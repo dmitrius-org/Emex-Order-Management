@@ -1,0 +1,496 @@
+﻿unit uShipmentsT;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  uniGUIClasses, uniGUIFrame, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniBasicGrid, uniDBGrid,
+  uniGUIBaseClasses, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
+  uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
+  uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
+
+  uUserF, uGrant, uCommonType, uniButton, uniBitBtn, uniLabel, uniDBComboBox,
+  uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
+
+  uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
+
+  System.Generics.Collections, System.MaskUtils, uniFileUpload,
+  uniDateTimePicker;
+
+
+
+type
+
+  TShipmentsT = class(TUniFrame)
+    Query: TFDQuery;
+    DataSource: TDataSource;
+    actMain: TUniActionList;
+    ppMain: TUniPopupMenu;
+    actRefreshAll: TAction;
+    N6: TUniMenuItem;
+    UniPanel: TUniPanel;
+    ToolBar: TUniToolBar;
+    UniPanel2: TUniPanel;
+    Grid: TUniDBGrid;
+    UpdateSQL: TFDUpdateSQL;
+    pFilter: TUniPanel;
+    gbFilter: TUniGroupBox;
+    ppExecute: TUniPopupMenu;
+    UniImageListAdapter: TUniImageListAdapter;
+    UniImageList: TUniImageList;
+    UniImageList32: TUniImageList;
+    actFilter: TAction;
+    actFilterClear: TAction;
+    actGridSettingLoad: TAction;
+    actGridSettingSave: TAction;
+    actGridSettingDefault: TAction;
+    N7: TUniMenuItem;
+    N8: TUniMenuItem;
+    N9: TUniMenuItem;
+    N11: TUniMenuItem;
+    pnlGridSelectedCount: TUniPanel;
+    UniPanel3: TUniPanel;
+    lblSelRowCunt: TUniLabel;
+    UniPanel4: TUniPanel;
+    lblSelRowSum: TUniLabel;
+    UniPanel5: TUniPanel;
+    lblRowSum2: TUniLabel;
+    lblRowSum1: TUniLabel;
+    UniLabel7: TUniLabel;
+    lblWeightKG: TUniLabel;
+    lblVolumeKG: TUniLabel;
+    QueryShipmentsID: TFMTBCDField;
+    QueryShipmentsDate: TSQLTimeStampField;
+    QueryReceiptDate: TSQLTimeStampField;
+    QueryInvoice: TWideStringField;
+    QueryShipmentsType: TWideStringField;
+    QueryShipmentsAmount: TCurrencyField;
+    QueryDetailCount: TIntegerField;
+    QueryWeightKG: TCurrencyField;
+    QueryVolumeKG: TCurrencyField;
+    QueryWeightKGF: TCurrencyField;
+    QueryVolumeKGF: TCurrencyField;
+    QueryVolumeKGDiff: TCurrencyField;
+    QuerySupplierWeightKG: TCurrencyField;
+    QuerySupplierVolumeKG: TCurrencyField;
+    QuerySupplierDiffVolumeWeigh: TCurrencyField;
+    QueryTransporterWeightKG: TCurrencyField;
+    QueryTransporterVolumeKG: TCurrencyField;
+    QueryTransporterDiffVolumeWeigh: TCurrencyField;
+    QueryWeightKGAmount: TCurrencyField;
+    QueryVolumeKGAmount: TCurrencyField;
+    QueryupdDatetime: TSQLTimeStampField;
+    QuerySupplierDiffVolumeWeigh2: TCurrencyField;
+    QueryAmount: TCurrencyField;
+    QuerySupplierAmount: TCurrencyField;
+    QueryTransporterAmount: TCurrencyField;
+    fCancel: TUniBitBtn;
+    fOk: TUniBitBtn;
+    fShipmentsDate: TUniDateTimePicker;
+    UniLabel8: TUniLabel;
+    edtInvoice: TUniEdit;
+    UniLabel4: TUniLabel;
+    N1: TUniMenuItem;
+    QuerySupplierBrief: TWideStringField;
+    procedure UniFrameCreate(Sender: TObject);
+    procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
+    procedure actRefreshAllExecute(Sender: TObject);
+    procedure actDeleteExecute(Sender: TObject);
+    procedure GridSelectionChange(Sender: TObject);
+    procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure GridCellClick(Column: TUniDBGridColumn);
+    procedure ppMainPopup(Sender: TObject);
+    procedure actFilterExecute(Sender: TObject);
+    procedure actFilterClearExecute(Sender: TObject);
+
+    procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+    procedure actGridSettingLoadExecute(Sender: TObject);
+    procedure actGridSettingSaveExecute(Sender: TObject);
+    procedure actGridSettingDefaultExecute(Sender: TObject);
+    procedure fClientSelect(Sender: TObject);
+
+  private
+    { Private declarations }
+    FAction: tFormaction;
+    FAccrual: TAccrual;
+
+    FFilterTextStatus: string;
+    FFilterTextPriceLogo: string;
+    FFilterTextClient: string;
+
+    ACurrColumn: TUniDBGridColumn;  //текущая колонка
+
+    /// <summary>
+    /// GridOpen -
+    /// </summary>
+    procedure GridOpen;
+
+    procedure DoShowMask();
+    procedure DoHideMask();
+
+    function Accrual :TAccrual;
+
+    procedure SortColumn(const FieldName: string; Dir: Boolean);
+
+    procedure FilterStatusCreate();
+    procedure FilterPriceLogoCreate();
+    procedure FilterClientsCreate();
+
+  public
+    { Public declarations }
+    /// <summary>
+    ///  GridLayout - сохранение/восстановление настроек грида
+    ///  AOperation 0-сохранение
+    ///             1-восстановление
+    ///</summary>
+    procedure GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
+  end;
+
+implementation
+
+uses
+  MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
+  Main, ServerModule, uToast, uGridUtils;
+
+{$R *.dfm}
+
+function TShipmentsT.Accrual: TAccrual;
+begin
+  if not Assigned(FAccrual) then
+  begin
+    FAccrual := TAccrual.Create(TFDConnection(Query.Connection));
+  end;
+
+  Result := FAccrual;
+end;
+
+procedure TShipmentsT.actDeleteExecute(Sender: TObject);
+begin
+  FAction:=TFormAction.acDelete;
+  Query.Delete;
+end;
+
+procedure TShipmentsT.actFilterClearExecute(Sender: TObject);
+begin
+  edtInvoice.Clear;
+  fShipmentsDate.Text := '';
+  GridOpen();
+end;
+
+procedure TShipmentsT.actFilterExecute(Sender: TObject);
+begin
+  GridOpen();
+end;
+
+procedure TShipmentsT.actGridSettingDefaultExecute(Sender: TObject);
+begin
+  Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
+  GridLayout(Self, Grid, tGridLayout.glLoad);
+end;
+
+procedure TShipmentsT.actGridSettingLoadExecute(Sender: TObject);
+begin
+  GridLayout(Self, Grid, tGridLayout.glLoad);
+end;
+
+procedure TShipmentsT.actGridSettingSaveExecute(Sender: TObject);
+begin
+  GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+
+procedure TShipmentsT.actRefreshAllExecute(Sender: TObject);
+begin
+  GridOpen();
+end;
+
+procedure TShipmentsT.DoHideMask;
+begin
+//  UniToolButton5.HideMask();
+//  UniSession.Synchronize;
+end;
+
+procedure TShipmentsT.DoShowMask;
+begin
+//  UniToolButton5.ShowMask('');
+//  UniSession.Synchronize;
+end;
+
+procedure TShipmentsT.fClientSelect(Sender: TObject);
+var
+  s: String;
+  i: Integer;
+begin
+  s:= '';
+  FFilterTextClient := '';
+
+  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
+  begin
+    if (Sender as TUniCheckComboBox).Selected[i] = True then
+    begin
+      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
+    end;
+  end;
+
+  if (s<> '') and  (s[length(s)]=',') then
+    delete(s,length(s),1);
+
+  FFilterTextClient := s;
+  GridOpen;
+  logger.Info('FFilterTextClient: ' + FFilterTextClient);
+end;
+
+procedure TShipmentsT.FilterClientsCreate;
+begin
+//  qClient.Open(); // используется в фильтре Клиент
+//
+//  fClient.Clear;
+//  qClient.First;
+//  while not qClient.Eof do
+//  begin
+//    fClient.Items.AddObject( qClient.FieldByName('Brief').AsString, Pointer(qClient.FieldByName('ClientID').AsInteger) );
+//    qClient.Next;
+//  end;
+//
+//  fClient.Refresh;
+end;
+
+procedure TShipmentsT.FilterPriceLogoCreate;
+begin
+//  qPriceLogo.Open(); // используется в фильтре PriceLogo
+//
+//  fPriceLogo.Clear;
+//  qPriceLogo.First;
+//  while not qPriceLogo.Eof do
+//  begin
+//    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
+//    qPriceLogo.Next;
+//  end;
+//
+//  fPriceLogo.Refresh;
+end;
+
+procedure TShipmentsT.FilterStatusCreate;
+begin
+//  qStatus.Open(); // используется в фильтре Статус
+//
+//  fStatus2.Clear;
+//  qStatus.First;
+//  while not qStatus.Eof do
+//  begin
+//    fStatus2.Items.AddObject( qStatus.FieldByName('Name').AsString, Pointer(qStatus.FieldByName('NodeID').AsInteger) );
+//    qStatus.Next;
+//  end;
+//
+//  fStatus2.Refresh;
+end;
+
+
+procedure TShipmentsT.GridOpen;
+var FClient:string;
+    FStatus :string;
+    FPriceLogo :string;
+begin
+  logger.Info('TOrdersT.GridOpen Begin');
+  DoShowMask;
+  try
+    Query.Close();
+
+    if edtInvoice.Text <> '' then
+      Query.MacroByName('Invoice').Value := ' and Invoice like ''%'   + edtInvoice.Text + '%'''
+    else
+      Query.MacroByName('Invoice').Value := '';
+
+    if (fShipmentsDate.Text <> '') and (fShipmentsDate.Text <> '30.12.1899') then
+      Query.MacroByName('ShipmentsDate').Value := ' and ShipmentsDate = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
+    else
+      Query.MacroByName('ShipmentsDate').Value := '';
+
+    Query.Open();
+
+  finally
+    DoHideMask();
+    logger.Info('TOrdersT.GridOpen End');
+  end;
+end;
+
+procedure TShipmentsT.GridSelectionChange(Sender: TObject);
+begin
+  //logger.Info('TOrdersT.GridSelectionChange Begin');
+
+ // Marks.Select;
+
+ // GetMarksInfo;
+
+ // ActionExecuteEnabled;
+
+ // logger.Info('TOrdersT.GridSelectionChange End');
+end;
+
+
+procedure TShipmentsT.ppMainPopup(Sender: TObject);
+begin
+//  actProtocol.Enabled := (actProtocol.Tag=1) and (Query.RecordCount>0);
+//
+//  actGroupDetailNameEdit.Enabled := (actGroupDetailNameEdit.Tag=1) and (Marks.Count>0);
+end;
+
+procedure TShipmentsT.GridCellClick(Column: TUniDBGridColumn);
+begin
+//  ACurrColumn := Column;
+end;
+
+procedure TShipmentsT.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer);
+begin
+//  ACurrColumn := Column;
+
+  ppMain.Popup(X, Y, Grid);
+end;
+
+procedure TShipmentsT.GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
+var
+  i: integer;
+  SqlText: string;
+  Column: TUniBaseDBGridColumn;
+begin
+  if not (AGrid is TUniDBGrid) then Exit;
+
+  if AOperation=tGridLayout.glSave then
+    for i := 0 to AGrid.Columns.count-1 do
+    begin
+      Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[AForm.ClassName +'.' + AGrid.Name]);
+      if i = 0 then
+        SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
+      else
+        SqlText:= SqlText + ' Union all ';
+
+       SqlText:= SqlText +
+       Format ('select dbo.GetUserID(), ''%s'', ''%s'', %d, %d, %d',
+       [AForm.ClassName +'.' + AGrid.Name,
+        AGrid.Columns[i].FieldName,
+        AGrid.Columns[i].Index,
+        AGrid.Columns[i].Width,
+        AGrid.Columns[i].Visible.ToInteger
+        //AGrid.Columns[i].Locked.ToInteger Locking
+        ]);
+
+        logger.Info(SqlText);
+        Sql.Exec(SqlText,[],[]);
+    end
+  else
+  if AOperation=tGridLayout.glLoad then
+  begin
+    Sql.Q.Close;
+    Sql.Open('select * '+
+             '  from tGridOptions (nolock) '+
+             ' where UserID = dbo.GetUserID() '+
+             '   and Grid =:Grid '+
+             ' order by Position ',
+            ['Grid'], [AForm.ClassName +'.' + AGrid.Name]);
+    Sql.Q.First;
+    for i:= 0 to Sql.Q.RecordCount-1 do
+    begin
+
+     try
+       Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
+       Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
+       Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
+       Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
+     // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
+
+     except
+       on E: Exception do
+       begin
+         logger.Info('TOrdersT.GridLayout Ошибка: ' + e.Message);
+         logger.Info('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString);
+       end;
+     end;
+      Sql.Q.Next;
+    end;
+  end;
+
+  if AShowResultMessage = True then
+    ToastOK ('Успешно выполнено!', unisession);
+end;
+
+procedure TShipmentsT.SortColumn(const FieldName: string; Dir: Boolean);
+begin
+  if Dir then
+    Query.IndexName := FieldName+'_index_asc'
+  else
+    Query.IndexName := FieldName+'_index_des';
+end;
+
+procedure TShipmentsT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+begin
+  SortColumn(Column.FieldName, Direction);
+end;
+
+procedure TShipmentsT.UniFrameCreate(Sender: TObject);
+var
+  I: Integer;
+  IndexnameAsc : string;
+  IndexnameDes : string;
+begin
+  logger.Info('TShipmentsT.UniFrameCreate Begin');
+
+  {$IFDEF Debug}
+  Grant.GrantTemplateCreate(self);
+  {$ENDIF}
+
+  Grant.SetGrant(self, actMain);
+
+  fShipmentsDate.Text := '';
+
+//  Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
+
+//  fOrderDate.Text := '';
+//
+//  FilterStatusCreate;
+//  FilterPriceLogoCreate();
+//  FilterClientsCreate();
+
+ // qPriceLogo.Open();
+ // qClient.Open();
+
+  GridOpen;
+
+  // индексы для сортировки
+  //with Query do
+  SortColumnCreate(Query);
+
+
+//  {$IFDEF Release}
+//  {$ENDIF}
+
+  // восстановление настроек грида для пользователя
+  GridLayout(Self, Grid, tGridLayout.glLoad, False);
+
+
+
+  //GetMarksInfo;
+
+  logger.Info('TShipmentsT.UniFrameCreate End');
+end;
+
+
+procedure TShipmentsT.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+
+  if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      Grid.JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
+end;
+
+
+initialization
+  RegisterClass(TShipmentsT);
+end.

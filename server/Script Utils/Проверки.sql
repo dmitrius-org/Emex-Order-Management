@@ -1,0 +1,174 @@
+-- сумма не сходится с количнством и ценой
+Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF, PricePurchase, AmountPurchase
+  from tOrders o (nolock)
+ where o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+
+
+
+ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF, PricePurchase, AmountPurchase
+  from tOrders o (nolock)
+ where o.PricePurchase * o.Quantity <> o.AmountPurchase
+
+/* -- исправление
+  update o 
+     set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
+    from tOrders o 
+   where o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+
+
+  update o 
+     set o.AmountPurchase = o.Quantity * o.PricePurchase
+    from tOrders o 
+   where o.PricePurchase * o.Quantity <> o.AmountPurchase
+  */
+
+
+-- не проставлен признак отказан и статус нет в наличи
+select *
+  from tOrders
+ where StatusID = 9	--NotAvailable
+   and isCancel = 0
+
+/* -- исправление
+update tOrders
+   set isCancel = 1
+  from tOrders
+ where StatusID = 9	--NotAvailable
+   and isCancel = 0
+  */
+
+-- проставлен признак отказан ...
+select *
+  from tOrders
+ where StatusID in (1	--New
+                   ,2	--InChecked
+                   ,3	--InBasket
+                   ,4	--InWork
+                   ,5	--Purchased
+                   ,6	--ReceivedOnStock
+                   ,7	--ReadyToSend
+                   ,8	--Send
+                    )
+   and isCancel = 1
+
+/* -- исправление
+update tOrders
+   set isCancel = 0
+  from tOrders
+ where StatusID in (1	--New
+                   ,2	--InChecked
+                   ,3	--InBasket
+                   ,4	--InWork
+                   ,5	--Purchased
+                   ,6	--ReceivedOnStock
+                   ,7	--ReadyToSend
+                   ,8	--Send
+                    )
+   and isCancel = 1
+  */
+
+-- Протоколы без заказа
+--Select 'Протоколы без заказа', *
+--  from tProtocol p (nolock)
+-- where not exists (select 1
+--                    from tOrders o (nolock)
+--				   where o.OrderID = p.ObjectID
+--				   )
+--
+/* -- исправление
+delete p
+  from tProtocol p
+ where not exists (select 1
+                    from tOrders o (nolock)
+				   where o.OrderID = p.ObjectID
+				   )
+*/
+
+
+--
+--select 'Заказы, которые не удалось разбить на части', *
+--  from tMovement (nolock)
+-- where OrderID is null
+
+-- заказы, которых нет в emex
+Select 'Заказы, которых нет в emex', *
+  from tOrders p
+ where not exists (select 1
+                    from tMovement m (nolock)
+				   where m.OrderID = p.OrderID
+				   )
+   --and p.isCancel = 0
+   and StatusID in (--1	--New
+                   --,2	--InChecked
+                    3	--InBasket
+                   ,4	--InWork
+                   ,5	--Purchased
+                   ,6	--ReceivedOnStock
+                   ,7	--ReadyToSend
+                   ,8	--Send
+				   ,9	--NotAvailable
+                    )
+/* -- исправление
+delete p
+  from tOrders p
+ where not exists (select 1
+                    from tMovement m (nolock)
+				   where m.OrderID = p.OrderID
+				   )
+   --and p.isCancel = 0
+   and StatusID in (--1	--New
+                   --,2	--InChecked
+                    3	--InBasket
+                   ,4	--InWork
+                   ,5	--Purchased
+                   ,6	--ReceivedOnStock
+                   ,7	--ReadyToSend
+                   ,8	--Send
+				   ,9	--NotAvailable
+                    )
+*/
+
+
+--
+select 'Разное количество', m.Quantity, o.Quantity, o.EmexQuantity, *
+  from tMovement m (nolock)
+  inner join tOrders o (nolock)
+          on o.OrderID = m.OrderID
+where m.Quantity <> o.Quantity
+
+
+
+--
+select 'Смапили не те детали', m.OrderDetailSubId, o.DetailNumber, m.DetailNum, o.EmexOrderID, m.OrderNumber,  o.DetailNumber, o.CustomerSubId, o.Reference, m.DetailNum, m.CustomerSubId, m.Reference ,    *
+  from tMovement m (nolock)
+  inner join tOrders o (nolock)
+          on o.OrderDetailSubId = m.OrderDetailSubId
+		 and ( (o.DetailNumber    <> m.DetailNum)
+		    or (o.Reference <> m.Reference and o.CustomerSubId = m.CustomerSubId))
+
+
+where isnull(m.OrderDetailSubId, '') <> '' 
+	--	 and o.Manufacturer <> m.MakeLogo
+
+
+/* -- исправление
+begin tran
+Update o
+   set o.OrderDetailSubId = null
+  from tMovement m (nolock)
+  inner join tOrders o (nolock)
+          on o.OrderDetailSubId = m.OrderDetailSubId
+		 and o.DetailNumber <> m.DetailNum
+where isnull(m.OrderDetailSubId, '') <> '' 
+--commit tran
+---where m.Quantity <> o.Quantity
+*/
+
+
+--select * from tMovement 
+--where DetailNum = '86300D9700'
+
+
+--select * from tOrders
+--where DetailNumber = '86300D9700'
+

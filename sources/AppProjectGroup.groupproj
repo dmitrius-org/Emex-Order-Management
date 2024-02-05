@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{41F86203-0A6B-445A-B2C5-38413C536754}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Customer\Customer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Manager\Manager.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Scheduler\Scheduler.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Customer">
+        <MSBuild Projects="Customer\Customer.dproj"/>
+    </Target>
+    <Target Name="Customer:Clean">
+        <MSBuild Projects="Customer\Customer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Customer:Make">
+        <MSBuild Projects="Customer\Customer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Manager">
+        <MSBuild Projects="Manager\Manager.dproj"/>
+    </Target>
+    <Target Name="Manager:Clean">
+        <MSBuild Projects="Manager\Manager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Manager:Make">
+        <MSBuild Projects="Manager\Manager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Scheduler">
+        <MSBuild Projects="Scheduler\Scheduler.dproj"/>
+    </Target>
+    <Target Name="Scheduler:Clean">
+        <MSBuild Projects="Scheduler\Scheduler.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Scheduler:Make">
+        <MSBuild Projects="Scheduler\Scheduler.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Customer;Manager;Scheduler"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Customer:Clean;Manager:Clean;Scheduler:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Customer:Make;Manager:Make;Scheduler:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

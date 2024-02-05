@@ -1,0 +1,191 @@
+object OrderF: TOrderF
+  Left = 0
+  Top = 0
+  ClientHeight = 266
+  ClientWidth = 709
+  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
+  OnShow = UniFormShow
+  OldCreateOrder = False
+  ShowHint = True
+  MonitoredKeys.Keys = <>
+  TextHeight = 15
+  object tabCommon: TUniFieldContainer
+    Left = 0
+    Top = 0
+    Width = 709
+    Height = 258
+    Hint = ''
+    ShowHint = True
+    ParentColor = False
+    Align = alTop
+    TabOrder = 0
+    ExplicitLeft = -2
+    DesignSize = (
+      709
+      258)
+    object edtDetailNameF: TUniEdit
+      Left = 160
+      Top = 83
+      Width = 499
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 3
+      ClearButton = True
+      ExplicitWidth = 481
+    end
+    object lblWeightKGF: TUniLabel
+      Left = 17
+      Top = 15
+      Width = 116
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090':'
+      TabOrder = 6
+    end
+    object lblVolumeKGF: TUniLabel
+      Left = 17
+      Top = 43
+      Width = 111
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090':'
+      TabOrder = 7
+    end
+    object edtWeightKGF: TUniNumberEdit
+      Left = 160
+      Top = 15
+      Width = 121
+      Hint = ''
+      ShowHint = True
+      TabOrder = 1
+      DecimalSeparator = ','
+    end
+    object edtVolumeKGF: TUniNumberEdit
+      Left = 160
+      Top = 43
+      Width = 121
+      Hint = ''
+      ShowHint = True
+      TabOrder = 2
+      DecimalSeparator = ','
+    end
+    object lblDetailNameF: TUniLabel
+      Left = 17
+      Top = 83
+      Width = 113
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1092#1072#1082#1090':'
+      TabOrder = 8
+    end
+    object btnCancel: TUniBitBtn
+      AlignWithMargins = True
+      Left = 490
+      Top = 213
+      Width = 81
+      Height = 27
+      Hint = ''
+      ShowHint = True
+      Caption = #1054#1090#1084#1077#1085#1072
+      Anchors = [akRight, akBottom]
+      TabOrder = 5
+      OnClick = btnCancelClick
+      ExplicitLeft = 472
+      ExplicitTop = 163
+    end
+    object btnOk: TUniBitBtn
+      AlignWithMargins = True
+      Left = 577
+      Top = 213
+      Width = 82
+      Height = 27
+      Hint = ''
+      Margins.Right = 30
+      ShowHint = True
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      Anchors = [akRight, akBottom]
+      TabOrder = 4
+      OnClick = btnOkClick
+      ExplicitLeft = 559
+      ExplicitTop = 163
+    end
+    object UniGroupBox1: TUniGroupBox
+      Left = 17
+      Top = 185
+      Width = 389
+      Height = 70
+      Hint = 
+        '|('#1044#1083#1080#1085#1072' (1-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1064#1080#1088#1080#1085#1072' (2-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1042#1099#1089#1086#1090#1072' (3-'#1103' '#1075#1088#1072#1092#1072')) /' +
+        ' 5000'#13#10#1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1086#1082#1088#1091#1075#1083#1103#1077#1084' '#1076#1086' '#1076#1077#1089#1103#1090#1099#1093' '
+      ShowHint = True
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' '#1086#1073#1098#1077#1084#1085#1086#1075#1086' '#1074#1077#1089#1072
+      TabOrder = 9
+      object edtL: TUniNumberEdit
+        Left = 18
+        Top = 28
+        Width = 80
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 1
+        FieldLabel = 'L'
+        FieldLabelWidth = 15
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtW: TUniNumberEdit
+        Left = 104
+        Top = 28
+        Width = 80
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 2
+        FieldLabel = 'W'
+        FieldLabelWidth = 15
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtH: TUniNumberEdit
+        Left = 190
+        Top = 28
+        Width = 80
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 3
+        FieldLabel = 'H'
+        FieldLabelWidth = 15
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtVKG: TUniNumberEdit
+        Left = 276
+        Top = 28
+        Width = 96
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 4
+        ReadOnly = True
+        FieldLabel = 'VKG'
+        FieldLabelWidth = 30
+        DecimalPrecision = 1
+        DecimalSeparator = ','
+      end
+    end
+  end
+end

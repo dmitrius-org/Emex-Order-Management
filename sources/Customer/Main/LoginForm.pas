@@ -1,0 +1,89 @@
+unit LoginForm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  uniGUIClasses, uniGUIRegClasses, uniGUIForm, uniEdit, uniButton,
+  uniGUIBaseClasses, uniLabel,
+  Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Error, uniCheckBox, uniPanel;
+
+type
+  TLoginF = class(TUniLoginForm)
+    UniPanel1: TUniPanel;
+    UniLabel1: TUniLabel;
+    UniLabel2: TUniLabel;
+    btnOk: TUniButton;
+    edtUser: TUniEdit;
+    edtPas: TUniEdit;
+    btnCancel: TUniButton;
+    UniCheckBox1: TUniCheckBox;
+    btnRegister: TUniButton;
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnOkClick(Sender: TObject);
+    procedure UniLoginFormShow(Sender: TObject);
+    procedure btnRegisterClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+function LoginF: TLoginF;
+
+implementation
+
+{$R *.dfm}
+
+uses uniGUIVars, ServerModule, MainModule, uniGUIApplication, uUserRegisterF;
+
+function LoginF: TLoginF;
+begin
+  Result := TLoginF(UniMainModule.GetFormInstance(TLoginF));
+end;
+
+procedure TLoginF.btnCancelClick(Sender: TObject);
+begin
+  self.ModalResult:=mrcancel;
+end;
+
+procedure TLoginF.btnOkClick(Sender: TObject);
+begin
+  if UniMainModule.dbUserConnect(edtUser.Text, edtPas.Text) then
+  begin
+    if UniCheckBox1.Checked then
+      begin
+        UniApplication.Cookies.SetCookie('_loginname2D02D0BF', edtUser.Text, Date + 7.0); // Expires 7 days from now
+        UniApplication.Cookies.SetCookie('_pwd2D02D0BF', edtPas.Text, Date + 7.0);
+      end;
+
+    self.ModalResult:=mrok;
+  end;
+//  else
+//  begin
+//    MessageDlg('Имя пользователя или пароль неверны!', mtError, [mbOK]);
+//  end;
+end;
+
+procedure TLoginF.btnRegisterClick(Sender: TObject);
+var UserRegister:TUserRegisterF;
+begin
+  UserRegister := TUserRegisterF.Create(UniApplication);
+  UserRegister.Show;
+end;
+
+procedure TLoginF.UniLoginFormShow(Sender: TObject);
+begin
+  {$IFDEF DEBUG}
+  if FDManager.IsConnectionDef('Connection') then
+  begin
+    edtUser.Text := FDManager.ConnectionDefs[0].Params.Values['User_nameT'];
+    edtPas.Text := FDManager.ConnectionDefs[0].Params.Values['PasswordT'];
+  end;
+  {$ENDIF}
+end;
+
+initialization
+  RegisterAppFormClass(TLoginF);
+end.

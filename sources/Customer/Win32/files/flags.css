@@ -1,0 +1,15 @@
+/* Флаги справочника статусы */
+.statusFlag .flagSystem   {color:red;}  /*1 -- системный тип */
+.statusFlag .flagBegin    {color:lime;} /*2 -- начальное состояние */
+.statusFlag .flagDefault  {color:blue;} /*4 -- по умолчанию */
+
+.splitWord .char1  {color:red;}
+.splitWord .char2  {color:green;}
+.splitWord .char3  {color:blue;}
+.splitWord .char4  {color:yellow;}
+.splitWord .char5  {color:orange;}
+.splitWord .char6  {color:yellowgreen;}
+.splitWord .char7  {color:cyan;}
+.splitWord .char8  {color:gold;}
+.splitWord .char9  {color:pink;}
+.splitWord .char10 {color:magenta;}

@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{A74B9DFD-ECB6-4996-9BD6-29809791779C}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="TUniFSComboBox14.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="TUniFSComboBox14">
+        <MSBuild Projects="TUniFSComboBox14.dproj"/>
+    </Target>
+    <Target Name="TUniFSComboBox14:Clean">
+        <MSBuild Projects="TUniFSComboBox14.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TUniFSComboBox14:Make">
+        <MSBuild Projects="TUniFSComboBox14.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="TUniFSComboBox14"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="TUniFSComboBox14:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="TUniFSComboBox14:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1,0 +1,183 @@
+/*для всех таблиц по умолчанию*/
+/* вид чекбоксов в гриде */
+.x-item-disabled .x-grid-checkcolumn {
+    opacity: 1 !important;
+}
+
+/* таблица заказов */
+/* Перенос строки в заголовке таблицы заказов */
+.grid-order .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+/* Стрелка номера детали замены*/
+.grid-order .x-replacement-detail-number-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Номер детали замены*/
+.grid-order .x-replacement-detail-number{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Стрелка бренд замены*/
+.grid-order .x-replacement-make-logo-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Бренд замены*/
+.grid-order .x-replacement-make-logo{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Стрелка производитель замены*/
+.grid-order .x-replacement-manufacturer-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Производитель замены*/
+.grid-order .x-replacement-manufacturer{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Цена замены*/
+.grid-order .x-replacement-price-arrow{
+    line-height: 0.0; 
+    color: #c45b41;
+    text-align: left
+}
+
+.grid-order .x-replacement-price{
+    line-height: 0.0; 
+    color: #c45b41;
+    text-align: left
+}
+
+
+/* grid-search - таблица поиск деталей */
+
+.grid-search .x-keyboard-mode .x-grid-item-focused .x-grid-cell-inner:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    pointer-events: none;
+    /* border: 1px solid #3d92cf */
+}
+
+.grid-search .x-grid-item-selected {
+    color: #000;
+    background-color: #c2ddf2
+}
+
+
+.grid-search .radio-form {
+    display: flex;
+    justify-content: center;
+    margin: 1px 0;
+}
+.grid-search .radio-form .radio-control {
+    width: 40px;
+    transition: all ease 250ms;
+}
+.grid-search .radio-form .radio-control input {
+    display: none;
+}
+.grid-search .radio-form .radio-control .radio-input {
+    background: #ffffff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0 1px;
+    position: relative;
+    transition: all ease 250ms;
+    border: 1px solid #BFE2FF; 
+    display: block;
+}
+.grid-search .radio-form .radio-control:hover .radio-input {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.2);
+}
+.grid-search .radio-form .radio-control .radio-input i {
+    display: block;
+    font-size: 20px;
+    color: #BFE2FF;
+    font-weight: bold;  
+}
+.grid-search .radio-form .radio-control .radio-input img {
+    width: 50px; 
+}
+.grid-search .radio-form .radio-control .radio-input span {
+    font-family: Tahoma, sans-serif;
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 1px;
+    color: #AAA;
+}
+.grid-search .radio-form .radio-control input:checked + .radio-input span {
+    color: #444444;
+    opacity: 1;
+    transition: opacity ease 250ms;
+}
+.grid-search .radio-form .radio-control input:checked + .radio-input:after {
+    top: 2;
+    right: 25px;
+    transform: translateY(-50%);
+    animation-name: animation;
+    animation-duration: 250ms;
+    background-color: #FFF;
+    font-size: 15px;
+    display: block;
+    position: absolute;
+    /* border: 1px solid #FFF; */
+    /* padding-left: 1px; */
+    content: "\f058";
+    font-family: "FontAwesome";
+    font-weight: bold;
+}
+.grid-search .radio-form .radio-control input:checked + .radio-input {
+    border: 2px solid #337AB7;
+}
+.grid-search .radio-form .radio-control input:checked + .radio-input:after,
+.grid-search .radio-form .radio-control input:checked + .radio-input i {
+    color: #337AB7;
+}
+@keyframes animation {
+    0% {
+        transform: translateY(-50%) scale(0);
+    }
+    75% {
+        transform: translateY(-50%) scale(1.3);
+    }
+    100% {
+        transform: translateY(-50%) scale(1);
+    }
+}
+@media screen and (max-width: 768px) {
+    .grid-search .radio-form {
+        display: block;
+    }
+    .grid-search .radio-form .radio-control {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
