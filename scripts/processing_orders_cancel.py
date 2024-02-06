@@ -63,7 +63,7 @@ def orderRefusalsInsert(Acrsr, Afilename, AfilePath):
                 ,o.OrderID       	         
                 ,3        
                 ,5 -- acCancel        
-                ,'Выгрузка отказов: Количество=' + convert(varchar(50), p.Quantity)     
+                ,'Выгрузка отказов: Количество=' + convert(varchar(50), p.Quantity) + ', файл: ' + @FileName     
             from #UnloadRefusals p (nolock)
            inner join tOrders o (nolock)
                    on o.ClientID     = p.ClientID
