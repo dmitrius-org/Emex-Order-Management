@@ -75,3 +75,5 @@ sources/Manager/1
 sources/Scheduler/1
 cache/
 log/
+sources/Customer/Win32/Connection.ini
+sources/Customer/compile.inc
