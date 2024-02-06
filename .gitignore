@@ -75,5 +75,5 @@ sources/Manager/1
 sources/Scheduler/1
 cache/
 log/
-
+Connection.ini
 compile.inc
