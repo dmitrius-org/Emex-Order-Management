@@ -82,7 +82,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
       item
         FieldName = 'ProtocolID'
         Title.Alignment = taCenter
-        Title.Caption = #1048#1044' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+        Title.Caption = #1048#1044' '#1086#1073#1098#1077#1082#1090#1072
         Width = 113
       end
       item
@@ -141,8 +141,9 @@ object OrdersProtocol_T: TOrdersProtocol_T
     Caption = 'UniPanel1'
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
+    ExplicitWidth = 1371
     object UniButton1: TUniButton
-      Left = 211
+      Left = 267
       Top = 25
       Width = 75
       Height = 25
@@ -154,15 +155,16 @@ object OrdersProtocol_T: TOrdersProtocol_T
     object fProtocol: TUniCheckComboBox
       Left = 9
       Top = 25
-      Width = 196
+      Width = 252
+      Height = 23
       Hint = ''
       ShowHint = True
       ParentShowHint = False
       Text = ''
       Items.Strings = (
         #1057#1086#1089#1090#1086#1103#1085#1080#1077
-        #1054#1090#1082#1072#1079#1099)
-      ItemIndex = 0
+        #1054#1090#1082#1072#1079#1099
+        #1048#1079#1084#1077#1085#1077#1085#1080#1077)
       TabOrder = 2
       ClientEvents.UniEvents.Strings = (
         'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
@@ -197,7 +199,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     end
     object UniLabel3: TUniLabel
       Left = 9
-      Top = 3
+      Top = 6
       Width = 84
       Height = 13
       Hint = ''

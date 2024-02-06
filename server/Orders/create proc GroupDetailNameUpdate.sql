@@ -1,12 +1,10 @@
 drop proc if exists GroupDetailNameUpdate
 /*
-  GroupDetailNameUpdate - изменение данных по заказу/детали
+  GroupDetailNameUpdate - групповое изменение данных по заказу/детали
 */
 go
 create proc GroupDetailNameUpdate
-              @DetailName             nvarchar(512) = null -- Наименование факт
-
-              
+              @DetailName             nvarchar(512) = null -- Наименование факт            
 as
   set nocount on;
   declare @r       int = 0
@@ -24,6 +22,27 @@ as
 		  and p.MakeLogo  = t.MakeLogo -- производитель
    where m.Spid = @@SPID
      and m.Type = 3
+
+  delete pAuditInsert from pAuditInsert (rowlock) where spid=@@spid
+  insert pAuditInsert
+        (Spid
+        ,ObjectID
+        ,ObjectTypeID
+        ,ActionID
+        ,Comment
+        )
+  select @@Spid 
+        ,o.OrderID       	         
+        ,3        
+        ,2      
+        ,'Изменение DetailName, WeightKGF, VolumeKGF'
+    from tMarks m (nolock)
+   inner join tOrders o (nolock)
+           on o.OrderID     = m.ID
+   where m.Spid = @@SPID
+     and m.Type = 3
+          
+  exec MassAuditInsert
 
  exit_:
  return @r

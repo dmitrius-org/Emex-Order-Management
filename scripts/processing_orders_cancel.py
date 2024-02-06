@@ -172,6 +172,7 @@ Select p.OperDate
          inner join tOrders o with (nolock)
                  on o.ClientID = c.ClientID
                 and o.MakeLogo is not null
+                and o.DetailNumber = '12018AB470'
          where c.NotificationMethod = 0 -- автоматическое оповещение
            and c.ResponseType       = 1 -- файл           
            and not exists (select 1

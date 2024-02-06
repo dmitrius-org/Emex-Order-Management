@@ -119,7 +119,7 @@ end;
 procedure TOrdersProtocol_T.GridDrawColumnCell(Sender: TObject; ACol,
   ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
-  if (Query.FieldByName('ProtocolType').AsInteger = 1) then
+  if (Query.FieldByName('ProtocolType').AsInteger in [1, 2]) then
   begin
     Attribs.Font.Color:=clGray//rgb(70 ,	68,	81);
     //Attribs.Font.Style:=[fsBold, fsItalic];
@@ -149,7 +149,7 @@ begin
   DataRefresh;
 end;
 
-procedure TOrdersProtocol_T.UniFormShow(Sender: TObject);
+procedure TOrdersProtocol_T.UniFormShow(Sender: TObject);  var i: Integer;
 begin
   sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 
@@ -159,12 +159,15 @@ begin
       sql.Q.FieldByName('DetailNumber').AsString;
   sql.Q.Close;
 
-  fProtocol.Selected[0] := true;
+  //fProtocol.Selected[0] := true;
+  for i:= 0 to fProtocol.Items.Count-1 do
+  begin
+    fProtocol.Selected[i] := True;
+  end;
 
   fProtocolSelect(fProtocol);
 
   DataRefresh;
-
 
 end;
 
