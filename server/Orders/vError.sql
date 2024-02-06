@@ -2,13 +2,10 @@ if OBJECT_ID('vError') is not null
     drop view vError
 go
 /* **********************************************************						
-vError - получение ошибки для отображения на форме при выполнении действия
+vError - РїРѕР»СѓС‡РµРЅРёРµ РѕС€РёР±РєРё РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РґРµР№СЃС‚РІРёСЏ
 ********************************************************** */
-
 create view vError
-
 as
-
 select p.ObjectID
       ,p.Retval
       ,rc.Message + case 
@@ -33,7 +30,6 @@ where p.Spid   = @@spid
 go
 grant select on vError to public
 go
--- Описание таблицы
+-- РћРїРёСЃР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
 --exec dbo.sys_setTableDescription @table = 'vError', @desc = ''
 
-select * from vError

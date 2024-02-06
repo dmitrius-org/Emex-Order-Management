@@ -17,17 +17,17 @@ as
         ,t.Flag    = case 
                        when isnull(@Comment, '') = '' 
                          then isnull(t.Flag, 0) &~ 32
-                         else isnull(t.Flag, 0) | 32 -- Сообщение для клиента
+                         else isnull(t.Flag, 0) | 32 -- РЎРѕРѕР±С‰РµРЅРёРµ РґР»СЏ РєР»РёРµРЅС‚Р°
                      end 
 	from tOrders t (updlock)
    where t.OrderID       = @OrderID
 
   if isnull(@Comment, '') = '' 
-    set @Comment = 'Прочитано'
+    set @Comment = 'РџСЂРѕС‡РёС‚Р°РЅРѕ'
   else
-    set @Comment = 'Комментарий по заказу: ' + @Comment
+    set @Comment = 'РљРѕРјРјРµРЅС‚Р°СЂРёР№ РїРѕ Р·Р°РєР°Р·Сѓ: ' + @Comment
 
-  -- аудит
+  -- Р°СѓРґРёС‚
   exec AuditInsert
               @AuditID          = @AuditID out         
              ,@ObjectID         = @OrderID

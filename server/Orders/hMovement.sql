@@ -8,23 +8,23 @@ create table hMovement
 (
  OrderID                 numeric(18,0)  --
 ,OrderNumber             numeric(18,0)  --
-,Comment                 nvarchar(256)  -- комментарий
-,OrderDetailSubId        nvarchar(64)   -- уникальный идентификатор строки заказа в системе EmEx
-,DocumentDate            datetime       -- дата документа
-,PriceOrdered            decimal(18,2)  -- обещанна¤ клиенту цена детали (видна насайте)
-,PriceSale               decimal(18,2)  -- цена продажи детали дл¤ клиента
-,MakeLogo                nvarchar(32)   -- лого бренда
-,DetailNum               nvarchar(32)   -- номер детали
-,Quantity                int            -- количество
-,Condition               nvarchar(32)   -- код статуса детали
-,Reference               nvarchar(64)   -- информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти 
+,Comment                 nvarchar(256)  -- РєРѕРјРјРµРЅС‚Р°СЂРёР№
+,OrderDetailSubId        nvarchar(64)   -- СѓРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃС‚СЂРѕРєРё Р·Р°РєР°Р·Р° РІ СЃРёСЃС‚РµРјРµ EmEx
+,DocumentDate            datetime       -- РґР°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
+,PriceOrdered            decimal(18,2)  -- РѕР±РµС‰Р°РЅРЅР°В¤ РєР»РёРµРЅС‚Сѓ С†РµРЅР° РґРµС‚Р°Р»Рё (РІРёРґРЅР° РЅР°СЃР°Р№С‚Рµ)
+,PriceSale               decimal(18,2)  -- С†РµРЅР° РїСЂРѕРґР°Р¶Рё РґРµС‚Р°Р»Рё РґР»В¤ РєР»РёРµРЅС‚Р°
+,MakeLogo                nvarchar(32)   -- Р»РѕРіРѕ Р±СЂРµРЅРґР°
+,DetailNum               nvarchar(32)   -- РЅРѕРјРµСЂ РґРµС‚Р°Р»Рё
+,Quantity                int            -- РєРѕР»РёС‡РµСЃС‚РІРѕ
+,Condition               nvarchar(32)   -- РєРѕРґ СЃС‚Р°С‚СѓСЃР° РґРµС‚Р°Р»Рё
+,Reference               nvarchar(64)   -- РёРЅС„РѕСЂРјР°С†РёСЏ, РїРѕР·РІРѕР»СЏСЋС‰Р°СЏ РєР»РёРµРЅС‚Сѓ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ Р·Р°РїС‡Р°СЃС‚СЊ. Р§Р°СЃС‚СЊ СЌС‚РѕР№ РёРЅС„РѕСЂРјР°С†РёРё РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°СЃРїРµС‡Р°С‚Р°РЅР° РІ РІРёРґРµ С€С‚СЂРёС…-РєРѕРґР° РЅР° СЃС‚РёРєРµСЂРµ Р·Р°РїС‡Р°СЃС‚Рё 
 ,DetailNameRus           nvarchar(256)  --
 ,DetailNameEng           nvarchar(256)  --
-,CustomerSubId           nvarchar(32)   -- идентификатор запчасти клиента
-,DestinationLogo         nvarchar(32)   -- тип отгрузки (EMEW Ц авиа, CNTE Ц контейнер)
-,PriceLogo               nvarchar(32)   -- лого прайслиста
-,ReplacementMakeLogo     nvarchar(128)  -- Бренд замены
-,ReplacementDetailNumber nvarchar(32)   -- Номер замены
+,CustomerSubId           nvarchar(32)   -- РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р·Р°РїС‡Р°СЃС‚Рё РєР»РёРµРЅС‚Р°
+,DestinationLogo         nvarchar(32)   -- С‚РёРї РѕС‚РіСЂСѓР·РєРё (EMEW Р¦ Р°РІРёР°, CNTE Р¦ РєРѕРЅС‚РµР№РЅРµСЂ)
+,PriceLogo               nvarchar(32)   -- Р»РѕРіРѕ РїСЂР°Р№СЃР»РёСЃС‚Р°
+,ReplacementMakeLogo     nvarchar(128)  -- Р‘СЂРµРЅРґ Р·Р°РјРµРЅС‹
+,ReplacementDetailNumber nvarchar(32)   -- РќРѕРјРµСЂ Р·Р°РјРµРЅС‹
 ,StatusId                int            --
 ,StateText               nvarchar(256)  --
 ,Flag                    int            --
@@ -35,8 +35,8 @@ end
 go
 grant all on hMovement to public
 go
--- !! индекс не уникальный !! 
+-- !! РёРЅРґРµРєСЃ РЅРµ СѓРЅРёРєР°Р»СЊРЅС‹Р№ !! 
 create index ao1 on hMovement(OrderNumber, DetailNum, CustomerSubId, Reference, OrderDetailSubId)
 go
--- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tMovement', @desc = 'Движение по номеру заказа.'
+-- РћРїРёСЃР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
+exec dbo.sys_setTableDescription @table = 'tMovement', @desc = 'Р”РІРёР¶РµРЅРёРµ РїРѕ РЅРѕРјРµСЂСѓ Р·Р°РєР°Р·Р°.'

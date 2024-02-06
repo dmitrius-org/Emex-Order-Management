@@ -1,10 +1,8 @@
 if OBJECT_ID('FindByNumberInsert', 'P') is not null
-    drop proc FindByNumberInsert
-	 
+    drop proc FindByNumberInsert	 
 go
-
 /* --------------------------------------------------------
-  FindByNumberInsert - добавление результата поиска в БД
+  FindByNumberInsert - РґРѕР±Р°РІР»РµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° РїРѕРёСЃРєР° РІ Р‘Р”
 
 -------------------------------------------------------- */
 create proc FindByNumberInsert

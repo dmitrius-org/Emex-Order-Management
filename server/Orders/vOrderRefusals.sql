@@ -2,15 +2,10 @@ if OBJECT_ID('vOrderRefusals') is not null
     drop view vOrderRefusals
 go
 /* **********************************************************						
-vOrderRefusals - Отказы
+vOrderRefusals - РћС‚РєР°Р·С‹
 ********************************************************** */
-
 create view vOrderRefusals
-
 as
-
---SET DATEFIRST 1;
-
 select OrderRefusalsID
      -- ,Folder
       ,FileName
@@ -18,14 +13,8 @@ select OrderRefusalsID
       ,InDateTime
   from tOrderRefusals (nolock)
  where Flag&4=4
-   and Flag&8=0 -- Удален
-
-
-
-		 
+   and Flag&8=0 -- РЈРґР°Р»РµРЅ
 
 go
 grant select on vOrderRefusals to public
 go
-
-select * from vOrderRefusals 

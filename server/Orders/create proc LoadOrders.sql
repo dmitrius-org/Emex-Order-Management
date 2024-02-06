@@ -229,6 +229,6 @@ end
 exit_:
 
 return @r
-GO
+go
 grant exec on LoadOrders to public
 go

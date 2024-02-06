@@ -4,7 +4,7 @@ if OBJECT_ID('vProtocolSelect') is not null
     drop view vProtocolSelect
 go
 /* **********************************************************						
-vProtocolSelect - начитка данных для формы Протокол
+vProtocolSelect - РЅР°С‡РёС‚РєР° РґР°РЅРЅС‹С… РґР»СЏ С„РѕСЂРјС‹ РџСЂРѕС‚РѕРєРѕР»
 ********************************************************** */
 create view vProtocolSelect
 as
@@ -31,11 +31,11 @@ SELECT p.[ProtocolID]  ProtocolID
          on u.UserID = p.UserID
 
  union all
-/*Отказы*/
+/*РћС‚РєР°Р·С‹*/
 SELECT p.[AuditID]          ProtocolID
       ,p.[ObjectID]	        ObjectID
       ,null                 CurState
-      ,'Выгрузка отказов'   ActionName 
+      ,'Р’С‹РіСЂСѓР·РєР° РѕС‚РєР°Р·РѕРІ'   ActionName 
       ,p.InDateTime    OperDate
       ,p.[Comment]     Comment
       ,u.Name          UserName
@@ -48,11 +48,11 @@ SELECT p.[AuditID]          ProtocolID
          on u.UserID = p.UserID
  where p.ActionID = 5 -- acCancel
  union all
-/*Изменения*/
+/*РР·РјРµРЅРµРЅРёСЏ*/
 SELECT p.[AuditID]     ProtocolID
       ,p.[ObjectID]	   ObjectID
       ,null            CurState
-      ,'Изменение'     ActionName 
+      ,'РР·РјРµРЅРµРЅРёРµ'     ActionName 
       ,p.InDateTime    OperDate
       ,p.[Comment]     Comment
       ,u.Name          UserName

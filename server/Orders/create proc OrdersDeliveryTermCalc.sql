@@ -1,13 +1,13 @@
 drop proc if exists OrdersDeliveryTermCalc
 /*
-  OrdersDeliveryTermCalc - расчет 
+  OrdersDeliveryTermCalc - СЂР°СЃС‡РµС‚ 
 
-  @IsSave - сохраняет данные в tOrders
-            0 - нет
-            1 - да
+  @IsSave - СЃРѕС…СЂР°РЅСЏРµС‚ РґР°РЅРЅС‹Рµ РІ tOrders
+            0 - РЅРµС‚
+            1 - РґР°
 
-  Входящий набор данных: pDeliveryTerm
-  Результат расчета: pDeliveryTerm
+  Р’С…РѕРґСЏС‰РёР№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С…: pDeliveryTerm
+  Р РµР·СѓР»СЊС‚Р°С‚ СЂР°СЃС‡РµС‚Р°: pDeliveryTerm
 */
 go
 create proc OrdersDeliveryTermCalc
@@ -40,7 +40,7 @@ Update p
 -- select * from pDeliveryTerm
 Update p   
    set p.DeliveryPlanDateSupplier  =  case 
-                                        when t.DeliveryTerm < 5 -- В прайсах со сроком меньше 5 дней учитывать выходные как не рабочие дни
+                                        when t.DeliveryTerm < 5 -- Р’ РїСЂР°Р№СЃР°С… СЃРѕ СЃСЂРѕРєРѕРј РјРµРЅСЊС€Рµ 5 РґРЅРµР№ СѓС‡РёС‚С‹РІР°С‚СЊ РІС‹С…РѕРґРЅС‹Рµ РєР°Рє РЅРµ СЂР°Р±РѕС‡РёРµ РґРЅРё
                                         then dbo.AddDaysAndWeekends(p.OrderDate, t.DeliveryTerm, 1)
                                         else DATEADD(dd, t.DeliveryTerm, p.OrderDate)
                                       end
@@ -53,10 +53,10 @@ Update p
 update p
    set p.DeliveryNextDate =  case 
                                when DATEPART(dw, p.DeliveryPlanDateSupplier) < (pd.DenVyleta) 
-                                 -- успеваем на этой неделе
+                                 -- СѓСЃРїРµРІР°РµРј РЅР° СЌС‚РѕР№ РЅРµРґРµР»Рµ
                                  then  DATEADD(dd, pd.DenVyleta - DATEPART(dw, p.DeliveryPlanDateSupplier), p.DeliveryPlanDateSupplier)
 
-                                 else (select DATEADD(DAY, pd.DenVyleta - DATEPART(WEEKDAY, p.wkNextDate), p.wkNextDate)  -- начало недели
+                                 else (select DATEADD(DAY, pd.DenVyleta - DATEPART(WEEKDAY, p.wkNextDate), p.wkNextDate)  -- РЅР°С‡Р°Р»Рѕ РЅРµРґРµР»Рё
                                         from (select DATEADD(wk, 1, p.DeliveryPlanDateSupplier) as wkNextDate) as p
                                       )
                              end
@@ -78,10 +78,6 @@ if @IsSave = 1
 
  exit_:
 
--- select * from pDeliveryTerm where spid = @@spid
-
-
- 
  return @r
 go
   grant exec on OrdersDeliveryTermCalc to public

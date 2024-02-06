@@ -2,7 +2,7 @@ if OBJECT_ID('vMarkOrderStateAction') is not null
     drop view vMarkOrderStateAction
 go
 /* **********************************************************						
-vMarkOrderStateAction - список действий для состоянии отмеченных заказов
+vMarkOrderStateAction - СЃРїРёСЃРѕРє РґРµР№СЃС‚РІРёР№ РґР»СЏ СЃРѕСЃС‚РѕСЏРЅРёРё РѕС‚РјРµС‡РµРЅРЅС‹С… Р·Р°РєР°Р·РѕРІ
 ********************************************************** */
 create view vMarkOrderStateAction
 as 
@@ -12,7 +12,7 @@ select ia.InstrumentID
   from tObjectType o (nolock)
  inner join tInstrument ia (nolock)
          on ia.ObjectTypeID = o.ObjectTypeID
- where o.Brief = 'Заказы')
+ where o.Brief = 'Р—Р°РєР°Р·С‹')
 
 select o.OrderID       OrderID
 	  ,mo.ActionID     ActionID
@@ -29,9 +29,7 @@ select o.OrderID       OrderID
         and mo.InstrumentID = i.InstrumentID
  inner join tNodes n (nolock)
          on n.NodeID = mo.ActionID
-		and n.Type   = 1 -- действие
-
-
+		and n.Type   = 1 -- РґРµР№СЃС‚РІРёРµ
 go
 grant select on vMarkOrderStateAction to public
---exec dbo.sys_setTableDescription @table = 'vMarkOrderStateAction', @desc = 'Список действий для состоянии отмеченных заказов'
+

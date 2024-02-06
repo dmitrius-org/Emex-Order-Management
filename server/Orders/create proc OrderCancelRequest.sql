@@ -18,14 +18,14 @@ as
         ,t.Flag    = case 
                        when isnull(@Comment, '') = '' 
                          then isnull(t.Flag, 0) &~ 64
-                         else isnull(t.Flag, 0) | 64 -- Запрошен отказ
+                         else isnull(t.Flag, 0) | 64 -- Р—Р°РїСЂРѕС€РµРЅ РѕС‚РєР°Р·
                      end 
 	from tOrders t (updlock)
    where t.OrderID       = @OrderID
 
-  set @Comment = 'Зпрос на отказ: ' + @Comment
+  set @Comment = 'Р—РїСЂРѕСЃ РЅР° РѕС‚РєР°Р·: ' + @Comment
 
-  -- аудит
+  -- Р°СѓРґРёС‚
   exec AuditInsert
               @AuditID          = @AuditID out         
              ,@ObjectID         = @OrderID

@@ -1,7 +1,7 @@
 if OBJECT_ID('OrderArchive') is not null
     drop proc OrderArchive
 /*
-  OrderArchive - Архив синхронизационных данных по заказу.
+  OrderArchive - РђСЂС…РёРІ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРѕРЅРЅС‹С… РґР°РЅРЅС‹С… РїРѕ Р·Р°РєР°Р·Сѓ.
                  
 */
 go
@@ -11,7 +11,7 @@ as
  set nocount on; 
  declare @r int = 0
 
---сохранение в архив
+--СЃРѕС…СЂР°РЅРµРЅРёРµ РІ Р°СЂС…РёРІ
 INSERT INTO [hOrders]
       ([ClientID]
       ,[OrderDate]
@@ -72,7 +72,7 @@ INSERT INTO [hOrders]
       ,[Invoice]      
 	  ,[FileDate]
 	  ,[DestinationLogo]
-      ,[Commission]          -- Комиссия от продажи	
+      ,[Commission]          -- РљРѕРјРёСЃСЃРёСЏ РѕС‚ РїСЂРѕРґР°Р¶Рё	
       ,[CommissionAmount]
       ,[Taxes]
       ,[WeightKGAmount]
@@ -142,7 +142,7 @@ select distinct
       ,o.[Invoice]
       ,o.[FileDate]
 	  ,o.[DestinationLogo]
-      ,o.[Commission]          -- Комиссия от продажи	
+      ,o.[Commission]          -- РљРѕРјРёСЃСЃРёСЏ РѕС‚ РїСЂРѕРґР°Р¶Рё	
       ,o.[CommissionAmount]
       ,o.[Taxes]
       ,o.[WeightKGAmount]
