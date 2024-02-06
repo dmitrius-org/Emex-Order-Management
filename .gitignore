@@ -73,3 +73,5 @@ __pycache__/
 sources/Customer/1
 sources/Manager/1
 sources/Scheduler/1
+cache/
+log/

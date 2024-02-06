@@ -1,4 +1,4 @@
-unit Main;
+п»їunit Main;
 
 interface
 
@@ -51,7 +51,7 @@ type
   private
     { Private declarations }
     ///<summary>
-    ///  FormNames - список форм
+    ///  FormNames - СЃРїРёСЃРѕРє С„РѕСЂРј
     ///</summary>
     FormNames : TStrings;
 
@@ -59,7 +59,7 @@ type
     FBasketF :TBasketF;
     FOrdersF :TOrdersT2;
     ///<summary>
-    ///  FormJSNames - список форм
+    ///  FormJSNames - СЃРїРёСЃРѕРє С„РѕСЂРј
     ///</summary>
     FormJSNames : TStrings;
 

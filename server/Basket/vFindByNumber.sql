@@ -42,7 +42,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
  --inner join tSearchPrice sp (nolock)
  --        on sp.MakeLogo             = p.PriceLogo
 	   -- and isnull(sp.Synthetic, 0) = 0
--- where p.Spid = @@spid
+ where p.Spid = @@spid
    --and (p.PercentSupped >= 30
    --    or (p.PercentSupped <30 and not exists (select 1 
    --                                                from pFindByNumber f (nolock)

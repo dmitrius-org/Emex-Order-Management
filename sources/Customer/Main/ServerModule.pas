@@ -152,7 +152,11 @@ begin
   if ARequestInfo.URI=('/confirmed') then
   begin
     Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
-    Retval := ClientRegistrationRequest(ARequestInfo.Params.Values['tokken']);
+
+    if ARequestInfo.Params.Values['tokken'] <> '' then
+        Retval := ClientRegistrationRequest(ARequestInfo.Params.Values['tokken'])
+    else
+        Retval := 0;
      
     if Retval = 999 then
     begin

@@ -121,14 +121,6 @@ begin
   Query.Close;
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
   Query.Open;
-
-  // js := ' function setDeliveryCheck() ' +
-  // '{' +
-  // ' document.getElementById("r'+FDestinationLogo+'").setAttribute("class", "checked") ; ' +
-  // '}; ' +
-  // 'ajaxRequest(' + SearchGrid.JSName + ', ''rating'', [setDeliveryCheck()]);';
-  //
-  // UniSession.JSCode(js);
 end;
 
 procedure TSearchF.PartSearch;
@@ -224,6 +216,8 @@ procedure TSearchF.UniFrameCreate(Sender: TObject);
 var
   js: string;
 begin
+  SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+
   js := ' setDestLogo = function(AVal) { ' + ' ajaxRequest(' + SearchGrid.JSName
     + ', "setDestLogo", [ "P1=" + AVal ]);' + ' } ;';
   UniSession.JSCode(js);
@@ -231,8 +225,6 @@ end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-  // SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
-
   Sql.exec('update pFindByNumber set spid = @@spid', [], []);
 
   FDestinationLogo := '0001';

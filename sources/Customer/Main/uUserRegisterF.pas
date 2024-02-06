@@ -1,4 +1,4 @@
-unit uUserRegisterF;
+п»їunit uUserRegisterF;
 
 interface
 
@@ -43,7 +43,7 @@ begin
 
   if (edtEmail.Text = '') or (edtPassword.text = '') then
   begin
-    MessageDlg('Заполните все поля!', mtError, [mbOK]);
+    MessageDlg('Р—Р°РїРѕР»РЅРёС‚Рµ РІСЃРµ РїРѕР»СЏ!', mtError, [mbOK]);
     Exit;
   end;
 
@@ -86,10 +86,10 @@ begin
         htmlBody :=      ''+
           '<html>  '+
           '<head>  '+
-          '<title>Подтвердите Email (booster.ae)</title>'+
+          '<title>РџРѕРґС‚РІРµСЂРґРёС‚Рµ Email (booster.ae)</title>'+
           '</head> '+
           '<body>  '+
-          '<p>Для завершения регистрации перейдите по ссылке: <a href="' +RegLink + '/confirmed?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
+          '<p>Р”Р»СЏ Р·Р°РІРµСЂС€РµРЅРёСЏ СЂРµРіРёСЃС‚СЂР°С†РёРё РїРµСЂРµР№РґРёС‚Рµ РїРѕ СЃСЃС‹Р»РєРµ: <a href="' +RegLink + 'confirmed?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">СЃСЃС‹Р»РєР°</a></p> '+
           '</body> '+
           '</html> ';
 
@@ -97,9 +97,9 @@ begin
         try
             try
               Gmail.Connect;
-              Gmail.Send([edtEmail.Text], 'Подтвердите Email', '', htmlBody, '');
+              Gmail.Send([edtEmail.Text], 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ Email', '', htmlBody, '');
 
-              MessageDlg('На вашу почту отправлена ссылка для подтверждения регистрации!', mtInformation, [mbOK]);
+              MessageDlg('РќР° РІР°С€Сѓ РїРѕС‡С‚Сѓ РѕС‚РїСЂР°РІР»РµРЅР° СЃСЃС‹Р»РєР° РґР»СЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ СЂРµРіРёСЃС‚СЂР°С†РёРё!', mtInformation, [mbOK]);
             except
               on E: Exception do
                  raise Exception.Create(E.Message);

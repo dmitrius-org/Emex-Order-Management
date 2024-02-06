@@ -25,7 +25,7 @@ object ClientsF: TClientsF
       1113
       44)
     object btnOk: TUniBitBtn
-      Left = 1003
+      Left = 999
       Top = 10
       Width = 85
       Height = 25
@@ -34,9 +34,10 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
+      ExplicitLeft = 995
     end
     object btnCancel: TUniBitBtn
-      Left = 916
+      Left = 912
       Top = 10
       Width = 81
       Height = 25
@@ -45,6 +46,7 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
+      ExplicitLeft = 908
     end
   end
   object pcCommon: TUniPageControl
@@ -53,7 +55,7 @@ object ClientsF: TClientsF
     Width = 1119
     Height = 486
     Hint = ''
-    ActivePage = pcOrders
+    ActivePage = tabHome
     Align = alClient
     TabOrder = 1
     ExplicitLeft = -138
@@ -450,6 +452,8 @@ object ClientsF: TClientsF
       ParentAlignmentControl = False
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1088#1072#1081#1089#1083#1080#1089#1090#1086#1074
       LayoutConfig.Width = '100'
+      ExplicitWidth = 1107
+      ExplicitHeight = 457
       object UniToolBar2: TUniToolBar
         Left = 0
         Top = 0
@@ -787,17 +791,19 @@ object ClientsF: TClientsF
       object edtNotificationAddress: TUniEdit
         Left = 196
         Top = 117
-        Width = 815
+        Width = 811
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
-        ExplicitWidth = 811
+        ExplicitWidth = 807
       end
     end
     object pcSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ExplicitWidth = 1107
+      ExplicitHeight = 457
       object UniLabel4: TUniLabel
         Left = 33
         Top = 37
@@ -933,6 +939,8 @@ object ClientsF: TClientsF
       ParentAlignmentControl = False
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088#1099
       LayoutConfig.Width = '100'
+      ExplicitWidth = 1107
+      ExplicitHeight = 457
       object UniPanel2: TUniPanel
         Left = 0
         Top = 48
