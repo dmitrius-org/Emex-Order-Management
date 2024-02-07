@@ -3,7 +3,6 @@
 delete pOrdersFinIn from pOrdersFinIn where spid = @@Spid
 --delete pOrdersFinTotal from pOrdersFinTotal where spid = @@Spid
 
-
 insert pOrdersFinIn
       (Spid
       ,OrderID
