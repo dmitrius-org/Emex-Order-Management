@@ -78,3 +78,4 @@ cache/
 log/
 Connection.ini
 compile.inc
+settings.ini
