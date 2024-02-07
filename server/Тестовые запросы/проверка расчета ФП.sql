@@ -21,25 +21,25 @@ exec OrdersFinCalc
 
 select 't.Orders',
        
-	   Price          'Продажа'
-	  ,CourseExt      'Курс с комиссией'
-	  ,Purchase       'Закупка c комиссией' --	Доставка fkg с комиссией	Доставка vkg с комиссией	Доставка	Себестоимость	Комиссия от продажи	Наценка	Рентабельность	Доход %	Доход P
-	  ,Deliveryfkg    'Доставка fkg с комиссией' 
-	  ,Deliveryvkg    'Доставка vkg с комиссией'
-      ,Delivery       'Доставка итого'
-      ,CostPrice      'Себестоимость'
-      ,PriceCommission        'Комиссия от продажи'
+	   Price          'РџСЂРѕРґР°Р¶Р°'
+	  ,CourseExt      'РљСѓСЂСЃ СЃ РєРѕРјРёСЃСЃРёРµР№'
+	  ,Purchase       'Р—Р°РєСѓРїРєР° c РєРѕРјРёСЃСЃРёРµР№' --	Р”РѕСЃС‚Р°РІРєР° fkg СЃ РєРѕРјРёСЃСЃРёРµР№	Р”РѕСЃС‚Р°РІРєР° vkg СЃ РєРѕРјРёСЃСЃРёРµР№	Р”РѕСЃС‚Р°РІРєР°	РЎРµР±РµСЃС‚РѕРёРјРѕСЃС‚СЊ	РљРѕРјРёСЃСЃРёСЏ РѕС‚ РїСЂРѕРґР°Р¶Рё	РќР°С†РµРЅРєР°	Р РµРЅС‚Р°Р±РµР»СЊРЅРѕСЃС‚СЊ	Р”РѕС…РѕРґ %	Р”РѕС…РѕРґ P
+	  ,Deliveryfkg    'Р”РѕСЃС‚Р°РІРєР° fkg СЃ РєРѕРјРёСЃСЃРёРµР№' 
+	  ,Deliveryvkg    'Р”РѕСЃС‚Р°РІРєР° vkg СЃ РєРѕРјРёСЃСЃРёРµР№'
+      ,Delivery       'Р”РѕСЃС‚Р°РІРєР° РёС‚РѕРіРѕ'
+      ,CostPrice      'РЎРµР±РµСЃС‚РѕРёРјРѕСЃС‚СЊ'
+      ,PriceCommission        'РљРѕРјРёСЃСЃРёСЏ РѕС‚ РїСЂРѕРґР°Р¶Рё'
 
 
-      ,MarginF       'НАЦЕНКА' 
-      ,Profit        'РЕНТАБЕЛЬНОСТЬ*'
-      ,IncomePrc     'ДОХОД %' 
-      ,Income        'ДОХОД Р' 
+      ,MarginF       'РќРђР¦Р•РќРљРђ' 
+      ,Profit        'Р Р•РќРўРђР‘Р•Р›Р¬РќРћРЎРўР¬*'
+      ,IncomePrc     'Р”РћРҐРћР” %' 
+      ,Income        'Р”РћРҐРћР” Р ' 
   from pOrdersFin (nolock)
  where Spid = @@Spid
 
 select 't.Orders'
-      ,Price               'Продажа'
+      ,Price               'РџСЂРѕРґР°Р¶Р°'
       ,WeightKG            'WeightKG'
       ,WeightKGF           'WeightKGF'   
       ,VolumeKG            'VolumeKG'
@@ -56,8 +56,8 @@ select 't.ProfilesCustomer'
  where Spid = @@Spid
  
 select 't.ProfilesDelivery'
-      ,PdWeightKG          'Стоимость PdWeightKG'
-      ,PdVolumeKG          'Стоимость PdVolumeKG'
+      ,PdWeightKG          'РЎС‚РѕРёРјРѕСЃС‚СЊ PdWeightKG'
+      ,PdVolumeKG          'РЎС‚РѕРёРјРѕСЃС‚СЊ PdVolumeKG'
   from pOrdersFin (nolock)
  where Spid = @@Spid
 
@@ -67,7 +67,7 @@ select 't.Clients'
   from pOrdersFin (nolock)
  where Spid = @@Spid
 
-select 't.CurrencyRate', Course     as 'Курс'
+select 't.CurrencyRate', Course     as 'РљСѓСЂСЃ'
   from pOrdersFin (nolock)
  where Spid = @@Spid
 
