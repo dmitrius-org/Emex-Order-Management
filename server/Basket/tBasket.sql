@@ -22,12 +22,12 @@ tBasket - корзина деталей
   ,Reference               nvarchar(32)   -- reference
   ,WeightKG                money          -- вес детали в граммах
   ,VolumeKG                money          -- объемный вес
-  ,DestinationLogo	       nvarchar(10)   -- направление доставки
-  ,Margin		           money          -- наценка
-  ,Discount	               money          -- Скидка
-  ,Kurs		               money          -- курс
+  ,DestinationLogo         nvarchar(10)   -- направление доставки
+  ,Margin                  money          -- наценка
+  ,Discount                money          -- Скидка
+  ,Kurs                    money          -- курс
   ,ExtraKurs               money          -- 
-  ,Commission	           money          -- Комиссия эквайера
+  ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
   );
 
