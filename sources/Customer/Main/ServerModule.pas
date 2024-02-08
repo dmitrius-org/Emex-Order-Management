@@ -82,7 +82,6 @@ begin
       Logger.AddLog('TUniServerModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
       FDConnection.Connected := True;
 
-      //Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Вход в систему');
     except
       on E: EFDDBEngineException do
       case E.Kind of
@@ -132,6 +131,13 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
+  {$IFDEF DEBUG}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
+              '. БД: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
+  {$ELSE}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
+  {$ENDIF}
+
   dbConnect;
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
@@ -149,6 +155,8 @@ var Retval: Integer;
 begin
   // валидация ссылки на регистрацию
   Handled := false;
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Begin', ARequestInfo.ToString);
+
   if ARequestInfo.URI=('/confirmed') then
   begin
     Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
@@ -160,14 +168,19 @@ begin
      
     if Retval = 999 then
     begin
-      Handled := True;
+      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '200');
+
       AResponseInfo.ResponseNo := 200;
-      AResponseInfo.ResponseText := 'Регистрация прошла успешна'
+      AResponseInfo.ContentText := 'Регистрация прошла успешна';
+      AResponseInfo.WriteContent;
+      Handled := True;
+     // AResponseInfo.ResponseText := 'Регистрация прошла успешна'
     end
     Else
     begin
-      Handled := True;
+      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '400');
       AResponseInfo.ResponseNo := 400;
+      Handled := True;
     end;
   end;
 end;
