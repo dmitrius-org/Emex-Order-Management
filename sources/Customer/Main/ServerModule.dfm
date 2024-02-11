@@ -54,10 +54,6 @@ object UniServerModule: TUniServerModule
     Left = 207
     Top = 97
   end
-  object FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink
-    Left = 517
-    Top = 24
-  end
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (

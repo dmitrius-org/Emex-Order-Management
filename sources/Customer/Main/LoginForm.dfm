@@ -33,10 +33,10 @@ object LoginF: TLoginF
     object UniLabel1: TUniLabel
       Left = 82
       Top = 79
-      Width = 77
+      Width = 113
       Height = 13
       Hint = ''
-      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (email):'
       TabOrder = 1
     end
     object UniLabel2: TUniLabel

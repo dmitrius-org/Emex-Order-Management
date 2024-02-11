@@ -12,7 +12,8 @@ create table tClients
 ,Password             nvarchar(256)  null     -- 
 
 ,IsActive             bit
-,IsConfirmed          bit
+,IsConfirmed          bit          -- Признак что регистрация подьверждена
+,IsConfirmedDate      datetime	   -- Дата подтверждения регистрации
 ,Taxes                money        -- Комиссия и налоги
 ,ResponseType         int          -- Тип ответа
 ,NotificationMethod   int          -- Способ оповещения
@@ -37,5 +38,8 @@ go
 grant all on tClients to public
 go
 exec dbo.sys_setTableDescription @table = 'tClients', @desc = 'Таблица Клиенты'
+
+
+--alter table tClients add IsConfirmedDate       datetime
 
 

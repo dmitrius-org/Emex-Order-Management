@@ -21,7 +21,6 @@ type
     FDManager: TFDManager;
     FDGUIxWaitCursor: TFDGUIxWaitCursor;
     FDGUIxErrorDialog: TFDGUIxErrorDialog;
-    FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink;
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
     procedure UniGUIServerModuleServerStartup(Sender: TObject);

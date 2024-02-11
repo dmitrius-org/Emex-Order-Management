@@ -245,6 +245,11 @@ type
       Files: TUniFileInfoArray);
     procedure actSetCommentExecute(Sender: TObject);
     procedure actGroupDetailNameEditExecute(Sender: TObject);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+      NewIndex: Integer);
+    procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -464,12 +469,12 @@ end;
 
 procedure TOrdersT.actGridSettingLoadExecute(Sender: TObject);
 begin
-  GridLayout(Self, Grid, tGridLayout.glLoad);
+  //GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
 
 procedure TOrdersT.actGridSettingSaveExecute(Sender: TObject);
 begin
-  GridLayout(Self, Grid, tGridLayout.glSave);
+  //GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TOrdersT.actGroupDetailNameEditExecute(Sender: TObject);
@@ -892,6 +897,34 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  logger.Info(EventName);
+  if (EventName = '_columnhide')
+  then
+  begin
+    Sql.Exec('Update tGridOptions  set Visible = 0 from tGridOptions (updlock) ' +
+             ' Where UserID   = dbo.GetUserID() '+
+             '   and Grid     =:Grid   ' +
+             '   and [Column] =:Column ',
+            ['Grid', 'Column'],
+            [self.ClassName +'.' + Grid.Name,
+             Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
+  end
+  else if (EventName = '_columnshow')
+  then
+  begin
+    Sql.Exec('Update tGridOptions  set Visible = 1 from tGridOptions (updlock) ' +
+             ' Where UserID   = dbo.GetUserID() '+
+             '   and Grid     =:Grid'+
+             '   and [Column] =:Column ',
+            ['Grid', 'Column'],
+            [self.ClassName +'.' + Grid.Name,
+             Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
+  end;
+end;
+
 procedure TOrdersT.GridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
@@ -953,27 +986,36 @@ begin
   if not (AGrid is TUniDBGrid) then Exit;
 
   if AOperation=tGridLayout.glSave then
+  begin
+    Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid',
+            ['Grid'],
+            [AForm.ClassName +'.' + AGrid.Name]);
+
+    SqlText:='';
+
     for i := 0 to AGrid.Columns.count-1 do
     begin
-      Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[AForm.ClassName +'.' + AGrid.Name]);
-      if i = 0 then
-        SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
-      else
-        SqlText:= SqlText + ' Union all ';
 
-       SqlText:= SqlText +
-       Format ('select dbo.GetUserID(), ''%s'', ''%s'', %d, %d, %d',
-       [AForm.ClassName +'.' + AGrid.Name,
-        AGrid.Columns[i].FieldName,
-        AGrid.Columns[i].Index,
-        AGrid.Columns[i].Width,
-        AGrid.Columns[i].Visible.ToInteger
-        //AGrid.Columns[i].Locked.ToInteger Locking
+        if i = 0 then
+          SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
+        else
+          SqlText:= SqlText + ' Union all ';
+
+        SqlText:= SqlText +
+        Format ('select dbo.GetUserID(), ''%s'', ''%s'', %d, %d, %d',
+        [AForm.ClassName +'.' + AGrid.Name,
+         AGrid.Columns[i].FieldName,
+         AGrid.Columns[i].Index,
+         AGrid.Columns[i].Width,
+         AGrid.Columns[i].Visible.ToInteger
+          //AGrid.Columns[i].Locked.ToInteger Locking
         ]);
+    end;
 
-        logger.Info(SqlText);
-        Sql.Exec(SqlText,[],[]);
-    end
+    logger.Info(SqlText);
+    Sql.Exec(SqlText,[],[]);
+
+  end
   else
   if AOperation=tGridLayout.glLoad then
   begin
@@ -988,20 +1030,20 @@ begin
     for i:= 0 to Sql.Q.RecordCount-1 do
     begin
 
-     try
-       Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
-       Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
-       Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
-       Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
-     // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
+      try
+        Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
+        Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
+        Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
+        Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
+      // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
 
-     except
-       on E: Exception do
-       begin
-         logger.Info('TOrdersT.GridLayout Ошибка: ' + e.Message);
-         logger.Info('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString);
-       end;
-     end;
+      except
+        on E: Exception do
+        begin
+          logger.Info('TOrdersT.GridLayout Ошибка: ' + e.Message);
+          logger.Info('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString);
+        end;
+      end;
       Sql.Q.Next;
     end;
   end;
@@ -1030,7 +1072,6 @@ var
   newitem: TUnimenuitem;
   i: Integer;
 begin
- // logger.Info('TOrdersT.StateActionMenuCreate begin');
   ppExecute.Items.Clear;
   ppExecuteAction.Clear;
 
@@ -1055,7 +1096,6 @@ begin
       Sql.Q.Next;
     end;
   end;
-//  logger.Info('TOrdersT.StateActionMenuCreate End');
 end;
 
 procedure TOrdersT.actSelectExecute(Sender: TObject);
@@ -1093,6 +1133,18 @@ begin
     Query.IndexName := FieldName+'_index_des';
 end;
 
+procedure TOrdersT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+  NewIndex: Integer);
+begin
+  GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TOrdersT.GridColumnResize(Sender: TUniBaseDBGridColumn;
+  NewSize: Integer);
+begin
+  GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
 procedure TOrdersT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
 begin
   SortColumn(Column.FieldName, Direction);
@@ -1121,9 +1173,6 @@ begin
   FilterStatusCreate;
   FilterPriceLogoCreate();
   FilterClientsCreate();
-
- // qPriceLogo.Open();
- // qClient.Open();
 
   // индексы для сортировки
   //with Query do
@@ -1298,7 +1347,7 @@ end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid= @@Spid and Type=3', [], [])
+  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
 end;
 
 procedure tMarks.Clear;

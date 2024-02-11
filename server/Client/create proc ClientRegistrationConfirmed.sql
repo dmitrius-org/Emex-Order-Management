@@ -5,8 +5,9 @@ if OBJECT_ID('ClientRegistrationConfirmed') is not null
 */
 go
 create proc ClientRegistrationConfirmed
-			  @Hash      nvarchar(512)
+              @Hash      nvarchar(512)
 as
+  SET NOCOUNT ON;
   declare @r        int = 0
          ,@ClientID numeric(18, 0)
 
@@ -14,15 +15,16 @@ as
     from tClients u (nolock)
    where u.Hash                   = @Hash
      and isnull(u.IsConfirmed, 0) = 0
-			  
+              
   if isnull(@ClientID, 0) <> 0
   begin
     set @r = 999
 
     Update tClients
-       set IsActive    = 1 
-	      ,IsConfirmed = 1
-     where ClientID = @ClientID	  
+       set IsActive       = 1 
+          ,IsConfirmed    = 1
+          ,IsConfirmedDate = GetDate()
+     where ClientID = @ClientID      
   end
  
 exit_:

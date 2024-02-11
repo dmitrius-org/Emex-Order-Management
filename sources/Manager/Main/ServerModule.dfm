@@ -4,7 +4,7 @@ object UniServerModule: TUniServerModule
   TempFolder = 'temp\'
   FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\Framework\uniGUI'
   SessionTimeout = 86400000
-  Title = ' '
+  Title = 'Managers'
   AjaxTimeout = 500000
   SuppressErrors = []
   Bindings = <>
@@ -55,9 +55,5 @@ object UniServerModule: TUniServerModule
     Provider = 'Forms'
     Left = 207
     Top = 97
-  end
-  object FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink
-    Left = 630
-    Top = 23
   end
 end

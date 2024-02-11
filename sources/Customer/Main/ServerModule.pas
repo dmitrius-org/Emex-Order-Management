@@ -22,7 +22,6 @@ type
     FDManager: TFDManager;
     FDGUIxWaitCursor: TFDGUIxWaitCursor;
     FDGUIxErrorDialog: TFDGUIxErrorDialog;
-    FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink;
     FDConnection: TFDConnection;
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
@@ -153,36 +152,36 @@ procedure TUniServerModule.UniGUIServerModuleHTTPCommand(
   var Handled: Boolean);
 var Retval: Integer;
 begin
-  // валидаци€ ссылки на регистрацию
-  Handled := false;
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Begin', ARequestInfo.ToString);
+// валидаци€ ссылки на регистрацию
+//  Handled := false;
+//  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Begin', ARequestInfo.URI);
 
-  if ARequestInfo.URI=('/confirmed') then
-  begin
-    Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
-
-    if ARequestInfo.Params.Values['tokken'] <> '' then
-        Retval := ClientRegistrationRequest(ARequestInfo.Params.Values['tokken'])
-    else
-        Retval := 0;
-     
-    if Retval = 999 then
-    begin
-      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '200');
-
-      AResponseInfo.ResponseNo := 200;
-      AResponseInfo.ContentText := '–егистраци€ прошла успешна';
-      AResponseInfo.WriteContent;
-      Handled := True;
-     // AResponseInfo.ResponseText := '–егистраци€ прошла успешна'
-    end
-    Else
-    begin
-      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '400');
-      AResponseInfo.ResponseNo := 400;
-      Handled := True;
-    end;
-  end;
+//  if ARequestInfo.URI='/confirmed' then
+//  begin
+//    Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
+//
+//    if ARequestInfo.Params.Values['tokken'] <> '' then
+//        Retval := ClientRegistrationRequest(ARequestInfo.Params.Values['tokken'])
+//    else
+//        Retval := 0;
+//
+//    if Retval = 999 then
+//    begin
+//      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '200');
+//
+//      AResponseInfo.ResponseNo := 200;
+//      AResponseInfo.ContentText := '–егистраци€ прошла успешно';
+//      AResponseInfo.WriteContent;
+//      Handled := True;
+//     // AResponseInfo.ResponseText := '–егистраци€ прошла успешно'
+//    end
+//    Else
+//    begin
+//      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '400');
+//      AResponseInfo.ResponseNo := 400;
+//      Handled := True;
+//    end;
+//  end;
 end;
 
 function TUniServerModule.ClientRegistrationRequest(AHash: string): Integer;

@@ -135,7 +135,6 @@ object OrdersT: TOrdersT
         Scale = bbsSmall
         LayoutConfig.Cls = 'btn-order-action-execute'
         TabOrder = 3
-        ExplicitTop = 6
       end
     end
   end
@@ -172,7 +171,29 @@ object OrdersT: TOrdersT
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
           'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=false;'#13#10' ' +
-          '   }'#13#10'}')
+          '   }'#13#10'}'
+        'hide=function hide(sender, eOpts)'#13#10'{'#13#10#13#10'}'
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnhide'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  //consol' +
+          'e.log(column); '#13#10'  //console.log(eOpts);'#13#10'  //console.log(ct);'#13#10 +
+          '  ajaxRequest(this, '#39'_columnshow'#39', ["column=" + column.dataIndex' +
+          ', "hidden=" + column.hidden]);'#13#10'}'
+        
+          'columnmove=function columnmove(ct, column, fromIdx, toIdx, eOpts' +
+          ')'#13#10'{'#13#10'  //ajaxRequest(this, '#39'_columnmove'#39', ["column=" + fromIdx,' +
+          ' "columnTo=" + toIdx]);'#13#10'}'
+        
+          'columnresize=function columnresize(ct, column, width, eOpts)'#13#10'{'#13 +
+          #10'  //  ajaxRequest(this, '#39'_columnresize'#39', ["column=" + column.da' +
+          'taIndex, "hidden=" + column.hidden]);'#13#10'}'
+        
+          'columnschanged=function columnschanged(ct, eOpts)'#13#10'{'#13#10' // ajaxRe' +
+          'quest(this, '#39'_columnschanged'#39', ['#39'colIndx='#39' + column.dataIndex])'#13 +
+          #10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -228,12 +249,15 @@ object OrdersT: TOrdersT
       DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
+      OnAjaxEvent = GridAjaxEvent
       OnSelectionChange = GridSelectionChange
       OnCellClick = GridCellClick
       OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnDblClick = GridDblClick
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
+      OnColumnResize = GridColumnResize
       Columns = <
         item
           ShowToolTip = True
@@ -1032,7 +1056,7 @@ object OrdersT: TOrdersT
           AlignWithMargins = True
           Left = 5
           Top = 3
-          Width = 91
+          Width = 92
           Height = 13
           Hint = ''
           ShowHint = True
@@ -1736,9 +1760,11 @@ object OrdersT: TOrdersT
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080
       object N9: TUniMenuItem
         Action = actGridSettingSave
+        Visible = False
       end
       object N8: TUniMenuItem
         Action = actGridSettingLoad
+        Visible = False
       end
       object N11: TUniMenuItem
         Action = actGridSettingDefault

@@ -44,7 +44,6 @@ type
 
     /// <summary> dbUserAuthorization - авторизация пользователя.
     ///  IsSaveSession:Boolean - подключение используя сохраненные данные  </summary>
-
     function dbUserAuthorization(AU: string; AP: string; IsSaveSession: Boolean = False): Boolean;
 
     function dbConnect(): Boolean;
@@ -112,7 +111,7 @@ end;
 function TUniMainModule.dbUserAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Begin');
-//  if not UniMainModule.FDConnection.Connected  then
+
   Query.SQL.Text := (' Select ClientID, IsActive from tClients (nolock) where Email=:Email and Password = master.dbo.fn_varbintohexstr(HashBytes(''SHA2_512'', :Password)) ');
   Query.ParamByName('Email').AsWideString    := AU;
   Query.ParamByName('Password').AsWideString := AP;
@@ -146,8 +145,6 @@ begin
     begin
       if not IsSaveSession then
         raise Exception.Create('Доступ отключен!');
-     // (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname2D02D0BF', '', Date - 1); // Expires 7 days from now
-     // (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd2D02D0BF', '', Date - 1);
       Result := false;
     end;
   end
@@ -175,7 +172,7 @@ begin
 
     if not Handled then
     begin
-      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname2D02D0BF', '', Date - 1); // Expires 7 days from now
+      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname2D02D0BF', '', Date - 1);
       (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd2D02D0BF', '', Date - 1);
     end;
 
