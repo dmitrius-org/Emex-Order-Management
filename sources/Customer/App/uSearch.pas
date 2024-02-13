@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
-  Vcl.ActnList, uniMainMenu, uniHTMLFrame;
+  Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton;
 
 type
   TSearchF = class(TUniFrame)
@@ -35,8 +35,7 @@ type
     btnAddBasket: TUniButtonWidget;
     QueryID: TFMTBCDField;
     QueryRating: TStringField;
-    procedure edtSearchTriggerEvent(Sender: TUniFormControl;
-      AButtonId: Integer);
+    btnSearch: TUniButton;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
@@ -50,6 +49,7 @@ type
     procedure UniHTMLFrameAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
     procedure UniFrameReady(Sender: TObject);
+    procedure btnSearchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -81,6 +81,14 @@ begin
   PartToBasket();
 end;
 
+procedure TSearchF.btnSearchClick(Sender: TObject);
+begin
+  if edtSearch.Text = '' then
+    Exit;
+
+    PartSearch;
+end;
+
 procedure TSearchF.CustomerPriceCalc;
 begin
     RetVal.Clear;
@@ -99,18 +107,6 @@ begin
     begin
       PartSearch;
     end;
-  end;
-end;
-
-procedure TSearchF.edtSearchTriggerEvent(Sender: TUniFormControl;
-  AButtonId: Integer);
-begin
-  if edtSearch.Text = '' then
-    Exit;
-
-  if AButtonId = 0 then
-  begin
-    PartSearch;
   end;
 end;
 

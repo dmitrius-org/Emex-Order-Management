@@ -38,6 +38,7 @@ object MainForm: TMainForm
       Hint = ''
       Align = alClient
       TabOrder = 1
+      BorderStyle = ubsNone
       Caption = ''
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
@@ -45,10 +46,10 @@ object MainForm: TMainForm
       ExplicitWidth = 706
       ExplicitHeight = 527
       object UniPanelCentral: TUniPanel
-        Left = 1
-        Top = 56
-        Width = 708
-        Height = 471
+        Left = 0
+        Top = 55
+        Width = 710
+        Height = 473
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -60,14 +61,16 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
+        ExplicitLeft = 1
+        ExplicitTop = 56
         ExplicitWidth = 704
         ExplicitHeight = 470
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 702
-          Height = 465
+          Width = 704
+          Height = 467
           Hint = ''
           ActivePage = tbS
           Align = alClient
@@ -98,9 +101,9 @@ object MainForm: TMainForm
         end
       end
       object UniPanelTop: TUniPanel
-        Left = 1
-        Top = 1
-        Width = 708
+        Left = 0
+        Top = 0
+        Width = 710
         Height = 55
         Hint = ''
         Align = alTop
@@ -108,9 +111,11 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
+        ExplicitLeft = 1
+        ExplicitTop = 1
         ExplicitWidth = 704
         object UniPanel: TUniPanel
-          Left = 393
+          Left = 395
           Top = 0
           Width = 315
           Height = 55
@@ -124,11 +129,11 @@ object MainForm: TMainForm
             AlignWithMargins = True
             Left = 114
             Top = 5
-            Width = 196
+            Width = 201
             Height = 45
             Hint = ''
             Margins.Top = 5
-            Margins.Right = 5
+            Margins.Right = 0
             Margins.Bottom = 5
             DropdownMenu = pmProfile
             Caption = 'btnProfile'
@@ -138,6 +143,7 @@ object MainForm: TMainForm
             LayoutConfig.Cls = 'btn-profile'
             LayoutConfig.DockWhenAligned = False
             Images = ImageList
+            ExplicitLeft = 110
           end
         end
       end
