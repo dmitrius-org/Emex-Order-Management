@@ -8,7 +8,7 @@ config = configparser.ConfigParser()  # создаём объект парсер
 config.read("Connection.ini")  # читаем конфиг
 
 logger.add(config["Log"]["LogFile"] + 'user_register_charck.log', level='DEBUG', rotation="1 MB")
-logger.info('Начало экспорта отказов')
+logger.info('Начало проверки регистрации пользователя')
 
 form = cgi.FieldStorage()
 # environ="post"
@@ -46,7 +46,7 @@ if tokken:
         file_row = file_rows[0]
         
         if file_row==999:
-            logger.error('Успешная авторизация')
+            logger.info('Успешная авторизация')
             
             f = open ('.\success\success.html' , 'r')
             result = f.read()
@@ -60,7 +60,9 @@ if tokken:
             print(result)
 
             exit()  
-
+            
+logger.info(file_row)
+logger.error('Ошибка авторизации')
 print('Content-Type: text/plain')
 print('')
 print('ERR')

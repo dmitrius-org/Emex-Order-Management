@@ -904,10 +904,10 @@ begin
   if (EventName = '_columnhide')
   then
   begin
-    Sql.Exec('Update tGridOptions  set Visible = 0 from tGridOptions (updlock) ' +
-             ' Where UserID   = dbo.GetUserID() '+
-             '   and Grid     =:Grid   ' +
-             '   and [Column] =:Column ',
+    Sql.Exec('exec GridOptionsVisible ' +
+             '       @Grid   = :Grid'+
+             '      ,@Column = :Column '+
+             '      ,@Visible= 0 ',
             ['Grid', 'Column'],
             [self.ClassName +'.' + Grid.Name,
              Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
@@ -915,10 +915,10 @@ begin
   else if (EventName = '_columnshow')
   then
   begin
-    Sql.Exec('Update tGridOptions  set Visible = 1 from tGridOptions (updlock) ' +
-             ' Where UserID   = dbo.GetUserID() '+
-             '   and Grid     =:Grid'+
-             '   and [Column] =:Column ',
+    Sql.Exec('exec GridOptionsVisible ' +
+             '       @Grid   = :Grid'+
+             '      ,@Column = :Column '+
+             '      ,@Visible= 1 ',
             ['Grid', 'Column'],
             [self.ClassName +'.' + Grid.Name,
              Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
