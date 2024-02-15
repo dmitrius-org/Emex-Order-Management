@@ -23,7 +23,6 @@ type
     FDGUIxErrorDialog: TFDGUIxErrorDialog;
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
-    procedure UniGUIServerModuleServerStartup(Sender: TObject);
     procedure UniGUIServerModuleBeforeInit(Sender: TObject);
   private
     { Private declarations }
@@ -56,17 +55,13 @@ end;
 
 function TUniServerModule.dbConnect(): Boolean;
 begin
-//  Logger.AddLog('TUniServerModule.dbConnect', 'begin');
-//  try
-//  finally
-//    Logger.AddLog('TUniServerModule.dbConnect', 'end');
-//  end;
 end;
 
 procedure TUniServerModule.FirstInit;
 begin
   InitServerModule(Self);
 end;
+
 
 procedure TUniServerModule.UniGUIServerModuleBeforeInit(Sender: TObject);
 begin
@@ -93,6 +88,13 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
+  {$IFDEF DEBUG}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
+              '. ад: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
+  {$ELSE}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
+  {$ENDIF}
+
   dbConnect;
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
@@ -101,13 +103,6 @@ end;
 procedure TUniServerModule.UniGUIServerModuleDestroy(Sender: TObject);
 begin
   FDManager.Close;
-end;
-
-procedure TUniServerModule.UniGUIServerModuleServerStartup(Sender: TObject);
-begin
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'Begin');
-
-  Logger.AddLog('TTUniServerModule.UniGUIServerModuleServerStartup', 'End');
 end;
 
 procedure ExploreWeb(page:PChar);

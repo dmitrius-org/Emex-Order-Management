@@ -11,9 +11,9 @@ uses
   FireDAC.Phys.MSSQLDef, FireDAC.Phys.ODBCBase, FireDAC.Phys.MSSQL,
   FireDAC.Comp.Client, FireDAC.VCLUI.Wait, FireDAC.Comp.UI,
   FireDAC.ConsoleUI.Wait, FireDAC.VCLUI.Error, FireDAC.Stan.Pool,
-  FireDAC.Stan.Async, Data.DB, uniThreadTimer
+  FireDAC.Stan.Async, Data.DB, uniThreadTimer, Variants,
 
-  ,Windows, Messages, Winapi.ShellAPI
+  Windows, Messages, Winapi.ShellAPI, uTaskUtils
   ;
 
 type
@@ -24,19 +24,23 @@ type
     FDTaskConnection: TFDConnection;
     FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink;
     UniThreadTimer: TUniThreadTimer;
+    DBTaskAlert: TFDEventAlerter;
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
-    procedure UniGUIServerModuleServerStartup(Sender: TObject);
     procedure UniThreadTimerTimer(Sender: TObject);
-    procedure UniGUIServerModuleBeforeInit(Sender: TObject);
+    procedure UniGUIServerModuleServerStartup(Sender: TObject);
+    procedure DBTaskAlertAlert(ASender: TFDCustomEventAlerter;
+      const AEventName: string; const AArgument: Variant);
   private
     { Private declarations }
+
     function dbConnect(): Boolean;
   protected
     procedure FirstInit; override;
-    procedure TaskEnabled();
+
   public
-    { Public declarations }
+    MTask: TMTask;
+    procedure TaskEnabled();
   end;
 
   function UniServerModule: TUniServerModule;
@@ -51,10 +55,8 @@ implementation
 
 {$R *.dfm}
 
-uses UniGUIVars, uTaskUtils;
+uses UniGUIVars;
 
-var
-  MTask: TMTask;
 
 function UniServerModule: TUniServerModule;
 begin
@@ -80,8 +82,6 @@ begin
       Logger.AddLog('TUniServerModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
       FDTaskConnection.Connected := True;
 
-      //Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Вход в систему');
-
     except
       on E: EFDDBEngineException do
       case E.Kind of
@@ -91,7 +91,7 @@ begin
           Logger.AddLog('TUniMainModule ekUserPwdExpired', 'Ошибка подключения к БД. Срок действия пароля пользователя истек! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
         ekServerGone:
           Logger.AddLog('TUniMainModule ekServerGone', 'Ошибка соединения с базой данных. СУБД недоступна по какой-то причине! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
-      else // other issues
+      else
         Logger.AddLog('TUniMainModule Other issues', 'Ошибка соединения с базой данных. Неизвестная ошибка! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
       end;
       on E : Exception do
@@ -103,29 +103,45 @@ begin
   end;
 end;
 
+procedure TUniServerModule.DBTaskAlertAlert(ASender: TFDCustomEventAlerter;
+  const AEventName: string; const AArgument: Variant);
+var
+	i: Integer;
+	sArgs: String;
+begin
+	if VarIsArray(AArgument) then
+  begin
+		sArgs := '';
+		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
+    begin
+			if sArgs <> '' then
+				sArgs := sArgs + ', ';
+			sArgs := sArgs + VarToStr(AArgument[i]);
+		end;
+	end
+	else if VarIsNull(AArgument) then sArgs := '<NULL>'
+	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
+	else sArgs := VarToStr(AArgument);
+
+	logger.AddLog('Event - [' + AEventName + '] - [' + sArgs + ']');
+//  logger.Info(AEventName + ' ' + '');
+end;
+
 procedure TUniServerModule.FirstInit;
 begin
   InitServerModule(Self);
 end;
 
-procedure TUniServerModule.TaskEnabled;
+procedure TUniServerModule.TaskEnabled();
 begin
-  UniThreadTimer.Enabled := MTask.IsActive;
-end;
+ // UniServerModule.MTask.IsActive := not MTask.IsActive;
 
-procedure TUniServerModule.UniGUIServerModuleBeforeInit(Sender: TObject);
-begin
-//{$ifndef UNIGUI_VCL}
-//  Self.ExtRoot:='ext-7.2.0';
-//  Self.UniRoot:='uni-1.90.0.1530';
-//{$endif}
+  UniThreadTimer.Enabled := MTask.IsActive;
 end;
 
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
-
-  Title := 'Scheduler';
 
   {$IFDEF UNIGUI_VCL}
   ExploreWeb('http://127.0.0.1:8078');
@@ -139,37 +155,51 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
+  {$IFDEF DEBUG}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
+              '. БД: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
+  {$ELSE}
+      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
+  {$ENDIF}
+
   dbConnect;
 
   MTask:= TMTask.Create(FDTaskConnection);
 
-  TaskEnabled();
+//  DBTaskAlert.Names.Clear;
+//	DBTaskAlert.Names.Add('QUEUE=TaskManager');
+//	DBTaskAlert.Names.Add('SERVICE=TaskManager');
+//	DBTaskAlert.Names.Add('CHANGE2=TaskManagerIsActive;select IsActive from dbo.tTaskActive (nolock)');
+//	DBTaskAlert.Options.Synchronize := True;
+//	DBTaskAlert.Register;
+
+  if MTask.IsActive then
+    TaskEnabled();
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;
 
 procedure TUniServerModule.UniGUIServerModuleDestroy(Sender: TObject);
 begin
-  FDManager.Close;
-
   FreeAndNil(MTask);
+  FDManager.Close;
 end;
 
 procedure TUniServerModule.UniGUIServerModuleServerStartup(Sender: TObject);
 begin
-//  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'Begin');
-//
-//  Logger.AddLog('TTUniServerModule.UniGUIServerModuleServerStartup', 'End');
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'Begin');
+
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'End');
 end;
 
 procedure TUniServerModule.UniThreadTimerTimer(Sender: TObject);
 begin
-//  try
+  try
     MTask.Execute;
-//  except
-//    on E: Exception do
-//      Logger.AddLog('TUniServerModule.UniThreadTimerTimer', E.Message);
-//  end;
+  except
+    on E: Exception do
+      Logger.AddLog('TUniServerModule.UniThreadTimerTimer Exception', E.Message);
+  end;
 end;
 
 procedure ExploreWeb(page:PChar);

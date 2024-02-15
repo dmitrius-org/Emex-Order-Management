@@ -1,17 +1,17 @@
 object Task_T: TTask_T
   Left = 0
   Top = 0
-  Width = 1067
+  Width = 899
   Height = 441
   OnCreate = UniFrameCreate
-  OnDestroy = UniFrameDestroy
+  OnReady = UniFrameReady
   LayoutConfig.Width = '100'
   TabOrder = 0
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 4
     Top = 4
-    Width = 1060
+    Width = 892
     Height = 67
     Hint = ''
     Margins.Left = 4
@@ -37,7 +37,7 @@ object Task_T: TTask_T
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 1054
+      Width = 886
       Height = 64
       Hint = ''
       Margins.Bottom = 0
@@ -107,7 +107,7 @@ object Task_T: TTask_T
   object UniPanel2: TUniPanel
     Left = 0
     Top = 71
-    Width = 1067
+    Width = 899
     Height = 370
     Hint = ''
     ShowHint = True
@@ -126,7 +126,7 @@ object Task_T: TTask_T
     object GridUsers: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 1067
+      Width = 899
       Height = 370
       Hint = ''
       ShowHint = True
@@ -245,7 +245,7 @@ object Task_T: TTask_T
       'Select *'
       '  from vTask')
     Left = 684
-    Top = 103
+    Top = 119
     object QueryTaskID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'TaskID'
@@ -293,7 +293,7 @@ object Task_T: TTask_T
   object DataSource: TDataSource
     DataSet = Query
     Left = 686
-    Top = 173
+    Top = 181
   end
   object ImageList32: TUniImageList
     Width = 32
@@ -1939,6 +1939,7 @@ object Task_T: TTask_T
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
+    OnPopup = PopupMenuPopup
     Left = 219
     Top = 271
     object N1: TUniMenuItem
@@ -2393,7 +2394,23 @@ object Task_T: TTask_T
       'SELECT *'
       '  FROM vTask'
       ' WHERE TaskID = :OLD_TaskID')
-    Left = 847
+    Left = 751
     Top = 118
+  end
+  object DBAlert: TFDEventAlerter
+    Connection = UniMainModule.FDConnection
+    OnAlert = DBAlertAlert
+    Left = 688
+    Top = 248
+  end
+  object IntefaceRefresh: TUniTimer
+    ClientEvent.Strings = (
+      'function(sender)'
+      '{'
+      ' '
+      '}')
+    OnTimer = IntefaceRefreshTimer
+    Left = 680
+    Top = 327
   end
 end

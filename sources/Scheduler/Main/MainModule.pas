@@ -1,4 +1,4 @@
- unit MainModule;
+п»ї unit MainModule;
 
 interface
 
@@ -31,8 +31,9 @@ type
 
   public
     { Public declarations }
-    /// <summary> AUserName - логин пользователя </summary>
+    /// <summary> AUserName - Р»РѕРіРёРЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ </summary>
     AUserName: string;
+    AUserID  : integer;
     /// <summary> ASql    - </summary>
     ASql     : TSql;
     /// <summary> ARetVal - </summary>
@@ -67,8 +68,6 @@ begin
   try
     result:=False;
     try
-
-
       FDConnection.ConnectionDefName:='Connection';
       UniServerModule.Logger.AddLog('TUniMainModule FDConnection DriverID', FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID']);
       FDConnection.Params.Values['DriverID'] :=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID'];
@@ -79,8 +78,8 @@ begin
         FDConnection.Params.Add('Password='  + APass);
       end;
 
-      // параметры подключения из ini файла
-      UniServerModule.Logger.AddLog('TUniMainModule Параметры подключения', 'FDConnection');
+      // РїР°СЂР°РјРµС‚СЂС‹ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РёР· ini С„Р°Р№Р»Р°
+      UniServerModule.Logger.AddLog('TUniMainModule РџР°СЂР°РјРµС‚СЂС‹ РїРѕРґРєР»СЋС‡РµРЅРёСЏ', 'FDConnection');
       UniServerModule.Logger.AddLog('TUniMainModule FDConnection DriverID', FDConnection.Params.Values['DriverID']);
       UniServerModule.Logger.AddLog('TUniMainModule DriverID',  FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID']);
       UniServerModule.Logger.AddLog('TUniMainModule Server',    FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server']);
@@ -92,21 +91,21 @@ begin
 
       AUserName:=AUser;
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
-
-      // настройки  логирования
+      AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
+      // РЅР°СЃС‚СЂРѕР№РєРё  Р»РѕРіРёСЂРѕРІР°РЅРёСЏ
       CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
 
       Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
       if Sql.Q.RecordCount > 0 then
       begin
         logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-        logger.Info('Программа запущена');
+        logger.Info('РџСЂРѕРіСЂР°РјРјР° Р·Р°РїСѓС‰РµРЅР°');
 
         FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
         FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
 
-      Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Вход в систему');
+      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Р’С…РѕРґ РІ СЃРёСЃС‚РµРјСѓ');
 
     except
       on E: EFDDBEngineException do
@@ -115,22 +114,21 @@ begin
         begin
           if not ABefore then
           begin
-           raise Exception.Create('Имя пользователя или пароль неверны!');
-//          UniSession.AddJS('alert("Имя пользователя или пароль неверны! ")')
+           raise Exception.Create('РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРЅС‹!');
           end
         end;
         ekUserPwdExpired:
         if not ABefore then
         begin
-          raise Exception.Create('Ошибка подключения к БД. Срок действия пароля пользователя истек!');
+          raise Exception.Create('РћС€РёР±РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р‘Р”. РЎСЂРѕРє РґРµР№СЃС‚РІРёСЏ РїР°СЂРѕР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёСЃС‚РµРє!');
         end;
         ekServerGone:
-          raise Exception.Create('Ошибка соединения с базой данных. СУБД недоступна по какой-то причине!');
-      else // other issues
-        raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка!');
+          raise Exception.Create('РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РЎРЈР‘Р” РЅРµРґРѕСЃС‚СѓРїРЅР° РїРѕ РєР°РєРѕР№-С‚Рѕ РїСЂРёС‡РёРЅРµ!');
+      else
+        raise Exception.Create('РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°!');
       end;
       on E : Exception do
-        raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
+        raise Exception.Create(E.ClassName+' РїРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+#13#10+#13#10+E.Message);
     end;
 
   finally
@@ -164,8 +162,8 @@ end;
 
 procedure TUniMainModule.UniGUIMainModuleBrowserClose(Sender: TObject);
 begin
- // Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acExit, 'Выход из системы');
- // logger.Info('Программа остановлена');
+ // Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acExit, 'Р’С‹С…РѕРґ РёР· СЃРёСЃС‚РµРјС‹');
+ // logger.Info('РџСЂРѕРіСЂР°РјРјР° РѕСЃС‚Р°РЅРѕРІР»РµРЅР°');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
@@ -180,10 +178,10 @@ procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 var A:TAudit;
 begin
   A := TAudit.Create(FDConnection);
-  A.Add(TObjectType.otAuthorization, 0, TFormAction.acExit, 'Выход из системы');
+  A.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Р’С‹С…РѕРґ РёР· СЃРёСЃС‚РµРјС‹');
   A.Destroy;
 
-  logger.Info('Программа остановлена');
+  logger.Info('РџСЂРѕРіСЂР°РјРјР° РѕСЃС‚Р°РЅРѕРІР»РµРЅР°');
 
   FDConnection.Close;
 

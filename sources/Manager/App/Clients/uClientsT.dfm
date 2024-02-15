@@ -95,9 +95,6 @@ object ClientsT: TClientsT
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
     LayoutConfig.DockWhenAligned = False
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1065
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
@@ -119,10 +116,6 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1065
-      ExplicitHeight = 67
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -141,8 +134,6 @@ object ClientsT: TClientsT
         Action = actEdit
         ImageIndex = 3
         TabOrder = 2
-        ExplicitLeft = 112
-        ExplicitTop = 0
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
@@ -153,8 +144,6 @@ object ClientsT: TClientsT
         Action = actView
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 222
-        ExplicitTop = 0
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
@@ -165,8 +154,6 @@ object ClientsT: TClientsT
         Action = actDelete
         ImageIndex = 0
         TabOrder = 4
-        ExplicitLeft = 332
-        ExplicitTop = 0
       end
       object UniToolButton5: TUniToolButton
         AlignWithMargins = True
@@ -177,8 +164,6 @@ object ClientsT: TClientsT
         Action = actRefreshAll
         ImageIndex = 6
         TabOrder = 5
-        ExplicitLeft = 442
-        ExplicitTop = 0
       end
       object UniToolButton8: TUniToolButton
         AlignWithMargins = True
@@ -192,8 +177,6 @@ object ClientsT: TClientsT
         Style = tbsSeparator
         Caption = 'UniToolButton8'
         TabOrder = 8
-        ExplicitLeft = 560
-        ExplicitTop = 0
       end
       object UniToolButton6: TUniToolButton
         AlignWithMargins = True
@@ -204,8 +187,6 @@ object ClientsT: TClientsT
         Action = actBalance
         ImageIndex = 4
         TabOrder = 6
-        ExplicitLeft = 552
-        ExplicitTop = 0
       end
       object UniToolButton7: TUniToolButton
         AlignWithMargins = True
@@ -216,8 +197,6 @@ object ClientsT: TClientsT
         Action = actBalanceAdd
         ImageIndex = 5
         TabOrder = 7
-        ExplicitLeft = 662
-        ExplicitTop = 0
       end
     end
   end
@@ -239,8 +218,6 @@ object ClientsT: TClientsT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitTop = 67
-    ExplicitHeight = 507
     object Grid: TUniDBGrid
       Left = 0
       Top = 0

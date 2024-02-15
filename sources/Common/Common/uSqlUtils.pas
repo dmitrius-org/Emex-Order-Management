@@ -1,4 +1,4 @@
-unit uSqlUtils;
+п»їunit uSqlUtils;
 
 interface
 
@@ -10,7 +10,7 @@ uses System.SysUtils, System.UITypes, Variants,  Data.DB,//System.Rtti,
 
 Type
   /// <summary>
-  /// Класс для работы с SQL запросами.
+  /// РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ SQL Р·Р°РїСЂРѕСЃР°РјРё.
   /// </summary>
   TSql = class
   private
@@ -32,21 +32,21 @@ Type
     function Q():TFDQuery;
 
     /// <summary>
-    /// Возвращает результат запроса переданного в параметре ASqlText
-    /// в компонент AQuery. Запрос выполняется как "Query.Open".
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ Р·Р°РїСЂРѕСЃР° РїРµСЂРµРґР°РЅРЅРѕРіРѕ РІ РїР°СЂР°РјРµС‚СЂРµ ASqlText
+    /// РІ РєРѕРјРїРѕРЅРµРЅС‚ AQuery. Р—Р°РїСЂРѕСЃ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РєР°Рє "Query.Open".
     /// </summary>
     procedure Open(AQuery: TFDQuery; AParams: array of string; AArgs: array of variant); overload;
 
     /// <summary>
-    /// Возвращает результат запроса переданного в параметре ASqlText
-    /// в компонент TSql.Q.
+    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ Р·Р°РїСЂРѕСЃР° РїРµСЂРµРґР°РЅРЅРѕРіРѕ РІ РїР°СЂР°РјРµС‚СЂРµ ASqlText
+    /// РІ РєРѕРјРїРѕРЅРµРЅС‚ TSql.Q.
     /// </summary>
     procedure Open(ASql: String; AParams: array of string; AArgs: array of variant);     overload;
 
     procedure Exec(ASql: String; AParams: array of string; AArgs: array of variant);
 
     /// <summary>
-    /// GetSetting - получение значния настройки
+    /// GetSetting - РїРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РЅРёСЏ РЅР°СЃС‚СЂРѕР№РєРё
     /// </summary>
     function GetSetting(ASetting: String): Variant; overload;
     function GetSetting(ASetting: String; ADefValue: Double): Double; overload;

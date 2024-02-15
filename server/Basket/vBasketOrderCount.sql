@@ -15,6 +15,6 @@ select
  inner join tBasket b (nolock)
          on b.BasketID = m.ID
  where m.spid = @@spid   
-   and m.Type = 6--Корзина
+   and m.Type = 6--РљРѕСЂР·РёРЅР°
 go
 grant all on vBasketOrderCount to public

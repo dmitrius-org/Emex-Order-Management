@@ -6,6 +6,7 @@ object SearchF: TSearchF
   Margins.Left = 100
   Margins.Right = 100
   OnCreate = UniFrameCreate
+  OnDestroy = UniFrameDestroy
   OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
@@ -139,6 +140,7 @@ object SearchF: TSearchF
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
       LoadMask.Color = clInactiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093
+      EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-search'
       BorderStyle = ubsNone
       TrackOver = False
@@ -149,6 +151,10 @@ object SearchF: TSearchF
       Color = clBtnFace
       OnKeyDown = SearchGridKeyDown
       OnAjaxEvent = SearchGridAjaxEvent
+      OnCellClick = SearchGridCellClick
+      OnColumnSort = SearchGridColumnSort
+      OnDblClick = SearchGridDblClick
+      OnCellContextClick = SearchGridCellContextClick
       Columns = <
         item
           FieldName = 'MakeName'
@@ -185,10 +191,23 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
+          FieldName = 'WeightGr'
+          Title.Alignment = taCenter
+          Title.Caption = #1042#1077#1089
+          Width = 64
+        end
+        item
+          FieldName = 'VolumeAdd'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1073#1098#1077#1084
+          Width = 64
+        end
+        item
           FieldName = 'Delivery'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Width = 109
+          Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -199,6 +218,7 @@ object SearchF: TSearchF
           Width = 150
           Alignment = taCenter
           ReadOnly = True
+          Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -207,6 +227,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072
           Width = 115
+          Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -215,6 +236,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1083#1080#1095#1080#1077
           Width = 76
+          Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -340,6 +362,14 @@ object SearchF: TSearchF
     object QueryRating: TStringField
       FieldName = 'Rating'
       Size = 1048
+    end
+    object QueryWeightGr: TCurrencyField
+      FieldName = 'WeightGr'
+      DisplayFormat = '###,##0.00'
+    end
+    object QueryVolumeAdd: TCurrencyField
+      FieldName = 'VolumeAdd'
+      DisplayFormat = '###,##0.00'
     end
   end
   object qStatus: TFDQuery

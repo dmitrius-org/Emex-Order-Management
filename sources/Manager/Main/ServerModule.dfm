@@ -31,7 +31,6 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.ErrorMessage = #1054#1096#1080#1073#1082#1072' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
   ConnectionFailureRecovery.RetryMessage = #1055#1086#1074#1090#1086#1088#1085#1072#1103' '#1087#1086#1087#1099#1090#1082#1072'...'
   OnBeforeInit = UniGUIServerModuleBeforeInit
-  OnServerStartup = UniGUIServerModuleServerStartup
   Height = 261
   Width = 906
   object FDManager: TFDManager

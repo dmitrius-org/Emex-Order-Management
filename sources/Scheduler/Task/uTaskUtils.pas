@@ -1,4 +1,4 @@
-unit uTaskUtils;
+п»їunit uTaskUtils;
 
 interface
 
@@ -23,8 +23,8 @@ Type
     procedure SetIsActive(const Value: Boolean);
 
     /// <summary>
-    /// AuditInsert - записывает сообщение в поле message таблицы tTask
-    /// AMessage     - сообщение
+    /// AuditInsert - Р·Р°РїРёСЃС‹РІР°РµС‚ СЃРѕРѕР±С‰РµРЅРёРµ РІ РїРѕР»Рµ message С‚Р°Р±Р»РёС†С‹ tTask
+    /// AMessage     - СЃРѕРѕР±С‰РµРЅРёРµ
     /// </summary>
     procedure WriteTaskMessage(ATaskID:Integer; AMessage: String);
 
@@ -33,11 +33,11 @@ Type
     function ExecDosOutput(CommandLine: String): String;
 
     /// <summary>
-    /// AuditInsert - добавление аудита
-    /// AObjectID     - ИД объекта по которому ведется аудит
-    /// AObjectTypeID - тип объекта
-    /// AActionID     - ИД выполняемое дейстие из tAction
-    /// AComment      - Комментарий
+    /// AuditInsert - РґРѕР±Р°РІР»РµРЅРёРµ Р°СѓРґРёС‚Р°
+    /// AObjectID     - РР” РѕР±СЉРµРєС‚Р° РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РІРµРґРµС‚СЃСЏ Р°СѓРґРёС‚
+    /// AObjectTypeID - С‚РёРї РѕР±СЉРµРєС‚Р°
+    /// AActionID     - РР” РІС‹РїРѕР»РЅСЏРµРјРѕРµ РґРµР№СЃС‚РёРµ РёР· tAction
+    /// AComment      - РљРѕРјРјРµРЅС‚Р°СЂРёР№
     /// </summary>
     procedure AuditInsert(
                    AObjectTypeID:TObjectType; AObjectID: Integer;
@@ -53,7 +53,7 @@ Type
     property IsActive: Boolean read GetIsActive write SetIsActive;
 
     /// <summary>
-    /// Execute - Выполнение задачи
+    /// Execute - Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РґР°С‡Рё
     /// </summary>
     procedure Execute();
 
@@ -71,7 +71,7 @@ uses
 
 function TMTask.GetIsActive: Boolean;
 begin
-  Result:= FConnection.ExecSQLScalar(' Select IsActive from tTaskProperties (nolock) where Brief = :B ', ['Task']);
+  Result:= FConnection.ExecSQLScalar(' Select IsActive from tTaskActive (nolock) ', []);
 end;
 
 procedure TMTask.SetIsActive(const Value: Boolean);
@@ -81,13 +81,16 @@ begin
     qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
     qry.Close;
-    qry.SQL.Text := ' Update tTaskProperties      '+
-                    '    set IsActive = :IsActive '+
-                    '  where Brief    = :Brief    ';
+    qry.SQL.Text := ' Update tTaskActive      '+
+                    '    set IsActive = :IsActive ';
     qry.ParamByName('IsActive').Value := Value;
-    qry.ParamByName('Brief').Value := 'Task';
     qry.ExecSQL;
     qry.Close;
+
+    if Value then
+      AuditInsert(TObjectType.otTask, 0, acOn, '')
+    else
+      AuditInsert(TObjectType.otTask, 0, acOff, '')
   finally
     FreeAndNil(qry);
   end;
@@ -107,6 +110,7 @@ begin
     qry.ParamByName('Message').Value := AMessage;
     qry.ExecSQL;
     qry.Close;
+
   finally
     FreeAndNil(qry);
   end;
@@ -217,20 +221,20 @@ begin
  //   Try
         for i := 0 to qry.RecordCount-1 do
         begin
-          Logger.Info('TMTask.Execute Задача:' + qry.FieldByName('TaskBrief').AsString);
+          Logger.Info('TMTask.Execute Р—Р°РґР°С‡Р°:' + qry.FieldByName('TaskBrief').AsString);
           TaskID:= qry.FieldByName('TaskID').AsInteger;
           M     := qry.FieldByName('Method').AsString;
           Msg   := '';
-          AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение задачи:' + qry.FieldByName('TaskBrief').AsString);
+          AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РґР°С‡Рё:' + qry.FieldByName('TaskBrief').AsString);
 
           case qry.FieldByName('TaskType').AsInteger of
-            Integer(tTaskType.ttProc):  // внутренняя процедура
+            Integer(tTaskType.ttProc):  // РІРЅСѓС‚СЂРµРЅРЅСЏСЏ РїСЂРѕС†РµРґСѓСЂР°
             begin
               Logger.Info('TMTask.Execute Method: ' + M );
               try
                 Proc := TProcExec.Create(FConnection);
                 try
-                  if M='' then raise Exception.Create('Не настроена внутренняя процедура!');
+                  if M='' then raise Exception.Create('РќРµ РЅР°СЃС‚СЂРѕРµРЅР° РІРЅСѓС‚СЂРµРЅРЅСЏСЏ РїСЂРѕС†РµРґСѓСЂР°!');
 
                   Proc.Call(M);
 
@@ -250,13 +254,13 @@ begin
               end;
             end;
 
-            Integer(tTaskType.ttBat):  // bat файл
+            Integer(tTaskType.ttBat):  // bat С„Р°Р№Р»
             begin
               Logger.Info('TMTask.Execute Script: ' + M );
               try
                 try
                   if M='' then
-                    raise Exception.Create('Не указан путь к скрипту!');
+                    raise Exception.Create('РќРµ СѓРєР°Р·Р°РЅ РїСѓС‚СЊ Рє СЃРєСЂРёРїС‚Сѓ!');
 
                   //ExecFile2(M, '', rc,  ((qry.FieldByName('Flag').AsInteger and 1) = 1));
                   Msg:=ExecDosOutput(M);
@@ -287,7 +291,7 @@ begin
 //              try
 //                try
 //                  if M='' then
-//                    raise Exception.Create('Не указан текст скрипта!');
+//                    raise Exception.Create('РќРµ СѓРєР°Р·Р°РЅ С‚РµРєСЃС‚ СЃРєСЂРёРїС‚Р°!');
 //
 //                  Msg:=ExecDosOutput(M);
 //

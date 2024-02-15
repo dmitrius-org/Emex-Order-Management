@@ -139,7 +139,7 @@ begin
         FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
 
-      Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Вход в систему');
+      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
     end
     else
     begin
@@ -190,7 +190,7 @@ end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 begin
-  Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Выход из системы');
+  Audit.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
 
   logger.Info('Программа остановлена');
   FreeDefLogger;

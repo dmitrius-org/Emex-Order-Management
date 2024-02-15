@@ -1,4 +1,4 @@
-unit uSearch;
+п»їunit uSearch;
 
 interface
 
@@ -36,25 +36,29 @@ type
     QueryID: TFMTBCDField;
     QueryRating: TStringField;
     btnSearch: TUniButton;
-    procedure SearchGridKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    QueryWeightGr: TCurrencyField;
+    QueryVolumeAdd: TCurrencyField;
+    procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
-    procedure edtSearchKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure QueryDeliveryTypeGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure SearchGridAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
-    procedure UniHTMLFrameAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
+    procedure edtSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure QueryDeliveryTypeGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure SearchGridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure UniHTMLFrameAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
     procedure UniFrameReady(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
+    procedure SearchGridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+    procedure SearchGridCellContextClick(Column: TUniDBGridColumn; X,
+      Y: Integer);
+    procedure SearchGridDblClick(Sender: TObject);
+    procedure SearchGridCellClick(Column: TUniDBGridColumn);
+    procedure UniFrameDestroy(Sender: TObject);
 
   private
     { Private declarations }
 
     FDestinationLogo: string;
+    ACurrColumn: TUniDBGridColumn;  //С‚РµРєСѓС‰Р°СЏ РєРѕР»РѕРЅРєР°
 
     procedure PartSearch();
 
@@ -62,7 +66,7 @@ type
 
     procedure PartToBasket();
     /// <summary>
-    /// CustomerPriceCalc - расчет цены
+    /// CustomerPriceCalc - СЂР°СЃС‡РµС‚ С†РµРЅС‹
     /// </summary>
     procedure CustomerPriceCalc();
   public
@@ -72,7 +76,7 @@ type
 implementation
 
 uses
-  uEmexUtils, MainModule, uMainVar, uLogger, uToast;
+  uEmexUtils, MainModule, uMainVar, uLogger, uToast, uGridUtils;
 
 {$R *.dfm}
 
@@ -100,8 +104,7 @@ procedure TSearchF.edtSearchKeyDown(Sender: TObject; var Key: Word;
 begin
   if (Key = 13) then
   begin
-    if edtSearch.Text = '' then
-      Exit;
+    if edtSearch.Text = '' then Exit;
 
     if (Sender is TUniDBGrid) then
     begin
@@ -150,7 +153,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    ToastOK('Деталь успешно добавлена в корзину!', UniSession);
+    ToastOK('Р”РµС‚Р°Р»СЊ СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅР° РІ РєРѕСЂР·РёРЅСѓ!', UniSession);
   end
   else
   begin
@@ -196,6 +199,37 @@ begin
   end;
 end;
 
+procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
+begin
+  ACurrColumn := Column;
+end;
+
+procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
+  Y: Integer);
+begin
+  ACurrColumn := Column;
+end;
+
+procedure TSearchF.SearchGridColumnSort(Column: TUniDBGridColumn;
+  Direction: Boolean);
+begin
+  if Direction then
+    Query.IndexName := Column.FieldName+'_index_asc'
+  else
+    Query.IndexName := Column.FieldName+'_index_des';
+end;
+
+procedure TSearchF.SearchGridDblClick(Sender: TObject);
+begin
+  if ( (ACurrColumn.FieldName = 'MakeName') or
+       (ACurrColumn.FieldName = 'DetailNum') or
+       (ACurrColumn.FieldName = 'PartNameRus') )
+  then
+  begin
+    UniSession.BrowserWindow(Format('https://www.google.com/search?tbm=isch&q=%s+%s', [QueryMakeName.Value, QueryDetailNum.Value]), 0, 0, '_blank');
+  end;
+end;
+
 procedure TSearchF.SearchGridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -212,16 +246,29 @@ procedure TSearchF.UniFrameCreate(Sender: TObject);
 var
   js: string;
 begin
-  SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+  {$IFDEF Realese}
+    SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+  {$ENDIF}
 
   js := ' setDestLogo = function(AVal) { ' + ' ajaxRequest(' + SearchGrid.JSName
     + ', "setDestLogo", [ "P1=" + AVal ]);' + ' } ;';
   UniSession.JSCode(js);
+
+  GridExt.SortColumnCreate(SearchGrid);
+end;
+
+procedure TSearchF.UniFrameDestroy(Sender: TObject);
+begin
+  {$IFDEF Realese}
+    SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+  {$ENDIF}
 end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-  Sql.exec('update pFindByNumber set spid = @@spid', [], []);
+  {$IFDEF Debug}
+    Sql.exec('update pFindByNumber set spid = @@spid', [], []);
+  {$ENDIF}
 
   FDestinationLogo := '0001';
 

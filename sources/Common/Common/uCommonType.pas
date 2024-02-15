@@ -16,13 +16,13 @@ Type
   TFormAction = (
    acNone          = 0
    /// <summary> acInsert - добавление </summary>
-  ,acInsert        = 1   // поднимаем форму для добавления данных
+  ,acInsert        = 1
   /// <summary> acUpdate - изменение </summary>
-  ,acUpdate        = 2   // поднимаем форму для изменения  данных
+  ,acUpdate        = 2
   /// <summary> acDelete - Удаление </summary>
-  ,acDelete        = 3   // поднимаем форму для удаления   данных
+  ,acDelete        = 3
   /// <summary> acShow - удаление </summary>
-  ,acShow          = 4   // поднимаем форму для просмотра  данных
+  ,acShow          = 4
   /// <summary> acCancel - отмена </summary>
   ,acCancel        = 5   // отмена
   /// <summary> acLookup - выбрать </summary>
@@ -47,12 +47,14 @@ Type
   ,acRefresh       = 23
   /// <summary> acMessage - Сообщение </summary>
   ,acMessage       = 24
+  ,acOn            = 25
+  ,acOff           = 26
   );
 
    /// <summary> Типы объектов системы </summary>
   TObjectType = (
-   otAuthorization  = 1          //авторизация пользователя
-  ,otUser           = 2          //пользователи
+   //otAuthorization  = 1          //авторизация пользователя
+   otUser           = 2          //пользователи
   ,otTask           = 11         //Автоматические задания
 
   );

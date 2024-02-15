@@ -1,4 +1,4 @@
-unit uTask_T;
+п»їunit uTask_T;
 
 interface
 
@@ -10,7 +10,8 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
   Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList, uniGUIBaseClasses,
   uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid, uniDBGrid,
-  uniToolBar, uniPanel, uTaskUtils, System.ImageList, Vcl.ImgList;
+  uniToolBar, uniPanel, uTaskUtils, System.ImageList, Vcl.ImgList,
+  uniThreadTimer, uniTimer;
 
 type
   TTask_T = class(TUniFrame)
@@ -57,6 +58,8 @@ type
     N10: TUniMenuItem;
     UniToolButton5: TUniToolButton;
     QueryMessage: TWideStringField;
+    DBAlert: TFDEventAlerter;
+    IntefaceRefresh: TUniTimer;
     procedure actAddExecute(Sender: TObject);
     procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -67,14 +70,18 @@ type
     procedure UniFrameCreate(Sender: TObject);
     procedure actDateExecClearExecute(Sender: TObject);
     procedure actTaskActiveExecute(Sender: TObject);
-    procedure UniFrameDestroy(Sender: TObject);
     procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure UniFrameReady(Sender: TObject);
+    procedure DBAlertAlert(ASender: TFDCustomEventAlerter;
+      const AEventName: string; const AArgument: Variant);
+    procedure PopupMenuPopup(Sender: TObject);
+    procedure IntefaceRefreshTimer(Sender: TObject);
   private
     { Private declarations }
 
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
 
@@ -83,14 +90,14 @@ type
     procedure SetTaskEnabledStatus();
   public
     { Public declarations }
+    IsRefreshInterface: Boolean;
   end;
 
 implementation
 
 uses
-  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils;
+  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils, uLogger, ServerModule, uAuditUtils;
 
-var MTask: TMTask;
 var IsActive: Boolean;
 
 {$R *.dfm}
@@ -137,7 +144,14 @@ end;
 
 procedure TTask_T.actTaskActiveExecute(Sender: TObject);
 begin
-  MTask.IsActive := not IsActive;
+  IsActive := not IsActive;
+  Sql.Exec(' Update tTaskActive      '+
+           '    set IsActive = :IsActive ', ['IsActive'], [IsActive]);
+
+  if IsActive then
+    Audit.Add(TObjectType.otTask, 0, acOn , '')
+  else
+    Audit.Add(TObjectType.otTask, 0, acOff, '');
 
   SetTaskEnabledStatus;
 end;
@@ -153,6 +167,37 @@ procedure TTask_T.DataRefresh;
 begin
   Query.Close;
   Query.Open();
+end;
+
+procedure TTask_T.DBAlertAlert(ASender: TFDCustomEventAlerter;
+  const AEventName: string; const AArgument: Variant);
+var
+	i: Integer;
+	sArgs: String;
+begin
+  logger.Info('TTask_T.DBAlertAlert Begin');
+	if VarIsArray(AArgument) then
+  begin
+		sArgs := '';
+		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
+    begin
+			if sArgs <> '' then
+				sArgs := sArgs + ', ';
+			sArgs := sArgs + VarToStr(AArgument[i]);
+		end;
+	end
+	else if VarIsNull(AArgument) then sArgs := '<NULL>'
+	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
+	else sArgs := VarToStr(AArgument);
+	logger.Info('Event - [' + AEventName + '] - [' + sArgs + ']');
+
+
+  if AEventName = 'IsActive' then
+  begin
+    IsRefreshInterface:=True;
+  end;
+
+  logger.Info('TTask_T.DBAlertAlert End');
 end;
 
 procedure TTask_T.GridUsersCellContextClick(Column: TUniDBGridColumn; X,
@@ -173,21 +218,30 @@ begin
   end;
 end;
 
-procedure TTask_T.SetTaskEnabledStatus;
-
+procedure TTask_T.PopupMenuPopup(Sender: TObject);
 begin
-  IsActive:=MTask.IsActive;
+  SetTaskEnabledStatus;
+end;
+
+procedure TTask_T.SetTaskEnabledStatus;
+begin
+	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
+  //  IsActive:=UniServerModule.MTask.IsActive;  - РІР°СЂРёР°РЅ РЅРµ РїРѕРґС…РѕРґРёС‚, С‚.Рє. С„РѕСЂРјР° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РЅРµСЃРєРѕР»СЊРєРёС… РїСЂРѕРµРєС‚Р°С…
+  Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
+  IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
 
   if IsActive then
   begin
-    actTaskActive.Caption:= 'Выполнение задач включено';
+    actTaskActive.Caption:= 'Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РґР°С‡ РІРєР»СЋС‡РµРЅРѕ';
     actTaskActive.ImageIndex := 5;
   end
   else
   begin
-    actTaskActive.Caption:= 'Выполнение задач выключено';
+    actTaskActive.Caption:= 'Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РґР°С‡ РІС‹РєР»СЋС‡РµРЅРѕ';
     actTaskActive.ImageIndex := 4;
   end;
+
+  logger.Info('TTask_T.SetTaskEnabledStatus End');
 end;
 
 procedure TTask_T.UniFrameCreate(Sender: TObject);
@@ -197,17 +251,28 @@ begin
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
 
-  if not Assigned(MTask) then
-    MTask:= TMTask.Create(UniMainModule.FDConnection);
-
   SetTaskEnabledStatus;
 
   DataRefresh;
 end;
 
-procedure TTask_T.UniFrameDestroy(Sender: TObject);
+procedure TTask_T.UniFrameReady(Sender: TObject);
 begin
-  FreeAndNil(MTask);
+  DBAlert.Names.Clear;
+  DBAlert.Names.Add('QUEUE=TaskManager');
+ 	DBAlert.Names.Add('SERVICE=TaskManager');
+  DBAlert.Names.Add('CHANGE1=IsActive;select IsActive from dbo.tTaskActive');
+	DBAlert.Options.Synchronize := True;
+	DBAlert.Register;
+end;
+
+procedure TTask_T.IntefaceRefreshTimer(Sender: TObject);
+begin
+  if IsRefreshInterface then
+  begin
+    IsRefreshInterface := false;
+    SetTaskEnabledStatus;
+  end;
 end;
 
 procedure TTask_T.UserFCallBack(Sender: TComponent; AResult: Integer);

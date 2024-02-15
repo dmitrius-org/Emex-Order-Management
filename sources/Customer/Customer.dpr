@@ -47,11 +47,11 @@ uses
   uOrderF in 'App\Orders\uOrderF.pas' {OrderF: TUniForm},
   uEmail.gmail in '..\Common\Common\uEmail.gmail.pas',
   uFileU in '..\Common\Common\uFileU.pas',
-  uGridUtils in '..\Common\Common\uGridUtils.pas',
   uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
   uEmexUtils in 'App\uEmexUtils.pas',
   uToast in '..\Common\CommonApp\uToast.pas',
-  uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm};
+  uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
+  uGridUtils in '..\Common\Common\uGridUtils.pas';
 
 {$R *.res}
 

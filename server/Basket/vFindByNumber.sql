@@ -2,7 +2,7 @@ if OBJECT_ID('vFindByNumber') is not null
     drop view vFindByNumber
 go
 /* **********************************************************						
-vFindByNumber - получение списка найденных
+vFindByNumber - РїРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РЅР°Р№РґРµРЅРЅС‹С…
 ********************************************************** */
 
 create view vFindByNumber
@@ -16,13 +16,15 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        p.MakeName,
        p.DetailNum,
 	   p.PartNameRus,
-	   0 as DeliveryType, -- тип доставки
+	   0 as DeliveryType, -- С‚РёРї РґРѕСЃС‚Р°РІРєРё
+	   p.WeightGr ,       -- РІРµСЃ РґРµС‚Р°Р»Рё РІ РіСЂР°РјРјР°С…
+	   p.VolumeAdd,       -- РЅР°С†РµРЅРєР° РѕР±СЉРµРј (РѕР±СЉРµРјРЅС‹Р№ РІРµСЃ)
 	   --dbo.AddDaysAndWeekends(GetDate(), p.Delivery, 1) 
-	   p.Delivery,        -- срок поставки
-       p.PercentSupped,   -- процент поставки (Статистика)
-	   p.Price,           -- цена детали у emex
-       p.PriceRub,        -- цена детали, показаваемая на сайте
-       p.Available,       -- наличие детали на складе
+	   p.Delivery,        -- СЃСЂРѕРє РїРѕСЃС‚Р°РІРєРё
+       p.PercentSupped,   -- РїСЂРѕС†РµРЅС‚ РїРѕСЃС‚Р°РІРєРё (РЎС‚Р°С‚РёСЃС‚РёРєР°)
+	   p.Price,           -- С†РµРЅР° РґРµС‚Р°Р»Рё Сѓ emex
+       CEILING(p.PriceRub) PriceRub, -- С†РµРЅР° РґРµС‚Р°Р»Рё, РїРѕРєР°Р·Р°РІР°РµРјР°СЏ РЅР° СЃР°Р№С‚Рµ
+       p.Available,       -- РЅР°Р»РёС‡РёРµ РґРµС‚Р°Р»Рё РЅР° СЃРєР»Р°РґРµ
        p.PriceLogo,
        '<fieldset class="rating">'+
        '<input type="radio" ' + iif(p.PercentSupped between 91 and 100,'checked', '') + '/><label class="full" for="star5"    ></label>'+
@@ -42,7 +44,8 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
  --inner join tSearchPrice sp (nolock)
  --        on sp.MakeLogo             = p.PriceLogo
 	   -- and isnull(sp.Synthetic, 0) = 0
- where p.Spid = @@spid
+ where p.Spid             = @@spid
+   and p.Available        > 0
    --and (p.PercentSupped >= 30
    --    or (p.PercentSupped <30 and not exists (select 1 
    --                                                from pFindByNumber f (nolock)
@@ -56,20 +59,6 @@ go
 grant all on vFindByNumber to public
 go
 
-
 Select *
   from vFindByNumber
 order by n  
-
-
-
-Select *
-  from vFindByNumber
- where DestinationLogo = '0001'
-order by n  
-
-
-
-
-
-

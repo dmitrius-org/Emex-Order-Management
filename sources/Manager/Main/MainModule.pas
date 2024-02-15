@@ -35,6 +35,7 @@ type
     { Public declarations }
     /// <summary> AUserName - логин пользователя </summary>
     AUserName: string;
+    AUserID : Integer;
     /// <summary> ASql -  </summary>
     ASql     : TSql;
     /// <summary> ARetVal -  </summary>
@@ -119,6 +120,7 @@ begin
 
       AUserName:=AUser;
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
+      AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
 
 
       // настройки  логирования
@@ -133,7 +135,7 @@ begin
         FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
         FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
-      Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Вход в систему');
+      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
     except
       on E: EFDDBEngineException do
@@ -207,7 +209,7 @@ end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 begin
-  Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acLogin, 'Выход из системы');
+  Audit.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
 
   FDConnection.Close;
 

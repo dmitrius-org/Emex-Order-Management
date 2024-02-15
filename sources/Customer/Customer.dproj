@@ -174,7 +174,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uEmail.gmail.pas"/>
         <DCCReference Include="..\Common\Common\uFileU.pas"/>
-        <DCCReference Include="..\Common\Common\uGridUtils.pas"/>
         <DCCReference Include="..\Common\CommonApp\emexdwc\uEmexService.pas"/>
         <DCCReference Include="App\uEmexUtils.pas"/>
         <DCCReference Include="..\Common\CommonApp\uToast.pas"/>
@@ -183,6 +182,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Common\Common\uGridUtils.pas"/>
         <None Include="compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

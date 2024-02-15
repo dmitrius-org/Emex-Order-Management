@@ -5,10 +5,10 @@ pFindByNumber -
 ********************************************************** */
 create table pFindByNumber
 (
- Spid                    numeric(18,0)  default @@spid
+ ID                      numeric(18, 0) identity
+,Spid                    numeric(18,0)  default @@spid
 ,ClientID                numeric(18, 0)
 ,DestinationLogo	     nvarchar(10)
-,ID                      numeric(18, 0) identity
 ,Available               nvarchar(128)  -- наличие детали на складе
 ,bitOldNum               bit            -- признак УСТАРЕВШИЙ НОМЕР
 ,PercentSupped           int            -- процент поставки
