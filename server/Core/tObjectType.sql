@@ -3,20 +3,24 @@ if OBJECT_ID('tObjectType') is null
 /* **********************************************************
 tObjectType - типы объектов системы. TObjectType
 ********************************************************** */
-create table tObjectType
-(
- ObjectTypeID     numeric(18, 0)  --
-,Brief            nvarchar(512)   -- 
-,Name             nvarchar(512)
-,Flag             int -- 1 - поддерживает модель сосотояния
-                      -- 2 - Активна
-)
+begin
+	create table tObjectType
+	(
+	 ObjectTypeID     numeric(18, 0)  --
+	,Brief            nvarchar(512)   -- 
+	,Name             nvarchar(512)
+	,Flag             int -- 1 - поддерживает модель сосотояния
+						  -- 2 - Активна
+	);
+	
+	create unique index ao1 on tObjectType(ObjectTypeID);
+	
+	create unique index ao2 on tObjectType(Brief);
+	
+	grant select on tObjectType to public;
+end
 go
-create unique index ao1 on tObjectType(ObjectTypeID)
-go
-create unique index ao2 on tObjectType(Brief)
-go
-grant select on tObjectType to public
+exec setOV 'tObjectType', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'TObjectType', @desc = 'Типы объектов системы'
 go

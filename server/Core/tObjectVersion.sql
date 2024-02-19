@@ -20,3 +20,6 @@ begin
 
 	grant select on tObjectVersion to public;
 end
+go
+exec setOV 'tObjectVersion', 'U', '20240101', '1.0.0.0'
+go

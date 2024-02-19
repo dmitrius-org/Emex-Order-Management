@@ -23,5 +23,7 @@ create index ao2 on pAccrualAction(Spid, Retval)
 go
 grant all on pAccrualAction to public
 go
+exec setOV 'pAccrualAction', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pAccrualAction', @desc = 'Временная таблица для выполнения действий'

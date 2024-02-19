@@ -3,36 +3,30 @@ if OBJECT_ID('tProtocol') is null
 /* **********************************************************
 tProtocol - Таблица протокола
 ********************************************************** */
-create table tProtocol
-(
- ProtocolID        numeric(18, 0) identity  --
-,ObjectID          numeric(18, 0)   -- Объект
-,StateID           numeric(18, 0)   -- Предыдущее состояние
-,NewStateID        numeric(18, 0)   -- Текущее состояние 
-,ActionID          numeric(18, 0)   -- ИД выполняемое дейстие из tAction
-,OperDate          DateTime         -- Дата протокола
---,Type              int              -- Тип протокола
-,Comment           nvarchar(1024)   -- Комментарий
-,UserID            numeric(18, 0)   -- Пользователь
-,InDateTime        DateTime default getdate()   -- 
+begin
+	create table tProtocol
+	(
+	 ProtocolID        numeric(18, 0) identity  --
+	,ObjectID          numeric(18, 0)   -- Объект
+	,StateID           numeric(18, 0)   -- Предыдущее состояние
+	,NewStateID        numeric(18, 0)   -- Текущее состояние 
+	,ActionID          numeric(18, 0)   -- ИД выполняемое дейстие из tAction
+	,OperDate          DateTime         -- Дата протокола
+	--,Type              int              -- Тип протокола
+	,Comment           nvarchar(1024)   -- Комментарий
+	,UserID            numeric(18, 0)   -- Пользователь
+	,InDateTime        DateTime default getdate()   -- 
+	);
 
-)
+	create index ao1 on tProtocol(ProtocolID);
+
+	create index ao2 on tProtocol(ObjectID);
+
+	grant select on tProtocol to public;
+end
 go
-create index ao1 on tProtocol(ProtocolID)
-go
-create index ao2 on tProtocol(ObjectID)
-go
-grant select on tProtocol to public
+exec setOV 'tProtocol', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tProtocol', @desc = 'Таблица протокола'
--- 
 
-
---alter table tProtocol
---drop column Type
-
---update tProtocol
---   set Type=1
-
---select * from tProtocol

@@ -4,15 +4,19 @@ go
 /* **********************************************************
 tMarks - Таблица для хранения списка выделенных объектов
 ********************************************************** */
-create table tMarks
-(
- Spid  numeric(18,0)
-,Type  numeric(18,0)  
-,ID    numeric(18,0)  
-CONSTRAINT pk_tMarks PRIMARY KEY  clustered  (Spid, Type, ID)
-)
+begin
+	create table tMarks
+	(
+	 Spid  numeric(18,0)
+	,Type  numeric(18,0)  
+	,ID    numeric(18,0)  
+	CONSTRAINT pk_tMarks PRIMARY KEY  clustered  (Spid, Type, ID)
+	);
+
+	grant all on tMarks to public;
+end
 go
-grant all on tMarks to public
+exec setOV 'tMarks', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tMarks', @desc = 'Таблица для хранения списка выделенных объектов'

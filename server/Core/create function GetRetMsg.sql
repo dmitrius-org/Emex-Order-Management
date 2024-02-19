@@ -29,3 +29,5 @@ END
 go
 grant exec on dbo.GetRetMsg to public
 go
+exec setOV 'GetRetMsg', 'F', '20240101', '1.0.0.0'
+go

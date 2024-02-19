@@ -4,11 +4,8 @@ go
 /* **********************************************************						
 vInsertPartToBasketByPart -
 ********************************************************** */
-
 create view vInsertPartToBasketByPart
-
 as
-
 Select o.ClientID,
        o.OrderID,  o.StatusID,    
        o.OrderNum, 
@@ -26,7 +23,6 @@ Select o.ClientID,
          on o.OrderID = p.ObjectID
   left join tPrice pr with (nolock index=ao1)
          on pr.PriceID = o.PriceID
-
  inner join tProfilesCustomer pc (nolock)
          on pc.ClientID        = o.ClientID
         and pc.ClientPriceLogo = o.CustomerPriceLogo
@@ -39,8 +35,5 @@ Select o.ClientID,
 go
 grant all on vInsertPartToBasketByPart to public
 go
-
-
---Select * from tOrders p 
-
-select * from vInsertPartToBasketByPart
+exec setOV 'vInsertPartToBasketByPart', 'V', '20240101', '1.0.0.0'
+go

@@ -3,13 +3,17 @@ if OBJECT_ID('tRetCode') is null
 /* **********************************************************
 tRetCode - коды ошибок
 ********************************************************** */
-create table tRetCode
-(
- RetCode           numeric(18,0)   --  
-,Message           nvarchar(512)       --
-)
+begin
+	create table tRetCode
+	(
+	 RetCode           numeric(18,0)   --  
+	,Message           nvarchar(512)       --
+	);
+
+	create unique index ao1 on tRetCode(RetCode);
+
+	grant all on tRetCode to public;
+end
 go
-create unique index ao1 on tRetCode(RetCode)
-go
-grant all on tRetCode to public
+exec setOV 'tRetCode', 'U', '20240101', '1.0.0.0'
 go

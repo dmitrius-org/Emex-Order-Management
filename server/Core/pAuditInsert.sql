@@ -7,10 +7,10 @@ create table pAuditInsert
 (
  Spid             numeric(18,0)  not null  
 ,AuditID          numeric(18, 0)            
-,ObjectID         numeric(18, 0) not null   -- ИД объекта по которому ведется аудит
-,ObjectTypeID     numeric(18, 0) not null   -- тип объекта 
-,ActionID         numeric(18, 0) not null   -- ИД выполняемое дейстие из tAction
-,Comment          nvarchar(1024)            -- Комментарий
+,ObjectID         numeric(18, 0) not null   -- РР” РѕР±СЉРµРєС‚Р° РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РІРµРґРµС‚СЃСЏ Р°СѓРґРёС‚
+,ObjectTypeID     numeric(18, 0) not null   -- С‚РёРї РѕР±СЉРµРєС‚Р° 
+,ActionID         numeric(18, 0) not null   -- РР” РІС‹РїРѕР»РЅСЏРµРјРѕРµ РґРµР№СЃС‚РёРµ РёР· tAction
+,Comment          nvarchar(1024)            -- РљРѕРјРјРµРЅС‚Р°СЂРёР№
 ,UserID           numeric(18, 0) 
 ,HostInfoID       nvarchar(256)
 ,Retval           int
@@ -22,5 +22,7 @@ create index ao2 on pAuditInsert(Spid, Retval)
 go
 grant all on pAuditInsert to public
 go
--- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'pAuditInsert', @desc = 'Временная таблица для массового добавления аудита по заказам'
+exec setOV 'pAuditInsert', 'U', '20240101', '1.0.0.0'
+go
+-- РћРїРёСЃР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
+exec dbo.sys_setTableDescription @table = 'pAuditInsert', @desc = 'Р’СЂРµРјРµРЅРЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР»СЏ РјР°СЃСЃРѕРІРѕРіРѕ РґРѕР±Р°РІР»РµРЅРёСЏ Р°СѓРґРёС‚Р° РїРѕ Р·Р°РєР°Р·Р°Рј'
