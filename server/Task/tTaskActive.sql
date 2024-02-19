@@ -8,13 +8,13 @@ begin
 	  IsActive             bit
 	);
 	grant all on tTaskActive to public;
-	
-	insert tTaskActive 
-	select 0
-	where not exists (select 1 from tTaskActive);
-
-	select * from tTaskActive;
-
-	-- Описание таблицы
-	exec dbo.sys_setTableDescription @table = 'tTaskActive', @desc = 'Активность планировщика задач';
 end
+go
+exec setOV 'tTaskActive', 'U', '20240101', '1.0.0.0'
+go
+-- Описание таблицы
+exec dbo.sys_setTableDescription @table = 'tTaskActive', @desc = 'Активность планировщика задач';
+
+insert tTaskActive 
+select 0
+where not exists (select 1 from tTaskActive);

@@ -3,28 +3,32 @@ if OBJECT_ID('tDocuments') is null
 /* **********************************************************
 tDocuments - 
 ********************************************************** */
-create table tDocuments
-(
- DocumentID          numeric(18,0)  identity -- 
-,ClientID            numeric(18,0)  
-,Number              nvarchar(255)  null  --
-,Date                datetime
-,Amount              money
-,Comment	         nvarchar(512)  null  -- 
-,Type         int            --     1 - дебит
-                             --    -1 - кредит   
---
-,Flag                int
-,UserID              numeric(18,0) default dbo.GetUserID()
-,inDatetime          datetime      default GetDate()
-,updDatetime         datetime      default GetDate()
-)
+begin
+	create table tDocuments
+	(
+	 DocumentID          numeric(18,0)  identity -- 
+	,ClientID            numeric(18,0)  
+	,Number              nvarchar(255)  null  --
+	,Date                datetime
+	,Amount              money
+	,Comment	         nvarchar(512)  null  -- 
+	,Type         int            --     1 - РґРµР±РёС‚
+								 --    -1 - РєСЂРµРґРёС‚   
+	--
+	,Flag                int
+	,UserID              numeric(18,0) default dbo.GetUserID()
+	,inDatetime          datetime      default GetDate()
+	,updDatetime         datetime      default GetDate()
+	);
+
+	create unique index ao1 on tDocuments(DocumentID);
+
+	create index ao2 on tDocuments(ClientID);
+
+	grant all on tDocuments to public;
+end
 go
-create unique index ao1 on tDocuments(DocumentID)
+exec setOV 'tDocuments', 'U', '20240101', '1.0.0.0'
 go
-create index ao2 on tDocuments(ClientID)
-go
-grant all on tDocuments to public
-go
--- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tDocuments', @desc = 'Таблица '
+-- РћРїРёСЃР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
+exec dbo.sys_setTableDescription @table = 'tDocuments', @desc = 'РўР°Р±Р»РёС†Р° '

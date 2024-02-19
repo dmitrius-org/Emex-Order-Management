@@ -54,3 +54,5 @@ as
 go
 grant exec on InstrumentDelete to public
 go
+exec setOV 'InstrumentDelete', 'P', '20240101', '1.0.0.0'
+go

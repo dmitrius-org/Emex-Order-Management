@@ -1,7 +1,6 @@
 if OBJECT_ID('MakesUpdate') is not null
   drop proc MakesUpdate
 go
-
 /* **********************************************************
 
 ********************************************************** */
@@ -33,3 +32,6 @@ update t
 
 go
 grant execute on MakesUpdate to public
+go
+exec setOV 'MakesUpdate', 'P', '20240101', '1.0.0.0'
+go

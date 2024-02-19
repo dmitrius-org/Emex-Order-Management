@@ -46,3 +46,5 @@ return @r
 go
 grant exec on BalanceAdd to public
 go
+exec setOV 'BalanceAdd', 'P', '20240101', '1.0.0.0'
+go

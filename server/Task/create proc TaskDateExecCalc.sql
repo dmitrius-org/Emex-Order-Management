@@ -37,6 +37,7 @@ as
 go
 grant exec on TaskDateExecCalc to public
 go
-
+exec setOV 'TaskDateExecCalc', 'P', '20240101', '1.0.0.0'
+go
 
 --select DATEPART ( dd , null )  

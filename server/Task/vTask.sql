@@ -24,6 +24,8 @@ SELECT [TaskID]
 go
 grant select on vTask to public
 go
-select * from vTask
+exec setOV 'vTask', 'V', '20240101', '1.0.0.0'
+go
+ 
 
 

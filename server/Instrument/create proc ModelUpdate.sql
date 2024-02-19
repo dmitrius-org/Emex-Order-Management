@@ -57,3 +57,5 @@ UPDATE [dbo].[tModel]
 go
 grant execute on ModelUpdate to public
 go
+exec setOV 'ModelUpdate', 'P', '20240101', '1.0.0.0'
+go

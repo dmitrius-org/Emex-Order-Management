@@ -33,7 +33,7 @@ select t.TaskID
 
 go
 grant all on vTaskSelect to public
+go
+exec setOV 'vTaskSelect', 'V', '20240101', '1.0.0.0'
+go
 
-
-
-select * from vTaskSelect

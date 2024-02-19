@@ -137,3 +137,5 @@ return @r
 go
 grant exec on SupplierDeliveryProfilesLoad to public
 go
+exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240101', '1.0.0.0'
+go

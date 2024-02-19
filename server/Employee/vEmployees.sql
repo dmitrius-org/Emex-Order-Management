@@ -2,19 +2,19 @@ if OBJECT_ID('vEmployees') is not null
     drop view vEmployees
 go
 /* **********************************************************						
-vEmployees - получение списка сотрудников
+vEmployees - РїРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° СЃРѕС‚СЂСѓРґРЅРёРєРѕРІ
 ********************************************************** */
+--create view vEmployees
+--as
 
-create view vEmployees
+--select e.EmployeeID      
+--      ,e.Brief       
+--      ,e.Name	     
 
-as
+--  from tEmployees e (nolock)
 
-select e.EmployeeID      
-      ,e.Brief       
-      ,e.Name	     
-
-  from tEmployees e (nolock)
-
-go
-grant all on vEmployees to public
-
+--go
+--grant all on vEmployees to public
+--go
+--exec setOV 'vEmployees', 'V', '20240101', '1.0.0.0'
+--go

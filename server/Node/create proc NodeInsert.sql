@@ -52,3 +52,5 @@ as
 go
 grant exec on NodeInsert to public
 go
+exec setOV 'NodeInsert', 'P', '20240101', '1.0.0.0'
+go

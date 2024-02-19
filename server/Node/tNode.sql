@@ -2,26 +2,30 @@ if OBJECT_ID('tNodes') is null
 /* **********************************************************
 tNodes - 
 ********************************************************** */
-create table tNodes
-(
- NodeID            numeric(18,0)  identity --  
-,Brief             nvarchar(32)   not null --
-,Name              nvarchar(256)  not null --
-,Comment           nvarchar(512)  null     --
-,Flag              int            default 0--
-,ColorID           nvarchar(32)   null     -- 
-,Type              int -- 0 - состояние 
-                       -- 1 - действие
-,EID               int --  
-,EBrief            nvarchar(32)  not null  --
-,EName             nvarchar(256) not null  --
-)
+begin
+	create table tNodes
+	(
+	 NodeID            numeric(18,0)  identity --  
+	,Brief             nvarchar(32)   not null --
+	,Name              nvarchar(256)  not null --
+	,Comment           nvarchar(512)  null     --
+	,Flag              int            default 0--
+	,ColorID           nvarchar(32)   null     -- 
+	,Type              int -- 0 - состояние 
+						   -- 1 - действие
+	,EID               int --  
+	,EBrief            nvarchar(32)  not null  --
+	,EName             nvarchar(256) not null  --
+	);
+
+	create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name);
+
+	create unique index ao2 on tNodes(Brief);
+
+	grant select on tNodes to public;
+end
 go
-create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name)
-go
-create unique index ao2 on tNodes(Brief)
-go
-grant select on tNodes to public
+exec setOV 'tNodes', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tNodes', @desc = 'Справочник состояний и действий'

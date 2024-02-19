@@ -58,3 +58,5 @@ as
 go
 grant exec on InstrumentUpdate to public
 go
+exec setOV 'InstrumentUpdate', 'P', '20240101', '1.0.0.0'
+go

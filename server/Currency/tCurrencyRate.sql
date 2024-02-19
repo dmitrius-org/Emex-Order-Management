@@ -3,20 +3,23 @@ if OBJECT_ID('tCurrencyRate') is null
 /* 
 tCurrencyRate - курсы
 */
-create table tCurrencyRate
-(
- NumCode           nvarchar(3)    --
-,CharCode	       nvarchar(3)  
-,Nominal	       float
-,Name	           nvarchar(255) 
-,Value	           float
-,OnDate            date --default getdate()
-)
-go
-create unique index ao1 on tCurrencyRate(NumCode, OnDate)
-go
-create unique index ao2 on tCurrencyRate(CharCode, OnDate)
-go
+begin
+	create table tCurrencyRate
+	(
+	 NumCode           nvarchar(3)    --
+	,CharCode	       nvarchar(3)  
+	,Nominal	       float
+	,Name	           nvarchar(255) 
+	,Value	           float
+	,OnDate            date --default getdate()
+	);
+
+	create unique index ao1 on tCurrencyRate(NumCode, OnDate);
+
+	create unique index ao2 on tCurrencyRate(CharCode, OnDate);
+end
 grant all on tCurrencyRate to public
+go
+exec setOV 'tCurrencyRate', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'tCurrencyRate', @desc = 'Таблица курсов'

@@ -18,7 +18,7 @@ select m.ActionID       ActionID
  where m.InstrumentTypeID = 7
 go
 grant all on vActionMetod to public
---exec dbo.sys_setTableDescription @table = 'vMarkOrderStateAction', @desc = 'Список действий для состоянии отмеченных заказов'
-
-select * from tModel
-select * from vActionMetod
+go
+exec setOV 'vActionMetod', 'V', '20240101', '1.0.0.0'
+go
+ 

@@ -3,19 +3,23 @@ if OBJECT_ID('tInstrumentType') is null
 /* **********************************************************
 tInstrumentType - типы объект tInstrument
 ********************************************************** */
-create table tInstrumentType
-(
- InstrumentTypeID numeric(18, 0)  --
-,Brief            nvarchar(64)       -- 
-,Name             nvarchar(512)
-,Filters          nvarchar(512) -- регулирует возможность создания типов элементов на текущем элементе
-)
+begin
+	create table tInstrumentType
+	(
+	 InstrumentTypeID numeric(18, 0)  --
+	,Brief            nvarchar(64)       -- 
+	,Name             nvarchar(512)
+	,Filters          nvarchar(512) -- регулирует возможность создания типов элементов на текущем элементе
+	);
+
+	create unique index ao1 on tInstrumentType(InstrumentTypeID);
+
+	create unique index ao2 on tInstrumentType(Brief);
+
+	grant select on tInstrumentType to public;
+end
 go
-create unique index ao1 on tInstrumentType(InstrumentTypeID)
-go
-create unique index ao2 on tInstrumentType(Brief)
-go
-grant select on tInstrumentType to public
+exec setOV 'tModelMetod', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription 'tInstrumentType', 'Filters', 'Регулирует возможность создания типов элементов на текущем элементе'
 

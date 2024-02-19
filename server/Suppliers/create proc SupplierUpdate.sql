@@ -61,3 +61,5 @@ return @r
 go
 grant exec on SupplierUpdate to public
 go
+exec setOV 'SupplierUpdate', 'P', '20240101', '1.0.0.0'
+go

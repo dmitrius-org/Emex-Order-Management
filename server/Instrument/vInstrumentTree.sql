@@ -59,5 +59,6 @@ select m.ModelID           as ID
 go
 grant all on vInstrumentTree to public
 go
-
-select * from vInstrumentTree
+exec setOV 'vInstrumentTree', 'V', '20240101', '1.0.0.0'
+go
+ 

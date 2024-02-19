@@ -3,15 +3,19 @@ if OBJECT_ID('tRest') is null
 /* **********************************************************
 tRest - 
 ********************************************************** */
+begin
 create table tRest
 (
  ClientID   numeric(18,0)  -- 
 ,Amount       money
-)
+);
+
+create index ao1 on tRest(ClientID) include (Amount);
+
+grant all on tRest to public;
+end
 go
-create index ao1 on tRest(ClientID) include (Amount)
+exec setOV 'tRest', 'U', '20240101', '1.0.0.0'
 go
-grant all on tRest to public
-go
--- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tRest', @desc = 'Таблица '
+-- РћРїРёСЃР°РЅРёРµ С‚Р°Р±Р»РёС†С‹
+exec dbo.sys_setTableDescription @table = 'tRest', @desc = 'РўР°Р±Р»РёС†Р° '

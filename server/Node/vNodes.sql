@@ -1,24 +1,19 @@
 drop view if exists vStatus
-
+go
 drop view if exists vNodes
 go
 /* **********************************************************						
-vNodes - состояния и действия 
+vNodes - СЃРѕСЃС‚РѕВ¤РЅРёВ¤ Рё РґРµР№СЃС‚РІРёВ¤ 
 ********************************************************** */
-
 create view vNodes
-
 as
-
---SET DATEFIRST 1;
-
 SELECT n.[NodeID]
-      -- поле статус
+      -- РїРѕР»Рµ СЃС‚Р°С‚СѓСЃ
       ,n.[Flag] 
       --, '<div class="statusFlag">'+
-      --  case when (s.[Flag]&1)>0 then '<span class="flagSystem">u</span>' else '<span class=""></span>' end  + -- системный тип
-      --  case when (s.[Flag]&2)>0 then '<span class="flagBegin">u</span>' else '<span class=""></span>' end   + -- начальное состояние
-      --  case when (s.[Flag]&4)>0 then '<span class="flagDefault">u</span>' else '<span class=""></span>' end + -- по умолчанию         
+      --  case when (s.[Flag]&1)>0 then '<span class="flagSystem">u</span>' else '<span class=""></span>' end  + -- СЃРёСЃС‚РµРјРЅС‹Р№ С‚РёРї
+      --  case when (s.[Flag]&2)>0 then '<span class="flagBegin">u</span>' else '<span class=""></span>' end   + -- РЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕВ¤РЅРёРµ
+      --  case when (s.[Flag]&4)>0 then '<span class="flagDefault">u</span>' else '<span class=""></span>' end + -- РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ         
       --  '</div>' as [Status]        
       --,'<span class="char">test</span>' as test
 	  ,n.Brief
@@ -26,8 +21,8 @@ SELECT n.[NodeID]
       ,n.Comment
 	  ,n.Type
 	  ,Case n.Type
-	     when 0 then 'Статус'
-		 when 1 then 'Действие'
+	     when 0 then 'вЂ”С‚Р°С‚СѓСЃ'
+		 when 1 then 'Ж’РµР№СЃС‚РІРёРµ'
 		 else ''
        end TypeDescription
       ,sc.StatusColorID as ColorID
@@ -40,6 +35,7 @@ SELECT n.[NodeID]
 
 go
 grant all on vNodes to public
-
-
-select * from vNodes
+go
+exec setOV 'vNodes', 'V', '20240101', '1.0.0.0'
+go
+ 

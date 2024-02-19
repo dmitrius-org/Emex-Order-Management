@@ -17,6 +17,8 @@ create unique index ao2 on tStatusColor(Brief)
 go
 grant all on tStatusColor to public
 go
+exec setOV 'tStatusColor', 'U', '20240101', '1.0.0.0'
+go
 insert tStatusColor (StatusColorID, Brief, Name) Select 'clBlack',      '$000000', 'Black'
 insert tStatusColor (StatusColorID, Brief, Name) Select 'clMaroon',     '$000080', 'Maroon'
 insert tStatusColor (StatusColorID, Brief, Name) Select 'clGreen',      '$008000', 'Green'

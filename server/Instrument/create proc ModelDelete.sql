@@ -68,3 +68,5 @@ as
 go
 grant exec on ModelDelete to public
 go
+exec setOV 'ModelDelete', 'P', '20240101', '1.0.0.0'
+go

@@ -24,3 +24,6 @@ as
 go
 grant exec on TaskExecuteClear to public
 go
+exec setOV 'TaskExecuteClear', 'P', '20240101', '1.0.0.0'
+go
+ 

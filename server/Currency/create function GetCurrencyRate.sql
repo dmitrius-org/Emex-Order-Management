@@ -24,3 +24,6 @@ BEGIN
 end   
 go
 grant execute on dbo.GetCurrencyRate to public
+go
+exec setOV 'GetCurrencyRate', 'F', '20240101', '1.0.0.0'
+go

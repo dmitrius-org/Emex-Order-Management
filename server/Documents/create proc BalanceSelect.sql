@@ -86,3 +86,5 @@ return @r
 go
 grant exec on BalanceSelect to public
 go
+exec setOV 'BalanceSelect', 'P', '20240101', '1.0.0.0'
+go

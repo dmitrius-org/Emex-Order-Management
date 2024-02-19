@@ -60,3 +60,5 @@ return @r
 go
 grant exec on EmployeeUpdate to public
 go
+exec setOV 'EmployeeUpdate', 'P', '20240101', '1.0.0.0'
+go

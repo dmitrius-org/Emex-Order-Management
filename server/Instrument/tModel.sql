@@ -2,24 +2,27 @@ if OBJECT_ID('tModel') is null
 /* **********************************************************
 tInstrument - инструменты
 ********************************************************** */
-create table tModel
-(ModelID           numeric(18, 0) identity
-,InstrumentID      numeric(18,0)  not null -- Ид модели tInstrument.InstrumentID
-,StateID           numeric(18,0)  not null -- ИД состояния
-,ActionID          numeric(18,0)           -- ИД действия
-,TargetStateID     numeric(18,0)           -- ИД состояния
-,InstrumentTypeID  numeric(18,0)  not null -- типы объект tInstrumentType.InstrumentTypeID 
-,Flag              int                     -- Флаги
---
-,UserID            numeric(18,0) default dbo.GetUserID()
-,inDatetime        datetime      default GetDate()      --
-,updDatetime       datetime      default GetDate()      --
-)
+begin
+	create table tModel
+	(ModelID           numeric(18, 0) identity
+	,InstrumentID      numeric(18,0)  not null -- Ид модели tInstrument.InstrumentID
+	,StateID           numeric(18,0)  not null -- ИД состояния
+	,ActionID          numeric(18,0)           -- ИД действия
+	,TargetStateID     numeric(18,0)           -- ИД состояния
+	,InstrumentTypeID  numeric(18,0)  not null -- типы объект tInstrumentType.InstrumentTypeID 
+	,Flag              int                     -- Флаги
+	--
+	,UserID            numeric(18,0) default dbo.GetUserID()
+	,inDatetime        datetime      default GetDate()      --
+	,updDatetime       datetime      default GetDate()      --
+	)
+
+	create unique index ao1 on tModel(ModelID)
+
+	grant select on tModel to public
+end
 go
-create unique index ao1 on tModel(ModelID)
-go
-go
-grant select on tModel to public
+exec setOV 'tModel', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'tModel', @desc = 'Модель состояния'
 go

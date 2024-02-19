@@ -147,3 +147,5 @@ return @r
 GO
 grant exec on ShipmentsInsert to public
 go
+exec setOV 'ShipmentsInsert', 'P', '20240101', '1.0.0.0'
+go
