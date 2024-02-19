@@ -3,16 +3,19 @@ if OBJECT_ID('tUserReliation') is null
 /* **********************************************************
 tUserReliation - Связь с пользователями
 ********************************************************** */
-create table tUserReliation
-(
- UserID            numeric(18,0)   --  
-,GroupID           numeric(18,0)   --  
-,LinkType          int -- 
-)
+begin
+	create table tUserReliation
+	(
+	 UserID            numeric(18,0)   --  
+	,GroupID           numeric(18,0)   --  
+	,LinkType          int -- 
+	)
+
+	create unique index ao1 on tUserReliation(LinkType, UserID, GroupID)
+
+	grant all on tUserReliation to public
+end
 go
-create unique index ao1 on tUserReliation(LinkType, UserID, GroupID)
+exec setOV 'tUserReliation', 'U', '20240101', '1.0.0.0'
 go
---create unique index ao2 on tUserReliation()
-go
-grant all on tUserReliation to public
-go
+

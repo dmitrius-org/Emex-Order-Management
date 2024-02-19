@@ -21,6 +21,8 @@ create unique index ao1 on pGrantObject(Spid, ObjectType, ObjectID, LinkType, Li
 go
 grant all on pGrantObject to public
 go
+exec setOV 'pGrantObject', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pGrantObject', @desc = 'Права доступа пользователя к объектам системы'
 

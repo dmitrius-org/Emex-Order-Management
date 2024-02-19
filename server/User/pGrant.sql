@@ -25,5 +25,7 @@ create index ao2 on pGrant(GrantID)
 go
 grant all on pGrant to public
 go
+exec setOV 'pGrant', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pGrant', @desc = 'Временная таблица прав'

@@ -75,6 +75,9 @@ as
 
  exit_:
  return @r
-
+go
 grant exec on GrantSave to public
 go
+exec setOV 'GrantSave', 'P', '20240101', '1.0.0.0'
+go
+

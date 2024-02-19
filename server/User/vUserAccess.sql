@@ -30,7 +30,9 @@ as
 go
 grant select on vUserAccess to public
 go
+exec setOV 'vUserAccess', 'V', '20240101', '1.0.0.0'
+go
+ 
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
-select  * from vUserAccess

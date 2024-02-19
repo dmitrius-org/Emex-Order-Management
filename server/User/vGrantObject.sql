@@ -21,5 +21,7 @@ Select p.ObjectType
 
 go
 grant all on vGrantObject to public
-
-select * from vGrantObject
+go
+exec setOV 'vGrantObject', 'V', '20240101', '1.0.0.0'
+go
+ 

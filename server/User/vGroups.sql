@@ -4,9 +4,7 @@ go
 /* **********************************************************						
 vGroups - получение списка групп/ролей
 ********************************************************** */
-
 create view vGroups
-
 as
 
 --SET DATEFIRST 1;
@@ -20,7 +18,7 @@ SELECT [GroupID]
 
 go
 grant all on vGroups to public
-
-
-
---select * from vUsers
+go
+exec setOV 'vGroups', 'V', '20240101', '1.0.0.0'
+go
+ 

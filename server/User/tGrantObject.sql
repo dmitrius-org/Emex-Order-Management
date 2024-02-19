@@ -3,19 +3,24 @@ if OBJECT_ID('tGrantObject') is null
 /* **********************************************************
 tGrantObject - Права 
 ********************************************************** */
-create table tGrantObject
-(
- GrantObjectID     numeric(18, 0) identity  --
-,ObjectID          numeric(18, 0)           -- ИД группы или пользователя
-,ObjectType        int                      -- 0 - пользователь
-                                            -- 1 - группа
-,LinkID            numeric(18, 0)           -- Связанный объект
-,LinkType          int                      -- Тип объекта                       
-)
+begin
+	create table tGrantObject
+	(
+	 GrantObjectID     numeric(18, 0) identity  --
+	,ObjectID          numeric(18, 0)           -- ИД группы или пользователя
+	,ObjectType        int                      -- 0 - пользователь
+												-- 1 - группа
+	,LinkID            numeric(18, 0)           -- Связанный объект
+	,LinkType          int                      -- Тип объекта                       
+	)
+
+	create unique index ao1 on tGrantObject(ObjectType, ObjectID, LinkType, LinkID)
+
+	grant all on tGrantObject to public
+end
 go
-create unique index ao1 on tGrantObject(ObjectType, ObjectID, LinkType, LinkID)
+exec setOV 'tGrantObject', 'U', '20240101', '1.0.0.0'
 go
-grant all on tGrantObject to public
-go
+
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tGrantObject', @desc = 'Права доступа пользователя к объектам системы'

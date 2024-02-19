@@ -6,9 +6,7 @@ vGrant - права
  */
 
 create view vGrant
-
 as
-
 --
 select u.GrantID           
       ,u.ObjectID 
@@ -29,5 +27,7 @@ select u.GrantID
 
 go
 grant all on vGrant to public
-
---select * from vUsers
+go
+exec setOV 'vGrant', 'V', '20240101', '1.0.0.0'
+go
+ 

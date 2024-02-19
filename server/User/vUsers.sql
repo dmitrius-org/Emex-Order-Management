@@ -23,6 +23,10 @@ select u.UserID
  -- inner join  is_disabled from sys.server_principals
 go
 grant all on vUsers to public
+go
+exec setOV 'vUsers', 'V', '20240101', '1.0.0.0'
+go
+ 
 
 
 

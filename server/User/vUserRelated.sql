@@ -4,9 +4,7 @@ go
 /* **********************************************************						
 vUserRelated - вхождение пользователя в группы
 ********************************************************** */
-
 create view vUserRelated
-
 as
 
 --SET DATEFIRST 1;
@@ -27,7 +25,10 @@ select u.UserID
              
 go
 grant all on vUserRelated to public
-
+go
+exec setOV 'vUserRelated', 'V', '20240101', '1.0.0.0'
+go
+ 
 
 
 --select * from vUsers

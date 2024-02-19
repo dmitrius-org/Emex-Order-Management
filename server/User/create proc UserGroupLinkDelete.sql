@@ -35,3 +35,5 @@ as
 go
 grant exec on UserGroupLinkDelete to public
 go
+exec setOV 'UserGroupLinkDelete', 'P', '20240101', '1.0.0.0'
+go
