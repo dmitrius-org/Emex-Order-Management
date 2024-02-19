@@ -12,9 +12,10 @@ BEGIN
 
   IF EXISTS (SELECT * 
                FROM SYS.EXTENDED_PROPERTIES
-              WHERE [major_id] = OBJECT_ID('tRestrictions') 
-	            AND [name] = N'MS_Description'
-                AND [minor_id] = 0)
+              WHERE [major_id] = OBJECT_ID(@table) 
+	            AND [name]     = N'MS_Description'
+                AND [minor_id] = 0
+				)
   begin
     EXEC sp_dropextendedproperty 
 	    @name       = 'MS_Description',

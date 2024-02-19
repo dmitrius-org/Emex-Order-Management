@@ -11,11 +11,11 @@ begin
 	,MenuID            numeric(18, 0)   -- 
 	,ObjectType        int -- 0 -- пользователь
 						   -- 1 -- группа
-	)
+	);
 
-	create unique index ao1 on tGrant(ObjectType, ObjectID, MenuID)
+	create unique index ao1 on tGrant(ObjectType, ObjectID, MenuID);
 
-	grant all on tGrant to public
+	grant all on tGrant to public;
 end
 go
 exec setOV 'tGrant', 'U', '20240101', '1.0.0.0'
