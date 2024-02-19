@@ -4,7 +4,6 @@ interface
 
 uses System.SysUtils, Vcl.Dialogs, System.StrUtils;
 
-
 /// <summary>
 ///  GetFName - получение наименования файла. Если файл существует, то к
 ///  наименованию добавляем порядковый номер
@@ -13,9 +12,7 @@ function GetFName(filename: string): string;
 
 function GetSpecialPath(APath:string; ASymbol: string = '\'):string;
 
-
 implementation
-
 
 function GetFName(filename: string): string; var i: Integer;
 var fn: string;
@@ -30,7 +27,6 @@ begin
       filename:=ExtractFilePath(filename) + fn + '(' + i.ToString + ')' + ExtractFileExt(filename);
     end;
   end;
-
 
   Result := filename;
 end;

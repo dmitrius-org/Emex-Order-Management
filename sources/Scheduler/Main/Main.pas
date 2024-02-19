@@ -168,13 +168,10 @@ begin
           Nd := MainMenu.Items.Add(Nd, c);
           Nd.ImageIndex := -1;
         end;
-
         Nd.Tag := ID;
       end;
       UniMainModule.Query.Next;
     end;
-
-
   finally
 //    Ls.Free;
   end;

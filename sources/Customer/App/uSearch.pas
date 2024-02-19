@@ -106,10 +106,7 @@ begin
   begin
     if edtSearch.Text = '' then Exit;
 
-    if (Sender is TUniDBGrid) then
-    begin
-      PartSearch;
-    end;
+    PartSearch;
   end;
 end;
 
@@ -147,7 +144,8 @@ begin
 
   RetVal.Clear;
   Sql.Open('declare @R int exec @R=PartToBasket @ClientID = :ClientID, @PartID=:PartID  select @R as retval',
-    ['PartID', 'ClientID'], [QueryID.AsInteger, UniMainModule.AUserID]);
+          ['PartID', 'ClientID'],
+          [QueryID.AsInteger, UniMainModule.AUserID]);
 
   RetVal.Code := Sql.Q.FieldByName('retval').Value;
 
@@ -159,14 +157,11 @@ begin
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
-
 end;
 
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  /// /  if (Sender.FieldName = 'Manufacturer') and (QueryReplacementManufacturer.Value <> '') then
-  /// /  begin
   Text := StringReplace('<form id="frmDestLogo"  method="post" action=""> ' +
     '<div class="radio-form">' + '   <label class="radio-control">  ' +
     '       <input type="radio"  value="0001"  onchange="setDestLogo(value)" /> '
@@ -193,7 +188,7 @@ begin
   begin
     FDestinationLogo := Params.Values['P1'];
 
-    CustomerPriceCalc;
+    CustomerPriceCalc();
 
     GridRefresh();
   end;
@@ -251,7 +246,7 @@ begin
   {$ENDIF}
 
   js := ' setDestLogo = function(AVal) { ' + ' ajaxRequest(' + SearchGrid.JSName
-    + ', "setDestLogo", [ "P1=" + AVal ]);' + ' } ;';
+      + ', "setDestLogo", [ "P1=" + AVal ]);' + ' } ;';
   UniSession.JSCode(js);
 
   GridExt.SortColumnCreate(SearchGrid);

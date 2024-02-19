@@ -40,6 +40,7 @@ type
     tbS: TUniTabSheet;
     tsB: TUniTabSheet;
     tsO: TUniTabSheet;
+    lblVersion: TUniLabel;
     procedure UniFormShow(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -47,6 +48,7 @@ type
     procedure actinfoExecute(Sender: TObject);
     procedure UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tsBBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure UniFormCreate(Sender: TObject);
 
   private
     { Private declarations }
@@ -78,7 +80,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp;
 
 function MainForm: TMainForm;
 begin
@@ -113,6 +115,11 @@ procedure TMainForm.tsBBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
   FBasketF.GridRefresh;
+end;
+
+procedure TMainForm.UniFormCreate(Sender: TObject);
+begin
+  lblVersion.Caption := GetAppVersionStr();
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

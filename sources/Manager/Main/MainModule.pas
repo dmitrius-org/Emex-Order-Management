@@ -47,6 +47,9 @@ type
 
     ASPID: Integer;
 
+    const _loginname = '_loginname';
+    const _pwd = '_pwd';
+
     function dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
   end;
 
@@ -202,9 +205,6 @@ begin
   {$IFDEF RELEASE}
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
   {$ENDIF}
-
-
-
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);

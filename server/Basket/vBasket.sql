@@ -24,7 +24,5 @@ select
   from tBasket t (nolock)
 go
 grant all on vBasket to public
-
-
-
-select * from vBasket
+go
+exec setOV 'vBasket', 'V', '20240101', '1.0.0.0'

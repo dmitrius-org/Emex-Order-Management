@@ -60,20 +60,20 @@ object MainForm: TMainForm
         LayoutAttribs.Columns = 1
         LayoutConfig.Split = True
         LayoutConfig.Region = 'west'
+        ExplicitHeight = 475
         object MainMenu: TUnimTreeMenu
           AlignWithMargins = True
-          Left = 4
-          Top = 4
-          Width = 296
-          Height = 468
+          Left = 3
+          Top = 3
+          Width = 298
+          Height = 470
           Hint = ''
           Align = alClient
           Items.FontData = {0100000000}
           LayoutConfig.Width = '0'
           SelectOnExpander = True
           OnClick = MainMenuClick
-          ExplicitWidth = 317
-          ExplicitHeight = 467
+          ExplicitHeight = 469
         end
       end
       object UniPanelCentral: TUniPanel
@@ -93,8 +93,7 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitLeft = 326
-        ExplicitWidth = 697
+        ExplicitWidth = 718
         ExplicitHeight = 475
         object pcMain: TUniPageControl
           AlignWithMargins = True
@@ -112,10 +111,8 @@ object MainForm: TMainForm
           TabOrder = 1
           ScreenMask.Enabled = True
           ScreenMask.Target = Owner
-          ExplicitLeft = 1
-          ExplicitTop = 1
-          ExplicitWidth = 695
-          ExplicitHeight = 473
+          ExplicitWidth = 718
+          ExplicitHeight = 470
         end
       end
       object UniPanelTop: TUniPanel

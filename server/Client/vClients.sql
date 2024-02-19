@@ -25,6 +25,7 @@ select c.ClientID
 go
 grant all on vClients to public
 go
-select * from vClients
+exec setOV 'vClients', 'V', '20240101', '1.0.0.0'
+go
 
 

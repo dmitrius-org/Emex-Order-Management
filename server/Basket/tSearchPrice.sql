@@ -3,20 +3,23 @@ if OBJECT_ID('tSearchPrice') is null
 /* **********************************************************						
 tSearchPrice - список прайсов для поисковой выдчи клиентам
 ********************************************************** */
-create table tSearchPrice
-(
- PriceID           numeric(18,0)  identity --  
-,MakeLogo          varchar(30)    -- наименоване прайса
-,Synthetic         bit            -- тип: синтетический прайс
+begin
+	create table tSearchPrice
+	(
+	 PriceID           numeric(18,0)  identity --  
+	,MakeLogo          varchar(30)    -- наименоване прайса
+	,Synthetic         bit            -- тип: синтетический прайс
 
-)
+	);
+
+	create unique index a1 on tSearchPrice(PriceID);
+
+	create unique index ao2 on tSearchPrice(MakeLogo);
+
+	grant all on tSearchPrice to public
+end
 go
-create unique index a1 on tSearchPrice(PriceID)
-go
-create unique index ao2 on tSearchPrice(MakeLogo)
-go
-grant all on tSearchPrice to public
-go
+exec setOV 'tSearchPrice', 'U', '20240101', '1.0.0.0'
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tSearchPrice', @desc = 'Список прайсов для поисковой выдчи клиентам'
 -- Описание полей

@@ -1,4 +1,4 @@
-unit InfoForm;
+﻿unit InfoForm;
 
 interface
 

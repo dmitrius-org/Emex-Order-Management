@@ -25,7 +25,6 @@ type
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
-    procedure UniGUIMainModuleBrowserClose(Sender: TObject);
   private
     { Private declarations }
 
@@ -44,6 +43,9 @@ type
     AGrant: TGrant;
 
     ASPID: Integer;
+
+    const _loginname = '_loginname';
+    const _pwd = '_pwd';
 
     function dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
   end;
@@ -137,14 +139,13 @@ begin
   end;
 end;
 
-
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
 var S1, S2 : string;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'begin');
 
-  S1 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_loginname'];
-  S2 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_pwd'];
+  S1 := (Sender as TUniGUISession).UniApplication.Cookies.Values[_loginname];
+  S2 := (Sender as TUniGUISession).UniApplication.Cookies.Values[_pwd];
 
   if (S1 <> '') and ( S2 <> '') then
   begin
@@ -152,18 +153,12 @@ begin
 
     if Handled = False then
     begin
-      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname','',Date-1);
-      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd','',Date-1);
+      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie(_loginname,'',Date-1);
+      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie(_pwd,'',Date-1);
     end;
 
   end;
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'end');
-end;
-
-procedure TUniMainModule.UniGUIMainModuleBrowserClose(Sender: TObject);
-begin
- // Audit.Add(TObjectType.otAuthorization, 0, TFormAction.acExit, 'Выход из системы');
- // logger.Info('Программа остановлена');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
@@ -172,7 +167,6 @@ begin
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
   {$ENDIF}
 end;
-
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 var A:TAudit;

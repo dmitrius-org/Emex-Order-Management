@@ -14,18 +14,18 @@ object LoginEditF: TLoginEditF
     201)
   TextHeight = 15
   object UniLabel2: TUniLabel
-    Left = 48
+    Left = 47
     Top = 31
-    Width = 91
+    Width = 90
     Height = 13
     Hint = ''
     Caption = #1058#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100':'
     Anchors = []
     TabOrder = 0
-    ExplicitLeft = 47
+    ExplicitLeft = 46
   end
   object edtPas: TUniEdit
-    Left = 195
+    Left = 190
     Top = 31
     Width = 225
     Hint = ''
@@ -36,7 +36,7 @@ object LoginEditF: TLoginEditF
     TabOrder = 1
     EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 192
+    ExplicitLeft = 188
   end
   object UniPanel: TUniPanel
     Left = 0
@@ -53,7 +53,7 @@ object LoginEditF: TLoginEditF
       487
       40)
     object btnOk: TUniButton
-      Left = 306
+      Left = 300
       Top = 6
       Width = 113
       Height = 28
@@ -62,10 +62,10 @@ object LoginEditF: TLoginEditF
       Anchors = []
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 303
+      ExplicitLeft = 297
     end
     object btnCancel: TUniButton
-      Left = 194
+      Left = 190
       Top = 6
       Width = 107
       Height = 28
@@ -75,7 +75,7 @@ object LoginEditF: TLoginEditF
       Anchors = []
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 192
+      ExplicitLeft = 188
     end
   end
   object UniLabel1: TUniLabel
@@ -90,7 +90,7 @@ object LoginEditF: TLoginEditF
     ExplicitLeft = 51
   end
   object edtNewPas2: TUniEdit
-    Left = 195
+    Left = 190
     Top = 105
     Width = 225
     Hint = ''
@@ -101,7 +101,7 @@ object LoginEditF: TLoginEditF
     TabOrder = 4
     EmptyText = #1055#1086#1074#1090#1086#1088#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 192
+    ExplicitLeft = 188
     ExplicitTop = 104
   end
   object UniLabel3: TUniLabel
@@ -117,7 +117,7 @@ object LoginEditF: TLoginEditF
     ExplicitTop = 105
   end
   object edtNewPas: TUniEdit
-    Left = 195
+    Left = 190
     Top = 72
     Width = 225
     Hint = ''
@@ -128,6 +128,6 @@ object LoginEditF: TLoginEditF
     TabOrder = 6
     EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 192
+    ExplicitLeft = 188
   end
 end

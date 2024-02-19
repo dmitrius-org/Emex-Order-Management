@@ -11,7 +11,6 @@ object UniMainModule: TUniMainModule
   EnableSynchronousOperations = True
   ExtLocale = 'ru'
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
-  OnBrowserClose = UniGUIMainModuleBrowserClose
   Height = 351
   Width = 1020
   object FDConnection: TFDConnection

@@ -32,7 +32,6 @@ select c.ClientID
 
 go
 grant all on vClientEdit to public
-
-
-
-select * from vClientEdit
+go
+exec setOV 'vClientEdit', 'V', '20240101', '1.0.0.0'
+go

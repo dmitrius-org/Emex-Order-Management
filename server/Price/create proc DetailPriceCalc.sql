@@ -1,8 +1,6 @@
 if OBJECT_ID('DetailPriceCalc', 'P') is not null
-    drop proc DetailPriceCalc
-	 
+    drop proc DetailPriceCalc	 
 go
-
 /* --------------------------------------------------------
   DetailPriceCalc - расчет цены
 
@@ -240,3 +238,5 @@ exit_:
 return @RetVal
 go
 grant all on DetailPriceCalc to public
+go
+exec setOV 'DetailPriceCalc', 'P', '20240101', '1.0.0.0'

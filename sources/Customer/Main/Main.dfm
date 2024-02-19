@@ -8,7 +8,9 @@ object MainForm: TMainForm
   OldCreateOrder = False
   OnKeyDown = UniFormKeyDown
   MonitoredKeys.Keys = <>
+  Font.Color = clSilver
   Layout = 'fit'
+  OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
@@ -61,10 +63,8 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitLeft = 1
-        ExplicitTop = 56
-        ExplicitWidth = 704
-        ExplicitHeight = 470
+        ExplicitWidth = 706
+        ExplicitHeight = 472
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 3
@@ -77,26 +77,26 @@ object MainForm: TMainForm
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
-          ExplicitWidth = 698
-          ExplicitHeight = 464
+          ExplicitWidth = 700
+          ExplicitHeight = 466
           object tbS: TUniTabSheet
             Hint = ''
             Caption = #1055#1086#1080#1089#1082
-            ExplicitWidth = 690
-            ExplicitHeight = 436
+            ExplicitWidth = 692
+            ExplicitHeight = 438
           end
           object tsB: TUniTabSheet
             Hint = ''
             Caption = #1050#1086#1088#1079#1080#1085#1072
             OnBeforeActivate = tsBBeforeActivate
-            ExplicitWidth = 690
-            ExplicitHeight = 436
+            ExplicitWidth = 692
+            ExplicitHeight = 438
           end
           object tsO: TUniTabSheet
             Hint = ''
             Caption = #1047#1072#1082#1072#1079#1099
-            ExplicitWidth = 690
-            ExplicitHeight = 436
+            ExplicitWidth = 692
+            ExplicitHeight = 438
           end
         end
       end
@@ -111,9 +111,7 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
-        ExplicitLeft = 1
-        ExplicitTop = 1
-        ExplicitWidth = 704
+        ExplicitWidth = 706
         object UniPanel: TUniPanel
           Left = 395
           Top = 0
@@ -124,7 +122,7 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
-          ExplicitLeft = 389
+          ExplicitLeft = 391
           object btnProfile: TUniMenuButton
             AlignWithMargins = True
             Left = 114
@@ -143,11 +141,23 @@ object MainForm: TMainForm
             LayoutConfig.Cls = 'btn-profile'
             LayoutConfig.DockWhenAligned = False
             Images = ImageList
-            ExplicitLeft = 110
           end
         end
       end
     end
+  end
+  object lblVersion: TUniLabel
+    AlignWithMargins = True
+    Left = 24
+    Top = 513
+    Width = 38
+    Height = 13
+    Hint = ''
+    Alignment = taCenter
+    Caption = 'Version'
+    ParentFont = False
+    Font.Color = clSilver
+    TabOrder = 1
   end
   object Menu: TUniMenuItems
     Left = 409

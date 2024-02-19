@@ -23,6 +23,7 @@ select isnull(sum(t.Quantity * t.Price), 0) Amount
 GO
 grant exec on BasketData to public
 go
-
+exec setOV 'BasketData', 'P', '20240101', '1.0.0.0'
+go
 
 exec BasketData @ClientID=26

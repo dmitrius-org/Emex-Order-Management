@@ -3,20 +3,23 @@ if OBJECT_ID('tDelimiter') is null
 /* **********************************************************
 tDelimiter - 
 ********************************************************** */
-create table tDelimiter
-(
- DelimiterID  int  identity --
-,Brief        varchar(10)  
-,Name         varchar(60)   --
-)
-go
-create unique index ao1 on tDelimiter(DelimiterID)
-go
-grant all on tDelimiter to public
-go
-insert tDelimiter (Brief, Name) select ';', 'Разделитель точка запятая' 
-insert tDelimiter (Brief, Name) select char(9), 'Разделитель табуляция' 
+begin
+	create table tDelimiter
+	(
+	 DelimiterID  int  identity --
+	,Brief        varchar(10)  
+	,Name         varchar(60)   --
+	);
 
+	create unique index ao1 on tDelimiter(DelimiterID);
 
+	grant all on tDelimiter to public;
+
+	insert tDelimiter (Brief, Name) select ';', 'Разделитель точка запятая'; 
+	insert tDelimiter (Brief, Name) select char(9), 'Разделитель табуляция'; 
+end
+go
+exec setOV 'tDelimiter', 'U', '20240101', '1.0.0.0'
+go
 
 

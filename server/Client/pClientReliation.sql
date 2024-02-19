@@ -17,5 +17,7 @@ create unique index ao1 on pClientReliation(ID)
 go
 grant all on pClientReliation to public
 go
+exec setOV 'pClientReliation', 'U', '20240101', '1.0.0.0'
+go
 exec dbo.sys_setTableDescription @table = 'pClientReliation', @desc =  'Cвязь с клиентами'
 go

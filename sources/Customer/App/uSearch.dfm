@@ -36,7 +36,7 @@ object SearchF: TSearchF
     object edtSearch: TUniEdit
       Left = 16
       Top = 12
-      Width = 1121
+      Width = 1105
       Height = 30
       Hint = ''
       Text = ''
@@ -59,9 +59,9 @@ object SearchF: TSearchF
       OnKeyDown = edtSearchKeyDown
     end
     object btnSearch: TUniButton
-      Left = 1143
+      Left = 1127
       Top = 12
-      Width = 90
+      Width = 106
       Height = 30
       Hint = ''
       Caption = #1053#1072#1081#1090#1080
@@ -160,6 +160,7 @@ object SearchF: TSearchF
           FieldName = 'MakeName'
           Title.Alignment = taCenter
           Title.Caption = #1041#1088#1077#1085#1076
+          Title.Font.Height = -13
           Width = 166
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -168,6 +169,7 @@ object SearchF: TSearchF
           FieldName = 'DetailNum'
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
+          Title.Font.Height = -13
           Width = 149
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -176,6 +178,7 @@ object SearchF: TSearchF
           FieldName = 'PartNameRus'
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+          Title.Font.Height = -13
           Width = 364
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -184,7 +187,8 @@ object SearchF: TSearchF
           FieldName = 'DeliveryType'
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
-          Width = 146
+          Title.Font.Height = -13
+          Width = 120
           Alignment = taCenter
           ReadOnly = True
           Menu.MenuEnabled = False
@@ -194,18 +198,21 @@ object SearchF: TSearchF
           FieldName = 'WeightGr'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089
+          Title.Font.Height = -13
           Width = 64
         end
         item
           FieldName = 'VolumeAdd'
           Title.Alignment = taCenter
           Title.Caption = #1054#1073#1098#1077#1084
+          Title.Font.Height = -13
           Width = 64
         end
         item
           FieldName = 'Delivery'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Title.Font.Height = -13
           Width = 109
           Sortable = True
           Menu.MenuEnabled = False
@@ -215,6 +222,7 @@ object SearchF: TSearchF
           FieldName = 'Rating'
           Title.Alignment = taCenter
           Title.Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
+          Title.Font.Height = -13
           Width = 150
           Alignment = taCenter
           ReadOnly = True
@@ -226,6 +234,7 @@ object SearchF: TSearchF
           FieldName = 'PriceRub'
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072
+          Title.Font.Height = -13
           Width = 115
           Sortable = True
           Menu.MenuEnabled = False
@@ -235,6 +244,7 @@ object SearchF: TSearchF
           FieldName = 'Available'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1083#1080#1095#1080#1077
+          Title.Font.Height = -13
           Width = 76
           Sortable = True
           Menu.MenuEnabled = False
@@ -249,6 +259,7 @@ object SearchF: TSearchF
           WidgetColumn.Widget = btnAddBasket
           WidgetColumn.Height = 30
           Title.Caption = ' '
+          Title.Font.Height = -13
           Width = 120
           Alignment = taCenter
         end>

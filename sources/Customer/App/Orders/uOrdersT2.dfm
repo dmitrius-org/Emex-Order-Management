@@ -76,9 +76,10 @@ object OrdersT2: TOrdersT2
     end
   end
   object UniPanel: TUniPanel
-    Left = 0
-    Top = 0
-    Width = 1402
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 1396
     Height = 51
     Hint = ''
     ShowHint = True
@@ -94,11 +95,14 @@ object OrdersT2: TOrdersT2
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 1402
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 4
       Top = 4
-      Width = 1394
+      Width = 1388
       Height = 43
       Hint = ''
       ShowHint = True
@@ -106,6 +110,7 @@ object OrdersT2: TOrdersT2
       ButtonWidth = 142
       Images = UniImageList
       ShowCaptions = True
+      ButtonAutoWidth = True
       LayoutConfig.IgnorePosition = False
       LayoutConfig.Width = '100'
       LayoutConfig.DockWhenAligned = False
@@ -115,6 +120,7 @@ object OrdersT2: TOrdersT2
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
+      ExplicitWidth = 1394
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -124,15 +130,14 @@ object OrdersT2: TOrdersT2
         ImageIndex = 4
         IconAlign = iaLeft
         TabOrder = 1
-        ExplicitLeft = 151
       end
     end
   end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 51
+    Top = 57
     Width = 1402
-    Height = 545
+    Height = 539
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -146,11 +151,13 @@ object OrdersT2: TOrdersT2
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
+    ExplicitTop = 51
+    ExplicitHeight = 545
     object Grid: TUniDBGrid
       Left = 0
       Top = 104
       Width = 1402
-      Height = 441
+      Height = 435
       Hint = ''
       ShowHint = True
       CustomAttribs.Strings = (
@@ -718,7 +725,7 @@ object OrdersT2: TOrdersT2
           AlignWithMargins = True
           Left = 3
           Top = 17
-          Width = 91
+          Width = 92
           Height = 13
           Hint = ''
           ShowHint = True

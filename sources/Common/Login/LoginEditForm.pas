@@ -1,4 +1,4 @@
-unit LoginEditForm;
+п»їunit LoginEditForm;
 
 interface
 
@@ -52,19 +52,19 @@ begin
 
   if (edtPas.Text = '') or (edtNewPas.Text = '') or (edtNewPas2.Text = '')  then
   begin
-    MessageDlg('Пароль не может быть пустым!', mtWarning, [mbOK]);
+    MessageDlg('РџР°СЂРѕР»СЊ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!', mtWarning, [mbOK]);
     Exit;
   end
   else
   if edtPas.Text = edtNewPas.Text  then
   begin
-    MessageDlg('Старый и новый пароли не должны совпадать!', mtWarning, [mbOK]);
+    MessageDlg('РЎС‚Р°СЂС‹Р№ Рё РЅРѕРІС‹Р№ РїР°СЂРѕР»Рё РЅРµ РґРѕР»Р¶РЅС‹ СЃРѕРІРїР°РґР°С‚СЊ!', mtWarning, [mbOK]);
     Exit;
   end
   else
   if edtNewPas.Text <> edtNewPas2.Text  then
   begin
-    MessageDlg('Новые пароли должны совпадать!', mtWarning, [mbOK]);
+    MessageDlg('РќРѕРІС‹Рµ РїР°СЂРѕР»Рё РґРѕР»Р¶РЅС‹ СЃРѕРІРїР°РґР°С‚СЊ!', mtWarning, [mbOK]);
     Exit;
   end;
 
@@ -86,9 +86,9 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    // сбрасываем пароли если их запоминали
-    UniApplication.Cookies.SetCookie('_loginname','',Date-1);
-    UniApplication.Cookies.SetCookie('_pwd','',Date-1);
+    // СЃР±СЂР°СЃС‹РІР°РµРј РїР°СЂРѕР»Рё РµСЃР»Рё РёС… Р·Р°РїРѕРјРёРЅР°Р»Рё
+    UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
+    UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',Date-1);
 
     begin
 
@@ -101,20 +101,20 @@ begin
         case E.Kind of
           ekUserPwdInvalid:
           begin
-             raise Exception.Create('Имя пользователя или пароль неверны!');
+             raise Exception.Create('РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРЅС‹!');
           end;
           ekUserPwdExpired:
-            raise Exception.Create('Ошибка подключения к БД. Срок действия пароля пользователя истек!');
+            raise Exception.Create('РћС€РёР±РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р‘Р”. РЎСЂРѕРє РґРµР№СЃС‚РІРёСЏ РїР°СЂРѕР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёСЃС‚РµРє!');
           ekServerGone:
-            raise Exception.Create('Ошибка соединения с базой данных. СУБД недоступна по какой-то причине!');
+            raise Exception.Create('РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РЎРЈР‘Р” РЅРµРґРѕСЃС‚СѓРїРЅР° РїРѕ РєР°РєРѕР№-С‚Рѕ РїСЂРёС‡РёРЅРµ!');
         else // other issues
-          raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка!');
+          raise Exception.Create('РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°!');
         end;
         on E : Exception do
-          raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
+          raise Exception.Create(E.ClassName+' РїРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+#13#10+#13#10+E.Message);
       end;
 
-      MessageDlg('Пароль успешно изменен!', mtInformation, [mbOK]);
+      MessageDlg('РџР°СЂРѕР»СЊ СѓСЃРїРµС€РЅРѕ РёР·РјРµРЅРµРЅ!', mtInformation, [mbOK]);
       ModalResult:=mrOK;
     end;
   end

@@ -51,7 +51,8 @@ uses
   uEmexUtils in 'App\uEmexUtils.pas',
   uToast in '..\Common\CommonApp\uToast.pas',
   uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
-  uGridUtils in '..\Common\Common\uGridUtils.pas';
+  uGridUtils in '..\Common\Common\uGridUtils.pas',
+  uApp in '..\Common\Common\uApp.pas';
 
 {$R *.res}
 

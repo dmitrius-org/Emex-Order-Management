@@ -38,5 +38,7 @@ tBasket - корзина деталей
   create unique index ao2 on tBasket(ClientID);
 end
 go
+exec setOV 'tBasket', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tBasket', @desc = 'Корзина'

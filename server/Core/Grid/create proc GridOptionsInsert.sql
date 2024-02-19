@@ -23,4 +23,7 @@ as
   select dbo.GetUserID() , @Grid, @Column, 1
 go
 grant execute on GridOptionsInsert to public
-
+go
+exec setOV 'GridOptionsInsert', 'P', '20240101', '1.0.0.0'
+go
+ 

@@ -3,18 +3,21 @@ if OBJECT_ID('tProfilesPrice') is null
 /* **********************************************************
 tProfilesPrice - профили управления загрузкой
 ********************************************************** */
-create table tProfilesPrice
-(
- ProfilesPriceID      int  identity --  
-,isActive             bit
-,PriceName            varchar(10)
-,UpdateDate           datetime
-)
+begin
+	create table tProfilesPrice
+	(
+	 ProfilesPriceID      int  identity --  
+	,isActive             bit
+	,PriceName            varchar(10)
+	,UpdateDate           datetime
+	);
+	create unique index ao1 on tProfilesPrice(ProfilesPriceID);
+	
+	create unique index ao2 on tProfilesPrice(PriceName);
+	
+	grant all on tProfilesPrice to public;
+end
 go
-create unique index ao1 on tProfilesPrice(ProfilesPriceID)
-go
-create unique index ao2 on tProfilesPrice(PriceName)
-go
-grant all on tProfilesPrice to public
+exec setOV 'tProfilesPrice', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'tProfilesPrice', @desc = 'Профили управления загрузкой'

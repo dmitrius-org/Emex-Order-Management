@@ -80,6 +80,8 @@ type
   private
     { Private declarations }
 
+    IsActive: Boolean;
+    IsRefreshInterface: Boolean;
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
@@ -90,15 +92,13 @@ type
     procedure SetTaskEnabledStatus();
   public
     { Public declarations }
-    IsRefreshInterface: Boolean;
+
   end;
 
 implementation
 
 uses
   uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils, uLogger, ServerModule, uAuditUtils;
-
-var IsActive: Boolean;
 
 {$R *.dfm}
 
@@ -145,8 +145,7 @@ end;
 procedure TTask_T.actTaskActiveExecute(Sender: TObject);
 begin
   IsActive := not IsActive;
-  Sql.Exec(' Update tTaskActive      '+
-           '    set IsActive = :IsActive ', ['IsActive'], [IsActive]);
+  Sql.Exec(' Update tTaskActive set IsActive = :IsActive ', ['IsActive'], [IsActive]);
 
   if IsActive then
     Audit.Add(TObjectType.otTask, 0, acOn , '')
@@ -171,26 +170,25 @@ end;
 
 procedure TTask_T.DBAlertAlert(ASender: TFDCustomEventAlerter;
   const AEventName: string; const AArgument: Variant);
-var
-	i: Integer;
-	sArgs: String;
+//var
+//	i: Integer;
+//	sArgs: String;
 begin
   logger.Info('TTask_T.DBAlertAlert Begin');
-	if VarIsArray(AArgument) then
-  begin
-		sArgs := '';
-		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
-    begin
-			if sArgs <> '' then
-				sArgs := sArgs + ', ';
-			sArgs := sArgs + VarToStr(AArgument[i]);
-		end;
-	end
-	else if VarIsNull(AArgument) then sArgs := '<NULL>'
-	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
-	else sArgs := VarToStr(AArgument);
-	logger.Info('Event - [' + AEventName + '] - [' + sArgs + ']');
-
+//	if VarIsArray(AArgument) then
+//  begin
+//		sArgs := '';
+//		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
+//    begin
+//			if sArgs <> '' then
+//				sArgs := sArgs + ', ';
+//			sArgs := sArgs + VarToStr(AArgument[i]);
+//		end;
+//	end
+//	else if VarIsNull(AArgument) then sArgs := '<NULL>'
+//	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
+//	else sArgs := VarToStr(AArgument);
+//	logger.Info('Event - [' + AEventName + '] - [' + sArgs + ']');
 
   if AEventName = 'IsActive' then
   begin
@@ -226,7 +224,7 @@ end;
 procedure TTask_T.SetTaskEnabledStatus;
 begin
 	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
-  //  IsActive:=UniServerModule.MTask.IsActive;  - вариан не подходит, т.к. форма используется в нескольких проектах
+
   Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
   IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
 
@@ -258,6 +256,8 @@ end;
 
 procedure TTask_T.UniFrameReady(Sender: TObject);
 begin
+  logger.Info('TTask_T.UniFrameReady Handle: ' + VarToStr(Self.Handle));
+
   DBAlert.Names.Clear;
   DBAlert.Names.Add('QUEUE=TaskManager');
  	DBAlert.Names.Add('SERVICE=TaskManager');
@@ -271,6 +271,7 @@ begin
   if IsRefreshInterface then
   begin
     IsRefreshInterface := false;
+
     SetTaskEnabledStatus;
   end;
 end;

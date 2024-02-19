@@ -80,3 +80,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
+exec setOV 'PartToBasket', 'P', '20240101', '1.0.0.0'
+go

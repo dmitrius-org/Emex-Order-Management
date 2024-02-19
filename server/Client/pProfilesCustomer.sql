@@ -36,5 +36,7 @@ create unique index ao2 on pProfilesCustomer(Spid, ClientID, Brief)
 go
 grant all on pProfilesCustomer to public
 go
+exec setOV 'pProfilesCustomer', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pProfilesCustomer', @desc = 'Профили управления выгрузкой прайсов'

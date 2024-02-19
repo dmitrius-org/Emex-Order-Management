@@ -17,3 +17,5 @@ return @r
 go
 grant exec on OrderFileFormatDeleteP to public
 go
+exec setOV 'OrderFileFormatDeleteP', 'P', '20240101', '1.0.0.0'
+go

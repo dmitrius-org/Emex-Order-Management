@@ -61,3 +61,5 @@ return @r
 go
 grant exec on ClientTypeInsert to public
 go
+exec setOV 'ClientTypeInsert', 'P', '20240101', '1.0.0.0'
+go

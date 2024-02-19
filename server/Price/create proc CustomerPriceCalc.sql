@@ -1,6 +1,5 @@
 if OBJECT_ID('ClientPriceCalc', 'P') is not null
     drop proc ClientPriceCalc
-
 go
 if OBJECT_ID('CustomerPriceCalc', 'P') is not null
     drop proc CustomerPriceCalc	 
@@ -12,7 +11,7 @@ go
 create proc CustomerPriceCalc
               @DestinationLogo	nvarchar(20)
 as
-set nocount on
+set nocount on;
 
 declare @Kurs		  float
 	   ,@RetVal       int
@@ -162,3 +161,6 @@ exit_:
 return @RetVal    
 go
 grant all on CustomerPriceCalc to public
+go
+exec setOV 'CustomerPriceCalc', 'P', '20240101', '1.0.0.0'
+go

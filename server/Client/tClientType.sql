@@ -3,32 +3,36 @@ if OBJECT_ID('tClientType') is null
 /* **********************************************************
 tClientType - Типы клиентов
 ********************************************************** */
-create table tClientType
-(
- ClientTypeID      numeric(18,0)  identity --  
-,Name	           nvarchar(256)           -- Название
-,Comment           nvarchar(512)           -- Описание 
-,Prepayment        bit                     -- Предоплата 
-,PrepaymentAmount  money                   -- Предоплата 
-,Margin            money                   -- Наценка
-,OrderNumMask      nvarchar(10)            -- Mаска для формирования номера заказа
-,IsActive          bit                     -- Активен
---
-,Reliability         money                 -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70", 😵
-,Discount            money                 -- Скидка (discount, текстовое поле, по умолчанию установить значение "5", 😵
-                                           -- Discount -- Скидка поставщика на закупку товара
-,Commission          money                 -- Комиссия эквайера (commission, текстовое поле, по умолчанию установить значение "3,5", 😵
---
-,UserID            numeric(18,0) default dbo.GetUserID()
-,inDatetime        datetime      default GetDate()      --
-,updDatetime       datetime      default GetDate()      --
-)
+begin
+	create table tClientType
+	(
+	 ClientTypeID      numeric(18,0)  identity --  
+	,Name	           nvarchar(256)           -- Название
+	,Comment           nvarchar(512)           -- Описание 
+	,Prepayment        bit                     -- Предоплата 
+	,PrepaymentAmount  money                   -- Предоплата 
+	,Margin            money                   -- Наценка
+	,OrderNumMask      nvarchar(10)            -- Mаска для формирования номера заказа
+	,IsActive          bit                     -- Активен
+	--
+	,Reliability         money                 -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70", 😵
+	,Discount            money                 -- Скидка (discount, текстовое поле, по умолчанию установить значение "5", 😵
+											   -- Discount -- Скидка поставщика на закупку товара
+	,Commission          money                 -- Комиссия эквайера (commission, текстовое поле, по умолчанию установить значение "3,5", 😵
+	--
+	,UserID            numeric(18,0) default dbo.GetUserID()
+	,inDatetime        datetime      default GetDate()      --
+	,updDatetime       datetime      default GetDate()      --
+	);
+
+	create unique index ao1 on tClientType(ClientTypeID);
+
+	create unique index ao2 on tClientType(Name);
+
+	grant all on tClientType to public;
+end
 go
-create unique index ao1 on tClientType(ClientTypeID)
-go
-create unique index ao2 on tClientType(Name)
-go
-grant all on tClientType to public
+exec setOV 'tClientType', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'tClientType', @desc = 'Типы клиентов'
 go

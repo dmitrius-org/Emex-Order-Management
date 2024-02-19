@@ -150,3 +150,5 @@ return @r
 go
 grant exec on OrderFileFormat_load to public
 go
+exec setOV 'OrderFileFormat_load', 'P', '20240101', '1.0.0.0'
+go

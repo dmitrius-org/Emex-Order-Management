@@ -1,4 +1,4 @@
-unit LoginForm;
+п»їunit LoginForm;
 
 interface
 
@@ -62,7 +62,7 @@ begin
   end;
 //  else
 //  begin
-//    MessageDlg('Имя пользователя или пароль неверны!', mtError, [mbOK]);
+//    MessageDlg('РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРЅС‹!', mtError, [mbOK]);
 //  end;
 end;
 

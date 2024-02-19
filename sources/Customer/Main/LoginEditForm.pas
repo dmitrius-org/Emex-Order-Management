@@ -1,4 +1,4 @@
-unit LoginEditForm;
+п»їunit LoginEditForm;
 
 interface
 
@@ -51,19 +51,19 @@ begin
 
   if (edtPas.Text = '') or (edtNewPas.Text = '') or (edtNewPas2.Text = '')  then
   begin
-    MessageDlg('Пароль не может быть пустым!', mtWarning, [mbOK]);
+    MessageDlg('РџР°СЂРѕР»СЊ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!', mtWarning, [mbOK]);
     Exit;
   end
   else
   if edtPas.Text = edtNewPas.Text  then
   begin
-    MessageDlg('Старый и новый пароли не должны совпадать!', mtWarning, [mbOK]);
+    MessageDlg('РЎС‚Р°СЂС‹Р№ Рё РЅРѕРІС‹Р№ РїР°СЂРѕР»Рё РЅРµ РґРѕР»Р¶РЅС‹ СЃРѕРІРїР°РґР°С‚СЊ!', mtWarning, [mbOK]);
     Exit;
   end
   else
   if edtNewPas.Text <> edtNewPas2.Text  then
   begin
-    MessageDlg('Новые пароли должны совпадать!', mtWarning, [mbOK]);
+    MessageDlg('РќРѕРІС‹Рµ РїР°СЂРѕР»Рё РґРѕР»Р¶РЅС‹ СЃРѕРІРїР°РґР°С‚СЊ!', mtWarning, [mbOK]);
     Exit;
   end;
 
@@ -85,15 +85,12 @@ begin
 
   if RetVal.Code = 0then
   begin
-//    if UniMainModule.dbConnect(UniMainModule.Query.FieldByName('USR').Value, edtNewPas.Text) then
-    begin
-      // сбрасываем пароли если их запоминали
+      // СЃР±СЂР°СЃС‹РІР°РµРј РїР°СЂРѕР»Рё РµСЃР»Рё РёС… Р·Р°РїРѕРјРёРЅР°Р»Рё
       UniApplication.Cookies.SetCookie('_loginname2D02D0BF','',Date-1);
       UniApplication.Cookies.SetCookie('_pwd2D02D0BF','',Date-1);
 
-      MessageDlg('Пароль успешно изменен!', mtInformation, [mbOK]);
+      MessageDlg('РџР°СЂРѕР»СЊ СѓСЃРїРµС€РЅРѕ РёР·РјРµРЅРµРЅ!', mtInformation, [mbOK]);
       ModalResult:=mrOK;
-    end;
   end
   else
   begin

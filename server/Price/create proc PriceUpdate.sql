@@ -1,8 +1,6 @@
-
 if OBJECT_ID('PriceUpdate') is not null
   drop proc PriceUpdate
 go
-
 /* **********************************************************
  PriceUpdate  - добавление/обновление данных по прайсам в БД
 ********************************************************** */
@@ -121,3 +119,5 @@ end
 exit_:
 go
 grant execute on PriceUpdate to public
+go
+exec setOV 'PriceUpdate', 'P', '20240101', '1.0.0.0'

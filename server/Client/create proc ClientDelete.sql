@@ -58,7 +58,10 @@ as
  
  exit_:
  return @r
-
+go
 grant exec on ClientDelete to public
 go
+exec setOV 'ClientDelete', 'P', '20240101', '1.0.0.0'
+go
+
  

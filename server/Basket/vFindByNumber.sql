@@ -4,13 +4,9 @@ go
 /* **********************************************************						
 vFindByNumber - получение списка найденных
 ********************************************************** */
-
 create view vFindByNumber
-
 as
-
 --SET DATEFIRST 1;
-
 select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc, cast(p.Available as int) desc) N,
        p.ID,
        p.MakeName,
@@ -58,7 +54,5 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-
-Select *
-  from vFindByNumber
-order by n  
+exec setOV 'vFindByNumber', 'V', '20240101', '1.0.0.0'
+go
