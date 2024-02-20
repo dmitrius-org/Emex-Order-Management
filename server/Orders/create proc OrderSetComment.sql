@@ -40,3 +40,6 @@ as
 go
 grant exec on OrderSetComment to public
 go
+exec setOV 'OrderSetComment', 'P', '20240101', '1.0.0.0'
+go
+ 

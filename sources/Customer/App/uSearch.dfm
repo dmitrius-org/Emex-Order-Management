@@ -109,7 +109,7 @@ object SearchF: TSearchF
           ' {'#13#10'                var cell = view.getCellByPosition({ row: row' +
           ', column: colIndx }).dom,'#13#10'                record = store.getAt(' +
           'row),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'       ' +
-          '         if (col < 4) {'#13#10'                    if (spanValue != va' +
+          '         if (col < 5) {'#13#10'                    if (spanValue != va' +
           'lue) {'#13#10'                        if (spanCell !== null) {'#13#10'      ' +
           '                      spanCell.rowSpan = spanCount;'#13#10'           ' +
           '             }'#13#10#13#10'                        Ext.fly(cell).query('#39'.' +
@@ -184,17 +184,6 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'DeliveryType'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
-          Title.Font.Height = -13
-          Width = 120
-          Alignment = taCenter
-          ReadOnly = True
-          Menu.MenuEnabled = False
-          Menu.ColumnHideable = False
-        end
-        item
           FieldName = 'WeightGr'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089
@@ -207,6 +196,17 @@ object SearchF: TSearchF
           Title.Caption = #1054#1073#1098#1077#1084
           Title.Font.Height = -13
           Width = 64
+        end
+        item
+          FieldName = 'DeliveryType'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
+          Title.Font.Height = -13
+          Width = 120
+          Alignment = taCenter
+          ReadOnly = True
+          Menu.MenuEnabled = False
+          Menu.ColumnHideable = False
         end
         item
           FieldName = 'Delivery'

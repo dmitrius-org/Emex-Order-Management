@@ -226,6 +226,7 @@ begin
 	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
 
   Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
+
   IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
 
   if IsActive then

@@ -12,6 +12,8 @@ create table pOrdersFinIn
 go
 grant all on pOrdersFinIn to public
 go
+exec setOV 'pOrdersFinIn', 'U', '20240101', '1.0.0.0'
+go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pOrdersFinIn', @desc = 'Расчет финансовых показателей. Список заказов для расчета фин. показателей'
 go
@@ -59,6 +61,8 @@ create table pOrdersFin
 )
 go
 grant all on pOrdersFin to public
+go
+exec setOV 'pOrdersFin', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pOrdersFin', @desc = 'Расчет финансовых показателей. Результат расчтеа фин. показателей'

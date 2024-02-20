@@ -35,6 +35,8 @@ create unique index ao1 on pOrderFileFormat(ID)
 go
 grant all on pOrderFileFormat to public
 go
+exec setOV 'pOrderFileFormat', 'U', '20240101', '1.0.0.0'
+go
 exec dbo.sys_setTableDescription @table = 'pOrderFileFormat', @desc = 'Формат файла с заказом'
 go
 

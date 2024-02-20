@@ -1,21 +1,24 @@
 if OBJECT_ID('tOrderRefusals') is null
---  drop table tOrderRefusals
+begin
 /* **********************************************************
 tOrderRefusals - Таблица отказов
 ********************************************************** */
-create table tOrderRefusals
-(
- OrderRefusalsID      numeric(18,0)  identity --  
-,FileName             nvarchar(256)  
-,Flag                 int
-,UserID               numeric(18,0) default dbo.GetUserID()
-,InDateTime           DateTime default GetDate()
-,UpdDateTime          DateTime default GetDate()
-)
-go
-create unique index ao1 on tOrderRefusals(OrderRefusalsID)
+	create table tOrderRefusals
+	(
+	 OrderRefusalsID      numeric(18,0)  identity --  
+	,FileName             nvarchar(256)  
+	,Flag                 int
+	,UserID               numeric(18,0) default dbo.GetUserID()
+	,InDateTime           DateTime default GetDate()
+	,UpdDateTime          DateTime default GetDate()
+	)
+
+	create unique index ao1 on tOrderRefusals(OrderRefusalsID)
+end
 go
 grant all on tOrderRefusals to public
+go
+exec setOV 'tOrderRefusals', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tOrderRefusals', @desc = 'Таблица отказов'

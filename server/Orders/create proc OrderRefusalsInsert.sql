@@ -38,9 +38,6 @@ as
 go
 grant exec on OrderRefusalsInsert to public
 go
-
-
---exec TaskRefusals
-
---select  *
---from sys.dm_db_index_usage_stats where database_id = db_id('Car');
+exec setOV 'OrderRefusalsInsert', 'P', '20240101', '1.0.0.0'
+go
+ 

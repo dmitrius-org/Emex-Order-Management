@@ -139,3 +139,6 @@ select
 GO
 grant exec on MovementArchive to public
 go
+exec setOV 'MovementArchive', 'P', '20240101', '1.0.0.0'
+go
+ 

@@ -60,3 +60,7 @@ exit_:
 return @RetVal    
 go
 grant all on FindByNumberInsert to public
+go
+exec setOV 'FindByNumberInsert', 'P', '20240101', '1.0.0.0'
+go
+ 

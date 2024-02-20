@@ -64,3 +64,6 @@ return @r
 GO
 grant exec on OrderAutoSetStatus to public
 go
+exec setOV 'OrderAutoSetStatus', 'P', '20240101', '1.0.0.0'
+go
+ 

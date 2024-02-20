@@ -1,4 +1,4 @@
-unit uTask_F;
+п»їunit uTask_F;
 
 interface
 
@@ -65,12 +65,12 @@ type
     FFlag:Integer;
     procedure SetAction(const Value: TFormAction);
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
 
@@ -269,22 +269,22 @@ begin
       if edtBrief.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!'; Exit();
+        RetVal.Message := 'РџРѕР»Рµ [РЎРѕРєСЂР°С‰РµРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!'; Exit();
       end
       else if edtName.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательна к заполнению!'; Exit();
+        RetVal.Message := 'РџРѕР»Рµ [РќР°РёРјРµРЅРѕРІР°РЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!'; Exit();
       end
       else if edtPeriodType.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Период выполнения] обязателена к заполнению!'; Exit();
+        RetVal.Message := 'РџРѕР»Рµ [РџРµСЂРёРѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ] РѕР±СЏР·Р°С‚РµР»РµРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!'; Exit();
       end
       else if edtTaskType.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Тип задачи] обязателена к заполнению!'; Exit();
+        RetVal.Message := 'РџРѕР»Рµ [РўРёРї Р·Р°РґР°С‡Рё] РѕР±СЏР·Р°С‚РµР»РµРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!'; Exit();
       end;
     end;
   end;
@@ -353,25 +353,25 @@ begin
   FAction := Value;
 end;
 
-procedure TTask_F.SetPeriodTypeProperty; // период выполнения
+procedure TTask_F.SetPeriodTypeProperty; // РїРµСЂРёРѕРґ РІС‹РїРѕР»РЅРµРЅРёСЏ
 begin
   PeriodType1.Visible:=False;
 
   case edtPeriodType.ItemIndex of
     Integer(tTaskPeriod.tpSelect):
     begin
-      lblStartTime.Text := 'Интервал времени в течении дня:';
+      lblStartTime.Text := 'РРЅС‚РµСЂРІР°Р» РІСЂРµРјРµРЅРё РІ С‚РµС‡РµРЅРёРё РґРЅСЏ:';
       PeriodType1.Visible:= True;
       pnlInteval.Visible := True;
     end;
   else
-   // lblStartTime.Text := 'Время выполнения:';
+   // lblStartTime.Text := 'Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ:';
     PeriodType1.Visible:= False;
     pnlInteval.Visible := False;
   end;
 end;
 
-procedure TTask_F.SetTaskTypeProperty; // тип задачи
+procedure TTask_F.SetTaskTypeProperty; // С‚РёРї Р·Р°РґР°С‡Рё
 begin
   edtLinkID.Visible:=False;
   edtLink.Visible:=False;
@@ -410,19 +410,24 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
+
+
+      edtDateBegin.DateTime := Now();
+      edtTimeBegin.Text := '';
+      edtTimeEnd.Text := '';
     end;
     acUpdate, acReportEdit, acUserAction:
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;

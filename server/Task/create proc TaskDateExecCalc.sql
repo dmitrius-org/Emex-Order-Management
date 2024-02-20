@@ -16,12 +16,14 @@ as
 						   When PeriodType = 1 then  dateadd(ss, DATEPART(ss, TimePeriod),             --выбрать, период
 						                               dateadd(mi, DATEPART(mi, TimePeriod),
 						                                 dateadd(hh, DATEPART(HH, TimePeriod),
-						                                                dateadd(d, DayPeriod, isnull(DateExec,  getdate()) )
+						                                   dateadd(dd, DayPeriod, isnull(  
+														                                 iif(datediff(dd, DateExec, getdate()) > 0, getdate(), DateExec)  
+														                               , getdate()) )
 													     ) 
 													   )
 												     )
 															--Выбрать
-						   When PeriodType = 2 then dateadd(d, 1,     ( cast( cast(getdate() as date) as datetime ) + cast( cast(DateBegin as time) as datetime ) )) --Ежедневно
+						   When PeriodType = 2 then dateadd(dd, 1,    ( cast( cast(getdate() as date) as datetime ) + cast( cast(DateBegin as time) as datetime ) )) --Ежедневно
 						   When PeriodType = 3 then dateadd(week, 1,  ( cast( cast(getdate() as date) as datetime ) + cast( cast(DateBegin as time) as datetime ) )) --Еженедельно
 						   When PeriodType = 4 then dateadd(month, 1, ( cast( cast(getdate() as date) as datetime ) + cast( cast(DateBegin as time) as datetime ) )) --Ежемесячно
 						   When PeriodType = 5 then dateadd(year, 1,  ( cast( cast(getdate() as date) as datetime ) + cast( cast(DateBegin as time) as datetime ) )) --Ежегодно

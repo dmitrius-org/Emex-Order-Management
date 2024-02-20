@@ -39,4 +39,6 @@ as
 go
 grant exec on BasketСheck to public
 go
- 
+exec setOV 'BasketСheck', 'P', '20240101', '1.0.0.0'
+go
+  

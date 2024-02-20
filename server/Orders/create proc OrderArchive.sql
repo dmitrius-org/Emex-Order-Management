@@ -166,3 +166,6 @@ select distinct
 GO
 grant exec on OrderArchive to public
 go
+exec setOV 'OrderArchive', 'P', '20240101', '1.0.0.0'
+go
+ 
