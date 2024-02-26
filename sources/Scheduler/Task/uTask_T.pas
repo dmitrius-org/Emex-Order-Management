@@ -148,9 +148,9 @@ begin
   Sql.Exec(' Update tTaskActive set IsActive = :IsActive ', ['IsActive'], [IsActive]);
 
   if IsActive then
-    Audit.Add(TObjectType.otTask, 0, acOn , '')
+    Audit.Add(TObjectType.otTask, 0, acOn , 'Включение планировщика')
   else
-    Audit.Add(TObjectType.otTask, 0, acOff, '');
+    Audit.Add(TObjectType.otTask, 0, acOff, 'Выключение планировщика');
 
   SetTaskEnabledStatus;
 end;
