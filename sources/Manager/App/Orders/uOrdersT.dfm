@@ -63,7 +63,7 @@ object OrdersT: TOrdersT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      object UniToolButton4: TUniToolButton
+      object tbFormRefusalsOpen: TUniToolButton
         AlignWithMargins = True
         Left = 3
         Top = 3
@@ -75,7 +75,7 @@ object OrdersT: TOrdersT
         Scale = bbsSmall
         TabOrder = 1
       end
-      object UniToolButton2: TUniToolButton
+      object tbUploadingRefusalsEmex: TUniToolButton
         AlignWithMargins = True
         Left = 149
         Top = 3
@@ -88,7 +88,7 @@ object OrdersT: TOrdersT
         Scale = bbsSmall
         TabOrder = 5
       end
-      object UniToolButton1: TUniToolButton
+      object tbProtocol: TUniToolButton
         AlignWithMargins = True
         Left = 295
         Top = 3
@@ -101,7 +101,7 @@ object OrdersT: TOrdersT
         Scale = bbsSmall
         TabOrder = 4
       end
-      object UniToolButton5: TUniToolButton
+      object tbExecuteActionRollback: TUniToolButton
         AlignWithMargins = True
         Left = 441
         Top = 3

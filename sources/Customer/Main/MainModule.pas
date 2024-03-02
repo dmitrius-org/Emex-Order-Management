@@ -42,6 +42,9 @@ type
 
     ASPID: Integer;
 
+    const _loginname = '_loginname2D02D0BF';
+    const _pwd = '_pwd2D02D0BF';
+
     /// <summary> dbUserAuthorization - авторизация пользователя.
     ///  IsSaveSession:Boolean - подключение используя сохраненные данные  </summary>
     function dbUserAuthorization(AU: string; AP: string; IsSaveSession: Boolean = False): Boolean;

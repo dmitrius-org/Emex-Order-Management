@@ -59,7 +59,7 @@ type
     N6: TUniMenuItem;
     UniPanel: TUniPanel;
     ToolBar: TUniToolBar;
-    UniToolButton4: TUniToolButton;
+    tbFormRefusalsOpen: TUniToolButton;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
@@ -118,7 +118,7 @@ type
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     UniLabel4: TUniLabel;
-    UniToolButton5: TUniToolButton;
+    tbExecuteActionRollback: TUniToolButton;
     tbActionExecute: TUniToolButton;
     ppExecute: TUniPopupMenu;
     ppExecuteAction: TUniMenuItem;
@@ -143,7 +143,7 @@ type
     actProtocol: TAction;
     N1: TUniMenuItem;
     N2: TUniMenuItem;
-    UniToolButton1: TUniToolButton;
+    tbProtocol: TUniToolButton;
     UniImageList: TUniImageList;
     UniImageList32: TUniImageList;
     actFilter: TAction;
@@ -182,7 +182,7 @@ type
     actUploadingRefusalsEmex: TAction;
     Emex1: TUniMenuItem;
     UniFileUpload: TUniFileUpload;
-    UniToolButton2: TUniToolButton;
+    tbUploadingRefusalsEmex: TUniToolButton;
     QueryInvoice: TWideStringField;
     lblRowSum2: TUniLabel;
     lblRowSum1: TUniLabel;
@@ -532,13 +532,13 @@ end;
 
 procedure TOrdersT.DoHideMask;
 begin
-  UniToolButton5.HideMask();
+  tbExecuteActionRollback.HideMask();
   UniSession.Synchronize;
 end;
 
 procedure TOrdersT.DoShowMask;
 begin
-  UniToolButton5.ShowMask('');
+  tbExecuteActionRollback.ShowMask('');
   UniSession.Synchronize;
 end;
 

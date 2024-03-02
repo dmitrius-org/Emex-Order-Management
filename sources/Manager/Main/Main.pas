@@ -8,7 +8,8 @@ uses
   uniGUIClasses, uniGUIRegClasses, uniGUIForm, uniGUIBaseClasses, uniButton,
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
-  uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
+  uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
+  Vcl.ImgList
   ;
 
 type
@@ -17,7 +18,6 @@ type
     UniPanelLeft: TUniPanel;
     UniPanelCentral: TUniPanel;
     UniContainerPanel: TUniContainerPanel;
-    MainMenu: TUnimTreeMenu;
     Menu: TUniMenuItems;
     mnHome: TUniMenuItem;
     pcMain: TUniPageControl;
@@ -38,6 +38,9 @@ type
     actinfo: TAction;
     N4: TUniMenuItem;
     N5: TUniMenuItem;
+    MainMenuImage: TUniNativeImageList;
+    MainMenu: TUniTreeMenu;
+    UniNativeImageList1: TUniNativeImageList;
     procedure UniFormShow(Sender: TObject);
     procedure MainMenuClick(Sender: TObject);
     procedure TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -70,7 +73,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger;
 
 function MainForm: TMainForm;
 begin
@@ -99,8 +102,8 @@ end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
 begin
-  UniApplication.Cookies.SetCookie('_loginname','',Date-1);
-  UniApplication.Cookies.SetCookie('_pwd','',Date-1);
+  UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
+  UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',Date-1);
   UniApplication.Restart();
 end;
 
@@ -114,10 +117,12 @@ var
   c, Path: string;
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
+
+  iconfile: string;
 begin
   FormNames := TStringList.Create;
 
-  Path := UniServerModule.StartPath + '';
+  Path := UniServerModule.StartPath + 'files\';
   with UniMainModule.Query do
   begin
     close;
@@ -154,23 +159,29 @@ begin
         FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
 
         Nd := FindNodeByID(PID);
-        if Nd = nil then
+       // if Nd = nil then
+       // begin
+      //    Nd := MainMenu.Items.Add(nil, c);
+      //  end
+      //  else
+      //  begin
+        Nd := MainMenu.Items.Add(Nd, c);
+       // end;
+
+       // logger.Info(UniMainModule.Query.FieldByName('Icon').AsWideString);
+        //iconfile :=  Path + 'Icons\' + UniMainModule.Query.FieldByName('Icon').AsWideString +'.png';
+
+       // logger.Info(BoolToStr(UniMainModule.Query.FieldByName('Icon').AsWideString <> ''));
+
+
+       // if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) and (FileExists(iconfile))  then
+        if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) then
         begin
-          Nd := MainMenu.Items.Add(nil, c);
-          Nd.ImageIndex := -1;
+         //logger.Info(iconfile);
+          Nd.ImageIndex := UniMainModule.Query.FieldByName('Icon').AsWideString.ToInteger;
         end
         else
-        begin
-//
-//        iconfile := Path + 'Icons\' + FileNames.Values[SubS] + '.ico';
-//        if FileExists(iconfile) then
-//          index := CreateImageIndex(iconfile)
-//        else
-//          index := -1;
-//
-          Nd := MainMenu.Items.Add(Nd, c);
           Nd.ImageIndex := -1;
-        end;
 
         Nd.Tag := ID;
       end;
@@ -185,7 +196,7 @@ end;
 
 function TMainForm.CreateImageIndex(filename: string): Integer;
 begin
-  Result := ImageList.AddIconFile(filename);
+  Result := MainMenuImage.AddImageFile(filename);
 end;
 
 procedure TMainForm.MainMenuClick(Sender: TObject);

@@ -54,8 +54,8 @@ begin
   begin
     if UniCheckBox1.Checked then
       begin
-        UniApplication.Cookies.SetCookie('_loginname2D02D0BF', edtUser.Text, Date + 7.0); // Expires 7 days from now
-        UniApplication.Cookies.SetCookie('_pwd2D02D0BF', edtPas.Text, Date + 7.0);
+        UniApplication.Cookies.SetCookie(UniMainModule._loginname, edtUser.Text, Date + 7.0); // Expires 7 days from now
+        UniApplication.Cookies.SetCookie(UniMainModule._pwd, edtPas.Text, Date + 7.0);
       end;
 
     self.ModalResult:=mrok;

@@ -20,6 +20,7 @@ select u.GrantID
       ,u.IsGroup
       ,u.Groups
       ,u.GroupValue
+	  ,m.Icon
   from pGrant u with (nolock index=ao1)
  inner join tMenu m with (nolock index=ao1)
          on m.MenuID = u.MenuID
@@ -28,6 +29,6 @@ select u.GrantID
 go
 grant all on vGrant to public
 go
-exec setOV 'vGrant', 'V', '20240101', '1.0.0.0'
+exec setOV 'vGrant', 'V', '20240101', '1.0.0.1'
 go
  

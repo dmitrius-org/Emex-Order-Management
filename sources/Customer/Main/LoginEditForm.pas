@@ -86,8 +86,8 @@ begin
   if RetVal.Code = 0then
   begin
       // сбрасываем пароли если их запоминали
-      UniApplication.Cookies.SetCookie('_loginname2D02D0BF','',Date-1);
-      UniApplication.Cookies.SetCookie('_pwd2D02D0BF','',Date-1);
+      UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
+      UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',Date-1);
 
       MessageDlg('Пароль успешно изменен!', mtInformation, [mbOK]);
       ModalResult:=mrOK;

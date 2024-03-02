@@ -95,8 +95,8 @@ end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
 begin
-  UniApplication.Cookies.SetCookie('_loginname2D02D0BF','',Date-1);
-  UniApplication.Cookies.SetCookie('_pwd2D02D0BF','',Date-1);
+  UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
+  UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',Date-1);
   UniApplication.Restart();
 end;
 
