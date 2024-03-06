@@ -21,8 +21,6 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker;
 
-
-
 type
   tMarks = class
   private
@@ -46,7 +44,6 @@ type
 
     procedure DataRefresh();
   end;
-
 
 
   TOrdersT = class(TUniFrame)
@@ -250,6 +247,8 @@ type
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
       NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
+    procedure fStatus2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -264,9 +263,10 @@ type
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
     /// <summary>
-    /// GridOpen -
+    /// GridOpen - получение данных с сервера
     /// </summary>
-    procedure GridOpen;
+    procedure GridOpen; overload;
+    procedure GridOpen(Key: Word); overload;
 
     /// <summary>
     ///  OrdersFCallBack - CallBack обработчик действия на форме редактирования данных
@@ -448,7 +448,7 @@ begin
 
   fOrderDate.Text := '';
 
-  GridOpen();
+  //GridOpen();
 end;
 
 procedure TOrdersT.actFilterExecute(Sender: TObject);
@@ -562,7 +562,7 @@ begin
     delete(s,length(s),1);
 
   FFilterTextClient := s;
-  GridOpen;
+  //GridOpen;
   logger.Info('FFilterTextClient: ' + FFilterTextClient);
 end;
 
@@ -690,8 +690,14 @@ begin
     delete(s,length(s),1);
 
   FFilterTextPriceLogo := s;
-  GridOpen;
+  //GridOpen;
   logger.Info('FFilterTextPriceLogo: ' + FFilterTextPriceLogo) ;
+end;
+
+procedure TOrdersT.fStatus2KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  GridOpen(Key);
 end;
 
 procedure TOrdersT.fStatus2Select(Sender: TObject);
@@ -714,9 +720,18 @@ begin
     delete(s,length(s),1);
 
   FFilterTextStatus := s;
-  GridOpen;
+  //GridOpen;
   logger.Info('FFilterTextStatus: ' + FFilterTextStatus);
 end;
+
+procedure TOrdersT.GridOpen(Key: Word);
+begin
+  if (Key = 13) then
+  begin
+    GridOpen;
+  end;
+end;
+
 
 procedure TOrdersT.GridOpen;
 var FClient:string;
@@ -1122,7 +1137,7 @@ end;
 
 procedure TOrdersT.cbCancelSelect(Sender: TObject);
 begin
-  GridOpen;
+//  GridOpen;
 end;
 
 procedure TOrdersT.SortColumn(const FieldName: string; Dir: Boolean);

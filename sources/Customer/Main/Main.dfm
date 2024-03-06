@@ -12,6 +12,9 @@ object MainForm: TMainForm
   Layout = 'fit'
   OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
+  DesignSize = (
+    910
+    534)
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     AlignWithMargins = True
@@ -155,6 +158,7 @@ object MainForm: TMainForm
     Hint = ''
     Alignment = taCenter
     Caption = 'Version'
+    Anchors = [akLeft, akBottom]
     ParentFont = False
     Font.Color = clSilver
     TabOrder = 1

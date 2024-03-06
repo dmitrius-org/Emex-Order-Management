@@ -41,54 +41,15 @@ object MainForm: TMainForm
       Layout = 'border'
       ExplicitWidth = 1024
       ExplicitHeight = 532
-      object UniPanelLeft: TUniPanel
+      object UniPanelCentral: TUniPanel
         Left = 1
         Top = 56
-        Width = 320
-        Height = 476
-        Hint = ''
-        Align = alLeft
-        TabOrder = 1
-        TitleVisible = True
-        TitleAlign = taCenter
-        Title = #1052#1077#1085#1102
-        Caption = ''
-        Collapsible = True
-        CollapseDirection = cdLeft
-        LayoutAttribs.Pack = 'center'
-        LayoutAttribs.Columns = 1
-        LayoutConfig.Split = True
-        LayoutConfig.Region = 'west'
-        ExplicitHeight = 475
-        object MainMenu: TUniTreeMenu
-          AlignWithMargins = True
-          Left = 4
-          Top = 4
-          Width = 312
-          Height = 468
-          Hint = ''
-          ShowHint = True
-          ParentShowHint = False
-          Align = alClient
-          Items.FontData = {0100000000}
-          Images = MainMenuImage
-          MicroWidth = 50
-          OnClick = MainMenuClick
-          ExplicitLeft = 9
-          ExplicitTop = 2
-          ExplicitWidth = 120
-          ExplicitHeight = 474
-        end
-      end
-      object UniPanelCentral: TUniPanel
-        Left = 321
-        Top = 56
-        Width = 706
+        Width = 1026
         Height = 476
         Hint = ''
         Margins.Bottom = 0
         Align = alClient
-        TabOrder = 2
+        TabOrder = 1
         TitleAlign = taCenter
         Caption = 'UniPanelCentral'
         AlignmentControl = uniAlignmentClient
@@ -96,13 +57,14 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
+        ExplicitLeft = 321
         ExplicitWidth = 702
         ExplicitHeight = 475
         object pcMain: TUniPageControl
           AlignWithMargins = True
-          Left = 1
+          Left = 324
           Top = 1
-          Width = 704
+          Width = 701
           Height = 474
           Hint = ''
           Margins.Left = 0
@@ -115,8 +77,26 @@ object MainForm: TMainForm
           TabOrder = 1
           ScreenMask.Enabled = True
           ScreenMask.Target = Owner
-          ExplicitWidth = 700
-          ExplicitHeight = 473
+          ExplicitLeft = 648
+          ExplicitWidth = 377
+        end
+        object MainMenu: TUniTreeMenu
+          AlignWithMargins = True
+          Left = 1
+          Top = 3
+          Width = 320
+          Height = 469
+          Hint = ''
+          Margins.Left = 0
+          Margins.Top = 2
+          ParentRTL = False
+          ShowHint = True
+          ParentShowHint = False
+          BodyRTL = False
+          Items.FontData = {0100000000}
+          Images = MainMenuImage
+          MicroWidth = 50
+          OnClick = MainMenuClick
         end
       end
       object UniPanelTop: TUniPanel
@@ -126,7 +106,7 @@ object MainForm: TMainForm
         Height = 55
         Hint = ''
         Align = alTop
-        TabOrder = 3
+        TabOrder = 2
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
@@ -239,7 +219,7 @@ object MainForm: TMainForm
     Left = 512
     Top = 166
     Images = {
-      0E000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
+      0F000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
       FFFFFF1F060900000075736572733B66613BFFFFFF1F0608000000757365723B
       66613BFFFFFF1F0612000000616464726573732D626F6F6B2D6F3B66613BFFFF
       FF1F06080000006C6F636B3B66613BFFFFFF1F0608000000626F6F6B3B66613B
@@ -248,7 +228,7 @@ object MainForm: TMainForm
       3BFFFFFF1F060D0000006D61702D7369676E733B66613BFFFFFF1F0609000000
       747275636B3B66613BFFFFFF1F060800000073657474696E6773FFFFFF1F0607
       0000006661783B66613BFFFFFF1F0610000000616464726573732D626F6F6B3B
-      66613B}
+      66613BFFFFFF1F0608000000686F6D653B66613B}
   end
   object UniNativeImageList1: TUniNativeImageList
     Left = 696

@@ -6,7 +6,6 @@ object OrdersT: TOrdersT
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
-  Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
   LayoutConfig.DockWhenAligned = False
@@ -24,6 +23,7 @@ object OrdersT: TOrdersT
     Width = 1396
     Height = 46
     Hint = ''
+    Margins.Bottom = 0
     ShowHint = True
     Align = alTop
     TabOrder = 0
@@ -32,12 +32,13 @@ object OrdersT: TOrdersT
     Color = clBtnShadow
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
-    Layout = 'auto'
+    Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
+    LayoutConfig.DockWhenAligned = False
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
@@ -68,6 +69,7 @@ object OrdersT: TOrdersT
         Left = 3
         Top = 3
         Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         Action = actFormRefusalsOpen
         ImageIndex = 7
@@ -81,6 +83,7 @@ object OrdersT: TOrdersT
         Top = 3
         Margins.Left = 0
         Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         Action = actUploadingRefusalsEmex
         ImageIndex = 8
@@ -94,6 +97,7 @@ object OrdersT: TOrdersT
         Top = 3
         Margins.Left = 0
         Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         Action = actProtocol
         ImageIndex = 4
@@ -107,6 +111,7 @@ object OrdersT: TOrdersT
         Top = 3
         Margins.Left = 0
         Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         Action = actExecuteActionRollback
         ScreenMask.Enabled = True
@@ -125,6 +130,7 @@ object OrdersT: TOrdersT
         Width = 170
         Margins.Left = 0
         Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         ParentShowHint = False
         Action = actExecuteActionEnabled
@@ -140,9 +146,9 @@ object OrdersT: TOrdersT
   end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 52
+    Top = 49
     Width = 1402
-    Height = 544
+    Height = 547
     Hint = ''
     Margins.Bottom = 0
     ShowHint = True
@@ -157,11 +163,13 @@ object OrdersT: TOrdersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
+    ExplicitTop = 52
+    ExplicitHeight = 544
     object Grid: TUniDBGrid
       Left = 0
       Top = 104
       Width = 1402
-      Height = 440
+      Height = 443
       Hint = ''
       Margins.Bottom = 0
       ShowHint = True
@@ -788,6 +796,7 @@ object OrdersT: TOrdersT
           EmptyText = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           CheckChangeDelay = 200
           ClearButton = True
+          OnKeyDown = fStatus2KeyDown
         end
         object UniLabel4: TUniLabel
           Left = 581
@@ -826,6 +835,7 @@ object OrdersT: TOrdersT
           ClearButton = True
           IconItems = <>
           OnSelect = cbCancelSelect
+          OnKeyDown = fStatus2KeyDown
         end
         object UniButton1: TUniButton
           Left = 17
@@ -869,6 +879,7 @@ object OrdersT: TOrdersT
               '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
               '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
           EmptyText = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
+          ForceSelection = True
           CheckChangeDelay = 100
           ClearButton = True
           Triggers = <
@@ -884,11 +895,11 @@ object OrdersT: TOrdersT
               HandleClicks = True
               Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
             end>
-          Images = UniImageList
           HideTrigger = True
           HideDefaultTrigger = False
           IconItems = <>
           OnSelect = fStatus2Select
+          OnKeyDown = fStatus2KeyDown
         end
         object fPriceLogo: TUniCheckComboBox
           Left = 259
@@ -932,6 +943,7 @@ object OrdersT: TOrdersT
           HideDefaultTrigger = False
           IconItems = <>
           OnSelect = fPriceLogoSelect
+          OnKeyDown = fStatus2KeyDown
         end
         object fClient: TUniCheckComboBox
           Left = 379
@@ -973,6 +985,7 @@ object OrdersT: TOrdersT
           HideDefaultTrigger = False
           IconItems = <>
           OnSelect = fClientSelect
+          OnKeyDown = fStatus2KeyDown
         end
         object UniLabel6: TUniLabel
           Left = 715
@@ -995,6 +1008,7 @@ object OrdersT: TOrdersT
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
+          OnKeyDown = fStatus2KeyDown
         end
         object fOrderDate: TUniDateTimePicker
           Left = 888
@@ -1009,6 +1023,7 @@ object OrdersT: TOrdersT
           TabOrder = 17
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+          OnKeyDown = fStatus2KeyDown
         end
         object UniLabel8: TUniLabel
           Left = 888
@@ -1652,8 +1667,8 @@ object OrdersT: TOrdersT
     end
     object actFilterClear: TAction
       Category = 'Filter'
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1086#1083#1103' '#1092#1080#1083#1100#1090#1088#1072
       ImageIndex = 3
       OnExecute = actFilterClearExecute
     end

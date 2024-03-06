@@ -15,7 +15,6 @@ uses
 type
   TMainForm = class(TUniForm)
     UniPanelParent: TUniPanel;
-    UniPanelLeft: TUniPanel;
     UniPanelCentral: TUniPanel;
     UniContainerPanel: TUniContainerPanel;
     Menu: TUniMenuItems;

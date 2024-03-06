@@ -143,6 +143,7 @@ type
     N1: TUniMenuItem;
     N3: TUniMenuItem;
     N5: TUniMenuItem;
+    QueryStatus: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -175,6 +176,8 @@ type
     procedure GridBodyDblClick(Sender: TObject);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
+    procedure QueryStatusGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -543,6 +546,25 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT2.QueryStatusGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
+var t: string;
+begin
+  t := '';
+  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
+  begin
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
+  end;
+
+  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
+  begin
+    //t := t + '<span class="x-request-cancellation hint hint--top hint-info" data-hint="Запрошен отказ по позиции!"><i class="fa fa-times-circle"></i></span>';
+    t := t + '<span class="x-request-cancellation"><i class="fa fa-times-circle"></i></span>';
+  end;
+
+  Text := t;
+
+end;
+
 procedure TOrdersT2.GridBodyDblClick(Sender: TObject);
 begin
 //  if (Query.FieldByName('Flag').AsInteger and 32) = 32 then
@@ -575,15 +597,15 @@ begin
   else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then
   begin
     Attribs.Color:=rgb(242, 169, 210);
-  end
-  else if (Query.FieldByName('Flag').AsInteger and 32) = 32 then
-  begin
-    Attribs.Color:=rgb(0,191,255);
-  end
-  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
-  begin
-    Attribs.Color:=rgb(255,219,88); //#F34723
   end;
+//  else if (Query.FieldByName('Flag').AsInteger and 32) = 32 then
+//  begin
+//    Attribs.Color:=rgb(0,191,255);
+//  end;
+//  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
+//  begin
+//    Attribs.Color:=rgb(255,219,88); //#F34723
+//  end;
 
 
   if (Query.FieldByName('Flag').AsInteger and 4) > 0 then

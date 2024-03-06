@@ -23,7 +23,7 @@ as
 	from tOrders t (updlock)
    where t.OrderID       = @OrderID
 
-  set @Comment = 'Зпрос на отказ: ' + @Comment
+  set @Comment = 'Запрос на отказ: ' + @Comment
 
   -- аудит
   exec AuditInsert
@@ -38,6 +38,6 @@ as
 go
 grant exec on OrderCancelRequest to public
 go
-exec setOV 'OrderCancelRequest', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderCancelRequest', 'P', '20240101', '1.0.0.1'
 go
  

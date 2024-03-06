@@ -95,9 +95,6 @@ object OrdersT2: TOrdersT2
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1402
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 4
@@ -120,7 +117,6 @@ object OrdersT2: TOrdersT2
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 1394
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -151,13 +147,11 @@ object OrdersT2: TOrdersT2
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitTop = 51
-    ExplicitHeight = 545
     object Grid: TUniDBGrid
       Left = 0
-      Top = 104
+      Top = 110
       Width = 1402
-      Height = 435
+      Height = 429
       Hint = ''
       ShowHint = True
       CustomAttribs.Strings = (
@@ -189,7 +183,7 @@ object OrdersT2: TOrdersT2
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelectCheckOnly, dgDontShowSelected]
-      WebOptions.PageSize = 50
+      WebOptions.PageSize = 150
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.WaitData = True
@@ -206,6 +200,7 @@ object OrdersT2: TOrdersT2
       TabOrder = 1
       ParentColor = False
       Color = clBtnFace
+      DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
       OnSelectionChange = GridSelectionChange
@@ -215,6 +210,12 @@ object OrdersT2: TOrdersT2
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
       Columns = <
+        item
+          ShowToolTipAlways = False
+          FieldName = 'Status'
+          Title.Caption = ' '
+          Width = 64
+        end
         item
           ShowToolTip = True
           FieldName = 'OrderID'
@@ -470,9 +471,10 @@ object OrdersT2: TOrdersT2
         end>
     end
     object pFilter: TUniPanel
-      Left = 0
-      Top = 0
-      Width = 1402
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 1396
       Height = 104
       Hint = ''
       ShowHint = True
@@ -486,10 +488,11 @@ object OrdersT2: TOrdersT2
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 1396
+        Width = 1390
         Height = 98
         Hint = ''
         ShowHint = True
+        AlignmentControl = uniAlignmentClient
         Caption = #1060#1080#1083#1100#1090#1088
         Align = alClient
         LayoutConfig.Width = '0'
@@ -841,8 +844,9 @@ object OrdersT2: TOrdersT2
       '      ,o.[ReplacementDetailNumber]'
       '      ,o.[ReplacementManufacturer]    '
       '      ,o.[ReplacementPrice]  '
-      '      ,o.[Flag]'
       '      ,o.[Reference]'
+      '      ,o.[Flag]'
+      '      ,0 as Status'
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
       ' '
@@ -895,15 +899,9 @@ object OrdersT2: TOrdersT2
         Value = ''
         Name = 'PRICELOGO'
       end>
-    object QueryinDatetime: TSQLTimeStampField
-      FieldName = 'inDatetime'
-      Origin = 'inDatetime'
-      ReadOnly = True
-    end
-    object QueryupdDatetime: TSQLTimeStampField
-      FieldName = 'updDatetime'
-      Origin = 'updDatetime'
-      ReadOnly = True
+    object QueryStatus: TIntegerField
+      FieldName = 'Status'
+      OnGetText = QueryStatusGetText
     end
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -924,6 +922,9 @@ object OrdersT2: TOrdersT2
       Origin = 'PriceLogo'
       ReadOnly = True
       Size = 32
+    end
+    object QueryStatusID: TFMTBCDField
+      FieldName = 'StatusID'
     end
     object QueryStatusName: TWideStringField
       FieldName = 'StatusName'
@@ -1026,16 +1027,6 @@ object OrdersT2: TOrdersT2
     object QueryDeliveryRestToCustomer: TIntegerField
       FieldName = 'DeliveryRestToCustomer'
     end
-    object QueryStatusID: TFMTBCDField
-      FieldName = 'StatusID'
-    end
-    object QueryFlag: TIntegerField
-      FieldName = 'Flag'
-    end
-    object QueryWarning: TWideStringField
-      FieldName = 'Warning'
-      Size = 128
-    end
     object QueryReplacementMakeLogo: TWideStringField
       FieldName = 'ReplacementMakeLogo'
       Size = 32
@@ -1059,6 +1050,10 @@ object OrdersT2: TOrdersT2
       FieldName = 'Reference'
       Size = 64
     end
+    object QueryWarning: TWideStringField
+      FieldName = 'Warning'
+      Size = 128
+    end
     object QueryComment: TWideStringField
       FieldName = 'Comment'
       Size = 512
@@ -1066,6 +1061,19 @@ object OrdersT2: TOrdersT2
     object QueryOrderNum: TWideStringField
       FieldName = 'OrderNum'
       Size = 128
+    end
+    object QueryinDatetime: TSQLTimeStampField
+      FieldName = 'inDatetime'
+      Origin = 'inDatetime'
+      ReadOnly = True
+    end
+    object QueryupdDatetime: TSQLTimeStampField
+      FieldName = 'updDatetime'
+      Origin = 'updDatetime'
+      ReadOnly = True
+    end
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
     end
   end
   object DataSource: TDataSource
@@ -1079,8 +1087,8 @@ object OrdersT2: TOrdersT2
     Top = 270
     object actCancelRequest: TAction
       Category = 'Action'
-      Caption = #1047#1072#1087#1088#1086#1089#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
-      Hint = #1047#1072#1087#1088#1086#1089#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
+      Caption = #1047#1072#1087#1088#1086#1089#1080#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
+      Hint = #1047#1072#1087#1088#1086#1089#1080#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
       OnExecute = actCancelRequestExecute
     end
     object actRefreshAll: TAction

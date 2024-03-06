@@ -11,9 +11,10 @@ object UniServerModule: TUniServerModule
   Bindings = <>
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (
-    'files/css/custom.css '
+    'files/css/hint.css'
     'files/css/main_menu.css'
-    'files/css/grid.css')
+    'files/css/grid.css'
+    'files/css/custom.css ')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'

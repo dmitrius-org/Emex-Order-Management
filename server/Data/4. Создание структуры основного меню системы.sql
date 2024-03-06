@@ -1,6 +1,6 @@
 --delete from tMenu
 -- приложение для менеджера
-insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 1,   1,   'Главная',                     'THomeF',       0,   0,  ''
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 1,   1,   'Главная',                     'THomeF',       0,   0,  '14'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 20,  20,  'Заказы',                      'TOrdersT',     0,   0,  '0'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 40,  40,  'Клиенты',                     'TClientsT',    0,   0,  '3'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 60,  60,  'Поставщики',                  'TSuppliersT',  0,   0,  '8'
@@ -32,7 +32,7 @@ update tMenu set Icon = '10' from tMenu where Name='TShipmentsT'
 update tMenu set Icon = '11' from tMenu where Name='TInstrumentT'
 update tMenu set Icon = '12' from tMenu where Name='TPricesT'
 update tMenu set Icon = '13' from tMenu where Name='TClientsTypeT'
-
+update tMenu set Icon = '14' from tMenu where Name='THomeF'
 select * from tMenu
 
 delete from tMenu where Name = 'TOrdersT.actGroupAction'
