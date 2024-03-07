@@ -1,11 +1,11 @@
 
-if OBJECT_ID('BasketСheck') is not null
-    drop proc BasketСheck
+if OBJECT_ID('BasketCheck') is not null
+    drop proc BasketCheck
 /*
-  BasketСheck - проверка данных в корзине и данных на нашей стороне
+  BasketCheck - проверка данных в корзине и данных на нашей стороне
 */
 go
-create proc BasketСheck
+create proc BasketCheck
 as
   declare @r int = 0
 
@@ -37,8 +37,8 @@ as
  exit_:
  return @r
 go
-grant exec on BasketСheck to public
+grant exec on BasketCheck to public
 go
-exec setOV 'BasketСheck', 'P', '20240101', '1.0.0.0'
+exec setOV 'BasketCheck', 'P', '20240101', '1.0.0.1'
 go
   

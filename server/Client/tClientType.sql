@@ -1,5 +1,4 @@
 if OBJECT_ID('tClientType') is null
---drop table tClientType
 /* **********************************************************
 tClientType - Типы клиентов
 ********************************************************** */
@@ -32,7 +31,7 @@ begin
 	grant all on tClientType to public;
 end
 go
-exec setOV 'tClientType', 'U', '20240101', '1.0.0.0'
+exec setOV 'tClientType', 'U', '20240101', '1.0.0.0';
 go
 exec dbo.sys_setTableDescription @table = 'tClientType', @desc = 'Типы клиентов'
 go

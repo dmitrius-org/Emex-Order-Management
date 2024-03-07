@@ -1,7 +1,7 @@
 object RefusalsT: TRefusalsT
   Left = 123
   Top = 104
-  ClientHeight = 554
+  ClientHeight = 664
   ClientWidth = 1027
   Caption = #1054#1090#1082#1072#1079#1099
   OnShow = UniFormShow
@@ -148,7 +148,7 @@ object RefusalsT: TRefusalsT
     Left = 0
     Top = 74
     Width = 1027
-    Height = 480
+    Height = 590
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -168,7 +168,7 @@ object RefusalsT: TRefusalsT
       Left = 0
       Top = 0
       Width = 1027
-      Height = 480
+      Height = 590
       Hint = ''
       ShowHint = True
       BodyRTL = False

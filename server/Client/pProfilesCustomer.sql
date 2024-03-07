@@ -1,5 +1,6 @@
 ﻿if OBJECT_ID('pProfilesCustomer') is not null
   drop table pProfilesCustomer
+go
 /* **********************************************************
 pProfilesCustomer - профили управления выгрузкой
 ********************************************************** */

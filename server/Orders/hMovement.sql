@@ -39,4 +39,4 @@ go
 exec setOV 'hMovement', 'U', '20240101', '1.0.0.0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tMovement', @desc = 'История движение по номеру заказа.'
+exec dbo.sys_setTableDescription @table = 'hMovement', @desc = 'История движение по номеру заказа.'

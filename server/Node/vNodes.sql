@@ -3,7 +3,7 @@ go
 drop view if exists vNodes
 go
 /* **********************************************************						
-vNodes - состо¤ни¤ и действи¤ 
+vNodes - 
 ********************************************************** */
 create view vNodes
 as
@@ -21,8 +21,8 @@ SELECT n.[NodeID]
       ,n.Comment
 	  ,n.Type
 	  ,Case n.Type
-	     when 0 then '—татус'
-		 when 1 then 'ƒействие'
+	     when 0 then 'Состояние'
+		 when 1 then 'Действие'
 		 else ''
        end TypeDescription
       ,sc.StatusColorID as ColorID
@@ -36,6 +36,6 @@ SELECT n.[NodeID]
 go
 grant all on vNodes to public
 go
-exec setOV 'vNodes', 'V', '20240101', '1.0.0.0'
+exec setOV 'vNodes', 'V', '20240306', '1.0.0.1'
 go
  

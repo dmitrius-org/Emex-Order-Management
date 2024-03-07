@@ -20,9 +20,6 @@ as
 go
 grant exec on GetAppInfo to public
 go
-exec setOV 'GetAppInfo', 'P', '20240101', '1.0.0.0'
+exec setOV 'GetAppInfo', 'P', '20240306', '1.0.0.1'
 go
 exec GetAppInfo
-
---select  *
---from sys.dm_db_index_usage_stats where database_id = db_id('Car');

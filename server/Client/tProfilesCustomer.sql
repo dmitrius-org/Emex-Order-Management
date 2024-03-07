@@ -1,5 +1,4 @@
 if OBJECT_ID('tProfilesCustomer') is null
---drop table tProfilesCustomer
 /* **********************************************************
 tProfilesCustomer - профили управления выгрузкой
 ********************************************************** */

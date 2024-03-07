@@ -16,5 +16,3 @@ vEmployees - получение списка сотрудников
 --go
 --grant all on vEmployees to public
 --go
---exec setOV 'vEmployees', 'V', '20240101', '1.0.0.0'
---go
