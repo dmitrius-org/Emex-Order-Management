@@ -1,7 +1,7 @@
 object Task_T: TTask_T
   Left = 0
   Top = 0
-  Width = 899
+  Width = 1036
   Height = 441
   OnCreate = UniFrameCreate
   OnReady = UniFrameReady
@@ -11,7 +11,7 @@ object Task_T: TTask_T
     AlignWithMargins = True
     Left = 4
     Top = 4
-    Width = 892
+    Width = 1029
     Height = 67
     Hint = ''
     Margins.Left = 4
@@ -37,7 +37,7 @@ object Task_T: TTask_T
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 886
+      Width = 1023
       Height = 64
       Hint = ''
       Margins.Bottom = 0
@@ -107,7 +107,7 @@ object Task_T: TTask_T
   object UniPanel2: TUniPanel
     Left = 0
     Top = 71
-    Width = 899
+    Width = 1036
     Height = 370
     Hint = ''
     ShowHint = True
@@ -126,7 +126,7 @@ object Task_T: TTask_T
     object GridUsers: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 899
+      Width = 1036
       Height = 370
       Hint = ''
       ShowHint = True
@@ -2410,7 +2410,7 @@ object Task_T: TTask_T
       ' '
       '}')
     OnTimer = IntefaceRefreshTimer
-    Left = 680
+    Left = 688
     Top = 327
   end
 end

@@ -17,17 +17,18 @@ create table pTaskActions
 ,LinkID           numeric(18,0)
 ,Field            nvarchar(max)
 ,Flag             int         
-,inDatetime       datetime default GetDate()      --
-,updDatetime      datetime default GetDate()      --
-)
-
+,inDatetime       datetime     --
+,updDatetime      datetime     --
+);
 go
-create unique index ao1 on pTaskActions(ID)
+create unique index ao1 on pTaskActions(ID);
 go
-grant all on pTaskActions to public
+create index ao2 on pTaskActions(Spid);
 go
-exec setOV 'pTaskActions', 'U', '20240101', '1.0.0.0'
+grant all on pTaskActions to public;
+go
+exec setOV 'pTaskActions', 'U', '20240307', '1.0.0.1';
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'pTaskActions', @desc = 'Действия для задачи'
+exec dbo.sys_setTableDescription @table = 'pTaskActions', @desc = 'Действия для задачи';
 go

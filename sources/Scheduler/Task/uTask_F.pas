@@ -50,22 +50,22 @@ type
     UniToolButton8: TUniToolButton;
     UniToolButton9: TUniToolButton;
     ActionList: TUniActionList;
-    actAddActionProcType: TAction;
+    actAddActionProc: TAction;
     actEdit: TAction;
     actDelete: TAction;
     actRefreshAll: TAction;
     ILAction16: TUniImageList;
-    pmAction: TUniPopupMenu;
+    pmTaskAction: TUniPopupMenu;
     N1: TUniMenuItem;
     N2: TUniMenuItem;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
     N5: TUniMenuItem;
-    FDQueryActionTaskActionsID: TFMTBCDField;
+    FDQueryActionID: TFMTBCDField;
     FDQueryActionBrief: TWideStringField;
     FDQueryActionIsActive: TBooleanField;
     FDQueryActionTaskTypeName: TStringField;
-    UniPopupMenu1: TUniPopupMenu;
+    pmTaskActionAdd: TUniPopupMenu;
     N6: TUniMenuItem;
     PeriodType1: TUniPanel;
     edtTimePeriod: TUniDateTimePicker;
@@ -73,12 +73,24 @@ type
     edtDayPeriod: TUniSpinEdit;
     UniLabel4: TUniLabel;
     UniLabel5: TUniLabel;
+    FDQueryActionTaskType: TIntegerField;
+    FDQueryActionNumber: TIntegerField;
+    actAddActionBat: TAction;
+    actAddActionSQL: TAction;
+    Bat1: TUniMenuItem;
+    SQL1: TUniMenuItem;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure edtPeriodTypeClick(Sender: TObject);
-    procedure actAddActionProcTypeExecute(Sender: TObject);
+    procedure actAddActionProcExecute(Sender: TObject);
     procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actEditExecute(Sender: TObject);
+    procedure ActionGridCellContextClick(Column: TUniDBGridColumn; X,
+      Y: Integer);
+    procedure actDeleteExecute(Sender: TObject);
+    procedure actRefreshAllExecute(Sender: TObject);
+    procedure actAddActionSQLExecute(Sender: TObject);
   private
     FAction: TFormAction;
     FID: Integer;
@@ -112,7 +124,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F;
+  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F, uTaskSQL_F;
 
 function Task_F: TTask_F;
 begin
@@ -120,17 +132,76 @@ begin
 end;
 
 { TTask_F }
-
-procedure TTask_F.actAddActionProcTypeExecute(Sender: TObject);
+procedure TTask_F.actAddActionProcExecute(Sender: TObject);
 begin
   TaskProcedure_F.FormAction := TFormAction.acInsert;
   TaskProcedure_F.ShowModal(ActionGridCallBack);
+end;
+
+procedure TTask_F.actAddActionSQLExecute(Sender: TObject);
+begin
+  TaskSQL_F.FormAction := TFormAction.acInsert;
+  TaskSQL_F.ShowModal(ActionGridCallBack);
+end;
+
+procedure TTask_F.actDeleteExecute(Sender: TObject);
+begin
+  if FDQueryAction.FieldByName('TaskType').AsInteger = 0 then
+  begin
+    TaskProcedure_F.FormAction := TFormAction.acDelete;
+    TaskProcedure_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskProcedure_F.ShowModal(ActionGridCallBack);
+  end
+//  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
+//  begin
+//    TaskSQL_F.FormAction := TFormAction.acDelete;
+//    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+//    TaskSQL_F.ShowModal(ActionGridCallBack);
+//  end
+  else if FDQueryAction.FieldByName('TaskType').AsInteger = 2 then
+  begin
+    TaskSQL_F.FormAction := TFormAction.acDelete;
+    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskSQL_F.ShowModal(ActionGridCallBack);
+  end;
+end;
+
+procedure TTask_F.actEditExecute(Sender: TObject);
+begin
+  if FDQueryAction.FieldByName('TaskType').AsInteger = 0 then
+  begin
+    TaskProcedure_F.FormAction := TFormAction.acUpdate;
+    TaskProcedure_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskProcedure_F.ShowModal(ActionGridCallBack);
+  end
+//  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
+//  begin
+//    TaskSQL_F.FormAction := TFormAction.acUpdate;
+//    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+//    TaskSQL_F.ShowModal(ActionGridCallBack);
+//  end
+  else if FDQueryAction.FieldByName('TaskType').AsInteger = 2 then
+  begin
+    TaskSQL_F.FormAction := TFormAction.acUpdate;
+    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskSQL_F.ShowModal(ActionGridCallBack);
+  end;
 end;
 
 procedure TTask_F.ActionGridCallBack(Sender: TComponent; AResult: Integer);
 begin
   if AResult <> mrOK then Exit;
 
+  FDQueryAction.Refresh();
+end;
+
+procedure TTask_F.ActionGridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
+begin
+  pmTaskAction.Popup(x, y, ActionGrid);
+end;
+
+procedure TTask_F.actRefreshAllExecute(Sender: TObject);
+begin
   FDQueryAction.Refresh();
 end;
 
@@ -147,7 +218,6 @@ begin
 
   if RetVal.Code = 0 then
   begin
-
    case FAction of
     acInsert:
     begin
@@ -167,13 +237,11 @@ begin
                 '            ,@TimePeriod= :TimePeriod'+
                 '            ,@Flag      = :Flag      '+
                 '                                     '+
-                ' select @r as retcode, @TaskID as TaskID      '+
-                ' ';
+                ' select @r      as retcode,          '+
+                '        @TaskID as TaskID ';
 
       Sql.Open(sqltext,
-               ['Brief','Name', 'PeriodType', 'DateBegin',
-                'IsActive', 'TimeBegin', 'TimeEnd',
-                'DayPeriod', 'TimePeriod', 'Flag'],
+               ['Brief','Name', 'PeriodType', 'DateBegin', 'IsActive', 'TimeBegin', 'TimeEnd',  'DayPeriod', 'TimePeriod', 'Flag'],
                [edtBrief.Text,
                 edtName.Text,
                 edtPeriodType.ItemIndex,
@@ -208,8 +276,7 @@ begin
                 '            ,@TimePeriod= :TimePeriod'+
                 '            ,@Flag      = :Flag      '+
                 '                                     '+
-                ' select @r as retcode                '+
-                ' ';
+                ' select @r as retcode                ';
 
       Sql.Open(sqltext,
                ['TaskID', 'Brief','Name','PeriodType', 'DateBegin',
@@ -288,7 +355,10 @@ end;
 procedure TTask_F.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select *  '+
+  UniMainModule.Query.SQL.Text := 'exec TaskActionLoad      '+
+                                  '        @TaskID = :TaskID'+
+                                  '       ,@Direction = 0   '+
+                                  ' select *                '+
                                   '   from tTask (nolock)   '+
                                   '  where TaskID = :TaskID '+
                                   ' ';
@@ -342,6 +412,9 @@ end;
 procedure TTask_F.UniFormClose(Sender: TObject; var Action: TCloseAction);
 begin
   FDQueryAction.Close;
+  {$IFDEF Release}
+    Sql.Exec('delete pTaskActions  from pTaskActions  (rowlock) where spid = @@spid;', [], []);
+  {$ENDIF}
 end;
 
 procedure TTask_F.UniFormShow(Sender: TObject);
@@ -371,6 +444,8 @@ begin
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;
   end;
+
+  FDQueryAction.Open();
 end;
 
 end.

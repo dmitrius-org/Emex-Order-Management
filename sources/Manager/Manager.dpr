@@ -84,7 +84,8 @@ uses
   uTaskUtils in '..\Scheduler\Task\uTaskUtils.pas',
   uEmployeesF in 'App\Employees\uEmployeesF.pas' {EmployeesF: TUniForm},
   uClientsTypeT in 'App\Clients\uClientsTypeT.pas' {ClientsTypeT: TUniFrame},
-  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm};
+  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
+  uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm};
 
 {$R *.res}
 

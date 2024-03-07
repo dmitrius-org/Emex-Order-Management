@@ -204,12 +204,107 @@ end;  }
 procedure TMTask.Execute;
 var
    qry: TFDQuery;
-     i: Integer;
+   act: TFDQuery;
+
+  i, a: Integer;
   Proc: TProcExec;
     rc: word;
      M: string;
 TaskID: Integer;
    Msg: string;
+
+   /// <summary>
+   /// ExecProcedure - Выполнение внутренней процедуры
+   /// </summary>
+   procedure ExecProcedure();
+   begin
+     Logger.Info('ExecProcedure.Execute Method: ' + M );
+     Proc := TProcExec.Create(FConnection);
+     try
+       try
+         if M='' then raise Exception.Create('Не настроена внутренняя процедура!');
+
+         Proc.Call(M);
+
+         // следующая дата выполнения
+         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+       except
+         on E: Exception do
+         begin
+           Logger.Info('ExecProcedure.Exception: ' + E.Message);
+           AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
+
+           WriteTaskMessage(TaskID, E.Message);
+         end
+       end;
+     finally
+       Logger.Info('ExecProcedure.finally');
+       Proc.Destroy;
+     end;
+   end;
+
+
+   /// <summary>
+   /// ExecBat - Выполнение bat файла
+   /// </summary>
+   procedure ExecBat();
+   begin
+     Logger.Info('ExecBat.Execute Script: ' + M );
+     try
+       try
+         if M='' then
+           raise Exception.Create('Не указан путь к скрипту!');
+
+         Msg:=ExecDosOutput(M);
+
+         if Msg<>'' then raise Exception.Create(Msg);
+
+         // следующая дата выполнения
+         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+       except
+         on E: Exception do
+         begin
+           Logger.Info('ExecBat.Exception' + E.Message);
+           AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
+
+           WriteTaskMessage(TaskID, e.Message);
+         end
+       end;
+     finally
+       Logger.Info('ExecBat.finally');
+     end;
+   end;
+
+
+   /// <summary>
+   /// ExecSQL - Выполнение sql скрипта
+   /// </summary>
+   procedure ExecSQL();
+   begin
+     Logger.Info('ExecSQL.Execute Script: ' + M );
+     try
+       try
+         if M='' then
+           raise Exception.Create('Не задан текст скрипта!');
+
+         Qry.Connection.ExecSQL(M, []);
+
+         // следующая дата выполнения
+         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+       except
+         on E: Exception do
+         begin
+           Logger.Info('ExecSQL.Exception' + E.Message);
+           AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
+
+           WriteTaskMessage(TaskID, e.Message);
+         end
+       end;
+     finally
+       Logger.Info('ExecSQL.finally');
+     end;
+   end;
+
 begin
     Logger.Info('TMTask.Execute Begin');
 
@@ -218,103 +313,50 @@ begin
     qry.Close;
     qry.SQL.Text := ' Select * from vTaskSelect ';
     qry.Open;
- //   Try
+    Try
+        // цикл по задачам
+        qry.First;
         for i := 0 to qry.RecordCount-1 do
         begin
-          Logger.Info('TMTask.Execute Задача:' + qry.FieldByName('TaskBrief').AsString);
-          TaskID:= qry.FieldByName('TaskID').AsInteger;
-          M     := qry.FieldByName('Method').AsString;
-          Msg   := '';
-          AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение задачи:' + qry.FieldByName('TaskBrief').AsString);
+            Logger.Info('TMTask.Execute Задача:' + qry.FieldByName('TaskBrief').AsString);
+            TaskID:= qry.FieldByName('TaskID').AsInteger;
 
-          case qry.FieldByName('TaskType').AsInteger of
-            Integer(tTaskType.ttProc):  // внутренняя процедура
-            begin
-              Logger.Info('TMTask.Execute Method: ' + M );
-              try
-                Proc := TProcExec.Create(FConnection);
-                try
-                  if M='' then raise Exception.Create('Не настроена внутренняя процедура!');
+            act:= TFDQuery.Create(nil);
+            act.Connection:= FConnection;
+            act.Close;
+            act.SQL.Text := ' Select * from vTaskActionsSelect where TaskID=:TaskID order by Number ';
+            act.ParamByName('TaskID').Value := TaskID;
+            act.Open;
+            Try
+                // цикл по действиям
+                act.First;
+                for a := 0 to act.RecordCount-1 do
+                begin
+                    M := act.FieldByName('Method').AsString; Msg := '';
 
-                  Proc.Call(M);
+                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия:' + act.FieldByName('Comment').AsString);
 
-                  Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
-                except
-                  on E: Exception do
-                  begin
-                    Logger.Info('TMTask.Exception: ' + E.Message);
-                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
+                    case act.FieldByName('TaskType').AsInteger of
+                      Integer(tTaskType.ttProc):  // внутренняя процедура
+                          ExecProcedure();
 
-                    WriteTaskMessage(TaskID, e.Message);
-                  end
+                      Integer(tTaskType.ttBat):  // bat файл
+                          ExecBat();
+
+                      Integer(tTaskType.ttSQL):  // SQL
+                          ExecSQL();
+                    end;
+                    act.Next;
                 end;
-              finally
-                Logger.Info('TMTask.finally');
-                Proc.Destroy;
-              end;
-            end;
 
-            Integer(tTaskType.ttBat):  // bat файл
-            begin
-              Logger.Info('TMTask.Execute Script: ' + M );
-              try
-                try
-                  if M='' then
-                    raise Exception.Create('Не указан путь к скрипту!');
-
-                  //ExecFile2(M, '', rc,  ((qry.FieldByName('Flag').AsInteger and 1) = 1));
-                  Msg:=ExecDosOutput(M);
-
-                  if Msg<>'' then
-                    raise Exception.Create(Msg);
-
-                  Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
-                except
-                  on E: Exception do
-                  begin
-                    Logger.Info('TMTask.Exception' + E.Message);
-                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
-
-                    WriteTaskMessage(TaskID, e.Message);
-                  end
-                end;
-              finally
-                Logger.Info('TMTask.finally');
-              //  if rc > 0 then
-                //  WriteTaskMessage(TaskID, rc.ToString);
-              end;
-            end;
-
-//            Integer(tTaskType.ttSQL):  // cmd
-//            begin
-//              Logger.Info('TMTask.Execute Script: ' + M );
-//              try
-//                try
-//                  if M='' then
-//                    raise Exception.Create('Не указан текст скрипта!');
-//
-//                  Msg:=ExecDosOutput(M);
-//
-//                  Qry.Connection.ExecSQL(' exec TaskDateExecCalc @TaskID = :1, @Message = :2 ', [TaskID, Msg]);
-//                except
-//                  on E: Exception do
-//                  begin
-//                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
-//
-//                    WriteTaskMessage(TaskID, e.Message);
-//                  end
-//                end;
-//              finally
-//                if rc > 0 then
-//                  WriteTaskMessage(TaskID, rc.ToString);
-//              end;
-//            end;
-
-          end;
+            finally
+                FreeAndNil(act);
+            End;
+            Qry.Next;
         end;
-   // finally
-    FreeAndNil(Qry);
- // End;
+    finally
+        FreeAndNil(Qry);
+    End;
     Logger.Info('TMTask.Execute End');
 end;
 

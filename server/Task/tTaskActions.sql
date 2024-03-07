@@ -1,6 +1,6 @@
 if OBJECT_ID('tTaskActions') is null
 /* **********************************************************
-drop table tTaskActions
+tTaskActions - действия автоматических заданий
 ********************************************************** */
 begin
 	create table tTaskActions
@@ -10,31 +10,22 @@ begin
     ,Number           int      --
     ,Comment          nvarchar(255)       -- 
 	,TaskType         int                -- тип задачи
-	--,PeriodType       int
-	--,DateBegin        datetime
-	--,DateExec         datetime
-	--,TimeBegin        Time
-	--,TimeEnd          Time
-	--,DayPeriod        int
-	--,TimePeriod       Time
 	,IsActive         bit
-	--,Message          nvarchar(1000)
 	,LinkID           numeric(18,0)
-
 	,Field            nvarchar(max)
 	,Flag             int         
 	,inDatetime       datetime default GetDate()      --
 	,updDatetime      datetime default GetDate()      --
-	)
+	);
 
-	create unique index ao1 on tTaskActions(TaskID)
+	create unique index ao1 on tTaskActions(TaskActionsID);
 
-	--create index ao2 on tTaskActions(tTaskActions)
+	create index ao2 on tTaskActions(TaskID);
 
-	grant all on tTask to public
+	grant all on tTaskActions to public;
 end
 go
-exec setOV 'tTaskActions', 'U', '20240101', '1.0.0.0'
+exec setOV 'tTaskActions', 'U', '20240101', '1.0.0.0';
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tTaskActions', @desc = 'Действия для задачи'
+exec dbo.sys_setTableDescription @table = 'tTaskActions', @desc = 'Действия для задачи';

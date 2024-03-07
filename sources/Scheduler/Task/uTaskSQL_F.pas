@@ -1,4 +1,4 @@
-﻿unit uTaskProcedure_F;
+﻿unit uTaskSQL_F;
 
 interface
 
@@ -10,22 +10,22 @@ uses
   uniEdit, uniCheckBox, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniSyntaxEditorBase,
+  uniSyntaxEditor;
 
 type
-  TTaskProcedure_F = class(TUniForm)
+  TTaskSQL_F = class(TUniForm)
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
-    edtLinkID: TUniDBLookupComboBox;
     edtIsActive: TUniCheckBox;
     edtComment: TUniEdit;
     UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
     DataSource: TDataSource;
     FDQuery: TFDQuery;
     edtNumber: TUniNumberEdit;
     UniLabel3: TUniLabel;
+    edtSQL: TUniSyntaxEdit;
     procedure UniFormShow(Sender: TObject);
     procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnOkClick(Sender: TObject);
@@ -52,7 +52,7 @@ type
     property ID: Integer read FID write FID;
   end;
 
-function TaskProcedure_F: TTaskProcedure_F;
+function TaskSQL_F: TTaskSQL_F;
 
 implementation
 
@@ -61,19 +61,19 @@ implementation
 uses
   MainModule, uniGUIApplication, uSqlUtils, uMainVar, uVarUtils;
 
-function TaskProcedure_F: TTaskProcedure_F;
+function TaskSQL_F: TTaskSQL_F;
 begin
-  Result := TTaskProcedure_F(UniMainModule.GetFormInstance(TTaskProcedure_F));
+  Result := TTaskSQL_F(UniMainModule.GetFormInstance(TTaskSQL_F));
 end;
 
 { TTaskProcedure_F }
 
-procedure TTaskProcedure_F.btnCancelClick(Sender: TObject);
+procedure TTaskSQL_F.btnCancelClick(Sender: TObject);
 begin
   ModalResult:=mrCancel;
 end;
 
-procedure TTaskProcedure_F.btnOkClick(Sender: TObject);
+procedure TTaskSQL_F.btnOkClick(Sender: TObject);
  var sqltext: string;
        Field: string;
 begin
@@ -92,19 +92,19 @@ begin
                 '            ,@TaskID   = :TaskID     '+
                 '            ,@Number   = :Number     '+
                 '            ,@Comment  = :Comment    '+
-                '            ,@TaskType = 0           '+
-                '            ,@LinkID   = :LinkID     '+
+                '            ,@TaskType = 2           '+
+                '            ,@Field    = :Field      '+
                 '            ,@IsActive = :IsActive   '+
                 '                                     '+
                 ' select @r as retcode, @ID  as ID    '+
                 ' ';
 
       Sql.Open(sqltext,
-               ['TaskID','Number','Comment', 'LinkID', 'IsActive'],
+               ['TaskID','Number','Comment', 'Field', 'IsActive'],
                [null,
                 edtNumber.Text,
                 edtComment.Text,
-                vartoint(edtLinkID.KeyValue),
+                edtSQL.Text,
                 edtIsActive.Checked
                 ]);
 
@@ -120,18 +120,18 @@ begin
                 '             @ID       = :ID         '+
                 '            ,@Number   = :Number     '+
                 '            ,@Comment  = :Comment    '+
-                '            ,@LinkID   = :LinkID     '+
+                '            ,@Field    = :Field      '+
                 '            ,@IsActive = :IsActive   '+
                 '                                     '+
                 ' select @r as retcode    '+
                 ' ';
 
       Sql.Open(sqltext,
-               ['ID','Number','Comment', 'LinkID', 'IsActive'],
+               ['ID','Number','Comment', 'Field', 'IsActive'],
                [FID,
                 edtNumber.Text,
                 edtComment.Text,
-                vartoint(edtLinkID.KeyValue),
+                edtSQL.Text,
                 edtIsActive.Checked
                 ]);
 
@@ -166,7 +166,7 @@ begin
 
 end;
 
-procedure TTaskProcedure_F.DataCheck;
+procedure TTaskSQL_F.DataCheck;
 begin
   RetVal.Clear;
 
@@ -187,7 +187,7 @@ begin
   end;
 end;
 
-procedure TTaskProcedure_F.DataLoad;
+procedure TTaskSQL_F.DataLoad;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := ' select *               '+
@@ -200,21 +200,21 @@ begin
   edtNumber.Text     :=  UniMainModule.Query.FieldByName('Number').AsString;
   edtComment.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
   edtIsActive.Checked:= UniMainModule.Query.FieldByName('IsActive').AsBoolean;
-  edtLinkID.KeyValue :=  UniMainModule.Query.FieldByName('LinkID').AsInteger;
+  edtSQL.Text        :=  UniMainModule.Query.FieldByName('Field').Value;
 end;
 
-procedure TTaskProcedure_F.SetAction(const Value: TFormAction);
+procedure TTaskSQL_F.SetAction(const Value: TFormAction);
 begin
   FAction := Value;
 end;
 
-procedure TTaskProcedure_F.UniFormClose(Sender: TObject;
+procedure TTaskSQL_F.UniFormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   FDQuery.Close;
 end;
 
-procedure TTaskProcedure_F.UniFormShow(Sender: TObject);
+procedure TTaskSQL_F.UniFormShow(Sender: TObject);
 begin
 
   case FAction of

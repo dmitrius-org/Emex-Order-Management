@@ -2,7 +2,7 @@ if OBJECT_ID('ClientReliationload') is not null
     drop proc ClientReliationload
 /*
   ClientReliationload - 
-  @@LinkID   - Ид связанного объекта
+  @LinkID    - Ид связанного объекта
   @LinkType  - тип объекта. tObjectType.ObjectTypeID   
   @Direction - 0 - с постоянной во временную
                1 - с временной в постоянную

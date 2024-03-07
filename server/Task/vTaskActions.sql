@@ -7,20 +7,22 @@ vTaskActions -
 create view vTaskActions
 as
 
-SELECT [TaskID]
+SELECT ID
+      ,[TaskID]
       ,[TaskActionsID]
       ,[Comment]
       ,[TaskType]
       ,case
-	     when TaskType=0 then 'Процедура'
-         when TaskType=1 then 'Bat файл (*.bat)'
-         when TaskType=2 then 'Sql скрипт'
+	     when TaskType=0 then 'РџСЂРѕС†РµРґСѓСЂР°'
+         when TaskType=1 then 'Bat С„Р°Р№Р» (*.bat)'
+         when TaskType=2 then 'Sql СЃРєСЂРёРїС‚'
 		 else ''
 	   end [TaskTypeName]
       ,[IsActive]          
       ,[LinkID]        
       ,[Field]         
-      ,[Flag]          
+      ,[Flag]  
+	  ,[Number]
       ,[inDatetime]    
       ,[updDatetime]   
   FROM pTaskActions (nolock)
@@ -31,6 +33,3 @@ grant select on vTaskActions to public
 go
 exec setOV 'vTaskActions', 'V', '20240101', '1.0.0.0'
 go
- 
-
-

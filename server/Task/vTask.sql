@@ -4,10 +4,9 @@ go
 /* **********************************************************						
 vTask - 
 ********************************************************** */
-
 create view vTask
-
 as
+
 SELECT [TaskID]
       ,[Brief]
       ,[Name]
@@ -18,6 +17,7 @@ SELECT [TaskID]
       ,[inDatetime]
       ,[updDatetime]
   FROM [tTask] (nolock)
+
 go
 grant select on vTask to public
 go

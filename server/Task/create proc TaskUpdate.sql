@@ -19,21 +19,47 @@ as
   declare @r       int = 0
 		 ,@Type    int
 
-  update [tTask]
-     set [Brief]	   = @Brief
-        ,[Name]		   = @Name
-        ,[PeriodType]  = @PeriodType
-        ,[DateBegin]   = @DateBegin
-        ,[IsActive]	   = @IsActive
-        ,[updDatetime] = getDate()
-		,TimeBegin 	   = @TimeBegin        
-        ,TimeEnd       = @TimeEnd          
-        ,DayPeriod     = @DayPeriod        
-        ,TimePeriod    = @TimePeriod    
-        ,Flag          = @Flag
-   where TaskID = @TaskID
+  BEGIN TRY 
+      delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
+      Begin tran
 
- exit_:
+	  update [tTask]
+		 set [Brief]	   = @Brief
+			,[Name]		   = @Name
+			,[PeriodType]  = @PeriodType
+			,[DateBegin]   = @DateBegin
+			,[IsActive]	   = @IsActive
+			,[updDatetime] = getDate()
+			,TimeBegin 	   = @TimeBegin        
+			,TimeEnd       = @TimeEnd          
+			,DayPeriod     = @DayPeriod        
+			,TimePeriod    = @TimePeriod    
+			,Flag          = @Flag
+	   where TaskID = @TaskID
+
+	    exec @r= TaskActionLoad     
+                   @TaskID    = @TaskID
+                  ,@Direction = 1
+		
+		if @r <> 0
+		begin 
+		  RAISERROR (15600, 16, 1, @r);
+		end
+
+      commit tran
+  END TRY  
+  BEGIN CATCH  
+      if @@TRANCOUNT > 0
+        rollback tran
+    
+      set @r = -1
+      insert tRetMessage(RetCode, Message) select @r,  ERROR_MESSAGE()  
+
+      goto exit_     
+  END CATCH  
+
+      
+  exit_:
  return @r
 go
 grant exec on TaskUpdate to public

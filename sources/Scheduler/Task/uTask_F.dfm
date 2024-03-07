@@ -20,7 +20,7 @@ object Task_F: TTask_F
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 489
+    ExplicitTop = 447
     ExplicitWidth = 887
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -60,12 +60,12 @@ object Task_F: TTask_F
     Align = alClient
     TabOrder = 1
     ExplicitWidth = 893
-    ExplicitHeight = 486
+    ExplicitHeight = 444
     object MainSheet: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
       ExplicitWidth = 885
-      ExplicitHeight = 458
+      ExplicitHeight = 416
       object tabCommon: TUniFieldContainer
         Left = 0
         Top = 0
@@ -76,31 +76,31 @@ object Task_F: TTask_F
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 885
-        ExplicitHeight = 458
+        ExplicitHeight = 416
         DesignSize = (
           889
           417)
         object edtBrief: TUniEdit
           Left = 150
           Top = 42
-          Width = 716
+          Width = 704
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 712
+          ExplicitWidth = 700
         end
         object edtName: TUniEdit
           Left = 150
           Top = 70
-          Width = 716
+          Width = 704
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
           ClearButton = True
-          ExplicitWidth = 712
+          ExplicitWidth = 700
         end
         object lblBruef: TUniLabel
           Left = 17
@@ -141,7 +141,7 @@ object Task_F: TTask_F
           Color = clWindow
           Columns = 2
           OnClick = edtPeriodTypeClick
-          ExplicitTop = 290
+          ExplicitTop = 313
           ExplicitWidth = 879
         end
         object edtDateBegin: TUniDateTimePicker
@@ -167,7 +167,7 @@ object Task_F: TTask_F
         object ebtIsActive: TUniCheckBox
           Left = 150
           Top = 14
-          Width = 173
+          Width = 161
           Height = 22
           Hint = ''
           Caption = #1047#1072#1076#1072#1085#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
@@ -175,7 +175,7 @@ object Task_F: TTask_F
           Font.Height = -13
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 8
-          ExplicitWidth = 169
+          ExplicitWidth = 157
         end
         object pnlInteval: TUniPanel
           Left = 17
@@ -230,7 +230,7 @@ object Task_F: TTask_F
           BorderStyle = ubsNone
           ShowCaption = False
           Caption = ''
-          ExplicitTop = 398
+          ExplicitTop = 355
           object edtTimePeriod: TUniDateTimePicker
             Left = 168
             Top = 3
@@ -282,28 +282,32 @@ object Task_F: TTask_F
     end
     object TaskPage: TUniTabSheet
       Hint = ''
+      AlignmentControl = uniAlignmentClient
+      ParentAlignmentControl = False
       Caption = #1044#1077#1081#1089#1090#1074#1080#1103
       ExplicitWidth = 885
-      ExplicitHeight = 458
+      ExplicitHeight = 416
       object UniPanel3: TUniPanel
         Left = 0
-        Top = 48
+        Top = 54
         Width = 889
-        Height = 369
+        Height = 363
         Hint = ''
         Align = alClient
         TabOrder = 0
         Caption = 'UniPanel1'
         Color = clYellow
+        AlignmentControl = uniAlignmentClient
+        ParentAlignmentControl = False
         Layout = 'fit'
         LayoutConfig.Width = '100'
         ExplicitWidth = 885
-        ExplicitHeight = 410
+        ExplicitHeight = 362
         object ActionGrid: TUniDBGrid
           Left = 1
           Top = 1
           Width = 887
-          Height = 367
+          Height = 361
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -316,10 +320,15 @@ object Task_F: TTask_F
               'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
               't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
               '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
-              'ent.body.removeChild(el);'#13#10'    };'#13#10'}')
+              'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
+            
+              'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+              'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
+              #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
+              'n the ToolBar, number 10, hide him'#13#10'}')
           RowEditor = True
           DataSource = DataSourceAction
-          Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
           WebOptions.PageSize = 50
           WebOptions.AppendPosition = tpCurrentRow
           WebOptions.FetchAll = True
@@ -335,34 +344,47 @@ object Task_F: TTask_F
           TabOrder = 1
           ParentColor = False
           Color = clBtnFace
+          OnCellContextClick = ActionGridCellContextClick
           Columns = <
             item
-              FieldName = 'TaskActionsID'
+              FieldName = 'ID'
+              Title.Alignment = taCenter
               Title.Caption = #1048#1044
               Width = 112
+              Visible = False
+            end
+            item
+              FieldName = 'Number'
+              Title.Alignment = taCenter
+              Title.Caption = #1053#1086#1084#1077#1088
+              Width = 79
             end
             item
               FieldName = 'IsActive'
+              Title.Alignment = taCenter
               Title.Caption = #1057#1090#1072#1090#1091#1089
-              Width = 105
+              Width = 82
             end
             item
               FieldName = 'TaskTypeName'
+              Title.Alignment = taCenter
               Title.Caption = #1058#1080#1087' '#1076#1077#1081#1089#1090#1074#1080#1103
-              Width = 150
+              Width = 142
               ReadOnly = True
             end
             item
               FieldName = 'Comment'
+              Title.Alignment = taCenter
               Title.Caption = #1057#1086#1082#1088#1072#1096#1077#1085#1080#1077
-              Width = 479
+              Width = 526
             end>
         end
       end
       object ActionTool: TUniToolBar
-        Left = 0
-        Top = 0
-        Width = 889
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 883
         Height = 48
         Hint = ''
         ShowHint = True
@@ -377,7 +399,7 @@ object Task_F: TTask_F
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 885
+        ExplicitWidth = 879
         object UniToolButton7: TUniToolButton
           Left = 0
           Top = 0
@@ -386,7 +408,7 @@ object Task_F: TTask_F
           ShowHint = True
           ImageIndex = 1
           Style = tbsDropDown
-          DropdownMenu = UniPopupMenu1
+          DropdownMenu = pmTaskActionAdd
           Caption = #1044#1086#1073#1072#1074#1080#1090#1100
           IconAlign = iaLeft
           TabOrder = 1
@@ -415,35 +437,35 @@ object Task_F: TTask_F
       Hint = ''
       Caption = #1040#1091#1076#1080#1090
       ExplicitWidth = 885
-      ExplicitHeight = 458
+      ExplicitHeight = 416
       DesignSize = (
         889
         417)
       object edtID: TUniEdit
         Left = 150
-        Top = 374
+        Top = 380
         Width = 163
         Hint = ''
         Text = 'edtID'
         Anchors = [akLeft, akBottom]
         TabOrder = 0
         ReadOnly = True
-        ExplicitTop = 415
+        ExplicitTop = 379
       end
       object UniLabel6: TUniLabel
         Left = 15
-        Top = 377
+        Top = 383
         Width = 89
         Height = 13
         Hint = ''
         Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088':'
         Anchors = [akLeft, akBottom]
         TabOrder = 1
-        ExplicitTop = 418
+        ExplicitTop = 382
       end
       object edtInDateTime: TUniDateTimePicker
         Left = 534
-        Top = 374
+        Top = 380
         Width = 163
         Hint = ''
         DateTime = 45170.605918425930000000
@@ -453,42 +475,41 @@ object Task_F: TTask_F
         Anchors = [akLeft, akBottom]
         TabOrder = 2
         DateMode = dtmDateTime
-        ExplicitTop = 415
+        ExplicitTop = 379
       end
       object UniLabel7: TUniLabel
         Left = 383
-        Top = 376
+        Top = 382
         Width = 95
         Height = 13
         Hint = ''
         Caption = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103':'
         Anchors = [akLeft, akBottom]
         TabOrder = 3
-        ExplicitTop = 417
+        ExplicitTop = 381
       end
     end
   end
   object FDQueryAction: TFDQuery
+    AutoCalcFields = False
     Connection = UniMainModule.FDConnection
     SQL.Strings = (
-      'select TaskActionsID '
+      'select ID '
       '      ,Comment'
       '      ,IsActive'
+      '      ,TaskType'
       '      ,TaskTypeName'
-      '  from vTaskActions')
-    Left = 650
+      '      ,Number'
+      '  from vTaskActions'
+      ' order by Number')
+    Left = 634
     Top = 154
-    object FDQueryActionTaskActionsID: TFMTBCDField
-      FieldName = 'TaskActionsID'
-      Origin = 'TaskActionsID'
+    object FDQueryActionID: TFMTBCDField
+      FieldName = 'ID'
+      KeyFields = 'ID'
+      Origin = 'ID'
       Precision = 18
       Size = 0
-    end
-    object FDQueryActionBrief: TWideStringField
-      DisplayLabel = 'Comment'
-      FieldName = 'Brief'
-      Origin = 'Brief'
-      Size = 60
     end
     object FDQueryActionIsActive: TBooleanField
       FieldName = 'IsActive'
@@ -501,6 +522,17 @@ object Task_F: TTask_F
       Required = True
       Size = 16
     end
+    object FDQueryActionTaskType: TIntegerField
+      FieldName = 'TaskType'
+    end
+    object FDQueryActionNumber: TIntegerField
+      FieldName = 'Number'
+    end
+    object FDQueryActionBrief: TWideStringField
+      FieldName = 'Comment'
+      Origin = 'Brief'
+      Size = 60
+    end
   end
   object DataSourceAction: TDataSource
     DataSet = FDQueryAction
@@ -510,25 +542,35 @@ object Task_F: TTask_F
   object ActionList: TUniActionList
     Left = 407
     Top = 218
-    object actAddActionProcType: TAction
-      Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1103#1103' '#1087#1088#1086#1094#1077#1076#1091#1088#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 1
-      OnExecute = actAddActionProcTypeExecute
-    end
     object actEdit: TAction
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 2
+      OnExecute = actEditExecute
     end
     object actDelete: TAction
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 0
+      OnExecute = actDeleteExecute
     end
     object actRefreshAll: TAction
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
       Hint = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1090#1072#1073#1083#1080#1094#1099
+      OnExecute = actRefreshAllExecute
+    end
+    object actAddActionProc: TAction
+      Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1103#1103' '#1087#1088#1086#1094#1077#1076#1091#1088#1072
+      Hint = #1042#1085#1091#1090#1088#1077#1085#1085#1103#1103' '#1087#1088#1086#1094#1077#1076#1091#1088#1072
+      ImageIndex = 1
+      OnExecute = actAddActionProcExecute
+    end
+    object actAddActionBat: TAction
+      Caption = 'Bat '#1092#1072#1081#1083
+    end
+    object actAddActionSQL: TAction
+      Caption = #1057#1082#1088#1080#1087#1090' SQL'
+      OnExecute = actAddActionSQLExecute
     end
   end
   object ILAction16: TUniImageList
@@ -806,7 +848,7 @@ object Task_F: TTask_F
       00004017000F80070000C02F803FFFFF00000000000000000000000000000000
       000000000000}
   end
-  object pmAction: TUniPopupMenu
+  object pmTaskAction: TUniPopupMenu
     Images = ILAction16
     Left = 489
     Top = 257
@@ -834,12 +876,18 @@ object Task_F: TTask_F
       ImageIndex = 2
     end
   end
-  object UniPopupMenu1: TUniPopupMenu
+  object pmTaskActionAdd: TUniPopupMenu
     Images = ILAction16
     Left = 489
-    Top = 321
+    Top = 153
     object N6: TUniMenuItem
-      Action = actAddActionProcType
+      Action = actAddActionProc
+    end
+    object Bat1: TUniMenuItem
+      Action = actAddActionBat
+    end
+    object SQL1: TUniMenuItem
+      Action = actAddActionSQL
     end
   end
 end

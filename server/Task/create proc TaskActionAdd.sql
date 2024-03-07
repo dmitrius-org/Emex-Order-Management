@@ -5,35 +5,39 @@ drop proc if exists TaskActionAdd
 go
 create proc TaskActionAdd
                @ID               numeric(18,0)  out 
-              ,@TaskID           nvarchar(60)   null    --
-              ,@Number           int            null    -- 
-              ,@Comment          nvarchar(255)  null
+              ,@TaskID           nvarchar(60)   = null
+              ,@Number           int 
+              ,@Comment          nvarchar(255)  
               ,@TaskType         int
-              ,@LinkID           numeric(18,0)  null
-              ,@IsActive         int            null
+              ,@LinkID           numeric(18,0)  = null
+			  ,@Field            nvarchar(max)  = null
+              ,@IsActive         int            
 as
-  declare @r       int = 0
+  declare @r int = 0
 
   DECLARE @_ID TABLE (ID numeric(18,0));
 
   INSERT INTO pTaskActions
-        ( TaskActionsID   
+        ( Spid
+		 ,TaskActionsID   
 		 ,TaskID          
 		 ,Number          
 		 ,Comment         
 		 ,TaskType        
 		 ,LinkID          
 		 ,IsActive        
-
+		 ,Field
 		)
   OUTPUT INSERTED.ID  INTO @_ID
-  select  null   
+  select  @@SPID
+         ,null   
 		 ,@TaskID          
 		 ,@Number          
 		 ,@Comment         
 		 ,@TaskType        
 		 ,@LinkID          
-		 ,@IsActive        
+		 ,@IsActive 
+		 ,@Field
 
   Select @ID = ID from @_ID
 
