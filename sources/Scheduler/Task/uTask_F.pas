@@ -12,7 +12,8 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniMultiItem, uniComboBox,
   uniDBComboBox, uniDBLookupComboBox, uniSpinEdit, uniGroupBox, uniPageControl,
-  uniMemo;
+  uniMemo, uniToolBar, uniBasicGrid, uniDBGrid, Vcl.Menus, uniMainMenu,
+  uniImageList, System.Actions, Vcl.ActnList;
 
 type
   TTask_F = class(TUniForm)
@@ -27,19 +28,9 @@ type
     edtPeriodType: TUniRadioGroup;
     edtDateBegin: TUniDateTimePicker;
     UniLabel2: TUniLabel;
-    edtTaskType: TUniRadioGroup;
     ebtIsActive: TUniCheckBox;
-    FDQuery: TFDQuery;
-    DataSource: TDataSource;
-    PeriodType1: TUniPanel;
-    edtTimePeriod: TUniDateTimePicker;
-    UniLabel3: TUniLabel;
-    edtDayPeriod: TUniSpinEdit;
-    UniLabel4: TUniLabel;
-    UniLabel5: TUniLabel;
-    gbLink: TUniGroupBox;
-    edtLinkID: TUniDBLookupComboBox;
-    edtLink: TUniEdit;
+    FDQueryAction: TFDQuery;
+    DataSourceAction: TDataSource;
     pnlInteval: TUniPanel;
     lblStartTime: TUniLabel;
     edtTimeBegin: TUniDateTimePicker;
@@ -51,13 +42,43 @@ type
     UniLabel6: TUniLabel;
     edtInDateTime: TUniDateTimePicker;
     UniLabel7: TUniLabel;
-    cbExecuteHide: TUniCheckBox;
-    edtCMD: TUniMemo;
+    TaskPage: TUniTabSheet;
+    UniPanel3: TUniPanel;
+    ActionGrid: TUniDBGrid;
+    ActionTool: TUniToolBar;
+    UniToolButton7: TUniToolButton;
+    UniToolButton8: TUniToolButton;
+    UniToolButton9: TUniToolButton;
+    ActionList: TUniActionList;
+    actAddActionProcType: TAction;
+    actEdit: TAction;
+    actDelete: TAction;
+    actRefreshAll: TAction;
+    ILAction16: TUniImageList;
+    pmAction: TUniPopupMenu;
+    N1: TUniMenuItem;
+    N2: TUniMenuItem;
+    N3: TUniMenuItem;
+    N4: TUniMenuItem;
+    N5: TUniMenuItem;
+    FDQueryActionTaskActionsID: TFMTBCDField;
+    FDQueryActionBrief: TWideStringField;
+    FDQueryActionIsActive: TBooleanField;
+    FDQueryActionTaskTypeName: TStringField;
+    UniPopupMenu1: TUniPopupMenu;
+    N6: TUniMenuItem;
+    PeriodType1: TUniPanel;
+    edtTimePeriod: TUniDateTimePicker;
+    UniLabel3: TUniLabel;
+    edtDayPeriod: TUniSpinEdit;
+    UniLabel4: TUniLabel;
+    UniLabel5: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure edtTaskTypeClick(Sender: TObject);
     procedure edtPeriodTypeClick(Sender: TObject);
+    procedure actAddActionProcTypeExecute(Sender: TObject);
+    procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
   private
     FAction: TFormAction;
     FID: Integer;
@@ -74,8 +95,9 @@ type
     ///</summary>
     procedure DataCheck();
 
-    procedure SetTaskTypeProperty();
     procedure SetPeriodTypeProperty();
+
+    procedure ActionGridCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
     { Public declarations }
@@ -90,7 +112,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar;
+  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F;
 
 function Task_F: TTask_F;
 begin
@@ -98,6 +120,19 @@ begin
 end;
 
 { TTask_F }
+
+procedure TTask_F.actAddActionProcTypeExecute(Sender: TObject);
+begin
+  TaskProcedure_F.FormAction := TFormAction.acInsert;
+  TaskProcedure_F.ShowModal(ActionGridCallBack);
+end;
+
+procedure TTask_F.ActionGridCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+
+  FDQueryAction.Refresh();
+end;
 
 procedure TTask_F.btnCancelClick(Sender: TObject);
 begin
@@ -112,29 +147,6 @@ begin
 
   if RetVal.Code = 0 then
   begin
-   case edtTaskType.ItemIndex of
-    Integer(tTaskType.ttProc):
-    begin
-     // Field := edtProcName.Text;
-    end;
-    Integer(tTaskType.ttBat):
-    begin
-      Field := edtLink.Text;
-    end;
-    Integer(tTaskType.ttSQL):
-    begin
-      Field := edtCMD.Text;
-    end;
-   end;
-
-//   if cbExecuteHide.Checked then
-//   Begin
-//     if (FFlag and 1) <> 1 then FFlag := (FFlag or 1)
-//   end
-//   else
-//   Begin
-//     if (FFlag and 1) = 1 then FFlag := (FFlag xor 1);
-//   end;
 
    case FAction of
     acInsert:
@@ -146,12 +158,9 @@ begin
                 '             @TaskID    = @TaskID out'+
                 '            ,@Brief     = :Brief     '+
                 '            ,@Name      = :Name      '+
-                '            ,@TaskType  = :TaskType  '+
                 '            ,@PeriodType= :PeriodType'+
                 '            ,@DateBegin = :DateBegin '+
                 '            ,@IsActive  = :IsActive  '+
-                '            ,@Field     = :Field     '+
-                '            ,@LinkID    = :LinkID    '+
                 '            ,@TimeBegin = :TimeBegin '+
                 '            ,@TimeEnd   = :TimeEnd   '+
                 '            ,@DayPeriod = :DayPeriod '+
@@ -162,17 +171,14 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','TaskType', 'PeriodType', 'DateBegin',
-                'IsActive', 'Field', 'LinkID', 'TimeBegin', 'TimeEnd',
+               ['Brief','Name', 'PeriodType', 'DateBegin',
+                'IsActive', 'TimeBegin', 'TimeEnd',
                 'DayPeriod', 'TimePeriod', 'Flag'],
                [edtBrief.Text,
                 edtName.Text,
-                edtTaskType.ItemIndex,
                 edtPeriodType.ItemIndex,
                 edtDateBegin.DateTime,
                 ebtIsActive.Checked,
-                Field,
-                vartoint(edtLinkID.KeyValue),
                 edtTimeBegin.DateTime,
                 edtTimeEnd.DateTime,
                 edtDayPeriod.Value,
@@ -193,12 +199,9 @@ begin
                 '             @TaskID    = :TaskID    '+
                 '            ,@Brief     = :Brief     '+
                 '            ,@Name      = :Name      '+
-                '            ,@TaskType  = :TaskType  '+
                 '            ,@PeriodType= :PeriodType'+
                 '            ,@DateBegin = :DateBegin '+
                 '            ,@IsActive  = :IsActive  '+
-                '            ,@Field     = :Field     '+
-                '            ,@LinkID    = :LinkID    '+
                 '            ,@TimeBegin = :TimeBegin '+
                 '            ,@TimeEnd   = :TimeEnd   '+
                 '            ,@DayPeriod = :DayPeriod '+
@@ -209,18 +212,15 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['TaskID', 'Brief','Name','TaskType', 'PeriodType', 'DateBegin',
-                'IsActive', 'Field', 'LinkID', 'TimeBegin', 'TimeEnd',
+               ['TaskID', 'Brief','Name','PeriodType', 'DateBegin',
+                'IsActive', 'TimeBegin', 'TimeEnd',
                 'DayPeriod', 'TimePeriod', 'Flag'],
                [FID,
                 edtBrief.Text,
                 edtName.Text,
-                edtTaskType.ItemIndex,
                 edtPeriodType.ItemIndex,
                 edtDateBegin.DateTime,
                 ebtIsActive.Checked,
-                Field,
-                vartoint(edtLinkID.KeyValue),
                 edtTimeBegin.DateTime,
                 edtTimeEnd.DateTime,
                 edtDayPeriod.Value,
@@ -280,11 +280,6 @@ begin
       begin
         RetVal.Code := 1;
         RetVal.Message := 'Поле [Период выполнения] обязателена к заполнению!'; Exit();
-      end
-      else if edtTaskType.IsBlank then
-      begin
-        RetVal.Code := 1;
-        RetVal.Message := 'Поле [Тип задачи] обязателена к заполнению!'; Exit();
       end;
     end;
   end;
@@ -305,47 +300,19 @@ begin
   edtDateBegin.DateTime:= UniMainModule.Query.FieldByName('DateBegin').AsDateTime;
   edtPeriodType.ItemIndex:= UniMainModule.Query.FieldByName('PeriodType').AsInteger;
   ebtIsActive.Checked:= UniMainModule.Query.FieldByName('IsActive').AsBoolean;
-
-  edtTaskType.ItemIndex:= UniMainModule.Query.FieldByName('TaskType').AsInteger;
-  case edtTaskType.ItemIndex of
-    Integer(tTaskType.ttProc):
-    begin
-     edtLinkID.KeyValue:=  UniMainModule.Query.FieldByName('LinkID').AsInteger;
-    end;
-    Integer(tTaskType.ttBat):
-    begin
-      edtLink.Text:=  UniMainModule.Query.FieldByName('Field').AsString;
-    end;
-    Integer(tTaskType.ttSQL):
-    begin
-      edtCMD.Text:=  UniMainModule.Query.FieldByName('Field').AsString;
-    end;
-  end;
-
   edtTimeBegin.DateTime:= UniMainModule.Query.FieldByName('TimeBegin').AsDateTime;
   edtTimeEnd.DateTime:= UniMainModule.Query.FieldByName('TimeEnd').AsDateTime;
   edtTimePeriod.DateTime:= UniMainModule.Query.FieldByName('TimePeriod').AsDateTime;
   edtDayPeriod.Value:= UniMainModule.Query.FieldByName('DayPeriod').AsInteger;
-
   edtID.Text:= UniMainModule.Query.FieldByName('TaskID').AsString;
   edtInDateTime.DateTime:= UniMainModule.Query.FieldByName('InDateTime').AsDateTime;
 
-  //FFlag:= UniMainModule.Query.FieldByName('Flag').AsInteger;
-
-  //cbExecuteHide.Checked := (FFlag And 1) > 0;
-
-  SetTaskTypeProperty;
   SetPeriodTypeProperty;
 end;
 
 procedure TTask_F.edtPeriodTypeClick(Sender: TObject);
 begin
    SetPeriodTypeProperty
-end;
-
-procedure TTask_F.edtTaskTypeClick(Sender: TObject);
-begin
-  SetTaskTypeProperty;
 end;
 
 procedure TTask_F.SetAction(const Value: TFormAction);
@@ -371,38 +338,10 @@ begin
   end;
 end;
 
-procedure TTask_F.SetTaskTypeProperty; // тип задачи
+
+procedure TTask_F.UniFormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  edtLinkID.Visible:=False;
-  edtLink.Visible:=False;
-  cbExecuteHide.Visible := False;
-  edtCMD.Visible := False;
-
-
-  case edtTaskType.ItemIndex of
-    Integer(tTaskType.ttProc):
-    begin
-      FDQuery.Close;
-      FDQuery.SQL.Text := 'select PropertyID, Brief, Name from tProperty (nolock) where ObjectTypeID = :ObjectTypeID';
-      FDQuery.ParamByName('ObjectTypeID').AsInteger := 101;
-      FDQuery.Open;
-
-      edtLinkID.Visible:=True;
-
-    end;
-    Integer(tTaskType.ttBat):
-    begin
-      edtLink.Visible:=True;
-      //cbExecuteHide.Visible := True;
-    end;
-    Integer(tTaskType.ttSQL):
-    begin
-      edtCMD.Visible:=True;
-      //cbExecuteHide.Visible := True;
-    end;
-  else
-  end;
-
+  FDQueryAction.Close;
 end;
 
 procedure TTask_F.UniFormShow(Sender: TObject);

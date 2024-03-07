@@ -7,12 +7,9 @@ create proc TaskInsert
                @TaskID           numeric(18,0)  out 
               ,@Brief            nvarchar(60)       --
               ,@Name	         nvarchar(128) null  -- 
-              ,@TaskType         int  -- тип задачи
               ,@PeriodType       int
               ,@DateBegin        datetime
               ,@IsActive         int
-			  ,@Field            nvarchar(max)
-			  ,@LinkID           numeric(18,0)
 			  ,@TimeBegin        Time
               ,@TimeEnd          Time
               ,@DayPeriod        int
@@ -27,13 +24,9 @@ as
   INSERT INTO [tTask]
         ([Brief]
         ,[Name]
-        ,[TaskType]
         ,[PeriodType]
-       -- ,[TimeType]
         ,[DateBegin]
         ,[IsActive]
-		,Field
-		,LinkID
         ,[inDatetime]
         ,[updDatetime]
 		,TimeBegin        
@@ -44,14 +37,10 @@ as
 		)
   OUTPUT INSERTED.TaskID  INTO @ID
   select @Brief       
-		,@Name	    
-		,@TaskType    
-		,@PeriodType  
-		--,@TimeType    
+		,@Name	      
+		,@PeriodType     
 		,@DateBegin   
 		,@IsActive  
-		,@Field
-		,@LinkID
 		,getDate() 
 		,getDate() 
 		,@TimeBegin        

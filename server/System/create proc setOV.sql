@@ -11,6 +11,14 @@ AS
 begin
   SET NOCOUNT ON;
 
+  if OBJECT_ID(@ObjectName, @Type) is null
+  begin
+
+    delete tObjectVersion from tObjectVersion (rowlock) where ObjectName=@ObjectName and [Type]=@Type
+    goto exit_
+  end
+
+
   if not exists (select 1
                    from tObjectVersion (nolock)
 				  where ObjectName = @ObjectName
@@ -30,7 +38,7 @@ begin
 		  ,@Type
 		  ,@Version
 		  ,GetDate()
-		  ,GetDate()
+		  ,GetDate()    
   end
   else
   begin
@@ -102,8 +110,11 @@ begin
 								   @level1name = @ObjectName;
   end
 
+
+
+  exit_:
 end
 go
 grant all on setOV to public
 go
-exec setOV 'setOV', 'P', '20240101', '1.0.0.0'
+exec setOV 'setOV', 'P', '20240307', '1.0.0.1'

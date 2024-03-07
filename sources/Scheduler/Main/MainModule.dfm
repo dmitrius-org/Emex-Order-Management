@@ -16,8 +16,7 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
-      'DriverID=MSSQL'
-      'MonitorBy=FlatFile')
+      'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
     Left = 42

@@ -2,7 +2,7 @@ if OBJECT_ID('vGrant') is not null
     drop view vGrant
 go
 /* 						
-vGrant - οπΰβΰ
+vGrant - ΠΏΡ€Π°Π²Π°
  */
 
 create view vGrant
@@ -29,6 +29,6 @@ select u.GrantID
 go
 grant all on vGrant to public
 go
-exec setOV 'vGrant', 'V', '20240101', '1.0.0.1'
+exec setOV 'vGrant', 'V', '20240101', '1.0.0.2'
 go
  

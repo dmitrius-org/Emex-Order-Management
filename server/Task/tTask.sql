@@ -1,5 +1,4 @@
 if OBJECT_ID('tTask') is null
---drop table tTask
 /* **********************************************************
 
 ********************************************************** */
@@ -19,8 +18,8 @@ begin
 	,TimePeriod       Time
 	,IsActive         bit
 	,Message          nvarchar(1000)
-	,LinkID           numeric(18,0)
-	,Field            nvarchar(max)
+	--,LinkID           numeric(18,0)
+	--,Field            nvarchar(max)
 	,Flag             int         
 	,inDatetime       datetime default GetDate()      --
 	,updDatetime      datetime default GetDate()      --

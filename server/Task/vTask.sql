@@ -8,12 +8,9 @@ vTask -
 create view vTask
 
 as
-
---SET DATEFIRST 1;
 SELECT [TaskID]
       ,[Brief]
       ,[Name]
-      ,[TaskType]
       ,[DateBegin]
 	  ,[DateExec]
       ,[IsActive]
@@ -24,7 +21,7 @@ SELECT [TaskID]
 go
 grant select on vTask to public
 go
-exec setOV 'vTask', 'V', '20240101', '1.0.0.0'
+exec setOV 'vTask', 'V', '20240307', '1.0.0.1'
 go
  
 

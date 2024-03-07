@@ -50,7 +50,8 @@ uses
   uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
   uMainVar in '..\Common\uMainVar.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
-  LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm};
+  LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},
+  uTaskProcedure_F in 'Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm};
 
 {$R *.res}
 
