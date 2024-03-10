@@ -1,7 +1,7 @@
 drop view if exists vInstrumentTree
 go
 /* **********************************************************						
-vInstrumentTree - структура меню настроек и состояний документообора
+vInstrumentTree - СЃС‚СЂСѓРєС‚СѓСЂР° РјРµРЅСЋ РЅР°СЃС‚СЂРѕРµРє Рё СЃРѕСЃС‚РѕСЏРЅРёР№ РґРѕРєСѓРјРµРЅС‚РѕРѕР±РѕСЂР°
 ********************************************************** */
 
 create view vInstrumentTree
@@ -20,7 +20,7 @@ select i.InstrumentID      as ID
   left join tInstrument ii (nolock) 
          on ii.InstrumentID = i.PID
 union all
--- состояния
+-- СЃРѕСЃС‚РѕСЏРЅРёСЏ
 select m.ModelID           as ID
       ,m.InstrumentID      as PID
 	  ,i.InstrumentTypeID  as PType
@@ -38,7 +38,7 @@ select m.ModelID           as ID
 		and n.Type   = 0
  where m.ActionID = 0 
 union all
--- действия
+-- РґРµР№СЃС‚РІРёСЏ
 select m.ModelID           as ID
       ,mc.ModelID          as PID
 	  ,mc.InstrumentTypeID as PType

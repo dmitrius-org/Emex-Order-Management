@@ -22,15 +22,17 @@ type
     FDGUIxWaitCursor: TFDGUIxWaitCursor;
     FDGUIxErrorDialog: TFDGUIxErrorDialog;
     FDTaskConnection: TFDConnection;
-    FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink;
     UniThreadTimer: TUniThreadTimer;
-    DBTaskAlert: TFDEventAlerter;
+    DBAlert: TFDEventAlerter;
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
     procedure UniThreadTimerTimer(Sender: TObject);
-    procedure UniGUIServerModuleServerStartup(Sender: TObject);
-    procedure DBTaskAlertAlert(ASender: TFDCustomEventAlerter;
+    procedure DBAlertAlert(ASender: TFDCustomEventAlerter;
       const AEventName: string; const AArgument: Variant);
+    procedure FDTaskConnectionError(ASender, AInitiator: TObject;
+      var AException: Exception);
+    procedure UniGUIServerModuleException(Sender: TUniGUIMainModule;
+      AException: Exception; var Handled: Boolean);
   private
     { Private declarations }
 
@@ -103,28 +105,39 @@ begin
   end;
 end;
 
-procedure TUniServerModule.DBTaskAlertAlert(ASender: TFDCustomEventAlerter;
+procedure TUniServerModule.DBAlertAlert(ASender: TFDCustomEventAlerter;
   const AEventName: string; const AArgument: Variant);
-var
-	i: Integer;
-	sArgs: String;
+//var
+//	i: Integer;
+//	sArgs: String;
 begin
-	if VarIsArray(AArgument) then
-  begin
-		sArgs := '';
-		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
-    begin
-			if sArgs <> '' then
-				sArgs := sArgs + ', ';
-			sArgs := sArgs + VarToStr(AArgument[i]);
-		end;
-	end
-	else if VarIsNull(AArgument) then sArgs := '<NULL>'
-	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
-	else sArgs := VarToStr(AArgument);
+//	if VarIsArray(AArgument) then
+//  begin
+//		sArgs := '';
+//		for i := VarArrayLowBound(AArgument, 1) to VarArrayHighBound(AArgument, 1) do
+//    begin
+//			if sArgs <> '' then
+//				sArgs := sArgs + ', ';
+//			sArgs := sArgs + VarToStr(AArgument[i]);
+//		end;
+//	end
+//	else if VarIsNull(AArgument) then sArgs := '<NULL>'
+//	else if VarIsEmpty(AArgument) then sArgs := '<UNASSIGNED>'
+//	else sArgs := VarToStr(AArgument);
+//
+//	logger.AddLog('Event - [' + AEventName + '] - [' + sArgs + ']');
+////  logger.Info(AEventName + ' ' + '');
+//
+//  if AEventName = 'IsActive' then
+//  begin
+//    TaskEnabled;
+//  end;
+end;
 
-	logger.AddLog('Event - [' + AEventName + '] - [' + sArgs + ']');
-//  logger.Info(AEventName + ' ' + '');
+procedure TUniServerModule.FDTaskConnectionError(ASender, AInitiator: TObject;
+  var AException: Exception);
+begin
+  Logger.AddLog('TUniServerModule.FDTaskConnectionError', AException.Message);
 end;
 
 procedure TUniServerModule.FirstInit;
@@ -134,9 +147,12 @@ end;
 
 procedure TUniServerModule.TaskEnabled();
 begin
- // UniServerModule.MTask.IsActive := not MTask.IsActive;
+  Logger.AddLog('TUniServerModule.TaskEnabled', 'Begin');
+  //MTask.IsActive := not MTask.IsActive;
 
   UniThreadTimer.Enabled := MTask.IsActive;
+  Logger.AddLog('TUniServerModule.TaskEnabled Enabled: ', UniThreadTimer.Enabled.ToString());
+  Logger.AddLog('TUniServerModule.TaskEnabled', 'End');
 end;
 
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
@@ -147,7 +163,7 @@ begin
   ExploreWeb('http://127.0.0.1:8078');
   {$ENDIF}
 
-  MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
+  //MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
 
   FDManager.DriverDefFileName     := UniServerModule.StartPath + 'Drivers.ini';
   FDManager.ConnectionDefFileName := UniServerModule.StartPath + 'Connection.ini';
@@ -164,15 +180,14 @@ begin
 
   dbConnect;
 
+//  DBAlert.Names.Clear;
+//  DBAlert.Names.Add('QUEUE=TaskManager');
+// 	DBAlert.Names.Add('SERVICE=TaskManager');
+//  DBAlert.Names.Add('CHANGE1=IsActive;select IsActive from tTaskActive (nolock)');
+//	DBAlert.Options.Synchronize := True;
+//	DBAlert.Register;
+
   MTask:= TMTask.Create(FDTaskConnection);
-
-//  DBTaskAlert.Names.Clear;
-//	DBTaskAlert.Names.Add('QUEUE=TaskManager');
-//	DBTaskAlert.Names.Add('SERVICE=TaskManager');
-//	DBTaskAlert.Names.Add('CHANGE2=TaskManagerIsActive;select IsActive from dbo.tTaskActive (nolock)');
-//	DBTaskAlert.Options.Synchronize := True;
-//	DBTaskAlert.Register;
-
   if MTask.IsActive then
     TaskEnabled();
 
@@ -185,11 +200,10 @@ begin
   FDManager.Close;
 end;
 
-procedure TUniServerModule.UniGUIServerModuleServerStartup(Sender: TObject);
+procedure TUniServerModule.UniGUIServerModuleException(
+  Sender: TUniGUIMainModule; AException: Exception; var Handled: Boolean);
 begin
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'Begin');
-
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleServerStartup', 'End');
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleException', AException.Message);
 end;
 
 procedure TUniServerModule.UniThreadTimerTimer(Sender: TObject);

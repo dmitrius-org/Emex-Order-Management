@@ -1,5 +1,4 @@
 if OBJECT_ID('tCurrencyRate') is null
---drop table tCurrencyRate
 /* 
 tCurrencyRate - курсы
 */
@@ -18,8 +17,8 @@ begin
 
 	create unique index ao2 on tCurrencyRate(CharCode, OnDate);
 end
-grant all on tCurrencyRate to public
+grant all on tCurrencyRate to public;
 go
-exec setOV 'tCurrencyRate', 'U', '20240101', '1.0.0.0'
+exec setOV 'tCurrencyRate', 'U', '20240101', '1.0.0.0';
 go
-exec dbo.sys_setTableDescription @table = 'tCurrencyRate', @desc = 'Таблица курсов'
+exec dbo.sys_setTableDescription @table = 'tCurrencyRate', @desc = 'Таблица курсов';

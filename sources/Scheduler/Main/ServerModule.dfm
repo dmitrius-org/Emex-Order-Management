@@ -31,7 +31,7 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.FullSequenceLog = True
   ConnectionFailureRecovery.ErrorMessage = #1054#1096#1080#1073#1082#1072' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
   ConnectionFailureRecovery.RetryMessage = #1055#1086#1074#1090#1086#1088#1085#1072#1103' '#1087#1086#1087#1099#1090#1082#1072'...'
-  OnServerStartup = UniGUIServerModuleServerStartup
+  OnException = UniGUIServerModuleException
   Height = 281
   Width = 776
   object FDManager: TFDManager
@@ -58,14 +58,9 @@ object UniServerModule: TUniServerModule
   end
   object FDTaskConnection: TFDConnection
     ConnectionName = 'TaskConnection'
-    Params.Strings = (
-      'ConnectionDef=TaskConnection')
     LoginPrompt = False
+    OnError = FDTaskConnectionError
     Left = 452
-    Top = 23
-  end
-  object FDPhysMSSQLDriverLink: TFDPhysMSSQLDriverLink
-    Left = 606
     Top = 23
   end
   object UniThreadTimer: TUniThreadTimer
@@ -74,10 +69,10 @@ object UniServerModule: TUniServerModule
     Left = 449
     Top = 97
   end
-  object DBTaskAlert: TFDEventAlerter
+  object DBAlert: TFDEventAlerter
     Connection = FDTaskConnection
-    OnAlert = DBTaskAlertAlert
+    OnAlert = DBAlertAlert
     Left = 608
-    Top = 101
+    Top = 21
   end
 end

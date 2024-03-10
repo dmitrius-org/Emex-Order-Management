@@ -91,6 +91,7 @@ type
     procedure actDeleteExecute(Sender: TObject);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actAddActionSQLExecute(Sender: TObject);
+    procedure actAddActionBatExecute(Sender: TObject);
   private
     FAction: TFormAction;
     FID: Integer;
@@ -124,7 +125,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F, uTaskSQL_F;
+  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F, uTaskSQL_F, uTaskBat_F;
 
 function Task_F: TTask_F;
 begin
@@ -132,6 +133,12 @@ begin
 end;
 
 { TTask_F }
+procedure TTask_F.actAddActionBatExecute(Sender: TObject);
+begin
+  TaskBAT_F.FormAction := TFormAction.acInsert;
+  TaskBAT_F.ShowModal(ActionGridCallBack);
+end;
+
 procedure TTask_F.actAddActionProcExecute(Sender: TObject);
 begin
   TaskProcedure_F.FormAction := TFormAction.acInsert;
@@ -152,12 +159,12 @@ begin
     TaskProcedure_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
     TaskProcedure_F.ShowModal(ActionGridCallBack);
   end
-//  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
-//  begin
-//    TaskSQL_F.FormAction := TFormAction.acDelete;
-//    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
-//    TaskSQL_F.ShowModal(ActionGridCallBack);
-//  end
+  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
+  begin
+    TaskBAT_F.FormAction := TFormAction.acDelete;
+    TaskBAT_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskBAT_F.ShowModal(ActionGridCallBack);
+  end
   else if FDQueryAction.FieldByName('TaskType').AsInteger = 2 then
   begin
     TaskSQL_F.FormAction := TFormAction.acDelete;
@@ -174,12 +181,12 @@ begin
     TaskProcedure_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
     TaskProcedure_F.ShowModal(ActionGridCallBack);
   end
-//  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
-//  begin
-//    TaskSQL_F.FormAction := TFormAction.acUpdate;
-//    TaskSQL_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
-//    TaskSQL_F.ShowModal(ActionGridCallBack);
-//  end
+  else if FDQueryAction.FieldByName('TaskType').AsInteger = 1 then
+  begin
+    TaskBAT_F.FormAction := TFormAction.acUpdate;
+    TaskBAT_F.ID         :=  FDQueryAction.FieldByName('ID').AsInteger;
+    TaskBAT_F.ShowModal(ActionGridCallBack);
+  end
   else if FDQueryAction.FieldByName('TaskType').AsInteger = 2 then
   begin
     TaskSQL_F.FormAction := TFormAction.acUpdate;

@@ -65,7 +65,7 @@ set @Rest = isnull((select sum(Amount*Type)
 
 select DocumentID
       ,Case
-         when Flag&1>0 then 'Пополнение баланса'
+         when Flag&1>0 then 'РџРѕРїРѕР»РЅРµРЅРёРµ Р±Р°Р»Р°РЅСЃР°'
          else ''
        end       as Document
       ,Number

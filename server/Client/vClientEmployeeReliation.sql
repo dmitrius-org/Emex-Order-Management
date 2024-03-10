@@ -2,7 +2,7 @@ if OBJECT_ID('vClientEmployeeReliation') is not null
     drop view vClientEmployeeReliation
 go
 /* **********************************************************						
-vClientEmployeeReliation - связанные менеджеры
+vClientEmployeeReliation - СЃРІСЏР·Р°РЅРЅС‹Рµ РјРµРЅРµРґР¶РµСЂС‹
 ********************************************************** */
 create view vClientEmployeeReliation
 as

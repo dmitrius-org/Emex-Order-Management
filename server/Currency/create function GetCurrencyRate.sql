@@ -8,8 +8,10 @@ go
   @OnDate  - дата
 -------------------------------------------------------- */
 CREATE FUNCTION GetCurrencyRate
-                (@NumCode varchar(3)
-				,@OnDate  date = null )
+                (
+				 @NumCode varchar(3)
+                ,@OnDate  date = null 
+				)
 RETURNS decimal(19, 4)
 WITH EXECUTE AS CALLER
 BEGIN
@@ -19,11 +21,15 @@ BEGIN
   return (select top 1 Value
             from tCurrencyRate with (nolock index=ao2)
            where NumCode = '840'
-  		     and OnDate <= @OnDate
-  		   order by OnDate desc)
+             and OnDate <= @OnDate
+           order by OnDate desc)
 end   
 go
 grant execute on dbo.GetCurrencyRate to public
 go
-exec setOV 'GetCurrencyRate', 'F', '20240101', '1.0.0.0'
+exec setOV 'GetCurrencyRate', 'FN', '20240101', '1.0.0.0'
 go
+
+select distinct type from sys.objects
+
+select * from sys.objects where name='GetCurrencyRate'

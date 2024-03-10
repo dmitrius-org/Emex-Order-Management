@@ -168,13 +168,18 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>LoginF</Form>
             <DesignClass>TUniLoginForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="Task\uTaskSQL_F.pas">
-            <Form>TaskSQL_F</Form>
+        <DCCReference Include="Task\uTaskBat_F.pas">
+            <Form>TaskBAT_F</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Task\uTaskProcedure_F.pas">
             <Form>TaskProcedure_F</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Task\uTaskSQL_F.pas">
+            <Form>TaskSQL_F</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>

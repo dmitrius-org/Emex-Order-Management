@@ -3,7 +3,7 @@ if OBJECT_ID('AddDaysAndWeekends') is not null
 /*
   AddDaysAndWeekends - Добавление дней к дате с учетом выходных
   @StartDate         - Дата
-  @NoOfDays			 - Количество дней
+  @NoOfDays          - Количество дней
   @IsSatrudayHoliday - Учитывать выходные
 */
 go
@@ -36,7 +36,7 @@ END
 go
 grant exec on dbo.AddDaysAndWeekends to public
 go
-exec setOV 'AddDaysAndWeekends', 'F', '20240101', '1.0.0.0'
+exec setOV 'AddDaysAndWeekends', 'FN', '20240101', '1.0.0.0'
 go
 
 

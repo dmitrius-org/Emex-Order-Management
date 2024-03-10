@@ -1,8 +1,8 @@
-if OBJECT_ID('vClients') is not null
+aif OBJECT_ID('vClients') is not null
     drop view vClients
 go
 /* **********************************************************						
-vClients - получение списка клиентов
+vClients - РїРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РєР»РёРµРЅС‚РѕРІ
 ********************************************************** */
 
 create view vClients
@@ -27,5 +27,3 @@ grant all on vClients to public
 go
 exec setOV 'vClients', 'V', '20240101', '1.0.0.0'
 go
-
-

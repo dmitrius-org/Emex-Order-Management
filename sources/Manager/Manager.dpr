@@ -85,7 +85,9 @@ uses
   uEmployeesF in 'App\Employees\uEmployeesF.pas' {EmployeesF: TUniForm},
   uClientsTypeT in 'App\Clients\uClientsTypeT.pas' {ClientsTypeT: TUniFrame},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
-  uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm};
+  uTaskBat_F in '..\Scheduler\Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
+  uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
+  uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm};
 
 {$R *.res}
 

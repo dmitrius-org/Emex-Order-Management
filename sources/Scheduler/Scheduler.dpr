@@ -51,8 +51,9 @@ uses
   uMainVar in '..\Common\uMainVar.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},
-  uTaskSQL_F in 'Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
-  uTaskProcedure_F in 'Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm};
+  uTaskBat_F in 'Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
+  uTaskProcedure_F in 'Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
+  uTaskSQL_F in 'Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm};
 
 {$R *.res}
 

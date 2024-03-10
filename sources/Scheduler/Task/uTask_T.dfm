@@ -2397,20 +2397,4 @@ object Task_T: TTask_T
     Left = 751
     Top = 118
   end
-  object DBAlert: TFDEventAlerter
-    Connection = UniMainModule.FDConnection
-    OnAlert = DBAlertAlert
-    Left = 688
-    Top = 248
-  end
-  object IntefaceRefresh: TUniTimer
-    ClientEvent.Strings = (
-      'function(sender)'
-      '{'
-      ' '
-      '}')
-    OnTimer = IntefaceRefreshTimer
-    Left = 688
-    Top = 327
-  end
 end

@@ -1,5 +1,5 @@
 if OBJECT_ID('GetLogin') is not null
-    drop function GetLogin
+    drop function GetLogin;
 /*
   GetLogin - 
 */
@@ -13,8 +13,8 @@ BEGIN
   RETURN(SUSER_NAME());
 END
 go
-grant exec on dbo.GetLogin to public
+grant exec on dbo.GetLogin to public;
 go
-exec setOV 'GetLogin', 'F', '20240101', '1.0.0.0'
+exec setOV 'GetLogin', 'FN', '20240101', '1.0.0.0';
 go
 

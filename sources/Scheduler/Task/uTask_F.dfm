@@ -83,24 +83,24 @@ object Task_F: TTask_F
         object edtBrief: TUniEdit
           Left = 150
           Top = 42
-          Width = 704
+          Width = 700
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 700
+          ExplicitWidth = 696
         end
         object edtName: TUniEdit
           Left = 150
           Top = 70
-          Width = 704
+          Width = 700
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
           ClearButton = True
-          ExplicitWidth = 700
+          ExplicitWidth = 696
         end
         object lblBruef: TUniLabel
           Left = 17
@@ -167,7 +167,7 @@ object Task_F: TTask_F
         object ebtIsActive: TUniCheckBox
           Left = 150
           Top = 14
-          Width = 161
+          Width = 157
           Height = 22
           Hint = ''
           Caption = #1047#1072#1076#1072#1085#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
@@ -175,7 +175,7 @@ object Task_F: TTask_F
           Font.Height = -13
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 8
-          ExplicitWidth = 157
+          ExplicitWidth = 153
         end
         object pnlInteval: TUniPanel
           Left = 17
@@ -221,7 +221,7 @@ object Task_F: TTask_F
         end
         object PeriodType1: TUniPanel
           Left = 110
-          Top = 356
+          Top = 358
           Width = 308
           Height = 33
           Hint = ''
@@ -230,7 +230,7 @@ object Task_F: TTask_F
           BorderStyle = ubsNone
           ShowCaption = False
           Caption = ''
-          ExplicitTop = 355
+          ExplicitTop = 357
           object edtTimePeriod: TUniDateTimePicker
             Left = 168
             Top = 3
@@ -443,29 +443,29 @@ object Task_F: TTask_F
         417)
       object edtID: TUniEdit
         Left = 150
-        Top = 380
+        Top = 382
         Width = 163
         Hint = ''
         Text = 'edtID'
         Anchors = [akLeft, akBottom]
         TabOrder = 0
         ReadOnly = True
-        ExplicitTop = 379
+        ExplicitTop = 381
       end
       object UniLabel6: TUniLabel
         Left = 15
-        Top = 383
+        Top = 385
         Width = 89
         Height = 13
         Hint = ''
         Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088':'
         Anchors = [akLeft, akBottom]
         TabOrder = 1
-        ExplicitTop = 382
+        ExplicitTop = 384
       end
       object edtInDateTime: TUniDateTimePicker
         Left = 534
-        Top = 380
+        Top = 382
         Width = 163
         Hint = ''
         DateTime = 45170.605918425930000000
@@ -475,18 +475,18 @@ object Task_F: TTask_F
         Anchors = [akLeft, akBottom]
         TabOrder = 2
         DateMode = dtmDateTime
-        ExplicitTop = 379
+        ExplicitTop = 381
       end
       object UniLabel7: TUniLabel
         Left = 383
-        Top = 382
+        Top = 384
         Width = 95
         Height = 13
         Hint = ''
         Caption = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103':'
         Anchors = [akLeft, akBottom]
         TabOrder = 3
-        ExplicitTop = 381
+        ExplicitTop = 383
       end
     end
   end
@@ -566,7 +566,8 @@ object Task_F: TTask_F
       OnExecute = actAddActionProcExecute
     end
     object actAddActionBat: TAction
-      Caption = 'Bat '#1092#1072#1081#1083
+      Caption = #1060#1072#1081#1083' BAT'
+      OnExecute = actAddActionBatExecute
     end
     object actAddActionSQL: TAction
       Caption = #1057#1082#1088#1080#1087#1090' SQL'

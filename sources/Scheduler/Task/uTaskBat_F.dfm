@@ -1,22 +1,22 @@
-object TaskSQL_F: TTaskSQL_F
+object TaskBAT_F: TTaskBAT_F
   Left = 0
   Top = 0
-  ClientHeight = 555
-  ClientWidth = 925
-  Caption = 'TaskSQL_F'
+  ClientHeight = 221
+  ClientWidth = 718
+  Caption = 'TaskBAT_F'
   OnShow = UniFormShow
   OldCreateOrder = False
   OnClose = UniFormClose
   MonitoredKeys.Keys = <>
   DesignSize = (
-    925
-    555)
+    718
+    221)
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 517
-    Width = 919
+    Top = 183
+    Width = 712
     Height = 35
     Hint = ''
     Align = alBottom
@@ -26,7 +26,7 @@ object TaskSQL_F: TTaskSQL_F
     ExplicitWidth = 915
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 831
+      Left = 624
       Top = 4
       Width = 82
       Height = 27
@@ -40,7 +40,7 @@ object TaskSQL_F: TTaskSQL_F
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 744
+      Left = 537
       Top = 4
       Width = 81
       Height = 27
@@ -53,9 +53,9 @@ object TaskSQL_F: TTaskSQL_F
     end
   end
   object edtIsActive: TUniCheckBox
-    Left = 103
+    Left = 97
     Top = 8
-    Width = 146
+    Width = 209
     Height = 22
     Hint = ''
     Caption = #1044#1077#1081#1089#1090#1074#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
@@ -64,19 +64,18 @@ object TaskSQL_F: TTaskSQL_F
     TabOrder = 1
   end
   object edtComment: TUniEdit
-    Left = 103
-    Top = 70
-    Width = 810
+    Left = 97
+    Top = 80
+    Width = 603
     Hint = ''
     Text = ''
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     ClearButton = True
-    ExplicitWidth = 806
   end
   object UniLabel1: TUniLabel
-    Left = 8
-    Top = 75
+    Left = 3
+    Top = 85
     Width = 57
     Height = 13
     Hint = ''
@@ -84,8 +83,8 @@ object TaskSQL_F: TTaskSQL_F
     TabOrder = 3
   end
   object edtNumber: TUniNumberEdit
-    Left = 103
-    Top = 42
+    Left = 97
+    Top = 40
     Width = 121
     Hint = ''
     TabOrder = 4
@@ -93,7 +92,7 @@ object TaskSQL_F: TTaskSQL_F
     DecimalSeparator = ','
   end
   object UniLabel3: TUniLabel
-    Left = 8
+    Left = 3
     Top = 45
     Width = 39
     Height = 13
@@ -101,17 +100,24 @@ object TaskSQL_F: TTaskSQL_F
     Caption = #1053#1086#1084#1077#1088':'
     TabOrder = 5
   end
-  object edtSQL: TUniSyntaxEdit
-    Left = 8
-    Top = 112
-    Width = 905
-    Height = 399
+  object edtpath: TUniEdit
+    Left = 97
+    Top = 120
+    Width = 603
     Hint = ''
-    Language = 'SQL'
-    Font.Name = 'Courier New'
-    Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 901
-    ExplicitHeight = 398
+    Text = ''
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 6
+    ClearButton = True
+  end
+  object UniLabel2: TUniLabel
+    Left = 3
+    Top = 124
+    Width = 29
+    Height = 13
+    Hint = ''
+    Caption = #1060#1072#1081#1083':'
+    TabOrder = 7
   end
   object DataSource: TDataSource
     DataSet = FDQuery

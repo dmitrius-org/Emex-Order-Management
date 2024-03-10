@@ -1,7 +1,7 @@
 if OBJECT_ID('GetRetMsg') is not null
     drop function GetRetMsg
 /*
-  GetRetMsg - получение описания ошибки по коду
+  GetRetMsg - РїРѕР»СѓС‡РµРЅРёРµ РѕРїРёСЃР°РЅРёСЏ РѕС€РёР±РєРё РїРѕ РєРѕРґСѓ
 */
 go
 
@@ -29,5 +29,5 @@ END
 go
 grant exec on dbo.GetRetMsg to public
 go
-exec setOV 'GetRetMsg', 'F', '20240101', '1.0.0.1'
+exec setOV 'GetRetMsg', 'FN', '20240101', '1.0.0.1'
 go
