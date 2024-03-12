@@ -1,6 +1,8 @@
 drop proc if exists OrdersDeliveryTermCalc
 /*
-  OrdersDeliveryTermCalc - расчет 
+  OrdersDeliveryTermCalc - расчет значения:
+                         - Ближайшая дата вылета	
+                         - Плановая дата поступления поставщику	                        
 
   @IsSave - сохраняет данные в tOrders
             0 - нет

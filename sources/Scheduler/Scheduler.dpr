@@ -13,7 +13,6 @@
   library
 {$ENDIF}
   Scheduler
-
 ;
 
 uses
@@ -53,7 +52,8 @@ uses
   LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},
   uTaskBat_F in 'Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
   uTaskProcedure_F in 'Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
-  uTaskSQL_F in 'Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm};
+  uTaskSQL_F in 'Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
+  uTaskActionHead in 'Task\uTaskActionHead.pas' {TaskActionHead: TUniFrame};
 
 {$R *.res}
 

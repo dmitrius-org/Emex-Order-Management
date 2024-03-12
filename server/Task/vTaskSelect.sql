@@ -13,13 +13,13 @@ select t.TaskID
 	  ,t.DateBegin
 	  ,t.DateExec
       ,t.Message
-      ,Flag       
+      ,t.Flag       
   from tTask t (nolock)
  where t.isActive = 1
-   and isnull(t.DateExec, case 
+   and isnull(t.DateExec, t.DateBegin /*case 
                             when t.DateBegin < getDate() then cast( cast(getdate() as date) as datetime ) + cast( cast(t.DateBegin as time) as datetime )
 							else t.DateBegin
-						  end
+						  end*/
 			  ) <= getDate()
 
    and ( (t.PeriodType=1 and convert(time, getDate(), 108) between t.TimeBegin and TimeEnd)
@@ -28,5 +28,5 @@ select t.TaskID
 go
 grant all on vTaskSelect to public;
 go
-exec setOV 'vTaskSelect', 'V', '20240101', '1.0.0.0';
+exec setOV 'vTaskSelect', 'V', '20240311', '1.0.0.0';
 go

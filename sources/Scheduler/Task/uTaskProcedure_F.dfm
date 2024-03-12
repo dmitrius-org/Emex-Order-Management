@@ -23,7 +23,7 @@ object TaskProcedure_F: TTaskProcedure_F
     TabOrder = 0
     Caption = ''
     ExplicitTop = 182
-    ExplicitWidth = 644
+    ExplicitWidth = 665
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 581
@@ -36,7 +36,7 @@ object TaskProcedure_F: TTaskProcedure_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 556
+      ExplicitLeft = 577
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -49,13 +49,13 @@ object TaskProcedure_F: TTaskProcedure_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 469
+      ExplicitLeft = 490
     end
   end
   object edtLinkID: TUniDBLookupComboBox
     Left = 103
     Top = 114
-    Width = 550
+    Width = 546
     Height = 23
     Hint = ''
     ListField = 'Brief'
@@ -73,6 +73,7 @@ object TaskProcedure_F: TTaskProcedure_F
     Width = 199
     Height = 22
     Hint = ''
+    Checked = True
     Caption = #1044#1077#1081#1089#1090#1074#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
     ParentFont = False
     Font.Height = -13
@@ -81,13 +82,13 @@ object TaskProcedure_F: TTaskProcedure_F
   object edtComment: TUniEdit
     Left = 103
     Top = 67
-    Width = 550
+    Width = 546
     Hint = ''
     Text = ''
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
     ClearButton = True
-    ExplicitWidth = 530
+    ExplicitWidth = 542
   end
   object UniLabel1: TUniLabel
     Left = 8
@@ -108,7 +109,7 @@ object TaskProcedure_F: TTaskProcedure_F
     TabOrder = 5
   end
   object edtNumber: TUniNumberEdit
-    Left = 532
+    Left = 528
     Top = 18
     Width = 121
     Hint = ''
@@ -116,10 +117,10 @@ object TaskProcedure_F: TTaskProcedure_F
     TabOrder = 6
     DecimalPrecision = 0
     DecimalSeparator = ','
-    ExplicitLeft = 512
+    ExplicitLeft = 524
   end
   object UniLabel3: TUniLabel
-    Left = 463
+    Left = 459
     Top = 20
     Width = 39
     Height = 13
@@ -127,7 +128,7 @@ object TaskProcedure_F: TTaskProcedure_F
     Caption = #1053#1086#1084#1077#1088':'
     Anchors = [akTop, akRight]
     TabOrder = 7
-    ExplicitLeft = 443
+    ExplicitLeft = 455
   end
   object DataSource: TDataSource
     DataSet = FDQuery

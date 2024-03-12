@@ -97,7 +97,7 @@ Select 'Заказы, которых нет в emex', *
                     from tMovement m (nolock)
 				   where m.OrderID = p.OrderID
 				   )
-   --and p.isCancel = 0
+   and p.OrderDate >= '20240310'
    and StatusID in (--1	--New
                    --,2	--InChecked
                     3	--InBasket

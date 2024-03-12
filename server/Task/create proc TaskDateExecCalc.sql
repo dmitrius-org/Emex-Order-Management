@@ -5,7 +5,7 @@ drop proc if exists TaskDateExecCalc
 go
 create proc TaskDateExecCalc
                @TaskID           numeric(18,0) 
-			  ,@Message          nvarchar(255)
+			  ,@Message          nvarchar(255) = null
 as
   declare @r       int = 0
 		 ,@Type    int
@@ -30,7 +30,7 @@ as
 
 						   else '20700101'
 	                     end
-        ,Message = @Message
+        ,Message = isnull(@Message, Message)
    where TaskID = @TaskID
 
 
@@ -41,5 +41,3 @@ grant exec on TaskDateExecCalc to public
 go
 exec setOV 'TaskDateExecCalc', 'P', '20240101', '1.0.0.0'
 go
-
---select DATEPART ( dd , null )  

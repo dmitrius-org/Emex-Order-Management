@@ -17,7 +17,7 @@ begin
 	,DayPeriod        int
 	,TimePeriod       Time
 	,IsActive         bit
-	,Message          nvarchar(1000)
+	,Message          nvarchar(2000)
 	,Flag             int         
 	,inDatetime       datetime default GetDate()      --
 	,updDatetime      datetime default GetDate()      --
@@ -30,7 +30,7 @@ begin
 	grant all on tTask to public
 end
 go
-exec setOV 'tTask', 'U', '20240101', '1.0.0.0'
+exec setOV 'tTask', 'U', '20240311', '1.0.0.1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tTask', @desc = 'Задачи'

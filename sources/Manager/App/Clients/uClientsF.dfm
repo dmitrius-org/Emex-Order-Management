@@ -25,7 +25,7 @@ object ClientsF: TClientsF
       1113
       44)
     object btnOk: TUniBitBtn
-      Left = 995
+      Left = 991
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 991
+      ExplicitLeft = 987
     end
     object btnCancel: TUniBitBtn
-      Left = 908
+      Left = 904
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 904
+      ExplicitLeft = 900
     end
   end
   object pcCommon: TUniPageControl
@@ -55,7 +55,7 @@ object ClientsF: TClientsF
     Width = 1119
     Height = 486
     Hint = ''
-    ActivePage = tabPriceProfiles
+    ActivePage = tabHome
     Align = alClient
     TabOrder = 1
     ExplicitLeft = -138
@@ -789,12 +789,12 @@ object ClientsF: TClientsF
       object edtNotificationAddress: TUniEdit
         Left = 196
         Top = 117
-        Width = 807
+        Width = 803
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
-        ExplicitWidth = 803
+        ExplicitWidth = 799
       end
     end
     object pcSuppliers: TUniTabSheet

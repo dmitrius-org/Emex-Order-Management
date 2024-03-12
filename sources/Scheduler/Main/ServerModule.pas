@@ -171,12 +171,7 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
-  {$IFDEF DEBUG}
-      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
-              '. ад: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
-  {$ELSE}
-      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
-  {$ENDIF}
+  Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
 
   dbConnect;
 
@@ -188,8 +183,8 @@ begin
 //	DBAlert.Register;
 
   MTask:= TMTask.Create(FDTaskConnection);
-  if MTask.IsActive then
-    TaskEnabled();
+ // if MTask.IsActive then
+ //   TaskEnabled();
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;
@@ -209,7 +204,9 @@ end;
 procedure TUniServerModule.UniThreadTimerTimer(Sender: TObject);
 begin
   try
-    MTask.Execute;
+    //Logger.AddLog('TUniServerModule.UniThreadTimerTimer');
+    if MTask.IsActive then
+      MTask.Execute;
   except
     on E: Exception do
       Logger.AddLog('TUniServerModule.UniThreadTimerTimer Exception', E.Message);

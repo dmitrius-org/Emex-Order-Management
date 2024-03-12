@@ -42,8 +42,3 @@ go
 exec setOV 'tClients', 'U', '20240101', '1.0.0.0'
 go
 exec dbo.sys_setTableDescription @table = 'tClients', @desc = 'Таблица Клиенты'
-
-
---alter table tClients add IsConfirmedDate       datetime
-
-

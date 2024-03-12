@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   ClientHeight = 533
   ClientWidth = 1028
-  Caption = 'Emex Manager'
+  Caption = 'Task Manager'
   OnShow = UniFormShow
   OldCreateOrder = False
   OnKeyDown = UniFormKeyDown

@@ -1151,13 +1151,13 @@ end;
 procedure TOrdersT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
   NewIndex: Integer);
 begin
-  GridLayout(Self, Grid, tGridLayout.glSave);
+  GridLayout(Self, Grid, tGridLayout.glSave, False);
 end;
 
 procedure TOrdersT.GridColumnResize(Sender: TUniBaseDBGridColumn;
   NewSize: Integer);
 begin
-  GridLayout(Self, Grid, tGridLayout.glSave);
+  GridLayout(Self, Grid, tGridLayout.glSave, False);
 end;
 
 procedure TOrdersT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);

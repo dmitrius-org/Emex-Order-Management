@@ -58,6 +58,7 @@ object TaskSQL_F: TTaskSQL_F
     Width = 146
     Height = 22
     Hint = ''
+    Checked = True
     Caption = #1044#1077#1081#1089#1090#1074#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
     ParentFont = False
     Font.Height = -13
@@ -66,13 +67,13 @@ object TaskSQL_F: TTaskSQL_F
   object edtComment: TUniEdit
     Left = 103
     Top = 70
-    Width = 810
+    Width = 806
     Hint = ''
     Text = ''
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     ClearButton = True
-    ExplicitWidth = 806
+    ExplicitWidth = 802
   end
   object UniLabel1: TUniLabel
     Left = 8
@@ -104,13 +105,13 @@ object TaskSQL_F: TTaskSQL_F
   object edtSQL: TUniSyntaxEdit
     Left = 8
     Top = 112
-    Width = 905
+    Width = 901
     Height = 399
     Hint = ''
     Language = 'SQL'
     Font.Name = 'Courier New'
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 901
+    ExplicitWidth = 897
     ExplicitHeight = 398
   end
   object DataSource: TDataSource

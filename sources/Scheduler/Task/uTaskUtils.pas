@@ -57,8 +57,6 @@ Type
     /// </summary>
     procedure Execute();
 
-
-
   end;
 
 implementation
@@ -66,8 +64,8 @@ implementation
 uses
   uAccrualUtils, uLogger;
 
-{ TTask }
 
+{ TMTask }
 
 function TMTask.GetIsActive: Boolean;
 begin
@@ -103,9 +101,9 @@ begin
     qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
     qry.Close;
-    qry.SQL.Text := ' Update tTask              '+
-                    '    set Message = :Message '+
-                    '  where TaskID    = :TaskID';
+    qry.SQL.Text := ' exec TaskWriteErrorMessage '+
+                    '        @TaskID  = :TaskID  '+
+                    '       ,@Message = :Message ' ;
     qry.ParamByName('TaskID').Value := ATaskID;
     qry.ParamByName('Message').Value := AMessage;
     qry.ExecSQL;
@@ -227,7 +225,7 @@ TaskID: Integer;
          Proc.Call(M);
 
          // следующая дата выполнения
-         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+         //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
        except
          on E: Exception do
          begin
@@ -257,14 +255,19 @@ TaskID: Integer;
 
          Msg:=ExecDosOutput(M);
 
-         if Msg<>'' then raise Exception.Create(Msg);
+         if Msg<>'' then
+         begin
+           Logger.Info('ExecBat.ERROR AnsiPos: ' + AnsiPos ('ERROR', Msg).ToString);
 
-         // следующая дата выполнения
-         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+           if AnsiPos ('ERROR', Msg)>0 then
+             raise Exception.Create(Msg);
+         end;
+
        except
          on E: Exception do
          begin
            Logger.Info('ExecBat.Exception' + E.Message);
+
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
 
            WriteTaskMessage(TaskID, e.Message);
@@ -290,7 +293,7 @@ TaskID: Integer;
          Qry.Connection.ExecSQL(M, []);
 
          // следующая дата выполнения
-         Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+         //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
        except
          on E: Exception do
          begin
@@ -311,7 +314,8 @@ begin
     qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
     qry.Close;
-    qry.SQL.Text := ' Select * from vTaskSelect ';
+    qry.SQL.Text := ' Select *           ' +
+                    '   from vTaskSelect ';
     qry.Open;
     Try
         // цикл по задачам
@@ -324,7 +328,10 @@ begin
             act:= TFDQuery.Create(nil);
             act.Connection:= FConnection;
             act.Close;
-            act.SQL.Text := ' Select * from vTaskActionsSelect where TaskID=:TaskID order by Number ';
+            act.SQL.Text := ' Select *                  ' +
+                            '   from vTaskActionsSelect ' +
+                            '  where TaskID=:TaskID     ' +
+                            '  order by Number          ';
             act.ParamByName('TaskID').Value := TaskID;
             act.Open;
             Try
@@ -338,19 +345,27 @@ begin
 
                     case act.FieldByName('TaskType').AsInteger of
                       Integer(tTaskType.ttProc):  // внутренняя процедура
+                      begin
                           ExecProcedure();
-
+                      end;
                       Integer(tTaskType.ttBat):  // bat файл
+                      begin
                           ExecBat();
-
+                      end;
                       Integer(tTaskType.ttSQL):  // SQL
+                      begin
                           ExecSQL();
+                      end;
                     end;
+
                     act.Next;
                 end;
 
             finally
                 FreeAndNil(act);
+
+                // следующая дата выполнения
+                Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = null', [TaskID]);
             End;
             Qry.Next;
         end;

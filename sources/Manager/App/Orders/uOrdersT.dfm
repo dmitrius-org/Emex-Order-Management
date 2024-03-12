@@ -74,7 +74,7 @@ object OrdersT: TOrdersT
         Action = actFormRefusalsOpen
         ImageIndex = 7
         IconAlign = iaLeft
-        Scale = bbsSmall
+        Scale = bbsMedium
         TabOrder = 1
       end
       object tbUploadingRefusalsEmex: TUniToolButton
@@ -88,7 +88,7 @@ object OrdersT: TOrdersT
         Action = actUploadingRefusalsEmex
         ImageIndex = 8
         IconAlign = iaLeft
-        Scale = bbsSmall
+        Scale = bbsMedium
         TabOrder = 5
       end
       object tbProtocol: TUniToolButton
@@ -102,7 +102,7 @@ object OrdersT: TOrdersT
         Action = actProtocol
         ImageIndex = 4
         IconAlign = iaLeft
-        Scale = bbsSmall
+        Scale = bbsMedium
         TabOrder = 4
       end
       object tbExecuteActionRollback: TUniToolButton
@@ -163,8 +163,6 @@ object OrdersT: TOrdersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitTop = 52
-    ExplicitHeight = 544
     object Grid: TUniDBGrid
       Left = 0
       Top = 104

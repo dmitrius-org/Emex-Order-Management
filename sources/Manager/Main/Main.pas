@@ -60,6 +60,8 @@ type
     function CreateImageIndex(filename: string): Integer;
 
     function FindNodeByID(AID: Integer): TUniTreeNode;
+
+    procedure SetMainMenuMicroName;
   public
     { Public declarations }
   end;
@@ -79,7 +81,6 @@ begin
   Result := TMainForm(UniMainModule.GetFormInstance(TMainForm));
 end;
 
-
 function TMainForm.FindNodeByID(AID: Integer): TUniTreeNode;
 var i:integer;
 begin
@@ -96,7 +97,7 @@ end;
 
 procedure TMainForm.actEditPasExecute(Sender: TObject);
 begin
-  LoginEditF.ShowModal();      //UserFCallBack
+  LoginEditF.ShowModal();
 end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
@@ -116,7 +117,6 @@ var
   c, Path: string;
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
-
   iconfile: string;
 begin
   FormNames := TStringList.Create;
@@ -153,43 +153,25 @@ begin
       PID := UniMainModule.Query.FieldByName('ParentID').Value;
       c   := UniMainModule.Query.FieldByName('Caption').Value;
 
+      // сохран€ем форму, котора€ будет открыватьс€ по клику на элементе меню
+      FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
+
+      Nd := FindNodeByID(PID);
+
+      Nd := MainMenu.Items.Add(Nd, c);
+
+      if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) then
       begin
-        // сохран€ем форму, котора€ будет открыватьс€ по клику на элементе меню
-        FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
+        Nd.ImageIndex := UniMainModule.Query.FieldByName('Icon').AsWideString.ToInteger;
+      end
+      else
+        Nd.ImageIndex := -1;
 
-        Nd := FindNodeByID(PID);
-       // if Nd = nil then
-       // begin
-      //    Nd := MainMenu.Items.Add(nil, c);
-      //  end
-      //  else
-      //  begin
-        Nd := MainMenu.Items.Add(Nd, c);
-       // end;
+      Nd.Tag := ID;
 
-       // logger.Info(UniMainModule.Query.FieldByName('Icon').AsWideString);
-        //iconfile :=  Path + 'Icons\' + UniMainModule.Query.FieldByName('Icon').AsWideString +'.png';
-
-       // logger.Info(BoolToStr(UniMainModule.Query.FieldByName('Icon').AsWideString <> ''));
-
-
-       // if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) and (FileExists(iconfile))  then
-        if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) then
-        begin
-         //logger.Info(iconfile);
-          Nd.ImageIndex := UniMainModule.Query.FieldByName('Icon').AsWideString.ToInteger;
-        end
-        else
-          Nd.ImageIndex := -1;
-
-        Nd.Tag := ID;
-      end;
       UniMainModule.Query.Next;
     end;
-
-
   finally
-//    Ls.Free;
   end;
 end;
 
@@ -207,6 +189,15 @@ var
   FClassName: string;
 begin
   Nd := MainMenu.Selected;
+
+  if Nd.IsFirstNode then
+  begin
+    MainMenu.Micro := not MainMenu.Micro;
+
+    SetMainMenuMicroName;
+    Exit();
+  end;
+
   if ((Nd.Count = 0) and (Nd.Text <> '')) then
   begin
     Ts := Nd.Data;
@@ -253,6 +244,14 @@ begin
   end;// if Assigned(N) then
 end;
 
+procedure TMainForm.SetMainMenuMicroName;
+begin
+  if MainMenu.Micro then
+      MainMenu.Items[0].Text := '–азвернуть'
+  else
+      MainMenu.Items[0].Text := '—вернуть';
+end;
+
 procedure TMainForm.TabMainClose(Sender: TObject; var AllowClose: Boolean);
 var
   Ts : TUniTabSheet;
@@ -288,11 +287,15 @@ begin
 
   Grant.UserGrantLoad;
 
+  MainMenu.Items[0].Tag := -1;
+
+  SetMainMenuMicroName;
+
   ConstructNavigator;
 
   if MainMenu.Items.Count > 0 then
   begin
-    MainMenu.Items[0].Selected := True;
+    MainMenu.Items[1].Selected := True;
     MainMenuClick(Sender);
   end;
 end;

@@ -88,12 +88,7 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
-  {$IFDEF DEBUG}
-      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
-              '. ад: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
-  {$ELSE}
-      Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
-  {$ENDIF}
+  Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
 
   dbConnect;
 

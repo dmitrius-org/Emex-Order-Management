@@ -65,6 +65,7 @@ object UniServerModule: TUniServerModule
   end
   object UniThreadTimer: TUniThreadTimer
     OnTimer = UniThreadTimerTimer
+    Enabled = True
     Interval = 10000
     Left = 449
     Top = 97

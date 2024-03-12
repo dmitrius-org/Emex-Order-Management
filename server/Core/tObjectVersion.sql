@@ -21,5 +21,5 @@ begin
 	grant select on tObjectVersion to public;
 end
 go
-exec setOV 'tObjectVersion', 'U', '20240101', '1.0.0.0'
+exec setOV 'tObjectVersion', 'U', '20240310', '1.0.0.1'
 go

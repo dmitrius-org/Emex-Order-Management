@@ -18,15 +18,15 @@ type
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
+    DataSource: TDataSource;
+    FDQuery: TFDQuery;
+    edtpath: TUniEdit;
+    UniLabel2: TUniLabel;
     edtIsActive: TUniCheckBox;
     edtComment: TUniEdit;
     UniLabel1: TUniLabel;
-    DataSource: TDataSource;
-    FDQuery: TFDQuery;
     edtNumber: TUniNumberEdit;
     UniLabel3: TUniLabel;
-    edtpath: TUniEdit;
-    UniLabel2: TUniLabel;
     procedure UniFormShow(Sender: TObject);
     procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnOkClick(Sender: TObject);
@@ -216,7 +216,10 @@ begin
 end;
 
 procedure TTaskBAT_F.UniFormShow(Sender: TObject);
+//var frmAH: TTaskActionHead;
 begin
+
+  //frmAH := TTaskActionHead.Create(HeadPanel);
 
   case FAction of
     acInsert, acReportCreate:

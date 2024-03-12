@@ -433,7 +433,7 @@ begin
 
 
       edtDateBegin.DateTime := Now();
-      edtTimeBegin.Text := '';
+      edtTimeBegin.Text := '00:00:01';
       edtTimeEnd.Text := '';
     end;
     acUpdate, acReportEdit, acUserAction:

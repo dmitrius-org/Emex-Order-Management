@@ -57,8 +57,7 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitLeft = 321
-        ExplicitWidth = 702
+        ExplicitWidth = 1022
         ExplicitHeight = 475
         object pcMain: TUniPageControl
           AlignWithMargins = True
@@ -71,14 +70,17 @@ object MainForm: TMainForm
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
+          ShowHint = True
+          ParentShowHint = False
+          Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
           ScreenMask.Enabled = True
           ScreenMask.Target = Owner
-          ExplicitLeft = 648
-          ExplicitWidth = 377
+          ExplicitWidth = 697
+          ExplicitHeight = 473
         end
         object MainMenu: TUniTreeMenu
           AlignWithMargins = True
@@ -93,10 +95,15 @@ object MainForm: TMainForm
           ShowHint = True
           ParentShowHint = False
           BodyRTL = False
-          Items.FontData = {0100000000}
+          Items.NodeData = {
+            0301000000260000000F0000000F0000000F000000FFFFFFFF0F000000000000
+            0000000000010420002E002E002E00}
+          Items.FontData = {
+            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
+            53696D53756E}
           Images = MainMenuImage
-          MicroWidth = 50
           OnClick = MainMenuClick
+          ExplicitHeight = 468
         end
       end
       object UniPanelTop: TUniPanel
@@ -219,7 +226,7 @@ object MainForm: TMainForm
     Left = 512
     Top = 166
     Images = {
-      0F000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
+      10000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
       FFFFFF1F060900000075736572733B66613BFFFFFF1F0608000000757365723B
       66613BFFFFFF1F0612000000616464726573732D626F6F6B2D6F3B66613BFFFF
       FF1F06080000006C6F636B3B66613BFFFFFF1F0608000000626F6F6B3B66613B
@@ -228,7 +235,8 @@ object MainForm: TMainForm
       3BFFFFFF1F060D0000006D61702D7369676E733B66613BFFFFFF1F0609000000
       747275636B3B66613BFFFFFF1F060800000073657474696E6773FFFFFF1F0607
       0000006661783B66613BFFFFFF1F0610000000616464726573732D626F6F6B3B
-      66613BFFFFFF1F0608000000686F6D653B66613B}
+      66613BFFFFFF1F0608000000686F6D653B66613BA6CAF0FF0608000000626172
+      733B66613B}
   end
   object UniNativeImageList1: TUniNativeImageList
     Left = 696
