@@ -6,7 +6,7 @@ from loguru import logger
 import configparser  # импортируем библиотеку для чтения конфигов
 from data import Sql
 
-config = configparser.ConfigParser()  # создаём объекта парсера
+config = configparser.ConfigParser()  # создаём объект парсера
 config.read("settings.ini")  # читаем конфиг
 
 logger.add(config["Log"]["LogFile"] + 'load_currency_rate.log', level='DEBUG', rotation="1 MB")

@@ -9,7 +9,7 @@ import configparser  # импортируем библиотеку для чте
 from data import Sql
 import time
 import xlwings as xw
-from utils import *
+from _utils import *
 
 
 def orderRefusalsInsert(Acrsr, Afilename, AfilePath):
@@ -107,7 +107,6 @@ if not os.path.isdir(uploadingRefusalsCatalog):
 
 sql = """
 set nocount on;
---delete  from tUnloadRefusals where clientid = 9
 
 if OBJECT_ID('tempdb..#UnloadRefusals') is not null
   drop table #UnloadRefusals
@@ -172,7 +171,6 @@ Select p.OperDate
          inner join tOrders o with (nolock)
                  on o.ClientID = c.ClientID
                 and o.MakeLogo is not null
-                and o.DetailNumber = '12018AB470'
          where c.NotificationMethod = 0 -- автоматическое оповещение
            and c.ResponseType       = 1 -- файл           
            and not exists (select 1

@@ -10,7 +10,7 @@ import numpy as np
 import excel_utils as eu
 from pathlib import Path
 import shutil
-from utils import *
+from _utils import *
 
 
 '''
@@ -20,10 +20,12 @@ from utils import *
 config = configparser.ConfigParser()  # создаём объект парсера
 config.read("settings.ini")  # читаем конфиг
 
-logger.add(config["Log"]["LogFile"] + 'import_orders.log', level='DEBUG', rotation="1 MB")
+logger.add(config["Log"]["LogFile"] + 'load_orders.log', level='DEBUG', rotation="1 MB")
 logger.info('Начало импорта')
 
-
+now = datetime.datetime.now()
+if (now > datetime.datetime(now.year, now.month, now.day, 20, 55, 00, 000) ):
+    exit
 
 def load_orders(conn, data, batchsize=500):
     '''
@@ -35,7 +37,6 @@ def load_orders(conn, data, batchsize=500):
     cursor = conn.cnxn.cursor()      # создаем курсор
     cursor.fast_executemany = True   # активируем быстрое выполнение
     try:
-        # data = data.fillna('')
         data = data.replace(to_replace=np.nan, value=None, inplace=False)
 
         query = """ delete from pOrders --where spid = @@spid
@@ -52,8 +53,8 @@ def load_orders(conn, data, batchsize=500):
                 batch = data[i: len(data)].values.tolist()
             else:
                 batch = data[i: i+batchsize].values.tolist()
-            # запускаем вставку батча      
-            # print(batch)     
+                
+            # запускаем вставку батча        
             cursor.executemany(query, batch)
             
         logger.info(f'Выполнили загрузку данных во временную таблицу. Время выполнения {time.perf_counter() - tic2:0.4f}')
@@ -119,9 +120,7 @@ def prepare_orders_data(prow, filexls):
         )   
 
         rowlist = [clientID] * len(df.axes[0])    
-        order_df['clientID'] = rowlist
-        
-        # print(df)
+        order_df['clientID'] = rowlist        
    
         if manufacturer:
             order_df['manufacturer'] = df[manufacturer-1]
@@ -144,8 +143,10 @@ def prepare_orders_data(prow, filexls):
         
         # 
         # читаем excel-файл
-        app = xw.App(visible=False)
-        wb = xw.Book(filexls)
+        # app = xw.App(visible=False) os.path.abspath
+        logger.info(f"[prepare_orders_data]. Файл:{(filexls)}.")
+        wb = xw.Book((filexls))
+        xw.App.visible = False
         sheet = wb.sheets[0]
         
         if orderNum:
@@ -155,8 +156,7 @@ def prepare_orders_data(prow, filexls):
         if priceNum:
             order_df['priceNum']=eu.GetExcelVal(df, sheet, priceNum)
 
-        # дата файла
-        creation_date((filexls))
+        # дата создания файла
         order_df['FileDate']=creation_date(filexls)
             
         wb.close() 
@@ -171,9 +171,9 @@ def prepare_orders_data(prow, filexls):
     except BaseException as err:
         if wb:
             wb.close() 
-            
-        if app:
-            app.quit()    
+        # wb.app.quit()    
+        # if app:
+        #     app.quit()    
         logger.error(f"[prepare_orders_data] Ошибка подготовки данных. Файл:{filexls}. Вычисление заняло {time.perf_counter() - tic2:0.4f}")
         logger.error(err)
 
@@ -203,6 +203,7 @@ sql = """
               ,o.OrderNum     
               ,o.OrderDate    
               ,o.PriceNum     
+              --,o.Commission 
               ,o.IsActive  
               ,c.Brief
           FROM [tClients] c (nolock)
@@ -210,6 +211,7 @@ sql = """
                  on o.ClientID = c.ClientID
 
          where isnull(o.folder, '') <> ''
+           ---and c.Brief = 'EmEx'--EmEx ADEO EEZap
       """
                      
 prows = crsr.execute(sql).fetchall()    
@@ -224,7 +226,7 @@ for prow in prows:
 
     if not isActive:
         logger.info(f'Загрузка заказов по клиенту {prow.Brief} отключена! ')
-        continue  
+        continue     
 
     if folder[-1] != '\\':
         folder += "\\"
@@ -232,21 +234,22 @@ for prow in prows:
     if not os.path.isdir(folder):
         logger.info(f'Не удается найти указанный путь: {folder}')
         continue  
+    
+    logger.info(f'Обработка заказов в папке: {folder}')    
 
     file_list = os.listdir(folder)  # определить список всех файлов
     for file in file_list:  
         retval = False
         if fnmatch.fnmatch(file, '*.xls'): #  EMIR FAST                       
             r = prepare_orders_data(prow, folder + file)
-            # print(r)
             if not r.empty:
                 retval = load_orders(conn, r)
                 
         # переносим файл в архив
-        # if retval:
-        #     dst = folder + 'Archive\\'
-        #     if not os.path.isdir(dst):
-        #         os.mkdir(dst)
-        #     shutil.move(folder + file, dst + file)
+        if retval:
+            dst = folder + 'Archive\\'
+            if not os.path.isdir(dst):
+                os.mkdir(dst)
+            shutil.move(folder + file, dst + file)
 
 logger.info(f'Завершили импорт. Вычисление заняло {time.perf_counter()-tic:0.4f}')

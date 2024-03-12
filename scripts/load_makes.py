@@ -15,7 +15,7 @@ from data import Sql
 config = configparser.ConfigParser()  # создаём объекта парсера
 config.read("settings.ini")  # читаем конфиг
 
-logger.add(config["Log"]["LogFile"] + 'import_makes.log', level='DEBUG', rotation="1 MB")
+logger.add(config["Log"]["LogFile"] + 'makes_import.log', level='DEBUG', rotation="1 MB")
 logger.info('Начало импорта')
 
 sql = Sql()
