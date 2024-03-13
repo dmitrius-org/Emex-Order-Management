@@ -1,12 +1,8 @@
-if OBJECT_ID('ClientPriceCalc', 'P') is not null
-    drop proc ClientPriceCalc
-go
 if OBJECT_ID('CustomerPriceCalc', 'P') is not null
     drop proc CustomerPriceCalc	 
 go
 /* --------------------------------------------------------
-  CustomerPriceCalc - расчет цены 
-
+  CustomerPriceCalc - СЂР°СЃС‡РµС‚ С†РµРЅС‹ 
 -------------------------------------------------------- */
 create proc CustomerPriceCalc
               @DestinationLogo	nvarchar(20)
@@ -16,33 +12,33 @@ set nocount on;
 declare @Kurs		  float
 	   ,@RetVal       int
 
--- курс доллара
+-- РєСѓСЂСЃ РґРѕР»Р»Р°СЂР°
 select @Kurs = dbo.GetCurrencyRate('840', null)
 
 if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 
 create table #Price 
 (
- PriceID           numeric(18,0)  --  
+ ID                numeric(18,0)  --  
 ,Brand             varchar(60)    --
-,DetailNum	       varchar(30)    -- Номер детали 
-,DetailPrice       float          -- Цена
-,FinalPrice        float          -- Цена
-,DetailName	       varchar(255)   -- Название
-,PriceLogo         varchar(30)    -- Название прайса 
-,Quantity          int            -- Количество
-,PackQuantity      int            -- Количество в упаковке
+,DetailNum	       varchar(30)    -- РќРѕРјРµСЂ РґРµС‚Р°Р»Рё 
+,DetailPrice       float          -- Р¦РµРЅР°
+,FinalPrice        float          -- Р¦РµРЅР°
+,DetailName	       varchar(255)   -- РќР°Р·РІР°РЅРёРµ
+,PriceLogo         varchar(30)    -- РќР°Р·РІР°РЅРёРµ РїСЂР°Р№СЃР° 
+,Quantity          int            -- РљРѕР»РёС‡РµСЃС‚РІРѕ
+,PackQuantity      int            -- РљРѕР»РёС‡РµСЃС‚РІРѕ РІ СѓРїР°РєРѕРІРєРµ
 
-,WeightKG          float          -- Вес физический кг 
-,VolumeKG          float          -- Вес объемный кг  
+,WeightKG          float          -- Р’РµСЃ С„РёР·РёС‡РµСЃРєРёР№ РєРі 
+,VolumeKG          float          -- Р’РµСЃ РѕР±СЉРµРјРЅС‹Р№ РєРі  
 
-,TPrice            float          -- тип цены, например: MOSA, MOSC, KIRG
-,TDel              float          -- номинал стоимости за доставку
-,TDetPrice         float          -- номинал цены детали со скидкой
-,TCom              float          -- номинал комиссии 
-,TMarg             float          -- номинал наценки на товар
+,TPrice            float          -- С‚РёРї С†РµРЅС‹, РЅР°РїСЂРёРјРµСЂ: MOSA, MOSC, KIRG
+,TDel              float          -- РЅРѕРјРёРЅР°Р» СЃС‚РѕРёРјРѕСЃС‚Рё Р·Р° РґРѕСЃС‚Р°РІРєСѓ
+,TDetPrice         float          -- РЅРѕРјРёРЅР°Р» С†РµРЅС‹ РґРµС‚Р°Р»Рё СЃРѕ СЃРєРёРґРєРѕР№
+,TCom              float          -- РЅРѕРјРёРЅР°Р» РєРѕРјРёСЃСЃРёРё 
+,TMarg             float          -- РЅРѕРјРёРЅР°Р» РЅР°С†РµРЅРєРё РЅР° С‚РѕРІР°СЂ
 ,TFinPrice         float
-,Term              int            -- срок доставки
+,Term              int            -- СЃСЂРѕРє РґРѕСЃС‚Р°РІРєРё
 ,TFinPriceKurs     money
 
 ,DestinationLogo   nvarchar(10)
@@ -50,9 +46,9 @@ create table #Price
 ,Margin		       float
 ,Kurs		       float
 ,ExtraKurs         float
-,Commission	       float  -- Комиссия эквайера
-,Discount	       float  -- Скидка
-,Reliability       float  -- Вероятность поставки
+,Commission	       float  -- РљРѕРјРёСЃСЃРёСЏ СЌРєРІР°Р№РµСЂР°
+,Discount	       float  -- РЎРєРёРґРєР°
+,Reliability       float  -- Р’РµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕСЃС‚Р°РІРєРё
 ,PDWeightKG	       float
 ,PDVolumeKG        float
 
@@ -60,7 +56,7 @@ create table #Price
 )
 
 insert #Price
-	  (PriceID        
+	  (ID        
       ,Brand        
       ,DetailNum	  
       ,DetailPrice  
@@ -80,7 +76,8 @@ insert #Price
       ,Reliability
       ,PDWeightKG	
       ,PDVolumeKG      
-      ,DestinationLogo)
+      ,DestinationLogo
+	  )
 select p.ID,
        p.MakeName, 
        p.DetailNum, 
@@ -92,11 +89,11 @@ select p.ID,
 	   0,--pt.Term,
 	   p.WeightGr/1000,--
 	   p.VolumeAdd 
-                    * case --коэффициенты [VolumeKG]
-                        when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
-                        when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
-                        when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
-                        when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
+                    * case --РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ [VolumeKG]
+                        when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. РљРѕСЌС„С„РёС†РёРµРЅС‚ РЅР° РґРµС‚Р°Р»Рё Сѓ РєРѕС‚РѕСЂС‹С… [VolumeKG] СЃС‚СЂРѕРіРѕ РјРµРЅСЊС€Рµ 10 РєРі
+                        when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. РљРѕСЌС„С„РёС†РёРµРЅС‚ РЅР° РґРµС‚Р°Р»Рё Сѓ РєРѕС‚РѕСЂС‹С… [VolumeKG] РѕС‚ 10 РєРі РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ, РЅРѕ СЃС‚СЂРѕРіРѕ РјРµРЅСЊС€Рµ 20 РєРі
+                        when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. РљРѕСЌС„С„РёС†РёРµРЅС‚ РЅР° РґРµС‚Р°Р»Рё Сѓ РєРѕС‚РѕСЂС‹С… [VolumeKG] РѕС‚ 20 РєРі РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ, РЅРѕ СЃС‚СЂРѕРіРѕ РјРµРЅСЊС€Рµ 25 РєРі
+                        when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. РљРѕСЌС„С„РёС†РёРµРЅС‚ РЅР° РґРµС‚Р°Р»Рё Сѓ РєРѕС‚РѕСЂС‹С… [VolumeKG] РѕС‚ 25 РєРі РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
                         else 1
                       end,
 	   p.Price,
@@ -122,21 +119,21 @@ select p.ID,
 
 Update #Price  
    set TDel = case
-                -- If "Физический вес из прайса" >= "Объемный вес из прайса", то:
-                 -- Конечный вес = "Физический вес из прайса" * "Цена за физ кг"
+                -- If "Р¤РёР·РёС‡РµСЃРєРёР№ РІРµСЃ РёР· РїСЂР°Р№СЃР°" >= "РћР±СЉРµРјРЅС‹Р№ РІРµСЃ РёР· РїСЂР°Р№СЃР°", С‚Рѕ:
+                 -- РљРѕРЅРµС‡РЅС‹Р№ РІРµСЃ = "Р¤РёР·РёС‡РµСЃРєРёР№ РІРµСЃ РёР· РїСЂР°Р№СЃР°" * "Р¦РµРЅР° Р·Р° С„РёР· РєРі"
                 when WeightKG >= VolumeKG 
 		          then WeightKG * (PDWeightKG)
-			    -- Else "Физический вес из прайса" < "Объемный вес из прайса", то:
-                   -- Конечный вес = "Физический вес из прайса" * "Цена за физ кг" + ("Объемный вес из прайса" - "Физический вес из прайса") * "Цена за объем кг"   
+			    -- Else "Р¤РёР·РёС‡РµСЃРєРёР№ РІРµСЃ РёР· РїСЂР°Р№СЃР°" < "РћР±СЉРµРјРЅС‹Р№ РІРµСЃ РёР· РїСЂР°Р№СЃР°", С‚Рѕ:
+                   -- РљРѕРЅРµС‡РЅС‹Р№ РІРµСЃ = "Р¤РёР·РёС‡РµСЃРєРёР№ РІРµСЃ РёР· РїСЂР°Р№СЃР°" * "Р¦РµРЅР° Р·Р° С„РёР· РєРі" + ("РћР±СЉРµРјРЅС‹Р№ РІРµСЃ РёР· РїСЂР°Р№СЃР°" - "Р¤РёР·РёС‡РµСЃРєРёР№ РІРµСЃ РёР· РїСЂР°Р№СЃР°") * "Р¦РµРЅР° Р·Р° РѕР±СЉРµРј РєРі"   
                   else WeightKG * (PDWeightKG) + (VolumeKG-WeightKG) * (PDVolumeKG)
               end
     
- --Вычисляем номинал цены детали со скидкой: TDetPrice = DetailPrice - DetailPrice*Discount
+ --Р’С‹С‡РёСЃР»СЏРµРј РЅРѕРјРёРЅР°Р» С†РµРЅС‹ РґРµС‚Р°Р»Рё СЃРѕ СЃРєРёРґРєРѕР№: TDetPrice = DetailPrice - DetailPrice*Discount
 Update #Price set TDetPrice = DetailPrice- DetailPrice * (Discount/100)
  
 Update #Price set TCom = TDetPrice * (Commission/100)
     
- -- Вычисляем номинал наценки на товар: TMarg = TDetPrice*Margin
+ -- Р’С‹С‡РёСЃР»СЏРµРј РЅРѕРјРёРЅР°Р» РЅР°С†РµРЅРєРё РЅР° С‚РѕРІР°СЂ: TMarg = TDetPrice*Margin
 Update #Price set TMarg = TDetPrice* (Margin/100)
 
 Update #Price set TFinPrice = (TDetPrice + TDel + TMarg + TCom)
@@ -153,7 +150,7 @@ Update f
   from #Price p (rowlock)
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
-        and f.id   = p.PriceID
+        and f.ID   = p.ID
  --*/
 
 
