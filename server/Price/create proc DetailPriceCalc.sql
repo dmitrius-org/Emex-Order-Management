@@ -239,4 +239,4 @@ return @RetVal
 go
 grant all on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20240101', '1.0.0.0'
+exec setOV 'DetailPriceCalc', 'P', '20240101', '0'

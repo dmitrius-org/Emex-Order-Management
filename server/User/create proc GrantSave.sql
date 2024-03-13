@@ -78,6 +78,6 @@ as
 go
 grant exec on GrantSave to public
 go
-exec setOV 'GrantSave', 'P', '20240101', '1.0.0.0'
+exec setOV 'GrantSave', 'P', '20240101', '0'
 go
 

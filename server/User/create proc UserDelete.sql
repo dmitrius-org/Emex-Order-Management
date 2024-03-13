@@ -66,5 +66,5 @@ as
 go
 grant exec on UserDelete to public
 go
-exec setOV 'UserDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'UserDelete', 'P', '20240101', '0'
 go

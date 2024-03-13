@@ -48,5 +48,5 @@ as
 go
 grant exec on NodeUpdate to public
 go
-exec setOV 'NodeUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'NodeUpdate', 'P', '20240101', '0'
 go

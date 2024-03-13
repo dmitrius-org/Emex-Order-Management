@@ -109,5 +109,5 @@ as
 go
 grant exec on GrantSelect to public
 go
-exec setOV 'GrantSelect', 'P', '20240101', '1.0.0.0'
+exec setOV 'GrantSelect', 'P', '20240101', '0'
 go

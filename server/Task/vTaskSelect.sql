@@ -28,5 +28,5 @@ select t.TaskID
 go
 grant all on vTaskSelect to public;
 go
-exec setOV 'vTaskSelect', 'V', '20240311', '1.0.0.0';
+exec setOV 'vTaskSelect', 'V', '20240311', '0';
 go

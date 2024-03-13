@@ -22,7 +22,7 @@ begin
 	grant select on tModel to public
 end
 go
-exec setOV 'tModel', 'U', '20240101', '1.0.0.0'
+exec setOV 'tModel', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tModel', @desc = 'Модель состояния'
 go

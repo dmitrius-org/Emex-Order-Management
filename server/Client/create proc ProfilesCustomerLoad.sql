@@ -142,5 +142,5 @@ return @r
 go
 grant exec on ProfilesCustomerLoad to public
 go
-exec setOV 'ProfilesCustomerLoad', 'P', '20240101', '1.0.0.0'
+exec setOV 'ProfilesCustomerLoad', 'P', '20240101', '0'
 go

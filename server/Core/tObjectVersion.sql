@@ -10,7 +10,7 @@ begin
 	,ObjectName                      nvarchar(255)  not null-- 
 	,ObjectDate                      datetime     
 	,ObjectTypeID                    numeric(18,0)
-	,[Version]                       nvarchar(255)
+	,[Version]                       int
 	,[Type]                          nvarchar(2)
 	,InDatetime                      datetime    
 	,UpdDatetime                     datetime    
@@ -21,5 +21,5 @@ begin
 	grant select on tObjectVersion to public;
 end
 go
-exec setOV 'tObjectVersion', 'U', '20240310', '1.0.0.1'
+exec setOV 'tObjectVersion', 'U', '20240310', '1'
 go

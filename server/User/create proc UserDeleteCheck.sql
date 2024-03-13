@@ -32,6 +32,6 @@ as
 go
 grant exec on UserDeleteCheck to public
 go
-exec setOV 'UserDeleteCheck', 'P', '20240101', '1.0.0.0'
+exec setOV 'UserDeleteCheck', 'P', '20240101', '0'
 go
 

@@ -33,5 +33,5 @@ return @r
 go
 grant exec on ClientRegistrationConfirmed to public
 go
-exec setOV 'ClientRegistrationConfirmed', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientRegistrationConfirmed', 'P', '20240101', '0'
 go

@@ -19,6 +19,6 @@ begin
 end
 grant all on tCurrencyRate to public;
 go
-exec setOV 'tCurrencyRate', 'U', '20240101', '1.0.0.0';
+exec setOV 'tCurrencyRate', 'U', '20240101', '0';
 go
 exec dbo.sys_setTableDescription @table = 'tCurrencyRate', @desc = 'Таблица курсов';

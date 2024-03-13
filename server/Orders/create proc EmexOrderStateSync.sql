@@ -292,6 +292,6 @@ exec MovementArchive
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240101', '1.0.0.0'
+exec setOV 'EmexOrderStateSync', 'P', '20240101', '0'
 go
  

@@ -15,5 +15,5 @@ as
 go
 grant exec on TaskActionDelete to public
 go
-exec setOV 'TaskActionDelete', 'P', '20240307', '1.0.0.1'
+exec setOV 'TaskActionDelete', 'P', '20240307', '1'
 go

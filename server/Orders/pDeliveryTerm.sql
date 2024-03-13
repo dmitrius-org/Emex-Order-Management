@@ -32,7 +32,7 @@ create unique index ao1 on pDeliveryTerm(Spid, OrderID)
 go
 grant select on pDeliveryTerm to public
 go
-exec setOV 'pDeliveryTerm', 'U', '20240101', '1.0.0.0'
+exec setOV 'pDeliveryTerm', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pDeliveryTerm', @desc = 'Сроки поставки'

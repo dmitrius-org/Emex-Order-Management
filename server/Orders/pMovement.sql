@@ -36,7 +36,7 @@ create table pMovement
 go
 grant all on pMovement to public
 go
-exec setOV 'pMovement', 'U', '20240101', '1.0.0.0'
+exec setOV 'pMovement', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pMovement', @desc = 'Движения по номеру заказа. Результат вызова сервиса MovementByOrderNumber'

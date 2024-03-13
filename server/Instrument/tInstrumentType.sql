@@ -19,7 +19,7 @@ begin
 	grant select on tInstrumentType to public;
 end
 go
-exec setOV 'tModelMetod', 'U', '20240101', '1.0.0.0'
+exec setOV 'tModelMetod', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription 'tInstrumentType', 'Filters', 'Регулирует возможность создания типов элементов на текущем элементе'
 

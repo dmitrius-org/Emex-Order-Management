@@ -63,5 +63,5 @@ return @r
 go
 grant exec on OrderFileFormatUpdate to public
 go
-exec setOV 'OrderFileFormatUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderFileFormatUpdate', 'P', '20240101', '0'
 go

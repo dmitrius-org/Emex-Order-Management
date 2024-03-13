@@ -21,7 +21,7 @@ begin
 end
 go
 go
-exec setOV 'tPrices', 'U', '20240101', '1.0.0.0'
+exec setOV 'tPrices', 'U', '20240101', '0'
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tPrices', @desc = 'Список прайсов'
 -- Описание полей

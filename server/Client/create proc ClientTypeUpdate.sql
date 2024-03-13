@@ -49,5 +49,5 @@ return @r
 go
 grant exec on ClientTypeUpdate to public
 go
-exec setOV 'ClientTypeUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientTypeUpdate', 'P', '20240101', '0'
 go

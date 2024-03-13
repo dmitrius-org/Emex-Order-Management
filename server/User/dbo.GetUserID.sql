@@ -21,6 +21,6 @@ END
 go
 grant exec on dbo.GetUserID to public
 go
-exec setOV 'GetUserID', 'FN', '20240101', '1.0.0.0'
+exec setOV 'GetUserID', 'FN', '20240101', '0'
 go
 

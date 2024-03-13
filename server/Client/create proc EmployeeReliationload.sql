@@ -117,5 +117,5 @@ return @r
 go
 grant exec on EmployeeReliationload to public
 go
-exec setOV 'EmployeeReliationload', 'P', '20240101', '1.0.0.0'
+exec setOV 'EmployeeReliationload', 'P', '20240101', '0'
 go

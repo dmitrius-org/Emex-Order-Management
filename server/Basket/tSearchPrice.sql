@@ -19,7 +19,7 @@ begin
 	grant all on tSearchPrice to public
 end
 go
-exec setOV 'tSearchPrice', 'U', '20240101', '1.0.0.0'
+exec setOV 'tSearchPrice', 'U', '20240101', '0'
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tSearchPrice', @desc = 'Список прайсов для поисковой выдчи клиентам'
 -- Описание полей

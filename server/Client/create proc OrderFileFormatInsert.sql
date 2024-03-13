@@ -80,5 +80,5 @@ return @r
 go
 grant exec on OrderFileFormatInsert to public
 go
-exec setOV 'OrderFileFormatInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderFileFormatInsert', 'P', '20240101', '0'
 go

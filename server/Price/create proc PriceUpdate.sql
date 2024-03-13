@@ -122,4 +122,4 @@ exit_:
 go
 grant execute on PriceUpdate to public
 go
-exec setOV 'PriceUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'PriceUpdate', 'P', '20240101', '0'

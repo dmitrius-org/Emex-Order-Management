@@ -22,7 +22,7 @@ begin
 	grant all on tSettings to public
 end
 go
-exec setOV 'tSettings', 'U', '20240101', '1.0.0.0'
+exec setOV 'tSettings', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tSettings', @desc = 'Настройки приложения'
 go

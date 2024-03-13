@@ -38,6 +38,6 @@ as
 go
 grant exec on OrderCancelRequest to public
 go
-exec setOV 'OrderCancelRequest', 'P', '20240101', '1.0.0.1'
+exec setOV 'OrderCancelRequest', 'P', '20240101', '1'
 go
  

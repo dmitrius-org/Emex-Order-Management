@@ -19,7 +19,7 @@ end
 go
 grant all on tOrderRefusalsDetail to public
 go
-exec setOV 'tOrderRefusalsDetail', 'U', '20240101', '1.0.0.0'
+exec setOV 'tOrderRefusalsDetail', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tOrderRefusalsDetail', @desc = 'Таблица детализации по отказам'

@@ -18,7 +18,7 @@ begin
 	grant all on tGrant to public;
 end
 go
-exec setOV 'tGrant', 'U', '20240101', '1.0.0.0'
+exec setOV 'tGrant', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tGrant', @desc = 'Права доступа пользователя к приложению'

@@ -44,5 +44,5 @@ as
 go
 grant exec on NodeDelete to public
 go
-exec setOV 'NodeDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'NodeDelete', 'P', '20240101', '0'
 go

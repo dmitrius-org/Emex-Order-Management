@@ -229,7 +229,7 @@ object OrdersT: TOrdersT
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
           'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
           #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+          'n the ToolBar, number 10, hide him'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
@@ -1687,12 +1687,10 @@ object OrdersT: TOrdersT
     object actGridSettingLoad: TAction
       Category = 'Grid'
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-      OnExecute = actGridSettingLoadExecute
     end
     object actGridSettingSave: TAction
       Category = 'Grid'
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-      OnExecute = actGridSettingSaveExecute
     end
     object actGridSettingDefault: TAction
       Category = 'Grid'

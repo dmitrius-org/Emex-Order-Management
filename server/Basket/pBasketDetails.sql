@@ -37,7 +37,7 @@ grant all on pBasketDetails to public
 go
 create index ao1 on pBasketDetails(Spid, OrderID)
 go
-exec setOV 'pBasketDetails', 'U', '20240101', '1.0.0.0'
+exec setOV 'pBasketDetails', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pBasketDetails', @desc = 'Корзина клиента (подклиента). Результат выполнения сервиса GetBasketDetails'

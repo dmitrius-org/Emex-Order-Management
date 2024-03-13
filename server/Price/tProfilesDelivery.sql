@@ -27,7 +27,7 @@ begin
 	grant all on tProfilesDelivery to public;
 end
 go
-exec setOV 'tProfilesDelivery', 'U', '20240101', '1.0.0.0'
+exec setOV 'tProfilesDelivery', 'U', '20240101', '0'
 go
 
 -- Описание таблицы

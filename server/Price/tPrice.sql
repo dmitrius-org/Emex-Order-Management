@@ -37,7 +37,7 @@ begin
 	grant all on tPrice to public;
 end
 go
-exec setOV 'tPrice', 'U', '20240101', '1.0.0.0'
+exec setOV 'tPrice', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tPrice', @desc = 'таблица цен/прайсов'

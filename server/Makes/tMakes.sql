@@ -20,7 +20,7 @@ begin
 	grant all on tMakes to public;
 end
 go
-exec setOV 'tMakes', 'U', '20240224', '1.0.0.1'
+exec setOV 'tMakes', 'U', '20240224', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tMakes', @desc = 'Список марок автозапчастей'

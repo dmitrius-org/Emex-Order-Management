@@ -91,5 +91,5 @@ end
 go
 grant select on hOrders to public
 go
-exec setOV 'hOrders', 'U', '20240101', '1.0.0.0'
+exec setOV 'hOrders', 'U', '20240101', '0'
 go

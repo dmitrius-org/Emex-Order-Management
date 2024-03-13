@@ -23,6 +23,6 @@ begin
 	grant all on tMenu to public
 end
 go
-exec setOV 'tMenu', 'U', '20240101', '1.0.0.0'
+exec setOV 'tMenu', 'U', '20240101', '0'
 go
 

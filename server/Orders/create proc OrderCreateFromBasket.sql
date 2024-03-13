@@ -214,6 +214,6 @@ exec OrdersFinCalc @IsSave = 1
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderCreateFromBasket', 'P', '20240101', '0'
 go
  

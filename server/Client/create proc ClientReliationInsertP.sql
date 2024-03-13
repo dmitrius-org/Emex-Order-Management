@@ -44,5 +44,5 @@ return @r
 go
 grant exec on ClientReliatioInsertP to public
 go
-exec setOV 'ClientReliatioInsertP', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientReliatioInsertP', 'P', '20240101', '0'
 go

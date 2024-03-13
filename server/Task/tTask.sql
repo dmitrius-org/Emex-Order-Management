@@ -30,7 +30,7 @@ begin
 	grant all on tTask to public
 end
 go
-exec setOV 'tTask', 'U', '20240311', '1.0.0.1'
+exec setOV 'tTask', 'U', '20240311', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tTask', @desc = 'Задачи'

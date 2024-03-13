@@ -75,6 +75,6 @@ as
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20240101', '1.0.0.1';
+exec setOV 'ProtocolAdd', 'P', '20240101', '1';
 go
  

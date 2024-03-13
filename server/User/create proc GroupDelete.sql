@@ -49,5 +49,5 @@ as
 go
 grant exec on GroupDelete to public
 go
-exec setOV 'GroupDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'GroupDelete', 'P', '20240101', '0'
 go

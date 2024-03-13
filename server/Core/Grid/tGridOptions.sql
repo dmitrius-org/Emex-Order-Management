@@ -20,7 +20,7 @@ begin
 	grant all on tGridOptions to public
 end
 go
-exec setOV 'tGridOptions', 'U', '20240101', '1.0.0.0'
+exec setOV 'tGridOptions', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tGridOptions', @desc = 'Настройки таблиц'

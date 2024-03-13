@@ -27,6 +27,6 @@ as
 
 grant exec on ClientTypeDelete to public
 go
-exec setOV 'ClientTypeDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientTypeDelete', 'P', '20240101', '0'
 go
  

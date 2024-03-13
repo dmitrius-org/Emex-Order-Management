@@ -35,7 +35,7 @@ begin
 	grant all on tProfilesCustomer to public;
 end
 go
-exec setOV 'tProfilesCustomer', 'U', '20240101', '1.0.0.0'
+exec setOV 'tProfilesCustomer', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tProfilesCustomer', @desc = 'Профили управления выгрузкой прайсов'

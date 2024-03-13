@@ -143,6 +143,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20240101', '1.0.0.0'
+exec setOV 'BasketStateSync', 'P', '20240101', '0'
 go
  

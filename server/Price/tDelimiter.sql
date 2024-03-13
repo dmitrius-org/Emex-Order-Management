@@ -19,7 +19,7 @@ begin
 	insert tDelimiter (Brief, Name) select char(9), 'Разделитель табуляция'; 
 end
 go
-exec setOV 'tDelimiter', 'U', '20240101', '1.0.0.0'
+exec setOV 'tDelimiter', 'U', '20240101', '0'
 go
 
 

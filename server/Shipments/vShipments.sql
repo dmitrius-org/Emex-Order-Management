@@ -82,7 +82,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240101', '1.0.0.0'
+exec setOV 'vShipments', 'V', '20240101', '0'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

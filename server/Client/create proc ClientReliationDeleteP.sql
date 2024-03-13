@@ -17,5 +17,5 @@ return @r
 go
 grant exec on ClientReliationDeleteP to public
 go
-exec setOV 'ClientReliationDeleteP', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientReliationDeleteP', 'P', '20240101', '0'
 go

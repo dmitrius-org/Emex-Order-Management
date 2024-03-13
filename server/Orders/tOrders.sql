@@ -93,7 +93,7 @@ end
 go
 grant select on tOrders to public
 go
-exec setOV 'tOrders', 'U', '20240101', '1.0.0.0'
+exec setOV 'tOrders', 'U', '20240101', '0'
 go
 /*
 alter table tOrders 

@@ -52,6 +52,6 @@ as
 go
 grant exec on GroupInsert to public
 go
-exec setOV 'GroupInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'GroupInsert', 'P', '20240101', '0'
 go
 

@@ -16,6 +16,6 @@ begin
 	grant all on tUserReliation to public
 end
 go
-exec setOV 'tUserReliation', 'U', '20240101', '1.0.0.0'
+exec setOV 'tUserReliation', 'U', '20240101', '0'
 go
 

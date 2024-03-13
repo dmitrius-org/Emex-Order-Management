@@ -36,6 +36,6 @@ SELECT n.[NodeID]
 go
 grant all on vNodes to public
 go
-exec setOV 'vNodes', 'V', '20240306', '1.0.0.1'
+exec setOV 'vNodes', 'V', '20240306', '1'
 go
  

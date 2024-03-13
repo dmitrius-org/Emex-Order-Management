@@ -49,6 +49,6 @@ as
 go
 grant exec on GroupDetailNameUpdate to public
 go
-exec setOV 'GroupDetailNameUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'GroupDetailNameUpdate', 'P', '20240101', '0'
 go
  

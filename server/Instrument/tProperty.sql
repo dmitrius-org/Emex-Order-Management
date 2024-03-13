@@ -22,7 +22,7 @@ begin
 	grant select on tProperty to public
 end
 go
-exec setOV 'tProperty', 'U', '20240101', '1.0.0.0'
+exec setOV 'tProperty', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tProperty', @desc = 'Типы объектов системы'
 go

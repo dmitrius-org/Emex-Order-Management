@@ -15,5 +15,5 @@ begin
 	grant all on tRetCode to public;
 end
 go
-exec setOV 'tRetCode', 'U', '20240101', '1.0.0.0'
+exec setOV 'tRetCode', 'U', '20240101', '0'
 go

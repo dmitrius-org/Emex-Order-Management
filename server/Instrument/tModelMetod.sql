@@ -24,7 +24,7 @@ begin
 	grant all on tModelMetod to public
 end
 go
-exec setOV 'tModelMetod', 'U', '20240101', '1.0.0.0'
+exec setOV 'tModelMetod', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tModelMetod', @desc = 'Расширение таблицы tModel'

@@ -36,7 +36,7 @@ end
 go
 grant all on hMovement to public
 go
-exec setOV 'hMovement', 'U', '20240101', '1.0.0.0'
+exec setOV 'hMovement', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'hMovement', @desc = 'История движение по номеру заказа.'

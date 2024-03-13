@@ -20,6 +20,6 @@ as
 go
 grant exec on GetAppInfo to public
 go
-exec setOV 'GetAppInfo', 'P', '20240306', '1.0.0.1'
+exec setOV 'GetAppInfo', 'P', '20240306', '1'
 go
 exec GetAppInfo

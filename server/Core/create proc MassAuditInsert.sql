@@ -61,5 +61,5 @@ return @r
 go
 grant exec on MassAuditInsert to public
 go
-exec setOV 'MassAuditInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'MassAuditInsert', 'P', '20240101', '0'
 go

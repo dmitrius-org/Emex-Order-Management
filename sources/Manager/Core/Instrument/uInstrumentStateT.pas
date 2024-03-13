@@ -38,6 +38,8 @@ type
     procedure actEditExecute(Sender: TObject);
     procedure acInsertExecute(Sender: TObject);
     procedure acDeleteExecute(Sender: TObject);
+    procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FID: Integer;
     procedure DataRefresh();
@@ -85,6 +87,18 @@ end;
 function TInstrumentStateT.GetID: Integer;
 begin
   Result:=FID;
+end;
+
+procedure TInstrumentStateT.GridUsersKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      GridUsers.JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
 end;
 
 procedure TInstrumentStateT.SetID(const Value: Integer);

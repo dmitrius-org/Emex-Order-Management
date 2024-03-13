@@ -85,5 +85,5 @@ return @r
 go
 grant exec on DocumentCreate to public
 go
-exec setOV 'DocumentCreate', 'P', '20240101', '1.0.0.0'
+exec setOV 'DocumentCreate', 'P', '20240101', '0'
 go

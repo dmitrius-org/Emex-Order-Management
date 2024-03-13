@@ -65,5 +65,5 @@ return @r
 go
 grant exec on EmployeeInsert to public
 go
-exec setOV 'EmployeeInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'EmployeeInsert', 'P', '20240101', '0'
 go

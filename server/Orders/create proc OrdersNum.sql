@@ -47,6 +47,6 @@ set nocount on;
 go
 grant exec on OrderNum to public
 go
-exec setOV 'OrderNum', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderNum', 'P', '20240101', '0'
 go
  

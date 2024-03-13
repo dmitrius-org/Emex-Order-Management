@@ -110,6 +110,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientInsert', 'P', '20240101', '0'
 go
 

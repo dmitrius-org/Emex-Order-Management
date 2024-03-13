@@ -22,5 +22,5 @@ return @r
 go
 grant exec on ClientGrantDelete to public
 go
-exec setOV 'ClientGrantDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientGrantDelete', 'P', '20240101', '0'
 go

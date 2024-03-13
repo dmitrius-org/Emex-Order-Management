@@ -192,7 +192,15 @@ object NodesT: TNodesT
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
           'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
           #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+          'n the ToolBar, number 10, hide him'#13#10#13#10'}'
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+          'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
+          'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
+          'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
+          'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
+          't.body.removeChild(el);'#13#10'    };'#13#10'}')
       RowEditor = True
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]

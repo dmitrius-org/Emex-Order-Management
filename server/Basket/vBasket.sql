@@ -25,4 +25,4 @@ select
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240101', '1.0.0.0'
+exec setOV 'vBasket', 'V', '20240101', '0'

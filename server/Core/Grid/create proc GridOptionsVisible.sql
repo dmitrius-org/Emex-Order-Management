@@ -25,5 +25,5 @@ as
 go
 grant execute on GridOptionsVisible to public
 go
-exec setOV 'GridOptionsVisible', 'P', '20240101', '1.0.0.0'
+exec setOV 'GridOptionsVisible', 'P', '20240101', '0'
 go

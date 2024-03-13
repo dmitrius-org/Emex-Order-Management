@@ -49,6 +49,6 @@ as
 go
 grant exec on SupplierDelete to public
 go
-exec setOV 'SupplierDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'SupplierDelete', 'P', '20240101', '0'
 go
  

@@ -66,5 +66,5 @@ as
 go
 grant execute on ModelCreate to public
 go
-exec setOV 'ModelCreate', 'P', '20240101', '1.0.0.0'
+exec setOV 'ModelCreate', 'P', '20240101', '0'
 go

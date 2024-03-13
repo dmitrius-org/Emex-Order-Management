@@ -30,7 +30,7 @@ as
 go
 grant select on vUserAccess to public
 go
-exec setOV 'vUserAccess', 'V', '20240101', '1.0.0.0'
+exec setOV 'vUserAccess', 'V', '20240101', '0'
 go
  
 -- Описание таблицы

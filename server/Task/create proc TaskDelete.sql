@@ -36,5 +36,5 @@ as
 go
 grant exec on TaskDelete to public
 go
-exec setOV 'TaskDelete', 'P', '20240101', '1.0.0.0'
+exec setOV 'TaskDelete', 'P', '20240101', '0'
 go

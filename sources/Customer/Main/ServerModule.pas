@@ -154,8 +154,9 @@ var Retval: Integer;
 begin
 // валидация ссылки на регистрацию
 //  Handled := false;
-//  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Begin', ARequestInfo.URI);
-
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand URI', ARequestInfo.URI);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Document', ARequestInfo.Document);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
 //  if ARequestInfo.URI='/confirmed' then
 //  begin
 //    Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);

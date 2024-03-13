@@ -25,7 +25,7 @@ begin
 	grant all on tTaskActions to public;
 end
 go
-exec setOV 'tTaskActions', 'U', '20240101', '1.0.0.0';
+exec setOV 'tTaskActions', 'U', '20240101', '0';
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tTaskActions', @desc = 'Действия для задачи';

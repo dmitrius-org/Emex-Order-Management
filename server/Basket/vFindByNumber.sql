@@ -54,5 +54,5 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20240101', '1.0.0.0'
+exec setOV 'vFindByNumber', 'V', '20240101', '0'
 go

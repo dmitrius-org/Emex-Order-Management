@@ -31,5 +31,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240101', '1.0.0.0'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240101', '0'
 go

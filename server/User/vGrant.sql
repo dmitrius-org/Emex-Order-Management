@@ -29,6 +29,6 @@ select u.GrantID
 go
 grant all on vGrant to public
 go
-exec setOV 'vGrant', 'V', '20240101', '1.0.0.2'
+exec setOV 'vGrant', 'V', '20240101', '2'
 go
  

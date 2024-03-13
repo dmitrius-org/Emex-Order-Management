@@ -96,17 +96,31 @@ begin
 end;
 
 function TEmex.getCustomer(AAccount: Integer): Customer;
+var SuppliersID: Integer;
 begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-    //данные дл€ интеграции берем из справочника " лиенты"
-    SQl.Open('Select s.emexUsername, s.emexPassword '+
-             '  from tClients c (nolock)            ' +
-             '  join tSuppliers  s (nolock)         ' +
-             '    on s.SuppliersID = c.SuppliersID  ' +
-             ' where c.ClientID = :ClientID',
-            ['ClientID'], [AAccount]);
+    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
+
+    if SuppliersID = 0 then
+    begin
+      //данные дл€ интеграции берем из справочника " лиенты"
+      SQl.Open('Select s.emexUsername, s.emexPassword '+
+               '  from tClients c (nolock)            ' +
+               '  join tSuppliers  s (nolock)         ' +
+               '    on s.SuppliersID = c.SuppliersID  ' +
+               ' where c.ClientID = :ClientID',
+              ['ClientID'], [AAccount]);
+    end
+    else
+    begin
+      //данные дл€ интеграции берем из настройки SearchSuppliers
+      SQl.Open('Select s.emexUsername, s.emexPassword '+
+               '  from tSuppliers  s (nolock)         ' +
+               ' where s.SuppliersID = :SuppliersID  ',
+              ['SuppliersID'], [SuppliersID]);
+    end;
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -191,7 +205,7 @@ var part: FindByNumber;
 begin
 //  logger.Info('TEmex.MovementByOrderNumber Begin');
 
-  parts:=Emex.SearchPart(getCustomer(3), ADetailNum, False);
+  parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, False);
 
   FillFindByNumber(AClientID, parts);
 

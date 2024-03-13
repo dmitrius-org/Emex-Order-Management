@@ -31,6 +31,6 @@ Select top 1 @StatusID =  m.StateID --, t.Flag
 go
 grant exec on GetStartNode to public
 go
-exec setOV 'GetStartNode', 'P', '20240101', '1.0.0.0'
+exec setOV 'GetStartNode', 'P', '20240101', '0'
 go
 

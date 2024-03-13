@@ -232,6 +232,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240101', '1.0.0.0'
+exec setOV 'LoadOrders', 'P', '20240101', '0'
 go
  

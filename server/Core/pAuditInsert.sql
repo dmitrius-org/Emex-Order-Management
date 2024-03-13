@@ -22,7 +22,7 @@ create index ao2 on pAuditInsert(Spid, Retval)
 go
 grant all on pAuditInsert to public
 go
-exec setOV 'pAuditInsert', 'U', '20240101', '1.0.0.0'
+exec setOV 'pAuditInsert', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pAuditInsert', @desc = 'Временная таблица для массового добавления аудита по заказам'

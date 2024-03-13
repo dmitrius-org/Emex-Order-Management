@@ -90,5 +90,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'ClientUpdate', 'P', '20240101', '0'
 go

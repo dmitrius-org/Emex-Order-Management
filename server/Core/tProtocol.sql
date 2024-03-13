@@ -25,7 +25,7 @@ begin
 	grant select on tProtocol to public;
 end
 go
-exec setOV 'tProtocol', 'U', '20240101', '1.0.0.0'
+exec setOV 'tProtocol', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tProtocol', @desc = 'Таблица протокола'

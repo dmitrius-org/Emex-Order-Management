@@ -15,6 +15,6 @@ END
 go
 grant exec on dbo.GetLogin to public;
 go
-exec setOV 'GetLogin', 'FN', '20240101', '1.0.0.0';
+exec setOV 'GetLogin', 'FN', '20240101', '0';
 go
 

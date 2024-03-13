@@ -31,5 +31,5 @@ SELECT ID
 go
 grant select on vTaskActions to public
 go
-exec setOV 'vTaskActions', 'V', '20240101', '1.0.0.0'
+exec setOV 'vTaskActions', 'V', '20240101', '0'
 go

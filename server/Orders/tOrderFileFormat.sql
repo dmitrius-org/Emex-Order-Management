@@ -35,7 +35,7 @@ end
 go
 grant all on tOrderFileFormat to public
 go
-exec setOV 'tOrderFileFormat', 'U', '20240101', '1.0.0.0'
+exec setOV 'tOrderFileFormat', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tOrderFileFormat', @desc = 'Формат файла с заказом'
 go

@@ -50,5 +50,5 @@ begin
 	grant select on tShipments to public
 end
 go
-exec setOV 'tShipments', 'U', '20240101', '1.0.0.0'
+exec setOV 'tShipments', 'U', '20240101', '0'
 go

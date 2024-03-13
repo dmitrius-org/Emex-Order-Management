@@ -117,4 +117,4 @@ end
 go
 grant all on setOV to public
 go
-exec setOV 'setOV', 'P', '20240307', '1.0.0.1'
+exec setOV 'setOV', 'P', '20240307', '1'

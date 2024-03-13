@@ -25,7 +25,7 @@ begin
 	grant select on tInstrument to public;
 end
 go
-exec setOV 'tModelMetod', 'U', '20240101', '1.0.0.0'
+exec setOV 'tModelMetod', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tInstrument', @desc = 'Интсрументы'
 go

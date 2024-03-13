@@ -97,5 +97,5 @@ as
 go
 grant exec on UserUpdate to public
 go
-exec setOV 'UserUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'UserUpdate', 'P', '20240101', '0'
 go

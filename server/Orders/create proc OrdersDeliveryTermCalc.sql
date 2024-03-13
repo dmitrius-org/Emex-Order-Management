@@ -84,6 +84,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalc to public
 go
-exec setOV 'OrdersDeliveryTermCalc', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrdersDeliveryTermCalc', 'P', '20240101', '0'
 go
   

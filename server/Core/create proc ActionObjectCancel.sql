@@ -27,6 +27,6 @@ as
 go
 grant execute on ActionObjectCancel to public
 go
-exec setOV 'ActionObjectCancel', 'P', '20240101', '1.0.0.0'
+exec setOV 'ActionObjectCancel', 'P', '20240101', '0'
 go
 

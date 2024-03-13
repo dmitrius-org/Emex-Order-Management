@@ -25,7 +25,7 @@ begin
 	grant select on tNodes to public;
 end
 go
-exec setOV 'tNodes', 'U', '20240101', '1.0.0.0'
+exec setOV 'tNodes', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tNodes', @desc = 'Справочник состояний и действий'

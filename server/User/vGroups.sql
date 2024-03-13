@@ -19,6 +19,6 @@ SELECT [GroupID]
 go
 grant all on vGroups to public
 go
-exec setOV 'vGroups', 'V', '20240101', '1.0.0.0'
+exec setOV 'vGroups', 'V', '20240101', '0'
 go
  

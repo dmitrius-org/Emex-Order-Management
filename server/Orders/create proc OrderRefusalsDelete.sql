@@ -61,6 +61,6 @@ as
 go
 grant exec on OrderRefusalsInsert to public
 go
-exec setOV 'OrderRefusalsInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrderRefusalsInsert', 'P', '20240101', '0'
 go
  

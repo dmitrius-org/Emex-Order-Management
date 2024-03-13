@@ -37,6 +37,8 @@ type
     procedure actEditExecute(Sender: TObject);
     procedure acInsertExecute(Sender: TObject);
     procedure acDeleteExecute(Sender: TObject);
+    procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FID: Integer;
     { Private declarations }
@@ -70,7 +72,6 @@ begin
   Query.Insert;
   Query.FieldByName('ModelID').Value := FID;
   Query.FieldByName('Type').Value := 0;
-
 end;
 
 procedure TInstrumentActionT.actEditExecute(Sender: TObject);
@@ -97,6 +98,18 @@ end;
 function TInstrumentActionT.GetID: Integer;
 begin
   result:=FID;
+end;
+
+procedure TInstrumentActionT.GridUsersKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      GridUsers.JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
 end;
 
 procedure TInstrumentActionT.SetID(const Value: Integer);

@@ -44,5 +44,5 @@ as
 go
 grant exec on TaskWriteErrorMessage to public
 go
-exec setOV 'TaskWriteErrorMessage', 'P', '20240311', '1.0.0.1'
+exec setOV 'TaskWriteErrorMessage', 'P', '20240311', '1'
 go

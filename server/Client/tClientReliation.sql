@@ -23,6 +23,6 @@ begin
 	grant all on tClientReliation to public
 end
 go
-exec setOV 'tClientReliation', 'U', '20240101', '1.0.0.0'
+exec setOV 'tClientReliation', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tClientReliation', @desc = 'Связь с клиентами'

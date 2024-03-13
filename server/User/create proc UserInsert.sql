@@ -85,5 +85,5 @@ as
 
 grant exec on UserInsert to public
 go
-exec setOV 'UserInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'UserInsert', 'P', '20240101', '0'
 go

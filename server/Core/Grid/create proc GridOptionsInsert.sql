@@ -24,6 +24,6 @@ as
 go
 grant execute on GridOptionsInsert to public
 go
-exec setOV 'GridOptionsInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'GridOptionsInsert', 'P', '20240101', '0'
 go
  

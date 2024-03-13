@@ -29,7 +29,7 @@ end
 go
 grant all on tSuppliers to public
 go
-exec setOV 'tSuppliers', 'U', '20240101', '1.0.0.0'
+exec setOV 'tSuppliers', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tSuppliers', @desc = 'Таблица Поставщики'

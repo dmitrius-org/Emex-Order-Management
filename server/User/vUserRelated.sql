@@ -26,7 +26,7 @@ select u.UserID
 go
 grant all on vUserRelated to public
 go
-exec setOV 'vUserRelated', 'V', '20240101', '1.0.0.0'
+exec setOV 'vUserRelated', 'V', '20240101', '0'
 go
  
 

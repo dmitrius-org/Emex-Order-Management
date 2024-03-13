@@ -47,5 +47,5 @@ as
 go
 grant exec on GroupUpdate to public
 go
-exec setOV 'GroupUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'GroupUpdate', 'P', '20240101', '0'
 go

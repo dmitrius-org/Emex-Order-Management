@@ -72,6 +72,6 @@ as
 go
 grant exec on ProtocolRollBack to public
 go
-exec setOV 'ProtocolRollBack', 'P', '20240101', '1.0.0.0'
+exec setOV 'ProtocolRollBack', 'P', '20240101', '0'
 go
  

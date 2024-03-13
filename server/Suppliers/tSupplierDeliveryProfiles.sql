@@ -31,7 +31,7 @@ begin
 	grant all on tSupplierDeliveryProfiles to public
 end
 go
-exec setOV 'tSupplierDeliveryProfiles', 'U', '20240101', '1.0.0.0'
+exec setOV 'tSupplierDeliveryProfiles', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tSupplierDeliveryProfiles', @desc = 'Расширение профилей управления выгрузкой'

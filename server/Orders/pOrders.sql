@@ -22,7 +22,7 @@ create table pOrders
 go
 grant all on pOrders to public
 go
-exec setOV 'pOrders', 'U', '20240101', '1.0.0.0'
+exec setOV 'pOrders', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pOrders', @desc = 'Временная таблица заказов. Используется для импорта заказов в базу данных'

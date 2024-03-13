@@ -111,6 +111,6 @@ as
 go
 grant execute on InstrumentCreate to public
 go
-exec setOV 'InstrumentCreate', 'P', '20240101', '1.0.0.0'
+exec setOV 'InstrumentCreate', 'P', '20240101', '0'
 go
 

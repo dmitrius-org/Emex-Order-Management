@@ -22,6 +22,6 @@ Select p.ObjectType
 go
 grant all on vGrantObject to public
 go
-exec setOV 'vGrantObject', 'V', '20240101', '1.0.0.0'
+exec setOV 'vGrantObject', 'V', '20240101', '0'
 go
  

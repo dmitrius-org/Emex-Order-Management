@@ -44,5 +44,5 @@ return @r
 GO
 grant exec on ShipmentsUpdate to public
 go
-exec setOV 'ShipmentsUpdate', 'P', '20240101', '1.0.0.0'
+exec setOV 'ShipmentsUpdate', 'P', '20240101', '0'
 go

@@ -107,6 +107,6 @@ as
 go
 grant exec on TaskActionLoad to public
 go
-exec setOV 'TaskActionLoad', 'P', '20240307', '1.0.0.1'
+exec setOV 'TaskActionLoad', 'P', '20240307', '1'
 go
 

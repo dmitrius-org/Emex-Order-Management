@@ -219,6 +219,6 @@ Update o
 GO
 grant exec on CloneOrders2 to public
 go
-exec setOV 'CloneOrders2', 'P', '20240101', '1.0.0.0'
+exec setOV 'CloneOrders2', 'P', '20240101', '0'
 go
  

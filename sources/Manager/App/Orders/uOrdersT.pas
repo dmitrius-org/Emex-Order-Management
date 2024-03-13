@@ -225,8 +225,6 @@ type
     procedure actUnselectExecute(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure actGridSettingLoadExecute(Sender: TObject);
-    procedure actGridSettingSaveExecute(Sender: TObject);
     procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure GridDblClick(Sender: TObject);
     procedure fStatus2Select(Sender: TObject);
@@ -465,16 +463,6 @@ procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
 begin
   Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
-end;
-
-procedure TOrdersT.actGridSettingLoadExecute(Sender: TObject);
-begin
-  //GridLayout(Self, Grid, tGridLayout.glLoad);
-end;
-
-procedure TOrdersT.actGridSettingSaveExecute(Sender: TObject);
-begin
-  //GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TOrdersT.actGroupDetailNameEditExecute(Sender: TObject);
@@ -1044,14 +1032,11 @@ begin
     Sql.Q.First;
     for i:= 0 to Sql.Q.RecordCount-1 do
     begin
-
       try
         Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
         Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
         Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
         Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
-      // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
-
       except
         on E: Exception do
         begin

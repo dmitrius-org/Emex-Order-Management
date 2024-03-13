@@ -16,5 +16,5 @@ begin
 	grant all on tRetMessage to public;
 end
 go
-exec setOV 'tRetMessage', 'U', '20240101', '1.0.0.0'
+exec setOV 'tRetMessage', 'U', '20240101', '0'
 go

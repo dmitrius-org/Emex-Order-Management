@@ -27,7 +27,7 @@ end
 go
 grant execute on dbo.GetCurrencyRate to public
 go
-exec setOV 'GetCurrencyRate', 'FN', '20240101', '1.0.0.0'
+exec setOV 'GetCurrencyRate', 'FN', '20240101', '0'
 go
 
 select distinct type from sys.objects

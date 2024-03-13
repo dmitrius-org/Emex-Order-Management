@@ -28,7 +28,7 @@ end
 go
 grant all on tUnloadRefusals to public
 go
-exec setOV 'tUnloadRefusals', 'U', '20240101', '1.0.0.0'
+exec setOV 'tUnloadRefusals', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tUnloadRefusals', @desc = 'Таблица отказов'

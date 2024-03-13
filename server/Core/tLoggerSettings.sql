@@ -19,7 +19,7 @@ begin
 	grant all on tLoggerSettings to public;
 end
 go
-exec setOV 'tLoggerSettings', 'U', '20240101', '1.0.0.0'
+exec setOV 'tLoggerSettings', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tLoggerSettings', @desc = 'Настройки логирования'

@@ -84,6 +84,6 @@ as
 go
 grant exec on TaskInsert to public
 go
-exec setOV 'TaskInsert', 'P', '20240101', '1.0.0.0'
+exec setOV 'TaskInsert', 'P', '20240101', '0'
 go
 

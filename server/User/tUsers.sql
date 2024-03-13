@@ -24,5 +24,5 @@ begin
 	grant all on tUser to public
 end
 go
-exec setOV 'tUser', 'U', '20240101', '1.0.0.0'
+exec setOV 'tUser', 'U', '20240101', '0'
 go

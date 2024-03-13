@@ -17,7 +17,7 @@ create unique index ao1 on pEmexRefusalsCalc(Spid, OrderID)
 go
 grant all on pEmexRefusalsCalc to public
 go
-exec setOV 'pEmexRefusalsCalc', 'U', '20240101', '1.0.0.0'
+exec setOV 'pEmexRefusalsCalc', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'pEmexRefusalsCalc', @desc = 'Таблица отказы'
 go
@@ -39,7 +39,7 @@ create unique index ao1 on pEmexRefusalsConfirm(Spid, OrderID)
 go
 grant all on pEmexRefusalsConfirm to public
 go
-exec setOV 'pEmexRefusalsConfirm', 'U', '20240101', '1.0.0.0'
+exec setOV 'pEmexRefusalsConfirm', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'pEmexRefusalsConfirm', @desc = 'Таблица отказы'
 go

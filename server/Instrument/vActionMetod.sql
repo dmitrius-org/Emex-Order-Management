@@ -19,6 +19,6 @@ select m.ActionID       ActionID
 go
 grant all on vActionMetod to public
 go
-exec setOV 'vActionMetod', 'V', '20240101', '1.0.0.0'
+exec setOV 'vActionMetod', 'V', '20240101', '0'
 go
  

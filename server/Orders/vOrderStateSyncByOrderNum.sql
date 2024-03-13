@@ -25,6 +25,6 @@ go
 grant all on vOrderStateSyncByOrderNum to public
 go
 go
-exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240101', '1.0.0.0'
+exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240101', '0'
 go
   

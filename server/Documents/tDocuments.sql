@@ -28,7 +28,7 @@ begin
 	grant all on tDocuments to public;
 end
 go
-exec setOV 'tDocuments', 'U', '20240101', '1.0.0.0'
+exec setOV 'tDocuments', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tDocuments', @desc = 'Таблица '

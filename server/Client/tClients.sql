@@ -39,6 +39,6 @@ begin
 	grant all on tClients to public;
 end
 go
-exec setOV 'tClients', 'U', '20240101', '1.0.0.0'
+exec setOV 'tClients', 'U', '20240101', '0'
 go
 exec dbo.sys_setTableDescription @table = 'tClients', @desc = 'Таблица Клиенты'

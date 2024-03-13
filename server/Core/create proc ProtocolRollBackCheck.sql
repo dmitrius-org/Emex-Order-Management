@@ -59,6 +59,6 @@ as
 go
 grant exec on ProtocolRollBackCheck to public
 go
-exec setOV 'ProtocolRollBackCheck', 'P', '20240101', '1.0.0.0'
+exec setOV 'ProtocolRollBackCheck', 'P', '20240101', '0'
 go
  

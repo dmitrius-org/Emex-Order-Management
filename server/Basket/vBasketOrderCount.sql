@@ -19,4 +19,4 @@ select
 go
 grant all on vBasketOrderCount to public
 go
-exec setOV 'vBasketOrderCount', 'V', '20240101', '1.0.0.0'
+exec setOV 'vBasketOrderCount', 'V', '20240101', '0'

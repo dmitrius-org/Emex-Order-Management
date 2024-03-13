@@ -49,5 +49,5 @@ as
 go
 grant exec on TaskActionUpdate to public
 go
-exec setOV 'TaskActionUpdate', 'P', '20240307', '1.0.0.1'
+exec setOV 'TaskActionUpdate', 'P', '20240307', '1'
 go

@@ -162,5 +162,5 @@ return @RetVal
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240101', '1.0.0.0'
+exec setOV 'CustomerPriceCalc', 'P', '20240101', '0'
 go

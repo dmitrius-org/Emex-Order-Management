@@ -32,7 +32,7 @@ as
 go
 grant exec on OrdersReferenceCalc to public
 go
-exec setOV 'OrdersReferenceCalc', 'P', '20240101', '1.0.0.0'
+exec setOV 'OrdersReferenceCalc', 'P', '20240101', '0'
 go
  
  
