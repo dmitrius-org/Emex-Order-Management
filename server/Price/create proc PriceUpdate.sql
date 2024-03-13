@@ -27,7 +27,7 @@ update t
 	   ,t.WeightKG     = p.WeightKG
   	   ,t.VolumeKG	   = p.VolumeKG
 	   ,t.MOSA         = p.MOSA
-	   ,t.Restrictions = nullif(p.Restrictions, '')
+	   ,t.Restrictions = isnull(t.Restrictions, nullif(p.Restrictions, ''))
        ,t.updDatetime  = GetDate()
 OUTPUT INSERTED.PriceID INTO @ID(ID)      
   from #Price p with (nolock index=ao3)       
@@ -82,6 +82,7 @@ delete p
    and isnull(p.WeightKGF  , '') = ''
    and isnull(p.VolumeKGf  , '') = ''
    and isnull(p.DetailNameF, '') = ''
+   and isnull(p.Restrictions, '') = ''
    and not exists (select 1
                      from @ID t
 					where t.ID = p.PriceID)	
@@ -93,6 +94,7 @@ Update p
    and (isnull(p.WeightKGF  , '') <> ''
      or isnull(p.VolumeKGf  , '') <> ''
      or isnull(p.DetailNameF, '') <> ''
+	 --or isnull(p.Restrictions, '') <> ''
 	 )
    and not exists (select 1
                      from @ID t
