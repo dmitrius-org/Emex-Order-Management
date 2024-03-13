@@ -152,25 +152,48 @@ object StatisticsT: TStatisticsT
   object qAverageCountOrders: TFDQuery
     Connection = UniMainModule.FDConnection
     SQL.Strings = (
-      '  Select o.OrderDate   as d, '
-      '         count(*)      as orderCount ,'
-      '         sum(o.Amount) as orderSum    '
+      ';with t as'
+      '('
+      '  Select o.OrderDate  , '
+      '         o.Amount,'
+      '         o.isCancel'
       '    from tOrders o (nolock)'
-      '   --cross apply ( select top 1 cast(p.InDateTime as date) d'
-      '   --                from tProtocol p with (nolock index=ao2)'
-      '   --              inner join tNodes n (nolock)'
-      '   --                      on n.NodeId = p.NewStateID'
-      '   --                     and n.Brief in ('#39'InWork'#39')'
-      '   --               where p.objectID  = o.OrderID'
-      '                    '
-      '   --               order by p.OperDate desc'
-      '   --             ) p'
       '   where 1=1'
       '     and o.OrderDate between :DateBegin  and :DateEnd'
-      '     and o.isCancel = 0'
-      '      !Client'
+      '    '
+      '     !Client'
+      ')'
+      '  --  '
+      '  Select o.OrderDate   as OrderDate, '
+      '         -- '#1086#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
+      '         count(*)      as TotalCount,'
+      '         sum(o.Amount) as TotalSum,  '
+      '         -- '#1074#1079#1103#1090#1086#1074' '#1088#1072#1073#1086#1090#1091'         '
+      '         sum(case '
+      '                 when o.isCancel = 0 then 1'
+      '                 else 0'
+      '             end)      as WorkCount,'
+      '         sum(case '
+      '                 when o.isCancel = 0 then o.Amount '
+      '                 else 0'
+      '             end)      as WorkSum,'
+      '         -- '#1086#1090#1082#1072#1079#1072#1085#1086
+      '         sum(case '
+      '                 when o.isCancel = 1 then 1'
+      '                 else 0'
+      '             end)      as CancelCount,'
+      '         sum(case '
+      '                 when o.isCancel = 1 then o.Amount '
+      '                 else 0'
+      '             end)      as CancelSum'
+      '  '
+      '    from t o (nolock)'
+      '   where 1=1'
+      '    '
       '   group by o.OrderDate   '
       '   order by o.OrderDate'
+      '    '
+      '       '
       '    '
       '       ')
     Left = 814
@@ -196,7 +219,7 @@ object StatisticsT: TStatisticsT
   end
   object dsAverageCountOrders: TDataSource
     DataSet = qAverageCountOrders
-    Left = 713
+    Left = 681
     Top = 32
   end
   object qClient: TFDQuery

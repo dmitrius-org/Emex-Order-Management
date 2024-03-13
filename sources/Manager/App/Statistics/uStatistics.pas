@@ -57,8 +57,10 @@ procedure TStatisticsT.AverageCountOrders;
 var
   //Defined as TInterfacedObject. No need try..finally
  // AreaChart: IcfsGChartProducer;
-  ColumnChartCount: IcfsGChartProducer;
-  ColumnChartSum:   IcfsGChartProducer;
+  ChartCount: IcfsGChartProducer;
+  ChartSum:   IcfsGChartProducer;
+
+  Series: TArray<string>;
 var FClient:string;
 begin
   if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
@@ -74,68 +76,121 @@ begin
 
   qAverageCountOrders.Open;
 
-  ColumnChartCount := TcfsGChartProducer.Create;
-  ColumnChartCount.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
-  ColumnChartCount.Data.DefineColumns([
+  ChartCount := TcfsGChartProducer.Create;
+  ChartCount.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
+
+  ChartCount.Data.DefineColumns([
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Количество заказов'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
   ]);
 
 
-
- ColumnChartSum := TcfsGChartProducer.Create;
-  ColumnChartSum.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
-  ColumnChartSum.Data.DefineColumns([
+  ChartSum := TcfsGChartProducer.Create;
+  ChartSum.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
+  ChartSum.Data.DefineColumns([
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Сумма заказов'),
-//    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_STYLE),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
-//    ROLE_ANOTATION
-//    ROLE_STYLE
+
   ]);
   qAverageCountOrders.First;
   while not qAverageCountOrders.eof do
   begin
-   // Profit := qAverageCountOrders.FieldByName('Sales').AsCurrency - FClientDataSet.FieldByName('Expenses').AsCurrency;
-    ColumnChartCount.Data.AddRow;
-    ColumnChartCount.Data.SetValue(0, qAverageCountOrders.FieldByName('d').Value);
-    ColumnChartCount.Data.SetValue(1, qAverageCountOrders.FieldByName('orderCount').Value);
-    ColumnChartCount.Data.SetValue(2, qAverageCountOrders.FieldByName('orderCount').Value);
-    //ColumnChart.Data.SetValue(2, qAverageCountOrders.FieldByName('orderSum').Value);
-    //if Profit < 0 then
-    //  ColumnChart.Data.SetValue(2, 'red');
+    ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
+                            qAverageCountOrders.FieldByName('WorkCount').Value,
+                            qAverageCountOrders.FieldByName('WorkCount').Value,
+                            qAverageCountOrders.FieldByName('CancelCount').Value,
+                            qAverageCountOrders.FieldByName('CancelCount').Value,
+                            0,
+                            qAverageCountOrders.FieldByName('TotalCount').Value
+                            ]);
 
-    ColumnChartSum.Data.AddRow;
-    ColumnChartSum.Data.SetValue(0, qAverageCountOrders.FieldByName('d').Value);
-    ColumnChartSum.Data.SetValue(1, qAverageCountOrders.FieldByName('orderSum').AsCurrency);
-    ColumnChartSum.Data.SetValue(2, qAverageCountOrders.FieldByName('orderSum').Value);
-    //ColumnChart.Data.SetValue(2, qAverageCountOrders.FieldByName('orderSum').Value);
-    //if Profit < 0 then
-    //  ColumnChart.Data.SetValue(2, 'red');
+    ChartSum.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
+                          qAverageCountOrders.FieldByName('WorkSum').Value,
+                          qAverageCountOrders.FieldByName('WorkSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSum').Value,
+                          0,
+                          qAverageCountOrders.FieldByName('TotalSum').Value
+                          ]);
+
     qAverageCountOrders.Next;
   end;
 
 // Г1
-  ColumnChartCount.Options.Title('Количество заказов по дням за период');
+  with ChartCount do
+  begin
+    LibraryLanguage := UniSession.Language;
+    Options.Title('Количество заказов по дням за период');
+    Options.IsStacked(True);
 //  ColumnChartCount.Options.Legend('position', 'none');
-  ColumnChartCount.LibraryLanguage := UniSession.Language;
-  ColumnChartCount.Options.hAxis('title', 'Дни');
-  ColumnChartCount.Options.hAxis('minValue', 0);
-  ColumnChartCount.Options.vAxis('title', 'Заказы (Количество)');
+//  ChartCount.Options.Annotations('alwaysOutside', True);
+//    Options.Annotations('alwaysOutside', True);
+//    Options.Annotations('displayAnnotationsFilter', True);
+//    Options.Annotations('legendPosition', 'newRow');
+    Options.hAxis('minValue', 0);
+    SetLength(Series, 3);
+  Series[0] := 'annotations: {    '+
+                 '  stem: {         '+
+                 '     length: 2  '+
+                 '  }  '+
+                 '} ';
+  Series[1] := 'annotations: {    '+
+                 '  stem: {         '+
+                 '     length: 15  '+
+                 '  }  '+
+                 '} ';
+    Series[2] := 'annotations: {    '+
+                 '  stem: {         '+
+                // '     color: "transparent",'+
+                 '     length: 30  '+
+                 '  }  '+
+                 '} '+
+                 //'type: "Bar"' +
+                 '';
+    Options.Series(Series);
 
 
+    Options.hAxis('title', 'Дни');
+    Options.vAxis('title', 'Заказы (Количество)');
+    Options.vAxis('title', 'Заказы (Количество)');
+  end;
 
 // Г2
-  ColumnChartSum.Options.Title('Сумма заказов по дням за период');
-//  ColumnChartSum.Options.Legend('position', 'none');
-  ColumnChartSum.LibraryLanguage := UniSession.Language;
-//  ColumnChartSum.Options.Annotations('alwaysOutside', True);
-//  ColumnChartSum.Options.Annotations('textStyle', '{fontSize: 12, auraColor: ''none'', color: ''#555''}');
-//  ColumnChartSum.Options.Annotations('boxStyle', '{stroke: ''#ccc'', strokeWidth: 1, gradient: {color1: ''#f3e5f5'', color2: ''#f3e5f5'', x1: ''0%'', y1: ''0%'', x2: ''100%'', y2: ''100%'' }}');
-  ColumnChartSum.Options.hAxis('title', 'Дни');
-  ColumnChartSum.Options.hAxis('minValue', 0);
-  ColumnChartSum.Options.vAxis('title', 'Заказы (Сумма)');
+  ChartSum.LibraryLanguage := UniSession.Language;
+  ChartSum.Options.Title('Сумма заказов по дням за период');
+  ChartSum.Options.IsStacked(True);
+  ChartSum.Options.hAxis('title', 'Дни');
+  ChartSum.Options.hAxis('minValue', 0);
+//  ChartSum.Options.hAxis('format', 'decimal');
+  ChartSum.Options.vAxis('title', 'Заказы (Сумма)');
+
+  SetLength(Series, 3);
+  Series[0] := 'annotations: {    '+
+                 '  stem: {         '+
+                 '     length: 2  '+
+                 '  }  '+
+                 '} ';
+  Series[1] := 'annotations: {    '+
+                 '  stem: {         '+
+                 '     length: 15  '+
+                 '  }  '+
+                 '} ';
+  Series[2] := 'annotations: {    '+
+                 '  stem: {         '+
+                 '     length: 30  '+
+                 '  }  '+
+                 '} ';
+  ChartSum.Options.Series(Series);
 
   // Generate
   ChartAverage.DocumentInit;
@@ -146,8 +201,8 @@ begin
     +   '</div>'
     + '</div>'
   );
-  ChartAverage.DocumentGenerate('ColumnChartCount', ColumnChartCount);
-  ChartAverage.DocumentGenerate('ColumnChartSum', ColumnChartSum);
+  ChartAverage.DocumentGenerate('ColumnChartCount', ChartCount);
+  ChartAverage.DocumentGenerate('ColumnChartSum', ChartSum);
   ChartAverage.DocumentPost;
 end;
 
@@ -197,7 +252,7 @@ procedure TStatisticsT.UniFrameCreate(Sender: TObject);
 begin
   edtDateBegin.DateTime := IncDay(now(), -7);
   {$IFDEF Debug}
-  edtDateBegin.DateTime := IncDay(now(), -90);
+  edtDateBegin.DateTime := IncDay(now(), -10);
   {$ENDIF}
   edtDateEnd.DateTime := now();
 

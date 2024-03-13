@@ -130,6 +130,8 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
+exec setOV 'vOrders', 'V', '20240313', '1.0.0.1'
+go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 

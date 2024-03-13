@@ -83,7 +83,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'ProtocolID'
         Title.Alignment = taCenter
         Title.Caption = #1048#1044' '#1086#1073#1098#1077#1082#1090#1072
-        Width = 113
+        Width = 103
       end
       item
         FieldName = 'ObjectID'
@@ -96,7 +96,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'ActionName'
         Title.Alignment = taCenter
         Title.Caption = #1044#1077#1081#1089#1090#1074#1080#1077
-        Width = 189
+        Width = 245
       end
       item
         FieldName = 'CurState'
@@ -120,7 +120,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'Comment'
         Title.Alignment = taCenter
         Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-        Width = 372
+        Width = 332
       end
       item
         FieldName = 'InDateTime'
@@ -200,7 +200,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     object UniLabel3: TUniLabel
       Left = 9
       Top = 6
-      Width = 84
+      Width = 83
       Height = 13
       Hint = ''
       ShowHint = True
