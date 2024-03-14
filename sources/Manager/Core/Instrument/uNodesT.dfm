@@ -72,11 +72,13 @@ object NodesT: TNodesT
     end
   end
   object UniPanel: TUniPanel
-    Left = 0
-    Top = 0
-    Width = 1065
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 1059
     Height = 67
     Hint = ''
+    Margins.Bottom = 0
     ShowHint = True
     Align = alTop
     TabOrder = 1
@@ -92,12 +94,17 @@ object NodesT: TNodesT
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
     LayoutConfig.DockWhenAligned = False
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 1065
     object ToolBar: TUniToolBar
-      Left = 0
-      Top = 0
-      Width = 1065
-      Height = 67
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 1053
+      Height = 64
       Hint = ''
+      Margins.Bottom = 0
       ShowHint = True
       ButtonHeight = 60
       ButtonWidth = 91
@@ -110,6 +117,10 @@ object NodesT: TNodesT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1065
+      ExplicitHeight = 67
       object UniToolButton1: TUniToolButton
         Left = 0
         Top = 0
@@ -146,9 +157,9 @@ object NodesT: TNodesT
   end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 67
+    Top = 70
     Width = 1065
-    Height = 507
+    Height = 504
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -162,11 +173,13 @@ object NodesT: TNodesT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
+    ExplicitTop = 67
+    ExplicitHeight = 507
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1065
-      Height = 507
+      Height = 504
       Hint = ''
       ShowHint = True
       BodyRTL = False
