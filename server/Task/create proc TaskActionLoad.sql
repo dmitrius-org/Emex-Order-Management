@@ -1,6 +1,6 @@
 drop proc if exists TaskActionLoad
 /*
-  TaskActionLoad - 
+  TaskActionLoad - процедура копирования действий по задаче.
   @TaskID    - Ид объекта
   @Direction - 0 - с постоянной во временную
                1 - с временной в постоянную
@@ -107,6 +107,6 @@ as
 go
 grant exec on TaskActionLoad to public
 go
-exec setOV 'TaskActionLoad', 'P', '20240307', '1'
+exec setOV 'TaskActionLoad', 'P', '20240314', '2'
 go
 

@@ -25,7 +25,6 @@ type
     edtName: TUniEdit;
     lblBruef: TUniLabel;
     UniLabel1: TUniLabel;
-    edtPeriodType: TUniRadioGroup;
     edtDateBegin: TUniDateTimePicker;
     UniLabel2: TUniLabel;
     ebtIsActive: TUniCheckBox;
@@ -38,10 +37,6 @@ type
     MainPage: TUniPageControl;
     MainSheet: TUniTabSheet;
     AuditSheet: TUniTabSheet;
-    edtID: TUniEdit;
-    UniLabel6: TUniLabel;
-    edtInDateTime: TUniDateTimePicker;
-    UniLabel7: TUniLabel;
     TaskPage: TUniTabSheet;
     UniPanel3: TUniPanel;
     ActionGrid: TUniDBGrid;
@@ -67,18 +62,28 @@ type
     FDQueryActionTaskTypeName: TStringField;
     pmTaskActionAdd: TUniPopupMenu;
     N6: TUniMenuItem;
-    PeriodType1: TUniPanel;
-    edtTimePeriod: TUniDateTimePicker;
-    UniLabel3: TUniLabel;
-    edtDayPeriod: TUniSpinEdit;
-    UniLabel4: TUniLabel;
-    UniLabel5: TUniLabel;
     FDQueryActionTaskType: TIntegerField;
     FDQueryActionNumber: TIntegerField;
     actAddActionBat: TAction;
     actAddActionSQL: TAction;
     Bat1: TUniMenuItem;
     SQL1: TUniMenuItem;
+    pnlPeriodType: TUniContainerPanel;
+    edtPeriodType: TUniRadioGroup;
+    PeriodType1: TUniPanel;
+    edtTimePeriod: TUniDateTimePicker;
+    UniLabel3: TUniLabel;
+    edtDayPeriod: TUniSpinEdit;
+    UniLabel4: TUniLabel;
+    UniLabel5: TUniLabel;
+    UniContainerPanel1: TUniContainerPanel;
+    UniLabel6: TUniLabel;
+    edtID: TUniEdit;
+    UniLabel7: TUniLabel;
+    edtInDateTime: TUniDateTimePicker;
+    N7: TUniMenuItem;
+    BAT2: TUniMenuItem;
+    SQL2: TUniMenuItem;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -365,6 +370,7 @@ begin
   UniMainModule.Query.SQL.Text := 'exec TaskActionLoad      '+
                                   '        @TaskID = :TaskID'+
                                   '       ,@Direction = 0   '+
+                                  '               '+
                                   ' select *                '+
                                   '   from tTask (nolock)   '+
                                   '  where TaskID = :TaskID '+
@@ -429,11 +435,12 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
+      Sql.Exec('delete pTaskActions  from pTaskActions  (rowlock) where spid = @@spid;', [], []);
       btnOk.Caption := ' Добавить';
-
-
       edtDateBegin.DateTime := Now();
-      edtTimeBegin.Text := '00:00:01';
+      edtTimeBegin.Text := '00:00:00';
+      edtTimeEnd.Text   := '23:59:59';
+
       edtTimeEnd.Text := '';
     end;
     acUpdate, acReportEdit, acUserAction:

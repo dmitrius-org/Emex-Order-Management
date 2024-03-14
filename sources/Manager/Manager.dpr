@@ -54,7 +54,6 @@ uses
   uUserF in 'Core\User\uUserF.pas' {UserF: TUniForm},
   uInstrumentActionT in 'Core\Instrument\uInstrumentActionT.pas' {InstrumentActionT: TUniFrame},
   uHome in 'App\uHome.pas' {HomeF: TUniFrame},
-  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
   uOrdersF in 'App\Orders\uOrdersF.pas' {OrderF: TUniForm},
   uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
   uOrdersT in 'App\Orders\uOrdersT.pas' {OrdersT: TUniFrame},
@@ -87,7 +86,9 @@ uses
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uTaskBat_F in '..\Scheduler\Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
   uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
-  uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm};
+  uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
+  uGroupSetFragileSignF in 'App\Orders\uGroupSetFragileSignF.pas' {GroupSetFragileSignF: TUniForm},
+  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm};
 
 {$R *.res}
 

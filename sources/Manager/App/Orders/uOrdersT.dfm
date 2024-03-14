@@ -1,7 +1,7 @@
 object OrdersT: TOrdersT
   Left = 0
   Top = 0
-  Width = 1402
+  Width = 1640
   Height = 596
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
@@ -20,7 +20,7 @@ object OrdersT: TOrdersT
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 1396
+    Width = 1634
     Height = 46
     Hint = ''
     Margins.Bottom = 0
@@ -39,11 +39,12 @@ object OrdersT: TOrdersT
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
     LayoutConfig.DockWhenAligned = False
+    ExplicitWidth = 1396
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
       Top = 0
-      Width = 1393
+      Width = 1631
       Height = 46
       Hint = ''
       Margins.Top = 0
@@ -64,6 +65,7 @@ object OrdersT: TOrdersT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
+      ExplicitWidth = 1393
       object tbFormRefusalsOpen: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -147,7 +149,7 @@ object OrdersT: TOrdersT
   object UniPanel2: TUniPanel
     Left = 0
     Top = 49
-    Width = 1402
+    Width = 1640
     Height = 547
     Hint = ''
     Margins.Bottom = 0
@@ -163,11 +165,12 @@ object OrdersT: TOrdersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
+    ExplicitWidth = 1402
     object Grid: TUniDBGrid
       Left = 0
-      Top = 104
-      Width = 1402
-      Height = 443
+      Top = 121
+      Width = 1640
+      Height = 426
       Hint = ''
       Margins.Bottom = 0
       ShowHint = True
@@ -711,8 +714,8 @@ object OrdersT: TOrdersT
     object pFilter: TUniPanel
       Left = 0
       Top = 0
-      Width = 1402
-      Height = 104
+      Width = 1640
+      Height = 121
       Hint = ''
       ShowHint = True
       Align = alTop
@@ -724,14 +727,16 @@ object OrdersT: TOrdersT
         AlignWithMargins = True
         Left = 4
         Top = 4
-        Width = 1394
-        Height = 96
+        Width = 1632
+        Height = 113
         Hint = ''
         ShowHint = True
         Caption = #1060#1080#1083#1100#1090#1088
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
+        ExplicitWidth = 1394
+        ExplicitHeight = 96
         object UniLabel1: TUniLabel
           Left = 17
           Top = 16
@@ -763,7 +768,7 @@ object OrdersT: TOrdersT
           TabOrder = 3
         end
         object fCancel: TUniBitBtn
-          Left = 1111
+          Left = 1135
           Top = 35
           Width = 128
           Height = 24
@@ -773,7 +778,7 @@ object OrdersT: TOrdersT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 1245
+          Left = 1285
           Top = 35
           Width = 137
           Height = 24
@@ -786,7 +791,7 @@ object OrdersT: TOrdersT
         object fOrderNum: TUniEdit
           Left = 581
           Top = 35
-          Width = 128
+          Width = 167
           Hint = ''
           ShowHint = True
           Text = ''
@@ -807,7 +812,7 @@ object OrdersT: TOrdersT
           TabOrder = 10
         end
         object UniLabel5: TUniLabel
-          Left = 1024
+          Left = 890
           Top = 16
           Width = 34
           Height = 13
@@ -817,7 +822,7 @@ object OrdersT: TOrdersT
           TabOrder = 12
         end
         object cbCancel: TUniComboBox
-          Left = 1024
+          Left = 890
           Top = 35
           Width = 81
           Height = 23
@@ -837,7 +842,7 @@ object OrdersT: TOrdersT
         end
         object UniButton1: TUniButton
           Left = 17
-          Top = 63
+          Top = 78
           Width = 25
           Height = 25
           ShowHint = True
@@ -849,7 +854,7 @@ object OrdersT: TOrdersT
         end
         object UniButton2: TUniButton
           Left = 46
-          Top = 63
+          Top = 78
           Width = 25
           Height = 25
           ShowHint = True
@@ -986,8 +991,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel6: TUniLabel
-          Left = 715
-          Top = 16
+          Left = 581
+          Top = 63
           Width = 78
           Height = 13
           Hint = ''
@@ -996,8 +1001,8 @@ object OrdersT: TOrdersT
           TabOrder = 16
         end
         object fDetailNum: TUniEdit
-          Left = 715
-          Top = 35
+          Left = 581
+          Top = 81
           Width = 167
           Hint = ''
           ShowHint = True
@@ -1009,7 +1014,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fOrderDate: TUniDateTimePicker
-          Left = 888
+          Left = 754
           Top = 35
           Width = 130
           Height = 21
@@ -1024,7 +1029,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel8: TUniLabel
-          Left = 888
+          Left = 754
           Top = 16
           Width = 65
           Height = 13
@@ -1032,6 +1037,54 @@ object OrdersT: TOrdersT
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072':'
           TabOrder = 18
+        end
+        object edtUpdDate: TUniDateTimePicker
+          Left = 977
+          Top = 35
+          Width = 130
+          Height = 21
+          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
+          ShowHint = True
+          DateTime = 45257.000000000000000000
+          DateFormat = 'dd/MM/yyyy'
+          TimeFormat = 'HH:mm:ss'
+          TabOrder = 19
+          ClearButton = True
+          EmptyText = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
+          OnKeyDown = fStatus2KeyDown
+        end
+        object UniLabel10: TUniLabel
+          Left = 977
+          Top = 16
+          Width = 97
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103':'
+          TabOrder = 20
+        end
+        object edtInvoice: TUniEdit
+          Left = 977
+          Top = 81
+          Width = 130
+          Hint = ''
+          ShowHint = True
+          Text = ''
+          TabOrder = 21
+          EmptyText = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
+          CheckChangeDelay = 200
+          ClearButton = True
+          OnKeyDown = fStatus2KeyDown
+        end
+        object UniLabel11: TUniLabel
+          Left = 977
+          Top = 63
+          Width = 87
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
+          TabOrder = 22
         end
       end
     end
@@ -1318,6 +1371,10 @@ object OrdersT: TOrdersT
       '   '
       '   !OrderDate'
       '   '
+      '   !updDateTime'
+      '   '
+      '   !Invoice'
+      '   '
       '  order by  o.[OrderID]  '
       '   ')
     Left = 575
@@ -1350,6 +1407,14 @@ object OrdersT: TOrdersT
       item
         Value = ''
         Name = 'ORDERDATE'
+      end
+      item
+        Value = Null
+        Name = 'UPDDATETIME'
+      end
+      item
+        Value = Null
+        Name = 'INVOICE'
       end>
     object QueryUserID: TFMTBCDField
       FieldName = 'UserID'
@@ -1684,14 +1749,6 @@ object OrdersT: TOrdersT
       ImageIndex = 0
       OnExecute = actUnSelectExecute
     end
-    object actGridSettingLoad: TAction
-      Category = 'Grid'
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-    end
-    object actGridSettingSave: TAction
-      Category = 'Grid'
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-    end
     object actGridSettingDefault: TAction
       Category = 'Grid'
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
@@ -1720,6 +1777,11 @@ object OrdersT: TOrdersT
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1103' '#1076#1077#1090#1072#1083#1080
       OnExecute = actGroupDetailNameEditExecute
     end
+    object actGroupSetFragileSign: TAction
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' Fragile'
+      Hint = #1043#1088#1091#1087#1087#1086#1074#1086#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' [B]Fragile[/B]'
+      OnExecute = actGroupSetFragileSignExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -1745,6 +1807,9 @@ object OrdersT: TOrdersT
       object N16: TUniMenuItem
         Action = actGroupDetailNameEdit
       end
+      object Fragile1: TUniMenuItem
+        Action = actGroupSetFragileSign
+      end
     end
     object N5: TUniMenuItem
       Caption = '-'
@@ -1769,14 +1834,6 @@ object OrdersT: TOrdersT
     end
     object N7: TUniMenuItem
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080
-      object N9: TUniMenuItem
-        Action = actGridSettingSave
-        Visible = False
-      end
-      object N8: TUniMenuItem
-        Action = actGridSettingLoad
-        Visible = False
-      end
       object N11: TUniMenuItem
         Action = actGridSettingDefault
       end

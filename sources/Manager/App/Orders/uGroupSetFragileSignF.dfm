@@ -1,9 +1,9 @@
-object GroupDetailNameEditF: TGroupDetailNameEditF
+object GroupSetFragileSignF: TGroupSetFragileSignF
   Left = 0
   Top = 0
-  ClientHeight = 172
-  ClientWidth = 671
-  Caption = #1043#1088#1091#1087#1087#1086#1074#1086#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1103' '#1076#1077#1090#1072#1083#1080
+  ClientHeight = 169
+  ClientWidth = 460
+  Caption = #1043#1088#1091#1087#1087#1086#1074#1086#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' Fragile'
   OnShow = UniFormShow
   BorderStyle = bsDialog
   OldCreateOrder = False
@@ -13,7 +13,7 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
   object tabCommon: TUniFieldContainer
     Left = 0
     Top = 0
-    Width = 671
+    Width = 460
     Height = 310
     Hint = ''
     ShowHint = True
@@ -22,33 +22,21 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
     TabOrder = 0
     ExplicitWidth = 667
     DesignSize = (
-      671
+      460
       310)
-    object edtDetailName: TUniEdit
-      Left = 21
-      Top = 40
-      Width = 610
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
-      ClearButton = True
-      ExplicitWidth = 606
-    end
     object lblDetailNameF: TUniLabel
       Left = 21
       Top = 21
-      Width = 84
+      Width = 49
       Height = 13
       Hint = ''
       ShowHint = True
-      Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
-      TabOrder = 4
+      Caption = #1055#1088#1080#1079#1085#1072#1082':'
+      TabOrder = 3
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 462
+      Left = 272
       Top = 126
       Width = 81
       Height = 27
@@ -57,13 +45,12 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akRight, akBottom]
       TabStop = False
-      TabOrder = 3
+      TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 458
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 549
+      Left = 359
       Top = 126
       Width = 82
       Height = 27
@@ -72,9 +59,21 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akRight, akBottom]
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 545
+    end
+    object cbRestrictions: TUniComboBox
+      Left = 21
+      Top = 40
+      Width = 420
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      Items.Strings = (
+        'Fragile')
+      TabOrder = 4
+      TabStop = False
+      IconItems = <>
     end
   end
 end

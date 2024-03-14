@@ -147,12 +147,8 @@ type
     actFilterClear: TAction;
     actSelect: TAction;
     actUnselect: TAction;
-    actGridSettingLoad: TAction;
-    actGridSettingSave: TAction;
     actGridSettingDefault: TAction;
     N7: TUniMenuItem;
-    N8: TUniMenuItem;
-    N9: TUniMenuItem;
     N11: TUniMenuItem;
     QueryDetailName: TWideStringField;
     QueryisCancelToClient: TBooleanField;
@@ -201,6 +197,12 @@ type
     UniPanel1: TUniPanel;
     UniLabel9: TUniLabel;
     lblOverVolume: TUniLabel;
+    edtUpdDate: TUniDateTimePicker;
+    UniLabel10: TUniLabel;
+    edtInvoice: TUniEdit;
+    UniLabel11: TUniLabel;
+    actGroupSetFragileSign: TAction;
+    Fragile1: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -247,6 +249,7 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure fStatus2KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure actGroupSetFragileSignExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -271,7 +274,14 @@ type
     ///</summary>
     procedure OrdersFCallBack(Sender: TComponent; AResult:Integer);
     procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
+    /// <summary>
+    ///  GroupDetailNameEditCallBack - CallBack обработчик группового изменения наименования детали
+    ///</summary>
     procedure GroupDetailNameEditCallBack(Sender: TComponent; AResult:Integer);
+    /// <summary>
+    ///  GroupSetFragileSignCallBack - CallBack обработчик группового изменения признака Fragile (хрупкий)
+    ///</summary>
+    procedure GroupSetFragileSignCallBack(Sender: TComponent; AResult:Integer);
     /// <summary>
     /// StateActionMenuCreate - Формирование списка меню/действий для состояния
     /// </summary>
@@ -316,7 +326,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule, uRefusalsT, uUploadingRefusals, uToast, uOrdersMessageF, uGroupDetailNameEditF;
+  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule, uRefusalsT, uUploadingRefusals, uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF;
 
 {$R *.dfm}
 
@@ -445,8 +455,8 @@ begin
   fDetailNum.Text:='';
 
   fOrderDate.Text := '';
-
-  //GridOpen();
+  edtUpdDate.Text := '';
+  edtInvoice.Text := '';
 end;
 
 procedure TOrdersT.actFilterExecute(Sender: TObject);
@@ -470,6 +480,13 @@ begin
   // групповое изменение наименования детали
   GroupDetailNameEditF.FormAction := TFormAction.acUpdate;
   GroupDetailNameEditF.ShowModal(GroupDetailNameEditCallBack);
+end;
+
+procedure TOrdersT.actGroupSetFragileSignExecute(Sender: TObject);
+begin
+  //Групповое изменение признака Fragile
+  GroupSetFragileSignF.FormAction := TFormAction.acUpdate;
+  GroupSetFragileSignF.ShowModal(GroupSetFragileSignCallBack);
 end;
 
 procedure TOrdersT.ActionExecuteAfter(AResult: TFormAction);
@@ -550,7 +567,7 @@ begin
     delete(s,length(s),1);
 
   FFilterTextClient := s;
-  //GridOpen;
+
   logger.Info('FFilterTextClient: ' + FFilterTextClient);
 end;
 
@@ -678,7 +695,7 @@ begin
     delete(s,length(s),1);
 
   FFilterTextPriceLogo := s;
-  //GridOpen;
+
   logger.Info('FFilterTextPriceLogo: ' + FFilterTextPriceLogo) ;
 end;
 
@@ -708,7 +725,7 @@ begin
     delete(s,length(s),1);
 
   FFilterTextStatus := s;
-  //GridOpen;
+
   logger.Info('FFilterTextStatus: ' + FFilterTextStatus);
 end;
 
@@ -780,6 +797,18 @@ begin
     else
       Query.MacroByName('OrderDate').Value := '';
 
+    if (edtUpdDate.Text <> '') and (edtUpdDate.Text <> '30.12.1899') then
+      Query.MacroByName('updDateTime').Value := ' and cast(o.updDateTime as date) = '''   + FormatDateTime('yyyymmdd', edtUpdDate.DateTime) + ''''
+    else
+      Query.MacroByName('updDateTime').Value := '';
+
+    if edtInvoice.Text <> '' then
+      Query.MacroByName('Invoice').Value := ' and o.Invoice like ''%'   + edtInvoice.Text + '%'''
+    else
+      Query.MacroByName('Invoice').Value := '';
+
+
+
     Query.Open();
 
     StateActionMenuCreate;
@@ -819,7 +848,24 @@ begin
     end;
   except
     on E: Exception do
-      logger.Info('TOrdersT.UserFCallBack Ошибка: ' + e.Message);
+      logger.Info('TOrdersT.GroupDetailNameEditCallBack Ошибка: ' + e.Message);
+  end;
+end;
+
+procedure TOrdersT.GroupSetFragileSignCallBack(Sender: TComponent;
+  AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+
+  try
+    if GroupSetFragileSignF.FormAction = acUpdate then
+    begin
+
+      ToastOK('Изменения успешно внесены!', unisession);
+    end;
+  except
+    on E: Exception do
+      logger.Info('TOrdersT.GroupSetFragileSignCallBack Ошибка: ' + e.Message);
   end;
 end;
 
@@ -856,6 +902,7 @@ begin
   actProtocol.Enabled := (actProtocol.Tag=1) and (Query.RecordCount>0);
 
   actGroupDetailNameEdit.Enabled := (actGroupDetailNameEdit.Tag=1) and (Marks.Count>0);
+  actGroupSetFragileSign.Enabled := (actGroupSetFragileSign.Tag=1) and (Marks.Count>0);
 end;
 
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -1169,6 +1216,7 @@ begin
   actSelect.Caption   := '';
   actUnSelect.Caption := '';
   fOrderDate.Text     := '';
+  edtUpdDate.Text     := '';
 
   FilterStatusCreate;
   FilterPriceLogoCreate();
@@ -1260,7 +1308,6 @@ end;
 
 procedure TOrdersT.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-
   if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
   begin
     if (Sender is Tunidbgrid) then
