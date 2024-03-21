@@ -16,7 +16,7 @@ as
      set t.Comment = nullif(@Comment, '')
         ,t.Flag    = case 
                        when isnull(@Comment, '') = '' 
-                         then isnull(t.Flag, 0) &~ 32
+                         then isnull(t.Flag, 0) & ~32
                          else isnull(t.Flag, 0) | 32 -- Сообщение для клиента
                      end 
 	from tOrders t (updlock)

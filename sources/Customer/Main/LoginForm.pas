@@ -18,11 +18,9 @@ type
     btnOk: TUniButton;
     edtUser: TUniEdit;
     edtPassword: TUniEdit;
-    btnCancel: TUniButton;
     UniCheckBox1: TUniCheckBox;
     lblReg: TUniLabel;
     lblReset: TUniLabel;
-    procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
     procedure UniLoginFormShow(Sender: TObject);
     procedure lblRegClick(Sender: TObject);
@@ -44,11 +42,6 @@ uses uniGUIVars, ServerModule, MainModule, uniGUIApplication, uUserRegisterF, uU
 function LoginF: TLoginF;
 begin
   Result := TLoginF(UniMainModule.GetFormInstance(TLoginF));
-end;
-
-procedure TLoginF.btnCancelClick(Sender: TObject);
-begin
-  self.ModalResult:=mrcancel;
 end;
 
 procedure TLoginF.btnOkClick(Sender: TObject);

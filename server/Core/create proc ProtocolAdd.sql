@@ -54,7 +54,7 @@ as
 
 	    ,o.flag     = case
 	                    when ns.Brief = 'InCancel' then isnull (o.flag, 0) | 4 -- признак "Отказан"
-						when act.Brief = 'ToReNew' then isnull (o.flag, 0) &~ 4 -- признак "Отказан"
+						when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
 					    else o.flag
 	                  end
         ,o.updDatetime = GetDate()

@@ -58,7 +58,7 @@ as
 
  Update o
     set o.EmexOrderID = @EmexOrderID
-       ,o.Flag        = ((o.Flag&~1) &~2)
+       ,o.Flag        = ((o.Flag & ~1) & ~2)
 	   ,o.updDatetime = GetDate()
    from pMovement p (nolock)
   inner join tOrders o (updlock)

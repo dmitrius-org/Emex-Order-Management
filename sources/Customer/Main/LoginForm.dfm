@@ -2,8 +2,8 @@ object LoginF: TLoginF
   Left = 0
   Top = 0
   Cursor = crHandPoint
-  ClientHeight = 365
-  ClientWidth = 800
+  ClientHeight = 352
+  ClientWidth = 547
   Caption = #1042#1093#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1091
   OnShow = UniLoginFormShow
   BorderStyle = bsNone
@@ -22,9 +22,9 @@ object LoginF: TLoginF
   LayoutAttribs.Align = 'stretch'
   TextHeight = 15
   object UniPanel1: TUniPanel
-    Left = 72
-    Top = 27
-    Width = 665
+    Left = 24
+    Top = 16
+    Width = 497
     Height = 313
     Hint = ''
     TabOrder = 0
@@ -33,27 +33,31 @@ object LoginF: TLoginF
     Caption = 'UniPanel1'
     LayoutConfig.Region = 'center'
     object UniLabel1: TUniLabel
-      Left = 106
-      Top = 79
-      Width = 113
-      Height = 13
+      Left = 146
+      Top = 53
+      Width = 32
+      Height = 15
       Hint = ''
-      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (email):'
+      Caption = 'Email:'
+      ParentFont = False
+      Font.Height = -12
       TabOrder = 1
     end
     object UniLabel2: TUniLabel
-      Left = 106
-      Top = 118
-      Width = 43
-      Height = 13
+      Left = 146
+      Top = 116
+      Width = 45
+      Height = 15
       Hint = ''
       Caption = #1055#1072#1088#1086#1083#1100':'
+      ParentFont = False
+      Font.Height = -12
       TabOrder = 2
     end
     object btnOk: TUniButton
-      Left = 428
-      Top = 220
-      Width = 105
+      Left = 256
+      Top = 236
+      Width = 115
       Height = 25
       Hint = ''
       Caption = #1042#1086#1081#1090#1080
@@ -61,8 +65,8 @@ object LoginF: TLoginF
       OnClick = btnOkClick
     end
     object edtUser: TUniEdit
-      Left = 308
-      Top = 79
+      Left = 146
+      Top = 74
       Width = 225
       Hint = ''
       MaxLength = 64
@@ -71,8 +75,8 @@ object LoginF: TLoginF
       InputType = 'email'
     end
     object edtPassword: TUniEdit
-      Left = 308
-      Top = 118
+      Left = 146
+      Top = 137
       Width = 225
       Hint = ''
       PasswordChar = '*'
@@ -81,29 +85,18 @@ object LoginF: TLoginF
       Text = ''
       TabOrder = 5
     end
-    object btnCancel: TUniButton
-      Left = 308
-      Top = 220
-      Width = 105
-      Height = 25
-      Hint = ''
-      Caption = #1054#1090#1084#1077#1085#1072
-      Cancel = True
-      TabOrder = 6
-      OnClick = btnCancelClick
-    end
     object UniCheckBox1: TUniCheckBox
-      Left = 308
-      Top = 167
+      Left = 146
+      Top = 197
       Width = 97
       Height = 17
       Hint = ''
       Caption = #1047#1072#1087#1086#1084#1085#1080#1090#1100
-      TabOrder = 7
+      TabOrder = 6
     end
     object lblReset: TUniLabel
-      Left = 384
-      Top = 296
+      Left = 285
+      Top = 165
       Width = 86
       Height = 17
       Cursor = crHandPoint
@@ -114,12 +107,12 @@ object LoginF: TLoginF
       Font.Height = -13
       ParentColor = False
       Color = clHighlight
-      TabOrder = 8
+      TabOrder = 7
       OnClick = lblResetClick
     end
     object lblReg: TUniLabel
-      Left = 204
-      Top = 296
+      Left = 18
+      Top = 293
       Width = 122
       Height = 17
       Cursor = crHandPoint
@@ -130,7 +123,7 @@ object LoginF: TLoginF
       Font.Height = -13
       ParentColor = False
       Color = clHighlight
-      TabOrder = 9
+      TabOrder = 8
       OnClick = lblRegClick
     end
   end

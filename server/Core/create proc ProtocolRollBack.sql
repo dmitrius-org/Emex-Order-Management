@@ -27,7 +27,7 @@ as
 		 ,o.AmountPurchaseF= null
 		 ,o.OverPricing    = null
 		 ,o.Warning        = ''
-		 ,o.Flag           = ((o.Flag&~1) &~2)
+		 ,o.Flag           = ((o.Flag & ~1) & ~2)
 		 --,o.updDatetime      = GetDate()
 	 from pAccrualAction p (nolock)
     inner join tOrders o (updlock)
@@ -46,7 +46,7 @@ as
 		-- ,o.AmountPurchaseF= null
 		-- ,o.OverPricing    = null
 		 --,o.Warning        = ''
-		  o.Flag           = ((o.Flag&~4))
+		  o.Flag           = ((o.Flag & ~4))
 		 ,o.isCancel         = 0
 		 --,o.updDatetime      = GetDate()
 	 from pAccrualAction p (nolock)

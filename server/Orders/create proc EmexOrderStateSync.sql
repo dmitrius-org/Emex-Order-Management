@@ -228,7 +228,7 @@ exec MovementArchive
                        else o.Warning
                      end
        ,o.Flag     = case
-                       when n.Brief  = 'Sent' then ((o.Flag&~1) &~2)
+                       when n.Brief  = 'Sent' then ((o.Flag & ~1) & ~2)
                        else o.Flag 
                      end
        ,o.updDatetime = GetDate()

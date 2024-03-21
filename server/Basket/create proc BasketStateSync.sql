@@ -86,7 +86,7 @@ as
 	                        end
 	   ,o.flag            = case
 	                          when @CoeffMaxAgree < o.OverPricing then isnull (o.flag, 0) | 1
-							  else isnull(o.flag, 0) &~ 1
+							  else (isnull(o.flag, 0) & ~1)
 	                        end
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
@@ -102,7 +102,7 @@ as
 							
 	   ,o.flag            = case
 	                          when p.Price = 0 then isnull (o.flag, 0) | 2
-							  else isnull(o.flag, 0) &~ 2
+							  else (isnull(o.flag, 0) & ~2)
 	                        end 
        ,o.updDatetime = GetDate()
    from pBasketDetails p (nolock)        
@@ -143,6 +143,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20240101', '0'
+exec setOV 'BasketStateSync', 'P', '20240101', '1'
 go
  

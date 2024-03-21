@@ -17,7 +17,7 @@ as
      set t.Comment = nullif(@Comment, '')
         ,t.Flag    = case 
                        when isnull(@Comment, '') = '' 
-                         then isnull(t.Flag, 0) &~ 64
+                         then (isnull(t.Flag, 0) & ~64)
                          else isnull(t.Flag, 0) | 64 -- Запрошен отказ
                      end 
 	from tOrders t (updlock)
