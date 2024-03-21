@@ -6,171 +6,39 @@ object OrdersT: TOrdersT
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
+  Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
   LayoutConfig.DockWhenAligned = False
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
   Align = alClient
-  Anchors = [akLeft, akTop, akRight, akBottom]
+  Anchors = []
   ShowHint = True
   ParentShowHint = False
   TabOrder = 0
-  object UniPanel: TUniPanel
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 1634
-    Height = 46
-    Hint = ''
-    Margins.Bottom = 0
-    ShowHint = True
-    Align = alTop
-    TabOrder = 0
-    BorderStyle = ubsNone
-    Caption = ''
-    Color = clBtnShadow
-    AlignmentControl = uniAlignmentClient
-    ParentAlignmentControl = False
-    Layout = 'fit'
-    LayoutAttribs.Align = 'top'
-    LayoutAttribs.Pack = 'start'
-    LayoutConfig.IgnorePosition = False
-    LayoutConfig.Height = '0'
-    LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
-    ExplicitWidth = 1396
-    object ToolBar: TUniToolBar
-      AlignWithMargins = True
-      Left = 3
-      Top = 0
-      Width = 1631
-      Height = 46
-      Hint = ''
-      Margins.Top = 0
-      Margins.Right = 0
-      Margins.Bottom = 0
-      ShowHint = True
-      ButtonHeight = 37
-      ButtonWidth = 146
-      Images = UniImageList
-      ShowCaptions = True
-      ButtonAutoWidth = True
-      LayoutConfig.IgnorePosition = False
-      LayoutConfig.Width = '100'
-      LayoutConfig.DockWhenAligned = False
-      Layout = 'hbox'
-      Align = alClient
-      TabOrder = 1
-      ParentColor = False
-      Color = clBtnFace
-      OverflowHandler = ohMenu
-      ExplicitWidth = 1393
-      object tbFormRefusalsOpen: TUniToolButton
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Action = actFormRefusalsOpen
-        ImageIndex = 7
-        IconAlign = iaLeft
-        Scale = bbsMedium
-        TabOrder = 1
-      end
-      object tbUploadingRefusalsEmex: TUniToolButton
-        AlignWithMargins = True
-        Left = 149
-        Top = 3
-        Margins.Left = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Action = actUploadingRefusalsEmex
-        ImageIndex = 8
-        IconAlign = iaLeft
-        Scale = bbsMedium
-        TabOrder = 5
-      end
-      object tbProtocol: TUniToolButton
-        AlignWithMargins = True
-        Left = 295
-        Top = 3
-        Margins.Left = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Action = actProtocol
-        ImageIndex = 4
-        IconAlign = iaLeft
-        Scale = bbsMedium
-        TabOrder = 4
-      end
-      object tbExecuteActionRollback: TUniToolButton
-        AlignWithMargins = True
-        Left = 441
-        Top = 3
-        Margins.Left = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Action = actExecuteActionRollback
-        ScreenMask.Enabled = True
-        ScreenMask.Message = #1046#1076#1080#1090#1077'. '#1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103'!'
-        ScreenMask.Target = Owner
-        ScreenMask.Color = clSkyBlue
-        IconAlign = iaLeft
-        Scale = bbsSmall
-        LayoutConfig.Cls = 'btn-order-action-undo'
-        TabOrder = 2
-      end
-      object tbActionExecute: TUniToolButton
-        AlignWithMargins = True
-        Left = 587
-        Top = 3
-        Width = 170
-        Margins.Left = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        ParentShowHint = False
-        Action = actExecuteActionEnabled
-        Style = tbsDropDown
-        DropdownMenu = ppExecute
-        ScreenMask.ShowMessage = False
-        IconAlign = iaLeft
-        Scale = bbsSmall
-        LayoutConfig.Cls = 'btn-order-action-execute'
-        TabOrder = 3
-      end
-    end
-  end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 49
+    Top = 0
     Width = 1640
-    Height = 547
+    Height = 596
     Hint = ''
     Margins.Bottom = 0
     ShowHint = True
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     Layout = 'fit'
-    LayoutAttribs.Align = 'stretch'
-    LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitWidth = 1402
     object Grid: TUniDBGrid
       Left = 0
       Top = 121
       Width = 1640
-      Height = 426
+      Height = 475
       Hint = ''
       Margins.Bottom = 0
       ShowHint = True
@@ -247,8 +115,6 @@ object OrdersT: TOrdersT
       Images = UniImageList
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
       LayoutConfig.ComponentCls = 'grid-order'
-      LayoutConfig.Height = '100'
-      LayoutConfig.Width = '100'
       BorderStyle = ubsNone
       Align = alClient
       Anchors = []
@@ -709,6 +575,7 @@ object OrdersT: TOrdersT
           Title.Caption = #1055#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1073#1098#1077#1084#1072
           Width = 123
           Hint = #1056#1072#1079#1085#1080#1094#1072': '#1054#1073#1098#1077#1084#1085#1099#1081' '#1074#1077#1089' - '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'.'
+          Sortable = True
         end>
     end
     object pFilter: TUniPanel
@@ -723,6 +590,9 @@ object OrdersT: TOrdersT
       ShowCaption = False
       Caption = 'pFilter'
       ParentAlignmentControl = False
+      LayoutAttribs.Align = 'top'
+      LayoutAttribs.Pack = 'start'
+      LayoutConfig.Region = 'north'
       object gbFilter: TUniGroupBox
         AlignWithMargins = True
         Left = 4
@@ -735,8 +605,6 @@ object OrdersT: TOrdersT
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        ExplicitWidth = 1394
-        ExplicitHeight = 96
         object UniLabel1: TUniLabel
           Left = 17
           Top = 16
@@ -847,7 +715,9 @@ object OrdersT: TOrdersT
           Height = 25
           ShowHint = True
           Action = actSelect
+          Caption = #1046#1076#1080#1090#1077'. '#1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103'!'
           TabOrder = 14
+          ScreenMask.Message = '0,5'
           ImageIndex = 1
           IconAlign = iaCenter
           IconPosition = ipButtonEdge
@@ -1105,6 +975,7 @@ object OrdersT: TOrdersT
       Layout = 'column'
       LayoutAttribs.Columns = 4
       LayoutConfig.Width = '100'
+      LayoutConfig.Region = 'center'
       LayoutConfig.ColumnWidth = 175.000000000000000000
       object UniPanel3: TUniPanel
         Left = 0
@@ -1754,16 +1625,6 @@ object OrdersT: TOrdersT
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       OnExecute = actGridSettingDefaultExecute
     end
-    object actFormRefusalsOpen: TAction
-      Caption = #1054#1090#1082#1072#1079#1099
-      ImageIndex = 7
-      OnExecute = actFormRefusalsOpenExecute
-    end
-    object actUploadingRefusalsEmex: TAction
-      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1086#1090#1082#1072#1079#1099' Emex'
-      ImageIndex = 8
-      OnExecute = actUploadingRefusalsEmexExecute
-    end
     object actSetComment: TAction
       Caption = #1053#1072#1087#1080#1089#1072#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1091
       Hint = #1053#1072#1087#1080#1089#1072#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1091
@@ -1815,10 +1676,12 @@ object OrdersT: TOrdersT
       Caption = '-'
     end
     object Emex1: TUniMenuItem
-      Action = actUploadingRefusalsEmex
+      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1086#1090#1082#1072#1079#1099' Emex'
+      ImageIndex = 8
     end
     object N13: TUniMenuItem
-      Action = actFormRefusalsOpen
+      Caption = #1054#1090#1082#1072#1079#1099
+      ImageIndex = 7
     end
     object N10: TUniMenuItem
       Caption = '-'
@@ -4003,25 +3866,5 @@ object OrdersT: TOrdersT
       0000000000000000F800000FC000007F0000000000000000FE00003FE00000FF
       0000000000000000FFC001FFF80001FF00000000000000000000000000000000
       000000000000}
-  end
-  object UniFileUpload: TUniFileUpload
-    Filter = '.xls,.xlsm'
-    Title = #1042#1099#1073#1077#1088#1080#1090#1077' '#1092#1072#1081#1083#1099' '#1086#1090#1082#1072#1079#1072' '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080
-    Messages.Uploading = 'Uploading...'
-    Messages.PleaseWait = 'Please Wait'
-    Messages.Cancel = #1054#1090#1084#1077#1085#1080#1090#1100
-    Messages.Processing = 'Processing...'
-    Messages.UploadError = 'Upload Error'
-    Messages.Upload = #1047#1072#1075#1088#1091#1079#1080#1090#1100
-    Messages.NoFileError = 'Please select a file'
-    Messages.BrowseText = #1042#1099#1073#1088#1072#1090#1100'...'
-    Messages.UploadTimeout = 'Timeout occurred...'
-    Messages.MaxSizeError = 'File is bigger than maximum allowed size'
-    Messages.MaxFilesError = 'You can upload maximum %d files.'
-    Width = 400
-    MultipleFiles = True
-    OnMultiCompleted = UniFileUploadMultiCompleted
-    Left = 801
-    Top = 253
   end
 end

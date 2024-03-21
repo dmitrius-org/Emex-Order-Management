@@ -2,8 +2,9 @@ object InstrumentT: TInstrumentT
   Left = 0
   Top = 0
   Width = 862
-  Height = 480
+  Height = 527
   OnCreate = UniFrameCreate
+  Layout = 'fit'
   LayoutConfig.Width = '0'
   TabOrder = 0
   object UniPanelTop: TUniPanel
@@ -27,7 +28,7 @@ object InstrumentT: TInstrumentT
     Left = 0
     Top = 40
     Width = 862
-    Height = 440
+    Height = 487
     Hint = ''
     Align = alClient
     TabOrder = 1
@@ -37,25 +38,26 @@ object InstrumentT: TInstrumentT
     Layout = 'border'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
+    ExplicitHeight = 440
     object UniPanelleft: TUniPanel
       Left = 1
       Top = 1
       Width = 487
-      Height = 438
+      Height = 485
       Hint = ''
       Align = alLeft
       TabOrder = 1
       ShowCaption = False
       Caption = 'UniPanel1'
-      LayoutAttribs.Pack = 'start'
-      LayoutConfig.Width = '0'
+      Layout = 'fit'
       LayoutConfig.Split = True
       LayoutConfig.Region = 'west'
+      ExplicitHeight = 438
       object twInstrument: TUniTreeView
         Left = 1
         Top = 1
         Width = 485
-        Height = 436
+        Height = 483
         Hint = ''
         Items.FontData = {0100000000}
         Images = UniImageList
@@ -67,17 +69,17 @@ object InstrumentT: TInstrumentT
         BorderStyle = ubsNone
         LayoutConfig.Cls = 'twInstrument'
         LayoutConfig.IgnorePosition = False
-        LayoutConfig.Region = 'west'
         OnClick = twInstrumentClick
         OnDblClick = twInstrumentDblClick
         OnCellContextClick = twInstrumentCellContextClick
+        ExplicitHeight = 436
       end
     end
     object UniPanelCenter: TUniPanel
       Left = 488
       Top = 1
       Width = 373
-      Height = 438
+      Height = 485
       Hint = ''
       Align = alClient
       TabOrder = 2
@@ -89,6 +91,7 @@ object InstrumentT: TInstrumentT
       Layout = 'fit'
       LayoutConfig.Width = '100'
       LayoutConfig.Region = 'center'
+      ExplicitHeight = 438
     end
   end
   object UniActionList: TUniActionList

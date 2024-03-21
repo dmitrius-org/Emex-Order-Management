@@ -1,11 +1,14 @@
 if OBJECT_ID('ClientRegistrationRequest') is not null
     drop proc ClientRegistrationRequest
+go
+if OBJECT_ID('CustomerRegistrationRequest') is not null
+    drop proc CustomerRegistrationRequest
 /*
-  ClientRegistrationRequest - запрос на регистрацию клиента
+  CustomerRegistrationRequest - запрос на регистрацию клиента
                             - 
 */
 go
-create proc ClientRegistrationRequest
+create proc CustomerRegistrationRequest
               @ClientID  numeric(18,0) output -- 
 			 ,@Hash      nvarchar(512) output
 			 ,@Email     nvarchar(64)
@@ -109,7 +112,7 @@ as
 exit_:
 return @r
 go
-grant exec on ClientRegistrationRequest to public
+grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'ClientRegistrationRequest', 'P', '20240101', '0'
+exec setOV 'CustomerRegistrationRequest', 'P', '20240320', '0'
 go

@@ -5,6 +5,7 @@ object PricesT: TPricesT
   Height = 502
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
+  Layout = 'fit'
   LayoutConfig.Width = '0'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -101,12 +102,8 @@ object PricesT: TPricesT
     Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
-    LayoutConfig.Height = '100'
     LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1027
+    LayoutConfig.Region = 'north'
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
@@ -120,16 +117,13 @@ object PricesT: TPricesT
       Images = ImageList32
       ShowCaptions = True
       LayoutConfig.IgnorePosition = False
+      LayoutConfig.Region = 'center'
       LayoutConfig.DockWhenAligned = False
       Align = alClient
       TabOrder = 1
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1027
-      ExplicitHeight = 67
       object UniToolButton1: TUniToolButton
         Left = 0
         Top = 0
@@ -174,8 +168,7 @@ object PricesT: TPricesT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
-    ExplicitTop = 67
-    ExplicitHeight = 435
+    LayoutConfig.Region = 'center'
     object Grid: TUniDBGrid
       Left = 0
       Top = 0

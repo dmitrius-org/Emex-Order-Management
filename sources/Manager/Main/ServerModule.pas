@@ -78,7 +78,7 @@ begin
   Title := 'Emex Manager';
 
   {$IFDEF UNIGUI_VCL}
-  ExploreWeb('http://127.0.0.1:8077');
+  ExploreWeb('http://127.0.0.1:8078');
   {$ENDIF}
   MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
 
@@ -87,6 +87,12 @@ begin
   FDManager.DriverDefFileAutoLoad := True;
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
+
+  Logger.AddLog('TUniServerModule.SessionTimeout', FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout']);
+  if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger > 0 then
+    SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger
+  else
+    SessionTimeout := 600000; // 10 минут
 
   Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
 

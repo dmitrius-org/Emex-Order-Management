@@ -4,6 +4,7 @@ object NodesT: TNodesT
   Width = 1065
   Height = 574
   OnCreate = UniFrameCreate
+  Layout = 'fit'
   LayoutConfig.Width = '0'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -91,12 +92,8 @@ object NodesT: TNodesT
     Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
-    LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1065
+    LayoutConfig.Region = 'north'
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
@@ -117,10 +114,6 @@ object NodesT: TNodesT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1065
-      ExplicitHeight = 67
       object UniToolButton1: TUniToolButton
         Left = 0
         Top = 0
@@ -173,8 +166,7 @@ object NodesT: TNodesT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
-    ExplicitTop = 67
-    ExplicitHeight = 507
+    LayoutConfig.Region = 'center'
     object Grid: TUniDBGrid
       Left = 0
       Top = 0

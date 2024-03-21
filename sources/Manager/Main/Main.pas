@@ -9,24 +9,11 @@ uses
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
-  Vcl.ImgList
+  Vcl.ImgList, uniImage
   ;
 
 type
   TMainForm = class(TUniForm)
-    UniPanelParent: TUniPanel;
-    UniPanelCentral: TUniPanel;
-    UniContainerPanel: TUniContainerPanel;
-    Menu: TUniMenuItems;
-    mnHome: TUniMenuItem;
-    pcMain: TUniPageControl;
-    mnUser: TUniMenuItem;
-    mnSettings: TUniMenuItem;
-    mnTasks: TUniMenuItem;
-    ImageList: TUniNativeImageList;
-    UniPanelTop: TUniPanel;
-    UniPanel: TUniPanel;
-    btnProfile: TUniMenuButton;
     pmProfile: TUniPopupMenu;
     ActionList: TUniActionList;
     actExit: TAction;
@@ -40,6 +27,14 @@ type
     MainMenuImage: TUniNativeImageList;
     MainMenu: TUniTreeMenu;
     UniNativeImageList1: TUniNativeImageList;
+    LogoPanel: TUniSimplePanel;
+    LogoImage: TUniImage;
+    LogoLabel: TUniLabel;
+    MainMenuPanel: TUniPanel;
+    MainMenuPanelDetail: TUniPanel;
+    UniContainerPanel: TUniContainerPanel;
+    UniPanel: TUniPanel;
+    pcMain: TUniPageControl;
     procedure UniFormShow(Sender: TObject);
     procedure MainMenuClick(Sender: TObject);
     procedure TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -47,21 +42,25 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
     procedure actinfoExecute(Sender: TObject);
-    procedure UniFormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
   private
     { Private declarations }
     FormNames : TStrings;
+
+    Profile : TUniTreeNode;
+
     /// <summary>
     ///  ConstructNavigator - создание меню пользователя
     ///</summary>
     procedure ConstructNavigator;
 
+    procedure SetMainMenuMicroName;
+
+    procedure ProfileMenuAdd();
+
     function CreateImageIndex(filename: string): Integer;
 
     function FindNodeByID(AID: Integer): TUniTreeNode;
-
-    procedure SetMainMenuMicroName;
   public
     { Public declarations }
   end;
@@ -198,7 +197,14 @@ begin
     Exit();
   end;
 
-  if ((Nd.Count = 0) and (Nd.Text <> '')) then
+  // под 999 меню профиль
+  if (Nd.Tag = -999) and (Nd.Action <> nil)  then
+  begin
+    Nd.Action.Execute;
+    Exit();
+  end;
+
+  if ((Nd.Count = 0) and (Nd.Text <> '') and (Nd.Tag<>-999)) then
   begin
     Ts := Nd.Data;
     if not Assigned(Ts) then
@@ -208,17 +214,21 @@ begin
 
       if Nd.Text <> 'Главная' then
         Ts.Closable   := True;
+
       Ts.OnClose    := TabMainClose;
       Ts.Tag        := NativeInt(Nd);
       Ts.Caption    := Nd.Text;
       Ts.ImageIndex := Nd.ImageIndex;
       Ts.BorderStyle:=ubsNone;
+      Ts.Layout     := 'fit';
 
       FClassName := FormNames.Values[Nd.Text];
       FrC := TUniFrameClass(FindClass(FClassName));
 
       Fr := FrC.Create(Self);
       Fr.Align := alClient;
+//      Fr.Color := clRed;
+      //Fr.Layout := 'fit';
       Fr.Parent := Ts;
 
       Nd.Data := Ts;
@@ -244,12 +254,46 @@ begin
   end;// if Assigned(N) then
 end;
 
+procedure TMainForm.ProfileMenuAdd;
+begin
+  Profile := MainMenu.Items.Add(nil, 'О программе');
+  Profile.ImageIndex := 2;
+  Profile.Tag:=-999;
+
+  with MainMenu.Items.Add(Profile, 'О системе') do
+  begin
+      Tag := -999;
+      Action := actinfo;
+      ImageIndex := 18;
+  end;
+
+  with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
+  begin
+      Tag := -999;
+      Action := actEditPas;
+      ImageIndex := 16;
+  end;
+
+  with MainMenu.Items.Add(Profile, 'Выйти из программы') do
+  begin
+      Tag := -999;
+      Action := actExit;
+      ImageIndex := 17;
+  end;
+end;
+
 procedure TMainForm.SetMainMenuMicroName;
 begin
   if MainMenu.Micro then
-      MainMenu.Items[0].Text := 'Развернуть'
+  begin
+      MainMenu.Items[0].Text := 'Развернуть';
+      MainMenuPanel.Width := MainMenu.MicroWidth ;
+  end
   else
+  begin
       MainMenu.Items[0].Text := 'Свернуть';
+      MainMenuPanel.Width := 300;
+  end;
 end;
 
 procedure TMainForm.TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -283,17 +327,20 @@ end;
 
 procedure TMainForm.UniFormShow(Sender: TObject);
 begin
-  btnProfile.Caption := UniMainModule.AUserName;
+  pcMain.Layout := 'fit';
 
   Grant.UserGrantLoad;
 
+  MainMenu.Width := 300;
   MainMenu.Items[0].Tag := -1;
 
   SetMainMenuMicroName;
 
   ConstructNavigator;
 
-  if MainMenu.Items.Count > 0 then
+  ProfileMenuAdd;
+
+  if MainMenu.Items.Count > 1 then
   begin
     MainMenu.Items[1].Selected := True;
     MainMenuClick(Sender);

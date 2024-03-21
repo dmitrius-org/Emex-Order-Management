@@ -4,6 +4,7 @@ object ClientsTypeT: TClientsTypeT
   Width = 1065
   Height = 574
   OnCreate = UniFrameCreate
+  Layout = 'fit'
   LayoutConfig.Width = '100'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -72,10 +73,9 @@ object ClientsTypeT: TClientsTypeT
     end
   end
   object UniPanel: TUniPanel
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 1059
+    Left = 0
+    Top = 0
+    Width = 1065
     Height = 67
     Hint = ''
     Margins.Bottom = 0
@@ -91,19 +91,16 @@ object ClientsTypeT: TClientsTypeT
     Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
-    LayoutConfig.IgnorePosition = False
-    LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1065
+    LayoutConfig.Region = 'north'
+    ExplicitLeft = 3
+    ExplicitTop = 3
+    ExplicitWidth = 1059
     object ToolBar: TUniToolBar
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 1053
-      Height = 64
+      Left = 0
+      Top = 0
+      Width = 1065
+      Height = 67
       Hint = ''
       Margins.Bottom = 0
       ShowHint = True
@@ -111,56 +108,66 @@ object ClientsTypeT: TClientsTypeT
       ButtonWidth = 90
       Images = ImageList32
       ShowCaptions = True
-      LayoutConfig.IgnorePosition = False
-      LayoutConfig.DockWhenAligned = False
       Align = alClient
       TabOrder = 1
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1065
-      ExplicitHeight = 67
+      ExplicitLeft = 3
+      ExplicitTop = 3
+      ExplicitWidth = 1053
+      ExplicitHeight = 64
       object UniToolButton1: TUniToolButton
-        Left = 0
-        Top = 0
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
         ShowHint = True
         Action = actAdd
         ImageIndex = 1
         TabOrder = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
       end
       object UniToolButton2: TUniToolButton
-        Left = 90
-        Top = 0
+        AlignWithMargins = True
+        Left = 99
+        Top = 3
         ShowHint = True
         Action = actEdit
         ImageIndex = 3
         TabOrder = 2
+        ExplicitLeft = 90
+        ExplicitTop = 0
       end
       object UniToolButton3: TUniToolButton
-        Left = 180
-        Top = 0
+        AlignWithMargins = True
+        Left = 195
+        Top = 3
         ShowHint = True
         Action = actView
         ImageIndex = 2
         TabOrder = 3
+        ExplicitLeft = 180
+        ExplicitTop = 0
       end
       object UniToolButton4: TUniToolButton
-        Left = 270
-        Top = 0
+        AlignWithMargins = True
+        Left = 291
+        Top = 3
         ShowHint = True
         Action = actDelete
         ImageIndex = 0
         TabOrder = 4
+        ExplicitLeft = 270
+        ExplicitTop = 0
       end
     end
   end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 70
+    Top = 67
     Width = 1065
-    Height = 504
+    Height = 507
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -170,17 +177,16 @@ object ClientsTypeT: TClientsTypeT
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     Layout = 'fit'
-    LayoutAttribs.Align = 'stretch'
-    LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitTop = 67
-    ExplicitHeight = 507
+    LayoutConfig.Region = 'center'
+    ExplicitTop = 70
+    ExplicitHeight = 504
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1065
-      Height = 504
+      Height = 507
       Hint = ''
       ShowHint = True
       BodyRTL = False

@@ -1,9 +1,8 @@
 object HomeF: THomeF
-  AlignWithMargins = True
   Left = 0
   Top = 0
   Width = 845
-  Height = 480
+  Height = 609
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'

@@ -41,7 +41,29 @@ SELECT o.[OrderID]
       ,o.[VolumeKG]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
-      ,( o.[VolumeKG] - o.[WeightKG] ) OverVolume    -- превышение объема, разница Объемный вес - Физический вес по данным прайс-листа.
+      
+	  /* превышение объема, разница Объемный вес - Физический вес по данным прайс-листа.
+	  Верно считать так:
+
+		Если не указан фактический вес и фактический объем:
+		Объем - Вес. Если итог < 0, ставим 0
+		Если указан фактически вес и фактический объем:
+		Фактический Объем - Фактический Вес. Если итог < 0, ставим 0
+	  */ 
+	  ,case
+	     when isnull(p.[WeightKGF], '') = '' and isnull(p.[VolumeKGF], '') = '' 
+		 then case
+		        when o.[VolumeKG] - o.[WeightKG]  >= 0 then o.[VolumeKG] - o.[WeightKG] 
+		        else 0    
+		      end
+
+         else case
+		        when p.[VolumeKGF] - p.[WeightKGF]  >= 0 then p.[VolumeKGF] - p.[WeightKGF]
+			    else 0    
+		      end
+
+	   end OverVolume
+
       ,o.[Margin]
       ,o.[MarginF]
       ,o.[Profit]

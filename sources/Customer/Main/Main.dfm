@@ -48,6 +48,7 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'border'
+      LayoutConfig.Region = 'center'
       ExplicitWidth = 706
       ExplicitHeight = 527
       object UniPanelCentral: TUniPanel
@@ -162,6 +163,7 @@ object MainForm: TMainForm
     ParentFont = False
     Font.Color = clSilver
     TabOrder = 1
+    ExplicitTop = 512
   end
   object Menu: TUniMenuItems
     Left = 409

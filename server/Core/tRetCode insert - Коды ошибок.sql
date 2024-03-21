@@ -4,7 +4,7 @@ insert tRetCode (RetCode, Message) select 1,   'Пользователь с за
 insert tRetCode (RetCode, Message) select 2,   'Пользователь должен иметь права [sysadmin]!'
 insert tRetCode (RetCode, Message) select 3,   'Ошибка при добавлении пользователя!'
 insert tRetCode (RetCode, Message) select 4,   'Ошибка при удалении пользователя!'
-insert tRetCode (RetCode, Message) select 5,   'Старый и новый пароли не должны совподать!'
+insert tRetCode (RetCode, Message) select 5,   'Старый и новый пароли не должны совпадать!'
 insert tRetCode (RetCode, Message) select 6,   'Удаление запрещено, пользователь используется в таблице заказов!'
 insert tRetCode (RetCode, Message) select 7,   'Группа с заданным сокращением существует!'
 insert tRetCode (RetCode, Message) select 8,   'Удаление запрещено, в группе имеются пользователи!'
@@ -12,6 +12,9 @@ insert tRetCode (RetCode, Message) select 9,   'Связь пользовате�
 insert tRetCode (RetCode, Message) select 10,  'Клиент существует!'
 insert tRetCode (RetCode, Message) select 11,  'Удаление запрещено, пользователь входит в группу прав!'
 insert tRetCode (RetCode, Message) select 12,  'Не заполнено обязательное поле!'
+insert tRetCode (RetCode, Message) select 13,  'Email в системе не зарегистрирован!'
+insert tRetCode (RetCode, Message) select 14,  'Ошибка сброса пароля!'
+insert tRetCode (RetCode, Message) select 15,  'Пароль не может быть пустым!'
 
 -- tClients
 insert tRetCode (RetCode, Message) select 100, 'Клиент с заданным наименованием существует!'

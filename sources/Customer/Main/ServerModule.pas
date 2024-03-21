@@ -78,6 +78,7 @@ begin
       Logger.AddLog('TUniServerModule Server',      FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server']);
       Logger.AddLog('TUniServerModule Database',    FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Database']);
       Logger.AddLog('TUniServerModule User_name',   FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['User_name']);
+
       Logger.AddLog('TUniServerModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
       FDConnection.Connected := True;
 
@@ -129,6 +130,12 @@ begin
   FDManager.DriverDefFileAutoLoad := True;
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
+
+  Logger.AddLog('TUniServerModule.SessionTimeout', FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout']);
+  if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger > 0 then
+    SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger
+  else
+    SessionTimeout := 600000; // 10 минут
 
   {$IFDEF DEBUG}
       Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+

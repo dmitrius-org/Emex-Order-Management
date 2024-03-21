@@ -5,6 +5,7 @@ object UsersT: TUsersT
   Height = 574
   OnCreate = UniFrameCreate
   OnReady = UniFrameReady
+  Layout = 'fit'
   LayoutConfig.Width = '0'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -29,9 +30,9 @@ object UsersT: TUsersT
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     Layout = 'fit'
-    LayoutConfig.Height = '0'
+    LayoutAttribs.Align = 'top'
+    LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '0'
-    LayoutConfig.DockWhenAligned = False
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -118,6 +119,7 @@ object UsersT: TUsersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
+    LayoutConfig.Region = 'center'
     object GridUsers: TUniDBGrid
       Left = 0
       Top = 0

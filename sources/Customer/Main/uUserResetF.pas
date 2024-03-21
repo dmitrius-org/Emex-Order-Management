@@ -1,20 +1,20 @@
-﻿unit uUserRegisterF;
+﻿unit uUserResetF;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel;
+  uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel,
+  uniPanel;
 
 type
-  TUserRegisterF = class(TUniForm)
+  TUserResetF = class(TUniForm)
     edtEmail: TUniEdit;
-    edtPassword: TUniEdit;
     btnCancel: TUniButton;
     btnOk: TUniButton;
-    UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
+    UniContainerPanel1: TUniContainerPanel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -32,16 +32,16 @@ uses
 {$R *.dfm}
 
 
-procedure TUserRegisterF.btnCancelClick(Sender: TObject);
+procedure TUserResetF.btnCancelClick(Sender: TObject);
 begin
   self.ModalResult:=mrcancel;
 end;
 
-procedure TUserRegisterF.btnOkClick(Sender: TObject);
+procedure TUserResetF.btnOkClick(Sender: TObject);
 var Gmail: TcfsGmail;
 begin
 
-  if (edtEmail.Text = '') or (edtPassword.text = '') then
+  if (edtEmail.Text = '')then
   begin
     MessageDlg('Заполните все поля!', mtError, [mbOK]);
     Exit;
@@ -52,15 +52,14 @@ begin
 
     sql.Open(' declare @R int, @ClientID numeric(18,0) '+
              '        ,@Hash nvarchar(512) ' +
-             ' exec @R=  CustomerRegistrationRequest '+
+             ' exec @R= CustomerResetPasswordRequest '+
              '          @ClientID = @ClientID out  '+
              '         ,@Hash     = @Hash     out  '+
              '         ,@Email    = :Email         '+
-             '         ,@Password = :Password      '+
              ''+
              ' Select @R as R, @ClientID as ClientID, @Hash as Hash' ,
-             ['Email', 'Password'],
-             [edtEmail.Text, edtPassword.text]);
+             ['Email'],
+             [edtEmail.Text]);
 
     RetVal.Code := sql.Q.FieldByName('R').Value;
 
@@ -79,17 +78,16 @@ begin
         Port     := Sql.GetSetting('SMTP_Port', 0);
         RegLink  := Sql.GetSetting('SMTP_RegistrationLink');
 
-
         var htmlBody: string;
-         RegLink := GetSpecialPath(RegLink, '/');
+        RegLink := GetSpecialPath(RegLink, '/');
 
         htmlBody :=      ''+
           '<html>  '+
           '<head>  '+
-          '<title>Подтвердите Email (search.booster.ae)</title>'+
+          '<title>Сброс пароля (search.booster.ae)</title>'+
           '</head> '+
           '<body>  '+
-          '<p>Для завершения регистрации перейдите по ссылке: <a href="' +RegLink + 'confirmed?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
+          '<p>Для завершения процедуры сброса пароля перейдите по ссылке: <a href="' +RegLink + 'reset?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
           '</body> '+
           '</html> ';
 
@@ -97,9 +95,9 @@ begin
         try
             try
               Gmail.Connect;
-              Gmail.Send([edtEmail.Text], 'Подтвердите Email', '', htmlBody, '');
+              Gmail.Send([edtEmail.Text], 'Сброс пароля', '', htmlBody, '');
 
-              MessageDlg('На вашу почту отправлена ссылка для подтверждения регистрации!', mtInformation, [mbOK]);
+              MessageDlg('На вашу почту отправлена ссылка для сброса пароля!', mtInformation, [mbOK]);
             except
               on E: Exception do
                  raise Exception.Create(E.Message);
@@ -116,13 +114,12 @@ begin
   end;
 end;
 
-procedure TUserRegisterF.UniFormShow(Sender: TObject);
+procedure TUserResetF.UniFormShow(Sender: TObject);
 begin
   {$IFDEF DEBUG}
   if UniServerModule.FDManager.IsConnectionDef('Connection') then
   begin
     edtEmail.Text := UniServerModule.FDManager.ConnectionDefs[0].Params.Values['User_nameT'];
-    edtPassword.Text := UniServerModule.FDManager.ConnectionDefs[0].Params.Values['PasswordT'];
   end;
   {$ENDIF}
 end;

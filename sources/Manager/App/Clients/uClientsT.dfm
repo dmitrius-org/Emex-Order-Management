@@ -4,6 +4,7 @@ object ClientsT: TClientsT
   Width = 1065
   Height = 574
   OnCreate = UniFrameCreate
+  Layout = 'fit'
   LayoutConfig.Width = '100'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -72,13 +73,11 @@ object ClientsT: TClientsT
     end
   end
   object UniPanel: TUniPanel
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 1059
+    Left = 0
+    Top = 0
+    Width = 1065
     Height = 67
     Hint = ''
-    Margins.Bottom = 0
     ShowHint = True
     Align = alTop
     TabOrder = 1
@@ -91,18 +90,17 @@ object ClientsT: TClientsT
     Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
-    LayoutConfig.IgnorePosition = False
-    LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
+    LayoutConfig.Region = 'north'
+    ExplicitLeft = 3
+    ExplicitTop = 3
+    ExplicitWidth = 1059
     object ToolBar: TUniToolBar
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 1053
-      Height = 64
+      Left = 0
+      Top = 0
+      Width = 1065
+      Height = 67
       Hint = ''
-      Margins.Bottom = 0
       ShowHint = True
       ButtonHeight = 53
       ButtonWidth = 112
@@ -116,6 +114,10 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
+      ExplicitLeft = 3
+      ExplicitTop = 3
+      ExplicitWidth = 1053
+      ExplicitHeight = 64
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -202,9 +204,9 @@ object ClientsT: TClientsT
   end
   object UniPanel2: TUniPanel
     Left = 0
-    Top = 70
+    Top = 67
     Width = 1065
-    Height = 504
+    Height = 507
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -218,11 +220,14 @@ object ClientsT: TClientsT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
+    LayoutConfig.Region = 'center'
+    ExplicitTop = 70
+    ExplicitHeight = 504
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1065
-      Height = 504
+      Height = 507
       Hint = ''
       ShowHint = True
       BodyRTL = False
@@ -252,8 +257,7 @@ object ClientsT: TClientsT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-      LayoutConfig.Height = '100'
-      LayoutConfig.Width = '100'
+      LayoutConfig.Flex = 1
       BorderStyle = ubsNone
       Align = alClient
       Anchors = []

@@ -42,7 +42,7 @@ uses
   InfoForm in 'Main\InfoForm.pas' {Info: TUniForm},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uOrdersT2 in 'App\Orders\uOrdersT2.pas' {OrdersT2: TUniFrame},
-  uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm},
+  uUserResetF in 'Main\uUserResetF.pas' {UserResetF: TUniForm},
   uSearch in 'App\uSearch.pas' {SearchF: TUniFrame},
   uOrderF in 'App\Orders\uOrderF.pas' {OrderF: TUniForm},
   uEmail.gmail in '..\Common\Common\uEmail.gmail.pas',
@@ -52,7 +52,8 @@ uses
   uToast in '..\Common\CommonApp\uToast.pas',
   uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
   uGridUtils in '..\Common\Common\uGridUtils.pas',
-  uApp in '..\Common\Common\uApp.pas';
+  uApp in '..\Common\Common\uApp.pas',
+  uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm};
 
 {$R *.res}
 

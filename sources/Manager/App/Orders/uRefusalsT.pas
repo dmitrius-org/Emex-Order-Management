@@ -13,10 +13,10 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, uCommonType;
+  uUserF, uGrant, uCommonType, uniFileUpload;
 
 type
-  TRefusalsT = class(TUniForm)
+  TRefusalsT = class(TUniFrame)
     DataSource: TDataSource;
     ImageList32: TUniImageList;
     ActionList: TUniActionList;
@@ -26,36 +26,35 @@ type
     N3: TUniMenuItem;
     N4: TUniMenuItem;
     ImageList16: TUniImageList;
-    hdFilter: TUniHiddenPanel;
-    fUserID: TUniEdit;
-    fName: TUniEdit;
-    fBrief: TUniEdit;
-    fisAdmin: TUniCheckBox;
     actRefreshAll: TAction;
     N5: TUniMenuItem;
     N6: TUniMenuItem;
-    fisBlock: TUniCheckBox;
-    UniPanel: TUniPanel;
+    TopPanel: TUniPanel;
     ToolBar: TUniToolBar;
     UniToolButton2: TUniToolButton;
     UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
-    UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
-    UniHiddenPanel: TUniHiddenPanel;
     Query: TFDQuery;
     QueryOrderRefusalsID: TFMTBCDField;
     QueryFileName: TWideStringField;
     UpdateSQL: TFDUpdateSQL;
     QueryFlag: TIntegerField;
     QueryInDateTime: TSQLTimeStampField;
+    UniToolButton1: TUniToolButton;
+    actUploadingRefusalsEmex: TAction;
+    UniFileUpload: TUniFileUpload;
+    GridPanel: TUniContainerPanel;
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
-    procedure UniFormShow(Sender: TObject);
     procedure actUploadExecute(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure UniFileUploadMultiCompleted(Sender: TObject;
+      Files: TUniFileInfoArray);
+    procedure UniFrameReady(Sender: TObject);
+    procedure UniFrameCreate(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -77,7 +76,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uFileU, uLogger;
+  MainModule, uGrantUtils, uMainVar, uFileU, uLogger, ServerModule, uUploadingRefusals, uToast;
 
 {$R *.dfm}
 
@@ -180,19 +179,88 @@ begin
   Query.Open;
 end;
 
-procedure TRefusalsT.UniFormShow(Sender: TObject);
+procedure TRefusalsT.UniFileUploadMultiCompleted(Sender: TObject;
+  Files: TUniFileInfoArray);
+var f:TUniFileInfoClass;
+    DestName : string;
+    DestFolder : string;
+
+    AFnabled : Boolean;
+begin
+  logger.Info('TRefusalsT.UniFileUpload1MultiCompleted Begin');
+  for f in Files do
+  begin
+    logger.Info('UniFileUpload1Completed ' + f.FileName);
+    logger.Info(ExtractFileName(f.FileName));
+
+    RetVal.Clear;
+
+    DestFolder:= UniServerModule.StartPath+'temp\';
+    DestName  := DestFolder+ExtractFileName(f.FileName);
+
+    AFnabled  := CopyFile(PChar(f.Stream.FileName), PChar(DestName), False);
+
+    Sql.Q.Close;
+    Sql.Open(' declare @R      int                  ' +
+             '                                      ' +
+             ' exec @r = OrderRefusalsInsert        ' +
+             '             @FileName = :FileName    ' +
+             '                                      ' +
+             ' select @r as retcode ',
+            ['FileName'],
+            [DestName]);
+
+    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    if RetVal.Code = 0 then
+    begin
+
+      var e:tUploadingRefusals;
+      e:= tUploadingRefusals.Create(UniMainModule.FDConnection);
+      try
+
+        RetVal.Code := e.Uploading(SPID);
+
+        if  RetVal.Code > 0   then
+          ToastERR(RetVal.Message, UniSession)
+        else
+          ToastOK('Ответ сформирован!', UniSession)
+
+      finally
+        FreeAndNil(e)
+      end;
+
+    end
+    else
+    begin
+      ToastERR(RetVal.Message, UniSession);
+      logger.Info('TRefusalsT.RetVal.Code:' + RetVal.Code.ToString + ', ' + RetVal.Message);
+    end;
+
+  end;
+  logger.Info('TRefusalsT.UniFileUpload1MultiCompleted End');
+end;
+
+procedure TRefusalsT.UniFrameCreate(Sender: TObject);
 begin
   {$IFDEF Debug}
-  Grant.GrantTemplateCreate(self, 'TOrdersT.actFormRefusalsOpen');
+  Grant.GrantTemplateCreate(self);
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
+end;
 
-  GridRefresh
+procedure TRefusalsT.UniFrameReady(Sender: TObject);
+begin
+  GridRefresh;
 end;
 
 procedure TRefusalsT.UserFCallBack(Sender: TComponent; AResult: Integer);
 begin
 
 end;
+
+
+
+initialization
+  RegisterClass(TRefusalsT);
 
 end.

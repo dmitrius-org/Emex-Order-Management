@@ -5,6 +5,7 @@ object Task_T: TTask_T
   Height = 441
   OnCreate = UniFrameCreate
   OnReady = UniFrameReady
+  Layout = 'fit'
   LayoutConfig.Width = '100'
   TabOrder = 0
   object UniPanel: TUniPanel
@@ -30,9 +31,8 @@ object Task_T: TTask_T
     Layout = 'fit'
     LayoutAttribs.Align = 'top'
     LayoutAttribs.Pack = 'start'
-    LayoutConfig.Height = '100'
     LayoutConfig.Width = '100'
-    LayoutConfig.DockWhenAligned = False
+    LayoutConfig.Region = 'north'
     object ToolBar: TUniToolBar
       AlignWithMargins = True
       Left = 3
@@ -123,6 +123,7 @@ object Task_T: TTask_T
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
+    LayoutConfig.Region = 'center'
     object GridUsers: TUniDBGrid
       Left = 0
       Top = 0

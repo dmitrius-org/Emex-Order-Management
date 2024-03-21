@@ -2,6 +2,7 @@
 -- приложение для менеджера
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 1,   1,   'Главная',                     'THomeF',       0,   0,  '14'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 20,  20,  'Заказы',                      'TOrdersT',     0,   0,  '0'
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 30,  30,  'Ответы',                      'TRefusalsT',   0,   0,  '19'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 40,  40,  'Клиенты',                     'TClientsT',    0,   0,  '3'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 60,  60,  'Поставщики',                  'TSuppliersT',  0,   0,  '8'
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 63,  63,  'Отгрузка',                    'TShipmentsT',  0,   0,  '10'
@@ -16,6 +17,7 @@ insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 100, 100, '
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 101, 101, 'Группы',                      'TGroupsT',     0,   99, '1' 
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 200, 200, 'Автоматические задания',      'TTask_T',      0,   0,  '7' 
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 500, 500, 'Настройки системы',           'TInstrumentT', 0,   0,  '11' 
+
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 900, 900, 'Тех. панель',                 'TTexT',        0,   0,  '' 
 go
 update tMenu set Icon = '0' from tMenu where Name='TOrdersT'

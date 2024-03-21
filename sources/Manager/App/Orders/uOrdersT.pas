@@ -19,7 +19,7 @@ uses
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
-  uniDateTimePicker;
+  uniDateTimePicker, uniScreenMask;
 
 type
   tMarks = class
@@ -54,9 +54,6 @@ type
     ppMain: TUniPopupMenu;
     actRefreshAll: TAction;
     N6: TUniMenuItem;
-    UniPanel: TUniPanel;
-    ToolBar: TUniToolBar;
-    tbFormRefusalsOpen: TUniToolButton;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
@@ -115,8 +112,6 @@ type
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     UniLabel4: TUniLabel;
-    tbExecuteActionRollback: TUniToolButton;
-    tbActionExecute: TUniToolButton;
     ppExecute: TUniPopupMenu;
     ppExecuteAction: TUniMenuItem;
     actExecuteAction: TAction;
@@ -140,7 +135,6 @@ type
     actProtocol: TAction;
     N1: TUniMenuItem;
     N2: TUniMenuItem;
-    tbProtocol: TUniToolButton;
     UniImageList: TUniImageList;
     UniImageList32: TUniImageList;
     actFilter: TAction;
@@ -168,14 +162,10 @@ type
     UniPanel4: TUniPanel;
     lblSelRowSum: TUniLabel;
     UniPanel5: TUniPanel;
-    actFormRefusalsOpen: TAction;
     N5: TUniMenuItem;
     N13: TUniMenuItem;
     QueryDestinationLogo: TWideStringField;
-    actUploadingRefusalsEmex: TAction;
     Emex1: TUniMenuItem;
-    UniFileUpload: TUniFileUpload;
-    tbUploadingRefusalsEmex: TUniToolButton;
     QueryInvoice: TWideStringField;
     lblRowSum2: TUniLabel;
     lblRowSum1: TUniLabel;
@@ -236,10 +226,6 @@ type
     procedure actEditExecute(Sender: TObject);
     procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
-    procedure actFormRefusalsOpenExecute(Sender: TObject);
-    procedure actUploadingRefusalsEmexExecute(Sender: TObject);
-    procedure UniFileUploadMultiCompleted(Sender: TObject;
-      Files: TUniFileInfoArray);
     procedure actSetCommentExecute(Sender: TObject);
     procedure actGroupDetailNameEditExecute(Sender: TObject);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -326,7 +312,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule, uRefusalsT, uUploadingRefusals, uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF;
+  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF;
 
 {$R *.dfm}
 
@@ -443,6 +429,8 @@ end;
 
 procedure TOrdersT.actFilterClearExecute(Sender: TObject);
 begin
+
+  DoShowMask;
   fStatus2.ClearSelection;
   fPriceLogo.ClearSelection;
   fClient.ClearSelection;
@@ -462,11 +450,6 @@ end;
 procedure TOrdersT.actFilterExecute(Sender: TObject);
 begin
   GridOpen();
-end;
-
-procedure TOrdersT.actFormRefusalsOpenExecute(Sender: TObject);
-begin
-  RefusalsT.ShowModal;
 end;
 
 procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
@@ -537,13 +520,13 @@ end;
 
 procedure TOrdersT.DoHideMask;
 begin
-  tbExecuteActionRollback.HideMask();
+  UniButton1.ScreenMask.Enabled := False;
   UniSession.Synchronize;
 end;
 
 procedure TOrdersT.DoShowMask;
 begin
-  tbExecuteActionRollback.ShowMask('');
+  UniButton1.ScreenMask.Enabled := True;
   UniSession.Synchronize;
 end;
 
@@ -616,64 +599,6 @@ begin
   fStatus2.Refresh;
 end;
 
-
-procedure TOrdersT.UniFileUploadMultiCompleted(Sender: TObject;
-  Files: TUniFileInfoArray);
-var f:TUniFileInfoClass;
-    DestName : string;
-    DestFolder : string;
-
-    AFnabled : Boolean;
-begin
-  logger.Info('TOrdersT.UniFileUpload1MultiCompleted Begin');
-  for f in Files do
-  begin
-    logger.Info('UniFileUpload1Completed ' + f.FileName);
-    logger.Info(ExtractFileName(f.FileName));
-
-    RetVal.Clear;
-
-    DestFolder:= UniServerModule.StartPath+'temp\';
-    DestName  := DestFolder+ExtractFileName(f.FileName);
-
-    AFnabled  := CopyFile(PChar(f.Stream.FileName), PChar(DestName), False);
-
-    Sql.Q.Close;
-    Sql.Open(' declare @R      int                  ' +
-             '                                      ' +
-             ' exec @r = OrderRefusalsInsert        ' +
-             '             @FileName = :FileName    ' +
-             '                                      ' +
-             ' select @r as retcode ',
-            ['FileName'],
-            [DestName]);
-
-    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-    if RetVal.Code = 0 then
-    begin
-
-      var e:tUploadingRefusals;
-      e:= tUploadingRefusals.Create(UniMainModule.FDConnection);
-      try
-
-        RetVal.Code := e.Uploading(SPID);
-
-        if  RetVal.Code > 0   then
-          ToastERR(RetVal.Message, UniSession)
-        else
-          ToastOK('Ответ сформирован!', UniSession)
-
-      finally
-        FreeAndNil(e)
-      end;
-
-    end
-    else
-      ToastERR(RetVal.Message, UniSession);
-
-  end;
-  logger.Info('TOrdersT.UniFileUpload1MultiCompleted End');
-end;
 
 procedure TOrdersT.fPriceLogoSelect(Sender: TObject);
 var
@@ -1160,11 +1085,6 @@ end;
 procedure TOrdersT.actUnselectExecute(Sender: TObject);
 begin
   DeselectAll;
-end;
-
-procedure TOrdersT.actUploadingRefusalsEmexExecute(Sender: TObject);
-begin
-  UniFileUpload.Execute;
 end;
 
 procedure TOrdersT.cbCancelSelect(Sender: TObject);

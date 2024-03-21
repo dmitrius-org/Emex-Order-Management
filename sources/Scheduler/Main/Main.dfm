@@ -38,7 +38,7 @@ object MainForm: TMainForm
       Caption = ''
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
-      Layout = 'border'
+      Layout = 'fit'
       ExplicitWidth = 1024
       ExplicitHeight = 532
       object UniPanelLeft: TUniPanel

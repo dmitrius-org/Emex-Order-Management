@@ -4,6 +4,7 @@ object TexT: TTexT
   Width = 938
   Height = 480
   OnReady = UniFrameReady
+  Layout = 'fit'
   LayoutConfig.Width = '0'
   TabOrder = 0
   object UniGroupBox1: TUniGroupBox
@@ -17,9 +18,6 @@ object TexT: TTexT
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Width = '0'
     TabOrder = 0
-    ExplicitLeft = 3
-    ExplicitTop = 3
-    ExplicitWidth = 932
     object lblordernum: TUniLabel
       Left = 16
       Top = 24
@@ -78,8 +76,6 @@ object TexT: TTexT
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Width = '0'
     TabOrder = 1
-    ExplicitLeft = -3
-    ExplicitTop = 105
     object UniButton2: TUniButton
       Left = 270
       Top = 34

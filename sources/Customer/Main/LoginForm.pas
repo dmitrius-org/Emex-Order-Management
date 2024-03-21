@@ -7,7 +7,8 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIRegClasses, uniGUIForm, uniEdit, uniButton,
   uniGUIBaseClasses, uniLabel,
-  Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Error, uniCheckBox, uniPanel;
+  Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Error, uniCheckBox, uniPanel,
+  unimLabel;
 
 type
   TLoginF = class(TUniLoginForm)
@@ -16,14 +17,16 @@ type
     UniLabel2: TUniLabel;
     btnOk: TUniButton;
     edtUser: TUniEdit;
-    edtPas: TUniEdit;
+    edtPassword: TUniEdit;
     btnCancel: TUniButton;
     UniCheckBox1: TUniCheckBox;
-    btnRegister: TUniButton;
+    lblReg: TUniLabel;
+    lblReset: TUniLabel;
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
     procedure UniLoginFormShow(Sender: TObject);
-    procedure btnRegisterClick(Sender: TObject);
+    procedure lblRegClick(Sender: TObject);
+    procedure lblResetClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,7 +39,7 @@ implementation
 
 {$R *.dfm}
 
-uses uniGUIVars, ServerModule, MainModule, uniGUIApplication, uUserRegisterF;
+uses uniGUIVars, ServerModule, MainModule, uniGUIApplication, uUserRegisterF, uUserResetF;
 
 function LoginF: TLoginF;
 begin
@@ -50,12 +53,12 @@ end;
 
 procedure TLoginF.btnOkClick(Sender: TObject);
 begin
-  if UniMainModule.dbUserAuthorization(edtUser.Text, edtPas.Text) then
+  if UniMainModule.dbUserAuthorization(edtUser.Text, edtPassword.Text) then
   begin
     if UniCheckBox1.Checked then
       begin
         UniApplication.Cookies.SetCookie(UniMainModule._loginname, edtUser.Text, Date + 7.0); // Expires 7 days from now
-        UniApplication.Cookies.SetCookie(UniMainModule._pwd, edtPas.Text, Date + 7.0);
+        UniApplication.Cookies.SetCookie(UniMainModule._pwd, edtPassword.Text, Date + 7.0);
       end;
 
     self.ModalResult:=mrok;
@@ -66,11 +69,18 @@ begin
 //  end;
 end;
 
-procedure TLoginF.btnRegisterClick(Sender: TObject);
+procedure TLoginF.lblRegClick(Sender: TObject);
 var UserRegister:TUserRegisterF;
 begin
   UserRegister := TUserRegisterF.Create(UniApplication);
   UserRegister.Show;
+end;
+
+procedure TLoginF.lblResetClick(Sender: TObject);
+var UserResetF:TUserResetF;
+begin
+  UserResetF := TUserResetF.Create(UniApplication);
+  UserResetF.Show;
 end;
 
 procedure TLoginF.UniLoginFormShow(Sender: TObject);
@@ -79,7 +89,7 @@ begin
   if FDManager.IsConnectionDef('Connection') then
   begin
     edtUser.Text := FDManager.ConnectionDefs[0].Params.Values['User_nameT'];
-    edtPas.Text := FDManager.ConnectionDefs[0].Params.Values['PasswordT'];
+    edtPassword.Text := FDManager.ConnectionDefs[0].Params.Values['PasswordT'];
   end;
   {$ENDIF}
 end;

@@ -3,7 +3,6 @@ object UniServerModule: TUniServerModule
   OnDestroy = UniGUIServerModuleDestroy
   TempFolder = 'temp\'
   FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\Framework\uniGUI'
-  SessionTimeout = 86400000
   Port = 8079
   Title = 'Customer'
   AjaxTimeout = 500000
@@ -24,7 +23,8 @@ object UniServerModule: TUniServerModule
   SSL.SSLOptions.Mode = sslmClient
   SSL.SSLOptions.VerifyMode = []
   SSL.SSLOptions.VerifyDepth = 0
-  Options = [soAutoPlatformSwitch, soWipeShadowSessions, soDontCompressDownloads]
+  Options = [soAutoPlatformSwitch, soWipeShadowSessions, soDontCompressDownloads, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
+  ServerLogger.Options = [logIndyExceptions, logSessionExceptions, logIndySSLExceptions, logIndySSLCryptoExceptions]
   ConnectionFailureRecovery.DetailedLog = True
   ConnectionFailureRecovery.FullSequenceLog = True
   ConnectionFailureRecovery.ErrorMessage = 'Connection Error'

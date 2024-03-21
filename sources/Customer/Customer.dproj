@@ -158,8 +158,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>OrdersT2</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="Main\uUserRegisterF.pas">
-            <Form>UserRegisterF</Form>
+        <DCCReference Include="Main\uUserResetF.pas">
+            <Form>UserResetF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\uSearch.pas">
@@ -182,6 +182,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uGridUtils.pas"/>
         <DCCReference Include="..\Common\Common\uApp.pas"/>
+        <DCCReference Include="Main\uUserRegisterF.pas">
+            <Form>UserRegisterF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
         <None Include="compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

@@ -4,7 +4,9 @@ object GroupsT: TGroupsT
   Width = 946
   Height = 574
   OnCreate = UniFrameCreate
+  Layout = 'fit'
   LayoutConfig.Width = '0'
+  LayoutConfig.Region = 'center'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
   Align = alClient
@@ -28,9 +30,10 @@ object GroupsT: TGroupsT
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     Layout = 'fit'
-    LayoutConfig.Height = '0'
+    LayoutAttribs.Align = 'top'
+    LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '0'
-    LayoutConfig.DockWhenAligned = False
+    LayoutConfig.Region = 'north'
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -116,6 +119,7 @@ object GroupsT: TGroupsT
     ParentAlignmentControl = False
     Layout = 'border'
     LayoutConfig.Width = '0'
+    LayoutConfig.Region = 'center'
     object pUser: TUniPanel
       Left = 0
       Top = 240

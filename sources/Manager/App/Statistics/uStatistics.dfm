@@ -29,6 +29,7 @@ object StatisticsT: TStatisticsT
     Caption = 'UniPanel1'
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
+    LayoutConfig.Region = 'north'
     object UniLabel1: TUniLabel
       Left = 29
       Top = 15
@@ -139,6 +140,8 @@ object StatisticsT: TStatisticsT
     Align = alClient
     TabOrder = 1
     Caption = 'UniPanel2'
+    Layout = 'fit'
+    LayoutConfig.Region = 'center'
     object ChartAverage: TuniGChartsFrame
       Left = 1
       Top = 1

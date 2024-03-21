@@ -1,4 +1,4 @@
--- сумма не сходится с количнством и ценой
+-- сумма не сходится с количеством и ценой
 Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF, PricePurchase, AmountPurchase
   from tOrders o (nolock)
  where o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
