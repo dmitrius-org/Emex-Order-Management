@@ -15,7 +15,7 @@ create proc UserInsert
 as
   declare @r int = 0
 
-  select @Password = isnull(@Password, 'Q!123456')
+  select @Password = isnull(@Password, 'Q!123456a')
   
   select @isBlock   = isnull(@isBlock, 0)
         ,@DateBlock = nullif(@DateBlock, '18991230')

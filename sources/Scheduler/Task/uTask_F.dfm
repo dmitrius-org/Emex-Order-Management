@@ -83,24 +83,24 @@ object Task_F: TTask_F
         object edtBrief: TUniEdit
           Left = 150
           Top = 42
-          Width = 680
+          Width = 676
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 676
+          ExplicitWidth = 672
         end
         object edtName: TUniEdit
           Left = 150
           Top = 70
-          Width = 680
+          Width = 676
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
           ClearButton = True
-          ExplicitWidth = 676
+          ExplicitWidth = 672
         end
         object lblBruef: TUniLabel
           Left = 17
@@ -143,7 +143,7 @@ object Task_F: TTask_F
         object ebtIsActive: TUniCheckBox
           Left = 150
           Top = 14
-          Width = 137
+          Width = 133
           Height = 22
           Hint = ''
           Caption = #1047#1072#1076#1072#1085#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
@@ -151,7 +151,7 @@ object Task_F: TTask_F
           Font.Height = -13
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 7
-          ExplicitWidth = 133
+          ExplicitWidth = 129
         end
         object pnlInteval: TUniPanel
           Left = 17
@@ -388,7 +388,7 @@ object Task_F: TTask_F
             item
               FieldName = 'Comment'
               Title.Alignment = taCenter
-              Title.Caption = #1057#1086#1082#1088#1072#1096#1077#1085#1080#1077
+              Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
               Width = 526
             end>
         end

@@ -15,7 +15,7 @@ create table pSupplierDeliveryProfiles
 ,PDelivery1         int                    -- Срок поставки до поставщика
 ,PDelivery2         int                    -- Максимальный срок задержки поставщика
 ,PDelivery3         int                    -- срок доставки до Москвы (из новой таблицы tDelivery)
-,DenVyleta          int                    -- день вылета, начиная с понедельника
+,DenVyleta          nvarchar(256)          -- день вылета, начиная с понедельника
 ,VolumeKG_Rate1     decimal(10, 2) null    -- Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
 ,VolumeKG_Rate2     decimal(10, 2) null    -- Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
 ,VolumeKG_Rate3     decimal(10, 2) null    -- Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
@@ -31,5 +31,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240101', '0'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240322', '0'
 go

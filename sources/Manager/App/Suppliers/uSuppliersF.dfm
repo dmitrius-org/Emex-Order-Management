@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 894
+      Left = 890
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 890
+      ExplicitLeft = 886
     end
     object btnCancel: TUniBitBtn
-      Left = 807
+      Left = 803
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 803
+      ExplicitLeft = 799
     end
   end
   object pcCommon: TUniPageControl
@@ -197,13 +197,13 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 260
+        Width = 256
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 256
+        ExplicitWidth = 252
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -217,13 +217,13 @@ object SuppliersF: TSuppliersF
       object edtEmexPassword: TUniEdit
         Left = 238
         Top = 63
-        Width = 260
+        Width = 256
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 256
+        ExplicitWidth = 252
       end
       object UniLabel5: TUniLabel
         Left = 33
@@ -377,8 +377,10 @@ object SuppliersF: TSuppliersF
             item
               FieldName = 'DenVyleta'
               Title.Alignment = taCenter
-              Title.Caption = 'DenVyleta'
-              Width = 111
+              Title.Caption = #1044#1077#1085#1100' '#1074#1099#1083#1077#1090#1072
+              Width = 247
+              Hint = #1044#1077#1085#1100' '#1074#1099#1083#1077#1090#1072' (DenVyleta)'
+              Editor = cbDenVileta
             end
             item
               FieldName = 'VolumeKG_Rate1'
@@ -411,6 +413,31 @@ object SuppliersF: TSuppliersF
               Width = 157
               CheckBoxField.AutoPost = True
             end>
+        end
+        object UniHiddenPanel3: TUniHiddenPanel
+          Left = 90
+          Top = 88
+          Width = 167
+          Height = 155
+          Hint = ''
+          Visible = True
+          object cbDenVileta: TUniCheckComboBox
+            Left = 12
+            Top = 32
+            Width = 145
+            Hint = ''
+            Text = ''
+            Items.Strings = (
+              #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
+              #1042#1090#1086#1088#1085#1080#1082
+              #1057#1088#1077#1076#1072
+              #1063#1077#1090#1074#1077#1088#1075
+              #1055#1103#1090#1085#1080#1094#1072
+              #1057#1091#1073#1073#1086#1090#1072
+              #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077)
+            TabOrder = 1
+            IconItems = <>
+          end
         end
       end
     end
@@ -922,10 +949,6 @@ object SuppliersF: TSuppliersF
       FieldName = 'PDelivery3'
       Origin = 'PDelivery3'
     end
-    object qDeliveryDenVyleta: TIntegerField
-      FieldName = 'DenVyleta'
-      Origin = 'DenVyleta'
-    end
     object qDeliveryVolumeKG_Rate1: TBCDField
       FieldName = 'VolumeKG_Rate1'
       Origin = 'VolumeKG_Rate1'
@@ -968,6 +991,10 @@ object SuppliersF: TSuppliersF
       Origin = 'ID'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
+    end
+    object qDeliveryDenVyleta: TWideStringField
+      FieldName = 'DenVyleta'
+      Size = 256
     end
   end
   object dsDelivery: TDataSource

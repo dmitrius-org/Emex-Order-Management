@@ -154,7 +154,6 @@ type
     N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
-    fDetailNum: TUniEdit;
     QueryReplacementPrice: TCurrencyField;
     QueryCustomerPriceLogo: TWideStringField;
     UniPanel3: TUniPanel;
@@ -193,6 +192,11 @@ type
     UniLabel11: TUniLabel;
     actGroupSetFragileSign: TAction;
     Fragile1: TUniMenuItem;
+    QueryDeliveryNextDate2: TSQLTimeStampField;
+    QueryDateDeparture: TSQLTimeStampField;
+    QueryDaysInWork: TIntegerField;
+    UniHiddenPanel1: TUniHiddenPanel;
+    fDetailNum: TUniEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -236,6 +240,8 @@ type
     procedure fStatus2KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure actGroupSetFragileSignExecute(Sender: TObject);
+    procedure QueryNextDateDepartureGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -334,9 +340,9 @@ end;
 
 procedure TOrdersT.actEditExecute(Sender: TObject);
 begin
-    OrderF.FormAction := TFormAction.acUpdate;
-    OrderF.ID:=QueryOrderID.AsInteger;
-    OrderF.ShowModal(OrdersFCallBack);
+  OrderF.FormAction := TFormAction.acUpdate;
+  OrderF.ID:=QueryOrderID.AsInteger;
+  OrderF.ShowModal(OrdersFCallBack);
 end;
 
 procedure TOrdersT.actExecuteActionExecute(Sender: TObject);
@@ -855,6 +861,18 @@ begin
   if (Sender.FieldName = 'Manufacturer') and (QueryReplacementManufacturer.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-manufacturer-arrow">&#10149;</span><span class="x-replacement-manufacturer">' + QueryReplacementManufacturer.Value + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT.QueryNextDateDepartureGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+begin
+  // Ближайшая дата вылета
+  if (Sender.FieldName = 'DeliveryNextDate') and (not QueryDeliveryNextDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryNextDate2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;

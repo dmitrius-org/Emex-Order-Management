@@ -56,10 +56,6 @@ begin
 
     self.ModalResult:=mrok;
   end;
-//  else
-//  begin
-//    MessageDlg('Имя пользователя или пароль неверны!', mtError, [mbOK]);
-//  end;
 end;
 
 procedure TLoginF.lblRegClick(Sender: TObject);

@@ -5,6 +5,7 @@ object OrdersT2: TOrdersT2
   Height = 596
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
+  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'

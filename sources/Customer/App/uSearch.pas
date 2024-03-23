@@ -36,7 +36,7 @@ type
     QueryID: TFMTBCDField;
     QueryRating: TStringField;
     btnSearch: TUniButton;
-    QueryWeightGr: TCurrencyField;
+    QueryWeight: TCurrencyField;
     QueryVolumeAdd: TCurrencyField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
@@ -115,6 +115,7 @@ var
   js: string;
 begin
   Query.Close;
+
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
   Query.Open;
 end;
@@ -124,6 +125,7 @@ var
   emex: TEmex;
 begin
   emex := TEmex.Create;
+  btnSearch.ScreenMask.Enabled := True;
   try
     emex.Connection := UniMainModule.FDConnection;
     emex.FindByDetailNumber(UniMainModule.AUserID, edtSearch.Text);
@@ -134,6 +136,7 @@ begin
 
   finally
     FreeAndNil(emex);
+    btnSearch.ScreenMask.Enabled := False;
   end;
 end;
 
@@ -268,6 +271,7 @@ begin
   FDestinationLogo := '0001';
 
   GridRefresh();
+
 
   with SearchGrid do
   begin

@@ -70,22 +70,22 @@ SELECT o.[OrderID]
       ,o.[Income]
       ,o.[IncomePRC]
 
-      ,o.[DeliveryPlanDateSupplier]
+      ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
       ,case 
-         when isnull(o.DeliveredDateToSupplier, '') = ''
-         then DATEDIFF(dd, getDate(), o.[DeliveryPlanDateSupplier])
-         else DATEDIFF(dd, o.DeliveredDateToSupplier, o.[DeliveryPlanDateSupplier])
-       end  [DeliveryRestTermSupplier] --Остаток срока до поступления поставщику	
+         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
+         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
+         else 0
+       end  [DeliveryRestTermSupplier] -- Остаток срока до поступления поставщику	
       ,o.[DeliveredDateToSupplier]     -- Доставлена поставщику
-      ,case 
-         when o.DeliveryNextDate < cast(getDate() as date)
-         then 0
-         else DATEDIFF(dd, getDate(), o.DeliveryNextDate)
-       end  DeliveryDaysReserve        -- Дней запаса до вылета	
+      ,o.DeliveryDaysReserve           -- Дней запаса до вылета	
       ,o.DeliveryNextDate              -- Ближайшая дата вылета
+      ,o.DeliveryNextDate2             -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate	
       ,o.DeliveryDateToCustomer        -- Дата поставки клиенту	
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
+
+	  ,o.DateDeparture                 -- Дата вылета 
+	  ,o.DaysInWork                    -- Дней в работе
                                        
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
@@ -112,6 +112,7 @@ SELECT o.[OrderID]
 
 	  ,m.Flag&1 /*1 - начальное состояние */ 
                                 as IsStartState
+
 
   FROM vUserAccess ua 
 
@@ -152,12 +153,9 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240313', '1'
+exec setOV 'vOrders', 'V', '20240323', '2'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
 select IsStartState, * from vOrders --where OrderID=327
-
-
---select top 1000 * from tPrice

@@ -54,6 +54,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
       /// <summary>
       /// getCustomer - описание клиента. Подготовка авторизационных данных (пользователь, пароль)
+      /// AAccount - идентификатор клиента
       /// </summary>
       /// <returns> объект Customer</returns>
       function getCustomer(AAccount: Integer): Customer;
@@ -111,7 +112,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       function Login(AAccount: Integer): String;
 
       /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
-      procedure FindByDetailNumber(ADetailNum:string);
+      procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
 
       /// <summary>
       /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
@@ -229,17 +230,30 @@ begin
 end;
 
 function TEmex.getCustomer(AAccount: Integer): Customer;
+var SuppliersID: Integer;
 begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-    //данные для интеграции берем из справочника "Клиенты"
-    SQl.Open('Select s.emexUsername, s.emexPassword '+
-             '  from tClients c (nolock)            ' +
-             '  join tSuppliers  s (nolock)         ' +
-             '    on s.SuppliersID = c.SuppliersID  ' +
-             ' where c.ClientID = :ClientID',
-            ['ClientID'], [AAccount]);
+    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
+    if SuppliersID = 0 then
+    begin
+      //данные для интеграции берем из справочника "Клиенты"
+      SQl.Open('Select s.emexUsername, s.emexPassword '+
+               '  from tClients c (nolock)            ' +
+               '  join tSuppliers  s (nolock)         ' +
+               '    on s.SuppliersID = c.SuppliersID  ' +
+               ' where c.ClientID = :ClientID',
+              ['ClientID'], [AAccount]);
+    end
+    else
+    begin
+      //данные для интеграции берем из настройки SearchSuppliers
+      SQl.Open('Select s.emexUsername, s.emexPassword '+
+               '  from tSuppliers  s (nolock)         ' +
+               ' where s.SuppliersID = :SuppliersID  ',
+              ['SuppliersID'], [SuppliersID]);
+    end;
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -587,22 +601,16 @@ begin
   end;
 end;
 
-procedure TEmex.FindByDetailNumber(ADetailNum: string);
+procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum: string);
 var parts: ArrayOfFindByNumber;
   Account: Integer;
-        c: Customer;
+
 begin
   logger.Info('TEmex.MovementByOrderNumber Begin');
-  c := Customer.Create;
-  //Account := sql.GetSetting('EmexdwcClient', 0);
-  c.UserName      :='QAKV';// SQl.Q.FieldByName('emexUsername').AsString;
-  c.Password      :='EBmoEoxster5780';// SQl.Q.FieldByName('emexPassword').AsString;
-  c.SubCustomerId := '0';
-  c.CustomerId    := '0';
+  logger.Info('TEmex.AClientID: ' + Account.ToString);
+  logger.Info('TEmex.ADetailNum: ' + ADetailNum);
 
-  logger.Info('TEmex.Account: ' + Account.ToString);
-
-  parts:=Emex.SearchPart(c, ADetailNum, False);
+  parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, False);
 
   FillFindByNumber(parts);
 

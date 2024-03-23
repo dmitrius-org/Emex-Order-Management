@@ -187,25 +187,19 @@ as
 
 -- расчет финнасовых показателей
 delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
-insert pOrdersFinIn
-      (Spid
-      ,OrderID)
-Select @@spid
-      ,OrderID
+insert pOrdersFinIn (Spid, OrderID)
+Select @@spid, OrderID
   from @ID
 
 exec OrdersFinCalc @IsSave = 1
 
 -- расчет сроков дотавки
 delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-insert pDeliveryTerm
-      (Spid
-      ,OrderID)
-Select @@spid
-      ,OrderID
+insert pDeliveryTerm (Spid, OrderID)
+Select @@spid, OrderID
   from @ID
 
-exec OrdersDeliveryTermCalc @IsSave = 1
+exec LoadOrdersDeliveryTermCalc @IsSave = 1
 
 -- OrderAutoSetStatus  - Автоматический перевод в Проверено при загрузке заказа
 if exists (select 1
@@ -218,8 +212,7 @@ begin
         drop table #Order
     CREATE TABLE #Order ( OrderID  numeric(18,0) );
 
-    insert #Order
-          (OrderID)
+    insert #Order (OrderID)
     Select OrderID
       from @ID
 

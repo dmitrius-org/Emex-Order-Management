@@ -132,16 +132,16 @@ END
 CLOSE my_cur
 DEALLOCATE my_cur
 
--- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
-exec MovementArchive
+ -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
+ exec MovementArchive
 
  Update p
     set p.Flag    = case
                       when p.Quantity<>o.Quantity then isnull(p.Flag, 0)|4 -- изменилось количество
                       else isnull(p.Flag, 0) 
                     end
-   from pMovement p (nolock)
-  inner join tOrders o (updlock) 
+   from pMovement p (updlock)
+  inner join tOrders o (nolock) 
           on o.OrderID = p.OrderID
   where p.Spid = @@SPID
 
@@ -160,9 +160,10 @@ exec MovementArchive
 
  exec CloneOrders2 -- разбиение заказа
 
+ -- чистим ошибочные заказа после разбиения
  delete o
-   from pMovement p (updlock) 
-  inner join tOrders op (nolock)
+   from pMovement p (nolock) 
+  inner join tOrders op (rowlock)
           on op.OrderID = p.OrderID 
    --left join tNodes n (nolock)
    --       on n.EID = p.StatusId
@@ -184,11 +185,27 @@ exec MovementArchive
  where p.Spid = @@SPID
    and p.Flag&8>0
 
+ update o 
+    set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
+   from pMovement p (nolock) 
+  inner join tOrders o (updlock)
+          on o.OrderID = p.OrderID 
+         and o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+  where p.Spid = @@SPID
+
+ update o 
+    set o.AmountPurchase = o.Quantity * o.PricePurchase
+   from pMovement p (nolock) 
+  inner join tOrders o (updlock)
+          on o.OrderID = p.OrderID 
+         and o.Quantity * o.PricePurchase <> o.AmountPurchase
+  where p.Spid = @@SPID
+
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
  select @@Spid, p.OrderID, o.StatusID, 0
    from pMovement p (nolock)
-  inner join tOrders o (updlock) 
+  inner join tOrders o (nolock) 
           on o.OrderID = p.OrderID
   where p.Spid = @@SPID
 
@@ -211,8 +228,6 @@ exec MovementArchive
   inner join tNodes n (nolock)  
           on n.Brief = 'AutomaticSynchronization'
   where p.Spid = @@Spid
-
- --declare @Invoiceas table (InvoiceNumber nvarchar(64), InvoiceDate datetime)
 
  Update o
     set o.StatusID = n.NodeID
@@ -239,17 +254,23 @@ exec MovementArchive
                                       else null
                                     end
        
-       ,o.OrderDetailSubId = p.OrderDetailSubId
-       ,o.Invoice          = case 
-	                           when CHARINDEX('#', StateText) > 0 
-	                           then SUBSTRING(StateText, CHARINDEX('#', StateText) +1, CHARINDEX(',', StateText) - CHARINDEX('#', StateText)-1 )
-                               else o.Invoice
-                             end
+       ,o.OrderDetailSubId        = p.OrderDetailSubId
+       ,o.Invoice                 = case 
+	                                  when CHARINDEX('#', StateText) > 0 
+	                                  then SUBSTRING(StateText, CHARINDEX('#', StateText) +1, CHARINDEX(',', StateText) - CHARINDEX('#', StateText)-1 )
+                                      else o.Invoice
+                                    end
        ,o.DeliveredDateToSupplier = case -- Доставлена поставщику
-                                      when n.Brief  = 'ReceivedOnStock' then p.DocumentDate
+                                      when n.Brief  in ('ReceivedOnStock' /*Получено на склад*/
+									                   ,'ReadyToSend'     /*Готово к выдаче*/)
+									    then p.DocumentDate
                                       else o.DeliveredDateToSupplier
                                     end
-       ,o.Quantity = p.Quantity
+       ,o.Quantity                = p.Quantity	       	   					          
+	   ,o.DateDeparture           = case --Добавить дату вылета (дата когда статус сменился на Отгружено)
+                                      when n.Brief  = 'Sent' then p.DocumentDate
+                                      else o.DateDeparture
+                                    end 
    from pMovement p (nolock)
   inner join pAccrualAction aa (nolock)
           on aa.Spid     = @@spid
@@ -263,19 +284,18 @@ exec MovementArchive
 
  exec ProtocolAdd
 
+
  -- Данные по инвойсам
  delete pShipments from pShipments (rowlock) where Spid = @@Spid 
  insert pShipments
-       (Spid, 
-        Invoice,
-        ShipmentsDate)           
+       (Spid, Invoice, ShipmentsDate)           
  select distinct
         @@SPid      
        ,case 
  	        when CHARINDEX('#', StateText) > 0 
  	        then SUBSTRING(StateText, CHARINDEX('#', StateText) +1, CHARINDEX(',', StateText) - CHARINDEX('#', StateText)-1 )
              else ''
-         end Invoice
+        end Invoice
        ,DocumentDate
    from pMovement (nolock)
   where Spid = @@Spid
@@ -287,11 +307,21 @@ exec MovementArchive
  
  exec ShipmentsInsert
 
+
+ -- расчет сроков дотавки
+ delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+ insert pDeliveryTerm (Spid, OrderID)
+ Select @@spid, OrderID
+   from pMovement (nolock)
+  where Spid = @@SPID
+  
+ exec OrdersDeliveryTermCalc @IsSave = 1
+
  exit_:
  return @r
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240101', '0'
+exec setOV 'EmexOrderStateSync', 'P', '20240322', '1'
 go
  

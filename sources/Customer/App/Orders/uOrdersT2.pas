@@ -178,6 +178,7 @@ type
     procedure actCancelRequestExecute(Sender: TObject);
     procedure QueryStatusGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure UniFrameReady(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -186,7 +187,7 @@ type
     FFilterTextPriceLogo: string;
     FFilterTextClient: string;
 
-
+    ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
@@ -199,7 +200,6 @@ type
     /// </summary>
     procedure StateActionMenuCreate();
 
-
     procedure DoShowMask();
     procedure DoHideMask();
 
@@ -208,15 +208,6 @@ type
     procedure FilterStatusCreate();
     procedure FilterPriceLogoCreate();
 
-
-    /// <summary>Select - выделить/ снять выделение с записи</summary>
-//    procedure Select();
-    /// <summary>SelectAll - выделить все записи таблицы</summary>
-//    procedure SelectAll();
-    /// <summary>DeselectAll - снять выделения со всех записей таблицы</summary>
-//    procedure DeselectAll();
-
-//    procedure GetMarksInfo();
   public
     { Public declarations }
 
@@ -240,11 +231,7 @@ uses
   , uOrdersMessageF;
 
   var screenmask: Boolean;
-      ClipBoard:TClipBoard;
-
       var Marks: TMarks;
-
-      ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
 {$R *.dfm}
 
@@ -726,14 +713,10 @@ begin
   actSelect.Caption := '';
   actUnSelect.Caption := '';
 
-  ClipBoard:=TClipBoard.Create;
+  //ClipBoard:=TClipBoard.Create;
 
   FilterStatusCreate;
   FilterPriceLogoCreate();
-
-  qPriceLogo.Open();
-
-  GridOpen();
 
   // индексы для сортировки
   with Query do
@@ -781,6 +764,14 @@ end;
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
+end;
+
+procedure TOrdersT2.UniFrameReady(Sender: TObject);
+begin
+
+  qPriceLogo.Open();
+
+  GridOpen();
 end;
 
 procedure TOrdersT2.UserFCallBack(Sender: TComponent; AResult: Integer);

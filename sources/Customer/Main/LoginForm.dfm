@@ -35,23 +35,25 @@ object LoginF: TLoginF
     object UniLabel1: TUniLabel
       Left = 146
       Top = 53
-      Width = 32
-      Height = 15
+      Width = 31
+      Height = 13
       Hint = ''
       Caption = 'Email:'
       ParentFont = False
       Font.Height = -12
+      Font.Style = [fsBold]
       TabOrder = 1
     end
     object UniLabel2: TUniLabel
       Left = 146
       Top = 116
-      Width = 45
-      Height = 15
+      Width = 44
+      Height = 13
       Hint = ''
       Caption = #1055#1072#1088#1086#1083#1100':'
       ParentFont = False
       Font.Height = -12
+      Font.Style = [fsBold]
       TabOrder = 2
     end
     object btnOk: TUniButton

@@ -12,9 +12,6 @@ object MainForm: TMainForm
   Layout = 'fit'
   OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
-  DesignSize = (
-    910
-    534)
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     AlignWithMargins = True
@@ -47,8 +44,7 @@ object MainForm: TMainForm
       Caption = ''
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
-      Layout = 'border'
-      LayoutConfig.Region = 'center'
+      Layout = 'fit'
       ExplicitWidth = 706
       ExplicitHeight = 527
       object UniPanelCentral: TUniPanel
@@ -99,6 +95,7 @@ object MainForm: TMainForm
           object tsO: TUniTabSheet
             Hint = ''
             Caption = #1047#1072#1082#1072#1079#1099
+            OnBeforeActivate = tsOBeforeActivate
             ExplicitWidth = 692
             ExplicitHeight = 438
           end
@@ -149,21 +146,6 @@ object MainForm: TMainForm
         end
       end
     end
-  end
-  object lblVersion: TUniLabel
-    AlignWithMargins = True
-    Left = 24
-    Top = 513
-    Width = 38
-    Height = 13
-    Hint = ''
-    Alignment = taCenter
-    Caption = 'Version'
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clSilver
-    TabOrder = 1
-    ExplicitTop = 512
   end
   object Menu: TUniMenuItems
     Left = 409

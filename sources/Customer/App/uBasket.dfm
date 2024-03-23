@@ -664,13 +664,6 @@ object BasketF: TBasketF
     Left = 497
     Top = 254
   end
-  object ppMain: TUniPopupMenu
-    Left = 99
-    Top = 148
-    object N6: TUniMenuItem
-      Action = actRefreshAll
-    end
-  end
   object actMain: TUniActionList
     Left = 98
     Top = 206

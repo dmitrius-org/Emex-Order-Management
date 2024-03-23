@@ -20,9 +20,8 @@ object OrderF: TOrderF
     ParentColor = False
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 33
     ExplicitWidth = 863
-    ExplicitHeight = 263
+    ExplicitHeight = 266
     DesignSize = (
       867
       267)
@@ -39,7 +38,7 @@ object OrderF: TOrderF
     object lblWeightKGF: TUniLabel
       Left = 16
       Top = 99
-      Width = 116
+      Width = 117
       Height = 13
       Hint = ''
       ShowHint = True
@@ -49,7 +48,7 @@ object OrderF: TOrderF
     object lblVolumeKGF: TUniLabel
       Left = 16
       Top = 131
-      Width = 111
+      Width = 112
       Height = 13
       Hint = ''
       ShowHint = True
@@ -99,7 +98,7 @@ object OrderF: TOrderF
       TabStop = False
       TabOrder = 6
       OnClick = btnCancelClick
-      ExplicitTop = 228
+      ExplicitTop = 231
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -114,7 +113,7 @@ object OrderF: TOrderF
       Anchors = [akLeft, akBottom]
       TabOrder = 5
       OnClick = btnOkClick
-      ExplicitTop = 228
+      ExplicitTop = 231
     end
     object UniGroupBox1: TUniGroupBox
       Left = 376
@@ -354,6 +353,7 @@ object OrderF: TOrderF
       TabStop = False
       Images = ImageList16
       IconItems = <>
+      OnChange = cbPriceChange
     end
     object UniBitBtn1: TUniBitBtn
       Left = 246
@@ -470,6 +470,7 @@ object OrderF: TOrderF
     TabOrder = 1
     Layout = 'hbox'
     LayoutAttribs.Columns = 1
+    ExplicitWidth = 863
     object UniLabel3: TUniLabel
       AlignWithMargins = True
       Left = 342
@@ -764,14 +765,15 @@ object OrderF: TOrderF
       00004017000F80070000C02F803FFFFF00000000000000000000000000000000
       000000000000}
   end
-  object UniTimer1: TUniTimer
+  object UniTimer: TUniTimer
+    RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'
       '{'
       ' '
       '}')
     Sequenced = False
-    OnTimer = UniTimer1Timer
+    OnTimer = UniTimerTimer
     Left = 51
     Top = 179
   end

@@ -4,6 +4,23 @@ go
 /* --------------------------------------------------------
   FindByNumberInsert - добавление результата поиска в БД
 
+Available     – наличие детали на складе
+bitOldNum     – признак УСТАРЕВШИЙ НОМЕР
+PercentSupped – процент поставки
+PriceId       – идентификатор прайслиста
+Region        – регион доставки детали
+Delivery      – срок поставки
+Make          – лого бренда детали
+DetailNum     – номер детали
+PriceLogo     – лого прайслиста
+Price         – цена детали, показаваемая на сайте
+PartNameRus   – русское название детали
+PartNameEng   – английское название детали
+WeightGr      – вес детали в граммах
+MakeName      – название бренда
+Packing       – количество деталей в упаковке
+VolumeAdd     – наценка объем (объемный вес)
+GuaranteedDay – гарантированный срок поставки детали
 -------------------------------------------------------- */
 create proc FindByNumberInsert
                @ClientID                numeric(18, 0)
@@ -48,7 +65,7 @@ select  @@Spid
        ,@Price                   
        ,@PartNameRus      
        ,@PartNameEng      
-       ,@WeightGr         
+       ,@WeightGr / 1000         
        ,@MakeName         
        ,@Packing   
        ,@VolumeAdd        

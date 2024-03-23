@@ -14,8 +14,6 @@ uses
 
 type
 
-
-
   TOrderF = class(TUniForm)
     tabCommon: TUniFieldContainer;
     edtDetailNameF: TUniEdit;
@@ -46,7 +44,7 @@ type
     UniBitBtn1: TUniBitBtn;
     UniGroupBox4: TUniGroupBox;
     UniHTMLFrame: TUniHTMLFrame;
-    UniTimer1: TUniTimer;
+    UniTimer: TUniTimer;
     btnNumber: TUniButton;
     btnNumber2: TUniButton;
     cbDestinationLogo: TUniComboBox;
@@ -64,23 +62,23 @@ type
     procedure btnEmExClick(Sender: TObject);
     procedure UniBitBtn1Click(Sender: TObject);
     procedure UniFormReady(Sender: TObject);
-    procedure UniTimer1Timer(Sender: TObject);
+    procedure UniTimerTimer(Sender: TObject);
     procedure edtVKGKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnNumberClick(Sender: TObject);
     procedure btnNumber2Click(Sender: TObject);
     procedure btnDestinationLogoClick(Sender: TObject);
+    procedure cbPriceChange(Sender: TObject);
 
   private
     FAction: TFormAction;
     FID: Integer;
+    FFlag: Integer;
+    FClientID: Integer;
 
     FDetailNumber: string;
     FDetailNumber2: string;
     FPriceLogo: string;
     FManufacturer:string;
-
-//    FWeightKGF: Double;
-//    FVolumeKGF: Double;
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
@@ -93,11 +91,8 @@ type
     ///</summary>
     procedure DataCheck();
 
-//    procedure SetTaskTypeProperty();
-//    procedure SetPeriodTypeProperty();
-
-
-    procedure getPartRating(AConnection: tFDConnection);
+    procedure getPartRatingFromEmex(AConnection: tFDConnection);
+    procedure getPartRatingFromDB(DetailNumber, PriceLogo: string);
 
     procedure setOpenUrl(AUrl: string);
   public
@@ -130,7 +125,6 @@ end;
 
 procedure TOrderF.btnDestinationLogoClick(Sender: TObject);
 begin
- //cbDestinationLogo.ReadOnly := False;
  cbDestinationLogo.Enabled := true;
  cbDestinationLogo.SetFocus;
 end;
@@ -164,6 +158,11 @@ procedure TOrderF.btnZZAPClick(Sender: TObject);
 begin
   //UniSession.BrowserWindow(Format('https://www.zzap.ru/public/search.aspx#rawdata=%s', [FDetailNumber]), 0, 0, '_blank');
   setOpenUrl(Format('https://www.zzap.ru/public/search.aspx#rawdata=%s', [FDetailNumber]));
+end;
+
+procedure TOrderF.cbPriceChange(Sender: TObject);
+begin
+  getPartRatingFromDB(FDetailNumber, cbPrice.Text);
 end;
 
 procedure TOrderF.btnNumber2Click(Sender: TObject);
@@ -250,15 +249,17 @@ begin
   UniMainModule.Query.SQL.Text := ' select isnull(WeightKGF, WeightKG) as WeightKGF  '+
                                   '       ,isnull(VolumeKGF, VolumeKG) as VolumeKGF  ' +
                                   '       ,DetailName as DetailName '+
-                                  '       ,Manufacturer ' +
-                                  '       ,DetailNumber ' +
-                                  '       ,Restrictions ' +
-                                  '       ,PriceLogo    ' +
-                                  '       ,Manufacturer ' +
+                                  '       ,Manufacturer    ' +
+                                  '       ,DetailNumber    ' +
+                                  '       ,Restrictions    ' +
+                                  '       ,PriceLogo       ' +
+                                  '       ,Manufacturer    ' +
                                   '       ,DestinationLogo ' +
                                   '       ,SuppliersID     ' +
                                   '       ,PriceID         ' +
-                                  '   from vOrders'+
+                                  '       ,ClientID        ' +
+                                  '       ,Flag            ' +
+                                  '   from vOrders         '+
                                   '  where OrderID = :OrderID '+
                                   ' ';
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
@@ -275,11 +276,11 @@ begin
   cbRestrictions.text:= UniMainModule.Query.FieldByName('Restrictions').AsString; //Ограничение
   cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
   cbDestinationLogo.text:= UniMainModule.Query.FieldByName('DestinationLogo').AsString;    // направление отгрузки
+  FFlag     := UniMainModule.Query.FieldByName('Flag').AsInteger;
+  FClientID := UniMainModule.Query.FieldByName('ClientID').AsInteger;
 
-
-  MessageContainer.Visible := UniMainModule.Query.FieldByName('PriceID').AsInteger = 0;
-
-
+  //16 - Онлайн заказ
+  MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
 end;
 
 procedure TOrderF.edtLChange(Sender: TObject);
@@ -293,30 +294,22 @@ begin
   ShowMessage(KEY.ToString);
   if (KEY = 13) then //enter
   begin
-
      edtVolumeKGF.Value := edtVKG.Value;
-
   end;
 end;
 
-procedure TOrderF.getPartRating(AConnection: tFDConnection);
-var Emex:TEmex;
-    js: string;
+procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
+var js: string;
      r: string;
 begin
-//
-  Emex := TEmex.Create;
-  Emex.Connection := AConnection;
-  Emex.FindByDetailNumber(FDetailNumber);
-  FreeAndNil(Emex);
-
-
   sql.Open('select top 1 PercentSupped   ' +
            '  from pFindByNumber (nolock)' +
-           ' where spid = @@spid and DetailNum=:DetailNum and PriceLogo=:PriceLogo ' +
-           ' order by PercentSupped desc',
+           ' where spid     = @@spid     ' +
+           '   and DetailNum=:DetailNum  ' +
+           '   and PriceLogo=:PriceLogo  ' +
+           ' order by PercentSupped desc ',
            ['DetailNum', 'PriceLogo'],
-           [FDetailNumber, FPriceLogo]);
+           [DetailNumber, PriceLogo]);
 
   if sql.Q.RecordCount>0 then
   begin
@@ -357,7 +350,22 @@ begin
 
     UniSession.JSCode(js);
 
+  end
+  else
+  begin
+     MessageContainer.Visible := (FFlag and 16) > 0; //16 - Онлайн заказ
   end;
+end;
+
+procedure TOrderF.getPartRatingFromEmex(AConnection: tFDConnection);
+var Emex:TEmex;
+begin
+  Emex := TEmex.Create;
+  Emex.Connection := AConnection;
+  Emex.FindByDetailNumber(FClientID, FDetailNumber);
+  FreeAndNil(Emex);
+
+  Sleep(5000);
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -368,24 +376,19 @@ end;
 procedure TOrderF.setOpenUrl(AUrl: string);
 begin
   logger.Info(AUrl);
-  //edtBrowser.HTML.Text := '<iframe src="'+AUrl+'"></iframe>';
 
-//    edtBrowser.UniSession.AddJS( 'window.open("' + AUrl + '","")');
-  //  UniURLFrame1.UniSession.AddJS( 'window.open("' + AUrl + '","_blank")');
-
-   UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
+  UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
 end;
 
 procedure TOrderF.UniBitBtn1Click(Sender: TObject);
 begin
- // cbPrice.ReadOnly := False;
   cbPrice.Enabled := true;
   cbPrice.SetFocus;
 end;
 
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
-  UniTimer1.Enabled := True;
+  UniTimer.Enabled := True;
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -408,10 +411,8 @@ begin
     btnOk.Caption := ' Выполнить';
   end;
 
-  ComboBoxFill(cbRestrictions,   ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
-  ComboBoxFill(cbPrice,          ' Select Name from tPrices       (nolock) where Flag&1=1 ');
-
-
+  ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
+  ComboBoxFill(cbPrice,        ' Select Name from tPrices       (nolock) where Flag&1=1 ');
 
   // начитываем данные с базы
   case FAction of
@@ -423,12 +424,7 @@ begin
       UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
       UniMainModule.Query.FieldByName('DetailNumber').AsString;
 
-      //getPartRating;
-
       edtDetailNameF.SetFocus;
-
-     // cbPrice.ReadOnly := True;
-     // cbDestinationLogo.ReadOnly := True;
 
       ComboBoxFill(cbDestinationLogo,' SELECT distinct [DestinationLogo] as Name FROM tSupplierDeliveryProfiles (nolock) where SuppliersID = ' + UniMainModule.Query.FieldByName('SuppliersID').AsString );
     end
@@ -437,12 +433,13 @@ begin
   end;
 end;
 
-procedure TOrderF.UniTimer1Timer(Sender: TObject);
+procedure TOrderF.UniTimerTimer(Sender: TObject);
 begin
   try
-    getPartRating(UniMainModule.FDConnection);
+    getPartRatingFromEmex(UniMainModule.FDConnection);
+
+    getPartRatingFromDB(FDetailNumber, FPriceLogo);
   finally
-    UniTimer1.Enabled := false;
   end;
 end;
 

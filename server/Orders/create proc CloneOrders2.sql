@@ -51,6 +51,7 @@ INSERT INTO [tOrders]
       ,ProfilesDeliveryID
       ,DeliveryDaysReserve
       ,DeliveryNextDate
+	  ,DeliveryNextDate2
       ,DeliveryDateToCustomer
       ,DeliveryTermToCustomer
       ,DeliveryRestToCustomer
@@ -82,6 +83,8 @@ INSERT INTO [tOrders]
       ,VolumeKGAmount
       ,ExtraKurs
 	  ,Reliability
+      ,DateDeparture
+      ,DaysInWork   
 	  ,ID)	  
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, inserted.ID
   INTO  @ID (OrderID, ParentID, StateID, ID)
@@ -120,6 +123,7 @@ select o.ClientID
       ,o.ProfilesDeliveryID
       ,o.DeliveryDaysReserve
       ,o.DeliveryNextDate
+	  ,o.DeliveryNextDate2
       ,o.DeliveryDateToCustomer
       ,o.DeliveryTermToCustomer
       ,o.DeliveryRestToCustomer
@@ -151,6 +155,8 @@ select o.ClientID
       ,o.VolumeKGAmount
       ,o.ExtraKurs
 	  ,o.Reliability
+      ,o.DateDeparture
+      ,o.DaysInWork   
 	  ,p.ID
   from pMovement p (nolock)
  inner join pMovement pp (nolock)
@@ -219,6 +225,6 @@ Update o
 GO
 grant exec on CloneOrders2 to public
 go
-exec setOV 'CloneOrders2', 'P', '20240101', '0'
+exec setOV 'CloneOrders2', 'P', '20240323', '1'
 go
  

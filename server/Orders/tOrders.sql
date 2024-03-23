@@ -41,9 +41,13 @@ begin
 	,DeliveredDateToSupplier         datetime       -- Доставлена поставщику
 	,DeliveryDaysReserve             int            -- Дней запаса до вылета	
 	,DeliveryNextDate                datetime       -- Ближайшая дата вылета	
+	,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate	
 	,DeliveryDateToCustomer          datetime       -- Дата поставки клиенту	
 	,DeliveryTermToCustomer          int            -- Срок поставки клиенту	
 	,DeliveryRestToCustomer          int            -- Остаток срока до поставки клиенту
+
+	,DateDeparture                   datetime       -- Добавить дату вылета 
+	,DaysInWork                      int            -- Дней в работе
 
 	,ReplacementMakeLogo             nvarchar(32)   -- Бренд замены
 	,ReplacementDetailNumber         nvarchar(32)   -- Номер замены
@@ -139,7 +143,8 @@ exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestTermSupplier'          
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveredDateToSupplier'           ,'Доставлена поставщику'
 exec dbo.sys_setTableDescription 'tOrders', 'ProfilesDeliveryID'                ,'tSupplierDeliveryProfiles.ProfilesDeliveryID - ИД профиля управления выгрузкой'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDaysReserve'               ,'Дней запаса до вылета'	
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate'                  ,'Ближайшая дата вылета'	
+exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate'                  ,'Ближайшая дата вылета'
+exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate2'                 ,'Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate'	
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDateToCustomer'            ,'Дата поставки клиенту'	
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryTermToCustomer'            ,'Срок поставки клиенту'	
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestToCustomer'            ,'Остаток срока до поставки клиенту'

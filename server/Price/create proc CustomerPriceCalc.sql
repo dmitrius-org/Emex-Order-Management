@@ -55,6 +55,41 @@ create table #Price
 ,RetVal            int
 )
 
+-- для получения даных с таблицы tPrice
+declare @Num as table
+       (DetailNum nvarchar(40));
+
+declare  @Price  table
+       ( --PriceLogo nvarchar(40)
+         DetailNum nvarchar(40)
+        ,MakeLogo  nvarchar(40)
+        ,WeightKGF float
+		,VolumeKGf float);
+
+insert @Num
+       (DetailNum)
+select distinct p.DetailNum
+  from pFindByNumber p with (nolock index=ao2)
+ where p.Spid = @@spid
+
+insert @Price
+       (--PriceLogo, 
+	    DetailNum, 
+		MakeLogo, 
+		WeightKGF, 
+		VolumeKGf
+		)
+select distinct 
+       --pp.PriceLogo,
+	   pp.DetailNum,
+	   pp.MakeLogo,
+	   pp.WeightKGF,
+	   pp.VolumeKGf
+  from @Num p 
+ inner join tPrice pp with (nolock index=ao2) 
+         on pp.DetailNum = p.DetailNum
+		
+
 insert #Price
 	  (ID        
       ,Brand        
@@ -87,8 +122,8 @@ select p.ID,
 	   1, 
 	   p.Packing, 
 	   0,--pt.Term,
-	   p.WeightGr/1000,--
-	   p.VolumeAdd 
+	   isnull(pp.WeightKGF,p.WeightGr),
+	   isnull(pp.VolumeKGf,p.VolumeAdd) 
                     * case --коэффициенты [VolumeKG]
                         when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
                         when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
@@ -107,15 +142,20 @@ select p.ID,
        pd.VolumeKG,
        pd.DestinationLogo
   from pFindByNumber p (rowlock)
- --inner join tClients c (nolock)
- --        on c.ClientID = p.ClientID
+
  inner join tProfilesCustomer pc (nolock)
          on pc.ClientID = p.ClientID
-
  inner join tSupplierDeliveryProfiles pd (nolock)
          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
         and pd.DestinationLogo    = @DestinationLogo
+
+ left join @Price pp
+        on pp.DetailNum = p.DetailNum
+	   and pp.MakeLogo  = p.Make
+	   
  where p.Spid = @@Spid
+
+
 
 Update #Price  
    set TDel = case
@@ -143,10 +183,14 @@ Update #Price set TFinPriceKurs  = TFinPrice * (Kurs + (Kurs * (isnull(ExtraKurs
 Update #Price set FinalPrice = TFinPriceKurs --CEILING(TFinPriceKurs)
 	  
 Update f 
-   set f.PriceRub        = p.FinalPrice
+   set f.PriceRub        = CEILING(p.FinalPrice)
       ,f.Margin          = p.Margin
       ,f.Discount        = p.Discount
       ,f.DestinationLogo = p.DestinationLogo
+
+	  ,f.WeightGr	     = p.WeightKG   
+	  ,f.VolumeAdd       = p.VolumeKG   
+
   from #Price p (rowlock)
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
@@ -159,5 +203,5 @@ return @RetVal
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240101', '0'
+exec setOV 'CustomerPriceCalc', 'P', '20240322', '0'
 go

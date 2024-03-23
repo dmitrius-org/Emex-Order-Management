@@ -52,14 +52,13 @@ type
     function dbConnect(): Boolean;
   end;
 
-function UniMainModule: TUniMainModule;
+  function UniMainModule: TUniMainModule;
 
 implementation
 
 {$R *.dfm}
 
-uses
-  UniGUIVars, ServerModule, uniGUIApplication, uMainVar;
+uses UniGUIVars, ServerModule, uniGUIApplication, uMainVar;
 
 function UniMainModule: TUniMainModule;
 begin
@@ -133,13 +132,14 @@ begin
       CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
 
       Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
+
       if Sql.Q.RecordCount > 0 then
       begin
-        logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-        logger.Info('Программа запущена');
+          logger.isActive := Sql.Q.FindField('AppClientLog').Value;
+          logger.Info('Программа запущена');
 
-        FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+          FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+          FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
 
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
@@ -147,7 +147,7 @@ begin
     else
     begin
       if not IsSaveSession then
-        raise Exception.Create('Доступ отключен!');
+          raise Exception.Create('Доступ отключен!');
       Result := false;
     end;
   end

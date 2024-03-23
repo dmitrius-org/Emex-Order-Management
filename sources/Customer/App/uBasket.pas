@@ -56,8 +56,6 @@ type
     QueryAmount: TCurrencyField;
     btnDeleteBasket: TUniButtonWidget;
     UpdateSQL: TFDUpdateSQL;
-    ppMain: TUniPopupMenu;
-    N6: TUniMenuItem;
     actMain: TUniActionList;
     actRefreshAll: TAction;
     TopPanel: TUniPanel;
@@ -192,7 +190,7 @@ end;
 procedure TBasketF.GridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
-  ppMain.Popup(X, Y, Grid);
+ // ppMain.Popup(X, Y, Grid);
 end;
 
 procedure TBasketF.GridKeyDown(Sender: TObject; var Key: Word;

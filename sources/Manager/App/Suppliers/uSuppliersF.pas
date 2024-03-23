@@ -12,7 +12,8 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
-  uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus;
+  uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
+  UniFSCombobox;
 
 type
   TSuppliersF = class(TUniForm)
@@ -62,7 +63,6 @@ type
     qDeliveryPDelivery1: TIntegerField;
     qDeliveryPDelivery2: TIntegerField;
     qDeliveryPDelivery3: TIntegerField;
-    qDeliveryDenVyleta: TIntegerField;
     qDeliveryVolumeKG_Rate1: TBCDField;
     qDeliveryVolumeKG_Rate2: TBCDField;
     qDeliveryVolumeKG_Rate3: TBCDField;
@@ -77,6 +77,9 @@ type
     N3: TUniMenuItem;
     N4: TUniMenuItem;
     N5: TUniMenuItem;
+    UniHiddenPanel3: TUniHiddenPanel;
+    qDeliveryDenVyleta: TWideStringField;
+    cbDenVileta: TUniCheckComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

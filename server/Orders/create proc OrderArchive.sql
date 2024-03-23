@@ -48,6 +48,7 @@ INSERT INTO [hOrders]
       ,[ProfilesDeliveryID]
       ,[DeliveryDaysReserve]
       ,[DeliveryNextDate]
+	  ,[DeliveryNextDate2]
       ,[DeliveryDateToCustomer]
       ,[DeliveryTermToCustomer]
       ,[DeliveryRestToCustomer]
@@ -81,6 +82,8 @@ INSERT INTO [hOrders]
 	  ,[Reliability]
       ,[ClientOrderNum]
       ,[hInDatetime]
+      ,DateDeparture
+      ,DaysInWork   
       )
 select distinct
        o.[ClientID]
@@ -118,6 +121,7 @@ select distinct
       ,o.[ProfilesDeliveryID]
       ,o.[DeliveryDaysReserve]
       ,o.[DeliveryNextDate]
+	  ,o.[DeliveryNextDate2]
       ,o.[DeliveryDateToCustomer]
       ,o.[DeliveryTermToCustomer]
       ,o.[DeliveryRestToCustomer]
@@ -151,6 +155,8 @@ select distinct
 	  ,o.[Reliability]
       ,o.[ClientOrderNum]
       ,GetDate()
+      ,o.DateDeparture
+      ,o.DaysInWork   
   from pMovement p (nolock)
  inner join tOrders o (rowlock) 
          on p.OrderNumber      = o.EmexOrderID
@@ -166,6 +172,6 @@ select distinct
 GO
 grant exec on OrderArchive to public
 go
-exec setOV 'OrderArchive', 'P', '20240101', '0'
+exec setOV 'OrderArchive', 'P', '20240323', '1'
 go
  

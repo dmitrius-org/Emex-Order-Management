@@ -41,9 +41,13 @@ hOrders - Заказы
 	,DeliveredDateToSupplier         datetime       -- Доставлена поставщику
 	,DeliveryDaysReserve             int            -- Дней запаса до вылета	
 	,DeliveryNextDate                datetime       -- Ближайшая дата вылета	
+	,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate	
 	,DeliveryDateToCustomer          datetime       -- Дата поставки клиенту	
 	,DeliveryTermToCustomer          int            -- Срок поставки клиенту	
 	,DeliveryRestToCustomer          int            -- Остаток срока до поставки клиенту
+
+	,DateDeparture                   datetime       -- Добавить дату вылета 
+	,DaysInWork                      int            -- Дней в работе
 
 	,ReplacementMakeLogo             nvarchar(32)   -- Бренд замены
 	,ReplacementDetailNumber         nvarchar(32)   -- Номер замены

@@ -4,22 +4,23 @@ go
 /* **********************************************************						
 vFindByNumber - получение списка найденных
 ********************************************************** */
+
 create view vFindByNumber
 as
---SET DATEFIRST 1;
+
 select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc, cast(p.Available as int) desc) N,
        p.ID,
        p.MakeName,
        p.DetailNum,
 	   p.PartNameRus,
-	   0 as DeliveryType, -- тип доставки
-	   p.WeightGr ,       -- вес детали в граммах
-	   p.VolumeAdd,       -- наценка объем (объемный вес)
+	   0 as DeliveryType,   -- тип доставки
+	   p.WeightGr [Weight], -- вес детали в граммах
+	   p.VolumeAdd,         -- наценка объем (объемный вес)
 	   --dbo.AddDaysAndWeekends(GetDate(), p.Delivery, 1) 
 	   p.Delivery,        -- срок поставки
        p.PercentSupped,   -- процент поставки (Статистика)
 	   p.Price,           -- цена детали у emex
-       CEILING(p.PriceRub) PriceRub, -- цена детали, показаваемая на сайте
+       p.PriceRub,        -- цена детали, показаваемая на сайте
        p.Available,       -- наличие детали на складе
        p.PriceLogo,
        '<fieldset class="rating">'+
@@ -36,7 +37,8 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        '</fieldset>'+
        '<label id="prc" class="ratingprc"> ' + cast(p.PercentSupped as varchar(30)) + '%</label>' as Rating,
        p.DestinationLogo
-  from pFindByNumber p (nolock)
+  from pFindByNumber p with (nolock index=ao2)
+
  --inner join tSearchPrice sp (nolock)
  --        on sp.MakeLogo             = p.PriceLogo
 	   -- and isnull(sp.Synthetic, 0) = 0
@@ -50,9 +52,13 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
    --                                                 )
    -- 	  )
    --     )
+   --select top 100 * from tPrice
+   -- select top 100 * from pFindByNumber
 
 go
 grant all on vFindByNumber to public
+
 go
-exec setOV 'vFindByNumber', 'V', '20240101', '0'
+exec setOV 'vFindByNumber', 'V', '20240321', '1'
 go
+-- select * from tPrice where DetailNum =  '09G301469A'

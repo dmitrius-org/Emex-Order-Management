@@ -40,7 +40,6 @@ type
     tbS: TUniTabSheet;
     tsB: TUniTabSheet;
     tsO: TUniTabSheet;
-    lblVersion: TUniLabel;
     procedure UniFormShow(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -49,6 +48,7 @@ type
     procedure UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tsBBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure UniFormCreate(Sender: TObject);
+    procedure tsOBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
 
   private
     { Private declarations }
@@ -59,7 +59,7 @@ type
 
     FSearchF :TSearchF;
     FBasketF :TBasketF;
-    FOrdersF :TOrdersT2;
+    FOrdersT2:TOrdersT2;
     ///<summary>
     ///  FormJSNames - список форм
     ///</summary>
@@ -114,12 +114,53 @@ end;
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
+  if not Assigned(FOrdersT2) then
+  begin
+    FBasketF :=  TBasketF.Create(Self);
+    FBasketF.Align := alClient;
+    FBasketF.Parent := tsB;
+  end;
+
   FBasketF.GridRefresh;
+end;
+
+procedure TMainForm.tsOBeforeActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  if not Assigned(FOrdersT2) then
+  begin
+    FOrdersT2 :=  TOrdersT2.Create(Self);
+    FOrdersT2.Align := alClient;
+    FOrdersT2.Parent := tsO;
+  end;
 end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
-  lblVersion.Caption := GetAppVersionStr();
+//  lblVersion.Caption := GetAppVersionStr();
+
+  if not Assigned(FSearchF) then
+  begin
+    FSearchF :=  TSearchF.Create(Self);
+    FSearchF.Align := alClient;
+    FSearchF.Parent := tbS;
+  end;
+//
+//  if not Assigned(FBasketF) then
+//  begin
+//    FBasketF :=  TBasketF.Create(Self);
+//    FBasketF.Align := alClient;
+//    FBasketF.Parent := tsB;
+//  end;
+//
+//  if not Assigned(FOrdersF) then
+//  begin
+//    FOrdersF :=  TOrdersT2.Create(Self);
+//    FOrdersF.Align := alClient;
+//    FOrdersF.Parent := tsO;
+//  end;
+
+
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);
@@ -140,26 +181,6 @@ procedure TMainForm.UniFormShow(Sender: TObject);
 begin
   btnProfile.Caption := UniMainModule.AUserName;
 
-  if not Assigned(FSearchF) then
-  begin
-    FSearchF :=  TSearchF.Create(Self);
-    FSearchF.Align := alClient;
-    FSearchF.Parent := tbS;
-  end;
-//
-  if not Assigned(FBasketF) then
-  begin
-    FBasketF :=  TBasketF.Create(Self);
-    FBasketF.Align := alClient;
-    FBasketF.Parent := tsB;
-  end;
-
-  if not Assigned(FOrdersF) then
-  begin
-    FOrdersF :=  TOrdersT2.Create(Self);
-    FOrdersF.Align := alClient;
-    FOrdersF.Parent := tsO;
-  end;
 
 end;
 

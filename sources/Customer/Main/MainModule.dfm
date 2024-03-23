@@ -6,7 +6,6 @@ object UniMainModule: TUniMainModule
   Background.Fit = True
   LoginBackground.Fit = True
   DocumentKeyOptions = [dkDisableBackSpace]
-  BrowserOptions = [boDisableMouseRightClick, boDisableChromeRefresh]
   MonitoredKeys.Keys = <>
   EnableSynchronousOperations = True
   ExtLocale = 'ru'

@@ -39,6 +39,7 @@ object SearchF: TSearchF
       Width = 1105
       Height = 30
       Hint = ''
+      MaxLength = 40
       Text = ''
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
@@ -67,6 +68,9 @@ object SearchF: TSearchF
       Caption = #1053#1072#1081#1090#1080
       Anchors = [akTop, akRight]
       TabOrder = 2
+      ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
+      ScreenMask.Target = Owner
+      ScreenMask.Color = clMoneyGreen
       OnClick = btnSearchClick
     end
   end
@@ -184,7 +188,7 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'WeightGr'
+          FieldName = 'Weight'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089
           Title.Font.Height = -13
@@ -292,7 +296,7 @@ object SearchF: TSearchF
   object DataSource: TDataSource
     DataSet = Query
     Left = 648
-    Top = 253
+    Top = 245
   end
   object Query: TFDQuery
     Connection = UniMainModule.FDConnection
@@ -312,7 +316,9 @@ object SearchF: TSearchF
       'Select *'
       '  from vFindByNumber'
       ' where DestinationLogo = :DestinationLogo  '
-      'order by N  ')
+      'order by N  '
+      ''
+      '')
     Left = 575
     Top = 255
     ParamData = <
@@ -374,9 +380,9 @@ object SearchF: TSearchF
       FieldName = 'Rating'
       Size = 1048
     end
-    object QueryWeightGr: TCurrencyField
-      FieldName = 'WeightGr'
-      DisplayFormat = '###,##0.00'
+    object QueryWeight: TCurrencyField
+      FieldName = 'Weight'
+      DisplayFormat = '###,##0.000'
     end
     object QueryVolumeAdd: TCurrencyField
       FieldName = 'VolumeAdd'
