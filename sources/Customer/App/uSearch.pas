@@ -53,6 +53,10 @@ type
     procedure SearchGridDblClick(Sender: TObject);
     procedure SearchGridCellClick(Column: TUniDBGridColumn);
     procedure UniFrameDestroy(Sender: TObject);
+    procedure edtSearchMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure edtSearchMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
 
   private
     { Private declarations }
@@ -110,6 +114,32 @@ begin
   end;
 end;
 
+procedure TSearchF.edtSearchMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+//  if Button = mbRight then
+//  begin
+//   // ppMain.Popup(X, Y, Grid);
+//    MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions - [boDisableMouseRightClick];
+//    UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true ; }');
+//
+//
+//
+//
+//  end;
+end;
+
+procedure TSearchF.edtSearchMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+//  if Button = mbRight then
+//  begin
+//   // ppMain.Popup(X, Y, Grid);
+//    MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions + [boDisableMouseRightClick];
+//    UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
+//  end;
+end;
+
 procedure TSearchF.GridRefresh();
 var
   js: string;
@@ -165,22 +195,29 @@ end;
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  Text := StringReplace('<form id="frmDestLogo"  method="post" action=""> ' +
-    '<div class="radio-form">' + '   <label class="radio-control">  ' +
-    '       <input type="radio"  value="0001"  onchange="setDestLogo(value)" /> '
-    + '       <span class="radio-input">   ' +
-    '           <i class="fa fa-plane"></i> ' +
-    // '          <span></span>    ' +
-    '       </span>      ' + '   </label>    ' +
+//<span class="hint  hint--bottom  hint--info" data-hint="О, это подсказка">Наведи на меня</span>
+  Text := StringReplace('<form id="frmDestLogo" method="post" action=""> ' +
+    '<div class="radio-form">' +
     '   <label class="radio-control">  ' +
-    '       <input type="radio"  value="0002"  onchange="setDestLogo(value)" />  '
-    + '       <span class="radio-input">  ' +
+    '       <input type="radio" value="0001" onchange="setDestLogo(value)" /> ' +
+    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Экспресс доставка: “Прямая авиадоставка: быстро и дорого. Этим способом выгодно заказывать небольшие детали без объемного веса. К доставке не принимается' +
+    ' опасный груз. Внизу поставить перечеркнутые логотипчики как в брошуре самолета, что нельзя возить взрывоопасные и легковоспламеняющиеся товары ( масла, подушки безопасности и т.д.)"><i class="fa fa-plane"></i></span> ' +
+    '   </label>    ' +
+    '   <label class="radio-control">  ' +
+    '       <input type="radio" value="0002" onchange="setDestLogo(value)" /> ' +
+    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Стандартная доставка: “Непрямая авиадоставка с пересадкой и перегрузкой в грузовой транспорт.' +
+    ' Этим способом выгодно доставлять 90% деталей, но для доставки деталей с большим объемным весом лучше выбрать Контейнерную доставку.">  ' +
     '           <i class="fa fa-car"></i> ' + '       </span>   ' +
-    '   </label>      ' + '   <label class="radio-control"> ' +
-    '       <input type="radio"  value="0003" onchange="setDestLogo(value)" />     '
-    + '       <span class="radio-input"> ' +
-    '          <i class="fa fa-ship"></i>  ' + '       </span>    ' +
-    '   </label>' + '</div>' + '</form>', FDestinationLogo + '"',
+    '   </label>      ' +
+    '   <label class="radio-control"> ' +
+    '       <input type="radio"  value="0003" onchange="setDestLogo(value)" />  '  +
+    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Контейнерная доставка: Самый дешевый способ доставки грузов, он же и самый долгий. Этот способ подходит для доставки тяжелых или крупных деталей с большим объемом. ' +
+    'Также можно доставлять любой опасный груз: масла, подушки безопасности с пиропатронами и так далее"> ' +
+    '          <i class="fa fa-ship"></i>  ' +
+    '       </span>    ' +
+    '   </label>' +
+    '</div>' +
+    '</form>', FDestinationLogo + '"',
     FDestinationLogo + '" checked', []);
 end;
 

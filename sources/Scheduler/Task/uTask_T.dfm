@@ -220,7 +220,7 @@ object Task_T: TTask_T
         item
           FieldName = 'updDatetime'
           Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
+          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           Title.Font.Height = -13
           Width = 150
         end

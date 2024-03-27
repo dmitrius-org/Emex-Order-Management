@@ -78,7 +78,7 @@ type
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
-    procedure UserFCallBack(Sender: TComponent; AResult:Integer);
+    procedure EditFCallBack(Sender: TComponent; AResult:Integer);
 
     /// <summary>
     /// </summary>
@@ -95,20 +95,20 @@ procedure TNodesT.actDeleteExecute(Sender: TObject);
 begin
   NodesF.FormAction := TFormAction.acDelete;
   NodesF.ID:=QueryNodeID.AsInteger;
-  NodesF.ShowModal(UserFCallBack);
+  NodesF.ShowModal(EditFCallBack);
 end;
 
 procedure TNodesT.actEditExecute(Sender: TObject);
 begin
   NodesF.FormAction := TFormAction.acUpdate;
   NodesF.ID:=QueryNodeID.AsInteger;
-  NodesF.ShowModal(UserFCallBack);
+  NodesF.ShowModal(EditFCallBack);
 end;
 
 procedure TNodesT.actInsertExecute(Sender: TObject);
 begin
   NodesF.FormAction := TFormAction.acInsert;
-  NodesF.ShowModal(UserFCallBack);
+  NodesF.ShowModal(EditFCallBack);
 end;
 
 procedure TNodesT.actRefreshAllExecute(Sender: TObject);
@@ -122,7 +122,7 @@ procedure TNodesT.actViewExecute(Sender: TObject);
 begin
   NodesF.FormAction := TFormAction.acShow;
   NodesF.ID:=QueryNodeID.AsInteger;
-  NodesF.ShowModal(UserFCallBack);
+  NodesF.ShowModal(EditFCallBack);
 end;
 
 procedure TNodesT.GridCellContextClick(Column: TUniDBGridColumn; X,
@@ -182,7 +182,7 @@ begin
   Query.Close; Query.Open;
 end;
 
-procedure TNodesT.UserFCallBack(Sender: TComponent; AResult: Integer);
+procedure TNodesT.EditFCallBack(Sender: TComponent; AResult: Integer);
 begin
   if AResult <> mrOK then Exit;
 

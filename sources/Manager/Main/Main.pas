@@ -9,7 +9,7 @@ uses
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
-  Vcl.ImgList, uniImage
+  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg
   ;
 
 type
@@ -43,6 +43,9 @@ type
     procedure actEditPasExecute(Sender: TObject);
     procedure actinfoExecute(Sender: TObject);
     procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
+    procedure UniFormCreate(Sender: TObject);
+    procedure UniFormAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -309,6 +312,17 @@ begin
     if MainMenu.Selected = Nd then
       MainMenu.Selected := nil;
   end;
+end;
+
+procedure TMainForm.UniFormAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  //logger.Info('TMainForm.UniFormAjaxEvent: ' + EventName);
+end;
+
+procedure TMainForm.UniFormCreate(Sender: TObject);
+begin
+  LogoLabel.Caption := sql.GetSetting('AppProfilesName');
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

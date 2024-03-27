@@ -39,4 +39,3 @@ h1 { font-size: 1em; margin: 10px; }
 
 /***** CSS Magic to Highlight Stars on Hover *****/
  .rating > input:checked ~ label { color: #FFD700;  }
-

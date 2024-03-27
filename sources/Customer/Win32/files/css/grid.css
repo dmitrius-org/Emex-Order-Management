@@ -108,7 +108,7 @@
 .grid-search .radio-form {
     display: flex;
     justify-content: center;
-    margin: 1px 0;
+    margin: 0px 0;
 }
 .grid-search .radio-form .radio-control {
     width: 40px;
@@ -120,21 +120,21 @@
 .grid-search .radio-form .radio-control .radio-input {
     background: #ffffff;
     text-align: center;
-    padding: 5px;
-    border-radius: 10px;
+    padding: 0px;
+    /* border-radius: 10px; */
     cursor: pointer;
-    margin: 0 1px;
+    /* margin: 0 1px; */
     position: relative;
     transition: all ease 250ms;
-    border: 1px solid #BFE2FF; 
+    /* border: 1px solid #BFE2FF;  */
     display: block;
 }
 .grid-search .radio-form .radio-control:hover .radio-input {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.2);
 }
 .grid-search .radio-form .radio-control .radio-input i {
     display: block;
-    font-size: 20px;
+    font-size: 18px;
     color: #BFE2FF;
     font-weight: bold;  
 }
@@ -143,12 +143,12 @@
 }
 .grid-search .radio-form .radio-control .radio-input span {
     font-family: Tahoma, sans-serif;
-    letter-spacing: 1px;
-    font-size: 18px;
+    /* letter-spacing: 1px; */
+    font-size: 15px;
     font-weight: bold;
     text-transform: uppercase;
     display: block;
-    margin-top: 1px;
+    /* margin-top: 1px; */
     color: #AAA;
 }
 .grid-search .radio-form .radio-control input:checked + .radio-input span {
@@ -156,7 +156,7 @@
     opacity: 1;
     transition: opacity ease 250ms;
 }
-.grid-search .radio-form .radio-control input:checked + .radio-input:after {
+/* .grid-search .radio-form .radio-control input:checked + .radio-input:after {
     top: 2;
     right: 25px;
     transform: translateY(-50%);
@@ -166,16 +166,16 @@
     font-size: 15px;
     display: block;
     position: absolute;
-    /* border: 1px solid #FFF; */
-    /* padding-left: 1px; */
+    border: 1px solid #FFF;
+    padding-left: 1px;
     content: "\f058";
     font-family: "FontAwesome";
-    font-weight: bold;
-}
+    font-weight: bold; 
+} */
 .grid-search .radio-form .radio-control input:checked + .radio-input {
-    border: 2px solid #337AB7;
+    border: 0px solid #337AB7;
 }
-.grid-search .radio-form .radio-control input:checked + .radio-input:after,
+/* .grid-search .radio-form .radio-control input:checked + .radio-input:after, */
 .grid-search .radio-form .radio-control input:checked + .radio-input i {
     color: #337AB7;
 }

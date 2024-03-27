@@ -1397,7 +1397,7 @@ object PricesT: TPricesT
     Top = 196
     object actAdd: TAction
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 1
       OnExecute = actAddExecute
     end

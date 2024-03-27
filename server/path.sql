@@ -54,4 +54,9 @@ insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 998, 998, 'Удалить',  
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 999, 999, 'Обновить',  'TRefusalsT.actRefreshAll', 30, 1
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1000, 1000, 'Обработать отказы Emex',  'TRefusalsT.actUploadingRefusalsEmex', 30, 1
 
-select * from tNodes
+
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 64,  64,  'Инструкции',                  'TInstructionsT', 0,   0,'20'
+
+select * from tMenu where MenuID = 64
+
+delete from tMenu where MenuID = 64

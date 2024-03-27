@@ -25,7 +25,7 @@ object ClientsF: TClientsF
       1113
       44)
     object btnOk: TUniBitBtn
-      Left = 987
+      Left = 983
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 983
+      ExplicitLeft = 979
     end
     object btnCancel: TUniBitBtn
-      Left = 900
+      Left = 896
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 896
+      ExplicitLeft = 892
     end
   end
   object pcCommon: TUniPageControl
@@ -221,7 +221,7 @@ object ClientsF: TClientsF
       Hint = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1092#1086#1088#1084#1072#1090#1086#1074' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1079#1072#1082#1072#1079#1086#1074' '#1080#1079' excel '#1092#1072#1081#1083#1072
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
-      Caption = #1060#1086#1088#1084#1072#1090' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
       LayoutConfig.Width = '100'
       ExplicitWidth = 1107
       ExplicitHeight = 457
@@ -727,7 +727,7 @@ object ClientsF: TClientsF
     end
     object pcRefusals: TUniTabSheet
       Hint = ''
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1086#1090#1082#1072#1079#1086#1074
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1086#1090#1074#1077#1090#1086#1074
       ExplicitWidth = 1107
       ExplicitHeight = 457
       DesignSize = (
@@ -789,12 +789,12 @@ object ClientsF: TClientsF
       object edtNotificationAddress: TUniEdit
         Left = 196
         Top = 117
-        Width = 799
+        Width = 795
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
-        ExplicitWidth = 795
+        ExplicitWidth = 791
       end
     end
     object pcSuppliers: TUniTabSheet

@@ -57,6 +57,8 @@ object SearchF: TSearchF
       ScreenMask.Enabled = True
       ScreenMask.Target = SearchGrid
       Images = UniImageList1
+      OnMouseDown = edtSearchMouseDown
+      OnMouseUp = edtSearchMouseUp
       OnKeyDown = edtSearchKeyDown
     end
     object btnSearch: TUniButton
@@ -100,37 +102,37 @@ object SearchF: TSearchF
           'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
           'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
           'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
-          't.body.removeChild(el);'#13#10'    };'#13#10'    '#13#10'    config.updateRowSpan ' +
-          '= function() {'#13#10'        var columns = sender.getColumns(),'#13#10'    ' +
-          '    view = sender.getView(),'#13#10'        store = sender.getStore(),' +
-          #13#10'        rowCount = store.getCount();'#13#10'        //console.log(co' +
-          'lumns);  '#13#10'        for (var col = 0; col < columns.length; ++col' +
-          ') {     '#13#10'            var colIndx = col; // second column for ex' +
-          'ample'#13#10'            var column = columns[colIndx];'#13#10'            v' +
-          'ar dataIndex = column.dataIndex,'#13#10'            spanCell = null,'#13#10 +
-          '            spanCount = null,'#13#10'            spanValue = null;'#13#10'  ' +
-          '          '#13#10'            for (var row = 0; row < rowCount; ++row)' +
-          ' {'#13#10'                var cell = view.getCellByPosition({ row: row' +
-          ', column: colIndx }).dom,'#13#10'                record = store.getAt(' +
-          'row),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'       ' +
-          '         if (col < 5) {'#13#10'                    if (spanValue != va' +
-          'lue) {'#13#10'                        if (spanCell !== null) {'#13#10'      ' +
-          '                      spanCell.rowSpan = spanCount;'#13#10'           ' +
-          '             }'#13#10#13#10'                        Ext.fly(cell).query('#39'.' +
-          'x-grid-cell-inner'#39')[0].style.display='#39#39';'#13#10'                      ' +
-          '  spanCell = cell;'#13#10'                        spanCount = 1;'#13#10'    ' +
-          '                    spanValue = value;'#13#10'                    } el' +
-          'se {'#13#10'                        spanCount++;'#13#10'                    ' +
-          '//  Ext.fly(cell).setStyle('#39'display'#39', '#39'none'#39');     '#13#10'           ' +
-          '             Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0].style.' +
-          'display='#39'none'#39';'#13#10'                    }'#13#10'                }'#13#10'     ' +
-          '           else {'#13#10'                    Ext.fly(cell).setStyle('#39'b' +
-          'order-style'#39', '#39'solid'#39');'#13#10'                    Ext.fly(cell).setSt' +
-          'yle('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'                    Ext.fly(cel' +
-          'l).setStyle('#39'border-color'#39', '#39'#cfcfcf'#39');  '#13#10'                }  //' +
-          'if (col < 4) {'#13#10'            }'#13#10'            '#13#10'            if (spa' +
-          'nCell !== null) {'#13#10'                spanCell.rowSpan = spanCount;' +
-          #13#10'            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
+          't.body.removeChild(el);'#13#10'    };'#13#10'    '#13#10'  config.updateRowSpan = ' +
+          'function() {'#13#10'        var columns = sender.getColumns(),'#13#10'      ' +
+          '  view = sender.getView(),'#13#10'        store = sender.getStore(),'#13#10 +
+          '        rowCount = store.getCount();'#13#10'        //console.log(colu' +
+          'mns);  '#13#10'        for (var col = 0; col < columns.length; ++col) ' +
+          '{     '#13#10'            var colIndx = col; // second column for exam' +
+          'ple'#13#10'            var column = columns[colIndx];'#13#10'            var' +
+          ' dataIndex = column.dataIndex,'#13#10'            spanCell = null,'#13#10'  ' +
+          '          spanCount = null,'#13#10'            spanValue = null;'#13#10'    ' +
+          '        '#13#10'            for (var row = 0; row < rowCount; ++row) {' +
+          #13#10'                var cell = view.getCellByPosition({ row: row, ' +
+          'column: colIndx }).dom,'#13#10'                record = store.getAt(ro' +
+          'w),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'         ' +
+          '       if (col < 5) {'#13#10'                    if (spanValue != valu' +
+          'e) {'#13#10'                        if (spanCell !== null) {'#13#10'        ' +
+          '                    spanCell.rowSpan = spanCount;'#13#10'             ' +
+          '           }'#13#10#13#10'                        Ext.fly(cell).query('#39'.x-' +
+          'grid-cell-inner'#39')[0].style.display='#39#39';'#13#10'                        ' +
+          'spanCell = cell;'#13#10'                        spanCount = 1;'#13#10'      ' +
+          '                  spanValue = value;'#13#10'                    } else' +
+          ' {'#13#10'                        spanCount++;'#13#10'                    //' +
+          '  Ext.fly(cell).setStyle('#39'display'#39', '#39'none'#39');     '#13#10'             ' +
+          '           Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0].style.di' +
+          'splay='#39'none'#39';'#13#10'                    }'#13#10'                }'#13#10'       ' +
+          '         else {'#13#10'                    Ext.fly(cell).setStyle('#39'bor' +
+          'der-style'#39', '#39'solid'#39');'#13#10'                    Ext.fly(cell).setStyl' +
+          'e('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'                    Ext.fly(cell)' +
+          '.setStyle('#39'border-color'#39', '#39'#cfcfcf'#39');  '#13#10'                }  //if' +
+          ' (col < 4) {'#13#10'            }'#13#10'            '#13#10'            if (spanC' +
+          'ell !== null) {'#13#10'                spanCell.rowSpan = spanCount;'#13#10 +
+          '            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
           'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
@@ -147,7 +149,6 @@ object SearchF: TSearchF
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-search'
       BorderStyle = ubsNone
-      TrackOver = False
       StripeRows = False
       Align = alClient
       TabOrder = 1
@@ -206,7 +207,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
           Title.Font.Height = -13
-          Width = 120
+          Width = 97
           Alignment = taCenter
           ReadOnly = True
           Menu.MenuEnabled = False

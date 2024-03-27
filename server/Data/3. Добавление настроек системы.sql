@@ -36,8 +36,7 @@ declare @PID numeric(18, 0)
 select @PID = InstrumentID from tInstrument where brief = 'SettingsClientApp'
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  @PID, 'SMTP', 'Почтовый сервер для регистрации', 4--, 'TSettingsT'
 
-
-
+go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'SMTP'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_Host', 'Host', '', 'smtp.yandex.ru', 0
@@ -47,7 +46,12 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_Password', 'Password', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_RegistrationLink', 'Registration link', 'Заголовок адреса для валидации регистрации', '', 0
 
-
+go
+Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'AppProfiles', 'Профили программы', 4--, 'TSettingsT'
+declare @ID numeric(18, 0)
+select @ID = InstrumentID from tInstrument where brief = 'AppProfiles'
+--insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesLogo', 'Логотип программы', '', '', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesName', 'Наименование программы', '', '', 0
 /*
 delete
   from tSettings 

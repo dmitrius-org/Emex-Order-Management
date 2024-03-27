@@ -98,15 +98,19 @@ begin
   for Index := 0 to AAction.ActionCount- 1 do
   Begin
     logger.Info(AComp.ClassName + '.' + vartostr(AAction[Index].Name));
-    // если -1, то пункт не контролируем правами
-    if AAction[Index].Tag = -1 then
-      Continue;
-    r:= VarToInt(FUserGrant.Values[AComp.ClassName + '.' + vartostr(AAction[Index].Name)]);
+    try
+      // если -1, то пункт не контролируем правами
+      if AAction[Index].Tag = -1 then Continue;
+      r:= VarToInt(FUserGrant.Values[AComp.ClassName + '.' + vartostr(AAction[Index].Name)]);
 
-    //logger.
-
-    AAction[Index].Tag:=r;
-    AAction[Index].Enabled :=  r = 1;
+      AAction[Index].Tag:=r;
+      AAction[Index].Enabled :=  r = 1;
+    except
+      on E: Exception do
+      begin
+        logger.Info(Format('Ошибка  [%s]', [E.Message]));
+      end;
+    end;
   end;
 end;
 

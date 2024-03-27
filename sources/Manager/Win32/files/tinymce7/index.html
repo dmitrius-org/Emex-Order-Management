@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <script>
+      tinyMCE.init({
+        selector: "#textarea",
+        plugins: [
+         'advlist autolink lists link image charmap print preview anchor',
+         'searchreplace visualblocks code fullscreen',
+         'insertdatetime media table contextmenu paste code'
+         
+        ],
+        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+         mode: "exact",
+         elements : "edt1"
+      });
+    </script>
+  </head>
+  <body>
+  <!-- <h1>TinyMCE Quick Start</h1> -->
+    <form method="post">
+      <div id="textarea" style="width: 100%; height: 100%;">Hello, World!</div>
+    </form>
+  </body>
+</html>

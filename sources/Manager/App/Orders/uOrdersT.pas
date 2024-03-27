@@ -125,8 +125,6 @@ type
     QueryWarning: TWideStringField;
     UniLabel5: TUniLabel;
     cbCancel: TUniComboBox;
-    UniButton1: TUniButton;
-    UniButton2: TUniButton;
     QueryReplacementMakeLogo: TWideStringField;
     QueryReplacementDetailNumber: TWideStringField;
     QueryMakeLogo: TWideStringField;
@@ -145,7 +143,6 @@ type
     N7: TUniMenuItem;
     N11: TUniMenuItem;
     QueryDetailName: TWideStringField;
-    QueryisCancelToClient: TBooleanField;
     fStatus2: TUniCheckComboBox;
     fPriceLogo: TUniCheckComboBox;
     fClient: TUniCheckComboBox;
@@ -197,6 +194,7 @@ type
     QueryDaysInWork: TIntegerField;
     UniHiddenPanel1: TUniHiddenPanel;
     fDetailNum: TUniEdit;
+    UniScreenMask: TUniScreenMask;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -460,7 +458,10 @@ end;
 
 procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
 begin
-  Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
+  Sql.Exec('delete tGridOptions '+
+           '  from tGridOptions (rowlock)   ' +
+           ' where UserID = dbo.GetUserID() ' +
+           '   and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
 
@@ -526,13 +527,18 @@ end;
 
 procedure TOrdersT.DoHideMask;
 begin
-  UniButton1.ScreenMask.Enabled := False;
+  fOk.ScreenMask.HideMask;
+//  fOk.ScreenMask.Enabled := False;
+ // UniScreenMask.Enabled := False;
+//  UniScreenMask.ScreenMask.HideMask;
   UniSession.Synchronize;
 end;
 
 procedure TOrdersT.DoShowMask;
 begin
-  UniButton1.ScreenMask.Enabled := True;
+//  fOk.ScreenMask.Enabled := True;
+  fOk.ScreenMask.ShowMask();
+//  UniScreenMask.ScreenMask.ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize;
 end;
 
@@ -739,7 +745,6 @@ begin
       Query.MacroByName('Invoice').Value := '';
 
 
-
     Query.Open();
 
     StateActionMenuCreate;
@@ -834,6 +839,9 @@ begin
 
   actGroupDetailNameEdit.Enabled := (actGroupDetailNameEdit.Tag=1) and (Marks.Count>0);
   actGroupSetFragileSign.Enabled := (actGroupSetFragileSign.Tag=1) and (Marks.Count>0);
+
+  actExecuteActionEnabled.Enabled  := (actExecuteActionEnabled.Tag = 1) and (Marks.Count > 0);
+  actExecuteActionRollback.Enabled := (actExecuteActionRollback.Tag= 1) and (Marks.Count > 0);
 end;
 
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -1191,9 +1199,6 @@ begin
 
   // восстановление настроек грида для пользователя
   GridLayout(Self, Grid, tGridLayout.glLoad, False);
-
-  actExecuteActionEnabled.Enabled  := (actExecuteActionEnabled.Tag = 1) and (Grid.SelectedRows.Count > 0);
-  actExecuteActionRollback.Enabled := (actExecuteActionRollback.Tag= 1) and (Grid.SelectedRows.Count > 0);
 
   // объект для упраления метками
   Marks := tMarks.Create(Grid);

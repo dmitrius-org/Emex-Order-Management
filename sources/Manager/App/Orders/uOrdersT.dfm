@@ -47,8 +47,8 @@ object OrdersT: TOrdersT
         
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
-          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=false;'#13#10' ' +
-          '   }'#13#10'}'
+          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=true;'#13#10'  ' +
+          '  }'#13#10'}'
         'hide=function hide(sender, eOpts)'#13#10'{'#13#10#13#10'}'
         
           'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
@@ -70,7 +70,8 @@ object OrdersT: TOrdersT
         
           'columnschanged=function columnschanged(ct, eOpts)'#13#10'{'#13#10' // ajaxRe' +
           'quest(this, '#39'_columnschanged'#39', ['#39'colIndx='#39' + column.dataIndex])'#13 +
-          #10'}')
+          #10'}'
+        'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -98,19 +99,19 @@ object OrdersT: TOrdersT
           'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}'
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10'}')
+          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(10).hide();'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgTabs, dgDontShowSelected, dgRowNumbers]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgFilterClearButton, dgTabs, dgDontShowSelected, dgRowNumbers]
       WebOptions.PageSize = 50
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       Grouping.ShowCaption = False
       Grouping.ShowValue = False
+      LoadMask.WaitData = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
+      LoadMask.Target = Owner
       LoadMask.Color = 13421772
       Images = UniImageList
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
@@ -184,7 +185,6 @@ object OrdersT: TOrdersT
         end
         item
           FieldName = 'OrderNum'
-          Filtering.Editor = fDetailNum
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           Width = 103
@@ -230,7 +230,6 @@ object OrdersT: TOrdersT
         item
           FieldName = 'DetailNumber'
           Filtering.Enabled = True
-          Filtering.Editor = fDetailNum
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           Width = 135
@@ -511,13 +510,6 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
-          FieldName = 'Flag'
-          Title.Caption = 'Flag'
-          Width = 64
-          ReadOnly = True
-          Sortable = True
-        end
-        item
           FieldName = 'IncomePRC'
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1093#1086#1076' %'
@@ -547,9 +539,17 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
+          FieldName = 'Flag'
+          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Width = 64
+          Visible = False
+          ReadOnly = True
+          Sortable = True
+        end
+        item
           FieldName = 'inDatetime'
           Title.Alignment = taCenter
-          Title.Caption = 'inDatetime'
+          Title.Caption = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103
           Width = 135
           ReadOnly = True
           Hint = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103
@@ -662,6 +662,10 @@ object OrdersT: TOrdersT
           Action = actFilter
           TabOrder = 12
           IconPosition = ipButtonEdge
+          ScreenMask.Enabled = True
+          ScreenMask.WaitData = True
+          ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
+          ScreenMask.Target = Owner
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
@@ -715,30 +719,6 @@ object OrdersT: TOrdersT
           IconItems = <>
           OnSelect = cbCancelSelect
           OnKeyDown = fStatus2KeyDown
-        end
-        object UniButton1: TUniButton
-          Left = 17
-          Top = 78
-          Width = 25
-          Height = 25
-          ShowHint = True
-          Action = actSelect
-          TabOrder = 13
-          ScreenMask.Message = #1046#1076#1080#1090#1077'. '#1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103'!'
-          ScreenMask.Target = Owner
-          ImageIndex = 1
-          IconAlign = iaCenter
-          IconPosition = ipButtonEdge
-        end
-        object UniButton2: TUniButton
-          Left = 46
-          Top = 78
-          Width = 25
-          Height = 25
-          ShowHint = True
-          Action = actUnselect
-          TabOrder = 14
-          ImageIndex = 0
         end
         object fStatus2: TUniCheckComboBox
           Left = 17
@@ -876,7 +856,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080':'
-          TabOrder = 15
+          TabOrder = 13
         end
         object fOrderDate: TUniDateTimePicker
           Left = 754
@@ -888,7 +868,7 @@ object OrdersT: TOrdersT
           DateTime = 45257.000000000000000000
           DateFormat = 'dd/MM/yyyy'
           TimeFormat = 'HH:mm:ss'
-          TabOrder = 16
+          TabOrder = 14
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
           OnKeyDown = fStatus2KeyDown
@@ -901,7 +881,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072':'
-          TabOrder = 17
+          TabOrder = 15
         end
         object edtUpdDate: TUniDateTimePicker
           Left = 977
@@ -913,7 +893,7 @@ object OrdersT: TOrdersT
           DateTime = 45257.000000000000000000
           DateFormat = 'dd/MM/yyyy'
           TimeFormat = 'HH:mm:ss'
-          TabOrder = 18
+          TabOrder = 16
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           OnKeyDown = fStatus2KeyDown
@@ -926,7 +906,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103':'
-          TabOrder = 19
+          TabOrder = 17
         end
         object edtInvoice: TUniEdit
           Left = 977
@@ -935,7 +915,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 20
+          TabOrder = 18
           EmptyText = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
           CheckChangeDelay = 200
           ClearButton = True
@@ -949,7 +929,20 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
-          TabOrder = 21
+          TabOrder = 19
+        end
+        object fDetailNum: TUniEdit
+          Left = 581
+          Top = 81
+          Width = 167
+          Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
+          ShowHint = True
+          Text = ''
+          TabOrder = 20
+          EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
+          CheckChangeDelay = 200
+          ClearButton = True
+          OnKeyDown = fStatus2KeyDown
         end
       end
     end
@@ -1138,26 +1131,13 @@ object OrdersT: TOrdersT
       end
     end
     object UniHiddenPanel1: TUniHiddenPanel
-      Left = 712
-      Top = 180
-      Width = 329
-      Height = 256
+      Left = 1096
+      Top = 192
+      Width = 127
+      Height = 244
       Hint = ''
       Visible = True
       ShowHint = True
-      object fDetailNum: TUniEdit
-        Left = 17
-        Top = 17
-        Width = 167
-        Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
-        ShowHint = True
-        Text = ''
-        TabOrder = 1
-        EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
-        CheckChangeDelay = 200
-        ClearButton = True
-        OnKeyDown = fStatus2KeyDown
-      end
     end
   end
   object Query: TFDQuery
@@ -1549,9 +1529,6 @@ object OrdersT: TOrdersT
     object QueryReplacementManufacturer: TWideStringField
       FieldName = 'ReplacementManufacturer'
       Size = 32
-    end
-    object QueryisCancelToClient: TBooleanField
-      FieldName = 'isCancelToClient'
     end
     object QueryReplacementPrice: TCurrencyField
       FieldName = 'ReplacementPrice'
@@ -3896,5 +3873,13 @@ object OrdersT: TOrdersT
       0000000000000000F800000FC000007F0000000000000000FE00003FE00000FF
       0000000000000000FFC001FFF80001FF00000000000000000000000000000000
       000000000000}
+  end
+  object UniScreenMask: TUniScreenMask
+    AttachedControl = Grid
+    Enabled = False
+    DisplayMessage = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
+    TargetControl = Owner
+    Left = 784
+    Top = 216
   end
 end

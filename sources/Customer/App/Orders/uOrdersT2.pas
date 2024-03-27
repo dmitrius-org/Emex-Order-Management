@@ -571,7 +571,15 @@ procedure TOrdersT2.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer)
 begin
   ACurrColumn := Column;
 
+
+//  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions + [boDisableMouseRightClick];
+//  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
+
   ppMain.Popup(X, Y, Grid);
+
+//  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions - [boDisableMouseRightClick];
+//  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true; }');
+
 end;
 
 procedure TOrdersT2.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;

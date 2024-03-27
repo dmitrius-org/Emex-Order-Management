@@ -142,8 +142,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>NodesT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="Core\Instrument\uNodesF.pas">
-            <Form>NodesF</Form>
+        <DCCReference Include="App\Instructions\uInstructionsF.pas">
+            <Form>InstructionsF</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
@@ -355,6 +355,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="App\Orders\uGroupDetailNameEditF.pas">
             <Form>GroupDetailNameEditF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Instructions\uInstructionsT.pas">
+            <Form>InstructionsT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Core\Instrument\uNodesF.pas">
+            <Form>NodesF</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>

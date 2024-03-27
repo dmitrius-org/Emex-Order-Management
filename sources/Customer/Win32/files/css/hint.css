@@ -24,9 +24,8 @@
  * 	1) hint
  */
  [class*=hint--] {
-    /* position: absolute; */
-    /* overflow: visible; */
-    display: inline-block;
+  position: relative;
+  display: inline-block;
     /**
      * tooltip arrow
      */
@@ -76,11 +75,11 @@
     content: attr(data-hint);
   }
   
-  [aria-label=""]:before, [aria-label=""]:after,
+  /* [aria-label=""]:before, [aria-label=""]:after,
   [data-hint=""]:before,
   [data-hint=""]:after {
     display: none !important;
-  }
+  } */
   
   /**
    * source: hint-position.scss

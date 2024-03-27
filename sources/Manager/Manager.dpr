@@ -31,7 +31,7 @@ uses
   uGrant in 'Core\User\uGrant.pas' {GrantF: TUniForm},
   uGroupsT in 'Core\User\uGroupsT.pas' {GroupsT: TUniFrame},
   uNodesT in 'Core\Instrument\uNodesT.pas' {NodesT: TUniFrame},
-  uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm},
+  uInstructionsF in 'App\Instructions\uInstructionsF.pas' {InstructionsF: TUniForm},
   uInstrumentStateT in 'Core\Instrument\uInstrumentStateT.pas' {InstrumentStateT: TUniFrame},
   uGrantClient in 'Core\User\uGrantClient.pas' {GrantClientT: TUniFrame},
   uSettingsT in 'Core\Instrument\uSettingsT.pas' {SettingsT: TUniFrame},
@@ -88,7 +88,9 @@ uses
   uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
   uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
   uGroupSetFragileSignF in 'App\Orders\uGroupSetFragileSignF.pas' {GroupSetFragileSignF: TUniForm},
-  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm};
+  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
+  uInstructionsT in 'App\Instructions\uInstructionsT.pas' {InstructionsT: TUniFrame},
+  uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm};
 
 {$R *.res}
 

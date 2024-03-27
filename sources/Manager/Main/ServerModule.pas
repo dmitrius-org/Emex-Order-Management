@@ -81,6 +81,7 @@ begin
   ExploreWeb('http://127.0.0.1:8078');
   {$ENDIF}
   MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
+  //MimeTable.AddMimeType('mjs', 'application/javascript');
 
   FDManager.DriverDefFileName     := UniServerModule.StartPath + 'Drivers.ini';
   FDManager.ConnectionDefFileName := UniServerModule.StartPath + 'Connection.ini';
