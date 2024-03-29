@@ -1,6 +1,6 @@
 unit ServerModule;
 
-{$I compile.inc}
+{$I ..\compile.inc}
 
 interface
 

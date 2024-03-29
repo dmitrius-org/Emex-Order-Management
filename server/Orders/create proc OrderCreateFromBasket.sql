@@ -74,7 +74,6 @@ declare @r int = 0
         ,Manufacturer
         ,DetailNumber
         ,Quantity
-        ,DetailID
         ,Price
         ,Amount
         ,PricePurchaseOrg
@@ -98,6 +97,10 @@ declare @r int = 0
         ,Discount
         --
         ,ClientOrderNum
+
+		,DetailID
+		,CustomerSubId
+
         ,ID
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
@@ -105,7 +108,6 @@ declare @r int = 0
         ,b.MakeName--Manufacturer
         ,b.DetailNum
         ,b.Quantity
-        ,0
         ,b.PriceRub
         ,b.Amount
         ,b.Price --PricePurchaseOrg
@@ -127,8 +129,11 @@ declare @r int = 0
         ,b.Margin  -- Наценка из прайса
         ,b.Discount-- Скидка  
         --
-        ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0)
-        ,b.BasketID
+        ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
+        ,b.BasketID -- DetailID 
+		,b.BasketID -- CustomerSubId
+
+		,b.BasketID -- ID
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
@@ -214,6 +219,6 @@ exec OrdersFinCalc @IsSave = 1
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240101', '0'
+exec setOV 'OrderCreateFromBasket', 'P', '20240327', '2'
 go
  

@@ -15,6 +15,6 @@ insert tObjectType (ObjectTypeID, Brief, Name, Flag) select   7, 'Клиенты
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  10, 'Shipments',     'Интерфейс: Отгрузка', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  11, 'Task',          'Автоматические задания', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 101, 'TaskProc',      'Процедуры автоматических заданий', 0
-
+insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 102, 'ModelMetod',    'Процедуры для подели состояния', 0
 
 select * From tObjectType-- where flag&4=4

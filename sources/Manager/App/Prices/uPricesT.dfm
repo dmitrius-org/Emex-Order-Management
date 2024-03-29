@@ -200,6 +200,7 @@ object PricesT: TPricesT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      LayoutConfig.ComponentCls = 'grid-prices'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
@@ -240,8 +241,16 @@ object PricesT: TPricesT
           FieldName = 'InWorkingDays'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1091#1082#1072#1079#1072#1085' '#1074' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1103#1093
-          Width = 191
+          Width = 103
           Hint = #1057#1088#1086#1082' '#1091#1082#1072#1079#1072#1085' '#1074' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1103#1093
+          Sortable = True
+          CheckBoxField.AutoPost = True
+        end
+        item
+          FieldName = 'ShowInSearch'
+          Title.Alignment = taCenter
+          Title.Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1087#1086#1080#1089#1082#1077
+          Width = 110
           Sortable = True
           CheckBoxField.AutoPost = True
         end
@@ -316,6 +325,9 @@ object PricesT: TPricesT
     end
     object QueryInWorkingDays: TBooleanField
       FieldName = 'InWorkingDays'
+    end
+    object QueryShowInSearch: TBooleanField
+      FieldName = 'ShowInSearch'
     end
   end
   object DataSource: TDataSource
@@ -1751,6 +1763,7 @@ object PricesT: TPricesT
       '           ,[DeliveryType]'
       '           ,[Flag]'
       '           ,[InWorkingDays]'
+      '           ,[ShowInSearch]   '
       '           )'
       '     VALUES'
       '           (@Name '
@@ -1759,6 +1772,7 @@ object PricesT: TPricesT
       '           ,:NEW_DeliveryType'
       '           ,:NEW_Flag'
       '           ,:New_InWorkingDays'
+      '           ,:NEW_ShowInSearch'
       '           )'
       ''
       'SELECT @Name AS Name')
@@ -1797,7 +1811,8 @@ object PricesT: TPricesT
       '      ,DeliveryTerm  = :NEW_DeliveryTerm'
       '      ,DeliveryType  = :NEW_DeliveryType'
       '      ,Flag          = :NEW_Flag'
-      '      ,InWorkingDays = :New_InWorkingDays'
+      '      ,InWorkingDays = :NEW_InWorkingDays'
+      '      ,ShowInSearch  = :NEW_ShowInSearch'
       ' WHERE Name = :OLD_Name;'
       ' '
       'SELECT @Name as Name        '

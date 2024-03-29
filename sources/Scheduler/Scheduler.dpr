@@ -1,4 +1,4 @@
-{$I compile.inc}
+{$I ..\compile.inc}
 
 {$IFDEF UNIGUI_SERVICE}
   {$EXTENSION exe}

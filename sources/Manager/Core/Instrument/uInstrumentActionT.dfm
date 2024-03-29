@@ -3,6 +3,7 @@ object InstrumentActionT: TInstrumentActionT
   Top = 0
   Width = 887
   Height = 403
+  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.Width = '0'
   ParentAlignmentControl = False
@@ -61,11 +62,13 @@ object InstrumentActionT: TInstrumentActionT
         FieldName = 'Metod'
         Title.Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1076#1077#1081#1089#1090#1074#1080#1103
         Width = 302
+        Editor = cbMetod
       end
       item
         FieldName = 'MetodRollback'
         Title.Caption = #1054#1090#1082#1072#1090' '#1076#1077#1081#1089#1090#1074#1080#1103
         Width = 285
+        Editor = cbMetodRollback
       end
       item
         FieldName = 'Comment'
@@ -119,6 +122,32 @@ object InstrumentActionT: TInstrumentActionT
       Top = 3
       Action = actRefreshAll
       TabOrder = 4
+    end
+  end
+  object UniHiddenPanel1: TUniHiddenPanel
+    Left = 504
+    Top = 96
+    Width = 160
+    Height = 256
+    Hint = ''
+    Visible = True
+    object cbMetod: TUniComboBox
+      Left = 12
+      Top = 48
+      Width = 145
+      Hint = ''
+      Text = 'cbMetod'
+      TabOrder = 1
+      IconItems = <>
+    end
+    object cbMetodRollback: TUniComboBox
+      Left = 12
+      Top = 88
+      Width = 145
+      Hint = ''
+      Text = 'cbMetod'
+      TabOrder = 2
+      IconItems = <>
     end
   end
   object Query: TFDQuery

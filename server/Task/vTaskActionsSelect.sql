@@ -18,7 +18,7 @@ select t.TaskID
          when t.TaskType=2 then t.Field
 		 else ''
 	   end Method
-      ,Flag       
+      ,t.Flag       
   from tTaskActions t (nolock)
   left join tProperty p (nolock)
          on p.PropertyID = t.LinkID

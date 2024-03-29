@@ -55,8 +55,15 @@ insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 999, 999, 'Обновить', 
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1000, 1000, 'Обработать отказы Emex',  'TRefusalsT.actUploadingRefusalsEmex', 30, 1
 
 
-insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 64,  64,  'Инструкции',                  'TInstructionsT', 0,   0,'20'
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 64,  64,  'Информация',                  '', 0,   0,'20'
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 65,  65,  'Инструкции',                  'TInstructionsT', 0,   64,''
 
-select * from tMenu where MenuID = 64
+--select * from tMenu where MenuID = 64
 
-delete from tMenu where MenuID = 64
+--delete from tMenu where MenuID = 64
+
+
+alter table tPrices add ShowInSearch                      bit           
+
+
+select * from tSettings

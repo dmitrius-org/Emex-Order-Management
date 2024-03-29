@@ -114,15 +114,25 @@ function TUniMainModule.dbUserAuthorization(AU, AP: string; IsSaveSession: Boole
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Begin');
 
-  Query.SQL.Text := (' Select ClientID, IsActive from tClients (nolock) where Email=:Email and Password = master.dbo.fn_varbintohexstr(HashBytes(''SHA2_512'', :Password)) ');
+  Query.SQL.Text := ('  declare @R int ' +
+                     '         ,@Password nvarchar(512)  ' +
+                     '         ,@ClientID numeric(18, 0) ' +
+                     ''+
+                     '  select @Password=  master.dbo.fn_varbintohexstr(HashBytes(''SHA2_512'', :Password)) ' +
+                     '  exec @R = CustomerAuthorization ' +
+                     '    @UserName = :Email,           ' +
+                     '    @Password = @Password,        ' +
+                     '    @ClientID = @ClientID out     ' +
+                     '  select @R        as R           ' +
+                     '        ,@ClientID as ClientID'    );
   Query.ParamByName('Email').AsWideString    := AU;
   Query.ParamByName('Password').AsWideString := AP;
   Query.Open();
 
-  if Query.RecordCount > 0 then
+  RetVal.Code :=  Query.FieldByName('r').AsInteger;
+
+  if RetVal.Code = 0 then
   begin
-    if Query.FieldByName('IsActive').AsBoolean then
-    begin
       UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
       AUserID  := Query.FieldByName('ClientID').AsInteger;
       AUserName:=AU;
@@ -141,22 +151,13 @@ begin
           FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
           FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
-
-      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
-    end
-    else
-    begin
-      if not IsSaveSession then
-          raise Exception.Create('Доступ отключен!');
-      Result := false;
-    end;
   end
   else
   begin
     Result := false;
 
     if not IsSaveSession then
-        raise Exception.Create('Имя пользователя или пароль неверны!');
+        raise Exception.Create(RetVal.Message);
   end;
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserConnect', 'End');
 end;

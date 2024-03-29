@@ -11,6 +11,7 @@ begin
 	,DeliveryTerm	int            -- Срок доставки
 	,DeliveryType	nvarchar(30)   -- Тип доставки
 	,InWorkingDays  bit            -- Срок указан в рабочих днях
+	,ShowInSearch   bit            -- Показывать на форме поиска
 	,Flag           int
 
 	);

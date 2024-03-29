@@ -53,6 +53,7 @@ type
     UniHiddenPanel1: TUniHiddenPanel;
     cbDeliveryType: TUniComboBox;
     QueryInWorkingDays: TBooleanField;
+    QueryShowInSearch: TBooleanField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

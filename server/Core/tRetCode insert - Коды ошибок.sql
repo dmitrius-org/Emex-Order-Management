@@ -15,6 +15,9 @@ insert tRetCode (RetCode, Message) select 12,  'Не заполнено обяз
 insert tRetCode (RetCode, Message) select 13,  'Email в системе не зарегистрирован!'
 insert tRetCode (RetCode, Message) select 14,  'Ошибка сброса пароля!'
 insert tRetCode (RetCode, Message) select 15,  'Пароль не может быть пустым!'
+insert tRetCode (RetCode, Message) select 16,  'Пользователь заблокирован из-за неудачных попыток входа, повторите попытку через 30 минут!'
+insert tRetCode (RetCode, Message) select 17,  'Имя пользователя или пароль неверны!'
+insert tRetCode (RetCode, Message) select 18,  'Доступ отключен!'
 
 -- tClients
 insert tRetCode (RetCode, Message) select 100, 'Клиент с заданным наименованием существует!'
@@ -84,6 +87,7 @@ insert tRetCode (RetCode, Message) select 527, 'Не выбраны позици
 insert tRetCode (RetCode, Message) select 528, 'Заказ с заданным номером существует!'
 insert tRetCode (RetCode, Message) select 530, '[OrderCreateFromBasket] Не определен идентификатор начального состояния!'
 insert tRetCode (RetCode, Message) select 533, '[OrderCreateFromBasket] Не определен поставщик, обратитесь к администратору системы!'
+insert tRetCode (RetCode, Message) select 534, '[EmexCreateOrderCheck] Деталь уже размещена!'
 --
 
 

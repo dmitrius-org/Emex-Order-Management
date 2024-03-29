@@ -119,7 +119,6 @@ type
     QueryStatusID: TFMTBCDField;
     actExecuteActionRollback: TAction;
     N3: TUniMenuItem;
-    N10: TUniMenuItem;
     QueryFlag: TIntegerField;
     QueryOverPricing: TCurrencyField;
     QueryWarning: TWideStringField;
@@ -159,9 +158,7 @@ type
     lblSelRowSum: TUniLabel;
     UniPanel5: TUniPanel;
     N5: TUniMenuItem;
-    N13: TUniMenuItem;
     QueryDestinationLogo: TWideStringField;
-    Emex1: TUniMenuItem;
     QueryInvoice: TWideStringField;
     lblRowSum2: TUniLabel;
     lblRowSum1: TUniLabel;
@@ -194,7 +191,6 @@ type
     QueryDaysInWork: TIntegerField;
     UniHiddenPanel1: TUniHiddenPanel;
     fDetailNum: TUniEdit;
-    UniScreenMask: TUniScreenMask;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -392,6 +388,8 @@ begin
   logger.Info('TOrdersT.ActionExecute Begin');
   DoShowMask;
   try
+    SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
+
     if Accrual.ActionExecute(ActionID) = 0 then
       begin
         ActionExecuteAfter(acRefresh);
@@ -433,8 +431,8 @@ end;
 
 procedure TOrdersT.actFilterClearExecute(Sender: TObject);
 begin
-
   DoShowMask;
+
   fStatus2.ClearSelection;
   fPriceLogo.ClearSelection;
   fClient.ClearSelection;
@@ -449,6 +447,8 @@ begin
   fOrderDate.Text := '';
   edtUpdDate.Text := '';
   edtInvoice.Text := '';
+
+  DoHideMask;
 end;
 
 procedure TOrdersT.actFilterExecute(Sender: TObject);
@@ -528,17 +528,12 @@ end;
 procedure TOrdersT.DoHideMask;
 begin
   fOk.ScreenMask.HideMask;
-//  fOk.ScreenMask.Enabled := False;
- // UniScreenMask.Enabled := False;
-//  UniScreenMask.ScreenMask.HideMask;
   UniSession.Synchronize;
 end;
 
 procedure TOrdersT.DoShowMask;
 begin
-//  fOk.ScreenMask.Enabled := True;
   fOk.ScreenMask.ShowMask();
-//  UniScreenMask.ScreenMask.ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize;
 end;
 

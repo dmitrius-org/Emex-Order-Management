@@ -9,7 +9,8 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
   System.Actions, Vcl.ActnList, uniMainMenu, Vcl.Menus, Data.DB,
-  FireDAC.Comp.DataSet, uniGUIBaseClasses, uniBasicGrid, uniDBGrid, uniToolBar;
+  FireDAC.Comp.DataSet, uniGUIBaseClasses, uniBasicGrid, uniDBGrid, uniToolBar,
+  uniMultiItem, uniComboBox, uniPanel;
 
 type
   TInstrumentActionT = class(TUniFrame)
@@ -33,12 +34,16 @@ type
     UniToolButton2: TUniToolButton;
     UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
+    UniHiddenPanel1: TUniHiddenPanel;
+    cbMetod: TUniComboBox;
+    cbMetodRollback: TUniComboBox;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
     procedure acInsertExecute(Sender: TObject);
     procedure acDeleteExecute(Sender: TObject);
     procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure UniFrameReady(Sender: TObject);
   private
     FID: Integer;
     { Private declarations }
@@ -56,7 +61,7 @@ type
 implementation
 
 uses
-  uLogger;
+  uLogger, uMainVar;
 
 {$R *.dfm}
 
@@ -119,6 +124,12 @@ begin
 
   DataRefresh;
   logger.Info('TInstrumentActionT.SetID end');
+end;
+
+procedure TInstrumentActionT.UniFrameReady(Sender: TObject);
+begin
+  ComboBoxFill(cbMetod,' select Brief as Name from tProperty where ObjectTypeID=102 and ((Flag & 1) >0)' );
+  ComboBoxFill(cbMetodRollback,' select Brief as Name from tProperty where ObjectTypeID=102 and ((Flag & 2) >0)' );
 end;
 
 initialization

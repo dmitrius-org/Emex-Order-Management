@@ -30,6 +30,11 @@ type
     procedure InsertPartToBasketByPartRollBack();
 
     /// <summary>
+    /// EmexCreateOrderCheck - Проверка наличия заказа в Emex по данным корзины
+    /// </summary>
+    procedure EmexCreateOrderCheck();
+
+    /// <summary>
     /// EmexCreateOrder - Создание заказа клиента по данным корзины
     /// </summary>
     procedure EmexCreateOrder();
@@ -118,6 +123,15 @@ end;
 procedure TProcExec.EmexCreateOrder();
 begin
   Emex.CreateOrder;
+end;
+
+procedure TProcExec.EmexCreateOrderCheck;
+begin
+  //Запрашиваем заказы в статусе в Работе
+  Emex.MovementInWork;
+
+  // Выполняем проверку, результат пишем pAccrualAction.RetVal
+  Emex.SQl.Exec('exec EmexCreateOrderCheck', [], []);
 end;
 
 procedure TProcExec.EmexOrderStateSync;

@@ -51,7 +51,7 @@ Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'AppProfiles
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'AppProfiles'
 --insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesLogo', 'Логотип программы', '', '', 0
-insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesName', 'Наименование программы', '', '', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesName', 'Наименование программы', '', 'Booster LLC', 0
 /*
 delete
   from tSettings 

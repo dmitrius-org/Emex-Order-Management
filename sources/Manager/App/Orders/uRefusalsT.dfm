@@ -1264,6 +1264,7 @@ object RefusalsT: TRefusalsT
     object actUploadingRefusalsEmex: TAction
       Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1086#1090#1082#1072#1079#1099' Emex'
       ImageIndex = 5
+      OnExecute = actUploadingRefusalsEmexExecute
     end
   end
   object PopupMenu: TUniPopupMenu

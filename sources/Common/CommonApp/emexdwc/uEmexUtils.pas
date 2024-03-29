@@ -235,25 +235,25 @@ begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
-    if SuppliersID = 0 then
-    begin
-      //данные дл€ интеграции берем из справочника " лиенты"
+//    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
+//    if SuppliersID = 0 then
+//    begin
+//      //данные дл€ интеграции берем из справочника " лиенты"
       SQl.Open('Select s.emexUsername, s.emexPassword '+
                '  from tClients c (nolock)            ' +
                '  join tSuppliers  s (nolock)         ' +
                '    on s.SuppliersID = c.SuppliersID  ' +
                ' where c.ClientID = :ClientID',
               ['ClientID'], [AAccount]);
-    end
-    else
-    begin
-      //данные дл€ интеграции берем из настройки SearchSuppliers
-      SQl.Open('Select s.emexUsername, s.emexPassword '+
-               '  from tSuppliers  s (nolock)         ' +
-               ' where s.SuppliersID = :SuppliersID  ',
-              ['SuppliersID'], [SuppliersID]);
-    end;
+//    end
+//    else
+//    begin
+//      //данные дл€ интеграции берем из настройки SearchSuppliers
+//      SQl.Open('Select s.emexUsername, s.emexPassword '+
+//               '  from tSuppliers  s (nolock)         ' +
+//               ' where s.SuppliersID = :SuppliersID  ',
+//              ['SuppliersID'], [SuppliersID]);
+//    end;
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -621,7 +621,7 @@ procedure TEmex.MovementByOrderNumber(AAccount: Integer; AEmexOrderID: integer);
 var parts: ArrayOfMovement;
 begin
   logger.Info('TEmex.MovementByOrderNumber Begin');
-  logger.Info('TEmex.MovementByOrderNumber AAccount: '    + AAccount.ToString);
+  logger.Info('TEmex.MovementByOrderNumber Client(AAccount): '    + AAccount.ToString);
   logger.Info('TEmex.MovementByOrderNumber EmexOrderID: ' + AEmexOrderID.ToString);
 
   parts:=Emex.MovementByOrderNumber(getCustomer(AAccount), AEmexOrderID);
@@ -701,7 +701,7 @@ begin
     end;
     Qry.Close;
 
-    SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
+    //SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
   end;
 
   FreeAndNil(Clients);

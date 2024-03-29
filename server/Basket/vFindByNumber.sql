@@ -39,9 +39,8 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        p.DestinationLogo
   from pFindByNumber p with (nolock index=ao2)
 
- --inner join tSearchPrice sp (nolock)
- --        on sp.MakeLogo             = p.PriceLogo
-	   -- and isnull(sp.Synthetic, 0) = 0
+ inner join tPrices sp (nolock)
+         on sp.Name  = p.PriceLogo
  where p.Spid             = @@spid
    and p.Available        > 0
    --and (p.PercentSupped >= 30
@@ -59,6 +58,6 @@ go
 grant all on vFindByNumber to public
 
 go
-exec setOV 'vFindByNumber', 'V', '20240321', '1'
+exec setOV 'vFindByNumber', 'V', '20240327', '2'
 go
 -- select * from tPrice where DetailNum =  '09G301469A'

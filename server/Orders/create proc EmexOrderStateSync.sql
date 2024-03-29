@@ -185,6 +185,7 @@ DEALLOCATE my_cur
  where p.Spid = @@SPID
    and p.Flag&8>0
 
+ -- 
  update o 
     set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
    from pMovement p (nolock) 
@@ -200,6 +201,10 @@ DEALLOCATE my_cur
           on o.OrderID = p.OrderID 
          and o.Quantity * o.PricePurchase <> o.AmountPurchase
   where p.Spid = @@SPID
+
+
+
+
 
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
@@ -252,8 +257,7 @@ DEALLOCATE my_cur
        ,o.ReplacementPrice        = case 
                                       when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
                                       else null
-                                    end
-       
+                                    end       
        ,o.OrderDetailSubId        = p.OrderDetailSubId
        ,o.Invoice                 = case 
 	                                  when CHARINDEX('#', StateText) > 0 
@@ -311,7 +315,7 @@ DEALLOCATE my_cur
  -- расчет сроков дотавки
  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
  insert pDeliveryTerm (Spid, OrderID)
- Select @@spid, OrderID
+ Select distinct @@spid, OrderID
    from pMovement (nolock)
   where Spid = @@SPID
   
@@ -322,6 +326,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240322', '1'
+exec setOV 'EmexOrderStateSync', 'P', '20240328', '2'
 go
  

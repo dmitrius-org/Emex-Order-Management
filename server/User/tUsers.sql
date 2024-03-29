@@ -1,5 +1,4 @@
 if OBJECT_ID('tUser') is null
---drop table tUser
 /* **********************************************************
 tUser - пользователи
 ********************************************************** */
@@ -9,20 +8,20 @@ begin
 	 UserID            numeric(18,0)  identity --  
 	,Brief             nvarchar(512)  not null --
 	,Name              nvarchar(512)  null  -- 
-	,isBlock           bit      default 0  --
+	,isBlock           bit            default 0  --
 	,DateBlock         datetime       null
 	,Login             nvarchar(512) 
 	--
 	,inDatetime        datetime default GetDate()      --
 	,updDatetime       datetime default GetDate()      --
-	)
+	);
 	
-	create unique index ao1 on tUser(UserID) include (Brief, Name)
+	create unique index ao1 on tUser(UserID) include (Brief, Name);
 	
-	create unique index ao2 on tUser(Brief)
+	create unique index ao2 on tUser(Brief);
 	
-	grant all on tUser to public
+	grant all on tUser to public;
 end
 go
-exec setOV 'tUser', 'U', '20240101', '0'
+exec setOV 'tUser', 'U', '20240101', '0';
 go

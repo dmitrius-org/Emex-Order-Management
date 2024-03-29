@@ -17,7 +17,7 @@ declare @r int = 0
 
   Update t
      set t.Quantity =   t.Quantity + 1 
-	    ,t.Amount   =  (t.Quantity + 1)*t.Price
+	    ,t.Amount   =  (t.Quantity + 1) * t.PriceRub
     from pFindByNumber p (nolock)
    inner join tBasket t (updlock)
 	       on t.ClientID  = @ClientID
@@ -80,5 +80,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240101', '0'
+exec setOV 'PartToBasket', 'P', '20240327', '1'
 go

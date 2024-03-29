@@ -141,7 +141,7 @@ select p.ID,
        pd.WeightKG,
        pd.VolumeKG,
        pd.DestinationLogo
-  from pFindByNumber p (rowlock)
+  from pFindByNumber p (nolock)
 
  inner join tProfilesCustomer pc (nolock)
          on pc.ClientID = p.ClientID
@@ -154,8 +154,6 @@ select p.ID,
 	   and pp.MakeLogo  = p.Make
 	   
  where p.Spid = @@Spid
-
-
 
 Update #Price  
    set TDel = case
@@ -198,10 +196,21 @@ Update f
  --*/
 
 
+ insert tSearchHistory (ClientID, DetailNum)
+ select distinct
+        f.ClientID
+       ,f.DetailNum
+   from pFindByNumber f (nolock)
+  where f.Spid = @@Spid
+    and  not exists (select 1
+	                   from tSearchHistory sh with (nolock index=ao1)
+					  where sh.ClientID  = f.ClientID
+					    and sh.DetailNum = f.DetailNum)
+     
 exit_:
 return @RetVal    
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240322', '0'
+exec setOV 'CustomerPriceCalc', 'P', '20240327', '1'
 go

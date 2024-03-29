@@ -116,3 +116,9 @@
     white-space: normal;
     text-align: center;
 }
+
+/* Перенос строки в заголовке таблицы заказов */
+.grid-prices .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}

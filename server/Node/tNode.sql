@@ -55,4 +55,5 @@ insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToNew'
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToReNew',                   'Вернуть в работу'	                    ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'AutomaticSynchronization',  'Синхронизация статусов'	                ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'AutomaticToChecked',        'Автоматический перевод в проверено'	    ,0   ,''                  ,''
+insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToСonfirm',                 'Подтвердить'	                            ,0   ,''                  ,''
 --*/

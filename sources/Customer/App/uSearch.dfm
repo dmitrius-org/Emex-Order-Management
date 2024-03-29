@@ -33,34 +33,6 @@ object SearchF: TSearchF
     DesignSize = (
       1247
       55)
-    object edtSearch: TUniEdit
-      Left = 16
-      Top = 12
-      Width = 1105
-      Height = 30
-      Hint = ''
-      MaxLength = 40
-      Text = ''
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
-      EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
-      ClientEvents.ExtEvents.Strings = (
-        
-          'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10'      sender' +
-          '.inputEl.setStyle('#39'padding-left'#39', '#39'25px'#39');'#13#10'    '#13#10'    sender.ico' +
-          'nEl = Ext.dom.Helper.insertBefore(sender.inputEl, {'#13#10'        tag' +
-          ': '#39'span'#39', '#13#10'        class: '#39'x-fa fa-search'#39', '#13#10'        style: '#39'p' +
-          'osition: absolute; font-size: 1.4em; padding-left: 5px;'#39#13#10'    })' +
-          ';'#13#10'    '#13#10'    var iconEl = Ext.get(sender.iconEl);'#13#10'    iconEl.se' +
-          'tStyle('#39'top'#39', sender.getHeight()/2 - iconEl.getHeight()/2 + '#39'px'#39 +
-          ');'#13#10'}')
-      ScreenMask.Enabled = True
-      ScreenMask.Target = SearchGrid
-      Images = UniImageList1
-      OnMouseDown = edtSearchMouseDown
-      OnMouseUp = edtSearchMouseUp
-      OnKeyDown = edtSearchKeyDown
-    end
     object btnSearch: TUniButton
       Left = 1127
       Top = 12
@@ -69,11 +41,31 @@ object SearchF: TSearchF
       Hint = ''
       Caption = #1053#1072#1081#1090#1080
       Anchors = [akTop, akRight]
-      TabOrder = 2
+      TabOrder = 1
       ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
       ScreenMask.Target = Owner
       ScreenMask.Color = clMoneyGreen
       OnClick = btnSearchClick
+    end
+    object edtSearch: TUniComboBox
+      Left = 12
+      Top = 12
+      Width = 1102
+      Height = 30
+      Hint = ''
+      MaxLength = 40
+      Text = ''
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 2
+      EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
+      MinQueryLength = 2
+      RemoteQuery = True
+      LayoutConfig.Height = '30'
+      Images = UniImageList1
+      HideTrigger = True
+      IconItems = <>
+      OnKeyDown = edtSearchKeyDown
+      OnRemoteQuery = edtSearchRemoteQuery
     end
   end
   object MainPanel: TUniPanel
@@ -126,13 +118,17 @@ object SearchF: TSearchF
           '  Ext.fly(cell).setStyle('#39'display'#39', '#39'none'#39');     '#13#10'             ' +
           '           Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0].style.di' +
           'splay='#39'none'#39';'#13#10'                    }'#13#10'                }'#13#10'       ' +
-          '         else {'#13#10'                    Ext.fly(cell).setStyle('#39'bor' +
-          'der-style'#39', '#39'solid'#39');'#13#10'                    Ext.fly(cell).setStyl' +
-          'e('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'                    Ext.fly(cell)' +
-          '.setStyle('#39'border-color'#39', '#39'#cfcfcf'#39');  '#13#10'                }  //if' +
-          ' (col < 4) {'#13#10'            }'#13#10'            '#13#10'            if (spanC' +
-          'ell !== null) {'#13#10'                spanCell.rowSpan = spanCount;'#13#10 +
-          '            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
+          '         else {'#13#10'                '#13#10'                    if (row =' +
+          '= 0) {'#13#10'                        Ext.fly(cell).query('#39'.x-grid-cel' +
+          'l-inner'#39')[0].style.display='#39#39#13#10'                    }'#13#10'          ' +
+          '          else { '#13#10'                '#13#10'                        Ext' +
+          '.fly(cell).setStyle('#39'border-style'#39', '#39'solid'#39');'#13#10'                 ' +
+          '       Ext.fly(cell).setStyle('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'     ' +
+          '                   Ext.fly(cell).setStyle('#39'border-color'#39', '#39'#cfcf' +
+          'cf'#39');  '#13#10'                    }'#13#10'                }  //if (col < 4' +
+          ') {'#13#10'                '#13#10'            }'#13#10'            '#13#10'            ' +
+          'if (spanCell !== null) {'#13#10'                spanCell.rowSpan = spa' +
+          'nCount;'#13#10'            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
           'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
@@ -167,6 +163,8 @@ object SearchF: TSearchF
           Title.Caption = #1041#1088#1077#1085#1076
           Title.Font.Height = -13
           Width = 166
+          Alignment = taCenter
+          MemoOptions.ConvertNewLineToBreak = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -176,6 +174,7 @@ object SearchF: TSearchF
           Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           Title.Font.Height = -13
           Width = 149
+          Alignment = taCenter
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -185,6 +184,7 @@ object SearchF: TSearchF
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
           Title.Font.Height = -13
           Width = 364
+          Alignment = taCenter
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -226,9 +226,9 @@ object SearchF: TSearchF
         item
           FieldName = 'Rating'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
+          Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
-          Width = 150
+          Width = 170
           Alignment = taCenter
           ReadOnly = True
           Sortable = True
@@ -251,6 +251,7 @@ object SearchF: TSearchF
           Title.Caption = #1053#1072#1083#1080#1095#1080#1077
           Title.Font.Height = -13
           Width = 76
+          Alignment = taRightJustify
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -262,7 +263,7 @@ object SearchF: TSearchF
             end>
           WidgetColumn.Enabled = True
           WidgetColumn.Widget = btnAddBasket
-          WidgetColumn.Height = 30
+          WidgetColumn.Height = 26
           Title.Caption = ' '
           Title.Font.Height = -13
           Width = 120
@@ -281,10 +282,14 @@ object SearchF: TSearchF
         Left = 17
         Top = 29
         Width = 120
-        Hint = #1059#1076#1072#1083#1080#1090#1100
+        Height = 22
+        Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1077#1090#1072#1083#1100' '#1074' '#1082#1086#1088#1079#1080#1085#1091
         Margins.Top = 5
         Margins.Bottom = 5
+        ShowHint = True
+        ParentShowHint = False
         ShowCaption = True
+        ShowValue = False
         OnClick = btnAddBasketClick
         Caption = #1042' '#1082#1086#1088#1079#1080#1085#1091
       end
@@ -390,8 +395,10 @@ object SearchF: TSearchF
       DisplayFormat = '###,##0.00'
     end
   end
-  object qStatus: TFDQuery
+  object qSearchHistory: TFDQuery
     AutoCalcFields = False
+    Filtered = True
+    FilterOptions = [foCaseInsensitive]
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
     UpdateOptions.EnableDelete = False
@@ -405,12 +412,16 @@ object SearchF: TSearchF
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'SELECT distinct'
-      '       n.[NodeID]'
-      '      ,n.[Name]'
-      '  FROM [tNodes] n (nolock)'
-      ' where n.Type = 0 -- '#1089#1086#1089#1090#1086#1103#1085#1080#1103)
-    Left = 575
-    Top = 316
+      'select top 20 *'
+      '  from tSearchHistory sh with (nolock index=ao1)'
+      ' where sh.ClientID  = :ClientID'
+      '   --and sh.DetailNum = :DetailNum')
+    Left = 767
+    Top = 220
+    ParamData = <
+      item
+        Name = 'CLIENTID'
+        ParamType = ptInput
+      end>
   end
 end

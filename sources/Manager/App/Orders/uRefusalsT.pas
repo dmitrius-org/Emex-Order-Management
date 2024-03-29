@@ -55,6 +55,7 @@ type
       Files: TUniFileInfoArray);
     procedure UniFrameReady(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
+    procedure actUploadingRefusalsEmexExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -127,6 +128,11 @@ begin
     UniSession.SendFile(Query.FieldByName('FileName').AsString);
   end;
   logger.Info('TRefusalsT.actUploadExecute End');
+end;
+
+procedure TRefusalsT.actUploadingRefusalsEmexExecute(Sender: TObject);
+begin
+   UniFileUpload.Execute;
 end;
 
 procedure TRefusalsT.FileList;

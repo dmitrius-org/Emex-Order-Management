@@ -1173,7 +1173,7 @@ object OrdersT: TOrdersT
       '      ,o.MakeLogo'
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
-      '        ,o.[DetailName]'
+      '      ,o.[DetailName]'
       '     -- ,o.[DetailNameF]'
       '      ,o.[DetailID]'
       '      ,o.[Quantity]'
@@ -1227,7 +1227,7 @@ object OrdersT: TOrdersT
       '      '
       '  FROM [vOrders] o'
       ' where 1=1'
-      ' '
+      '          '
       '   !Status'
       '   '
       '   !PriceLogo'
@@ -1245,7 +1245,7 @@ object OrdersT: TOrdersT
       '   !updDateTime'
       '   '
       '   !Invoice'
-      '   '
+      '               '
       '  order by  o.[OrderID]  '
       '   ')
     Left = 575
@@ -1280,11 +1280,11 @@ object OrdersT: TOrdersT
         Name = 'ORDERDATE'
       end
       item
-        Value = Null
+        Value = ''
         Name = 'UPDDATETIME'
       end
       item
-        Value = Null
+        Value = ''
         Name = 'INVOICE'
       end>
     object QueryUserID: TFMTBCDField
@@ -1680,17 +1680,6 @@ object OrdersT: TOrdersT
       end
     end
     object N5: TUniMenuItem
-      Caption = '-'
-    end
-    object Emex1: TUniMenuItem
-      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1086#1090#1082#1072#1079#1099' Emex'
-      ImageIndex = 8
-    end
-    object N13: TUniMenuItem
-      Caption = #1054#1090#1082#1072#1079#1099
-      ImageIndex = 7
-    end
-    object N10: TUniMenuItem
       Caption = '-'
     end
     object N2: TUniMenuItem
@@ -3873,13 +3862,5 @@ object OrdersT: TOrdersT
       0000000000000000F800000FC000007F0000000000000000FE00003FE00000FF
       0000000000000000FFC001FFF80001FF00000000000000000000000000000000
       000000000000}
-  end
-  object UniScreenMask: TUniScreenMask
-    AttachedControl = Grid
-    Enabled = False
-    DisplayMessage = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
-    TargetControl = Owner
-    Left = 784
-    Top = 216
   end
 end

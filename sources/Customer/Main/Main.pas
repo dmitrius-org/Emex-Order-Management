@@ -114,7 +114,7 @@ end;
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
-  if not Assigned(FOrdersT2) then
+  if not Assigned(FBasketF) then
   begin
     FBasketF :=  TBasketF.Create(Self);
     FBasketF.Align := alClient;
@@ -145,22 +145,6 @@ begin
     FSearchF.Align := alClient;
     FSearchF.Parent := tbS;
   end;
-//
-//  if not Assigned(FBasketF) then
-//  begin
-//    FBasketF :=  TBasketF.Create(Self);
-//    FBasketF.Align := alClient;
-//    FBasketF.Parent := tsB;
-//  end;
-//
-//  if not Assigned(FOrdersF) then
-//  begin
-//    FOrdersF :=  TOrdersT2.Create(Self);
-//    FOrdersF.Align := alClient;
-//    FOrdersF.Parent := tsO;
-//  end;
-
-
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

@@ -11,18 +11,17 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
-  Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton;
+  Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox;
 
 type
   TSearchF = class(TUniFrame)
     TopPanel: TUniPanel;
     MainPanel: TUniPanel;
-    edtSearch: TUniEdit;
     UniImageList1: TUniImageList;
     SearchGrid: TUniDBGrid;
     DataSource: TDataSource;
     Query: TFDQuery;
-    qStatus: TFDQuery;
+    qSearchHistory: TFDQuery;
     QueryMakeName: TWideStringField;
     QueryDetailNum: TWideStringField;
     QueryPartNameRus: TWideStringField;
@@ -38,6 +37,7 @@ type
     btnSearch: TUniButton;
     QueryWeight: TCurrencyField;
     QueryVolumeAdd: TCurrencyField;
+    edtSearch: TUniComboBox;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -53,10 +53,7 @@ type
     procedure SearchGridDblClick(Sender: TObject);
     procedure SearchGridCellClick(Column: TUniDBGridColumn);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure edtSearchMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure edtSearchMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure edtSearchRemoteQuery(const QueryString: string; Result: TStrings);
 
   private
     { Private declarations }
@@ -73,6 +70,8 @@ type
     /// CustomerPriceCalc - расчет цены
     /// </summary>
     procedure CustomerPriceCalc();
+
+    procedure SearchHistoryLoad();
   public
     { Public declarations }
   end;
@@ -114,30 +113,21 @@ begin
   end;
 end;
 
-procedure TSearchF.edtSearchMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TSearchF.edtSearchRemoteQuery(const QueryString: string;
+  Result: TStrings);
 begin
-//  if Button = mbRight then
-//  begin
-//   // ppMain.Popup(X, Y, Grid);
-//    MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions - [boDisableMouseRightClick];
-//    UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true ; }');
-//
-//
-//
-//
-//  end;
-end;
+  if Trim(QueryString)='' then Exit;
 
-procedure TSearchF.edtSearchMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-//  if Button = mbRight then
-//  begin
-//   // ppMain.Popup(X, Y, Grid);
-//    MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions + [boDisableMouseRightClick];
-//    UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
-//  end;
+  qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
+  qSearchHistory.Filtered := True;
+
+
+  qSearchHistory.First;
+  while not qSearchHistory.Eof do
+  begin
+    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString);
+    qSearchHistory.Next;
+  end;
 end;
 
 procedure TSearchF.GridRefresh();
@@ -163,6 +153,8 @@ begin
     CustomerPriceCalc;
 
     GridRefresh();
+
+    SearchHistoryLoad;
 
   finally
     FreeAndNil(emex);
@@ -277,6 +269,14 @@ begin
   end;
 end;
 
+procedure TSearchF.SearchHistoryLoad;
+begin
+  qSearchHistory.Close;
+  qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
+  qSearchHistory.Open();
+
+end;
+
 procedure TSearchF.UniFrameCreate(Sender: TObject);
 var
   js: string;
@@ -309,6 +309,7 @@ begin
 
   GridRefresh();
 
+  SearchHistoryLoad();
 
   with SearchGrid do
   begin
