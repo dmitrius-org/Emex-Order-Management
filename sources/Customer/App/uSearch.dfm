@@ -30,6 +30,7 @@ object SearchF: TSearchF
     ShowCaption = False
     Caption = 'TopPanel'
     LayoutConfig.Width = '0'
+    OnClick = TopPanelClick
     DesignSize = (
       1247
       55)
@@ -42,9 +43,10 @@ object SearchF: TSearchF
       Caption = #1053#1072#1081#1090#1080
       Anchors = [akTop, akRight]
       TabOrder = 1
+      ScreenMask.Enabled = True
       ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
-      ScreenMask.Target = Owner
-      ScreenMask.Color = clMoneyGreen
+      ScreenMask.Target = SearchGrid
+      ScreenMask.Color = clHighlight
       OnClick = btnSearchClick
     end
     object edtSearch: TUniComboBox
@@ -61,7 +63,6 @@ object SearchF: TSearchF
       MinQueryLength = 2
       RemoteQuery = True
       LayoutConfig.Height = '30'
-      Images = UniImageList1
       HideTrigger = True
       IconItems = <>
       OnKeyDown = edtSearchKeyDown
@@ -107,7 +108,7 @@ object SearchF: TSearchF
           #13#10'                var cell = view.getCellByPosition({ row: row, ' +
           'column: colIndx }).dom,'#13#10'                record = store.getAt(ro' +
           'w),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'         ' +
-          '       if (col < 5) {'#13#10'                    if (spanValue != valu' +
+          '       if (col < 6) {'#13#10'                    if (spanValue != valu' +
           'e) {'#13#10'                        if (spanCell !== null) {'#13#10'        ' +
           '                    spanCell.rowSpan = spanCount;'#13#10'             ' +
           '           }'#13#10#13#10'                        Ext.fly(cell).query('#39'.x-' +
@@ -125,7 +126,7 @@ object SearchF: TSearchF
           '.fly(cell).setStyle('#39'border-style'#39', '#39'solid'#39');'#13#10'                 ' +
           '       Ext.fly(cell).setStyle('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'     ' +
           '                   Ext.fly(cell).setStyle('#39'border-color'#39', '#39'#cfcf' +
-          'cf'#39');  '#13#10'                    }'#13#10'                }  //if (col < 4' +
+          'cf'#39');  '#13#10'                    }'#13#10'                }  //if (col < 5' +
           ') {'#13#10'                '#13#10'            }'#13#10'            '#13#10'            ' +
           'if (spanCell !== null) {'#13#10'                spanCell.rowSpan = spa' +
           'nCount;'#13#10'            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
@@ -133,7 +134,7 @@ object SearchF: TSearchF
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
           'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
       DataSource = DataSource
-      Options = [dgTitles, dgColumnResize, dgTabs, dgDontShowSelected]
+      Options = [dgTitles, dgColumnResize]
       ReadOnly = True
       WebOptions.Paged = False
       WebOptions.CustomizableCells = False
@@ -152,6 +153,7 @@ object SearchF: TSearchF
       Color = clBtnFace
       OnKeyDown = SearchGridKeyDown
       OnAjaxEvent = SearchGridAjaxEvent
+      OnBodyClick = SearchGridBodyClick
       OnCellClick = SearchGridCellClick
       OnColumnSort = SearchGridColumnSort
       OnDblClick = SearchGridDblClick
@@ -264,6 +266,7 @@ object SearchF: TSearchF
           WidgetColumn.Enabled = True
           WidgetColumn.Widget = btnAddBasket
           WidgetColumn.Height = 26
+          ShowToolTipAlways = False
           Title.Caption = ' '
           Title.Font.Height = -13
           Width = 120
@@ -293,11 +296,75 @@ object SearchF: TSearchF
         OnClick = btnAddBasketClick
         Caption = #1042' '#1082#1086#1088#1079#1080#1085#1091
       end
+      object UniComboBox1: TUniComboBox
+        Left = 0
+        Top = 96
+        Width = 145
+        Hint = ''
+        Text = 'UniComboBox1'
+        Items.Strings = (
+          '1'
+          '2'
+          '3'
+          '4')
+        TabOrder = 2
+        IconItems = <>
+      end
     end
-  end
-  object UniImageList1: TUniImageList
-    Left = 809
-    Top = 429
+    object MakeLogoPanel: TUniContainerPanel
+      Left = 3
+      Top = 56
+      Width = 705
+      Height = 177
+      Hint = ''
+      Visible = False
+      ParentColor = False
+      TabOrder = 3
+      object MakeLogoGrid: TUniDBGrid
+        Left = 0
+        Top = 0
+        Width = 705
+        Height = 177
+        Hint = ''
+        DataSource = dsMakeLogo
+        Options = [dgRowSelect]
+        WebOptions.Paged = False
+        WebOptions.CustomizableCells = False
+        LoadMask.Message = 'Loading data...'
+        EnableColumnHide = False
+        Align = alClient
+        ParentFont = False
+        TabOrder = 1
+        ParentColor = False
+        Color = clBtnFace
+        OnDblClick = MakeLogoGridDblClick
+        Columns = <
+          item
+            FieldName = 'MakeName'
+            Title.Caption = 'MakeName'
+            Width = 120
+            Alignment = taCenter
+          end
+          item
+            FieldName = 'DetailNum'
+            Title.Caption = 'DetailNum'
+            Width = 120
+            Alignment = taCenter
+          end
+          item
+            FieldName = 'PartNameRus'
+            Title.Caption = 'PartNameRus'
+            Width = 155
+            Alignment = taCenter
+          end
+          item
+            FieldName = 'PriceRub'
+            Title.Caption = 'PriceRub'
+            Title.Font.Style = [fsBold]
+            Width = 125
+          end>
+      end
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -321,13 +388,21 @@ object SearchF: TSearchF
     SQL.Strings = (
       'Select *'
       '  from vFindByNumber'
-      ' where DestinationLogo = :DestinationLogo  '
+      ' where MakeName        = :MakeName '
+      '   and DestinationLogo = :DestinationLogo  '
+      '   '
       'order by N  '
       ''
       '')
     Left = 575
     Top = 255
     ParamData = <
+      item
+        Name = 'MAKENAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
       item
         Name = 'DESTINATIONLOGO'
         DataType = ftString
@@ -346,6 +421,7 @@ object SearchF: TSearchF
     object QueryMakeName: TWideStringField
       FieldName = 'MakeName'
       Origin = 'MakeName'
+      OnGetText = QueryMakeNameGetText
       Size = 64
     end
     object QueryDetailNum: TWideStringField
@@ -423,5 +499,81 @@ object SearchF: TSearchF
         Name = 'CLIENTID'
         ParamType = ptInput
       end>
+  end
+  object qMakeLogo: TFDQuery
+    Connection = UniMainModule.FDConnection
+    FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
+    FetchOptions.Items = []
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
+    UpdateOptions.EnableDelete = False
+    UpdateOptions.EnableInsert = False
+    UpdateOptions.EnableUpdate = False
+    UpdateOptions.UpdateChangedFields = False
+    UpdateOptions.LockWait = True
+    UpdateOptions.RefreshMode = rmAll
+    UpdateOptions.CountUpdatedRecords = False
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.CheckRequired = False
+    SQL.Strings = (
+      'select '
+      '       p.MakeName,'
+      '       p.DetailNum,'
+      '       p.PartNameRus,'
+      
+        '       min(p.PriceRub) PriceRub        -- '#1094#1077#1085#1072' '#1076#1077#1090#1072#1083#1080', '#1087#1086#1082#1072#1079#1072#1074#1072#1077 +
+        #1084#1072#1103' '#1085#1072' '#1089#1072#1081#1090#1077'     '
+      '  from vFindByNumber p '
+      ' where 1=1 --p.MakeName       <> :MakeName '
+      '   and p.DestinationLogo = :DestinationLogo  '
+      ' group by p.MakeName, p.DetailNum, p.PartNameRus'
+      '  '
+      '  '
+      ' order by case'
+      '            when p.MakeName = :MakeName then 1'
+      '            else 2'
+      '          end '
+      '         ,PriceRub'
+      ''
+      '')
+    Left = 679
+    Top = 359
+    ParamData = <
+      item
+        Name = 'DESTINATIONLOGO'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'MAKENAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+    object WideStringField1: TWideStringField
+      FieldName = 'MakeName'
+      Origin = 'MakeName'
+      Size = 64
+    end
+    object WideStringField2: TWideStringField
+      FieldName = 'DetailNum'
+      Origin = 'DetailNum'
+      Size = 64
+    end
+    object qMakeLogoPriceRub: TCurrencyField
+      FieldName = 'PriceRub'
+      Origin = 'PriceRub'
+      DisplayFormat = #1086#1090' ###,##0 '#1088#1091#1073
+    end
+    object WideStringField3: TWideStringField
+      FieldName = 'PartNameRus'
+      Origin = 'PartNameRus'
+      Size = 256
+    end
+  end
+  object dsMakeLogo: TDataSource
+    DataSet = qMakeLogo
+    Left = 760
+    Top = 357
   end
 end

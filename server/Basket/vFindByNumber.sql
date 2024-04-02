@@ -3,10 +3,35 @@ if OBJECT_ID('vFindByNumber') is not null
 go
 /* **********************************************************						
 vFindByNumber - получение списка найденных
+
+
+
+поиск детали по номеру
+
+Выходные параметры:
+
+Available     – наличие детали на складе
+bitOldNum     – признак УСТАРЕВШИЙ НОМЕР
+PercentSupped – процент поставки
+PriceId       – идентификатор прайслиста
+Region        – регион доставки детали
+Delivery      – срок поставки
+Make          – лого бренда детали
+DetailNum     – номер детали
+PriceLogo     – лого прайслиста
+Price         – цена детали, показаваемая на сайте
+PartNameRus   – русское название детали
+PartNameEng   – английское название детали
+WeightGr      – вес детали в граммах
+MakeName      – название бренда
+Packing       – количество деталей в упаковке
+VolumeAdd     – наценка объем (объемный вес)
+GuaranteedDay – гарантированный срок поставки детали
+
 ********************************************************** */
 
 create view vFindByNumber
-as
+as 
 
 select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc, cast(p.Available as int) desc) N,
        p.ID,
@@ -39,10 +64,28 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        p.DestinationLogo
   from pFindByNumber p with (nolock index=ao2)
 
+ --cross apply (select top 1 * 
+ --               from pFindByNumber pp  with (nolock index=ao2)
+	--	   	   where pp.Spid = @@spid
+	--		 ) pp
+ 
  inner join tPrices sp (nolock)
          on sp.Name  = p.PriceLogo
+
+ left join tSettings st (nolock)
+        on st.Brief = 'PercentSupped'
+
+
  where p.Spid             = @@spid
+   --
    and p.Available        > 0
+   -- фильтры по вероятности поставки
+   and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
+
+   --and p.MakeName = pp.MakeName
+
+
+
    --and (p.PercentSupped >= 30
    --    or (p.PercentSupped <30 and not exists (select 1 
    --                                                from pFindByNumber f (nolock)

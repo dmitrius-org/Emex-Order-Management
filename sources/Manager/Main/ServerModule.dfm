@@ -6,7 +6,7 @@ object UniServerModule: TUniServerModule
   SessionTimeout = 86400000
   Title = 'Managers'
   AjaxTimeout = 500000
-  SuppressErrors = []
+  SuppressErrors = [errObjectNotFound]
   Bindings = <>
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (

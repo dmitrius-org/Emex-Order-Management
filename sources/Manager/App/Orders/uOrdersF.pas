@@ -68,6 +68,8 @@ type
     procedure btnNumber2Click(Sender: TObject);
     procedure btnDestinationLogoClick(Sender: TObject);
     procedure cbPriceChange(Sender: TObject);
+    procedure UniFormDestroy(Sender: TObject);
+
 
   private
     FAction: TFormAction;
@@ -386,9 +388,16 @@ begin
   cbPrice.SetFocus;
 end;
 
+procedure TOrderF.UniFormDestroy(Sender: TObject);
+begin
+  UniTimer.Enabled := false;
+
+end;
+
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
-  UniTimer.Enabled := True;
+  //UniTimer.Enabled := True;
+  //UniThreadTimer1.Enabled := True;
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -432,6 +441,8 @@ begin
     //
   end;
 end;
+
+
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
 begin

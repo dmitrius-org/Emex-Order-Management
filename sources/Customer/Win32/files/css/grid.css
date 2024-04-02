@@ -87,6 +87,11 @@
 
 /* grid-search - таблица поиск деталей */
 
+.grid-search .makelogo-caret-down {
+    float: left;
+    position: relative;
+}
+
 .grid-search .x-keyboard-mode .x-grid-item-focused .x-grid-cell-inner:before {
     content: "";
     position: absolute;

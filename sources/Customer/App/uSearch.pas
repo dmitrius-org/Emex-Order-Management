@@ -17,7 +17,6 @@ type
   TSearchF = class(TUniFrame)
     TopPanel: TUniPanel;
     MainPanel: TUniPanel;
-    UniImageList1: TUniImageList;
     SearchGrid: TUniDBGrid;
     DataSource: TDataSource;
     Query: TFDQuery;
@@ -38,6 +37,15 @@ type
     QueryWeight: TCurrencyField;
     QueryVolumeAdd: TCurrencyField;
     edtSearch: TUniComboBox;
+    UniComboBox1: TUniComboBox;
+    MakeLogoPanel: TUniContainerPanel;
+    MakeLogoGrid: TUniDBGrid;
+    qMakeLogo: TFDQuery;
+    WideStringField1: TWideStringField;
+    WideStringField2: TWideStringField;
+    WideStringField3: TWideStringField;
+    dsMakeLogo: TDataSource;
+    qMakeLogoPriceRub: TCurrencyField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -54,16 +62,24 @@ type
     procedure SearchGridCellClick(Column: TUniDBGridColumn);
     procedure UniFrameDestroy(Sender: TObject);
     procedure edtSearchRemoteQuery(const QueryString: string; Result: TStrings);
+    procedure QueryMakeNameGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure MakeLogoGridDblClick(Sender: TObject);
+    procedure TopPanelClick(Sender: TObject);
+    procedure SearchGridBodyClick(Sender: TObject);
 
   private
     { Private declarations }
 
     FDestinationLogo: string;
+    FMakeName: string;
+
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
     procedure PartSearch();
 
     procedure GridRefresh();
+    procedure MakeLogoGridRefresh();
 
     procedure PartToBasket();
     /// <summary>
@@ -72,6 +88,12 @@ type
     procedure CustomerPriceCalc();
 
     procedure SearchHistoryLoad();
+
+    procedure SetMakeName();
+    procedure MakeLogoGridShow();
+    procedure MakeLogoGridHide();
+
+
   public
     { Public declarations }
   end;
@@ -85,6 +107,7 @@ uses
 
 procedure TSearchF.btnAddBasketClick(Sender: TObject);
 begin
+  ACurrColumn := nil;
   PartToBasket();
 end;
 
@@ -131,13 +154,60 @@ begin
 end;
 
 procedure TSearchF.GridRefresh();
-var
-  js: string;
 begin
   Query.Close;
 
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
+  Query.ParamByName('MakeName').Value := FMakeName;
+
   Query.Open;
+end;
+
+procedure TSearchF.MakeLogoGridDblClick(Sender: TObject);
+begin
+  MakeLogoPanel.Visible := False;
+
+  if qMakeLogo.RecordCount > 0 then
+  begin
+    FMakeName := qMakeLogo.FieldByName('MakeName').AsString;
+
+    GridRefresh();
+  end;
+end;
+
+procedure TSearchF.MakeLogoGridHide;
+begin
+  MakeLogoPanel.Visible := False;
+end;
+
+procedure TSearchF.MakeLogoGridRefresh;
+begin
+  qMakeLogo.Close;
+
+  qMakeLogo.ParamByName('DestinationLogo').Value := FDestinationLogo;
+  qMakeLogo.ParamByName('MakeName').Value := FMakeName;
+
+  qMakeLogo.Open;
+end;
+
+procedure TSearchF.MakeLogoGridShow;
+begin
+  MakeLogoPanel.Left := SearchGrid.Left;
+
+  MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width := SearchGrid.Columns.ColumnFromFieldName('MakeName').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width := SearchGrid.Columns.ColumnFromFieldName('DetailNum').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('PartNameRus').Width := SearchGrid.Columns.ColumnFromFieldName('PartNameRus').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width := SearchGrid.Columns.ColumnFromFieldName('PriceRub').Width;
+
+  MakeLogoPanel.Width := MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width +
+                         MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width+
+                         MakeLogoGrid.Columns.ColumnFromFieldName('PartNameRus').Width+
+                         MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width+25;
+
+
+  MakeLogoGridRefresh;
+  MakeLogoPanel.Visible := True;
+
 end;
 
 procedure TSearchF.PartSearch;
@@ -145,12 +215,15 @@ var
   emex: TEmex;
 begin
   emex := TEmex.Create;
-  btnSearch.ScreenMask.Enabled := True;
+  btnSearch.ScreenMask.ShowMask();
   try
     emex.Connection := UniMainModule.FDConnection;
     emex.FindByDetailNumber(UniMainModule.AUserID, edtSearch.Text);
 
     CustomerPriceCalc;
+
+    //получаем текущий бренд
+    SetMakeName;
 
     GridRefresh();
 
@@ -158,7 +231,7 @@ begin
 
   finally
     FreeAndNil(emex);
-    btnSearch.ScreenMask.Enabled := False;
+    btnSearch.ScreenMask.HideMask;
   end;
 end;
 
@@ -213,6 +286,17 @@ begin
     FDestinationLogo + '" checked', []);
 end;
 
+procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+ // if (Sender.FieldName = 'MakeLogo') {and (QueryMakeName.Value <> '')} then
+  begin
+    Text := '<span><i class="fa fa-caret-down fa-lg makelogo-caret-down"></i><span>' + Sender.AsString + '</span></span>';
+  end
+  //else
+   // Text := Sender.AsString;
+end;
+
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -226,9 +310,24 @@ begin
   end;
 end;
 
+procedure TSearchF.SearchGridBodyClick(Sender: TObject);
+begin
+    MakeLogoGridHide;
+end;
+
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
+
+  if Assigned(ACurrColumn) then
+
+  if (
+       (ACurrColumn.FieldName = 'MakeName')
+       )
+  then
+  begin
+    MakeLogoGridShow;
+  end;
 end;
 
 procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
@@ -248,7 +347,9 @@ end;
 
 procedure TSearchF.SearchGridDblClick(Sender: TObject);
 begin
-  if ( (ACurrColumn.FieldName = 'MakeName') or
+ if (Assigned(ACurrColumn)) and (not MakeLogoPanel.Visible )then
+  if (
+       //(ACurrColumn.FieldName = 'MakeName') or    MakeLogoGridVisible
        (ACurrColumn.FieldName = 'DetailNum') or
        (ACurrColumn.FieldName = 'PartNameRus') )
   then
@@ -274,7 +375,17 @@ begin
   qSearchHistory.Close;
   qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
   qSearchHistory.Open();
+end;
 
+procedure TSearchF.SetMakeName;
+begin
+  sql.Open('select top 1 * from pFindByNumber pp  with (nolock index=ao2) where pp.Spid = @@spid', [] , []);
+  FMakeName := sql.Q.FieldByName('MakeName').AsString;
+end;
+
+procedure TSearchF.TopPanelClick(Sender: TObject);
+begin
+   MakeLogoGridHide;
 end;
 
 procedure TSearchF.UniFrameCreate(Sender: TObject);
@@ -306,6 +417,9 @@ begin
   {$ENDIF}
 
   FDestinationLogo := '0001';
+
+  //получаем текущий бренд
+  SetMakeName;
 
   GridRefresh();
 

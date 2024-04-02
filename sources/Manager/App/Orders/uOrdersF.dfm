@@ -1,7 +1,7 @@
 object OrderF: TOrderF
   Left = 0
   Top = 0
-  ClientHeight = 297
+  ClientHeight = 320
   ClientWidth = 867
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
@@ -9,12 +9,13 @@ object OrderF: TOrderF
   ShowHint = True
   MonitoredKeys.Keys = <>
   OnReady = UniFormReady
+  OnDestroy = UniFormDestroy
   TextHeight = 15
   object tabCommon: TUniFieldContainer
     Left = 0
     Top = 30
     Width = 867
-    Height = 267
+    Height = 290
     Hint = ''
     ShowHint = True
     ParentColor = False
@@ -24,7 +25,7 @@ object OrderF: TOrderF
     ExplicitHeight = 266
     DesignSize = (
       867
-      267)
+      290)
     object edtDetailNameF: TUniEdit
       Left = 173
       Top = 68
@@ -88,7 +89,7 @@ object OrderF: TOrderF
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
       Left = 675
-      Top = 232
+      Top = 255
       Width = 81
       Height = 27
       Hint = ''
@@ -103,7 +104,7 @@ object OrderF: TOrderF
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 762
-      Top = 232
+      Top = 255
       Width = 82
       Height = 27
       Hint = ''
