@@ -35,6 +35,7 @@ declare @r int = 0
         ,PartNameRus
         --,PartNameEng
         ,PriceLogo
+		,OurDelivery
         ,GuaranteedDay
         ,Quantity
         ,Price
@@ -53,6 +54,7 @@ declare @r int = 0
 		,p.DetailNum
 		,p.PartNameRus
 		,p.PriceLogo
+		,p.OurDelivery
 		,p.GuaranteedDay
         ,1--Quantity
 		,p.Price
@@ -68,10 +70,10 @@ declare @r int = 0
      and p.ID   = @PartID
 	 and not exists (select 1
 	                   from tBasket t (nolock)
-					  where t.ClientID  = @ClientID
-                        and t.Make      = p.Make
-					    and t.DetailNum = p.DetailNum
-						and t.PriceLogo = p.PriceLogo
+					  where t.ClientID        = @ClientID
+                        and t.Make            = p.Make
+					    and t.DetailNum       = p.DetailNum
+						and t.PriceLogo       = p.PriceLogo
                         and t.DestinationLogo = p.DestinationLogo)
                        
   exit_:
@@ -80,5 +82,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240327', '1'
+exec setOV 'PartToBasket', 'P', '20240404', '3'
 go

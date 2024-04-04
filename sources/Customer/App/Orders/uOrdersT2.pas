@@ -71,7 +71,6 @@ type
     QueryisCancel: TBooleanField;
     QueryManufacturer: TWideStringField;
     QueryDetailNumber: TWideStringField;
-    QueryDetailID: TWideStringField;
     QueryQuantity: TIntegerField;
     QueryPrice: TCurrencyField;
     QueryAmount: TCurrencyField;
@@ -212,9 +211,9 @@ type
     { Public declarations }
 
     /// <summary>
-    /// GridOpen -
+    /// GridRefresh -
     /// </summary>
-    procedure GridOpen;
+    procedure GridRefresh;
 
     /// <summary>
     ///  GridLayout - сохранение/восстановление настроек грида
@@ -260,12 +259,12 @@ begin
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
-  GridOpen();
+  GridRefresh();
 end;
 
 procedure TOrdersT2.actFilterExecute(Sender: TObject);
 begin
-  GridOpen();
+  GridRefresh();
 end;
 
 procedure TOrdersT2.actGridSettingDefaultExecute(Sender: TObject);
@@ -293,7 +292,7 @@ end;
 
 procedure TOrdersT2.actRefreshAllExecute(Sender: TObject);
 begin
-  GridOpen();
+  GridRefresh();
 end;
 
 procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
@@ -364,7 +363,7 @@ begin
     delete(s,length(s),1);
 
   FFilterTextPriceLogo := s;
-  GridOpen;
+  GridRefresh;
   logger.Info('FFilterTextPriceLogo: ' + FFilterTextPriceLogo) ;
 end;
 
@@ -388,11 +387,11 @@ begin
     delete(s,length(s),1);
 
   FFilterTextStatus := s;
-  GridOpen;
+  GridRefresh;
   logger.Info('FFilterTextStatus: ' + FFilterTextStatus);
 end;
 
-procedure TOrdersT2.GridOpen;
+procedure TOrdersT2.GridRefresh;
 var FClient:string;
     FStatus :string;
     FPriceLogo :string;
@@ -694,7 +693,7 @@ end;
 
 procedure TOrdersT2.cbCancelSelect(Sender: TObject);
 begin
-  GridOpen;
+  GridRefresh;
 end;
 
 procedure TOrdersT2.SortColumn(const FieldName: string; Dir: Boolean);
@@ -778,8 +777,6 @@ procedure TOrdersT2.UniFrameReady(Sender: TObject);
 begin
 
   qPriceLogo.Open();
-
-  GridOpen();
 end;
 
 procedure TOrdersT2.UserFCallBack(Sender: TComponent; AResult: Integer);

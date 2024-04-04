@@ -19,40 +19,44 @@ if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 
 create table #Price 
 (
- ID                numeric(18,0)  --  
-,Brand             varchar(60)    --
-,DetailNum	       varchar(30)    -- Номер детали 
-,DetailPrice       float          -- Цена
-,FinalPrice        float          -- Цена
-,DetailName	       varchar(255)   -- Название
-,PriceLogo         varchar(30)    -- Название прайса 
-,Quantity          int            -- Количество
-,PackQuantity      int            -- Количество в упаковке
+ ID                  numeric(18,0)  --  
+,Brand               varchar(60)    --
+,DetailNum	         varchar(30)    -- Номер детали 
+,DetailPrice         float          -- Цена
+,FinalPrice          float          -- Цена
+,DetailName	         varchar(255)   -- Название
+,PriceLogo           varchar(30)    -- Название прайса 
+,Quantity            int            -- Количество
+,PackQuantity        int            -- Количество в упаковке
 
-,WeightKG          float          -- Вес физический кг 
-,VolumeKG          float          -- Вес объемный кг  
+,WeightKG            float          -- Вес физический кг 
+,VolumeKG            float          -- Вес объемный кг  
 
-,TPrice            float          -- тип цены, например: MOSA, MOSC, KIRG
-,TDel              float          -- номинал стоимости за доставку
-,TDetPrice         float          -- номинал цены детали со скидкой
-,TCom              float          -- номинал комиссии 
-,TMarg             float          -- номинал наценки на товар
-,TFinPrice         float
-,Term              int            -- срок доставки
-,TFinPriceKurs     money
+,TPrice              float          -- тип цены, например: MOSA, MOSC, KIRG
+,TDel                float          -- номинал стоимости за доставку
+,TDetPrice           float          -- номинал цены детали со скидкой
+,TCom                float          -- номинал комиссии 
+,TMarg               float          -- номинал наценки на товар
+,TFinPrice           float
+,Term                int            -- срок доставки
+,TFinPriceKurs       money
 
-,DestinationLogo   nvarchar(10)
+,DestinationLogo     nvarchar(10)
 
-,Margin		       float
-,Kurs		       float
-,ExtraKurs         float
-,Commission	       float  -- Комиссия эквайера
-,Discount	       float  -- Скидка
-,Reliability       float  -- Вероятность поставки
-,PDWeightKG	       float
-,PDVolumeKG        float
+,Margin		         float
+,Kurs		         float
+,ExtraKurs           float
+,Commission	         float  -- Комиссия эквайера
+,Discount	         float  -- Скидка
+,Reliability         float  -- Вероятность поставки
+,PDWeightKG	         float
+,PDVolumeKG          float
 
-,RetVal            int
+ -- данные с профиля поставщика
+,ProfilesDeliveryID  numeric(18, 0)
+,Delivery            int
+
+,RetVal              int
 )
 
 -- для получения даных с таблицы tPrice
@@ -60,27 +64,23 @@ declare @Num as table
        (DetailNum nvarchar(40));
 
 declare  @Price  table
-       ( --PriceLogo nvarchar(40)
-         DetailNum nvarchar(40)
+       ( DetailNum nvarchar(40)
         ,MakeLogo  nvarchar(40)
         ,WeightKGF float
 		,VolumeKGf float);
 
-insert @Num
-       (DetailNum)
+insert @Num (DetailNum)
 select distinct p.DetailNum
   from pFindByNumber p with (nolock index=ao2)
  where p.Spid = @@spid
 
 insert @Price
-       (--PriceLogo, 
-	    DetailNum, 
+       (DetailNum, 
 		MakeLogo, 
 		WeightKGF, 
 		VolumeKGf
 		)
 select distinct 
-       --pp.PriceLogo,
 	   pp.DetailNum,
 	   pp.MakeLogo,
 	   pp.WeightKGF,
@@ -88,8 +88,8 @@ select distinct
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
-		
 
+-- расчет цены
 insert #Price
 	  (ID        
       ,Brand        
@@ -112,6 +112,8 @@ insert #Price
       ,PDWeightKG	
       ,PDVolumeKG      
       ,DestinationLogo
+	  ,ProfilesDeliveryID
+	  ,Delivery -- наш срок поставки, показываем клиенту
 	  )
 select p.ID,
        p.MakeName, 
@@ -140,19 +142,18 @@ select p.ID,
        pc.Reliability,
        pd.WeightKG,
        pd.VolumeKG,
-       pd.DestinationLogo
+       pd.DestinationLogo,
+	   pd.ProfilesDeliveryID,
+	   pd.Delivery
   from pFindByNumber p (nolock)
-
  inner join tProfilesCustomer pc (nolock)
          on pc.ClientID = p.ClientID
  inner join tSupplierDeliveryProfiles pd (nolock)
          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
         and pd.DestinationLogo    = @DestinationLogo
-
  left join @Price pp
         on pp.DetailNum = p.DetailNum
-	   and pp.MakeLogo  = p.Make
-	   
+	   and pp.MakeLogo  = p.Make	   
  where p.Spid = @@Spid
 
 Update #Price  
@@ -185,32 +186,52 @@ Update f
       ,f.Margin          = p.Margin
       ,f.Discount        = p.Discount
       ,f.DestinationLogo = p.DestinationLogo
-
 	  ,f.WeightGr	     = p.WeightKG   
 	  ,f.VolumeAdd       = p.VolumeKG   
-
-  from #Price p (rowlock)
+  from #Price p (nolock)
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
         and f.ID   = p.ID
  --*/
 
+-- расчет срока доставки
+delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
+insert pDeliveryDate 
+      (Spid, ID, OrderDate, ProfilesDeliveryID, Delivery)
+select @@SPID, 
+       ID, 
+       cast(getdate() as date),
+	   ProfilesDeliveryID,
+	   isnull(Delivery, 0) -- значение с профиля поставщика
+  from #Price (nolock)
 
- insert tSearchHistory (ClientID, DetailNum)
- select distinct
-        f.ClientID
-       ,f.DetailNum
-   from pFindByNumber f (nolock)
-  where f.Spid = @@Spid
-    and  not exists (select 1
-	                   from tSearchHistory sh with (nolock index=ao1)
-					  where sh.ClientID  = f.ClientID
-					    and sh.DetailNum = f.DetailNum)
-     
+exec DeliveryDateCalc  
+
+Update f 
+   set f.OurDelivery = f.Delivery + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery
+  from pDeliveryDate p with (nolock index=ao1)
+ inner join pFindByNumber f with (updlock index=ao1)
+         on f.Spid = @@Spid
+        and f.ID   = p.ID
+ where p.Spid = @@Spid
+
+
+-- сохранении истории поиска
+insert tSearchHistory (ClientID, DetailNum)
+select distinct
+       f.ClientID
+      ,f.DetailNum
+  from pFindByNumber f (nolock)
+ where f.Spid = @@Spid
+   and not exists (select 1	                   
+                     from tSearchHistory sh with (nolock index=ao1)					  
+		            where sh.ClientID  = f.ClientID					    
+                      and sh.DetailNum = f.DetailNum)
+    
 exit_:
 return @RetVal    
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240327', '1'
+exec setOV 'CustomerPriceCalc', 'P', '20240403', '2'
 go

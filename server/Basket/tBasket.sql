@@ -15,6 +15,7 @@ tBasket - корзина деталей
   ,PartNameEng             nvarchar(256)  -- английское название детали
   ,PriceLogo               nvarchar(64)   -- лого прайслиста
   ,GuaranteedDay           nvarchar(64)   -- гарантированный срок поставки детали
+  ,OurDelivery             int            -- наш срок поставки, показываем клиенту
   ,Quantity                int            -- Количество
   ,Price                   money          -- цена детали
   ,PriceRub                money          -- цена детали в рублях

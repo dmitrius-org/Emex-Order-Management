@@ -15,13 +15,11 @@ object MainForm: TMainForm
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     AlignWithMargins = True
-    Left = 100
+    Left = 3
     Top = 3
-    Width = 710
+    Width = 904
     Height = 528
     Hint = ''
-    Margins.Left = 100
-    Margins.Right = 100
     ParentColor = False
     Align = alClient
     AlignmentControl = uniAlignmentClient
@@ -30,12 +28,13 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
+    ExplicitLeft = 100
     ExplicitWidth = 706
     ExplicitHeight = 527
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
-      Width = 710
+      Width = 904
       Height = 528
       Hint = ''
       Align = alClient
@@ -50,7 +49,7 @@ object MainForm: TMainForm
       object UniPanelCentral: TUniPanel
         Left = 0
         Top = 55
-        Width = 710
+        Width = 904
         Height = 473
         Hint = ''
         Align = alClient
@@ -69,7 +68,7 @@ object MainForm: TMainForm
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 704
+          Width = 898
           Height = 467
           Hint = ''
           ActivePage = tbS
@@ -89,6 +88,7 @@ object MainForm: TMainForm
             Hint = ''
             Caption = #1050#1086#1088#1079#1080#1085#1072
             OnBeforeActivate = tsBBeforeActivate
+            OnBeforeFirstActivate = tsBBeforeFirstActivate
             ExplicitWidth = 692
             ExplicitHeight = 438
           end
@@ -96,6 +96,7 @@ object MainForm: TMainForm
             Hint = ''
             Caption = #1047#1072#1082#1072#1079#1099
             OnBeforeActivate = tsOBeforeActivate
+            OnBeforeFirstActivate = tsOBeforeFirstActivate
             ExplicitWidth = 692
             ExplicitHeight = 438
           end
@@ -104,7 +105,7 @@ object MainForm: TMainForm
       object UniPanelTop: TUniPanel
         Left = 0
         Top = 0
-        Width = 710
+        Width = 904
         Height = 55
         Hint = ''
         Align = alTop
@@ -114,7 +115,7 @@ object MainForm: TMainForm
         LayoutConfig.Region = 'north'
         ExplicitWidth = 706
         object UniPanel: TUniPanel
-          Left = 395
+          Left = 589
           Top = 0
           Width = 315
           Height = 55

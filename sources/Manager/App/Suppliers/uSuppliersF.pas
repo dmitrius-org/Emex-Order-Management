@@ -80,6 +80,7 @@ type
     UniHiddenPanel3: TUniHiddenPanel;
     qDeliveryDenVyleta: TWideStringField;
     cbDenVileta: TUniCheckComboBox;
+    qDeliveryDelivery: TIntegerField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

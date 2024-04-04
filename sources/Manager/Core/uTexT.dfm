@@ -13,7 +13,8 @@ object TexT: TTexT
     Width = 938
     Height = 81
     Hint = ''
-    Caption = #1047#1072#1087#1088#1086#1089' '#1089#1090#1072#1090#1091#1089#1072' '#1087#1086' '#1085#1086#1084#1091' '#1079#1072#1103#1074#1082#1080
+    AlignmentControl = uniAlignmentClient
+    Caption = #1047#1072#1087#1088#1086#1089' '#1089#1090#1072#1090#1091#1089#1072' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1079#1072#1103#1074#1082#1080
     Align = alTop
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Width = '0'
@@ -71,6 +72,7 @@ object TexT: TTexT
     Width = 938
     Height = 81
     Hint = ''
+    AlignmentControl = uniAlignmentClient
     Caption = #1047#1072#1087#1088#1086#1089' '#1089#1090#1072#1090#1091#1089#1072' '#1087#1086' '#1089#1086#1089#1090#1086#1103#1085#1080#1102
     Align = alTop
     LayoutConfig.IgnorePosition = False
@@ -122,6 +124,49 @@ object TexT: TTexT
       Text = ''
       TabOrder = 1
       IconItems = <>
+    end
+  end
+  object UniGroupBox3: TUniGroupBox
+    Left = 0
+    Top = 162
+    Width = 938
+    Height = 81
+    Hint = ''
+    AlignmentControl = uniAlignmentClient
+    Caption = #1047#1072#1087#1088#1086#1089' '#1082#1086#1088#1079#1080#1085#1099
+    Align = alTop
+    LayoutConfig.IgnorePosition = False
+    LayoutConfig.Width = '0'
+    TabOrder = 2
+    ExplicitTop = 89
+    object UniButton3: TUniButton
+      Left = 270
+      Top = 34
+      Width = 133
+      Height = 25
+      Hint = ''
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1079#1072#1087#1088#1086#1089
+      TabOrder = 2
+      ScreenMask.Enabled = True
+      OnClick = UniButton2Click
+    end
+    object edtSuppliersID: TUniNumberEdit
+      Left = 167
+      Top = 38
+      Width = 61
+      Hint = ''
+      TabOrder = 1
+      Value = 3.000000000000000000
+      DecimalSeparator = ','
+    end
+    object UniLabel5: TUniLabel
+      Left = 167
+      Top = 24
+      Width = 62
+      Height = 13
+      Hint = ''
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      TabOrder = 3
     end
   end
 end

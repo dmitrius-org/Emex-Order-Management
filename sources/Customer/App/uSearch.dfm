@@ -212,11 +212,12 @@ object SearchF: TSearchF
           Width = 97
           Alignment = taCenter
           ReadOnly = True
+          ImageOptions.Visible = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'Delivery'
+          FieldName = 'OurDelivery'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
@@ -300,6 +301,7 @@ object SearchF: TSearchF
         Left = 0
         Top = 96
         Width = 145
+        Height = 23
         Hint = ''
         Text = 'UniComboBox1'
         Items.Strings = (
@@ -320,6 +322,7 @@ object SearchF: TSearchF
       Visible = False
       ParentColor = False
       TabOrder = 3
+      ScrollDirection = sdVertical
       object MakeLogoGrid: TUniDBGrid
         Left = 0
         Top = 0
@@ -441,8 +444,8 @@ object SearchF: TSearchF
       Required = True
       OnGetText = QueryDeliveryTypeGetText
     end
-    object QueryDelivery: TIntegerField
-      FieldName = 'Delivery'
+    object QueryOurDelivery: TIntegerField
+      FieldName = 'OurDelivery'
       Origin = 'Delivery'
     end
     object QueryPercentSupped: TIntegerField

@@ -42,7 +42,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 	   p.WeightGr [Weight], -- вес детали в граммах
 	   p.VolumeAdd,         -- наценка объем (объемный вес)
 	   --dbo.AddDaysAndWeekends(GetDate(), p.Delivery, 1) 
-	   p.Delivery,        -- срок поставки
+	   p.OurDelivery,     -- наш срок поставки, показываем клиенту
        p.PercentSupped,   -- процент поставки (Статистика)
 	   p.Price,           -- цена детали у emex
        p.PriceRub,        -- цена детали, показаваемая на сайте
@@ -101,6 +101,6 @@ go
 grant all on vFindByNumber to public
 
 go
-exec setOV 'vFindByNumber', 'V', '20240327', '2'
+exec setOV 'vFindByNumber', 'V', '20240403', '3'
 go
 -- select * from tPrice where DetailNum =  '09G301469A'

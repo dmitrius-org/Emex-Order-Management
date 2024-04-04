@@ -51,9 +51,10 @@ object OrdersT: TOrdersT
           '  }'#13#10'}'
         'hide=function hide(sender, eOpts)'#13#10'{'#13#10#13#10'}'
         
-          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
-          'est(this, '#39'_columnhide'#39', ["column=" + column.dataIndex, "hidden=' +
-          '" + column.hidden]);'#13#10'}'
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
+          't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
+          '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
         
           'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  //consol' +
           'e.log(column); '#13#10'  //console.log(eOpts);'#13#10'  //console.log(ct);'#13#10 +
@@ -1725,7 +1726,7 @@ object OrdersT: TOrdersT
       '       WeightKG,'
       '       VolumeKG,'
       '       isCancel,'
-      '       isCancelToClient,'
+      '       --isCancelToClient,'
       '       PriceLogo,'
       '       Margin,'
       '       MarginF,'

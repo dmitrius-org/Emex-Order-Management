@@ -13,16 +13,13 @@ select
       ,t.MakeName         -- 
       ,t.DetailNum        -- 
       ,t.PartNameRus      -- 
-      --,t.PartNameEng      -- 
       ,t.PriceLogo        -- 
-      ,t.GuaranteedDay    -- 
-      ,t.Quantity         -- 
-     -- ,t.Price            -- 
+      ,t.OurDelivery      -- наш срок поставки, показываем клиенту
+	  ,t.Quantity         -- 
       ,t.PriceRub
       ,t.Amount           -- 
-     -- ,t.Reference        -- 
   from tBasket t (nolock)
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240101', '0'
+exec setOV 'vBasket', 'V', '20240403', '1'

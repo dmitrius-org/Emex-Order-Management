@@ -164,6 +164,7 @@ begin
       logger.Info('TEmex.CreateOrder Order: ' + Order.ToString);
       SQl.Exec(' delete pMovement from pMovement (rowlock) where spid = @@spid ', [],[]);
 
+      // запрашиваем данные по сформированному заказу для проверки, что все позиции заказаны
       MovementByOrderNumber(Client.ToInteger, Order);
 
       Qry.Close;
@@ -191,6 +192,10 @@ begin
                       '    and p.Retval = 0';
       Qry.ParamByName('Retval').AsInteger := retval;
       Qry.ExecSQL;
+
+
+
+
     end;
   end;
   FreeAndNil(Clients);

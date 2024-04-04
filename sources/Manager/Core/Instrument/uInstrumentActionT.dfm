@@ -162,7 +162,8 @@ object InstrumentActionT: TInstrumentActionT
     SQL.Strings = (
       'Select *'
       '  from tModelMetod (nolock)'
-      ' where ModelID  = :ModelID')
+      ' where ModelID  = :ModelID'
+      ' order by N')
     Left = 683
     Top = 102
     ParamData = <

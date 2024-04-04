@@ -88,6 +88,7 @@ insert tRetCode (RetCode, Message) select 528, 'Заказ с заданным �
 insert tRetCode (RetCode, Message) select 530, '[OrderCreateFromBasket] Не определен идентификатор начального состояния!'
 insert tRetCode (RetCode, Message) select 533, '[OrderCreateFromBasket] Не определен поставщик, обратитесь к администратору системы!'
 insert tRetCode (RetCode, Message) select 534, '[EmexCreateOrderCheck] Деталь уже размещена!'
+insert tRetCode (RetCode, Message) select 535, 'Нет позиций для заказа!'
 --
 
 

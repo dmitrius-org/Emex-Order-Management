@@ -21,14 +21,15 @@ begin
 	,VolumeKG_Rate4     decimal(10, 2) null    -- Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
 	,DestinationLogo    nvarchar(10)   not null-- Направление
 	,Restrictions       bit                    -- Признак выгружать детали с ограничениями или нет
-	,IsActive           bit      
-	)
+	,IsActive           bit     
+	,Delivery           int                    -- наш срок поставки, добавляем к сроку emex
+	);
 
-	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo)
+	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
 
-	create unique index ao2 on tSupplierDeliveryProfiles(ProfilesDeliveryID)
+	create unique index ao2 on tSupplierDeliveryProfiles(ProfilesDeliveryID);
 
-	grant all on tSupplierDeliveryProfiles to public
+	grant all on tSupplierDeliveryProfiles to public;
 end
 go
 exec setOV 'tSupplierDeliveryProfiles', 'U', '20240101', '0'
@@ -51,4 +52,5 @@ exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'VolumeKG_Rate3'  
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'VolumeKG_Rate4'        ,'Коэффициент на детали у которых [VolumeKG] от 25 кг включительно' 
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'DestinationLogo'       ,'Направление заказа. Передается в emex при добалении детали в корзину' 
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Restrictions'          ,'Признак выгружать детали с ограничениями или нет' 
+exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Delivery'              ,'Наш срок поставки, добавляем к сроку emex' 
 go

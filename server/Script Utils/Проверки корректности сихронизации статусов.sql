@@ -91,8 +91,10 @@ delete p
 -- where OrderID is null
 
 -- заказы, которых нет в emex
-Select 'Заказы, которых нет в emex', *
+Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, *
   from tOrders p
+ inner join tClients c (nolock)
+         on c.ClientID = p.ClientID 
  where not exists (select 1
                     from tMovement m (nolock)
 				   where m.OrderID = p.OrderID

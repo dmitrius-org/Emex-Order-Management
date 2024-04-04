@@ -18,7 +18,7 @@ Select o.ClientID,
 		and n.EID not in (5 /*Отправлено*/
 	                     ,6	/*NOT AVAILABLE*/
 		                  )     
- where isnull(o.EmexOrderID, 0) <> 0
+ where isnull(o.EmexOrderID, 0)  > 0
    and isnull(o.isCancel, 0)     = 0 
 
 go

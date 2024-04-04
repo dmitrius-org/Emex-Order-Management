@@ -16,7 +16,7 @@ SELECT o.[OrderID]
       ,o.[StatusID]
       ,s.[Name]          as StatusName -- статус/состояние
       ,o.[isCancel]
-	  ,o.[isCancelToClient] -- отказ отправлен клиенту
+	  --,o.[isCancelToClient] -- отказ отправлен клиенту
 	  ,o.[MakeLogo]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
@@ -27,7 +27,7 @@ SELECT o.[OrderID]
                 end  
                ,o.[DetailNumber]  
                ,'')))    as DetailName
-      ,o.[DetailID]
+      --,o.[DetailID]
       ,o.[Quantity]
       ,o.[Price]
       ,o.[Amount]
@@ -109,4 +109,4 @@ go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
-select * from vCustomerOrders where OrderID=327
+select * from vCustomerOrders  where ClientID =31

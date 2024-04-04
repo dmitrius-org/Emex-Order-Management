@@ -92,6 +92,11 @@
     position: relative;
 }
 
+/* .grid-search .fa-1x {
+    margin-top:0px;
+} */
+
+
 .grid-search .x-keyboard-mode .x-grid-item-focused .x-grid-cell-inner:before {
     content: "";
     position: absolute;

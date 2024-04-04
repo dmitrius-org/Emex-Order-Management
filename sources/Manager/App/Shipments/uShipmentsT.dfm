@@ -467,7 +467,7 @@ object ShipmentsT: TShipmentsT
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 91
+          Width = 92
           Height = 13
           Hint = ''
           ShowHint = True

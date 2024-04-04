@@ -1,9 +1,9 @@
-unit uBasket;
+Ôªøunit uBasket;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Windows, Messages, Variants, Classes, Graphics, System.SysUtils,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniEdit, uniGUIBaseClasses, uniPanel,
   uniImageList, System.ImageList, Vcl.ImgList,
@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, Vcl.Menus, uniButton, uniLabel,
-  System.Generics.Collections, uniSpinEdit;
+  System.Generics.Collections, uniSpinEdit, uniDBEdit;
 
 type
   tMarks = class
@@ -51,7 +51,6 @@ type
     QueryDetailNum: TWideStringField;
     QueryPartNameRus: TWideStringField;
     QueryPriceLogo: TWideStringField;
-    QueryGuaranteedDay: TWideStringField;
     QueryQuantity: TIntegerField;
     QueryAmount: TCurrencyField;
     btnDeleteBasket: TUniButtonWidget;
@@ -61,19 +60,24 @@ type
     TopPanel: TUniPanel;
     UniContainerPanel1: TUniContainerPanel;
     UniPanel1: TUniPanel;
-    UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
-    UniLabel3: TUniLabel;
     UniLabel4: TUniLabel;
     UniLabel5: TUniLabel;
-    edtCount: TUniLabel;
-    edtWeight: TUniLabel;
-    edtOrderAmount: TUniLabel;
     UniPanel2: TUniPanel;
     addOrder: TUniButton;
     btnRefresh: TUniButton;
     QueryPriceRub: TCurrencyField;
-    edtQuantity: TUniSpinEdit;
+    QueryOurDelivery: TIntegerField;
+    UniContainerPanel2: TUniContainerPanel;
+    UniFieldContainer1: TUniFieldContainer;
+    UniFieldContainer2: TUniFieldContainer;
+    UniLabel9: TUniLabel;
+    UniLabel10: TUniLabel;
+    UniLabel11: TUniLabel;
+    edtOrderAmount: TUniLabel;
+    edtWeight: TUniLabel;
+    edtCount: TUniLabel;
+    UniProgressbarWidget1: TUniProgressbarWidget;
+    UniSpinEdit1: TUniSpinEdit;
     procedure edtSearchTriggerEvent(Sender: TUniFormControl;
       AButtonId: Integer);
     procedure GridKeyDown(Sender: TObject; var Key: Word;
@@ -91,6 +95,7 @@ type
     procedure GridSelectionChange(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
     procedure addOrderClick(Sender: TObject);
+    procedure GridAfterLoad(Sender: TUniCustomDBGrid);
   private
     { Private declarations }
 
@@ -169,22 +174,36 @@ end;
 
 procedure TBasketF.GetAgregateDate;
 begin
-
   RetVal.Clear;
   Sql.Open('exec BasketData @ClientID = :ClientID',
           ['ClientID'],
           [UniMainModule.AUserID]);
 
-  edtOrderAmount.Text := Sql.Q.FieldByName('Amount').AsString;
+  edtOrderAmount.Text := FormatFloat('###,##0.00 ‚ÇΩ', Sql.Q.FieldByName('Amount').Value);
   edtWeight.Text := Sql.Q.FieldByName('WeightKG').AsString;
   edtCount.Text := Sql.Q.FieldByName('Cnt').AsString;
+end;
+
+procedure TBasketF.GridAfterLoad(Sender: TUniCustomDBGrid);
+begin
+   with Grid, JSInterface do
+    JSCallDefer('getSelectionModel().selectAll', [], 100 );
 end;
 
 procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-   Logger.Info(EventName);
-//   Logger.Info(Params.Text);
+  Logger.Info('GridAjaxEvent: ' + EventName);
+  Logger.Info('GridAjaxEvent: ' + Params.text);
+
+  if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
+  begin
+    Query.Post;
+    Query.Refresh
+   // Query.RefreshRecord();
+  end;
+
+
 end;
 
 procedure TBasketF.GridCellContextClick(Column: TUniDBGridColumn; X,
@@ -218,22 +237,21 @@ end;
 
 procedure TBasketF.UniFrameCreate(Sender: TObject);
 begin
-  // Ó·˙ÂÍÚ ‰Îˇ ÛÔ‡ÎÂÌËˇ ÏÂÚÍ‡ÏË
+  Logger.Info('TBasketF.UniFrameCreate');
+  // –æ–±—ä–µ–∫—Ç –¥–ª—è —É–ø—Ä–∞–ª–µ–Ω–∏—è –º–µ—Ç–∫–∞–º–∏
   Marks := tMarks.Create(Grid);
   Marks.Clear;
-
-  GridRefresh;
 end;
 
 procedure TBasketF.UniFrameDestroy(Sender: TObject);
 begin
- Marks.Free;
+  Marks.Free;
 end;
 
 procedure TBasketF.UniFrameReady(Sender: TObject);
 begin
   Logger.Info('TBasketF.UniFrameReady');
-  GridRefresh;
+  // Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
 end;
 
 
@@ -251,7 +269,7 @@ end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid= @@Spid and Type = 6 /*6-ÍÓÁËÌ‡*/', [], [])
+  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid= @@Spid and Type = 6 /*6-–∫–æ—Ä–∑–∏–Ω–∞*/', [], [])
 end;
 
 procedure tMarks.Clear;
@@ -305,6 +323,8 @@ begin
     end;
 
   end;
+
+  logger.Info('tMarks.Count: ' + Count.ToString);
   logger.Info('tMarks.Select End');
 end;
 

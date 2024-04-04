@@ -461,7 +461,7 @@ begin
 
   // индексы для сортировки
   //with Query do
-  SortColumnCreate(Query);
+  GridExt.SortColumnCreate(Grid);;
 
 
 //  {$IFDEF Release}

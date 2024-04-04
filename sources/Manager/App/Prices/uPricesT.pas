@@ -193,7 +193,7 @@ begin
 
   DataRefresh;
 
-  SortColumnCreate(Query);
+  GridExt.SortColumnCreate(Grid) //SortColumnCreate(Query);
 end;
 
 procedure TPricesT.UniFrameDestroy(Sender: TObject);

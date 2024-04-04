@@ -30,6 +30,7 @@ create table pFindByNumber
 ,VolumeAdd               money          -- наценка объем (объемный вес)
 ,GuaranteedDay           nvarchar(64)   -- гарантированный срок поставки детали
 
+,OurDelivery             int            -- наш срок поставки, показываем клиенту
 ,Margin		             money
 ,Discount	             money          -- Скидка
 ,Kurs		             money
@@ -44,7 +45,7 @@ create index ao1 on pFindByNumber(Spid, ID)
 go
 create index ao2 on pFindByNumber(Spid, DestinationLogo)
 go
-exec setOV 'pFindByNumber', 'U', '20240101', '0'
+exec setOV 'pFindByNumber', 'U', '20240403', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pFindByNumber', @desc = 'Результат поиска детали'

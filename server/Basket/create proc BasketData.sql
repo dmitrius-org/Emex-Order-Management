@@ -10,9 +10,9 @@ create proc BasketData
 as
 declare @r int = 0
 
-select isnull(sum(t.Quantity * t.Price), 0) Amount
-      ,Count(*)                  Cnt
-      ,isnull(Sum(WeightKG)/1000, 0)        WeightKG
+select isnull(sum(t.Quantity * t.PriceRub), 0) Amount    -- Сумма
+      ,Count(*)                                Cnt	     -- Количество
+      ,isnull(Sum(WeightKG)/1000, 0)           WeightKG  -- Вес
   from tBasket t (nolock)
  where t.ClientID  = @ClientID
 
@@ -23,7 +23,9 @@ select isnull(sum(t.Quantity * t.Price), 0) Amount
 GO
 grant exec on BasketData to public
 go
-exec setOV 'BasketData', 'P', '20240101', '0'
+exec setOV 'BasketData', 'P', '20240404', '1'
 go
 
-exec BasketData @ClientID=26
+exec BasketData @ClientID=31
+
+

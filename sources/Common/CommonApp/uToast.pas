@@ -25,7 +25,7 @@ begin
   AUniSession.AddJS('window._msg'+ genMsgID +' = Ext.toast ({html: "<font color=white style=font-size:15px;font-family:segoe ui;>' + apesan +
    '</font>", align: "tr" , header: false, autoCloseDelay: 3000, hideDuration: 2000, modal: false, bodyStyle:{"background-color":"'+acol+
    ' !important;box-shadow:'+acol+' !important; border-color: 0px solid transparent;padding:0px 0px 0px 0px !important;top:180px !important"}'
-   +',listeners: {show: function(){this.paddingY = Ext.getBody().getHeight() - this.getHeight()}}'
+   +',listeners: {show: function(){this.paddingY = Ext.getBody().getHeight() - this.getHeight()*2}}'
    +'});'
    );
 end;
@@ -45,7 +45,7 @@ begin
   AUniSession.AddJS('window._msg'+ genMsgID +' = Ext.toast ({html: "<font color=white style=font-size:15px;font-family:segoe ui;>' + apesan +
    '</font>", align: "tr" , header: false, autoCloseDelay: 3000, hideDuration: 2000, modal: false, bodyStyle:{"background-color":"'+acol+
    ' !important;box-shadow:'+acol+' !important; border-color: 0px solid transparent;padding:0px 0px 0px 0px !important;top:180px !important"}'
-   +',listeners: {show: function(){this.paddingY = Ext.getBody().getHeight() - this.getHeight()}}'
+   +',listeners: {show: function(){this.paddingY = Ext.getBody().getHeight() - this.getHeight()*2}}'
    +'});'
    );
 end;

@@ -26,10 +26,8 @@ object OrderF: TOrderF
     Align = alClient
     TabOrder = 0
     Caption = ''
-    ExplicitLeft = 397
-    ExplicitTop = 127
-    ExplicitWidth = 256
-    ExplicitHeight = 128
+    ExplicitWidth = 581
+    ExplicitHeight = 136
     object UniLabel1: TUniLabel
       Left = 94
       Top = 27
@@ -121,7 +119,7 @@ object OrderF: TOrderF
   end
   object btnCancel: TUniBitBtn
     AlignWithMargins = True
-    Left = 406
+    Left = 402
     Top = 152
     Width = 81
     Height = 27
@@ -133,12 +131,12 @@ object OrderF: TOrderF
     TabStop = False
     TabOrder = 1
     OnClick = btnCancelClick
-    ExplicitLeft = 527
-    ExplicitTop = 242
+    ExplicitLeft = 398
+    ExplicitTop = 151
   end
   object btnOk: TUniBitBtn
     AlignWithMargins = True
-    Left = 493
+    Left = 489
     Top = 152
     Width = 82
     Height = 27
@@ -150,7 +148,7 @@ object OrderF: TOrderF
     Anchors = [akRight, akBottom]
     TabOrder = 2
     OnClick = btnOkClick
-    ExplicitLeft = 614
-    ExplicitTop = 242
+    ExplicitLeft = 485
+    ExplicitTop = 151
   end
 end

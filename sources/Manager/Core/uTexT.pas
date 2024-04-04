@@ -22,6 +22,10 @@ type
     UniButton1: TUniButton;
     edtclient: TUniNumberEdit;
     edtOrderNum: TUniNumberEdit;
+    UniGroupBox3: TUniGroupBox;
+    UniButton3: TUniButton;
+    edtSuppliersID: TUniNumberEdit;
+    UniLabel5: TUniLabel;
     procedure UniButton1Click(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
     procedure UniButton2Click(Sender: TObject);
@@ -34,7 +38,7 @@ type
 implementation
 
 uses
-  uMainVar, uEmexUtils, MainModule, uVarUtils;
+  uMainVar, uEmexUtils, MainModule, uVarUtils, uEmexService;
 
 {$R *.dfm}
 
@@ -55,36 +59,52 @@ end;
 
 procedure TTexT.UniButton2Click(Sender: TObject);
 var Emex: TEmex;
+     Ctm: Customer;
+inBasket: ArrayOfBasketDetails;
+       i: Integer;
+    part: BasketDetails;
 begin
-   SQl.Exec('delete pMovement where spid = @@spid', [],[]);
-   SQl.Exec('delete pAccrualAction where spid = @@spid', [],[]);
+  SQl.Exec('delete pBasketDetails where spid = @@spid', [],[]);
+  SQl.Open('Select s.emexUsername, s.emexPassword '+
+           '  from tSuppliers  s (nolock)         ' +
+           ' where s.SuppliersID = :SuppliersID   ',
+          ['SuppliersID'], [edtSuppliersID.value]);
 
 
-   SQl.Exec('insert pAccrualAction (Spid, ObjectID, Retval) select top 1 @@Spid, OrderID, 0 from tOrders (nolock) where ClientID = :ClientID',
-           ['ClientID'],[edtclient2.Value]);
+  Ctm := Customer.Create;
+  Ctm.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
+  Ctm.Password      := SQl.Q.FieldByName('emexPassword').AsString;
+  Ctm.SubCustomerId := '0';
+  Ctm.CustomerId    := '0';
 
+  if (edtSuppliersID.Value > 0) then
+  begin
+    Emex := TEmex.Create;
+    Emex.Connection := UniMainModule.FDConnection;
 
-   if (edtclient2.Value > 0) and (cbStatus.ItemIndex > 0) then
-   begin
-     Emex := TEmex.Create;
-     Emex.Connection := UniMainModule.FDConnection;
+    inBasket := Emex.Emex.GetBasketDetails(Ctm);
 
-     case cbStatus.ItemIndex  of
-//        1: //InWork
-//        2: //Purchased
-//        3: //	ReceivedOnStock
-//        4: //	ReadyToSend
-        5: //	Sent
-          Emex.MovementInWork();
-//        6: //	NOT AVAILABLE
-//        7: //	AGREE
-     else
-       //
-     end;
+    for I := 0 to Length(inBasket)-1 do
+    begin
+      part:= BasketDetails.Create;
+      part:= inBasket[i];
 
+      SQl.Exec(''+
+               ' insert into pBasketDetails'+
+               '       (Spid, BasketId, MakeLogo, DetailNum, PriceLogo, Price, Quantity, Comments, DetailWeight, EmExWeight, DestinationLogo, UploadedPrice, CoeffMaxAgree, CustomerSubId, Reference, ClientID) '+
+               ' select @@spid, :BasketId,:MakeLogo,:DetailNum,:PriceLogo,:Price, :Quantity, :Comments, :DetailWeight, :EmExWeight, :DestinationLogo, :UploadedPrice, :CoeffMaxAgree, :CustomerSubId, :Reference, :ClientID'+
+               '       ',
+               ['BasketId','MakeLogo','DetailNum','PriceLogo','Price','Quantity', 'Comments', 'DetailWeight', 'EmExWeight', 'DestinationLogo', 'UploadedPrice', 'CoeffMaxAgree', 'CustomerSubId', 'Reference', 'ClientID'],
+               [part.BasketId, part.MakeLogo, part.DetailNum, part.PriceLogo, part.Price, part.Quantity
+               ,part.Comments, part.DetailWeight, part.EmExWeight, part.DestinationLogo, part.UploadedPrice
+               ,part.CoeffMaxAgree, part.CustomerSubId, part.Reference, 0]
+               );
+    end;
 
-     FreeAndNil(Emex);
-   end;
+    freeandnil(part);
+  end;
+
+  FreeAndNil(Emex);
 end;
 
 procedure TTexT.UniFrameReady(Sender: TObject);

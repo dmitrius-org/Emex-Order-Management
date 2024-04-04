@@ -39,7 +39,8 @@ as
             ,VolumeKG_Rate4     
             ,DestinationLogo    
             ,Restrictions       
-            ,IsActive                            
+            ,IsActive  
+			,Delivery
 			)
      select @@SPID
            ,ProfilesDeliveryID
@@ -58,6 +59,7 @@ as
            ,DestinationLogo
            ,Restrictions
            ,IsActive
+		   ,Delivery
        from tSupplierDeliveryProfiles (nolock)
       where SuppliersID = @SuppliersID
   end
@@ -89,7 +91,8 @@ as
             ,VolumeKG_Rate4     
             ,DestinationLogo    
             ,Restrictions       
-            ,IsActive                            
+            ,IsActive    
+			,Delivery
 			)
      select @SuppliersID
            ,Name
@@ -106,6 +109,7 @@ as
            ,DestinationLogo
            ,Restrictions
            ,IsActive
+		   ,Delivery
        from pSupplierDeliveryProfiles (nolock)
       where Spid = @@Spid --SuppliersID = @SuppliersID
 	    and isnull(ProfilesDeliveryID, 0) = 0
@@ -124,7 +128,8 @@ as
            ,t.VolumeKG_Rate4   = p.VolumeKG_Rate4 
            ,t.DestinationLogo  = p.DestinationLogo
            ,t.Restrictions     = p.Restrictions   
-           ,t.IsActive         = p.IsActive         
+           ,t.IsActive         = p.IsActive  
+		   ,t.Delivery         = p.Delivery
        from pSupplierDeliveryProfiles p (nolock)
       inner join tSupplierDeliveryProfiles t (updlock)
               on t.SuppliersID        = @SuppliersID
@@ -137,5 +142,5 @@ return @r
 go
 grant exec on SupplierDeliveryProfilesLoad to public
 go
-exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240101', '0'
+exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240403', '1'
 go

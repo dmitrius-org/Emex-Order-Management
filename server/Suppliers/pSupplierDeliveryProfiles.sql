@@ -22,7 +22,8 @@ create table pSupplierDeliveryProfiles
 ,VolumeKG_Rate4     decimal(10, 2) null    -- Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
 ,DestinationLogo    nvarchar(10) not null  -- Направление
 ,Restrictions       bit                    -- Признак выгружать детали с ограничениями или нет
-,IsActive           bit      
+,IsActive           bit 
+,Delivery           int                    -- наш срок поставки, добавляем к сроку emex
 )
 go
 create index ao1 on pSupplierDeliveryProfiles(ID)
@@ -31,5 +32,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240322', '0'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240403', '1'
 go

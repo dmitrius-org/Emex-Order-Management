@@ -223,6 +223,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1048#1044' '#1047#1072#1082#1072#1079#1072
           Width = 95
+          Visible = False
           ReadOnly = True
           Hint = #1048#1044' '#1047#1072#1082#1072#1079#1072
           Sortable = True
@@ -232,6 +233,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1054#1090#1082#1072#1079
           Width = 84
+          Visible = False
           ReadOnly = True
           Hint = #1054#1090#1082#1072#1079
           Sortable = True
@@ -259,6 +261,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = 'Reference'
           Width = 120
+          Visible = False
           Sortable = True
         end
         item
@@ -275,6 +278,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1041#1088#1077#1085#1076
           Width = 65
+          Visible = False
           Sortable = True
         end
         item
@@ -308,17 +312,9 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
           Width = 86
+          Visible = False
           ReadOnly = True
           Hint = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
-          Sortable = True
-        end
-        item
-          FieldName = 'DetailID'
-          Title.Alignment = taCenter
-          Title.Caption = 'ID '
-          Width = 112
-          ReadOnly = True
-          Hint = 'ID (DetailID)'
           Sortable = True
         end
         item
@@ -333,10 +329,10 @@ object OrdersT2: TOrdersT2
         item
           FieldName = 'Price'
           Title.Alignment = taCenter
-          Title.Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+          Title.Caption = #1062#1077#1085#1072' '#1079#1072' 1 '#1096#1090'.'
           Width = 108
           ReadOnly = True
-          Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' (Price)'
+          Hint = #1062#1077#1085#1072' '#1079#1072' 1 '#1096#1090'.'
           Sortable = True
         end
         item
@@ -819,7 +815,7 @@ object OrdersT2: TOrdersT2
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
-      '      ,o.[DetailID]'
+      '      --,o.[DetailID]'
       '      ,o.[Quantity]'
       '      ,o.[Price]'
       '      ,o.[Amount]'
@@ -956,11 +952,6 @@ object OrdersT2: TOrdersT2
     object QueryDetailName: TWideStringField
       FieldName = 'DetailName'
       Size = 512
-    end
-    object QueryDetailID: TWideStringField
-      FieldName = 'DetailID'
-      Origin = 'DetailID'
-      Size = 30
     end
     object QueryQuantity: TIntegerField
       FieldName = 'Quantity'

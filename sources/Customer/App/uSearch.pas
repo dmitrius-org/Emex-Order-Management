@@ -25,7 +25,7 @@ type
     QueryDetailNum: TWideStringField;
     QueryPartNameRus: TWideStringField;
     QueryDeliveryType: TIntegerField;
-    QueryDelivery: TIntegerField;
+    QueryOurDelivery: TIntegerField;
     QueryPercentSupped: TIntegerField;
     QueryPrice: TCurrencyField;
     QueryAvailable: TWideStringField;
@@ -192,6 +192,14 @@ end;
 
 procedure TSearchF.MakeLogoGridShow;
 begin
+
+  if MakeLogoPanel.Visible  then
+  begin
+    MakeLogoPanel.Visible:=False;
+    Exit;
+  end;
+
+
   MakeLogoPanel.Left := SearchGrid.Left;
 
   MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width := SearchGrid.Columns.ColumnFromFieldName('MakeName').Width;
@@ -289,17 +297,43 @@ end;
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
- // if (Sender.FieldName = 'MakeLogo') {and (QueryMakeName.Value <> '')} then
   begin
-    Text := '<span><i class="fa fa-caret-down fa-lg makelogo-caret-down"></i><span>' + Sender.AsString + '</span></span>';
+    Text := '<form method="post" action="">' +
+            '<span class="makelogo-caret-down"><a>'+
+            '<button type="button" onclick="setMakelogo()" style="border: 0; background: none;"> '+
+            '  <i class="fa fa-caret-down fa-lg"></i>'+
+            '</button>'+
+            '</a> </span>'+
+            '<span>' + Sender.AsString + ' </span>' +
+            '</form>';
   end
-  //else
-   // Text := Sender.AsString;
+end;
+
+procedure TSearchF.UniFrameCreate(Sender: TObject);
+var
+  js: string;
+begin
+  {$IFDEF Realese}
+    SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+  {$ENDIF}
+
+  js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
+  UniSession.JSCode(js);
+
+
+  js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "setMakelogo", []); } ;';
+  UniSession.JSCode(js);
+
+  GridExt.SortColumnCreate(SearchGrid);
 end;
 
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
+  logger.Info('TSearchF.SearchGridAjaxEvent');
+  logger.Info('TSearchF.SearchGridAjaxEvent EventName: ' + EventName);
+ // logger.Info('TSearchF.Params: ' + Params.Text);
+
   if EventName = 'setDestLogo' then
   begin
     FDestinationLogo := Params.Values['P1'];
@@ -308,26 +342,31 @@ begin
 
     GridRefresh();
   end;
+
+  if EventName = 'setMakelogo' then
+  begin
+    MakeLogoGridShow;
+  end;
 end;
 
 procedure TSearchF.SearchGridBodyClick(Sender: TObject);
 begin
-    MakeLogoGridHide;
+//  MakeLogoGridHide;
 end;
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
 
-  if Assigned(ACurrColumn) then
-
-  if (
-       (ACurrColumn.FieldName = 'MakeName')
-       )
-  then
-  begin
-    MakeLogoGridShow;
-  end;
+//  if Assigned(ACurrColumn) then
+//
+//  if (
+//       (ACurrColumn.FieldName = 'MakeName')
+//       )
+//  then
+//  begin
+//    MakeLogoGridShow;
+//  end;
 end;
 
 procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
@@ -349,7 +388,7 @@ procedure TSearchF.SearchGridDblClick(Sender: TObject);
 begin
  if (Assigned(ACurrColumn)) and (not MakeLogoPanel.Visible )then
   if (
-       //(ACurrColumn.FieldName = 'MakeName') or    MakeLogoGridVisible
+       (ACurrColumn.FieldName = 'MakeName') or
        (ACurrColumn.FieldName = 'DetailNum') or
        (ACurrColumn.FieldName = 'PartNameRus') )
   then
@@ -386,21 +425,6 @@ end;
 procedure TSearchF.TopPanelClick(Sender: TObject);
 begin
    MakeLogoGridHide;
-end;
-
-procedure TSearchF.UniFrameCreate(Sender: TObject);
-var
-  js: string;
-begin
-  {$IFDEF Realese}
-    SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
-  {$ENDIF}
-
-  js := ' setDestLogo = function(AVal) { ' + ' ajaxRequest(' + SearchGrid.JSName
-      + ', "setDestLogo", [ "P1=" + AVal ]);' + ' } ;';
-  UniSession.JSCode(js);
-
-  GridExt.SortColumnCreate(SearchGrid);
 end;
 
 procedure TSearchF.UniFrameDestroy(Sender: TObject);

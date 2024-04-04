@@ -47,10 +47,10 @@ as
   
  -- ошибка нужна для того, чтобы деталь не изменила статус
  Update p
-    set p.Retval = 510 -- Нет позиций для заказа!
+    set p.Retval = 535 -- Нет позиций для заказа!
    from pAccrualAction p (updlock)
   where p.Spid   = @@SPID
-    and p.Retval = 0
+    --and p.Retval = 0
     and not exists (select 1
 	                  from pMovement o (nolock)
   	                 where o.Spid = @@SPID

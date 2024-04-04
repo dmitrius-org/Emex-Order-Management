@@ -312,7 +312,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF;
+  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils;
 
 {$R *.dfm}
 
@@ -728,7 +728,7 @@ begin
       Query.MacroByName('OrderDate').Value := ' and o.OrderDate = '''   + FormatDateTime('yyyymmdd', fOrderDate.DateTime) + ''''
     else
       Query.MacroByName('OrderDate').Value := '';
-
+//
     if (edtUpdDate.Text <> '') and (edtUpdDate.Text <> '30.12.1899') then
       Query.MacroByName('updDateTime').Value := ' and cast(o.updDateTime as date) = '''   + FormatDateTime('yyyymmdd', edtUpdDate.DateTime) + ''''
     else
@@ -741,9 +741,9 @@ begin
 
 
     Query.Open();
-
+//
     StateActionMenuCreate;
-
+//
   finally
     DoHideMask();
     logger.Info('TOrdersT.GridOpen End');
@@ -900,13 +900,13 @@ begin
   if (EventName = '_columnhide')
   then
   begin
-    Sql.Exec('exec GridOptionsVisible ' +
-             '       @Grid   = :Grid'+
-             '      ,@Column = :Column '+
-             '      ,@Visible= 0 ',
-            ['Grid', 'Column'],
-            [self.ClassName +'.' + Grid.Name,
-             Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
+      Sql.Exec('exec GridOptionsVisible ' +
+               '       @Grid   = :Grid'+
+               '      ,@Column = :Column '+
+               '      ,@Visible= 0 ',
+              ['Grid', 'Column'],
+              [self.ClassName +'.' + Grid.Name,
+               Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
   end
   else if (EventName = '_columnshow')
   then
@@ -1164,29 +1164,30 @@ begin
   FilterClientsCreate();
 
   // индексы для сортировки
-  //with Query do
-  begin
-    for I := 0 to Query.FieldCount-1 do
-    begin
-      IndexnameAsc := Query.Fields[I].FieldName+'_index_asc';
-      IndexnameDes := Query.Fields[I].FieldName+'_index_des';
-
-      with Query.Indexes.Add do
-      begin
-        Name := IndexnameAsc;
-        Fields := Query.Fields[I].FieldName;
-        Options:=[];
-        Active := True;
-      end;
-      with Query.Indexes.Add do
-      begin
-        Name := IndexnameDes;
-        Fields := Query.Fields[I].FieldName;
-        Options:=[soDescending];
-        Active := True;
-      end;
-    end;
-  end;
+  GridExt.SortColumnCreate(Grid);
+//  with Query do
+//  begin
+//    for I := 0 to Query.FieldCount-1 do
+//    begin
+//      IndexnameAsc := Query.Fields[I].FieldName+'_index_asc';
+//      IndexnameDes := Query.Fields[I].FieldName+'_index_des';
+//
+//      with Query.Indexes.Add do
+//      begin
+//        Name := IndexnameAsc;
+//        Fields := Query.Fields[I].FieldName;
+//        Options:=[];
+//        Active := True;
+//      end;
+//      with Query.Indexes.Add do
+//      begin
+//        Name := IndexnameDes;
+//        Fields := Query.Fields[I].FieldName;
+//        Options:=[soDescending];
+//        Active := True;
+//      end;
+//    end;
+//  end;
 
   {$IFDEF Release}
     Grid.Columns.ColumnFromFieldName('Flag').Visible := False;

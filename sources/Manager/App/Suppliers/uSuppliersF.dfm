@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 890
+      Left = 886
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 886
+      ExplicitLeft = 882
     end
     object btnCancel: TUniBitBtn
-      Left = 803
+      Left = 799
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 799
+      ExplicitLeft = 795
     end
   end
   object pcCommon: TUniPageControl
@@ -197,13 +197,13 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 256
+        Width = 252
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 252
+        ExplicitWidth = 248
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -217,13 +217,13 @@ object SuppliersF: TSuppliersF
       object edtEmexPassword: TUniEdit
         Left = 238
         Top = 63
-        Width = 256
+        Width = 252
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 252
+        ExplicitWidth = 248
       end
       object UniLabel5: TUniLabel
         Left = 33
@@ -383,6 +383,14 @@ object SuppliersF: TSuppliersF
               Editor = cbDenVileta
             end
             item
+              FieldName = 'Delivery'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
+              Width = 124
+              Hint = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080', '#1076#1086#1073#1072#1074#1083#1103#1077#1084' '#1082' '#1089#1088#1086#1082#1091' emex'
+              Sortable = True
+            end
+            item
               FieldName = 'VolumeKG_Rate1'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG_Rate1'
@@ -425,6 +433,7 @@ object SuppliersF: TSuppliersF
             Left = 12
             Top = 32
             Width = 145
+            Height = 23
             Hint = ''
             Text = ''
             Items.Strings = (
@@ -486,6 +495,7 @@ object SuppliersF: TSuppliersF
       '         DestinationLogo, '
       '         Restrictions, '
       '         IsActive,'
+      '         Delivery,'
       '         Spid)'
       'VALUES (:NEW_SuppliersID, '
       '        :NEW_Name, '
@@ -502,6 +512,7 @@ object SuppliersF: TSuppliersF
       '        :NEW_DestinationLogo, '
       '        :NEW_Restrictions, '
       '        :NEW_IsActive,'
+      '        :NEW_Delivery,'
       '        @@Spid);'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
@@ -543,7 +554,8 @@ object SuppliersF: TSuppliersF
       '      VolumeKG_Rate4 = :NEW_VolumeKG_Rate4, '
       '      DestinationLogo = :NEW_DestinationLogo, '
       '      Restrictions = :NEW_Restrictions, '
-      '      IsActive = :NEW_IsActive'
+      '      IsActive = :NEW_IsActive,'
+      '      Delivery = :NEW_Delivery'
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (
@@ -907,6 +919,7 @@ object SuppliersF: TSuppliersF
       '      ,DestinationLogo'
       '      ,Restrictions'
       '      ,IsActive'
+      '      ,Delivery'
       '  from pSupplierDeliveryProfiles (nolock)'
       ' where Spid = @@Spid ')
     Left = 767
@@ -995,6 +1008,9 @@ object SuppliersF: TSuppliersF
     object qDeliveryDenVyleta: TWideStringField
       FieldName = 'DenVyleta'
       Size = 256
+    end
+    object qDeliveryDelivery: TIntegerField
+      FieldName = 'Delivery'
     end
   end
   object dsDelivery: TDataSource

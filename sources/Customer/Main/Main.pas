@@ -49,6 +49,10 @@ type
     procedure tsBBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure UniFormCreate(Sender: TObject);
     procedure tsOBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure tsBBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
+    procedure tsOBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
 
   private
     { Private declarations }
@@ -114,17 +118,29 @@ end;
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
+  Logger.Info('TMainForm.tsBBeforeActivate');
+  FBasketF.GridRefresh;
+end;
+
+procedure TMainForm.tsBBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  Logger.Info('TMainForm.tsBBeforeFirstActivate');
   if not Assigned(FBasketF) then
   begin
     FBasketF :=  TBasketF.Create(Self);
     FBasketF.Align := alClient;
     FBasketF.Parent := tsB;
   end;
-
-  FBasketF.GridRefresh;
 end;
 
 procedure TMainForm.tsOBeforeActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  FOrdersT2.GridRefresh;
+end;
+
+procedure TMainForm.tsOBeforeFirstActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
   if not Assigned(FOrdersT2) then

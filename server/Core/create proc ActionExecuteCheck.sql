@@ -11,7 +11,11 @@ as
   declare @r          int = 0        
 		 ,@NodeBrief  nvarchar(256)
 
-  --
+
+  -- отбор объектов к выполнению действия
+  Delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
+ 
+  Delete pMovement from pMovement (rowlock) where spid = @@spid
   -- проверки
   if not exists (select 1
                    from tMarks (nolock)
@@ -61,9 +65,6 @@ as
  -- end
 
   --
-  -- отбор объектов к выполнению действия
-  Delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-
   insert into pAccrualAction
         (Spid,
 		 ObjectID,
@@ -190,6 +191,6 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20240101', '1'
+exec setOV 'ActionExecuteCheck', 'P', '20240402', '2'
 go
  

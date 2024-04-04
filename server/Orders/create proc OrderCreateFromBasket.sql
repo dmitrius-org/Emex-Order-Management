@@ -119,7 +119,7 @@ declare @r int = 0
         ,b.PriceLogo             -- PriceLogo
         ,0--pc.ProfilesDeliveryID--
         ,0                       -- isCancel             
-		,b.PriceLogo		       -- 
+		,b.Make		             -- Бренд
 		,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
@@ -219,6 +219,6 @@ exec OrdersFinCalc @IsSave = 1
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240327', '2'
+exec setOV 'OrderCreateFromBasket', 'P', '20240404', '3'
 go
  

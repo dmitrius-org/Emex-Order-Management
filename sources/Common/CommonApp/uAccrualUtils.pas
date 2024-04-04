@@ -262,7 +262,7 @@ begin
 
             qMetod.Close;
             qMetod.SQL.Text :=
-            'Select distinct Number, ActionID, Metod, MetodType '+
+                      'Select distinct Number, ActionID, Metod, MetodType '+
                       '  from vActionMetod '+
                       ' where ActionID  =:ActionID '+
                       '   and StateID   =:StateID '+
@@ -276,9 +276,10 @@ begin
             qMetod.Open;
 
             logger.Info('TAccrual.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString());
-            qMetod.First;
+
             if qMetod.RecordCount > 0 then
             begin
+              qMetod.First;
               for I := 0 to qMetod.RecordCount-1 do
               begin
                 logger.Info('TAccrual.ActionExecute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
@@ -287,17 +288,15 @@ begin
 
                 if qMetod.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
                 begin
-                  //FRetVal.Code := Proc.Call(qMetod.FieldByName('Metod').AsString);
                   Proc.Call(qMetod.FieldByName('Metod').AsString);
                 end;
 
                 Proc.Destroy;
+                qMetod.Next;
               end;
-              qMetod.Next;
             end;
 
             qActionMetod.Next;
-
           end;
       //  finally
         //  FreeAndNil(qActionMetod);

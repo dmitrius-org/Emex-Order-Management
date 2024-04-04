@@ -45,7 +45,7 @@ type
 implementation
 
 uses
-  uniGUIApplication, MainModule, uMainVar;
+  uniGUIApplication, MainModule, uMainVar, uToast;
 
 {$R *.dfm}
 
@@ -77,6 +77,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
+    ToastOK('Заказ успешно создан!', UniSession);
     ModalResult:=mrOK;
   end
   else

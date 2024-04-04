@@ -592,8 +592,8 @@ begin
   qSuppliers.Close;
   qSuppliers.Open;
 
-  SortColumnCreate(qPriceProfiles);
-  SortColumnCreate(qManager);
+  GridExt.SortColumnCreate(UniDBGrid1);//(qPriceProfiles);
+  GridExt.SortColumnCreate(ManagerGrid);//(qManager);
 
   // начитываем данные с базы
   case FAction of
