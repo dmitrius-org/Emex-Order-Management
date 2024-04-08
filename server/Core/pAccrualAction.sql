@@ -15,6 +15,7 @@ create table pAccrualAction
 ,Retval            numeric(18,0)  default 0 
 ,Message	       nvarchar(1024) 
 ,ord               int            default 1
+,sgn               int
 )
 go
 create index ao1 on pAccrualAction(Spid, ObjectID, ActionID)

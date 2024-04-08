@@ -26,13 +26,15 @@ as
 		 ActionID,
 		 ProtocolID,
 		 StateID,
-		 NewStateID)
+		 NewStateID,
+		 sgn)
   Select @@Spid,
          p.ObjectID,
 		 p.ActionID,
 		 p.ProtocolID,
 		 p.NewStateID, --текущее состояние
-		 p.StateID
+		 p.StateID,
+		 5
     from tMarks m (nolock)
    cross apply (select top 1 *
                   from tProtocol p (nolock)

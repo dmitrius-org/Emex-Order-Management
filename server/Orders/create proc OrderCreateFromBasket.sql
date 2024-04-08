@@ -186,12 +186,14 @@ declare @r int = 0
 		 ObjectID,
 		 ActionID,
 		 StateID,
-		 NewStateID)
+		 NewStateID,
+		 sgn)
   Select @@Spid,
          i.OrderID ,
 		 isnull(@ToNew, 0),
 		 @StatusID, -- текущее состояние
-		 @StatusID
+		 @StatusID,
+		 8
     from @ID i
 
   exec ProtocolAdd

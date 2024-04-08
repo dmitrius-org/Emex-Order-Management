@@ -175,12 +175,14 @@ as
 		 ObjectID,
 		 ActionID,
 		 StateID,
-		 NewStateID)
+		 NewStateID,
+		 sgn)
   Select @@Spid,
          i.OrderID ,
 		 isnull(@ToNew, 0),
 		 0, -- текущее состояние
-		 @StatusID
+		 @StatusID,
+		 6
     from @ID i
 
   exec ProtocolAdd

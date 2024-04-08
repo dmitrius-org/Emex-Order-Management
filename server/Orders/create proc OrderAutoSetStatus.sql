@@ -36,12 +36,14 @@ as
 		 ObjectID,
 		 ActionID,
 		 StateID,
-		 NewStateID)
+		 NewStateID,
+		 sgn)
   Select @@Spid,
          o.OrderID ,
 		 @AutomaticToChecked,
 		 o.StatusID,
-		 @InChecked
+		 @InChecked,
+		 7
     from #Order p (nolock)
    inner join tOrders o (nolock)
            on o.OrderID = p.OrderID

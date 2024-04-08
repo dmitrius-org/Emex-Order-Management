@@ -16,6 +16,7 @@ as
   Delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
  
   Delete pMovement from pMovement (rowlock) where spid = @@spid
+
   -- проверки
   if not exists (select 1
                    from tMarks (nolock)
@@ -70,12 +71,14 @@ as
 		 ObjectID,
 		 ActionID,
 		 StateID,
-		 NewStateID)
+		 NewStateID,
+		 sgn)
   Select @@Spid,
          o.OrderID ,
 		 @ActionID,
 		 o.StatusID, -- текущее состояние
-		 mo.TargetStateID
+		 mo.TargetStateID,
+		 1
     from tMarks m (nolock)
    inner join tOrders o (nolock)
            on o.OrderID = m.ID
@@ -90,31 +93,33 @@ as
 		 ObjectID,
 		 ActionID,
 		 StateID,
-		 NewStateID)
-  Select @@Spid,
+		 NewStateID,
+		 sgn)
+  Select distinct @@Spid,
          o.OrderID ,
 		 p.ActionID,
 		 o.StatusID, -- текущее состояние
-		 p.NewStateID
-    from tNodes n (nolock)
-   inner join pAccrualAction p (nolock)
-           on p.Spid = @@spid
-		  and p.NewStateID = n.NodeID
+		 p.NewStateID,
+		 2
+    from pAccrualAction p (nolock) 
+   inner join tNodes n (nolock)
+           on n.Brief     = 'InWork'	-- В работе
+		  and n.NodeID    = p.NewStateID
    inner join tOrders op (nolock)
-           on op.OrderID = p.ObjectID 
+           on op.OrderID  = p.ObjectID 
    inner join tClients cp (nolock)
            on cp.ClientID = op.ClientID
 
-   inner join tNodes n2 (nolock)
-           on n2.NodeID = p.StateID
-		  and n2.Brief = 'InBasket'	-- В корзине
-   inner join tOrders o (nolock)
-           on o.StatusID = n2.NodeID 
-   inner join tClients c (nolock)
-           on c.ClientID = o.ClientID
-          and c.SuppliersID = cp.SuppliersID
 
-  where n.Brief = 'InWork'	-- В работе
+   inner join tClients c (nolock)
+           on c.SuppliersID = cp.SuppliersID
+   inner join tOrders o (nolock)
+           on o.ClientID    = cp.ClientID
+   inner join tNodes n2 (nolock)
+           on n2.NodeID     = o.StatusID
+		  and n2.Brief      = 'InBasket'-- В корзине
+
+  where p.Spid = @@spid 
     and not exists (select 1
 	                  from pAccrualAction pp (nolock)
 					 where pp.Spid     = @@spid
