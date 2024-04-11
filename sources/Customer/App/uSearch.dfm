@@ -134,11 +134,12 @@ object SearchF: TSearchF
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
           'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
       DataSource = DataSource
-      Options = [dgTitles, dgColumnResize]
+      Options = [dgTitles, dgColumnResize, dgTitleClick]
       ReadOnly = True
       WebOptions.Paged = False
-      WebOptions.CustomizableCells = False
+      WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
+      WebOptions.RetainCursorOnSort = True
       LoadMask.WaitData = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
       LoadMask.Color = clInactiveCaption
@@ -158,6 +159,9 @@ object SearchF: TSearchF
       OnColumnSort = SearchGridColumnSort
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
+      OnTitleClick = SearchGridTitleClick
+      OnAfterLoad = SearchGridAfterLoad
+      OnBeforeLoad = SearchGridBeforeLoad
       Columns = <
         item
           FieldName = 'MakeName'
@@ -185,7 +189,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
           Title.Font.Height = -13
-          Width = 364
+          Width = 350
           Alignment = taCenter
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -193,23 +197,38 @@ object SearchF: TSearchF
         item
           FieldName = 'Weight'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089
+          Title.Caption = 
+            '<span class="column-info">'#13#10'<span>'#1042#1077#1089'</span>'#13#10'<form class="colum' +
+            'n-info" method="post" action="">         '#13#10'<button type="button"' +
+            ' onclick="clickInfoButton('#39'Weight'#39')" style="border: 0; backgroun' +
+            'd: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info"></i>'#13 +
+            #10'</button>'#13#10'</form>'#13#10'</span>'
           Title.Font.Height = -13
-          Width = 64
+          Width = 100
         end
         item
           FieldName = 'VolumeAdd'
           Title.Alignment = taCenter
-          Title.Caption = #1054#1073#1098#1077#1084
+          Title.Caption = 
+            '<span class="column-info">'#13#10'<span>'#1054#1073#1098#1077#1084'</span>'#13#10'<form class="col' +
+            'umn-info" method="post" action="">         '#13#10'<button type="butto' +
+            'n" onclick="clickInfoButton('#39'Volume'#39')" style="border: 0; backgro' +
+            'und: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info"></i' +
+            '>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
           Title.Font.Height = -13
-          Width = 64
+          Width = 100
         end
         item
           FieldName = 'DeliveryType'
           Title.Alignment = taCenter
-          Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
+          Title.Caption = 
+            '<span class="column-info">'#13#10'<span>'#1044#1086#1089#1090#1072#1074#1082#1072'</span>'#13#10'<form class="' +
+            'column-info" method="post" action="">         '#13#10'<button type="bu' +
+            'tton" onclick="clickInfoButton('#39'Delivery'#39')" style="border: 0; ba' +
+            'ckground: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info' +
+            '"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
           Title.Font.Height = -13
-          Width = 97
+          Width = 105
           Alignment = taCenter
           ReadOnly = True
           ImageOptions.Visible = True
@@ -219,9 +238,14 @@ object SearchF: TSearchF
         item
           FieldName = 'OurDelivery'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Title.Caption = 
+            '<span class="column-info">'#13#10'<span>'#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080'</span>'#13#10'<form cl' +
+            'ass="column-info" method="post" action="">         '#13#10'<button typ' +
+            'e="button" onclick="clickInfoButton('#39'OurDelivery'#39')" style="borde' +
+            'r: 0; background: none;"> '#13#10' <i class="fa fa-info-circle column-' +
+            'btn-info"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
           Title.Font.Height = -13
-          Width = 109
+          Width = 146
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -229,9 +253,14 @@ object SearchF: TSearchF
         item
           FieldName = 'Rating'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Title.Caption = 
+            '<span class="column-info">'#13#10'<span>'#1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080'</span>'#13#10'<' +
+            'form class="column-info" method="post" action="">         '#13#10'<but' +
+            'ton type="button" onclick="clickInfoButton('#39'Rating'#39')" style="bor' +
+            'der: 0; background: none;"> '#13#10' <i class="fa fa-info-circle colum' +
+            'n-btn-info"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
           Title.Font.Height = -13
-          Width = 170
+          Width = 180
           Alignment = taCenter
           ReadOnly = True
           Sortable = True
@@ -298,7 +327,7 @@ object SearchF: TSearchF
         Caption = #1042' '#1082#1086#1088#1079#1080#1085#1091
       end
       object UniComboBox1: TUniComboBox
-        Left = 0
+        Left = 12
         Top = 96
         Width = 145
         Height = 23
@@ -311,6 +340,15 @@ object SearchF: TSearchF
           '4')
         TabOrder = 2
         IconItems = <>
+      end
+      object UniCheckBox1: TUniCheckBox
+        Left = 32
+        Top = 144
+        Width = 97
+        Height = 17
+        Hint = ''
+        Caption = 'UniCheckBox1'
+        TabOrder = 3
       end
     end
     object MakeLogoPanel: TUniContainerPanel

@@ -80,7 +80,7 @@ insert @Price
 		WeightKGF, 
 		VolumeKGf
 		)
-select distinct 
+select top 1 
 	   pp.DetailNum,
 	   pp.MakeLogo,
 	   pp.WeightKGF,
@@ -88,6 +88,8 @@ select distinct
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
+order by pp.WeightKGF desc, pp.VolumeKGf desc
+
 
 -- расчет цены
 insert #Price

@@ -11,7 +11,7 @@ uses
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
 
 
-  , uBasket, uSearch, uOrdersT2
+  , uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage
   ;
 
 type
@@ -40,6 +40,14 @@ type
     tbS: TUniTabSheet;
     tsB: TUniTabSheet;
     tsO: TUniTabSheet;
+    MainMenuPanel: TUniPanel;
+    LogoPanel: TUniSimplePanel;
+    LogoImage: TUniImage;
+    LogoLabel: TUniLabel;
+    MainMenu: TUniTreeMenu;
+    MainMenuImage: TUniNativeImageList;
+    btnFavorit: TUniButton;
+    btnBasket: TUniButton;
     procedure UniFormShow(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -53,6 +61,8 @@ type
       var AllowActivate: Boolean);
     procedure tsOBeforeFirstActivate(Sender: TObject;
       var AllowActivate: Boolean);
+    procedure MainMenuClick(Sender: TObject);
+    procedure btnBasketClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -71,6 +81,8 @@ type
 
     function CreateImageIndex(filename: string): Integer;
 
+    procedure SetMainMenuMicroName;
+
 //    function FindNodeByID(AID: Integer): TUniTreeNode;
   public
     { Public declarations }
@@ -84,7 +96,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar;
 
 function MainForm: TMainForm;
 begin
@@ -110,9 +122,47 @@ begin
 end;
 
 
+procedure TMainForm.btnBasketClick(Sender: TObject);
+begin
+  pcMain.ActivePageIndex := 1;
+end;
+
 function TMainForm.CreateImageIndex(filename: string): Integer;
 begin
   Result := ImageList.AddIconFile(filename);
+end;
+
+procedure TMainForm.MainMenuClick(Sender: TObject);
+var
+  Nd : TUniTreeNode;
+begin
+  Nd := MainMenu.Selected;
+
+  if Nd.IsFirstNode then
+  begin
+    MainMenu.Micro := not MainMenu.Micro;
+
+    SetMainMenuMicroName;
+    Exit();
+  end;
+
+  if Nd.Text = 'Поиск' then pcMain.ActivePageIndex := 0;
+  if Nd.Text = 'Корзина' then pcMain.ActivePageIndex := 1;
+  if Nd.Text = 'Заказы' then pcMain.ActivePageIndex := 2;
+end;
+
+procedure TMainForm.SetMainMenuMicroName;
+begin
+  if MainMenu.Micro then
+  begin
+      MainMenu.Items[0].Text := 'Развернуть';
+      MainMenuPanel.Width := MainMenu.MicroWidth ;
+  end
+  else
+  begin
+      MainMenu.Items[0].Text := 'Свернуть';
+      MainMenuPanel.Width := 300;
+  end;
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
@@ -154,6 +204,7 @@ end;
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
 //  lblVersion.Caption := GetAppVersionStr();
+  LogoLabel.Caption := sql.GetSetting('AppProfilesName');
 
   if not Assigned(FSearchF) then
   begin
@@ -181,7 +232,7 @@ procedure TMainForm.UniFormShow(Sender: TObject);
 begin
   btnProfile.Caption := UniMainModule.AUserName;
 
-
+  SetMainMenuMicroName;
 end;
 
 initialization

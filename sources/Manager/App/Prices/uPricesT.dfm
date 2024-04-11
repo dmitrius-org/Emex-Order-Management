@@ -249,7 +249,7 @@ object PricesT: TPricesT
         item
           FieldName = 'ShowInSearch'
           Title.Alignment = taCenter
-          Title.Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1087#1086#1080#1089#1082#1077
+          Title.Caption = #1053#1091' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1087#1086#1080#1089#1082#1077
           Width = 110
           Sortable = True
           CheckBoxField.AutoPost = True

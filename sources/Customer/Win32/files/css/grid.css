@@ -209,3 +209,16 @@
         margin-bottom: 5px;
     }
 }
+
+
+.grid-search .column-info { 
+    display: inline-block;
+}
+.grid-search .column-btn-info { 
+    color: #666;
+    /* display: inline-block; */
+}
+
+.grid-search .column-btn-info:hover {
+    color: #337AB7;
+}

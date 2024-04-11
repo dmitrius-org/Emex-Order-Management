@@ -11,7 +11,8 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
-  Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox;
+  Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
+  uniCheckBox;
 
 type
   TSearchF = class(TUniFrame)
@@ -46,6 +47,7 @@ type
     WideStringField3: TWideStringField;
     dsMakeLogo: TDataSource;
     qMakeLogoPriceRub: TCurrencyField;
+    UniCheckBox1: TUniCheckBox;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -67,12 +69,21 @@ type
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
     procedure SearchGridBodyClick(Sender: TObject);
+    procedure SearchGridTitleClick(Column: TUniDBGridColumn);
+    procedure SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
+    procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
 
   private
     { Private declarations }
 
     FDestinationLogo: string;
     FMakeName: string;
+
+    /// <summary>
+    /// FInfoButton - для контроля нажатия по кнопке в заготовке столбца.
+    /// При клике по кнопке отрабатывает сортировка, по данному параметру отключаем сортировку при нажании кноки <I>
+    /// </summary>
+    FInfoButton: Boolean;
 
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
@@ -144,7 +155,6 @@ begin
   qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
   qSearchHistory.Filtered := True;
 
-
   qSearchHistory.First;
   while not qSearchHistory.Eof do
   begin
@@ -192,13 +202,11 @@ end;
 
 procedure TSearchF.MakeLogoGridShow;
 begin
-
   if MakeLogoPanel.Visible  then
   begin
     MakeLogoPanel.Visible:=False;
     Exit;
   end;
-
 
   MakeLogoPanel.Left := SearchGrid.Left;
 
@@ -211,7 +219,6 @@ begin
                          MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width+
                          MakeLogoGrid.Columns.ColumnFromFieldName('PartNameRus').Width+
                          MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width+25;
-
 
   MakeLogoGridRefresh;
   MakeLogoPanel.Visible := True;
@@ -268,7 +275,6 @@ end;
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-//<span class="hint  hint--bottom  hint--info" data-hint="О, это подсказка">Наведи на меня</span>
   Text := StringReplace('<form id="frmDestLogo" method="post" action=""> ' +
     '<div class="radio-form">' +
     '   <label class="radio-control">  ' +
@@ -320,11 +326,18 @@ begin
   js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
 
-
   js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "setMakelogo", []); } ;';
   UniSession.JSCode(js);
 
+  js := ' clickInfoButton = function(AVal) {  ajaxRequest(' + SearchGrid.JSName    + ', "clickInfoButton", [ "P1=" + AVal ]); } ;';
+  UniSession.JSCode(js);
+
   GridExt.SortColumnCreate(SearchGrid);
+end;
+
+procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
+begin
+   logger.Info('TSearchF.SearchGridAfterLoad');
 end;
 
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
@@ -332,7 +345,6 @@ procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
 begin
   logger.Info('TSearchF.SearchGridAjaxEvent');
   logger.Info('TSearchF.SearchGridAjaxEvent EventName: ' + EventName);
- // logger.Info('TSearchF.Params: ' + Params.Text);
 
   if EventName = 'setDestLogo' then
   begin
@@ -347,26 +359,34 @@ begin
   begin
     MakeLogoGridShow;
   end;
+
+  if EventName = 'clickInfoButton' then
+  begin
+    logger.Info('TSearchF.SearchGridAjaxEvent Params: ' + Params.Values['P1']);
+
+    FInfoButton := True;
+
+    with SearchGrid.JSInterface do
+    begin
+      JSCall('getStore().sorters.clear', []);
+      //JSCall('getStore().reload', []);
+    end;
+  end;
+end;
+
+procedure TSearchF.SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
+begin
+  Logger.Info('TSearchF.SearchGridBeforeLoad');
 end;
 
 procedure TSearchF.SearchGridBodyClick(Sender: TObject);
 begin
-//  MakeLogoGridHide;
+  Logger.Info('TSearchF.SearchGridBodyClick');
 end;
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
-
-//  if Assigned(ACurrColumn) then
-//
-//  if (
-//       (ACurrColumn.FieldName = 'MakeName')
-//       )
-//  then
-//  begin
-//    MakeLogoGridShow;
-//  end;
 end;
 
 procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
@@ -378,6 +398,15 @@ end;
 procedure TSearchF.SearchGridColumnSort(Column: TUniDBGridColumn;
   Direction: Boolean);
 begin
+  Logger.Info('TSearchF.SearchGridColumnSort');
+  Logger.Info('TSearchF.SearchGridColumnSort FInfoButton ' + FInfoButton.ToString());
+
+//  if FInfoButton = True then
+//  begin
+//    FInfoButton := false;
+//    Exit();
+//  end;
+
   if Direction then
     Query.IndexName := Column.FieldName+'_index_asc'
   else
@@ -409,6 +438,11 @@ begin
   end;
 end;
 
+procedure TSearchF.SearchGridTitleClick(Column: TUniDBGridColumn);
+begin
+//  logger.Info('TSearchF.SearchGridTitleClick. ' + Column.Title.Caption);
+end;
+
 procedure TSearchF.SearchHistoryLoad;
 begin
   qSearchHistory.Close;
@@ -418,7 +452,7 @@ end;
 
 procedure TSearchF.SetMakeName;
 begin
-  sql.Open('select top 1 * from pFindByNumber pp  with (nolock index=ao2) where pp.Spid = @@spid', [] , []);
+  sql.Open('select top 1 * from pFindByNumber pp with (nolock index=ao2) where pp.Spid = @@spid', [] , []);
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
 end;
 

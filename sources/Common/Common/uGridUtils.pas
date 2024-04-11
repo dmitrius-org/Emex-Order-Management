@@ -32,6 +32,7 @@ var
 begin
   // индексы для сортировки
   begin
+
     for I := 0 to AGrid.Columns.Count-1 do
     begin
       if AGrid.Columns[i].Sortable then

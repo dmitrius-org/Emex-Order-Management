@@ -91,7 +91,7 @@ delete p
 -- where OrderID is null
 
 -- заказы, которых нет в emex
-Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity, P.Reference, *
+Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference, *
   from tOrders p
  inner join tClients c (nolock)
          on c.ClientID = p.ClientID 

@@ -48,7 +48,7 @@ set nocount on;
 
 declare @RetVal       int
 
-insert into C
+insert into pFindByNumber
        (Spid, ClientID, DestinationLogo, Available, bitOldNum, PercentSupped, PriceId, Region, Delivery, Make, DetailNum, PriceLogo, Price, PartNameRus, PartNameEng, WeightGr, MakeName, Packing, VolumeAdd, GuaranteedDay, bitECO, bitWeightMeasured)               
 select  @@Spid
        ,@ClientID 
