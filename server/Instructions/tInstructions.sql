@@ -12,8 +12,8 @@ begin
 	,Name	           nvarchar(256)           -- Название
 	,Comment           nvarchar(512)           -- Описание 
 	,Type              int
-
-	,UserID            numeric(18,0) default dbo.GetUserID()
+	
+ 	,UserID            numeric(18,0) default dbo.GetUserID()
 	,inDatetime        datetime      default GetDate()      --
 	,updDatetime       datetime      default GetDate()      --
 	);

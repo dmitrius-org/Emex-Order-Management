@@ -4,10 +4,11 @@ drop proc if exists InstructionInsert
 */
 go
 create proc InstructionInsert
-              @InstructionID     numeric(18,0) out
-             ,@ParentID          numeric(18,0) 
-             ,@Name              nvarchar(256)
-             ,@Comment           nvarchar(512)= null  
+              @InstructionID numeric(18,0) out
+             ,@ParentID      numeric(18,0) 
+             ,@Name          nvarchar(256)
+             ,@Comment       nvarchar(512)= null  
+			 ,@Type          int
      
 as
   declare @r int = 0
@@ -18,12 +19,14 @@ as
           ParentID
          ,Name
          ,Comment
+		 ,Type
          ,UserID
          )
   OUTPUT INSERTED.InstructionID INTO @ID
   select @ParentID    
         ,@Name	     
         ,@Comment	 
+		,@Type
 		,dbo.GetUserID()
 
 
@@ -34,5 +37,5 @@ as
 go
 grant exec on InstructionInsert to public
 go
-exec setOV 'InstructionInsert', 'P', '20240325', '0'
+exec setOV 'InstructionInsert', 'P', '20240412', '1'
 go

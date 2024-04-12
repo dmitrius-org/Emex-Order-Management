@@ -8,7 +8,7 @@ begin
 	(
 	 InstructionsDetailID numeric(18,0)  identity --  
 	,InstructionID        numeric(18,0)
-	,[Text]               varchar(max)              -- Название
+	,[Text]               nvarchar(max)              -- Название
 	);
 	
 	create unique index ao1 on tInstructionsDetail(InstructionsDetailID);

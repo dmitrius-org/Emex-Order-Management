@@ -4,17 +4,19 @@ drop proc if exists InstructionUpdate
 */
 go
 create proc InstructionUpdate
-              @InstructionID    numeric(18,0) 
+              @InstructionID     numeric(18,0) 
              ,@ParentID          numeric(18,0) = null
              ,@Name              nvarchar(256)
-             ,@Comment           nvarchar(512)= null  
+             ,@Comment           nvarchar(512) = null  
+			 
 as
   declare @r       int = 0
 
   Update tInstructions
-     set ParentID= isnull(@ParentID, ParentID)	
-        ,Name    = @Name
-	    ,Comment = @Comment        
+     set ParentID    = isnull(@ParentID, ParentID)	
+        ,Name        = @Name
+	    ,Comment     = @Comment  
+		,updDatetime = getdate()
    where InstructionID = @InstructionID
 
  exit_:
@@ -22,5 +24,5 @@ as
 go
 grant exec on InstructionUpdate to public
 go
-exec setOV 'InstructionUpdate', 'P', '20240325', '0'
+exec setOV 'InstructionUpdate', 'P', '20240412', '1'
 go

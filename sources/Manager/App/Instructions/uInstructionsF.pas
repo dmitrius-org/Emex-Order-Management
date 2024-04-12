@@ -20,6 +20,9 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     edtComment: TUniMemo;
+    AuditPanel: TUniPanel;
+    lblUserName: TUniLabel;
+    lblInDateTime: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -85,15 +88,16 @@ begin
                 '            ,@Name     = :Name      '+
                 '            ,@Comment  = :Comment   '+
                 '            ,@ParentID = :ParentID  '+
-                '                                    '+
+                '            ,@Type     = :Type      '+
                 ' select @r as retcode, @InstructionID as InstructionID '+
                 ' ';
 
       Sql.Open(sqltext,
-               ['Name','Comment','ParentID'],
+               ['Name','Comment','ParentID','Type'],
                [edtName.Text,
                 edtComment.Text,
-                0]);
+                0,
+                1]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
@@ -170,8 +174,10 @@ end;
 procedure TInstructionsF.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select t.*  '+
-                                  '   from tInstructions t   '+
+  UniMainModule.Query.SQL.Text := ' select t.*, u.Name as UserName '+
+                                  '   from tInstructions t  (nolock) '+
+                                  '  inner join tUser u (nolock)   '+
+                                  '          on u.UserID = t.UserID  '+
                                   '  where t.InstructionID = :InstructionID '+
                                   ' ';
   UniMainModule.Query.ParamByName('InstructionID').Value := FID;
@@ -180,6 +186,8 @@ begin
   edtName.Text:= UniMainModule.Query.FieldByName('Name').AsString;
   edtComment.Text:= UniMainModule.Query.FieldByName('Comment').AsString;
 
+  lblUserName.Caption:= 'Создал: '+UniMainModule.Query.FieldByName('UserName').AsString;
+  lblInDateTime.Caption:= 'Дата создания: '+UniMainModule.Query.FieldByName('InDateTime').AsString;
 end;
 
 procedure TInstructionsF.SetAction(const Value: TFormAction);
@@ -193,6 +201,8 @@ begin
     acInsert, acReportCreate:
     begin
       btnOk.Caption := ' Добавить';
+
+      AuditPanel.Visible:=False;
     end;
     acUpdate, acReportEdit, acUserAction:
       btnOk.Caption := ' Сохранить';

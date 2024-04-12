@@ -7,7 +7,7 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniPanel, uniHTMLFrame, uniTreeView,
   uniGUIBaseClasses, uniImageList, Vcl.Menus, uniMainMenu, System.Actions,
-  Vcl.ActnList, uniToolBar, unimToolbar;
+  Vcl.ActnList, uniToolBar, unimToolbar, ExtPascalUtils ;
 
 type
   TInstructionsT = class(TUniFrame)
@@ -56,7 +56,9 @@ type
     procedure EditFCallBack(Sender: TComponent; AResult:Integer);
     function FindNodeByID(AID: Integer): TUniTreeNode;
 
-
+    /// <summary>
+    ///  SetButtonEnabled - Управление доступностью меню редактирования сруктуры
+    ///</summary>
     procedure SetButtonEnabled;
     procedure SetEditorEnabled;
   public
@@ -125,13 +127,16 @@ var
   Nd : TUniTreeNode;
   iconfile: string;
 begin
+  SelectedNode := nil;
+
   TreeMenu.Items.Clear;
+
   Path := UniServerModule.StartPath + 'files\';
   with UniMainModule.Query do
   begin
     close;
     sql.Clear;
-    sql.Add( '  select * from tInstructions (nolock) order by ParentID ');
+    sql.Add( ' select * from tInstructions (nolock) where Type = 1 order by ParentID ');
     open;
     if RecordCount = 0 then
     begin
@@ -162,7 +167,15 @@ begin
 
       UniMainModule.Query.Next;
     end;
+
+    if True then
+
   finally
+    if TreeMenu.Items.Count > 0 then
+    begin
+      TreeMenu.Items[0].Selected := true;
+     // TreeMenuClick(TreeMenu);
+    end;
   end;
 end;
 
@@ -264,7 +277,8 @@ end;
 
 procedure TInstructionsT.SetEditorEnabled;
 begin
-  edt1.Enabled := TreeMenu.Items.Count > 0;
+
+  edt1.Enabled := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) );
 end;
 
 procedure TInstructionsT.TreeMenuCellContextClick(ANode: TUniTreeNode; X,
@@ -276,7 +290,6 @@ end;
 
 procedure TInstructionsT.TreeMenuClick(Sender: TObject);
 begin
-
   SelectedNode := TreeMenu.Selected;
 
   with UniMainModule.Query do
@@ -286,6 +299,7 @@ begin
     sql.Text := ' select [Text] from tInstructionsDetail (nolock) where InstructionID = :InstructionID ';
     ParamByName('InstructionID').Value := SelectedNode.Tag;
     open;
+
     if RecordCount = 0 then
     begin
       UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
@@ -294,12 +308,16 @@ begin
     else
     begin
       logger.Info(' TInstructionsT.TreeMenuClick: ' + FieldByName('Text').Value );
-      UniSession.AddJS('tinyMCE.get(''myEditor'').setContent(''' + FieldByName('Text').AsString + ''')');
-//      UniSession.AddJS('tinyMCE.get("myEditor").getBody().innerHTML = "' + FieldByName('Text').AsString + '"');
-
-
+      try
+        UniSession.AddJS('tinyMCE.get(''myEditor'').setContent(' + StrToJS(FieldByName('Text').AsString) + ')');
+      except
+        UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
+      end;
     end;
   end;
+
+  SetEditorEnabled;
+
 end;
 
 procedure TInstructionsT.UniFrameReady(Sender: TObject);
@@ -313,11 +331,11 @@ begin
   SetEditorEnabled;
   SetButtonEnabled;
 
+  edt1.HTML.Clear;
   edt1.HTML.LoadFromFile('./files/tinymce5/index.html');
-//  edt1.AfterScript.LoadFromFile('./files/tinyMCE5/index.js');
 
   js := ' mycustomSaveButton = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButton", [ "text=" + tinyMCE.get("myEditor").getContent() ]);' + ' } ;';
-  //js := ' mycustomSaveButton = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButton", [ "text=" + tinyMCE.get("myEditor").getBody().innerHTML ]);' + ' } ;';
+
   UniSession.JSCode(js);
 end;
 

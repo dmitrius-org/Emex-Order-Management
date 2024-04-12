@@ -1,8 +1,8 @@
 object InstructionsF: TInstructionsF
   Left = 0
   Top = 0
-  ClientHeight = 244
-  ClientWidth = 610
+  ClientHeight = 260
+  ClientWidth = 623
   Caption = #1048#1085#1089#1090#1088#1091#1082#1094#1080#1080
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -11,20 +11,20 @@ object InstructionsF: TInstructionsF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 197
-    Width = 604
+    Top = 213
+    Width = 617
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 196
-    ExplicitWidth = 600
+    ExplicitTop = 212
+    ExplicitWidth = 613
     DesignSize = (
-      604
+      617
       44)
     object btnOk: TUniBitBtn
-      Left = 479
+      Left = 507
       Top = 10
       Width = 82
       Height = 25
@@ -33,59 +33,96 @@ object InstructionsF: TInstructionsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 475
+      ExplicitLeft = 503
     end
     object btnCancel: TUniBitBtn
-      Left = 392
+      Left = 414
       Top = 10
-      Width = 81
+      Width = 87
       Height = 25
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 388
+      ExplicitLeft = 410
+    end
+    object AuditPanel: TUniPanel
+      Left = 1
+      Top = 1
+      Width = 416
+      Height = 42
+      Hint = ''
+      Align = alLeft
+      TabOrder = 3
+      BorderStyle = ubsNone
+      ShowCaption = False
+      Caption = 'AuditPanel'
+      object lblUserName: TUniLabel
+        Left = 16
+        Top = 5
+        Width = 52
+        Height = 12
+        Hint = ''
+        Caption = 'lblUserName'
+        ParentFont = False
+        Font.Color = clGray
+        Font.Height = -9
+        TabOrder = 1
+      end
+      object lblInDateTime: TUniLabel
+        Left = 16
+        Top = 24
+        Width = 39
+        Height = 12
+        Hint = ''
+        Caption = 'UniLabel3'
+        ParentFont = False
+        Font.Color = clGray
+        Font.Height = -9
+        TabOrder = 2
+      end
     end
   end
   object fsCommon: TUniFieldSet
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 604
-    Height = 182
+    Width = 617
+    Height = 204
     Hint = ''
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
-    Align = alTop
+    Align = alClient
     TabOrder = 1
-    ExplicitWidth = 600
+    ExplicitWidth = 613
+    ExplicitHeight = 203
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
       Top = 15
-      Width = 600
-      Height = 146
+      Width = 613
+      Height = 122
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 596
+      ExplicitWidth = 609
       DesignSize = (
-        600
-        146)
+        613
+        122)
       object edtName: TUniEdit
-        Left = 150
-        Top = 26
-        Width = 413
+        Left = 120
+        Top = 12
+        Width = 471
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         ClearButton = True
-        ExplicitWidth = 409
+        ExplicitWidth = 467
       end
       object UniLabel1: TUniLabel
-        Left = 31
-        Top = 29
+        Left = 15
+        Top = 14
         Width = 84
         Height = 13
         Hint = ''
@@ -93,8 +130,8 @@ object InstructionsF: TInstructionsF
         TabOrder = 2
       end
       object UniLabel2: TUniLabel
-        Left = 31
-        Top = 70
+        Left = 15
+        Top = 43
         Width = 57
         Height = 13
         Hint = ''
@@ -102,12 +139,14 @@ object InstructionsF: TInstructionsF
         TabOrder = 3
       end
       object edtComment: TUniMemo
-        Left = 150
-        Top = 54
-        Width = 413
+        Left = 120
+        Top = 40
+        Width = 471
         Height = 67
         Hint = ''
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 4
+        ExplicitWidth = 467
       end
     end
   end
