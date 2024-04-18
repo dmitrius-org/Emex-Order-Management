@@ -119,10 +119,12 @@ begin
                      '         ,@ClientID numeric(18, 0) ' +
                      ''+
                      '  select @Password=  master.dbo.fn_varbintohexstr(HashBytes(''SHA2_512'', :Password)) ' +
+                     ''+
                      '  exec @R = CustomerAuthorization ' +
                      '    @UserName = :Email,           ' +
                      '    @Password = @Password,        ' +
                      '    @ClientID = @ClientID out     ' +
+                     ''+
                      '  select @R        as R           ' +
                      '        ,@ClientID as ClientID'    );
   Query.ParamByName('Email').AsWideString    := AU;
@@ -135,7 +137,7 @@ begin
   begin
       UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
       AUserID  := Query.FieldByName('ClientID').AsInteger;
-      AUserName:=AU;
+      AUserName:= AU;
       Result   := True;
 
       // настройки  логирования

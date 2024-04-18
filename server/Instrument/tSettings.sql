@@ -11,7 +11,7 @@ begin
 	,Brief             nvarchar(64)   not null -- сокращение
 	,Name	           nvarchar(128)  not null -- Наименование
 	,Comment           nvarchar(256)  not null -- Комментарий
-	,Val               nvarchar(256)  not null -- Значение
+	,Val               nvarchar(1024) not null -- Значение
 	,SettingType       int                     -- Тип данных
 	)
 

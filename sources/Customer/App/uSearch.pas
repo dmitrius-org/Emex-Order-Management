@@ -3,7 +3,7 @@
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, System.StrUtils,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniEdit, uniGUIBaseClasses, uniPanel,
   uniImageList, System.ImageList, Vcl.ImgList,
@@ -26,7 +26,6 @@ type
     QueryDetailNum: TWideStringField;
     QueryPartNameRus: TWideStringField;
     QueryDeliveryType: TIntegerField;
-    QueryOurDelivery: TIntegerField;
     QueryPercentSupped: TIntegerField;
     QueryPrice: TCurrencyField;
     QueryAvailable: TWideStringField;
@@ -48,6 +47,7 @@ type
     dsMakeLogo: TDataSource;
     qMakeLogoPriceRub: TCurrencyField;
     UniCheckBox1: TUniCheckBox;
+    QueryOurDeliverySTR: TWideStringField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -72,12 +72,20 @@ type
     procedure SearchGridTitleClick(Column: TUniDBGridColumn);
     procedure SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
+    procedure edtSearchInputClick(Sender: TObject);
+    procedure edtSearchSelect(Sender: TObject);
+    procedure edtSearchEnter(Sender: TObject);
 
   private
     { Private declarations }
 
     FDestinationLogo: string;
     FMakeName: string;
+    FMakeCount: integer; // Количество уникальных брендов
+    FDetailNum: string;
+
+
+//    FIsSearchHistory: Boolean; // переменная для контроля показа истории поиска
 
     /// <summary>
     /// FInfoButton - для контроля нажатия по кнопке в заготовке столбца.
@@ -94,7 +102,7 @@ type
 
     procedure PartToBasket();
     /// <summary>
-    /// CustomerPriceCalc - расчет цены
+    /// CustomerPriceCalc - расчет цены и срока поставки
     /// </summary>
     procedure CustomerPriceCalc();
 
@@ -132,8 +140,21 @@ end;
 
 procedure TSearchF.CustomerPriceCalc;
 begin
-    RetVal.Clear;
-    Sql.exec('exec CustomerPriceCalc @DestinationLogo=:DestinationLogo', ['DestinationLogo'], [FDestinationLogo]);
+  RetVal.Clear;
+  Sql.exec('exec CustomerPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
+          ['DestinationLogo', 'DetailNum'],
+          [FDestinationLogo, FDetailNum ]);
+end;
+
+procedure TSearchF.edtSearchEnter(Sender: TObject);
+begin
+  //logger.Info('TSearchF.edtSearchEnter: ' );
+end;
+
+procedure TSearchF.edtSearchInputClick(Sender: TObject);
+begin
+//  logger.Info('TSearchF.edtSearchInputClick: ' );
+ // if not FIsSearchHistory then FIsSearchHistory := True;
 end;
 
 procedure TSearchF.edtSearchKeyDown(Sender: TObject; var Key: Word;
@@ -141,34 +162,45 @@ procedure TSearchF.edtSearchKeyDown(Sender: TObject; var Key: Word;
 begin
   if (Key = 13) then
   begin
-    if edtSearch.Text = '' then Exit;
-
-    PartSearch;
+    btnSearch.OnClick(btnSearch);
   end;
 end;
 
 procedure TSearchF.edtSearchRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
-  if Trim(QueryString)='' then Exit;
+  //if FIsSearchHistory then Exit;
 
-  qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
-  qSearchHistory.Filtered := True;
+  //qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
+  //qSearchHistory.Filtered := True;
 
   qSearchHistory.First;
   while not qSearchHistory.Eof do
   begin
-    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString);
+    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString );
     qSearchHistory.Next;
   end;
+
+  //FIsSearchHistory := True;
+end;
+
+procedure TSearchF.edtSearchSelect(Sender: TObject);
+begin
+ // logger.Info('TSearchF.edtSearchSelect: ' );
 end;
 
 procedure TSearchF.GridRefresh();
 begin
+  // определение количества уникальных брендов
+  sql.Open('Select Count(distinct Make) from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
+  FMakeCount := sql.Q.Fields[0].AsInteger;
+
+
   Query.Close;
 
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
-  Query.ParamByName('MakeName').Value := FMakeName;
+  Query.ParamByName('MakeName').Value  := FMakeName;
+  Query.ParamByName('DetailNum').Value := FDetailNum;
 
   Query.Open;
 end;
@@ -180,6 +212,7 @@ begin
   if qMakeLogo.RecordCount > 0 then
   begin
     FMakeName := qMakeLogo.FieldByName('MakeName').AsString;
+    FDetailNum:= qMakeLogo.FieldByName('DetailNum').AsString;
 
     GridRefresh();
   end;
@@ -196,6 +229,7 @@ begin
 
   qMakeLogo.ParamByName('DestinationLogo').Value := FDestinationLogo;
   qMakeLogo.ParamByName('MakeName').Value := FMakeName;
+  qMakeLogo.ParamByName('DetailNum').Value := FDetailNum;
 
   qMakeLogo.Open;
 end;
@@ -237,12 +271,14 @@ begin
 
     CustomerPriceCalc;
 
-    //получаем текущий бренд
     SetMakeName;
+
+    SearchHistoryLoad;
 
     GridRefresh();
 
-    SearchHistoryLoad;
+//    if Query.RecordCount > 0 then
+//      FIsSearchHistory := False;
 
   finally
     FreeAndNil(emex);
@@ -275,25 +311,20 @@ end;
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
+
   Text := StringReplace('<form id="frmDestLogo" method="post" action=""> ' +
     '<div class="radio-form">' +
-    '   <label class="radio-control">  ' +
+    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoExpress')+ '">' +
     '       <input type="radio" value="0001" onchange="setDestLogo(value)" /> ' +
-    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Экспресс доставка: “Прямая авиадоставка: быстро и дорого. Этим способом выгодно заказывать небольшие детали без объемного веса. К доставке не принимается' +
-    ' опасный груз. Внизу поставить перечеркнутые логотипчики как в брошуре самолета, что нельзя возить взрывоопасные и легковоспламеняющиеся товары ( масла, подушки безопасности и т.д.)"><i class="fa fa-plane"></i></span> ' +
+    '       <span class="radio-input"><i class="fa fa-plane"></i></span> ' +
     '   </label>    ' +
-    '   <label class="radio-control">  ' +
+    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoCharter')+ '">' +
     '       <input type="radio" value="0002" onchange="setDestLogo(value)" /> ' +
-    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Стандартная доставка: “Непрямая авиадоставка с пересадкой и перегрузкой в грузовой транспорт.' +
-    ' Этим способом выгодно доставлять 90% деталей, но для доставки деталей с большим объемным весом лучше выбрать Контейнерную доставку.">  ' +
-    '           <i class="fa fa-car"></i> ' + '       </span>   ' +
+    '       <span class="radio-input"><i class="fa fa-car"></i></span>  ' +
     '   </label>      ' +
-    '   <label class="radio-control"> ' +
+    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoContainer')+ '">' +
     '       <input type="radio"  value="0003" onchange="setDestLogo(value)" />  '  +
-    '       <span class="radio-input hint hint--bottom hint--info" data-hint="Контейнерная доставка: Самый дешевый способ доставки грузов, он же и самый долгий. Этот способ подходит для доставки тяжелых или крупных деталей с большим объемом. ' +
-    'Также можно доставлять любой опасный груз: масла, подушки безопасности с пиропатронами и так далее"> ' +
-    '          <i class="fa fa-ship"></i>  ' +
-    '       </span>    ' +
+    '       <span class="radio-input"><i class="fa fa-ship"></i></span> ' +
     '   </label>' +
     '</div>' +
     '</form>', FDestinationLogo + '"',
@@ -303,6 +334,8 @@ end;
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
+  // иконка для выбора аналогов
+  if FMakeCount > 1 then
   begin
     Text := '<form method="post" action="">' +
             '<span class="makelogo-caret-down"><a>'+
@@ -313,6 +346,8 @@ begin
             '<span>' + Sender.AsString + ' </span>' +
             '</form>';
   end
+  else
+    Text := '<span>' + Sender.AsString + ' </span>';
 end;
 
 procedure TSearchF.UniFrameCreate(Sender: TObject);
@@ -333,6 +368,26 @@ begin
   UniSession.JSCode(js);
 
   GridExt.SortColumnCreate(SearchGrid);
+
+  js := '<span class="column-info">  '+
+        '<span>ColName</span>     '+
+       // '<form class="column-info" method="post" action=""> '+
+        '' +
+       // '<button type="button" onclick="clickInfoButton(''ColInfo'')" style="border: 0; background: none;"> '+
+        '<span class="" data-qtip="ColDataQtip">'+
+        '<i class="fa fa-info-circle column-btn-info"></i> </span> '+
+       // '</button>'+
+       // '</form> '+        data-qtip="Ghbdtn"
+        '</span> ';
+
+  SearchGrid.Columns.ColumnFromFieldName('Weight').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вес', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoWeight'), []);
+  SearchGrid.Columns.ColumnFromFieldName('VolumeAdd').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Объем', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoVolume'), []);
+  SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
+  SearchGrid.Columns.ColumnFromFieldName('OurDeliverySTR').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
+  SearchGrid.Columns.ColumnFromFieldName('Rating').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
+
+
+//  FIsSearchHistory := False;
 end;
 
 procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
@@ -372,6 +427,14 @@ begin
       //JSCall('getStore().reload', []);
     end;
   end;
+
+  if EventName = 'MakeLogoPanelVisibleFalse' then
+  begin
+    logger.Info('TSearchF.SearchGridAjaxEvent');
+
+    MakeLogoGridHide();
+  end;
+
 end;
 
 procedure TSearchF.SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
@@ -447,6 +510,7 @@ procedure TSearchF.SearchHistoryLoad;
 begin
   qSearchHistory.Close;
   qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
+  qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
   qSearchHistory.Open();
 end;
 
@@ -454,6 +518,7 @@ procedure TSearchF.SetMakeName;
 begin
   sql.Open('select top 1 * from pFindByNumber pp with (nolock index=ao2) where pp.Spid = @@spid', [] , []);
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
+  FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);

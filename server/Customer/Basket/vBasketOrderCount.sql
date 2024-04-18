@@ -10,7 +10,7 @@ select
        isnull((Sum(b.Quantity)), 0)      DetailPosCount
       ,isnull((Count(*)       ), 0)      DetailCount
       ,isnull((Sum(b.Amount  )), 0)      OrderAmount
-      ,isnull((Sum(b.Weightkg)/1000), 0) OrderWeight
+      ,isnull((Sum(b.Weightkg)), 0)      OrderWeight
   from tMarks m (nolock)
  inner join tBasket b (nolock)
          on b.BasketID = m.ID

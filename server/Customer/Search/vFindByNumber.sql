@@ -2,7 +2,7 @@ if OBJECT_ID('vFindByNumber') is not null
     drop view vFindByNumber
 go
 /* **********************************************************						
-vFindByNumber - получение списка найденных
+vFindByNumber - получение списка найденных деталей
 
 
 
@@ -42,7 +42,8 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 	   p.WeightGr [Weight], -- вес детали в граммах
 	   p.VolumeAdd,         -- наценка объем (объемный вес)
 	   --dbo.AddDaysAndWeekends(GetDate(), p.Delivery, 1) 
-	   p.OurDelivery,     -- наш срок поставки, показываем клиенту
+	   p.OurDelivery,     -- наш срок поставки
+	   p.OurDeliverySTR,  -- наш срок поставки строкой, показываем клиенту
        p.PercentSupped,   -- процент поставки (Статистика)
 	   p.Price,           -- цена детали у emex
        p.PriceRub,        -- цена детали, показаваемая на сайте
@@ -79,29 +80,15 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
 
-   --and p.MakeName = pp.MakeName
-
    and not exists (select 1
                      from tPrices sp with (nolock index=a1)
                     where sp.Name         = p.PriceLogo
 					  and sp.ShowInSearch = 1)
 
-
-   --and (p.PercentSupped >= 30
-   --    or (p.PercentSupped <30 and not exists (select 1 
-   --                                                from pFindByNumber f (nolock)
-   -- 											  where f.Spid = @@spid
-   -- 											    and f.PercentSupped >= 30
-   --                                                 )
-   -- 	  )
-   --     )
-   --select top 100 * from tPrice
-   -- select top 100 * from pFindByNumber
-
 go
 grant all on vFindByNumber to public
 
 go
-exec setOV 'vFindByNumber', 'V', '20240408', '4'
+exec setOV 'vFindByNumber', 'V', '20240416', '5'
 go
 -- select * from tPrice where DetailNum =  '09G301469A'

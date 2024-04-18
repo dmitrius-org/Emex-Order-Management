@@ -105,6 +105,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         Width = 186
       end
       item
+        ShowToolTip = True
         FieldName = 'UserName'
         Title.Alignment = taCenter
         Title.Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100

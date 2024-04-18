@@ -240,25 +240,14 @@ begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-//    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
-//    if SuppliersID = 0 then
-//    begin
-//      //данные дл€ интеграции берем из справочника " лиенты"
-      SQl.Open('Select s.emexUsername, s.emexPassword '+
-               '  from tClients c (nolock)            ' +
-               '  join tSuppliers  s (nolock)         ' +
-               '    on s.SuppliersID = c.SuppliersID  ' +
-               ' where c.ClientID = :ClientID',
-              ['ClientID'], [AAccount]);
-//    end
-//    else
-//    begin
-//      //данные дл€ интеграции берем из настройки SearchSuppliers
-//      SQl.Open('Select s.emexUsername, s.emexPassword '+
-//               '  from tSuppliers  s (nolock)         ' +
-//               ' where s.SuppliersID = :SuppliersID  ',
-//              ['SuppliersID'], [SuppliersID]);
-//    end;
+    //данные дл€ интеграции берем из справочника " лиенты"
+    SQl.Open('Select s.emexUsername, s.emexPassword '+
+             '  from tClients c (nolock)            ' +
+             '  join tSuppliers  s (nolock)         ' +
+             '    on s.SuppliersID = c.SuppliersID  ' +
+             ' where c.ClientID = :ClientID',
+            ['ClientID'], [AAccount]);
+
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;

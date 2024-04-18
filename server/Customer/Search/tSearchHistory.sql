@@ -6,11 +6,12 @@ tSearchHistory - История поиска
 begin
 	create table tSearchHistory
 	(
-	 ClientID   numeric(18,0)
-	,DetailNum  varchar(40)
+	 SearchHistoryID   numeric(18,0) identity
+	,ClientID          numeric(18,0)
+	,DetailNum         varchar(40)
 	);
 
-	create index ao1 on tSearchHistory (ClientID, DetailNum);
+	create index ao1 on tSearchHistory (ClientID);
 
 	grant all on tSearchHistory to public;
 end

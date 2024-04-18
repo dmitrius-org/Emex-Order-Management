@@ -117,7 +117,7 @@ declare @r int = 0
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
-        ,0--pc.ProfilesDeliveryID--
+        ,null --ProfilesDeliveryID--
         ,0                       -- isCancel             
 		,b.Make		             -- Бренд
 		,b.PartNameRus           -- наименование детали
@@ -187,7 +187,8 @@ declare @r int = 0
 		 ActionID,
 		 StateID,
 		 NewStateID,
-		 sgn)
+		 sgn -- признак для понимания где сделали insert
+		 )
   Select @@Spid,
          i.OrderID ,
 		 isnull(@ToNew, 0),
@@ -221,6 +222,6 @@ exec OrdersFinCalc @IsSave = 1
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240404', '3'
+exec setOV 'OrderCreateFromBasket', 'P', '20240418', '4'
 go
  

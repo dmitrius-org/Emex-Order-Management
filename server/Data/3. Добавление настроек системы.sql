@@ -34,7 +34,17 @@ select @ID = InstrumentID from tInstrument where brief = 'ClientAppCommon'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DefaultSuppliers', 'Поставщик по умолчанию', 'Значение данного параметра проставляется в карточку клиента при регистрации на сайте', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchSuppliers',  'Поставщик для поиска деталей', 'Используется для определения личного кабинета через который выполняется поиск деталей. Если значение не проставлено, то поставщика определяем через клиента', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'PercentSupped',    'Фильтр по вероятности поставки для отображения результата поиска', '', '', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'ShowSubsts',       'Показывать аналоги в поиске', '', '', 0
 
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchColumnInfoWeight',       'Справка для столбца: Вес',                  'Текст справки столбца таблицы поиска деталей', 'Вес', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchColumnInfoVolume',       'Справка для столбца: Объем',                'Текст справки столбца таблицы поиска деталей', 'Объем', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchColumnInfoDeliveryType', 'Справка для столбца: Доставка',             'Текст справки столбца таблицы поиска деталей', 'Доставка', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchColumnInfoDelivery',     'Справка для столбца: Срок доставки',        'Текст справки столбца таблицы поиска деталей', 'Срок доставки', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchColumnInfoRating',       'Справка для столбца: Вероятность поставки', 'Текст справки столбца таблицы поиска деталей', 'Вероятность поставки', 0
+
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DeliveryInfoExpress',         'Справка для способа доставки Express <i class="fa fa-plane"></i>',  '', 'Экспресс доставка: Прямая авиадоставка: быстро и дорого. Этим способом выгодно заказывать небольшие детали без объемного веса. К доставке не принимается опасный груз. Внизу поставить перечеркнутые логотипчики как в брошуре самолета, что нельзя возить взрывоопасные и легковоспламеняющиеся товары ( масла, подушки безопасности и т.д.)', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DeliveryInfoCharter',         'Справка для способа доставки Charter <i class="fa fa-car"></i>',    '', 'Стандартная доставка: Непрямая авиадоставка с пересадкой и перегрузкой в грузовой транспорт. Этим способом выгодно доставлять 90% деталей, но для доставки деталей с большим объемным весом лучше выбрать Контейнерную доставку.', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DeliveryInfoContainer',       'Справка для способа доставки Container <i class="fa fa-ship"></i>', '', 'Контейнерная доставка: Самый дешевый способ доставки грузов, он же и самый долгий. Этот способ подходит для доставки тяжелых или крупных деталей с большим объемом. Также можно доставлять любой опасный груз: масла, подушки безопасности с пиропатронами и так далее', 0
 
 go
 declare @PID numeric(18, 0)

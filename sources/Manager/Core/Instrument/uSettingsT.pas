@@ -13,18 +13,11 @@ uses
 
 type
   TSettingsT = class(TUniFrame)
-    GridUsers: TUniDBGrid;
+    Grid: TUniDBGrid;
     Query: TFDQuery;
     DataSource: TDataSource;
     PopupMenu: TUniPopupMenu;
-    N1: TUniMenuItem;
-    N2: TUniMenuItem;
-    N3: TUniMenuItem;
-    N4: TUniMenuItem;
-    N5: TUniMenuItem;
     N6: TUniMenuItem;
-    N7: TUniMenuItem;
-    N8: TUniMenuItem;
     ActionList: TUniActionList;
     actEdit: TAction;
     actRefreshAll: TAction;
@@ -36,8 +29,10 @@ type
     QuerySettingType: TIntegerField;
     UpdateSQL: TFDUpdateSQL;
     procedure actRefreshAllExecute(Sender: TObject);
-    procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
+    procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure GridCellContextClick(Column: TUniDBGridColumn; X,
+      Y: Integer);
   private
     FID: Integer;
     { Private declarations }
@@ -74,14 +69,20 @@ begin
   Result:=FID;
 end;
 
-procedure TSettingsT.GridUsersKeyDown(Sender: TObject; var Key: Word;
+procedure TSettingsT.GridCellContextClick(Column: TUniDBGridColumn; X,
+  Y: Integer);
+begin
+  PopupMenu.Popup(X, Y, Grid);
+end;
+
+procedure TSettingsT.GridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
   begin
     if (Sender is Tunidbgrid) then
     begin
-      GridUsers.JSInterface.JSCall('copyToClipboard', []);
+      Grid.JSInterface.JSCall('copyToClipboard', []);
     end;
   end;
 end;

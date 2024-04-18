@@ -91,10 +91,12 @@ delete p
 -- where OrderID is null
 
 -- заказы, которых нет в emex
-Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference, *
+Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference,  n.Brief, n.Name, *
   from tOrders p
  inner join tClients c (nolock)
          on c.ClientID = p.ClientID 
+ inner join tNodes n (nolock)
+         on n.NodeID  = p.StatusID
  where not exists (select 1
                     from tMovement m (nolock)
 				   where m.OrderID = p.OrderID
@@ -110,6 +112,7 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
                    ,8	--Send
 				   ,9	--NotAvailable
                     )
+  order by p.OrderDate 
 /* -- исправление
 delete p
   from tOrders p
@@ -132,10 +135,12 @@ delete p
 
 
 --
-select 'Разное количество', m.Quantity, o.Quantity, o.EmexQuantity, *
+select 'Разное количество', m.Quantity, o.Quantity, o.EmexQuantity, c.Brief, *
   from tMovement m (nolock)
   inner join tOrders o (nolock)
           on o.OrderID = m.OrderID
+  inner join tClients c (nolock)
+          on c.ClientID = o.ClientID
 where m.Quantity <> o.Quantity
 
 

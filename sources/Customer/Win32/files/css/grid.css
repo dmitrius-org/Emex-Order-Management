@@ -115,6 +115,7 @@
 }
 
 
+/* grid-search - выбор типа доставки */
 .grid-search .radio-form {
     display: flex;
     justify-content: center;
@@ -128,7 +129,7 @@
     display: none;
 }
 .grid-search .radio-form .radio-control .radio-input {
-    background: #ffffff;
+    /* background: #ffffff; */
     text-align: center;
     padding: 0px;
     /* border-radius: 10px; */
@@ -137,7 +138,7 @@
     position: relative;
     transition: all ease 250ms;
     /* border: 1px solid #BFE2FF;  */
-    display: block;
+    /* display: block; */
 }
 .grid-search .radio-form .radio-control:hover .radio-input {
     box-shadow: 0 1px 1px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.2);
@@ -146,6 +147,7 @@
     display: block;
     font-size: 15px;
     color: #BFE2FF;
+    /* background-color: #FFF; */
     font-weight: bold;  
 }
 .grid-search .radio-form .radio-control .radio-input img {
@@ -159,29 +161,32 @@
     text-transform: uppercase;
     display: block;
     /* margin-top: 1px; */
-    color: #AAA;
+    /* color: #FFF; */
+    /* background-color: #FFF; */
 }
 .grid-search .radio-form .radio-control input:checked + .radio-input span {
-    color: #444444;
+    /* color: #FFF; */
     opacity: 1;
     transition: opacity ease 250ms;
+    /* background-color: #FFF; */
+
 }
-/* .grid-search .radio-form .radio-control input:checked + .radio-input:after {
-    top: 2;
-    right: 25px;
-    transform: translateY(-50%);
-    animation-name: animation;
-    animation-duration: 250ms;
+.grid-search .radio-form .radio-control input:checked + .radio-input:after {
+    /* top: 2; */
+    /* right: 25px; */
+    /* transform: translateY(-50%); */
+    /* animation-name: animation; */
+    /* animation-duration: 250ms; */
     background-color: #FFF;
-    font-size: 15px;
-    display: block;
-    position: absolute;
-    border: 1px solid #FFF;
-    padding-left: 1px;
-    content: "\f058";
-    font-family: "FontAwesome";
-    font-weight: bold; 
-} */
+    /* font-size: 15px; */
+    /* display: block; */
+    /* position: absolute; */
+    /* border: 1px solid #FFF; */
+    /* padding-left: 1px; */
+    /* content: "\f058"; */
+    /* font-family: "FontAwesome"; */
+    /* font-weight: bold;  */
+}
 .grid-search .radio-form .radio-control input:checked + .radio-input {
     border: 0px solid #337AB7;
 }
@@ -212,7 +217,7 @@
 
 
 .grid-search .column-info { 
-    display: inline-block;
+    /* display: inline-block; */
 }
 .grid-search .column-btn-info { 
     color: #666;

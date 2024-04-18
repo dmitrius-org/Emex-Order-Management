@@ -23,10 +23,10 @@ Select o.ClientID,
          on o.OrderID = p.ObjectID
   left join tPrice pr with (nolock index=ao1)
          on pr.PriceID = o.PriceID
- inner join tProfilesCustomer pc (nolock)
+  left join tProfilesCustomer pc (nolock)
          on pc.ClientID        = o.ClientID
-        and pc.ClientPriceLogo = o.CustomerPriceLogo
- inner join tSupplierDeliveryProfiles pd (nolock)
+		and pc.ClientPriceLogo = o.CustomerPriceLogo  /*pc.ClientPriceLogo для онлайн заказов тут не будет связи*/
+  left join tSupplierDeliveryProfiles pd (nolock)
          on pd.ProfilesDeliveryID = isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
 		 
  where p.Spid   = @@spid          
@@ -35,5 +35,5 @@ Select o.ClientID,
 go
 grant all on vInsertPartToBasketByPart to public
 go
-exec setOV 'vInsertPartToBasketByPart', 'V', '20240101', '0'
+exec setOV 'vInsertPartToBasketByPart', 'V', '20240418', '1'
 go

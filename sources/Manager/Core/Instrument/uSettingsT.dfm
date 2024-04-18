@@ -12,7 +12,7 @@ object SettingsT: TSettingsT
   TabOrder = 0
   ParentColor = False
   ParentBackground = False
-  object GridUsers: TUniDBGrid
+  object Grid: TUniDBGrid
     Left = 0
     Top = 0
     Width = 922
@@ -50,7 +50,8 @@ object SettingsT: TSettingsT
     TabOrder = 0
     ParentColor = False
     Color = clBtnFace
-    OnKeyDown = GridUsersKeyDown
+    OnKeyDown = GridKeyDown
+    OnCellContextClick = GridCellContextClick
     Columns = <
       item
         FieldName = 'Name'
@@ -66,7 +67,7 @@ object SettingsT: TSettingsT
         Title.Alignment = taCenter
         Title.Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         Title.Font.Height = -13
-        Width = 463
+        Width = 331
         Sortable = True
         CheckBoxField.FieldValues = '1;0'
         CheckBoxField.DisplayValues = #1044#1072';'#1053#1077#1090
@@ -146,7 +147,7 @@ object SettingsT: TSettingsT
       FieldName = 'Val'
       Origin = 'Val'
       Required = True
-      Size = 256
+      Size = 1024
     end
     object QuerySettingType: TIntegerField
       FieldName = 'SettingType'
@@ -161,36 +162,8 @@ object SettingsT: TSettingsT
   object PopupMenu: TUniPopupMenu
     Left = 225
     Top = 275
-    object N1: TUniMenuItem
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
-      ImageIndex = 1
-    end
-    object N2: TUniMenuItem
-      Action = actEdit
-    end
-    object N3: TUniMenuItem
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1077#1090#1100
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088#1077#1090#1100
-      ImageIndex = 2
-    end
-    object N4: TUniMenuItem
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 0
-    end
-    object N5: TUniMenuItem
-      Caption = '-'
-    end
     object N6: TUniMenuItem
       Action = actRefreshAll
-    end
-    object N7: TUniMenuItem
-      Caption = '-'
-    end
-    object N8: TUniMenuItem
-      Caption = #1055#1088#1072#1074#1072' '#1085#1072' '#1080#1085#1090#1077#1088#1092#1077#1081#1089
-      Hint = #1055#1088#1072#1074#1072' '#1085#1072' '#1080#1085#1090#1077#1088#1092#1077#1081#1089' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
     end
   end
   object ActionList: TUniActionList

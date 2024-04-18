@@ -5,7 +5,8 @@ go
   CustomerPriceCalc - расчет цены 
 -------------------------------------------------------- */
 create proc CustomerPriceCalc
-              @DestinationLogo	nvarchar(20)
+              @DestinationLogo	nvarchar(20),
+			  @DetailNum        nvarchar(40)
 as
 set nocount on;
 
@@ -73,6 +74,7 @@ insert @Num (DetailNum)
 select distinct p.DetailNum
   from pFindByNumber p with (nolock index=ao2)
  where p.Spid = @@spid
+   and p.DetailNum = @DetailNum
 
 insert @Price
        (DetailNum, 
@@ -210,30 +212,19 @@ select @@SPID,
 exec DeliveryDateCalc  
 
 Update f 
-   set f.OurDelivery = f.Delivery + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery
+   set f.OurDelivery    = f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery
+       /**/
+      ,f.OurDeliverySTR = cast(f.GuaranteedDay as nvarchar) + ' + ' + cast(DATEDIFF(dd, p.OrderDate, p.DeliveryDate) as nvarchar) + ' + ' + cast(p.Delivery as nvarchar) + ' = ' + Cast(f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery as nvarchar)
   from pDeliveryDate p with (nolock index=ao1)
  inner join pFindByNumber f with (updlock index=ao1)
          on f.Spid = @@Spid
         and f.ID   = p.ID
  where p.Spid = @@Spid
-
-
--- сохранении истории поиска
-insert tSearchHistory (ClientID, DetailNum)
-select distinct
-       f.ClientID
-      ,f.DetailNum
-  from pFindByNumber f (nolock)
- where f.Spid = @@Spid
-   and not exists (select 1	                   
-                     from tSearchHistory sh with (nolock index=ao1)					  
-		            where sh.ClientID  = f.ClientID					    
-                      and sh.DetailNum = f.DetailNum)
     
 exit_:
 return @RetVal    
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240403', '2'
+exec setOV 'CustomerPriceCalc', 'P', '20240417', '4'
 go

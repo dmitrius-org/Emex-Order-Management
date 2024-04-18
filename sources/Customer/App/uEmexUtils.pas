@@ -202,10 +202,13 @@ procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
 var part: FindByNumber;
    parts: ArrayOfFindByNumber;
        I: Integer;
+ ShowSubsts: Boolean;
 begin
 //  logger.Info('TEmex.MovementByOrderNumber Begin');
+  // Показывать аналоги в поиске
+  ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
-  parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, False);
+  parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, ShowSubsts);
 
   FillFindByNumber(AClientID, parts);
 

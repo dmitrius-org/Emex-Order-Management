@@ -60,12 +60,15 @@ object SearchF: TSearchF
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
       EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
-      MinQueryLength = 2
+      RemoteFilter = False
       RemoteQuery = True
       LayoutConfig.Height = '30'
       HideTrigger = True
       IconItems = <>
+      OnSelect = edtSearchSelect
       OnKeyDown = edtSearchKeyDown
+      OnEnter = edtSearchEnter
+      OnInputClick = edtSearchInputClick
       OnRemoteQuery = edtSearchRemoteQuery
     end
   end
@@ -87,6 +90,11 @@ object SearchF: TSearchF
       Width = 1247
       Height = 563
       Hint = ''
+      ClientEvents.ExtEvents.Strings = (
+        
+          'click=function click(sender, eOpts)'#13#10'{'#13#10'  if (SearchF.MakeLogoPa' +
+          'nel.isVisible()){'#13#10'    ajaxRequest(this, '#39'MakeLogoPanelVisibleFa' +
+          'lse'#39', []);'#13#10'  }  '#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -197,36 +205,21 @@ object SearchF: TSearchF
         item
           FieldName = 'Weight'
           Title.Alignment = taCenter
-          Title.Caption = 
-            '<span class="column-info">'#13#10'<span>'#1042#1077#1089'</span>'#13#10'<form class="colum' +
-            'n-info" method="post" action="">         '#13#10'<button type="button"' +
-            ' onclick="clickInfoButton('#39'Weight'#39')" style="border: 0; backgroun' +
-            'd: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info"></i>'#13 +
-            #10'</button>'#13#10'</form>'#13#10'</span>'
+          Title.Caption = #1042#1089#1077
           Title.Font.Height = -13
           Width = 100
         end
         item
           FieldName = 'VolumeAdd'
           Title.Alignment = taCenter
-          Title.Caption = 
-            '<span class="column-info">'#13#10'<span>'#1054#1073#1098#1077#1084'</span>'#13#10'<form class="col' +
-            'umn-info" method="post" action="">         '#13#10'<button type="butto' +
-            'n" onclick="clickInfoButton('#39'Volume'#39')" style="border: 0; backgro' +
-            'und: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info"></i' +
-            '>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
+          Title.Caption = #1054#1073#1098#1077#1084
           Title.Font.Height = -13
           Width = 100
         end
         item
           FieldName = 'DeliveryType'
           Title.Alignment = taCenter
-          Title.Caption = 
-            '<span class="column-info">'#13#10'<span>'#1044#1086#1089#1090#1072#1074#1082#1072'</span>'#13#10'<form class="' +
-            'column-info" method="post" action="">         '#13#10'<button type="bu' +
-            'tton" onclick="clickInfoButton('#39'Delivery'#39')" style="border: 0; ba' +
-            'ckground: none;"> '#13#10' <i class="fa fa-info-circle column-btn-info' +
-            '"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
+          Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
           Title.Font.Height = -13
           Width = 105
           Alignment = taCenter
@@ -236,14 +229,9 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'OurDelivery'
+          FieldName = 'OurDeliverySTR'
           Title.Alignment = taCenter
-          Title.Caption = 
-            '<span class="column-info">'#13#10'<span>'#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080'</span>'#13#10'<form cl' +
-            'ass="column-info" method="post" action="">         '#13#10'<button typ' +
-            'e="button" onclick="clickInfoButton('#39'OurDelivery'#39')" style="borde' +
-            'r: 0; background: none;"> '#13#10' <i class="fa fa-info-circle column-' +
-            'btn-info"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
+          Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
           Width = 146
           Sortable = True
@@ -253,14 +241,9 @@ object SearchF: TSearchF
         item
           FieldName = 'Rating'
           Title.Alignment = taCenter
-          Title.Caption = 
-            '<span class="column-info">'#13#10'<span>'#1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080'</span>'#13#10'<' +
-            'form class="column-info" method="post" action="">         '#13#10'<but' +
-            'ton type="button" onclick="clickInfoButton('#39'Rating'#39')" style="bor' +
-            'der: 0; background: none;"> '#13#10' <i class="fa fa-info-circle colum' +
-            'n-btn-info"></i>'#13#10'</button>'#13#10'</form>'#13#10'</span>'
+          Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
-          Width = 180
+          Width = 190
           Alignment = taCenter
           ReadOnly = True
           Sortable = True
@@ -299,7 +282,7 @@ object SearchF: TSearchF
           ShowToolTipAlways = False
           Title.Caption = ' '
           Title.Font.Height = -13
-          Width = 120
+          Width = 90
           Alignment = taCenter
         end>
     end
@@ -381,6 +364,7 @@ object SearchF: TSearchF
         OnDblClick = MakeLogoGridDblClick
         Columns = <
           item
+            ShowToolTip = True
             FieldName = 'MakeName'
             Title.Caption = 'MakeName'
             Width = 120
@@ -430,7 +414,9 @@ object SearchF: TSearchF
       'Select *'
       '  from vFindByNumber'
       ' where MakeName        = :MakeName '
+      '   and DetailNum       = :DetailNum'
       '   and DestinationLogo = :DestinationLogo  '
+      ''
       '   '
       'order by N  '
       ''
@@ -443,6 +429,10 @@ object SearchF: TSearchF
         DataType = ftString
         ParamType = ptInput
         Value = Null
+      end
+      item
+        Name = 'DETAILNUM'
+        ParamType = ptInput
       end
       item
         Name = 'DESTINATIONLOGO'
@@ -482,10 +472,6 @@ object SearchF: TSearchF
       Required = True
       OnGetText = QueryDeliveryTypeGetText
     end
-    object QueryOurDelivery: TIntegerField
-      FieldName = 'OurDelivery'
-      Origin = 'Delivery'
-    end
     object QueryPercentSupped: TIntegerField
       FieldName = 'PercentSupped'
       Origin = 'PercentSupped'
@@ -511,6 +497,10 @@ object SearchF: TSearchF
       FieldName = 'VolumeAdd'
       DisplayFormat = '###,##0.00'
     end
+    object QueryOurDeliverySTR: TWideStringField
+      FieldName = 'OurDeliverySTR'
+      Size = 256
+    end
   end
   object qSearchHistory: TFDQuery
     AutoCalcFields = False
@@ -529,13 +519,33 @@ object SearchF: TSearchF
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'select top 20 *'
+      '-- '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1086#1080#1089#1082#1072
+      'insert tSearchHistory (ClientID, DetailNum)'
+      'select distinct'
+      '       f.ClientID'
+      '      ,f.DetailNum'
+      '  from pFindByNumber f (nolock)'
+      ' where f.Spid      = @@Spid'
+      '   and f.DetailNum = :DetailNum'
+      '   and not exists (select 1'#9'                   '
+      
+        '                     from tSearchHistory sh with (nolock index=a' +
+        'o1)'#9#9#9#9#9'  '
+      '                    where sh.ClientID  = f.ClientID'#9#9#9#9#9'    '
+      '                      and sh.DetailNum = f.DetailNum)'
+      ''
+      ''
+      'select top 10 *'
       '  from tSearchHistory sh with (nolock index=ao1)'
       ' where sh.ClientID  = :ClientID'
-      '   --and sh.DetailNum = :DetailNum')
+      ' order by sh.SearchHistoryID desc   ')
     Left = 767
     Top = 220
     ParamData = <
+      item
+        Name = 'DETAILNUM'
+        ParamType = ptInput
+      end
       item
         Name = 'CLIENTID'
         ParamType = ptInput
@@ -573,6 +583,12 @@ object SearchF: TSearchF
       '            when p.MakeName = :MakeName then 1'
       '            else 2'
       '          end '
+      '          '
+      '         ,case'
+      '            when p.DetailNum = :DetailNum then 1'
+      '            else 2'
+      '          end '
+      '          '
       '         ,PriceRub'
       ''
       '')
@@ -590,6 +606,10 @@ object SearchF: TSearchF
         DataType = ftString
         ParamType = ptInput
         Value = Null
+      end
+      item
+        Name = 'DETAILNUM'
+        ParamType = ptInput
       end>
     object WideStringField1: TWideStringField
       FieldName = 'MakeName'

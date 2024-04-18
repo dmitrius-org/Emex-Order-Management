@@ -71,8 +71,7 @@ object OrdersT: TOrdersT
         
           'columnschanged=function columnschanged(ct, eOpts)'#13#10'{'#13#10' // ajaxRe' +
           'quest(this, '#39'_columnschanged'#39', ['#39'colIndx='#39' + column.dataIndex])'#13 +
-          #10'}'
-        'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10#13#10'}')
+          #10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +

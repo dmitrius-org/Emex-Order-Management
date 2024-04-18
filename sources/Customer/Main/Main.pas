@@ -28,7 +28,6 @@ type
     ImageList: TUniNativeImageList;
     UniPanelTop: TUniPanel;
     UniPanel: TUniPanel;
-    btnProfile: TUniMenuButton;
     pmProfile: TUniPopupMenu;
     ActionList: TUniActionList;
     actExit: TAction;
@@ -46,10 +45,7 @@ type
     LogoLabel: TUniLabel;
     MainMenu: TUniTreeMenu;
     MainMenuImage: TUniNativeImageList;
-    btnFavorit: TUniButton;
-    btnBasket: TUniButton;
     procedure UniFormShow(Sender: TObject);
-    procedure UniFormDestroy(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
     procedure actinfoExecute(Sender: TObject);
@@ -67,9 +63,9 @@ type
   private
     { Private declarations }
     ///<summary>
-    ///  FormNames - список форм
+    ///  Profile - профиль
     ///</summary>
-    FormNames : TStrings;
+    Profile : TUniTreeNode;
 
     FSearchF :TSearchF;
     FBasketF :TBasketF;
@@ -83,7 +79,7 @@ type
 
     procedure SetMainMenuMicroName;
 
-//    function FindNodeByID(AID: Integer): TUniTreeNode;
+    procedure ProfileMenuAdd();
   public
     { Public declarations }
   end;
@@ -96,7 +92,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uVarUtils;
 
 function MainForm: TMainForm;
 begin
@@ -133,8 +129,7 @@ begin
 end;
 
 procedure TMainForm.MainMenuClick(Sender: TObject);
-var
-  Nd : TUniTreeNode;
+var  Nd : TUniTreeNode;
 begin
   Nd := MainMenu.Selected;
 
@@ -146,23 +141,64 @@ begin
     Exit();
   end;
 
-  if Nd.Text = 'Поиск' then pcMain.ActivePageIndex := 0;
-  if Nd.Text = 'Корзина' then pcMain.ActivePageIndex := 1;
-  if Nd.Text = 'Заказы' then pcMain.ActivePageIndex := 2;
+  if Nd.Text = 'Поиск' then
+    pcMain.ActivePageIndex := 0
+  else
+  if Nd.Text = 'Корзина' then pcMain.ActivePageIndex := 1
+  else
+  if Nd.Text = 'Заказы' then pcMain.ActivePageIndex := 2
+  else
+    // под 999 меню профиль
+  if (Nd.Tag = -999) and (Nd.Action <> nil)  then
+  begin
+    Nd.Action.Execute;
+    Exit();
+  end;
+end;
+
+procedure TMainForm.ProfileMenuAdd;
+begin
+  Profile := MainMenu.Items.Add(nil, 'Профиль');
+  Profile.ImageIndex := 6;
+  Profile.Tag:=-999;
+
+//  with MainMenu.Items.Add(Profile, 'О системе') do
+//  begin
+//      Tag := -999;
+//      Action := actinfo;
+//      ImageIndex := 18;
+//  end;
+
+  with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
+  begin
+      Tag := -999;
+      Action := actEditPas;
+      ImageIndex := 7;
+  end;
+
+  with MainMenu.Items.Add(Profile, 'Выйти из программы') do
+  begin
+      Tag := -999;
+      Action := actExit;
+      ImageIndex := 5;
+  end;
 end;
 
 procedure TMainForm.SetMainMenuMicroName;
 begin
   if MainMenu.Micro then
   begin
-      MainMenu.Items[0].Text := 'Развернуть';
-      MainMenuPanel.Width := MainMenu.MicroWidth ;
+    MainMenu.Items[0].Text := 'Развернуть';
+    MainMenuPanel.Width := MainMenu.MicroWidth;
   end
   else
   begin
-      MainMenu.Items[0].Text := 'Свернуть';
-      MainMenuPanel.Width := 300;
+    MainMenu.Items[0].Text := 'Свернуть';
+    MainMenuPanel.Width := 300;
   end;
+
+  logger.Info('set _MicroWidth:' + MainMenu.Micro.ToString());
+  UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString()); // Expires 7 days from now
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
@@ -214,11 +250,6 @@ begin
   end;
 end;
 
-procedure TMainForm.UniFormDestroy(Sender: TObject);
-begin
-  FormNames.Free;
-end;
-
 procedure TMainForm.UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
  case Key of
@@ -230,9 +261,15 @@ end;
 
 procedure TMainForm.UniFormShow(Sender: TObject);
 begin
-  btnProfile.Caption := UniMainModule.AUserName;
+  //btnProfile.Caption := UniMainModule.AUserName;
+
+  logger.Info('get _MicroWidth:' + UniApplication.Cookies.Values['_MicroWidth']);
+
+  MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);
 
   SetMainMenuMicroName;
+
+  ProfileMenuAdd;
 end;
 
 initialization
