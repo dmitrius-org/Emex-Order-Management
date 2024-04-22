@@ -7,7 +7,8 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniPanel, uniHTMLFrame, uniTreeView,
   uniGUIBaseClasses, uniImageList, Vcl.Menus, uniMainMenu, System.Actions,
-  Vcl.ActnList, uniToolBar, unimToolbar, ExtPascalUtils ;
+  Vcl.ActnList, uniToolBar, unimToolbar, ExtPascalUtils, uniButton, uniLabel,
+  uniGroupBox ;
 
 type
   TInstructionsT = class(TUniFrame)
@@ -25,12 +26,20 @@ type
     N4: TUniMenuItem;
     N5: TUniMenuItem;
     N6: TUniMenuItem;
-    ImageList32: TUniImageList;
-    ImageList16: TUniImageList;
     TreeMenu: TUniTreeView;
     UniPanel1: TUniPanel;
     actAddChild: TAction;
     N3: TUniMenuItem;
+    btnArticleEdit: TUniButton;
+    actArticleEdit: TAction;
+    lblArticle: TUniLabel;
+    ArticleContent: TUniContainerPanel;
+    UniPanel2: TUniPanel;
+    ArticleToolBar: TUniPanel;
+    UniNativeImageList1: TUniNativeImageList;
+    UniPanel: TUniPanel;
+    UniButton1: TUniButton;
+    actSave: TAction;
     procedure UniFrameReady(Sender: TObject);
     procedure actAddExecute(Sender: TObject);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -42,9 +51,14 @@ type
     procedure actAddChildExecute(Sender: TObject);
     procedure TreeMenuCellContextClick(ANode: TUniTreeNode; X, Y: Integer);
     procedure PopupMenuPopup(Sender: TObject);
+    procedure actArticleEditExecute(Sender: TObject);
+    procedure actSaveExecute(Sender: TObject);
   private
     { Private declarations }
     SelectedNode : TUniTreeNode;
+
+    IsEdit: Boolean;
+
     /// <summary>
     ///  ConstructNavigator - создание меню
     ///</summary>
@@ -61,6 +75,12 @@ type
     ///</summary>
     procedure SetButtonEnabled;
     procedure SetEditorEnabled;
+
+
+    procedure SetArticleEditEnabled;
+    procedure ArticleSave(Atext: String);
+
+    procedure SetArticleData;
   public
     { Public declarations }
   end;
@@ -83,6 +103,32 @@ procedure TInstructionsT.actAddExecute(Sender: TObject);
 begin
   InstructionsF.FormAction := TFormAction.acInsert;
   InstructionsF.ShowModal(EditFCallBack);
+end;
+
+procedure TInstructionsT.actArticleEditExecute(Sender: TObject);
+begin
+  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("contenteditable", false)');
+  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("toolbar", false)');
+//  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("menubar", false)');
+//   UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("statusbar", false)');
+
+
+//tinymce.activeEditor.mode.set("readonly");
+  // edt1.HTML.Clear;
+  // edt1.HTML.LoadFromFile('./files/tinymce5/index.html');
+   IsEdit := True;
+
+   SetArticleData;
+
+   UniSession.AddJS('tinyMCE.get("myEditor").mode.set("design")');
+
+//  UniSession.AddJS('tinymce.activeEditor.setMode("readonly")');
+
+   SetArticleEditEnabled;
+
+  //edt1.HTML.Clear;
+
+
 end;
 
 procedure TInstructionsT.actDeleteExecute(Sender: TObject);
@@ -120,6 +166,40 @@ begin
   ConstructNavigator;
 end;
 
+procedure TInstructionsT.actSaveExecute(Sender: TObject);
+begin
+  isEdit:=False;
+  UniSession.AddJS('ajaxRequest(' + edt1.JSName + ', "myCustomSaveButton", ["text="+tinyMCE.get("myEditor").getContent()])');
+end;
+
+procedure TInstructionsT.ArticleSave(Atext: String);   var sqltext: string;
+begin
+    sqltext :=  ' declare @R      int                '+
+                '                                    '+
+                ' exec @r = InstructionsDetailEdit            '+
+                '             @InstructionID = :InstructionID '+
+                '            ,@Text          = :Text          '+
+                '                                    '+
+                ' select @r as retcode               '+
+                ' ';
+
+    Sql.Open(sqltext,
+               ['InstructionID','Text'],
+               [SelectedNode.tag,
+                Atext]);
+
+    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+
+    if RetVal.Code = 0 then
+    begin
+
+    end
+    else
+    begin
+      MessageDlg(RetVal.Message, mtError, [mbOK]);
+    end;
+end;
+
 procedure TInstructionsT.ConstructNavigator;
 var
   c, Path: string;
@@ -131,7 +211,6 @@ begin
 
   TreeMenu.Items.Clear;
 
-  Path := UniServerModule.StartPath + 'files\';
   with UniMainModule.Query do
   begin
     close;
@@ -156,11 +235,6 @@ begin
 
       Nd := TreeMenu.Items.Add(Nd, c);
 
-//      if (UniMainModule.Query.FieldByName('Icon').AsWideString <> '' ) then
-//      begin
-//        Nd.ImageIndex := UniMainModule.Query.FieldByName('Icon').AsWideString.ToInteger;
-//      end
-//      else
       Nd.ImageIndex := -1;
 
       Nd.Tag := ID;
@@ -174,7 +248,6 @@ begin
     if TreeMenu.Items.Count > 0 then
     begin
       TreeMenu.Items[0].Selected := true;
-     // TreeMenuClick(TreeMenu);
     end;
   end;
 end;
@@ -220,32 +293,14 @@ var sqltext: string;
 begin
   logger.Info('TInstructionsT.edt1AjaxEvent: ' + EventName);
 
-  if EventName = 'mycustomSaveButton' then
+  if EventName = 'myCustomSaveButton' then
   begin
-    sqltext :=  ' declare @R      int                '+
-                '                                    '+
-                ' exec @r = InstructionsDetailEdit            '+
-                '             @InstructionID = :InstructionID '+
-                '            ,@Text          = :Text          '+
-                '                                    '+
-                ' select @r as retcode               '+
-                ' ';
+    ArticleSave(Params.Values['text']);
+  end;
 
-    Sql.Open(sqltext,
-               ['InstructionID','Text'],
-               [SelectedNode.tag,
-                Params.Values['text']]);
-
-    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-
-    if RetVal.Code = 0 then
-    begin
-
-    end
-    else
-    begin
-      MessageDlg(RetVal.Message, mtError, [mbOK]);
-    end;
+  if EventName = 'mycustomSaveButtonEnabled' then
+  begin
+    actSave.Enabled := True;
   end;
 end;
 
@@ -268,6 +323,49 @@ begin
   SetButtonEnabled;
 end;
 
+procedure TInstructionsT.SetArticleData;
+begin
+  with UniMainModule.Query do
+  begin
+    close;
+    sql.Clear;
+    sql.Text := ' select i.Name, d.[Text]          ' +
+                '   from tInstructions i (nolock)  ' +
+                '   left join tInstructionsDetail d (nolock)    ' +
+                '          on i.InstructionID = d.InstructionID ' +
+                '  where i.InstructionID = :InstructionID       ';
+
+    ParamByName('InstructionID').Value := SelectedNode.Tag;
+    Open;
+
+    lblArticle.Caption := FieldByName('Name').asstring;
+
+    if RecordCount = 0 then
+    begin
+      UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
+      exit;
+    end
+    else
+    begin
+      try
+        UniSession.AddJS('tinyMCE.get("myEditor").setContent(' + StrToJS(FieldByName('Text').AsString) + ')');
+      except
+        UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
+      end;
+    end;
+  end;
+
+  if not IsEdit then
+    UniSession.AddJS('tinyMCE.get("myEditor").mode.set("readonly")');
+end;
+
+procedure TInstructionsT.SetArticleEditEnabled;
+begin
+  actArticleEdit.Enabled := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) and not IsEdit);
+
+  actSave.Enabled := False;
+end;
+
 procedure TInstructionsT.SetButtonEnabled;
 begin
   actEdit.Enabled := TreeMenu.Items.Count > 0;
@@ -277,8 +375,7 @@ end;
 
 procedure TInstructionsT.SetEditorEnabled;
 begin
-
-  edt1.Enabled := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) );
+ // edt1. := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) );
 end;
 
 procedure TInstructionsT.TreeMenuCellContextClick(ANode: TUniTreeNode; X,
@@ -290,34 +387,24 @@ end;
 
 procedure TInstructionsT.TreeMenuClick(Sender: TObject);
 begin
-  SelectedNode := TreeMenu.Selected;
 
-  with UniMainModule.Query do
+  if (IsEdit) then
+  if MessageDlg('Изменения в документе не сохранены, сохранить?" ', mtConfirmation, mbYesNo) = mrYes then
   begin
-    close;
-    sql.Clear;
-    sql.Text := ' select [Text] from tInstructionsDetail (nolock) where InstructionID = :InstructionID ';
-    ParamByName('InstructionID').Value := SelectedNode.Tag;
-    open;
+    //
+  end
+  else
+  begin
 
-    if RecordCount = 0 then
-    begin
-      UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
-      exit
-    end
-    else
-    begin
-      logger.Info(' TInstructionsT.TreeMenuClick: ' + FieldByName('Text').Value );
-      try
-        UniSession.AddJS('tinyMCE.get(''myEditor'').setContent(' + StrToJS(FieldByName('Text').AsString) + ')');
-      except
-        UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
-      end;
-    end;
   end;
 
-  SetEditorEnabled;
+  SelectedNode := TreeMenu.Selected;
 
+  IsEdit := False;
+
+  SetArticleData;
+
+  SetArticleEditEnabled;
 end;
 
 procedure TInstructionsT.UniFrameReady(Sender: TObject);
@@ -326,16 +413,20 @@ var
 begin
   logger.Info('TInstructionsT.UniFrameReady');
 
+  lblArticle.Caption := '';
+
   ConstructNavigator;
 
   SetEditorEnabled;
+
   SetButtonEnabled;
+
+  SetArticleEditEnabled;
 
   edt1.HTML.Clear;
   edt1.HTML.LoadFromFile('./files/tinymce5/index.html');
 
-  js := ' mycustomSaveButton = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButton", [ "text=" + tinyMCE.get("myEditor").getContent() ]);' + ' } ;';
-
+  js := ' mycustomSaveButtonEnabled = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButtonEnabled", []);' + ' } ;';
   UniSession.JSCode(js);
 end;
 

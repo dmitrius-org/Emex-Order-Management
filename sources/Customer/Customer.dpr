@@ -51,9 +51,10 @@ uses
   uEmexUtils in 'App\uEmexUtils.pas',
   uToast in '..\Common\CommonApp\uToast.pas',
   uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
-  uGridUtils in '..\Common\Common\uGridUtils.pas',
   uApp in '..\Common\Common\uApp.pas',
-  uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm};
+  uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm},
+  uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
+  uGridUtils in '..\Common\Common\uGridUtils.pas';
 
 {$R *.res}
 

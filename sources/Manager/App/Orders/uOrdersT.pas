@@ -191,6 +191,7 @@ type
     QueryDaysInWork: TIntegerField;
     UniHiddenPanel1: TUniHiddenPanel;
     fDetailNum: TUniEdit;
+    QueryStatus: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -220,7 +221,6 @@ type
     procedure fStatus2Select(Sender: TObject);
     procedure fPriceLogoSelect(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
-    procedure cbCancelSelect(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
     procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
@@ -235,6 +235,8 @@ type
       Shift: TShiftState);
     procedure actGroupSetFragileSignExecute(Sender: TObject);
     procedure QueryNextDateDepartureGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryStatusGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
   private
     { Private declarations }
@@ -410,7 +412,7 @@ begin
     case (MessageDlg('Вы действительно хотите отменить операцию?' , mtConfirmation, mbYesNo))  of
       mrNo:
       begin
-       Exit;
+        Exit;
       end;
     end;
 
@@ -461,7 +463,7 @@ begin
   Sql.Exec('delete tGridOptions '+
            '  from tGridOptions (rowlock)   ' +
            ' where UserID = dbo.GetUserID() ' +
-           '   and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
+           '   and Grid   = :Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
 
@@ -669,7 +671,6 @@ begin
   end;
 end;
 
-
 procedure TOrdersT.GridOpen;
 var FClient:string;
     FStatus :string;
@@ -728,7 +729,7 @@ begin
       Query.MacroByName('OrderDate').Value := ' and o.OrderDate = '''   + FormatDateTime('yyyymmdd', fOrderDate.DateTime) + ''''
     else
       Query.MacroByName('OrderDate').Value := '';
-//
+
     if (edtUpdDate.Text <> '') and (edtUpdDate.Text <> '30.12.1899') then
       Query.MacroByName('updDateTime').Value := ' and cast(o.updDateTime as date) = '''   + FormatDateTime('yyyymmdd', edtUpdDate.DateTime) + ''''
     else
@@ -739,11 +740,10 @@ begin
     else
       Query.MacroByName('Invoice').Value := '';
 
-
     Query.Open();
-//
+
     StateActionMenuCreate;
-//
+
   finally
     DoHideMask();
     logger.Info('TOrdersT.GridOpen End');
@@ -893,6 +893,23 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT.QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+var t: string;
+begin
+  logger.Info('QueryFlagGetText: ');
+  t := '';
+  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
+  begin
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
+  end;
+
+  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
+  begin
+    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа"><i class="fa fa-ban"></i></span>';
+  end;
+  Text := t;
+end;
+
 procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -961,13 +978,13 @@ begin
   else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then
   begin
     Attribs.Color:=rgb(242, 169, 210);
-  end
-  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
-  begin
-    Attribs.Color:=rgb(255,219,88); //#F34723
   end;
+//  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
+//  begin
+//    Attribs.Color:=rgb(255,219,88); //#F34723
+//  end;
 
-  if (Query.FieldByName('IsCancel').AsBoolean) then
+  if (Query.FieldByName('IsCancel').AsBoolean) then // отказан
   begin
     Attribs.Font.Color:=clGray;
   end;
@@ -991,7 +1008,6 @@ begin
 
     for i := 0 to AGrid.Columns.count-1 do
     begin
-
         if i = 0 then
           SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
         else
@@ -1108,11 +1124,6 @@ begin
   DeselectAll;
 end;
 
-procedure TOrdersT.cbCancelSelect(Sender: TObject);
-begin
-//  GridOpen;
-end;
-
 procedure TOrdersT.SortColumn(const FieldName: string; Dir: Boolean);
 begin
   if Dir then
@@ -1165,29 +1176,7 @@ begin
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
-//  with Query do
-//  begin
-//    for I := 0 to Query.FieldCount-1 do
-//    begin
-//      IndexnameAsc := Query.Fields[I].FieldName+'_index_asc';
-//      IndexnameDes := Query.Fields[I].FieldName+'_index_des';
-//
-//      with Query.Indexes.Add do
-//      begin
-//        Name := IndexnameAsc;
-//        Fields := Query.Fields[I].FieldName;
-//        Options:=[];
-//        Active := True;
-//      end;
-//      with Query.Indexes.Add do
-//      begin
-//        Name := IndexnameDes;
-//        Fields := Query.Fields[I].FieldName;
-//        Options:=[soDescending];
-//        Active := True;
-//      end;
-//    end;
-//  end;
+
 
   {$IFDEF Release}
     Grid.Columns.ColumnFromFieldName('Flag').Visible := False;

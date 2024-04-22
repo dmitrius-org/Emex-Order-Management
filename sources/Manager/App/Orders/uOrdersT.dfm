@@ -136,6 +136,13 @@ object OrdersT: TOrdersT
       OnColumnResize = GridColumnResize
       Columns = <
         item
+          FieldName = 'Status'
+          Title.Alignment = taCenter
+          Title.Caption = ' '
+          Width = 64
+          Alignment = taLeftJustify
+        end
+        item
           ShowToolTip = True
           FieldName = 'OrderID'
           Title.Alignment = taCenter
@@ -148,7 +155,7 @@ object OrdersT: TOrdersT
         item
           FieldName = 'ClientID'
           Title.Alignment = taCenter
-          Title.Caption = 'ClientID'
+          Title.Caption = ' '
           Width = 85
           Visible = False
           ReadOnly = True
@@ -717,7 +724,6 @@ object OrdersT: TOrdersT
           EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
           IconItems = <>
-          OnSelect = cbCancelSelect
           OnKeyDown = fStatus2KeyDown
         end
         object fStatus2: TUniCheckComboBox
@@ -1160,6 +1166,7 @@ object OrdersT: TOrdersT
     SQL.Strings = (
       'SELECT '
       '       o.[OrderID]'
+      '      ,o.Flag              Status '
       '      ,o.[ClientID]'
       '      ,o.[ClientName]'
       '      ,o.[OrderDate]'
@@ -1552,6 +1559,10 @@ object OrdersT: TOrdersT
     end
     object QueryDaysInWork: TIntegerField
       FieldName = 'DaysInWork'
+    end
+    object QueryStatus: TIntegerField
+      FieldName = 'Status'
+      OnGetText = QueryStatusGetText
     end
   end
   object DataSource: TDataSource

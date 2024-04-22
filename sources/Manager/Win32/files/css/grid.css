@@ -122,3 +122,22 @@
     white-space: normal;
     text-align: center;
 }
+
+/* Иконка: Запрос отмены заказа*/
+.x-request-cancellation {
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #FF033E
+}
+
+/* Иконка: сообщение по заказу*/
+.x-orders-message {
+    /* position: absolute; */
+    overflow: visible;
+    /* z-index: 999999; */
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #1E90FF
+}

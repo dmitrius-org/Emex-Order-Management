@@ -5,7 +5,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Forms, uniGUIClasses, uniGUIFrame,
   uniGUITypes, uniGUIAbstractClasses, uniGUIApplication;
 
-procedure ToastOK(AMessage: string; AUniSession: TUniGUISession);
+procedure ToastOK( AMessage: string; AUniSession: TUniGUISession);
 procedure ToastERR(AMessage: string; AUniSession: TUniGUISession);
 
 implementation

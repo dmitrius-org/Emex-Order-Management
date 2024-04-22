@@ -76,60 +76,6 @@ object OrdersT2: TOrdersT2
       TabOrder = 5
     end
   end
-  object UniPanel: TUniPanel
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 1396
-    Height = 51
-    Hint = ''
-    ShowHint = True
-    Align = alTop
-    TabOrder = 1
-    Caption = ''
-    Color = clBtnShadow
-    AlignmentControl = uniAlignmentClient
-    ParentAlignmentControl = False
-    Layout = 'auto'
-    LayoutAttribs.Align = 'top'
-    LayoutAttribs.Pack = 'start'
-    LayoutConfig.IgnorePosition = False
-    LayoutConfig.Height = '0'
-    LayoutConfig.Width = '100'
-    object ToolBar: TUniToolBar
-      AlignWithMargins = True
-      Left = 4
-      Top = 4
-      Width = 1388
-      Height = 43
-      Hint = ''
-      ShowHint = True
-      ButtonHeight = 37
-      ButtonWidth = 142
-      Images = UniImageList
-      ShowCaptions = True
-      ButtonAutoWidth = True
-      LayoutConfig.IgnorePosition = False
-      LayoutConfig.Width = '100'
-      LayoutConfig.DockWhenAligned = False
-      Layout = 'hbox'
-      Align = alClient
-      TabOrder = 1
-      ParentColor = False
-      Color = clBtnFace
-      OverflowHandler = ohMenu
-      object UniToolButton1: TUniToolButton
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        ShowHint = True
-        Action = actProtocol
-        ImageIndex = 4
-        IconAlign = iaLeft
-        TabOrder = 1
-      end
-    end
-  end
   object UniPanel2: TUniPanel
     Left = 0
     Top = 57
@@ -138,7 +84,7 @@ object OrdersT2: TOrdersT2
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -150,9 +96,9 @@ object OrdersT2: TOrdersT2
     LayoutConfig.Width = '100'
     object Grid: TUniDBGrid
       Left = 0
-      Top = 110
+      Top = 100
       Width = 1402
-      Height = 429
+      Height = 439
       Hint = ''
       ShowHint = True
       CustomAttribs.Strings = (
@@ -162,8 +108,8 @@ object OrdersT2: TOrdersT2
         
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
-          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=false;'#13#10' ' +
-          '   }'#13#10'}')
+          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=true;'#13#10'  ' +
+          '  }'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
@@ -183,7 +129,7 @@ object OrdersT2: TOrdersT2
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelectCheckOnly, dgDontShowSelected]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
       WebOptions.PageSize = 150
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
@@ -213,9 +159,10 @@ object OrdersT2: TOrdersT2
       Columns = <
         item
           ShowToolTipAlways = False
-          FieldName = 'Status'
+          FieldName = 'Flag'
           Title.Caption = ' '
           Width = 64
+          Alignment = taLeftJustify
         end
         item
           ShowToolTip = True
@@ -472,7 +419,7 @@ object OrdersT2: TOrdersT2
       Left = 3
       Top = 3
       Width = 1396
-      Height = 104
+      Height = 94
       Hint = ''
       ShowHint = True
       Align = alTop
@@ -486,7 +433,7 @@ object OrdersT2: TOrdersT2
         Left = 3
         Top = 3
         Width = 1390
-        Height = 98
+        Height = 88
         Hint = ''
         ShowHint = True
         AlignmentControl = uniAlignmentClient
@@ -494,6 +441,9 @@ object OrdersT2: TOrdersT2
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
+        DesignSize = (
+          1390
+          88)
         object UniLabel1: TUniLabel
           Left = 17
           Top = 16
@@ -504,71 +454,61 @@ object OrdersT2: TOrdersT2
           Caption = #1057#1090#1072#1090#1091#1089':'
           TabOrder = 1
         end
-        object UniLabel2: TUniLabel
-          Left = 293
-          Top = 16
-          Width = 36
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = #1055#1088#1072#1081#1089':'
-          TabOrder = 2
-        end
         object fCancel: TUniBitBtn
-          Left = 885
+          Left = 784
           Top = 35
           Width = 128
           Height = 24
           ShowHint = True
           Action = actFilterClear
-          TabOrder = 3
+          TabOrder = 2
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 1019
+          Left = 918
           Top = 35
-          Width = 143
+          Width = 139
           Height = 24
           ShowHint = True
           Action = actFilter
-          TabOrder = 4
+          TabOrder = 3
           IconPosition = ipButtonEdge
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
-          Left = 530
+          Left = 429
           Top = 35
           Width = 128
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 5
+          TabOrder = 4
           EmptyText = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           CheckChangeDelay = 200
           ClearButton = True
         end
         object UniLabel4: TUniLabel
-          Left = 530
+          Left = 429
           Top = 16
           Width = 76
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072':'
-          TabOrder = 6
+          TabOrder = 5
         end
         object UniLabel5: TUniLabel
-          Left = 798
+          Left = 697
           Top = 16
           Width = 34
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1054#1090#1082#1072#1079':'
-          TabOrder = 7
+          TabOrder = 6
         end
         object cbCancel: TUniComboBox
-          Left = 798
+          Left = 697
           Top = 35
           Width = 81
           Height = 23
@@ -579,7 +519,7 @@ object OrdersT2: TOrdersT2
             #1053#1077#1090
             #1044#1072)
           ItemIndex = 0
-          TabOrder = 8
+          TabOrder = 7
           ClearButton = True
           IconItems = <>
           OnSelect = cbCancelSelect
@@ -591,7 +531,7 @@ object OrdersT2: TOrdersT2
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 9
+          TabOrder = 8
           ClientEvents.UniEvents.Strings = (
             'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
             
@@ -624,69 +564,61 @@ object OrdersT2: TOrdersT2
           IconItems = <>
           OnSelect = fStatus2Select
         end
-        object fPriceLogo: TUniCheckComboBox
-          Left = 293
-          Top = 35
-          Width = 231
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 10
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-              HideOnReadOnly = False
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-              HideOnReadOnly = False
-            end>
-          Images = UniImageList
-          HideTrigger = True
-          HideDefaultTrigger = False
-          IconItems = <>
-          OnSelect = fPriceLogoSelect
-        end
         object UniLabel6: TUniLabel
-          Left = 664
+          Left = 563
           Top = 16
           Width = 78
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080':'
-          TabOrder = 11
+          TabOrder = 9
         end
         object fDetailNum: TUniEdit
-          Left = 664
+          Left = 563
           Top = 35
           Width = 128
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 12
+          TabOrder = 10
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
+        end
+        object fOrderDate: TUniDateTimePicker
+          Left = 293
+          Top = 35
+          Width = 130
+          Height = 21
+          Hint = ''
+          ShowHint = True
+          DateTime = 45257.000000000000000000
+          DateFormat = 'dd/MM/yyyy'
+          TimeFormat = 'HH:mm:ss'
+          TabOrder = 11
+          ClearButton = True
+          EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+        end
+        object UniLabel8: TUniLabel
+          Left = 293
+          Top = 16
+          Width = 65
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072':'
+          TabOrder = 12
+        end
+        object btnCancel: TUniBitBtn
+          Left = 1264
+          Top = 35
+          Width = 113
+          Height = 24
+          ShowHint = True
+          Action = actCancelRequest
+          Anchors = [akTop, akRight]
+          TabOrder = 13
         end
       end
     end
@@ -787,17 +719,43 @@ object OrdersT2: TOrdersT2
       end
     end
   end
+  object UniPanel: TUniPanel
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 1396
+    Height = 51
+    Hint = ''
+    Visible = False
+    ShowHint = True
+    Align = alTop
+    TabOrder = 2
+    Caption = ''
+    Color = clBtnShadow
+    AlignmentControl = uniAlignmentClient
+    ParentAlignmentControl = False
+    Layout = 'auto'
+    LayoutAttribs.Align = 'top'
+    LayoutAttribs.Pack = 'start'
+    LayoutConfig.IgnorePosition = False
+    LayoutConfig.Height = '0'
+    LayoutConfig.Width = '100'
+  end
   object Query: TFDQuery
+    AfterRefresh = QueryAfterRefresh
+    OnUpdateRecord = QueryUpdateRecord
+    BeforeGetRecords = QueryBeforeGetRecords
+    AfterGetRecord = QueryAfterGetRecord
+    BeforeRowRequest = QueryBeforeRowRequest
+    AfterRowRequest = QueryAfterRowRequest
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.UpdateChangedFields = False
-    UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvRefreshDelete, uvCountUpdatedRecords]
+    UpdateOptions.EnableDelete = False
+    UpdateOptions.EnableInsert = False
+    UpdateOptions.EnableUpdate = False
     UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.CheckRequired = False
     UpdateOptions.UpdateTableName = 'tOrders'
     UpdateOptions.KeyFields = 'OrderID'
     UpdateOptions.AutoIncFields = 'OrderID'
@@ -843,7 +801,6 @@ object OrdersT2: TOrdersT2
       '      ,o.[ReplacementPrice]  '
       '      ,o.[Reference]'
       '      ,o.[Flag]'
-      '      ,0 as Status'
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
       ' '
@@ -860,6 +817,8 @@ object OrdersT2: TOrdersT2
         'ullif(:DetailNum, '#39#39'), o.DetailNumber) + '#39'%'#39'))       '
       '   '
       '   and o.isCancel = isnull(nullif(:isCancel, -1), o.isCancel)'
+      '   '
+      '   !OrderDate'
       '   '
       '  order by  o.[OrderID]  '
       '   ')
@@ -895,10 +854,14 @@ object OrdersT2: TOrdersT2
       item
         Value = ''
         Name = 'PRICELOGO'
+      end
+      item
+        Value = Null
+        Name = 'ORDERDATE'
       end>
-    object QueryStatus: TIntegerField
-      FieldName = 'Status'
-      OnGetText = QueryStatusGetText
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
+      OnGetText = QueryFlagGetText
     end
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -1064,9 +1027,6 @@ object OrdersT2: TOrdersT2
       Origin = 'updDatetime'
       ReadOnly = True
     end
-    object QueryFlag: TIntegerField
-      FieldName = 'Flag'
-    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1079,7 +1039,7 @@ object OrdersT2: TOrdersT2
     Top = 270
     object actCancelRequest: TAction
       Category = 'Action'
-      Caption = #1047#1072#1087#1088#1086#1089#1080#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
+      Caption = #1047#1072#1087#1088#1086#1089' '#1086#1090#1082#1072#1079#1072
       Hint = #1047#1072#1087#1088#1086#1089#1080#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
       OnExecute = actCancelRequestExecute
     end
@@ -1131,29 +1091,6 @@ object OrdersT2: TOrdersT2
       OnExecute = actShowMessageExecute
     end
   end
-  object ppMain: TUniPopupMenu
-    OnPopup = ppMainPopup
-    Left = 101
-    Top = 218
-    object N1: TUniMenuItem
-      Action = actCancelRequest
-    end
-    object N3: TUniMenuItem
-      Action = actShowMessage
-    end
-    object N5: TUniMenuItem
-      Caption = '-'
-    end
-    object N2: TUniMenuItem
-      Action = actProtocol
-    end
-    object N4: TUniMenuItem
-      Caption = '-'
-    end
-    object N6: TUniMenuItem
-      Action = actRefreshAll
-    end
-  end
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
@@ -1163,7 +1100,7 @@ object OrdersT2: TOrdersT2
       ' WHERE OrderID  = :OLD_OrderID')
     FetchRowSQL.Strings = (
       'SELECT StatusID, '
-      '       StatusName,'
+      '/*       StatusName,'
       '       PricePurchaseF,'
       '       AmountPurchaseF,'
       '       ReplacementMakeLogo,'
@@ -1177,9 +1114,9 @@ object OrdersT2: TOrdersT2
       '       VolumeKG,'
       '       isCancel,'
       '       Warning,'
-      '       Comment,'
+      '       Comment,*/'
       '       Flag'
-      '  FROM vCustomerOrders'
+      '  FROM tOrders (nolock)'
       ' WHERE OrderID = :OrderID')
     Left = 498
     Top = 255
@@ -1242,11 +1179,6 @@ object OrdersT2: TOrdersT2
     DataSet = qPriceLogo
     Left = 650
     Top = 377
-  end
-  object ppExecute: TUniPopupMenu
-    ScreenMask.ShowMessage = False
-    Left = 210
-    Top = 218
   end
   object UniImageListAdapter: TUniImageListAdapter
     UniImageList = UniImageList

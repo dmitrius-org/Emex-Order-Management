@@ -370,7 +370,7 @@ begin
   GridExt.SortColumnCreate(SearchGrid);
 
   js := '<span class="column-info">  '+
-        '<span>ColName</span>     '+
+        '<span>ColName</span>        '+
        // '<form class="column-info" method="post" action=""> '+
         '' +
        // '<button type="button" onclick="clickInfoButton(''ColInfo'')" style="border: 0; background: none;"> '+
@@ -415,18 +415,18 @@ begin
     MakeLogoGridShow;
   end;
 
-  if EventName = 'clickInfoButton' then
-  begin
-    logger.Info('TSearchF.SearchGridAjaxEvent Params: ' + Params.Values['P1']);
-
-    FInfoButton := True;
-
-    with SearchGrid.JSInterface do
-    begin
-      JSCall('getStore().sorters.clear', []);
-      //JSCall('getStore().reload', []);
-    end;
-  end;
+//  if EventName = 'clickInfoButton' then
+//  begin
+//    logger.Info('TSearchF.SearchGridAjaxEvent Params: ' + Params.Values['P1']);
+//
+//    FInfoButton := True;
+//
+//    with SearchGrid.JSInterface do
+//    begin
+//      JSCall('getStore().sorters.clear', []);
+//      //JSCall('getStore().reload', []);
+//    end;
+//  end;
 
   if EventName = 'MakeLogoPanelVisibleFalse' then
   begin

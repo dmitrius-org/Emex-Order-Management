@@ -142,7 +142,7 @@ begin
   Emex.Connection.ExecSQL(
                     ' insert pAccrualAction (Spid, ObjectID, StateID, Retval) ' +
                     ' Select @@Spid, OrderID, StatusID, 0        '+
-                    '   from vOrderStateSyncByOrderNum (nolock)  ');
+                    '   from vOrderStateSyncByOrderNum  ');
 
   Emex.OrderStateSyncByOrderNum;
 end;

@@ -15,7 +15,7 @@ uses
   uCommonType, uniButton, uniBitBtn, uniLabel, uniDBComboBox,
   uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
-  System.Generics.Collections, System.MaskUtils;
+  System.Generics.Collections, System.MaskUtils, uniDateTimePicker;
 
 
 type
@@ -49,17 +49,13 @@ type
     DataSource: TDataSource;
     actMain: TUniActionList;
     actCancelRequest: TAction;
-    ppMain: TUniPopupMenu;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
     fBrief: TUniEdit;
     fisAdmin: TUniCheckBox;
     actRefreshAll: TAction;
-    N6: TUniMenuItem;
     fisBlock: TUniCheckBox;
-    UniPanel: TUniPanel;
-    ToolBar: TUniToolBar;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
@@ -87,7 +83,6 @@ type
     pFilter: TUniPanel;
     gbFilter: TUniGroupBox;
     UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     qStatus: TFDQuery;
@@ -97,7 +92,6 @@ type
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     UniLabel4: TUniLabel;
-    ppExecute: TUniPopupMenu;
     QueryStatusID: TFMTBCDField;
     QueryFlag: TIntegerField;
     QueryWarning: TWideStringField;
@@ -109,8 +103,6 @@ type
     QueryReplacementManufacturer: TWideStringField;
     UniImageListAdapter: TUniImageListAdapter;
     actProtocol: TAction;
-    N2: TUniMenuItem;
-    UniToolButton1: TUniToolButton;
     UniImageList: TUniImageList;
     UniImageList32: TUniImageList;
     actFilter: TAction;
@@ -119,9 +111,7 @@ type
     actUnselect: TAction;
     QueryDetailName: TWideStringField;
     fStatus2: TUniCheckComboBox;
-    fPriceLogo: TUniCheckComboBox;
     qPriceLogoPriceLogo: TWideStringField;
-    N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
     fDetailNum: TUniEdit;
@@ -139,10 +129,10 @@ type
     QueryDeliveryRestTermSupplier: TIntegerField;
     QueryOrderNum: TWideStringField;
     actShowMessage: TAction;
-    N1: TUniMenuItem;
-    N3: TUniMenuItem;
-    N5: TUniMenuItem;
-    QueryStatus: TIntegerField;
+    fOrderDate: TUniDateTimePicker;
+    UniLabel8: TUniLabel;
+    UniPanel: TUniPanel;
+    btnCancel: TUniBitBtn;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -175,9 +165,16 @@ type
     procedure GridBodyDblClick(Sender: TObject);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
-    procedure QueryStatusGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
+    procedure QueryFlagGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryBeforeRowRequest(DataSet: TFDDataSet);
+    procedure QueryBeforeGetRecords(DataSet: TFDDataSet);
+    procedure QueryAfterRowRequest(DataSet: TFDDataSet);
+    procedure QueryAfterGetRecord(DataSet: TFDDataSet);
+    procedure QueryAfterRefresh(DataSet: TDataSet);
+    procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest;
+      var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -194,6 +191,8 @@ type
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
     procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
 
+    procedure CancelRequest();
+
     /// <summary>
     /// StateActionMenuCreate - Формирование списка меню/действий для состояния
     /// </summary>
@@ -205,7 +204,7 @@ type
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
     procedure FilterStatusCreate();
-    procedure FilterPriceLogoCreate();
+//    procedure FilterPriceLogoCreate();
 
   public
     { Public declarations }
@@ -226,19 +225,54 @@ type
 implementation
 
 uses
-  MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main, ServerModule//, uOrdersMessageF
-  , uOrdersMessageF;
+  MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main,
+  ServerModule, uOrdersMessageF, uError_T, uGridUtils;
 
   var screenmask: Boolean;
-      var Marks: TMarks;
+  var Marks: TMarks;
 
 {$R *.dfm}
 
 procedure TOrdersT2.actCancelRequestExecute(Sender: TObject);
 begin
-    OrdersMessageF.FormAction := TFormAction.acCancel;
-    OrdersMessageF.ID:=QueryOrderID.AsInteger;
-    OrdersMessageF.ShowModal(OrdersMessageFCallBack);
+  //OrdersMessageF.FormAction := TFormAction.acCancel;
+  //OrdersMessageF.ID:=QueryOrderID.AsInteger;
+  //OrdersMessageF.ShowModal(OrdersMessageFCallBack);
+
+  MessageDlg('Вы действительно хотите отказаться от выбранных деталей?' , mtConfirmation, mbYesNo,
+  procedure(Sender: TComponent; Res: Integer)
+  begin
+    case Res of
+      mrYes : CancelRequest;
+      mrNo  : Exit;
+    end;
+  end);
+
+
+
+end;
+
+procedure TOrdersT2.CancelRequest;
+begin
+  logger.Info('actCancelRequestExecute:') ;
+
+  Sql.Exec(' exec CustomerOrderCancelRequest  ', [], []);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+  var ServerErr:integer;
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+    //MessageDlg('Запрос успешно выполнен! ', TMsgDlgType.mtConfirmation, mbOK);
+    OrdersMessageFCallBack(self, mrOk)
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
 end;
 
 procedure TOrdersT2.actDeleteExecute(Sender: TObject);
@@ -250,12 +284,12 @@ end;
 procedure TOrdersT2.actFilterClearExecute(Sender: TObject);
 begin
   fStatus2.ClearSelection;
-  fPriceLogo.ClearSelection;
 
   FFilterTextStatus := '';
   FFilterTextPriceLogo := '';
   FFilterTextClient := '';
 
+  fOrderDate.Text:= '';
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
@@ -283,7 +317,6 @@ begin
   GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
-
 procedure TOrdersT2.actProtocolExecute(Sender: TObject);
 begin
   OrdersProtocol_T.ID:= Integer(QueryOrderID.Value);
@@ -297,9 +330,9 @@ end;
 
 procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
-    OrdersMessageF.FormAction := TFormAction.acMessage;
-    OrdersMessageF.ID:=QueryOrderID.AsInteger;
-    OrdersMessageF.ShowModal(OrdersMessageFCallBack);
+  OrdersMessageF.FormAction := TFormAction.acMessage;
+  OrdersMessageF.ID:=QueryOrderID.AsInteger;
+  OrdersMessageF.ShowModal(OrdersMessageFCallBack);
 end;
 
 procedure TOrdersT2.DoHideMask;
@@ -312,20 +345,20 @@ begin
   UniSession.Synchronize;
 end;
 
-procedure TOrdersT2.FilterPriceLogoCreate;
-begin
-  qPriceLogo.Open(); // используется в фильтре PriceLogo
-
-  fPriceLogo.Clear;
-  qPriceLogo.First;
-  while not qPriceLogo.Eof do
-  begin
-    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
-    qPriceLogo.Next;
-  end;
-
-  fPriceLogo.Refresh;
-end;
+//procedure TOrdersT2.FilterPriceLogoCreate;
+//begin
+////  qPriceLogo.Open(); // используется в фильтре PriceLogo
+////
+////  fPriceLogo.Clear;
+////  qPriceLogo.First;
+////  while not qPriceLogo.Eof do
+////  begin
+////    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
+////    qPriceLogo.Next;
+////  end;
+////
+////  fPriceLogo.Refresh;
+//end;
 
 procedure TOrdersT2.FilterStatusCreate;
 begin
@@ -404,10 +437,6 @@ begin
   else
     FStatus := '';
 
-  if FFilterTextPriceLogo <> '' then FPriceLogo := ' and PriceLogo in (' + FFilterTextPriceLogo + ')'
-  else
-    FPriceLogo := '';
-
   if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
   else
     FClient := '';
@@ -425,14 +454,17 @@ begin
     Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
   end;
 
+  if (fOrderDate.Text <> '') and (fOrderDate.Text <> '30.12.1899') then
+     Query.MacroByName('OrderDate').Value := ' and o.OrderDate = '''   + FormatDateTime('yyyymmdd', fOrderDate.DateTime) + ''''
+  else
+     Query.MacroByName('OrderDate').Value := '';
+
   Query.MacroByName('Status').Value :=  FStatus;
   Query.MacroByName('PriceLogo').Value := FPriceLogo;
   Query.ParamByName('OrderNum').Value := fOrderNum.Text;
   Query.ParamByName('DetailNum').Value := fDetailNum.Text;
   Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
-
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
-
   Query.Open();
 
   logger.Info('GridOpen End');
@@ -440,22 +472,26 @@ end;
 
 procedure TOrdersT2.GridSelectionChange(Sender: TObject);
 begin
- // Marks.Select;
+  Marks.Select;
  // GetMarksInfo;
 end;
 
 procedure TOrdersT2.OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
 begin
+  logger.Info('OrdersMessageFCallBack begin');
   if AResult <> mrOK then Exit;
 
 //  try
-    if OrdersMessageF.FormAction = acMessage then
+   // if OrdersMessageF.FormAction = acMessage then
     begin
-      Query.Edit ;
-      Query.Post;
+      //Query.Edit ;
+      //Query.Post;
+
+      Marks.DataRefresh;
 
 //      ToastOK('Комментарий успешно сохранен!', unisession);
     end;
+    logger.Info('OrdersMessageFCallBack end');
 //  except
 //    on E: Exception do
 //      logger.Info('TOrdersT2.OrdersMessageFCallBack Ошибка: ' + e.Message);
@@ -484,10 +520,33 @@ procedure TOrdersT2.ppMainPopup(Sender: TObject);
 begin
   actProtocol.Visible := Query.RecordCount>0;
 
-
   actShowMessage.Visible:= (Query.RecordCount>0 ) and
                           ((Query.FieldByName('Flag').AsInteger and 32) = 32);
+end;
 
+procedure TOrdersT2.QueryAfterGetRecord(DataSet: TFDDataSet);
+begin
+  logger.Info('QueryAfterGetRecord: ');
+end;
+
+procedure TOrdersT2.QueryAfterRefresh(DataSet: TDataSet);
+begin
+  logger.Info('QueryAfterRefresh: ');
+end;
+
+procedure TOrdersT2.QueryAfterRowRequest(DataSet: TFDDataSet);
+begin
+  logger.Info('QueryAfterRowRequest: ');
+end;
+
+procedure TOrdersT2.QueryBeforeGetRecords(DataSet: TFDDataSet);
+begin
+  logger.Info('QueryBeforeGetRecords: ');
+end;
+
+procedure TOrdersT2.QueryBeforeRowRequest(DataSet: TFDDataSet);
+begin
+  logger.Info('QueryBeforeRowRequest: ');
 end;
 
 procedure TOrdersT2.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -498,6 +557,24 @@ begin
   end
   else
     Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+var t: string;
+begin
+  logger.Info('QueryFlagGetText: ');
+  t := '';
+  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
+  begin
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
+  end;
+
+  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
+  begin
+    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа"><i class="fa fa-ban"></i></span>';
+  end;
+
+  Text := t;
 end;
 
 procedure TOrdersT2.QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -532,23 +609,11 @@ begin
     Text := Sender.AsString;
 end;
 
-procedure TOrdersT2.QueryStatusGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
-var t: string;
+procedure TOrdersT2.QueryUpdateRecord(ASender: TDataSet;
+  ARequest: TFDUpdateRequest; var AAction: TFDErrorAction;
+  AOptions: TFDUpdateRowOptions);
 begin
-  t := '';
-  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
-  begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
-  end;
-
-  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
-  begin
-    //t := t + '<span class="x-request-cancellation hint hint--top hint-info" data-hint="Запрошен отказ по позиции!"><i class="fa fa-times-circle"></i></span>';
-    t := t + '<span class="x-request-cancellation"><i class="fa fa-times-circle"></i></span>';
-  end;
-
-  Text := t;
-
+  logger.Info('QueryUpdateRecord: ');
 end;
 
 procedure TOrdersT2.GridBodyDblClick(Sender: TObject);
@@ -570,15 +635,13 @@ procedure TOrdersT2.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer)
 begin
   ACurrColumn := Column;
 
-
 //  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions + [boDisableMouseRightClick];
 //  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
 
-  ppMain.Popup(X, Y, Grid);
+ // ppMain.Popup(X, Y, Grid);
 
 //  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions - [boDisableMouseRightClick];
 //  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true; }');
-
 end;
 
 procedure TOrdersT2.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
@@ -602,63 +665,15 @@ begin
 //  end;
 
 
-  if (Query.FieldByName('Flag').AsInteger and 4) > 0 then
+  if (Query.FieldByName('Flag').AsInteger and 4) > 0 then // отказан
   begin
     Attribs.Font.Color:=clGray;
   end;
 end;
 
 procedure TOrdersT2.GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
-//var
-//  i: integer;
-//  //dbg: TDBGrid;
-//  SqlText: string;
-//  Column: TUniBaseDBGridColumn;
 begin
-//  if not (AGrid is TUniDBGrid) then Exit;
-//
-//  if AOperation=tGridLayout.glSave then
-//    for i := 0 to AGrid.Columns.count-1 do
-//    begin
-//
-//      Sql.Exec('delete from tGridOptions where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[AForm.ClassName +'.' + AGrid.Name]);
-//      if i = 0 then
-//        SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
-//      else
-//        SqlText:= SqlText + ' Union all ';
-//
-//       SqlText:= SqlText +
-//       Format ('select dbo.GetUserID(), ''%s'', ''%s'', %d, %d, %d',
-//       [AForm.ClassName +'.' + AGrid.Name,
-//        AGrid.Columns[i].FieldName,
-//        AGrid.Columns[i].Index,
-//        AGrid.Columns[i].Width,
-//        AGrid.Columns[i].Visible.ToInteger
-//        ]);
-//
-//        logger.Info(SqlText);
-//        Sql.Exec(SqlText,[],[]);
-//    end
-//  else
-//  if AOperation=tGridLayout.glLoad then
-//  begin
-//    Sql.Q.Close;
-//    Sql.Open('select * from tGridOptions (nolock) where UserID = dbo.GetUserID() and Grid =:Grid',
-//            ['Grid'],
-//            [AForm.ClassName +'.' + AGrid.Name]);
-//    Sql.Q.First;
-//    for i:= 0 to Sql.Q.RecordCount-1 do
-//    begin
-//      Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
-//      Column.Index := Sql.Q.FieldByName('Position').AsInteger;
-//      Column.Width := Sql.Q.FieldByName('Width').AsInteger;
-//      Column.Visible := Sql.Q.FieldByName('Visible').Value;
-//      Sql.Q.Next;
-//    end;
-//  end;
-//
-//  if AShowResultMessage = True then
-//    MessageOKToast ('Успешно выполнено!');
+
 end;
 
 //procedure TOrdersT2.Select;
@@ -719,13 +734,14 @@ begin
 
   actSelect.Caption := '';
   actUnSelect.Caption := '';
-
-  //ClipBoard:=TClipBoard.Create;
+  fOrderDate.Text     := '';
 
   FilterStatusCreate;
-  FilterPriceLogoCreate();
 
   // индексы для сортировки
+    // индексы для сортировки
+//  GridExt.SortColumnCreate(Grid);
+
   with Query do
   begin
     for I := 0 to Query.FieldCount-1 do
@@ -751,22 +767,20 @@ begin
     end;
   end;
 
-
   // восстановление настроек грида для пользователя
   GridLayout(Self, Grid, tGridLayout.glLoad, False);
 
  // actExecuteActionEnabled.Enabled  := Grid.SelectedRows.Count > 0;
  // actExecuteActionRollback.Enabled := Grid.SelectedRows.Count > 0;
 
-//  // объект для упраления метками
-//  Marks := tMarks.Create(Grid);
-//  Marks.Clear;
+  // объект для упраления метками
+  Marks := tMarks.Create(Grid);
+  Marks.Clear;
 
- /// GetMarksInfo;
+  //GetMarksInfo;
 
   logger.Info('UniFrameCreate End');
 end;
-
 
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);
 begin
@@ -775,7 +789,6 @@ end;
 
 procedure TOrdersT2.UniFrameReady(Sender: TObject);
 begin
-
   qPriceLogo.Open();
 end;
 
@@ -796,7 +809,6 @@ begin
 end;
 
 { tMarks }
-
 constructor tMarks.Create(AGrid: TUniDBGrid);
 begin
   if Assigned(AGrid) then
@@ -813,8 +825,6 @@ procedure tMarks.DataRefresh;
 var Key: Integer;
     BM : TBookmark;
 begin
-  logger.Info('tMarks.DataRefresh Begin');
-
   begin
       FGrid.DataSource.DataSet.DisableControls;
       BM := FGrid.DataSource.DataSet.GetBookmark;
@@ -827,27 +837,23 @@ begin
             FGrid.RefreshCurrentRow();
           end;
         end;
-
       finally
         FGrid.DataSource.DataSet.GotoBookmark(BM);
         FGrid.DataSource.DataSet.FreeBookmark(BM);
         FGrid.DataSource.DataSet.EnableControls;
       end;
   end;
-  logger.Info('tMarks.DataRefresh End');
 end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid= @@Spid', [], [])
+  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid', [], [])
 end;
 
 procedure tMarks.Clear;
 begin
   DeleteInDB();
   FMarks.Clear;
-
-  //FGrid.Refresh;
 end;
 
 destructor tMarks.Destroy;
@@ -867,20 +873,7 @@ begin
 end;
 
 procedure tMarks.Load;
-//var
-//  i: Integer;
 begin
-//  FMarks.Clear;
-//
-//  FQuery.Close;
-//  FQuery.SQL.Text:= 'Select * from tMarks (nolock) where Spid = @@spid';
-//  FQuery.Open();
-//
-//  for i := 0 to FQuery.RecordCount - 1 do
-//  begin
-//    FMarks.Add(FQuery.FieldByName('ID').AsInteger, FQuery.FieldByName('ID').AsInteger);
-//  end;
-
 end;
 
 procedure tMarks.Select();
@@ -896,6 +889,7 @@ begin
   if FGrid.SelectedRows.Count>0 then
   begin
     BM := FGrid.DataSource.DataSet.GetBookmark;
+
     try
       for I := 0 to FGrid.SelectedRows.Count - 1 do
       begin
