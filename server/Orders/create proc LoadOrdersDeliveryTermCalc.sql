@@ -37,96 +37,59 @@ Update p
    set p.ClientID           = o.ClientID
       ,p.OrderDate          = o.OrderDate
       ,p.PriceLogo          = o.PriceLogo
-      ,p.DestinationLogo    = isnull(nullif(o.DestinationLogo, ''), pd.DestinationLogo) 
       ,p.ProfilesDeliveryID = o.ProfilesDeliveryID
+      ,p.DeliveryPlanDateSupplier  =  case 
+	                                    when o.Flag&16>0 
+										  then DATEADD(dd, isnull(o.DeliveryTerm, 0), o.OrderDate)
+                                        when isnull(t.InWorkingDays, 0) = 1 /*срок в рабочих днях*/
+                                          then dbo.AddDaysAndWeekends(o.OrderDate, isnull(t.DeliveryTerm, 0), 1)
+                                          else DATEADD(dd, isnull(t.DeliveryTerm, 0), o.OrderDate)
+                                      end
+      ,p.DeliveryTerm = iif(o.Flag&16>0, isnull(o.DeliveryTerm, 0), isnull(t.DeliveryTerm, 0))
   from pDeliveryTerm p (nolock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-  left join tSupplierDeliveryProfiles pd (nolock)
-         on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
+  left join tPrices t (nolock)
+         on t.Name = o.PriceLogo
  where p.Spid = @@Spid
 
-Update p   
-   set p.DeliveryPlanDateSupplier  =  case 
-                                        when t.DeliveryTerm < 5 -- В прайсах со сроком меньше 5 дней учитывать выходные как не рабочие дни
-                                        then dbo.AddDaysAndWeekends(p.OrderDate, t.DeliveryTerm, 1)
-                                        else DATEADD(dd, t.DeliveryTerm, p.OrderDate)
-                                      end
-      ,p.DeliveryTerm = t.DeliveryTerm
-  from pDeliveryTerm p (nolock)
- inner join tPrices t (nolock)
-         on t.Name = p.PriceLogo
+-- расчет ближайшей дата вылета
+delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
+insert pDeliveryDate 
+      (Spid, ID, OrderDate, ProfilesDeliveryID)
+select @@SPID, 
+       OrderID, 
+       DeliveryPlanDateSupplier,
+	   ProfilesDeliveryID
+  from pDeliveryTerm (nolock)
+ where Spid = @@Spid
+
+exec DeliveryDateCalc  
+
+Update f 
+   set f.DeliveryNextDate = p.DeliveryDate
+  from pDeliveryDate p with (nolock index=ao1)
+ inner join pDeliveryTerm f with (updlock index=ao1)
+         on f.Spid    = @@Spid
+        and f.OrderID = p.ID
  where p.Spid = @@Spid
 
-/*В системе можно выставить несколько дней доставки, поэтому обрабатываем в курсоре*/
-declare @N int
-       ,@Name nvarchar(15)
-
-Declare @DeliveryNextDate table 
-                                 (OrderID           numeric(18,0) 
-                                 ,DeliveryNextDate  datetime       -- Ближайшая дата вылета	
-                                 )
-
-DECLARE cr_Ekv1  CURSOR
-FOR
-      select 1 N,'Понедельник' Name
-union select 2,  'Вторник'
-union select 3,  'Среда'
-union select 4,  'Четверг'
-union select 5,  'Пятница'
-union select 6,  'Суббота'
-union select 7,  'Воскресенье'
-  
-OPEN cr_Ekv1
-FETCH NEXT FROM cr_Ekv1 INTO @N, @Name
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-
-	insert @DeliveryNextDate
-	      (OrderID
-		  ,DeliveryNextDate)
-		   -- Ближайшая дата вылета	
-    select p.OrderID
-	      ,case 
-			 when DATEPART(dw, p.DeliveryPlanDateSupplier) < @N
-			 -- успеваем на этой неделе
-			 then DATEADD(dd, @N - DATEPART(dw, p.DeliveryPlanDateSupplier), p.DeliveryPlanDateSupplier)
-
-			 else (select DATEADD(DAY, @N - DATEPART(WEEKDAY, p2.wkNextDate), p2.wkNextDate)  -- начало недели
-					 from (select DATEADD(wk, 1, p.DeliveryPlanDateSupplier) as wkNextDate) as p2
-				  )
-		   end
-	  from pDeliveryTerm p (nolock)
-	 inner join tSupplierDeliveryProfiles pd (nolock)
-			 on pd.ProfilesDeliveryID = p.ProfilesDeliveryID
-			and pd.DenVyleta like '%'+ @Name +'%'
-	 where p.Spid = @@spid
-
-NEXT_: 
-  
-FETCH NEXT FROM cr_Ekv1 INTO @N, @Name
-END
-  
-CLOSE cr_Ekv1
-DEALLOCATE cr_Ekv1
 
 update p
-      -- Ближайшая дата вылета	
    set   /*Считаем дни запаса до вылета по формуле: (Ближайшая Дата Вылета) - (Плановая Дата Поступления Поставщику)
             Если Остаток Срока до Поступления Поставщику <0, начинаем считать параметр по другому алгоритму: 
             (Ближайшая Дата Вылета) - (Сегодня)
             Считаем до тех пор, пока статус детали не изменится на “Отказ”, или “Отправлено” */
-		  p.DeliveryDaysReserve      = case
-		                                    when datediff(dd, p.DeliveryPlanDateSupplier, p.DeliveryNextDate) > 0
-											  then datediff(dd, p.DeliveryPlanDateSupplier, p.DeliveryNextDate)
-											  else datediff(dd, p.DeliveryNextDate, GetDate()) 
-		                               end
+		p.DeliveryDaysReserve   = case
+		                            when datediff(dd, p.DeliveryPlanDateSupplier, p.DeliveryNextDate) > 0
+								    then datediff(dd, p.DeliveryPlanDateSupplier, p.DeliveryNextDate)
+									else datediff(dd, p.DeliveryNextDate, GetDate()) 
+		                          end
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-        and o.StatusID not in (8	--Send
-                              ,12--InCancel 
+        and o.StatusID not in (8  -- Send
+                              ,12 -- InCancel 
      	                      )
  where p.Spid = @@spid
 
@@ -136,6 +99,7 @@ if @IsSave = 1
        set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier
           ,o.DeliveryNextDate         = p.DeliveryNextDate
 		  ,o.DeliveryDaysReserve      = p.DeliveryDaysReserve -- Дней запаса до вылета
+		  ,o.DeliveryTerm             = iif(o.Flag&16>0, o.DeliveryTerm, p.DeliveryTerm) -- срок доставки
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 
@@ -147,6 +111,6 @@ if @IsSave = 1
 go
   grant exec on LoadOrdersDeliveryTermCalc to public
 go
-exec setOV 'LoadOrdersDeliveryTermCalc', 'P', '20240322', '1'
+exec setOV 'LoadOrdersDeliveryTermCalc', 'P', '20240424', '4'
 go
   

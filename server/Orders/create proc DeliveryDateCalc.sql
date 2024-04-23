@@ -1,9 +1,11 @@
 drop proc if exists DeliveryDateCalc  
 /*
   DeliveryDateCalc - расчет ближайшей дата вылета
+
+  вызываем из CustomerPriceCalc
   
-  Входящий набор данных: pDeliveryTerm
-  Результат расчета:     pDeliveryTerm
+  Входящий набор данных: pDeliveryDate
+  Результат расчета:     pDeliveryDate
 */
 go
 create proc DeliveryDateCalc

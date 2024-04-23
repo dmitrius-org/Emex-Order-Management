@@ -44,13 +44,11 @@ SELECT o.[OrderID]
       ,o.[Profit]
       ,o.[Income]
       ,o.[IncomePRC]
-      --,o.[PlanDate]
-      --,o.[Rest]
-      ,o.[DeliveryPlanDateSupplier]
+      ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
       ,case 
-         when isnull(o.DeliveredDateToSupplier, '') = ''
-         then DATEDIFF(dd, getDate(), o.[DeliveryPlanDateSupplier])
-         else DATEDIFF(dd, o.DeliveredDateToSupplier, o.[DeliveryPlanDateSupplier])
+         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
+         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
+         else 0
        end  [DeliveryRestTermSupplier] -- Остаток срока до поступления поставщику	
       ,o.[DeliveredDateToSupplier]     -- Доставлена поставщику
       ,case 
@@ -106,7 +104,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20240419', '2'
+exec setOV 'vCustomerOrders', 'V', '20240423', '3'
 go
  
 -- Описание таблицы

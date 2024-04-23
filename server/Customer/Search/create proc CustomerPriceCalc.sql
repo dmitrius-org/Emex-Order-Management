@@ -56,6 +56,7 @@ create table #Price
  -- данные с профиля поставщика
 ,ProfilesDeliveryID  numeric(18, 0)
 ,Delivery            int
+,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
 
 ,RetVal              int
 )
@@ -117,7 +118,8 @@ insert #Price
       ,PDVolumeKG      
       ,DestinationLogo
 	  ,ProfilesDeliveryID
-	  ,Delivery -- наш срок поставки, показываем клиенту
+	  ,Delivery -- дополнительный срок поставки с поставщика
+	  ,GuaranteedDay
 	  )
 select p.ID,
        p.MakeName, 
@@ -148,7 +150,8 @@ select p.ID,
        pd.VolumeKG,
        pd.DestinationLogo,
 	   pd.ProfilesDeliveryID,
-	   pd.Delivery
+	   pd.Delivery,
+	   p.GuaranteedDay
   from pFindByNumber p (nolock)
  inner join tProfilesCustomer pc (nolock)
          on pc.ClientID = p.ClientID
@@ -196,15 +199,14 @@ Update f
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
         and f.ID   = p.ID
- --*/
 
--- расчет срока доставки
+-- расчет ближайшей дата вылета
 delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
 insert pDeliveryDate 
       (Spid, ID, OrderDate, ProfilesDeliveryID, Delivery)
 select @@SPID, 
        ID, 
-       cast(getdate() as date),
+	   DATEADD(dd, GuaranteedDay, cast(getdate() as date)),
 	   ProfilesDeliveryID,
 	   isnull(Delivery, 0) -- значение с профиля поставщика
   from #Price (nolock)
@@ -226,5 +228,5 @@ return @RetVal
 go
 grant all on CustomerPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240417', '4'
+exec setOV 'CustomerPriceCalc', 'P', '20240417', '5'
 go

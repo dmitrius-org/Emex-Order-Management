@@ -97,6 +97,7 @@ declare @r int = 0
         ,Discount
         --
         ,ClientOrderNum
+		,DeliveryTerm
 
 		,DetailID
 		,CustomerSubId
@@ -117,7 +118,7 @@ declare @r int = 0
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
-        ,null --ProfilesDeliveryID--
+        ,pd.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
 		,b.Make		             -- Бренд
 		,b.PartNameRus           -- наименование детали
@@ -130,6 +131,7 @@ declare @r int = 0
         ,b.Discount-- Скидка  
         --
         ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
+		,b.GuaranteedDay
         ,b.BasketID -- DetailID 
 		,b.BasketID -- CustomerSubId
 
@@ -137,6 +139,14 @@ declare @r int = 0
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
+
+   --inner join tClients c (nolock)
+   --        on c.ClientID = b.ClientID 
+   inner join tProfilesCustomer pc (nolock)
+           on pc.ClientID = b.ClientID
+   inner join tSupplierDeliveryProfiles pd (nolock)
+           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+          and pd.DestinationLogo    = b.DestinationLogo
    where m.spid = @@spid   
      and m.Type = 6--Корзина
    -- - - -
@@ -205,16 +215,23 @@ declare @r int = 0
    inner join tBasket b (rowlock)
            on b.BasketID = i.ID
 
----- расчет финнасовых показателей
-delete pOrdersFinIn from pOrdersFinIn where spid = @@Spid
-insert pOrdersFinIn
-      (Spid
-      ,OrderID)
-Select @@spid
-      ,OrderID
-  from @ID
+  -- расчет финнасовых показателей
+  delete pOrdersFinIn from pOrdersFinIn where spid = @@Spid
+  insert pOrdersFinIn
+        (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+  
+  exec OrdersFinCalc @IsSave = 1
 
-exec OrdersFinCalc @IsSave = 1
+  -- расчет сроков дотавки
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+  
+  exec LoadOrdersDeliveryTermCalc @IsSave = 1
+
 
   exit_:
 
@@ -222,6 +239,6 @@ exec OrdersFinCalc @IsSave = 1
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240418', '4'
+exec setOV 'OrderCreateFromBasket', 'P', '20240423', '5'
 go
  

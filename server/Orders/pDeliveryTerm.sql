@@ -9,8 +9,8 @@ create table pDeliveryTerm
 ,OrderID                   numeric(18,0)  
 ,ClientID                  numeric(18,0)  -- Клиент	
 ,OrderDate                 datetime       -- Дата заказа	
-,PriceLogo                 nvarchar(30)
-,DeliveryTerm              int
+,PriceLogo                 nvarchar(30)   -- Срок доставки
+,DeliveryTerm              int 
 ,DestinationLogo	       nvarchar(30)
 ,ProfilesDeliveryID        numeric(18, 0)
 	

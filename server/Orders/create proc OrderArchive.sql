@@ -84,6 +84,7 @@ INSERT INTO [hOrders]
       ,[hInDatetime]
       ,DateDeparture
       ,DaysInWork   
+	  ,DeliveryTerm
       )
 select distinct
        o.[ClientID]
@@ -157,6 +158,7 @@ select distinct
       ,GetDate()
       ,o.DateDeparture
       ,o.DaysInWork   
+	  ,o.DeliveryTerm
   from pMovement p (nolock)
  inner join tOrders o (rowlock) 
          on p.OrderNumber      = o.EmexOrderID
@@ -172,6 +174,6 @@ select distinct
 GO
 grant exec on OrderArchive to public
 go
-exec setOV 'OrderArchive', 'P', '20240323', '1'
+exec setOV 'OrderArchive', 'P', '20240323', '2'
 go
  

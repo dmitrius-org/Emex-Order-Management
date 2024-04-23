@@ -72,6 +72,7 @@ begin
 	,ParentID                        numeric(18,0)  -- Родительский идентификатор заказа. Проставляется при дроблении заказа.
 	,FileDate                        datetime       -- Дата файла заказа
 	,ClientOrderNum                  int            -- Номер заказа	клиента
+	,DeliveryTerm	                 int            -- Срок доставки
   
 	-- блок фин. показателей  
 	,Margin                          money          -- Наценка из прайса	

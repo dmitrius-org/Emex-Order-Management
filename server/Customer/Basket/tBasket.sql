@@ -43,3 +43,5 @@ exec setOV 'tBasket', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tBasket', @desc = 'Корзина'
+
+select * from tBasket

@@ -93,6 +93,7 @@ as
                ,isActive
                ,ExtraKurs
                ,ClientID
+			   ,isMyDelivery
                )
          select sdp.Name
                ,sdp.ProfilesDeliveryID
@@ -103,6 +104,7 @@ as
                ,1
                ,2
                ,@ClientID
+			   ,1
            from tSupplierDeliveryProfiles sdp (nolock)
            left join tClientType ct (nolock)
                   on ct.ClientTypeID=@ClientTypeID

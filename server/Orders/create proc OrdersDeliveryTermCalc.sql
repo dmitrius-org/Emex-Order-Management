@@ -93,6 +93,8 @@ END
 CLOSE cr_Ekv1
 DEALLOCATE cr_Ekv1
 
+
+
 update p
        -- Ближайшая дата вылета	
    set p.DeliveryNextDate2 = d.DeliveryNextDate

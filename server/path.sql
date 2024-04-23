@@ -1,1 +1,2 @@
-alter table tSettings alter column Val               nvarchar(1024)          -- наш срок поставки, показываем клиенту
+alter table tOrders add DeliveryTerm	int
+alter table hOrders add DeliveryTerm	int

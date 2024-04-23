@@ -328,7 +328,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'PlanDate'
+          FieldName = 'DeliveryPlanDateSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
@@ -337,7 +337,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'Rest'
+          FieldName = 'DeliveryRestToCustomer'
           Title.Alignment = taCenter
           Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
@@ -346,7 +346,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'DateDeliveredToSupplier'
+          FieldName = 'DeliveredDateToSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
@@ -355,7 +355,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'DaysReserveDeparture'
+          FieldName = 'DeliveryDaysReserve'
           Title.Alignment = taCenter
           Title.Caption = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072
           Width = 100
@@ -364,7 +364,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'NextDateDeparture'
+          FieldName = 'DeliveryNextDate'
           Title.Alignment = taCenter
           Title.Caption = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
           Width = 100
@@ -373,7 +373,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'DateDeliveryToCustomer'
+          FieldName = 'DeliveryDateToCustomer'
           Title.Alignment = taCenter
           Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
           Width = 100
@@ -382,7 +382,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'TermDeliveryToCustomer'
+          FieldName = 'DeliveryTermToCustomer'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
           Width = 100
@@ -391,7 +391,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'RestDeliveryToCustomer'
+          FieldName = 'DeliveryRestToCustomer'
           Title.Alignment = taCenter
           Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
           Width = 100

@@ -45,16 +45,16 @@ Select @@spid
       ,o.ClientID
       ,o.CustomerPriceLogo
       ,o.Quantity
-      ,o.Price                -- цена продажи в рублях
+      ,o.Price                  -- цена продажи в рублях
       ,isnull(nullif(o.PricePurchaseF, 0), o.PricePurchase) -- цена закупки в долларах
       ,isnull(o.WeightKG,  0)
       ,isnull(o.VolumeKG , 0)
       ,isnull(p.WeightKGF, 0)
       ,isnull(p.VolumeKGF, 0)
       ,isnull(o.Taxes, c.Taxes) -- Комиссия + Налоги
-      ,o.Commission/100         -- Комиссия за оплату  Comission ExtraKurs
-      ,o.Margin/100             -- Наценка             Margin
-      ,o.ExtraKurs/100          -- Комиссия на курс    ExtraKurs
+      ,isnull(o.Commission, 0)/100         -- Комиссия за оплату  Comission ExtraKurs
+      ,isnull(o.Margin, 0)/100             -- Наценка             Margin
+      ,isnull(o.ExtraKurs, 0)/100          -- Комиссия на курс    ExtraKurs
       ,isnull(o.WeightKGAmount, pd.WeightKG)              -- Стоимость кг	
       ,isnull(o.VolumeKGAmount, pd.VolumeKG)              -- Стоимость vкг
       ,o.CommissionAmount       -- Комиссия от продажи	 
@@ -214,7 +214,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20240101', '0'
+exec setOV 'OrdersFinCalc', 'P', '20240423', '1'
 go
  
  
