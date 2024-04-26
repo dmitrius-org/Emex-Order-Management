@@ -1,13 +1,18 @@
 -- сумма не сходится с количеством и ценой
-Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF, PricePurchase, AmountPurchase
+Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF
   from tOrders o (nolock)
  where o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
 
 
 
- Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF, PricePurchase, AmountPurchase
+ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum', PricePurchase, AmountPurchase
   from tOrders o (nolock)
  where o.PricePurchase * o.Quantity <> o.AmountPurchase
+
+
+  Select o.OrderID, Quantity, o.Price * o.Quantity 'calc sum',Price,  o.Amount
+  from tOrders o (nolock)
+ where o.Price * o.Quantity <> o.Amount
 
 /* -- исправление
   update o 
@@ -20,6 +25,12 @@ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurcha
      set o.AmountPurchase = o.Quantity * o.PricePurchase
     from tOrders o 
    where o.PricePurchase * o.Quantity <> o.AmountPurchase
+
+  update o 
+     set o.Amount = o.Quantity * o.Price
+    from tOrders o 
+   where o.Price * o.Quantity <> o.Amount
+
   */
 
 

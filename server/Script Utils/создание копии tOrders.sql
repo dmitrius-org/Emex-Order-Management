@@ -1,4 +1,4 @@
-USE [PriceDB]
+--USE [PriceDB]
 GO
 
 SELECT [OrderID]
@@ -70,7 +70,7 @@ SELECT [OrderID]
       ,[Taxes]
       ,[WeightKGAmount]
       ,[VolumeKGAmount]
-  into tOrders_20242001
+  into tOrders_20240425
   FROM [dbo].[tOrders]
 
 GO

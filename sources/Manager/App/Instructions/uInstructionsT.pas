@@ -1,4 +1,4 @@
-unit uInstructionsT;
+п»їunit uInstructionsT;
 
 interface
 
@@ -60,25 +60,25 @@ type
     IsEdit: Boolean;
 
     /// <summary>
-    ///  ConstructNavigator - создание меню
+    ///  ConstructNavigator - СЃРѕР·РґР°РЅРёРµ РјРµРЅСЋ
     ///</summary>
     procedure ConstructNavigator;
 
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure EditFCallBack(Sender: TComponent; AResult:Integer);
     function FindNodeByID(AID: Integer): TUniTreeNode;
 
     /// <summary>
-    ///  SetButtonEnabled - Управление доступностью меню редактирования сруктуры
+    ///  SetButtonEnabled - РЈРїСЂР°РІР»РµРЅРёРµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊСЋ РјРµРЅСЋ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ СЃСЂСѓРєС‚СѓСЂС‹
     ///</summary>
     procedure SetButtonEnabled;
     procedure SetEditorEnabled;
 
 
     procedure SetArticleEditEnabled;
-    procedure ArticleSave(Atext: String);
+    procedure ArticleSave(AInstructionID:Integer; Atext: String);
 
     procedure SetArticleData;
   public
@@ -169,24 +169,23 @@ end;
 procedure TInstructionsT.actSaveExecute(Sender: TObject);
 begin
   isEdit:=False;
-  UniSession.AddJS('ajaxRequest(' + edt1.JSName + ', "myCustomSaveButton", ["text="+tinyMCE.get("myEditor").getContent()])');
+
+  UniSession.AddJS('ajaxRequest(' + edt1.JSName + ', "myCustomSaveButton", ["text="+tinyMCE.get("myEditor").getContent(), "InstructionID=' + SelectedNode.tag.ToString +'"])');
 end;
 
-procedure TInstructionsT.ArticleSave(Atext: String);   var sqltext: string;
+procedure TInstructionsT.ArticleSave(AInstructionID:Integer; Atext: String);   var sqltext: string;
 begin
-    sqltext :=  ' declare @R      int                '+
-                '                                    '+
+    sqltext :=  ' declare @R      int  '+
+                ''+
                 ' exec @r = InstructionsDetailEdit            '+
                 '             @InstructionID = :InstructionID '+
                 '            ,@Text          = :Text          '+
-                '                                    '+
-                ' select @r as retcode               '+
-                ' ';
+                ''+
+                ' select @r as retcode ';
 
     Sql.Open(sqltext,
                ['InstructionID','Text'],
-               [SelectedNode.tag,
-                Atext]);
+               [AInstructionID, Atext]);
 
     RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
@@ -242,8 +241,6 @@ begin
       UniMainModule.Query.Next;
     end;
 
-    if True then
-
   finally
     if TreeMenu.Items.Count > 0 then
     begin
@@ -295,12 +292,14 @@ begin
 
   if EventName = 'myCustomSaveButton' then
   begin
-    ArticleSave(Params.Values['text']);
+    actSave.Enabled := False;
+    ArticleSave(Params.Values['InstructionID'].ToInteger, Params.Values['text']);
   end;
 
   if EventName = 'mycustomSaveButtonEnabled' then
   begin
     actSave.Enabled := True;
+    isEdit:=True;
   end;
 end;
 
@@ -389,13 +388,9 @@ procedure TInstructionsT.TreeMenuClick(Sender: TObject);
 begin
 
   if (IsEdit) then
-  if MessageDlg('Изменения в документе не сохранены, сохранить?" ', mtConfirmation, mbYesNo) = mrYes then
+  if MessageDlg('РР·РјРµРЅРµРЅРёСЏ РІ РґРѕРєСѓРјРµРЅС‚Рµ РЅРµ СЃРѕС…СЂР°РЅРµРЅС‹, СЃРѕС…СЂР°РЅРёС‚СЊ?" ', mtConfirmation, mbYesNo) = mrYes then
   begin
-    //
-  end
-  else
-  begin
-
+    actSaveExecute(Sender);
   end;
 
   SelectedNode := TreeMenu.Selected;
@@ -424,7 +419,7 @@ begin
   SetArticleEditEnabled;
 
   edt1.HTML.Clear;
-  edt1.HTML.LoadFromFile('./files/tinymce5/index.html');
+  edt1.HTML.LoadFromFile(UniServerModule.StartPath + '\files\tinymce5\index.html');
 
   js := ' mycustomSaveButtonEnabled = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButtonEnabled", []);' + ' } ;';
   UniSession.JSCode(js);

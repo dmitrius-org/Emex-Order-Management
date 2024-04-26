@@ -123,9 +123,6 @@ object InstructionsT: TInstructionsT
           AlignmentControl = uniAlignmentClient
           ParentAlignmentControl = False
           LayoutConfig.Region = 'north'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 684
           object lblArticle: TUniLabel
             Left = 16
             Top = 8
@@ -154,7 +151,6 @@ object InstructionsT: TInstructionsT
             Caption = ''
             AlignmentControl = uniAlignmentClient
             ParentAlignmentControl = False
-            ExplicitLeft = 288
             DesignSize = (
               393
               43)
@@ -205,8 +201,6 @@ object InstructionsT: TInstructionsT
           TabOrder = 2
           Layout = 'fit'
           LayoutConfig.Region = 'center'
-          ExplicitTop = 49
-          ExplicitHeight = 471
           object edt1: TUniHTMLFrame
             AlignWithMargins = True
             Left = 3
@@ -217,7 +211,6 @@ object InstructionsT: TInstructionsT
             ShowHint = True
             Align = alClient
             OnAjaxEvent = edt1AjaxEvent
-            ExplicitHeight = 465
           end
         end
       end

@@ -22,7 +22,7 @@ object SearchF: TSearchF
     Left = 0
     Top = 0
     Width = 1247
-    Height = 55
+    Height = 49
     Hint = ''
     Align = alTop
     TabOrder = 0
@@ -33,7 +33,7 @@ object SearchF: TSearchF
     OnClick = TopPanelClick
     DesignSize = (
       1247
-      55)
+      49)
     object btnSearch: TUniButton
       Left = 1127
       Top = 12
@@ -53,30 +53,29 @@ object SearchF: TSearchF
       Left = 12
       Top = 12
       Width = 1102
-      Height = 30
+      Height = 37
       Hint = ''
       MaxLength = 40
       Text = ''
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
       EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
+      MinQueryLength = 0
       RemoteFilter = False
-      RemoteQuery = True
+      RemoteQueryCache = False
       LayoutConfig.Height = '30'
       HideTrigger = True
       IconItems = <>
-      OnSelect = edtSearchSelect
       OnKeyDown = edtSearchKeyDown
-      OnEnter = edtSearchEnter
-      OnInputClick = edtSearchInputClick
+      OnClick = edtSearchClick
       OnRemoteQuery = edtSearchRemoteQuery
     end
   end
   object MainPanel: TUniPanel
     Left = 0
-    Top = 55
+    Top = 49
     Width = 1247
-    Height = 563
+    Height = 569
     Hint = ''
     Align = alClient
     TabOrder = 1
@@ -84,11 +83,13 @@ object SearchF: TSearchF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
+    ExplicitTop = 55
+    ExplicitHeight = 563
     object SearchGrid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1247
-      Height = 563
+      Height = 569
       Hint = ''
       ClientEvents.ExtEvents.Strings = (
         
@@ -167,7 +168,6 @@ object SearchF: TSearchF
       OnColumnSort = SearchGridColumnSort
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
-      OnTitleClick = SearchGridTitleClick
       OnAfterLoad = SearchGridAfterLoad
       OnBeforeLoad = SearchGridBeforeLoad
       Columns = <

@@ -83,7 +83,6 @@ object LoginF: TLoginF
       Hint = ''
       PasswordChar = '*'
       MaxLength = 64
-      CharEOL = '*'
       Text = ''
       TabOrder = 5
     end

@@ -1,4 +1,3 @@
-
 <div id="myEditor" style="width: 100%;"></div>
 <script>
   tinyMCE.remove();
@@ -10,7 +9,7 @@
 
     a11y_advanced_options: true,
     image_title: true,
-    /*включить автоматическую загрузку изображений, представленных BLOB-объектами или URI данных*/
+    /*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ BLOB-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ URI пїЅпїЅпїЅпїЅпїЅпїЅ*/
     automatic_uploads: true,
     /*
       URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
@@ -22,7 +21,7 @@
     //plugins: [ 'quickbars' ],
     //toolbar: false,
     //menubar: false,
-    //inline: true,// Включение режима встроенного редактирования
+    //inline: true,// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
     file_picker_callback: function (cb, value, meta) {
       var input = document.createElement('input');
@@ -40,7 +39,7 @@
           var blobInfo = blobCache.create(id, file, base64);
           blobCache.add(blobInfo);
   
-          /* вызовите обратный вызов и заполните поле «Заголовок» именем файла. */
+          /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. */
           cb(blobInfo.blobUri(), { title: file.name });
         };
         reader.readAsDataURL(file);
@@ -50,8 +49,8 @@
     },
 
     plugins: [
-       'autolink link image imagetools quickbars',
-       // 'visualchars visualblocks advlist lists charmap print preview anchor', 
+       'autolink link image imagetools',
+       // 'visualchars visualblocks advlist lists charmap print preview anchor', quickbars
        // 'searchreplace  fullscreen',
        // 'media table contextmenu paste code',
     ],
@@ -76,9 +75,9 @@
     //setup: (editor) => {
     //  var myButton = null;
     //  editor.ui.registry.addButton('customSaveButton', {
-    //    text: 'Сохранить изменения',
+    //    text: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
     //    enabled: false,
-    //    tooltip: "Сохранение внесенных изменений",
+    //    tooltip: "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",
     //    onAction:() => mycustomSaveButtonEnabled(),
     //  });      
     //},        

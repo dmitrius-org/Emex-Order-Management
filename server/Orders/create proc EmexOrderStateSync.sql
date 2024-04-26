@@ -1,10 +1,7 @@
 if OBJECT_ID('EmexOrderStateSync') is not null
     drop proc EmexOrderStateSync
 /*
-  EmexOrderStateSync - 
-
-
-  01.12.2023 - Доставлено поставщику ставим когда деталь переходит в статус Получена на склад
+  EmexOrderStateSync - Синронизация статусов с emex
 */
 go
 create proc EmexOrderStateSync
@@ -27,7 +24,6 @@ delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
 Update p
    set p.OrderID = o.OrderID
       ,p.Tag     = 1 
-    --  ,p.Flag    = isnull(p.Flag, 0)|1 --однозначно определили заказ
   from pMovement p (updlock) 
  cross apply (select top 1 *
                 from tOrders o (nolock) 
@@ -160,7 +156,7 @@ DEALLOCATE my_cur
 
  exec CloneOrders2 -- разбиение заказа
 
- -- чистим ошибочные заказа после разбиения
+ -- чистим ошибочные заказа после разбиения, иногда такое бывает
  delete o
    from pMovement p (nolock) 
   inner join tOrders op (rowlock)
@@ -184,27 +180,6 @@ DEALLOCATE my_cur
               ) o   
  where p.Spid = @@SPID
    and p.Flag&8>0
-
- -- 
- update o 
-    set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
-   from pMovement p (nolock) 
-  inner join tOrders o (updlock)
-          on o.OrderID = p.OrderID 
-         and o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
-  where p.Spid = @@SPID
-
- update o 
-    set o.AmountPurchase = o.Quantity * o.PricePurchase
-   from pMovement p (nolock) 
-  inner join tOrders o (updlock)
-          on o.OrderID = p.OrderID 
-         and o.Quantity * o.PricePurchase <> o.AmountPurchase
-  where p.Spid = @@SPID
-
-
-
-
 
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
@@ -287,6 +262,30 @@ DEALLOCATE my_cur
  where p.Spid = @@SPID
 
  exec ProtocolAdd
+
+
+ -- правим суммы, ??? по идее такого не должно быть!!
+ update o 
+    set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
+   from pMovement p (nolock) 
+  inner join tOrders o (updlock)
+          on o.OrderID = p.OrderID and o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+  where p.Spid = @@SPID
+
+ update o 
+    set o.AmountPurchase = o.Quantity * o.PricePurchase
+   from pMovement p (nolock) 
+  inner join tOrders o (updlock)
+          on o.OrderID = p.OrderID and o.Quantity * o.PricePurchase <> o.AmountPurchase
+  where p.Spid = @@SPID
+
+ update o 
+    set o.Amount = o.Quantity * o.Price
+   from pMovement p (nolock) 
+  inner join tOrders o (updlock)
+          on o.OrderID = p.OrderID and o.Quantity * o.Price <> o.Amount
+  where p.Spid = @@SPID
+
 
 
  -- Данные по инвойсам

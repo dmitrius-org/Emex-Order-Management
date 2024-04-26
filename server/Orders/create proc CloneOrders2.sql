@@ -87,7 +87,7 @@ INSERT INTO [tOrders]
       ,DaysInWork  
 	  ,DeliveryTerm
 	  ,ID)	  
-OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, inserted.ID
+OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
   INTO  @ID (OrderID, ParentID, StateID, ID)
 select o.ClientID
       ,o.OrderDate
@@ -102,15 +102,15 @@ select o.ClientID
       ,o.DetailName
       ,o.MakeLogo
       ,o.DetailID
-      ,p.Quantity-- o.Quantity
+      ,p.Quantity-- Quantity
       ,o.Price
-      ,p.Quantity * o.Price --o.Amount
+      ,p.Quantity * o.Price --Amount
       ,o.PricePurchase
       ,o.PricePurchaseOrg
-      ,p.Quantity * o.PricePurchase -- o.AmountPurchase
+      ,p.Quantity * o.PricePurchase -- AmountPurchase
       ,o.Discount
       ,o.PricePurchaseF
-      ,p.Quantity * o.PricePurchaseF --o.AmountPurchaseF
+      ,p.Quantity * o.PricePurchaseF --AmountPurchaseF
       ,o.WeightKG
       ,o.VolumeKG
       ,o.Margin
@@ -144,7 +144,7 @@ select o.ClientID
       ,isnull(o.inDatetime, GetDate())
       ,GetDate()
       ,p.PriceSale-- o.ReplacementPrice
-      ,o.OrderID
+      ,o.OrderID  --ParentID
       ,o.Invoice
       ,o.FileDate      
       ,o.DestinationLogo
@@ -160,7 +160,7 @@ select o.ClientID
       ,o.DaysInWork   
 	  ,o.DeliveryTerm
 	  ,p.ID
-  from pMovement p (nolock)
+  from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join pMovement pp (nolock)
          on pp.Spid          = @@Spid
 		and pp.OrderNumber   = p.OrderNumber
@@ -177,6 +177,7 @@ where p.Spid    = @@SPID
   and p.OrderID is null
 order by p.DetailNum
 
+
 Update p
    set p.OrderID = i.OrderID
   from pMovement p (updlock)
@@ -185,6 +186,20 @@ Update p
  --inner join tOrders o (nolock) 
  --        on o.OrderID = i.OrderID
  where p.Spid = @@SPID
+
+
+ -- меняем данные по заказу, который был разбит на части
+Update o
+   set o.Quantity       = p.Quantity
+      ,o.Amount         = p.Quantity * o.Price  
+	  ,o.AmountPurchase	= p.Quantity * o.PricePurchase
+	  ,o.AmountPurchaseF= p.Quantity * o.PricePurchaseF
+  from @ID i
+ inner join tOrders o (updlock) 
+         on o.OrderID = i.ParentID
+ inner join pMovement p (nolock)
+         on p.Spid    = @@Spid
+		and p.OrderID = o.OrderID
 
 --копирование протоколов для новых записей
 insert tProtocol 
@@ -209,18 +224,6 @@ Select i.OrderID
          on p.ObjectID=i.ParentID
  order by p.ProtocolID
 
--- меняем данные по заказу, который был разбит на части
-Update o
-   set o.Quantity       = p.Quantity
-      ,o.Amount         = p.Quantity * o.Price  
-	  ,o.AmountPurchase	= p.Quantity * o.PricePurchase
-	  ,o.AmountPurchaseF= p.Quantity * o.PricePurchaseF
-  from @ID i
- inner join tOrders o (rowlock) 
-         on o.OrderID = i.ParentID
- inner join pMovement p (nolock)
-         on p.Spid    = @@Spid
-		and p.OrderID = o.OrderID
   exit_:
 
   return @r

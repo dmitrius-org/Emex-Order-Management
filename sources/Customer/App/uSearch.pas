@@ -69,12 +69,9 @@ type
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
     procedure SearchGridBodyClick(Sender: TObject);
-    procedure SearchGridTitleClick(Column: TUniDBGridColumn);
     procedure SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
-    procedure edtSearchInputClick(Sender: TObject);
-    procedure edtSearchSelect(Sender: TObject);
-    procedure edtSearchEnter(Sender: TObject);
+    procedure edtSearchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -83,9 +80,6 @@ type
     FMakeName: string;
     FMakeCount: integer; // Количество уникальных брендов
     FDetailNum: string;
-
-
-//    FIsSearchHistory: Boolean; // переменная для контроля показа истории поиска
 
     /// <summary>
     /// FInfoButton - для контроля нажатия по кнопке в заготовке столбца.
@@ -146,15 +140,12 @@ begin
           [FDestinationLogo, FDetailNum ]);
 end;
 
-procedure TSearchF.edtSearchEnter(Sender: TObject);
+procedure TSearchF.edtSearchClick(Sender: TObject);
 begin
-  //logger.Info('TSearchF.edtSearchEnter: ' );
-end;
+ // edtSearch.RemoteUpdate := true;
 
-procedure TSearchF.edtSearchInputClick(Sender: TObject);
-begin
-//  logger.Info('TSearchF.edtSearchInputClick: ' );
- // if not FIsSearchHistory then FIsSearchHistory := True;
+ edtSearch.Expand;
+
 end;
 
 procedure TSearchF.edtSearchKeyDown(Sender: TObject; var Key: Word;
@@ -169,24 +160,15 @@ end;
 procedure TSearchF.edtSearchRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
-  //if FIsSearchHistory then Exit;
-
   //qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
   //qSearchHistory.Filtered := True;
 
-  qSearchHistory.First;
-  while not qSearchHistory.Eof do
-  begin
-    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString );
-    qSearchHistory.Next;
-  end;
-
-  //FIsSearchHistory := True;
-end;
-
-procedure TSearchF.edtSearchSelect(Sender: TObject);
-begin
- // logger.Info('TSearchF.edtSearchSelect: ' );
+//  qSearchHistory.First;
+//  while not qSearchHistory.Eof do
+//  begin
+//    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString );
+//    qSearchHistory.Next;
+//  end;
 end;
 
 procedure TSearchF.GridRefresh();
@@ -256,7 +238,6 @@ begin
 
   MakeLogoGridRefresh;
   MakeLogoPanel.Visible := True;
-
 end;
 
 procedure TSearchF.PartSearch;
@@ -276,10 +257,6 @@ begin
     SearchHistoryLoad;
 
     GridRefresh();
-
-//    if Query.RecordCount > 0 then
-//      FIsSearchHistory := False;
-
   finally
     FreeAndNil(emex);
     btnSearch.ScreenMask.HideMask;
@@ -385,9 +362,6 @@ begin
   SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
   SearchGrid.Columns.ColumnFromFieldName('OurDeliverySTR').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
   SearchGrid.Columns.ColumnFromFieldName('Rating').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
-
-
-//  FIsSearchHistory := False;
 end;
 
 procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
@@ -464,12 +438,6 @@ begin
   Logger.Info('TSearchF.SearchGridColumnSort');
   Logger.Info('TSearchF.SearchGridColumnSort FInfoButton ' + FInfoButton.ToString());
 
-//  if FInfoButton = True then
-//  begin
-//    FInfoButton := false;
-//    Exit();
-//  end;
-
   if Direction then
     Query.IndexName := Column.FieldName+'_index_asc'
   else
@@ -501,17 +469,20 @@ begin
   end;
 end;
 
-procedure TSearchF.SearchGridTitleClick(Column: TUniDBGridColumn);
-begin
-//  logger.Info('TSearchF.SearchGridTitleClick. ' + Column.Title.Caption);
-end;
-
 procedure TSearchF.SearchHistoryLoad;
 begin
   qSearchHistory.Close;
   qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
   qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
   qSearchHistory.Open();
+
+  edtSearch.Items.Clear;
+  qSearchHistory.First;
+  while not qSearchHistory.Eof do
+  begin
+    edtSearch.Items.Add( qSearchHistory.FieldByName('DetailNum').AsString );
+    qSearchHistory.Next;
+  end;
 end;
 
 procedure TSearchF.SetMakeName;
