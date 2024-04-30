@@ -32,7 +32,7 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.RetryMessage = #1055#1086#1074#1090#1086#1088#1085#1072#1103' '#1087#1086#1087#1099#1090#1082#1072'...'
   OnBeforeInit = UniGUIServerModuleBeforeInit
   Height = 200
-  Width = 350
+  Width = 611
   object FDManager: TFDManager
     DriverDefFileAutoLoad = False
     ConnectionDefFileAutoLoad = False

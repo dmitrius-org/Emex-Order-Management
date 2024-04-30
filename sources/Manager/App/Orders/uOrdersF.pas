@@ -14,6 +14,18 @@ uses
 
 type
 
+  TSQLQueryThread = class(TThread)
+  private
+    FConnection: TFDConnection;
+    FClientID: Integer;
+    FDetailNumber: string;
+    FPriceLogo: string;
+  protected
+    procedure Execute(); override;
+  public
+    constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+  end;
+
   TOrderF = class(TUniForm)
     tabCommon: TUniFieldContainer;
     edtDetailNameF: TUniEdit;
@@ -93,15 +105,20 @@ type
     ///</summary>
     procedure DataCheck();
 
-    procedure getPartRatingFromEmex(AConnection: tFDConnection);
-    procedure getPartRatingFromDB(DetailNumber, PriceLogo: string);
+//    procedure getPartRatingFromEmex(AConnection: tFDConnection; AClientID: Integer; ADetailNumber: string);
+
 
     procedure setOpenUrl(AUrl: string);
   public
     { Public declarations }
     { Public declarations }
+
+   // IsParts: Boolean;
+
     property FormAction: TFormAction read FAction write SetAction;
     property ID: Integer read FID write FID;
+
+    procedure getPartRatingFromDB(DetailNumber, PriceLogo: string);
   end;
 
 function OrderF: TOrderF;
@@ -111,7 +128,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule;
 
 function OrderF: TOrderF;
 begin
@@ -278,8 +295,8 @@ begin
   cbRestrictions.text:= UniMainModule.Query.FieldByName('Restrictions').AsString; //Ограничение
   cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
   cbDestinationLogo.text:= UniMainModule.Query.FieldByName('DestinationLogo').AsString;    // направление отгрузки
-  FFlag     := UniMainModule.Query.FieldByName('Flag').AsInteger;
-  FClientID := UniMainModule.Query.FieldByName('ClientID').AsInteger;
+  FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
+  FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
 
   //16 - Онлайн заказ
   MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
@@ -304,6 +321,7 @@ procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
 var js: string;
      r: string;
 begin
+  logger.Info('getPartRatingFromDB');
   sql.Open('select top 1 PercentSupped   ' +
            '  from pFindByNumber (nolock)' +
            ' where spid     = @@spid     ' +
@@ -359,16 +377,15 @@ begin
   end;
 end;
 
-procedure TOrderF.getPartRatingFromEmex(AConnection: tFDConnection);
-var Emex:TEmex;
-begin
-  Emex := TEmex.Create;
-  Emex.Connection := AConnection;
-  Emex.FindByDetailNumber(FClientID, FDetailNumber);
-  FreeAndNil(Emex);
+//procedure TOrderF.getPartRatingFromEmex(AConnection: tFDConnection; AClientID: Integer; ADetailNumber: string);
+//var Emex:TEmex;
+//begin
+//  Emex := TEmex.Create;
+//  Emex.Connection := AConnection;
+//  Emex.FindByDetailNumber(FClientID, FDetailNumber);
+//  FreeAndNil(Emex);
+//end;
 
-  Sleep(5000);
-end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
 begin
@@ -391,13 +408,21 @@ end;
 procedure TOrderF.UniFormDestroy(Sender: TObject);
 begin
   UniTimer.Enabled := false;
-
 end;
 
 procedure TOrderF.UniFormReady(Sender: TObject);
+var t: TSQLQueryThread;
 begin
-  //UniTimer.Enabled := True;
-  //UniThreadTimer1.Enabled := True;
+  try
+    sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
+
+    t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
+    t.FreeOnTerminate := true; // Экземпляр должен само уничтожиться после выполнения
+    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+
+    t.Resume; // непосредственно ручной запуск потока
+  finally
+  end;
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -410,7 +435,6 @@ begin
     acUpdate, acReportEdit, acUserAction:
     begin
       btnOk.Caption := ' Сохранить';
-
     end;
     acDelete:
       btnOk.Caption := ' Удалить';
@@ -442,16 +466,45 @@ begin
   end;
 end;
 
-
-
 procedure TOrderF.UniTimerTimer(Sender: TObject);
 begin
   try
-    getPartRatingFromEmex(UniMainModule.FDConnection);
+    Sql.Open('select 1 from #IsPart (nolock)', [],[]);
+    logger.Info('UniTimerTimer IsPart:' + Sql.Q.RecordCount.ToString);
+    if Sql.Q.RecordCount > 0 then
+    begin
+      getPartRatingFromDB(FDetailNumber, FPriceLogo);
+      UniMainModule.MemTable.EmptyDataSet;
 
-    getPartRatingFromDB(FDetailNumber, FPriceLogo);
+      UniTimer.Enabled := False;
+    end;
   finally
   end;
+end;
+
+
+{ TSQLQueryThread }
+
+constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+begin
+  inherited Create(False);
+
+  FConnection  := AConnection;
+  FClientID    := AClientID;
+  FPriceLogo   := APriceLogo;
+  FDetailNumber:= ADetailNumber;
+end;
+
+procedure TSQLQueryThread.Execute();
+var Emex:TEmex;
+begin
+  Emex := TEmex.Create;
+  Emex.Connection := FConnection;
+  Emex.FindByDetailNumber(FClientID, FDetailNumber);
+
+  Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
+
+  FreeAndNil(Emex);
 end;
 
 end.

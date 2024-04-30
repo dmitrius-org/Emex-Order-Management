@@ -24,6 +24,8 @@ type
     FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink;
     qSetting: TFDQuery;
     FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
+    MemTable: TFDMemTable;
+    MemTableIsPart: TBooleanField;
 //    procedure AddConnectionDef(Sender: TObject);
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
@@ -120,6 +122,7 @@ begin
       UniServerModule.Logger.AddLog('TUniMainModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
 
       FDConnection.Open;
+      MemTable.Open;
 
       AUserName:=AUser;
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');

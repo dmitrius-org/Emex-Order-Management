@@ -597,11 +597,9 @@ end;
 
 procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum: string);
 var parts: ArrayOfFindByNumber;
-  Account: Integer;
-
 begin
   logger.Info('TEmex.MovementByOrderNumber Begin');
-  logger.Info('TEmex.AClientID: ' + Account.ToString);
+  logger.Info('TEmex.AClientID: ' + AClientID.ToString);
   logger.Info('TEmex.ADetailNum: ' + ADetailNum);
 
   parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, False);

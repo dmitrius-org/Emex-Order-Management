@@ -564,14 +564,22 @@ var t: string;
 begin
   logger.Info('QueryFlagGetText: ');
   t := '';
-  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
+
+  if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
   end;
 
-  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
+  // запрошен отказ по детали
+  if (Sender.AsInteger and 64) > 0 then
   begin
-    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа"><i class="fa fa-ban"></i></span>';
+    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа от клиента"><i class="fa fa-question-circle"></i></span> ';
+  end;
+
+   // отказ по детали
+  if (Sender.AsInteger and 128) > 0 then
+  begin
+    t := t + '<span class="x-cancellation" data-qtip="Отказ по детали"><i class="fa fa-ban"></i></span> ';
   end;
 
   Text := t;

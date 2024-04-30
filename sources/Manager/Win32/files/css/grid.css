@@ -123,8 +123,16 @@
     text-align: center;
 }
 
-/* Иконка: Запрос отмены заказа*/
-.x-request-cancellation {
+/* Иконка: Запрос отказа*/
+.grid-order .x-request-cancellation {
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #FF033E
+}
+
+/* Иконка: Отказ*/
+.grid-order .x-cancellation {
     width: 100%;
     /* margin: 1% auto; */
     /* font-size: 16px; */

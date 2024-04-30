@@ -13,7 +13,8 @@ uses
   FireDAC.ConsoleUI.Wait, FireDAC.VCLUI.Error, FireDAC.Stan.Pool,
   FireDAC.Stan.Async, Data.DB, uniThreadTimer
 
-  ,Windows, Messages, Winapi.ShellAPI
+  ,Windows, Messages, Winapi.ShellAPI, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.Comp.DataSet
   ;
 
 type

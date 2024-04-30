@@ -48,4 +48,18 @@ object UniMainModule: TUniMainModule
     Left = 407
     Top = 17
   end
+  object MemTable: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 43
+    Top = 216
+    object MemTableIsPart: TBooleanField
+      FieldName = 'IsPart'
+    end
+  end
 end

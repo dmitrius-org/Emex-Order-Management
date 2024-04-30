@@ -192,6 +192,8 @@ type
     UniHiddenPanel1: TUniHiddenPanel;
     fDetailNum: TUniEdit;
     QueryStatus: TIntegerField;
+    actCancellation: TAction;
+    N8: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -238,6 +240,7 @@ type
       DisplayText: Boolean);
     procedure QueryStatusGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure actCancellationExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -301,6 +304,8 @@ type
     procedure DeselectAll();
 
     procedure GetMarksInfo();
+
+    procedure OrderSetCancellation();
   public
     { Public declarations }
     /// <summary>
@@ -326,6 +331,41 @@ begin
   end;
 
   Result := FAccrual;
+end;
+
+procedure TOrdersT.actCancellationExecute(Sender: TObject);
+begin
+  MessageDlg('Вы действительно хотите проставить признак "Запрошен отказ"?' , mtConfirmation, mbYesNo,
+  procedure(Sender: TComponent; Res: Integer)
+  begin
+    case Res of
+      mrYes : OrderSetCancellation;
+      mrNo  : Exit;
+    end;
+  end);
+end;
+
+procedure TOrdersT.OrderSetCancellation;
+begin
+  logger.Info('OrderSetCancellation:') ;
+
+  Sql.Exec(' exec OrderSetCancellation  ', [], []);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+  var ServerErr:integer;
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+    ToastOK ('Операция успешно выполнена!', UniSession);
+    //OrdersMessageFCallBack(self, mrOk)
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
 end;
 
 procedure TOrdersT.actDeleteExecute(Sender: TObject);
@@ -896,17 +936,24 @@ end;
 procedure TOrdersT.QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 var t: string;
 begin
-  logger.Info('QueryFlagGetText: ');
+ // logger.Info('QueryFlagGetText: ');
   t := '';
-  if (Query.FieldByName('Flag').AsInteger and 32) > 0 then
+
+  if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div>';
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
   end;
 
-  if (Query.FieldByName('Flag').AsInteger and 64) > 0 then
+  if (Sender.AsInteger and 64) > 0 then
   begin
-    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа"><i class="fa fa-ban"></i></span>';
+    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа от клиента"><i class="fa fa-question-circle"></i></span> ';
   end;
+
+  if (Sender.AsInteger and 128) > 0 then
+  begin
+    t := t + '<span class="x-cancellation" data-qtip="Запрошен отказ"><i class="fa fa-ban"></i></span> ';
+  end;
+
   Text := t;
 end;
 

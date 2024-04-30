@@ -264,8 +264,6 @@ begin
 
 end;
 
-
-
 initialization
   RegisterClass(TRefusalsT);
 

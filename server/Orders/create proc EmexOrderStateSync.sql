@@ -264,6 +264,7 @@ DEALLOCATE my_cur
  exec ProtocolAdd
 
 
+
  -- правим суммы, ??? по идее такого не должно быть!!
  update o 
     set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
@@ -309,6 +310,7 @@ DEALLOCATE my_cur
         end <> ''
  
  exec ShipmentsInsert
+
 
 
  -- расчет сроков дотавки

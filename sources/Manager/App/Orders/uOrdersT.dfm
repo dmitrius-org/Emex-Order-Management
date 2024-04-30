@@ -1661,6 +1661,10 @@ object OrdersT: TOrdersT
       Hint = #1043#1088#1091#1087#1087#1086#1074#1086#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' [B]Fragile[/B]'
       OnExecute = actGroupSetFragileSignExecute
     end
+    object actCancellation: TAction
+      Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': '#1047#1072#1087#1088#1086#1096#1077#1085' '#1086#1090#1082#1072#1079
+      OnExecute = actCancellationExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -1677,6 +1681,9 @@ object OrdersT: TOrdersT
     end
     object N12: TUniMenuItem
       Action = actEdit
+    end
+    object N8: TUniMenuItem
+      Action = actCancellation
     end
     object N14: TUniMenuItem
       Action = actSetComment

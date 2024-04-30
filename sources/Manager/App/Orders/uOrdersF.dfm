@@ -22,7 +22,7 @@ object OrderF: TOrderF
     Align = alClient
     TabOrder = 0
     ExplicitWidth = 863
-    ExplicitHeight = 266
+    ExplicitHeight = 289
     DesignSize = (
       867
       290)
@@ -99,7 +99,7 @@ object OrderF: TOrderF
       TabStop = False
       TabOrder = 6
       OnClick = btnCancelClick
-      ExplicitTop = 231
+      ExplicitTop = 254
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -114,7 +114,7 @@ object OrderF: TOrderF
       Anchors = [akLeft, akBottom]
       TabOrder = 5
       OnClick = btnOkClick
-      ExplicitTop = 231
+      ExplicitTop = 254
     end
     object UniGroupBox1: TUniGroupBox
       Left = 376
@@ -767,7 +767,6 @@ object OrderF: TOrderF
       000000000000}
   end
   object UniTimer: TUniTimer
-    RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'
       '{'
