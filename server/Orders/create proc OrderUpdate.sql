@@ -38,6 +38,10 @@ as
   update t
      set t.PriceLogo       = nullif(@Price, '')
         ,t.DestinationLogo = nullif(@DestinationLogo, '')
+		,t.Flag            = isnull(t.Flag, 0) | case  
+		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
+							                        else 0
+                                                  end  
 	from tOrders t (nolock)
    where t.OrderID       = @OrderID
 
@@ -54,11 +58,11 @@ as
 
   -- аудит
   exec AuditInsert
-              @AuditID          = @AuditID out         
-             ,@ObjectID         = @OrderID
-             ,@ObjectTypeID     = 3
-             ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
-             ,@Comment          = 'Изменение DetailNameF, WeightKGF, VolumeKGF' 
+         @AuditID          = @AuditID out         
+        ,@ObjectID         = @OrderID
+        ,@ObjectTypeID     = 3
+        ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
+        ,@Comment          = 'Изменение DetailNameF, WeightKGF, VolumeKGF' 
 
 
  exit_:
@@ -66,6 +70,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240101', '0'
+exec setOV 'OrderUpdate', 'P', '20240514', '1'
 go
  

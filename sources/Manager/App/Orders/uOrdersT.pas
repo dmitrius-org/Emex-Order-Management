@@ -150,7 +150,6 @@ type
     N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
-    QueryReplacementPrice: TCurrencyField;
     QueryCustomerPriceLogo: TWideStringField;
     UniPanel3: TUniPanel;
     lblSelRowCunt: TUniLabel;
@@ -224,8 +223,7 @@ type
     procedure fPriceLogoSelect(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
-    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+
     procedure actSetCommentExecute(Sender: TObject);
     procedure actGroupDetailNameEditExecute(Sender: TObject);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -241,6 +239,8 @@ type
     procedure QueryStatusGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure actCancellationExecute(Sender: TObject);
+    procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -319,7 +319,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils;
+  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils, uVarUtils;
 
 {$R *.dfm}
 
@@ -921,17 +921,29 @@ begin
     Text := Sender.AsString;
 end;
 
-procedure TOrdersT.QueryPricePurchaseGetText(Sender: TField; var Text: string;
+procedure TOrdersT.QueryPricePurchaseFGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'PricePurchase') and (QueryReplacementPrice.Value > 0)  then
+  if not IsEmptyOrNull(Sender.Value) and  (Sender.Value > QueryPricePurchase.Value)  then
   begin
-    Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
-    '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
+    Text := '<span class="x-replacement-price-arrow">&#10144; </span><span class="x-replacement-price">' +
+    FormatFloat('###,##0.00 $', Sender.Value) + '</span>';
   end
   else
     Text := Sender.AsString;
 end;
+
+//procedure TOrdersT.QueryPricePurchaseGetText(Sender: TField; var Text: string;
+//  DisplayText: Boolean);
+//begin
+//  if (Sender.FieldName = 'PricePurchase') and (QueryReplacementPrice.Value > 0)  then
+//  begin
+//    Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
+//    '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
+//  end
+//  else
+//    Text := Sender.AsString;
+//end;
 
 procedure TOrdersT.QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 var t: string;

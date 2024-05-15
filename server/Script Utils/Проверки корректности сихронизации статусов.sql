@@ -146,7 +146,7 @@ delete p
 
 
 --
-select 'Разное количество', m.Quantity, o.Quantity, o.EmexQuantity, c.Brief, *
+select 'Разное количество', m.Quantity QuantityM , o.Quantity QuantityQ, o.EmexQuantity, c.Brief, *
   from tMovement m (nolock)
   inner join tOrders o (nolock)
           on o.OrderID = m.OrderID

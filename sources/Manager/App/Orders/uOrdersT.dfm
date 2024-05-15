@@ -1221,7 +1221,7 @@ object OrdersT: TOrdersT
       '      ,o.ReplacementMakeLogo'
       '      ,o.ReplacementDetailNumber'
       '      ,o.ReplacementManufacturer    '
-      '      ,o.ReplacementPrice  '
+      '      --,o.ReplacementPrice  '
       '      ,o.DestinationLogo -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       '      ,o.Invoice'
       '      ,o.FileDate'
@@ -1403,7 +1403,6 @@ object OrdersT: TOrdersT
     object QueryPricePurchase: TCurrencyField
       FieldName = 'PricePurchase'
       Origin = 'PricePurchase'
-      OnGetText = QueryPricePurchaseGetText
       DisplayFormat = '###,##0.00 $'
     end
     object QueryAmountPurchase: TCurrencyField
@@ -1414,6 +1413,7 @@ object OrdersT: TOrdersT
     object QueryPricePurchaseF: TCurrencyField
       FieldName = 'PricePurchaseF'
       Origin = 'PricePurchaseF'
+      OnGetText = QueryPricePurchaseFGetText
       DisplayFormat = '###,##0.00 $'
     end
     object QueryAmountPurchaseF: TCurrencyField
@@ -1536,9 +1536,6 @@ object OrdersT: TOrdersT
     object QueryReplacementManufacturer: TWideStringField
       FieldName = 'ReplacementManufacturer'
       Size = 32
-    end
-    object QueryReplacementPrice: TCurrencyField
-      FieldName = 'ReplacementPrice'
     end
     object QueryCustomerPriceLogo: TWideStringField
       FieldName = 'CustomerPriceLogo'

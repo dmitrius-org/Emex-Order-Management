@@ -72,10 +72,8 @@ uses
   uSqlUtils in '..\Common\Common\uSqlUtils.pas',
   uVarUtils in '..\Common\Common\uVarUtils.pas',
   uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
-  uEmexUtils in '..\Common\CommonApp\emexdwc\uEmexUtils.pas',
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
-  uAccrualUtils in '..\Common\CommonApp\uAccrualUtils.pas',
   uLookupF in '..\Common\CommonApp\uLookupF.pas' {LookupF: TUniForm},
   uToast in '..\Common\CommonApp\uToast.pas',
   uTask_F in '..\Scheduler\Task\uTask_F.pas' {Task_F: TUniForm},
@@ -90,7 +88,10 @@ uses
   uGroupSetFragileSignF in 'App\Orders\uGroupSetFragileSignF.pas' {GroupSetFragileSignF: TUniForm},
   uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
   uInstructionsT in 'App\Instructions\uInstructionsT.pas' {InstructionsT: TUniFrame},
-  uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm};
+  uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm},
+  uConstant in '..\Common\CommonApp\uConstant.pas',
+  uEmexUtils in 'App\emexdwc\uEmexUtils.pas',
+  uAccrualUtils in 'App\Orders\uAccrualUtils.pas';
 
 {$R *.res}
 

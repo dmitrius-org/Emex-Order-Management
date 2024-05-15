@@ -104,7 +104,7 @@ object Error_T: TError_T
       item
         FieldName = 'Retval'
         Title.Caption = #1048#1044' '#1086#1096#1080#1073#1082#1080
-        Width = 119
+        Width = 105
       end
       item
         FieldName = 'Message'

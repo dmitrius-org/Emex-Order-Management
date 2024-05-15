@@ -11,11 +11,11 @@ create proc UserInsert
              --,@isAdmin	       bit      null
              ,@isBlock	       bit      = null
              ,@DateBlock       datetime = null
-             ,@Password        nvarchar(512) = null
+             ,@Password        nvarchar(512)
 as
   declare @r int = 0
 
-  select @Password = isnull(@Password, 'Q!123456a')
+  --select @Password = isnull(@Password, 'Q!123456a')
   
   select @isBlock   = isnull(@isBlock, 0)
         ,@DateBlock = nullif(@DateBlock, '18991230')
@@ -85,5 +85,5 @@ as
 
 grant exec on UserInsert to public
 go
-exec setOV 'UserInsert', 'P', '20240101', '0'
+exec setOV 'UserInsert', 'P', '20240514', '1'
 go

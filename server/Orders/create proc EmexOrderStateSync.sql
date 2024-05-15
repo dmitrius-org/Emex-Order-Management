@@ -128,9 +128,6 @@ END
 CLOSE my_cur
 DEALLOCATE my_cur
 
- -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
- exec MovementArchive
-
  Update p
     set p.Flag    = case
                       when p.Quantity<>o.Quantity then isnull(p.Flag, 0)|4 -- изменилось количество
@@ -156,7 +153,12 @@ DEALLOCATE my_cur
 
  exec CloneOrders2 -- разбиение заказа
 
+
+ -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
+ exec MovementArchive
+
  -- чистим ошибочные заказа после разбиения, иногда такое бывает
+ /*
  delete o
    from pMovement p (nolock) 
   inner join tOrders op (rowlock)
@@ -180,6 +182,8 @@ DEALLOCATE my_cur
               ) o   
  where p.Spid = @@SPID
    and p.Flag&8>0
+
+*/
 
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
@@ -232,7 +236,13 @@ DEALLOCATE my_cur
        ,o.ReplacementPrice        = case 
                                       when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
                                       else null
-                                    end       
+                                    end    
+        /*Если у детали обновляется цена, то прописывать ее не стрелкой внизу, а в поле “Цена закупки Факт” и ставить красную стрелочку перед ней. Но делать это в одну строку. 
+		Таким образом мы увидим какое превышение цены было пропущено в работу менеджером, а какое прислал сам поставщик. Пересчитывать сумму закупки Факт соответственно.*/
+       ,o.PricePurchaseF         = case 
+                                      when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
+                                      else null
+                                    end   									
        ,o.OrderDetailSubId        = p.OrderDetailSubId
        ,o.Invoice                 = case 
 	                                  when CHARINDEX('#', StateText) > 0 
@@ -265,7 +275,7 @@ DEALLOCATE my_cur
 
 
 
- -- правим суммы, ??? по идее такого не должно быть!!
+ -- пересчитываем суммы
  update o 
     set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
    from pMovement p (nolock) 
@@ -327,6 +337,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240328', '2'
+exec setOV 'EmexOrderStateSync', 'P', '20240514', '3'
 go
  

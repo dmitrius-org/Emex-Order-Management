@@ -27,11 +27,13 @@ type
     procedure UniGUIServerModuleBeforeInit(Sender: TObject);
   private
     { Private declarations }
-    function dbConnect(): Boolean;
+
   protected
     procedure FirstInit; override;
   public
     { Public declarations }
+
+
   end;
 
   function UniServerModule: TUniServerModule;
@@ -52,10 +54,6 @@ uses
 function UniServerModule: TUniServerModule;
 begin
   Result := TUniServerModule(UniGUIServerInstance);
-end;
-
-function TUniServerModule.dbConnect(): Boolean;
-begin
 end;
 
 procedure TUniServerModule.FirstInit;
@@ -97,8 +95,6 @@ begin
     SessionTimeout := 600000; // 10 минут
 
   Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
-
-  dbConnect;
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;

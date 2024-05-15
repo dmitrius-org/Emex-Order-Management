@@ -153,6 +153,7 @@ object Task_T: TTask_T
       WebOptions.FetchAll = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
+      LayoutConfig.ComponentCls = 'grid-task'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
@@ -207,7 +208,7 @@ object Task_T: TTask_T
           Title.Alignment = taCenter
           Title.Caption = #1057#1083#1077#1076#1091#1102#1097#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           Title.Font.Height = -13
-          Width = 203
+          Width = 145
         end
         item
           FieldName = 'inDatetime'

@@ -14,6 +14,7 @@ as
 
  Update p
     set p.OrderID = o.OrderID
+	   ,p.ClientID= isnull(p.ClientID, o.ClientID)
    from pBasketDetails p (updlock)
   inner join tOrders o (nolock) 
           on o.BasketId = p.BasketId   
@@ -21,6 +22,7 @@ as
 
  Update p
     set p.OrderID = o.OrderID
+	   ,p.ClientID= isnull(p.ClientID, o.ClientID)
    from pBasketDetails p (updlock) 
   cross apply (select top 1 *
                  from tOrders o (nolock) 
@@ -68,11 +70,18 @@ as
 	   ,o.AmountPurchaseF = round(p.Price * p.Quantity, 2)
 	   ,o.EmexQuantity    = p.Quantity
 	   ,o.OverPricing     = case 
-	                          when p.Price  > 0 
-							 -- then 100 - o.PricePurchaseOrg * 100 / p.Price
-							  then 100 - p.UploadedPrice * 100 / p.Price
+	                          when p.Price >  iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) 
+                              /*Если у детали изменили прайс-лист по которому она будет поставляться, нужно отправлять ее в корзину EmEx DWC без указания закупочной цены,
+                              тогда в корзине отобразится и нам по API в обратку передастся реальная цена по которой деталь будет поставлена. Иначе, если мы понимаем что готовы на превышение
+                              или понижение цены, но передадим изначальную закупочную цену, то нам дадут отказ по несоответствию цены.
+							  
+							  в таком случае превышение считаем по PricePurchase, иначе UploadedPrice. Хотя нет разницы, и там и там должна быть обдна цифра :)
+							  */
+							  then p.Price / iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) * 100 - 100
 							  else 0
                             end 
+
+							
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
@@ -143,6 +152,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20240101', '1'
+exec setOV 'BasketStateSync', 'P', '20240515', '3'
 go
  

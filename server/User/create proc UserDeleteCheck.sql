@@ -27,11 +27,21 @@ as
     goto exit_
   end
 
+
+  if exists (select 1 
+               from tClients (nolock)
+              where UserID = @UserID)
+  begin
+    set @r = 104-- 'Удаление запрещено, пользователь используется в справочнике клиентов!'
+    goto exit_
+  end
+  
+
  exit_:
  return @r
 go
 grant exec on UserDeleteCheck to public
 go
-exec setOV 'UserDeleteCheck', 'P', '20240101', '0'
+exec setOV 'UserDeleteCheck', 'P', '20240514', '1'
 go
 

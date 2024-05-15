@@ -8,6 +8,7 @@ create table pBasketDetails
  Spid                  numeric(18,0) default @@spid--  
 ,OrderID               numeric(18,0) -- ИД заказа
 ,ClientID	           numeric(18,0) -- ИД Клиента
+,SupplierID	           numeric(18,0) -- ИД Поставщика
 ,Comments              nvarchar(64)  -- комментарий
 ,UploadedPrice         decimal(18,2) -- цена заданная клиентом
 ,CoeffMaxAgree         decimal(18,2) -- максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте
@@ -37,7 +38,7 @@ grant all on pBasketDetails to public
 go
 create index ao1 on pBasketDetails(Spid, OrderID)
 go
-exec setOV 'pBasketDetails', 'U', '20240101', '0'
+exec setOV 'pBasketDetails', 'U', '20240515', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pBasketDetails', @desc = 'Корзина клиента (подклиента). Результат выполнения сервиса GetBasketDetails'

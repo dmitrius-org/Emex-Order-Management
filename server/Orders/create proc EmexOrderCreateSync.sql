@@ -1,16 +1,10 @@
-if OBJECT_ID('EmexOrderSave') is not null
-    drop proc EmexOrderSave
-
-go
 if OBJECT_ID('EmexOrderCreateSync') is not null
     drop proc EmexOrderCreateSync
-
 /*
   EmexOrderCreateSync - процедура проставления номера заказа emex после размещения заказа
 */
 go
 create proc EmexOrderCreateSync
-              @EmexOrderID int
 as
  declare @r int = 0
 
@@ -25,6 +19,11 @@ as
 							  then 1
                               else 2
 						  end
+						 ,case 
+				            when o.Reference     = p.Reference 
+							  then 1
+                              else 2
+						  end
                          ,case 
 				            when o.MakeLogo      = p.MakeLogo 
 							  then 1
@@ -35,15 +34,9 @@ as
 							  then 1
                               else 2
 						  end
-						 ,case 
-				            when o.Reference     = p.Reference 
-							  then 1
-                              else 2
-						  end
 
                ) o   
  where p.Spid               = @@SPID
-  -- and isnull(p.OrderID, 0) = 0
   
  -- ошибка нужна для того, чтобы деталь не изменила статус
  Update p
@@ -57,14 +50,13 @@ as
 	                   and o.OrderID = p.ObjectID)
 
  Update o
-    set o.EmexOrderID = @EmexOrderID
+    set o.EmexOrderID = p.OrderNumber
        ,o.Flag        = ((o.Flag & ~1) & ~2)
 	   ,o.updDatetime = GetDate()
    from pMovement p (nolock)
   inner join tOrders o (updlock)
           on o.OrderID = p.OrderID
  where p.Spid       = @@SPID
-   and p.OrderNumber=@EmexOrderID
 
 
 /**
@@ -78,13 +70,12 @@ as
   inner join tPrice pr (updlock)
           on pr.PriceID = o.PriceID
  where p.Spid       = @@SPID
-   and p.OrderNumber=@EmexOrderID
 
   exit_:
   return @r
 go
 grant exec on EmexOrderCreateSync to public
 go
-exec setOV 'EmexOrderCreateSync', 'P', '20240101', '0'
+exec setOV 'EmexOrderCreateSync', 'P', '20240515', '1'
 go
   

@@ -24,6 +24,7 @@ insert tRetCode (RetCode, Message) select 100, 'Клиент с заданным
 insert tRetCode (RetCode, Message) select 101, 'Удаление запрещено, Клиент используется в таблице заказов!'
 insert tRetCode (RetCode, Message) select 102, 'В системе уже зарегистрирован клиент с заданной почтой!'
 insert tRetCode (RetCode, Message) select 103, 'Нет данных!'
+insert tRetCode (RetCode, Message) select 104, 'Удаление запрещено, пользователь используется в справочнике клиентов!'
 
 --tClientType
 insert tRetCode (RetCode, Message) select 120, 'Тип клиент с заданным наименованием существует!'

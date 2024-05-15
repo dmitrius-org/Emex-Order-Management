@@ -6,7 +6,7 @@ interface
 
 uses  Windows, Messages, SysUtils, Variants, Classes, Graphics,
       Controls, Forms, Dialogs, uniGUITypes, uniGUIAbstractClasses,
-      uniGUIClasses, uniGUIFrame, uniMemo, uniButton, uniGUIBaseClasses, uniPanel,
+      uniGUIClasses, uniGUIFrame, uniGUIBaseClasses,
       uniGUIDialogs,
 
       FireDAC.Comp.Client, FireDAC.Comp.Script,
@@ -43,6 +43,7 @@ type
     /// EmexOrderStateSync - Синхронизация статусов
     /// </summary>
     procedure EmexOrderStateSync();
+
   public
     constructor Create(Value: TFDConnection); overload;
     destructor Destroy; override;
@@ -122,13 +123,13 @@ end;
 
 procedure TProcExec.EmexCreateOrder();
 begin
-
   Emex.CreateOrder;
 end;
 
 procedure TProcExec.EmexCreateOrderCheck;
 begin
   logger.Info('TProcExec.EmexCreateOrderCheck Begin ');
+
   //Запрашиваем заказы в статусе в Работе
   Emex.MovementInWork;
 
@@ -136,15 +137,32 @@ begin
   Emex.SQl.Exec('exec EmexCreateOrderCheck', [], []);
 
   // если имеются заказанные детали удаляем их из корзины
-  Emex.PartToBasketDelete();
+  //Emex.PartToBasketDelete();
 
-  logger.Info('TProcExec.EmexCreateOrderCheck End ');
+  // пробуем синхронизировать статусы
+//  Emex.SQl.Exec('delete m '+
+//                '  from pAccrualAction p (nolock)    '+
+//                ' inner join tOrders o(nolock)       '+
+//                '         on o.OrderID = p.ObjectID  '+
+//                ' inner join pMovement m (rowlock)   '+
+//                '         on m.Spid          = @@SPID           '+
+//                '        and m.Reference     = o.Reference      '+
+//                '        and m.CustomerSubId = o.CustomerSubId  '+
+//                '  where p.Spid   = @@SPID   '+
+//                '    and p.RetVal<> 534;     '+
+//                ''+
+//                ''+
+//                ' if exists(select 1 from pMovement (nolock) where Spid=@@Spid)'+
+//                '   exec EmexOrderCreateSync;  '+
+//                '   ', [],[]);
+//
+//  logger.Info('TProcExec.EmexCreateOrderCheck End ');
 end;
 
 procedure TProcExec.EmexOrderStateSync;
 begin
   Emex.Connection.ExecSQL(
-                    ' delete pAccrualAction from pAccrualAction where spid = @@Spid');
+                    ' delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid');
 
   Emex.Connection.ExecSQL(
                     ' insert pAccrualAction (Spid, ObjectID, StateID, Retval) ' +

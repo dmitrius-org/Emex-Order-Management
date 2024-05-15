@@ -32,6 +32,8 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
+    edtPass: TUniEdit;
+    UniLabel4: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -45,6 +47,11 @@ type
     ///  DataLoad - получение данных с сервера, для отображения на форме
     ///</summary>
     procedure DataLoad();
+
+    /// <summary>
+    ///  DataCheck - проверка заполнения обязательных полей
+    ///</summary>
+    procedure DataCheck();
   public
     { Public declarations }
     property FormAction: TFormAction read FAction write SetAction;
@@ -76,6 +83,10 @@ procedure TUserF.btnOkClick(Sender: TObject);
 var sqltext: string;
 begin
   RetVal.Clear;
+
+  DataCheck();
+
+  if RetVal.Code = 0 then
   case FAction of
     acInsert:
     begin
@@ -87,6 +98,7 @@ begin
                 '            ,@Name     = :Name      '+
                 '            ,@isBlock  = :isBlock   '+
                 '            ,@DateBlock= :DateBlock '+
+                '            ,@Password = :Password  '+
                 '                                    '+
                 ' select @r as retcode      '+
                 ' ';
@@ -94,8 +106,8 @@ begin
       UniMainModule.Query.SQL.Text := sqltext;
 
       Sql.Open(UniMainModule.Query,
-               ['Brief','Name','isBlock','DateBlock'],
-               [edtBrief.Text, edtName.Text, cbisBlock.Checked,  edtDataBlock.DateTime]);
+               ['Brief','Name','isBlock','DateBlock', 'Password'],
+               [edtBrief.Text, edtName.Text, cbisBlock.Checked,  edtDataBlock.DateTime, edtPass.Text]);
 
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
 
@@ -152,6 +164,42 @@ begin
 
 end;
 
+procedure TUserF.DataCheck;
+begin
+  RetVal.Clear;
+
+  case FAction of
+    acInsert, acReportCreate:
+    begin
+      if edtBrief.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Логин] обязателен к заполнению!';
+        edtBrief.SetFocus;
+        Exit();
+      end;
+
+      if edtPass.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Пароль] обязателен к заполнению!';
+        edtPass.SetFocus;
+        Exit();
+      end
+    end;
+    acUpdate, acReportEdit:
+    begin
+      if edtBrief.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Логин] обязателен к заполнению!';
+        edtBrief.SetFocus;
+        Exit();
+      end;
+    end;
+  end;
+end;
+
 procedure TUserF.DataLoad;
 begin
   UniMainModule.Query.Close;
@@ -171,6 +219,9 @@ begin
   cbIsActive.Checked   := UniMainModule.Query.FieldValues['isAdmin'];
   cbisBlock.Checked    := UniMainModule.Query.FieldValues['isBlock'];
   edtDataBlock.DateTime:= UniMainModule.Query.FieldByName('DateBlock').AsDateTime;
+
+
+  Caption := 'Пользователь [' + edtBrief.Text   + ']';
 end;
 
 procedure TUserF.SetAction(const Value: TFormAction);
@@ -183,6 +234,9 @@ begin
   edtBrief.ReadOnly:= FAction <> acInsert;
   fsAudit.Visible:= FAction <> acInsert;
 
+
+  edtPass.Visible := FAction = acInsert;
+
   case FAction of
     acInsert, acReportCreate:
     begin
@@ -190,9 +244,14 @@ begin
       edtDataBlock.Text := '';
       edtInDate.Text := '';
       edtUpdDate.Text := '';
+
+      edtPass.Text := 'Q!123456a';
+
+      Caption := 'Создание пользователя';
     end;
     acUpdate, acReportEdit, acUserAction:
       btnOk.Caption := ' Сохранить';
+
     acDelete:
       btnOk.Caption := ' Удалить';
     acShow:

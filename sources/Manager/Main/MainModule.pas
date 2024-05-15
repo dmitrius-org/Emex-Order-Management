@@ -14,7 +14,7 @@ uses
   FireDAC.Phys.MySQL, FireDAC.Phys.ODBCBase, FireDAC.Moni.Custom,
 
   uCommonType, uAuditUtils, uAccrualUtils, uEmexUtils, uSqlUtils, uLogger,
-  uGrantUtils, FireDAC.Moni.RemoteClient
+  uGrantUtils, FireDAC.Moni.RemoteClient, Windows
   ;
 
 type
@@ -33,6 +33,10 @@ type
   private
     { Private declarations }
 
+    /// <summary>
+    ///  AppVersion - верси€ программы
+    ///</summary>
+    procedure AppVersion();
   public
     { Public declarations }
     /// <summary> AUserName - логин пользовател€ </summary>
@@ -96,6 +100,18 @@ end;
 //  end;
 //end;
 
+procedure TUniMainModule.AppVersion;
+//var
+//  major, minor, build: Cardinal;
+//  Version: String;
+
+begin
+//  if GetProductVersion('', major, minor, build) then
+//  Version := 'v' + major.ToString() + '.' + minor.ToString() + ' Beta Build ' + build.ToString();
+//
+//  UniServerModule.Logger.AddLog(Version);
+end;
+
 function TUniMainModule.dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbConnect', 'Begin');
@@ -128,6 +144,9 @@ begin
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
       AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
 
+      AppVersion;
+
+      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, '¬ход в систему');
 
       // настройки  логировани€
       CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
@@ -141,7 +160,6 @@ begin
         FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
         FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
-      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, '¬ход в систему');
 
     except
       on E: EFDDBEngineException do

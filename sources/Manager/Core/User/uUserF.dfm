@@ -5,8 +5,11 @@ object UserF: TUserF
   ClientWidth = 602
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   OnShow = UniFormShow
+  BorderStyle = bsDialog
+  Position = poDesktopCenter
   OldCreateOrder = False
   MonitoredKeys.Keys = <>
+  AlignmentControl = uniAlignmentClient
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
@@ -22,29 +25,26 @@ object UserF: TUserF
     ExplicitWidth = 592
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 507
+      Left = 506
       Top = 4
       Width = 85
       Height = 26
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
-      Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 503
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 420
+      Left = 416
       Top = 4
       Width = 81
       Height = 26
       Hint = ''
+      Margins.Right = 5
       Caption = #1054#1090#1084#1077#1085#1072
-      Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 416
     end
   end
   object fsCommon: TUniFieldSet
@@ -52,31 +52,34 @@ object UserF: TUserF
     Left = 3
     Top = 3
     Width = 596
-    Height = 172
+    Height = 198
     Hint = ''
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 592
+    Font.Height = -12
+    ParentFont = False
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
-      Top = 15
+      Top = 17
       Width = 592
-      Height = 143
+      Height = 170
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 588
+      ExplicitTop = 15
       DesignSize = (
         592
-        143)
+        170)
       object edtBrief: TUniEdit
         Left = 144
         Top = 16
         Width = 416
         Hint = ''
         Text = ''
+        ParentFont = False
+        Font.Height = -12
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         ClearButton = True
@@ -88,33 +91,39 @@ object UserF: TUserF
         Width = 416
         Hint = ''
         Text = ''
+        ParentFont = False
+        Font.Height = -12
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
         ExplicitWidth = 412
       end
       object cbIsActive: TUniCheckBox
-        Left = 141
-        Top = 85
+        Left = 140
+        Top = 104
         Width = 138
         Height = 17
         Hint = ''
         Caption = #1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088
+        ParentFont = False
+        Font.Height = -12
         TabOrder = 3
         ReadOnly = True
       end
       object cbIsBlock: TUniCheckBox
-        Left = 141
-        Top = 113
+        Left = 140
+        Top = 132
         Width = 138
         Height = 17
         Hint = ''
         Caption = #1047#1072#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085
+        ParentFont = False
+        Font.Height = -12
         TabOrder = 4
       end
       object edtDataBlock: TUniDateTimePicker
-        Left = 415
-        Top = 110
+        Left = 414
+        Top = 129
         Width = 145
         Hint = ''
         DateTime = 45099.000000000000000000
@@ -123,34 +132,66 @@ object UserF: TUserF
         ReadOnly = True
         TabOrder = 5
         ParentFont = False
+        Font.Height = -12
         ClearButton = True
       end
       object lblBrief: TUniLabel
         Left = 25
         Top = 44
-        Width = 84
-        Height = 13
+        Width = 86
+        Height = 15
         Hint = ''
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
+        ParentFont = False
+        Font.Height = -12
         TabOrder = 6
       end
       object lblName: TUniLabel
         Left = 25
         Top = 16
-        Width = 36
-        Height = 13
+        Width = 37
+        Height = 15
         Hint = ''
         Caption = #1051#1086#1075#1080#1085':'
+        ParentFont = False
+        Font.Height = -12
         TabOrder = 7
       end
       object lbDateBlock: TUniLabel
-        Left = 295
-        Top = 113
-        Width = 97
-        Height = 13
+        Left = 294
+        Top = 132
+        Width = 98
+        Height = 15
         Hint = ''
         Caption = #1044#1072#1090#1072' '#1073#1083#1086#1082#1080#1088#1086#1074#1082#1080':'
+        ParentFont = False
+        Font.Height = -12
         TabOrder = 8
+      end
+      object edtPass: TUniEdit
+        Left = 144
+        Top = 72
+        Width = 209
+        Hint = ''
+        ShowHint = True
+        ParentShowHint = False
+        MaxLength = 128
+        Text = ''
+        ParentFont = False
+        Font.Height = -12
+        TabOrder = 9
+        ClearButton = True
+      end
+      object UniLabel4: TUniLabel
+        Left = 25
+        Top = 72
+        Width = 45
+        Height = 15
+        Hint = ''
+        Caption = #1055#1072#1088#1086#1083#1100':'
+        ParentFont = False
+        Font.Height = -12
+        TabOrder = 10
       end
     end
   end
@@ -180,7 +221,7 @@ object UserF: TUserF
       ExplicitWidth = 588
       object edtID: TUniEdit
         Left = 141
-        Top = 8
+        Top = 7
         Width = 138
         Hint = ''
         Text = ''
@@ -189,7 +230,7 @@ object UserF: TUserF
       end
       object edtInDate: TUniDateTimePicker
         Left = 141
-        Top = 33
+        Top = 34
         Width = 138
         Hint = ''
         DateTime = 45098.000000000000000000
@@ -201,7 +242,7 @@ object UserF: TUserF
       end
       object edtUpdDate: TUniDateTimePicker
         Left = 415
-        Top = 33
+        Top = 34
         Width = 145
         Hint = ''
         DateTime = 45098.000000000000000000
