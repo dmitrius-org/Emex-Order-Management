@@ -319,7 +319,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils, uVarUtils;
+  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils, uVarUtils, uStatusForm;
 
 {$R *.dfm}
 
@@ -994,6 +994,17 @@ begin
             ['Grid', 'Column'],
             [self.ClassName +'.' + Grid.Name,
              Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
+  end
+  else if (EventName = 'btnStatusFormShow')
+  then
+  begin
+    var StatusForm: TStatusForm;
+
+    StatusForm := TStatusForm.Create(UniSession.UniApplication);
+    StatusForm.StatusFile := UniServerModule.StartPath + '\files\html\OrderStatus.html';
+
+    StatusForm.ShowModal();
+   // StatusForm.Free;
   end;
 end;
 
@@ -1028,13 +1039,13 @@ end;
 procedure TOrdersT.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
   Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
-  if (Query.FieldByName('Flag').AsInteger and 1) = 1 then
+  if (Query.FieldByName('Flag').AsInteger and 1) = 1 then // 1 - Превышение цены
   begin
     //Attribs.Font.Color:=clMaroon;
     //Attribs.Font.Style:=[fsBold, fsItalic];
     Attribs.Color:= rgb(255, 207, 217);
   end
-  else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then
+  else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then // 2 - Нет цены
   begin
     Attribs.Color:=rgb(242, 169, 210);
   end;

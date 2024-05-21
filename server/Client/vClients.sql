@@ -1,4 +1,4 @@
-aif OBJECT_ID('vClients') is not null
+if OBJECT_ID('vClients') is not null
     drop view vClients
 go
 /* **********************************************************						
@@ -17,7 +17,10 @@ select c.ClientID
 	  ,c.IsActive
 	  ,c.UserID
       ,ct.Name as ClientTypeName --
+	  ,s.Brief as Supplier
   from tClients c (nolock)
+  left join tSuppliers s (nolock)
+         on s.SuppliersID = c.SuppliersID
   left join tClientType ct (nolock)
          on ct.ClientTypeID = c.ClientTypeID
   left join tOrderFileFormat o (nolock)
@@ -25,5 +28,5 @@ select c.ClientID
 go
 grant all on vClients to public
 go
-exec setOV 'vClients', 'V', '20240101', '0'
+exec setOV 'vClients', 'V', '20240521', '1'
 go

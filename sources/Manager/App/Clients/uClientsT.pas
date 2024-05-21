@@ -68,6 +68,7 @@ type
     UniToolButton6: TUniToolButton;
     UniToolButton7: TUniToolButton;
     UniToolButton8: TUniToolButton;
+    QuerySupplier: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

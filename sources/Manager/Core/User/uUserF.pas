@@ -33,7 +33,7 @@ type
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
     edtPass: TUniEdit;
-    UniLabel4: TUniLabel;
+    lblPass: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -236,6 +236,7 @@ begin
 
 
   edtPass.Visible := FAction = acInsert;
+  lblPass.Visible := FAction = acInsert;
 
   case FAction of
     acInsert, acReportCreate:

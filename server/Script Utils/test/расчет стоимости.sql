@@ -1,5 +1,5 @@
 declare
-              @ProfileName  varchar(30)='EmEx (MZYB-24H)',
+              @ProfileName  varchar(30)='EmEx (MZYH-EMIR)',
 			  @DetailNum    varchar(30)= '6102B303',
 			  @ErrMessage   varchar(255) = null 
 
@@ -13,7 +13,7 @@ select *
   from tProfilesCustomer pc (nolock)
   left join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
- where pc.UploadFileName =  'MZYB'
+ where pc.UploadFileName =  'MZYH'
 
 
 

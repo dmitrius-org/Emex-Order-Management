@@ -2,7 +2,7 @@ object BalanceT: TBalanceT
   Left = 0
   Top = 0
   ClientHeight = 527
-  ClientWidth = 1132
+  ClientWidth = 1098
   Caption = #1041#1072#1083#1072#1085#1089
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -13,7 +13,7 @@ object BalanceT: TBalanceT
   object Grid: TUniDBGrid
     Left = 0
     Top = 128
-    Width = 1132
+    Width = 1098
     Height = 399
     Hint = ''
     ShowHint = True
@@ -51,10 +51,10 @@ object BalanceT: TBalanceT
         '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
         'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
       
-        'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-        'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-        #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-        'n the ToolBar, number 10, hide him'#13#10'}')
+        'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  //'#1055#1072#1085#1077#1083#1100' '#1080#1085#1089#1090#1088#1091#1084#1077 +
+        #1085#1090#1086#1074', '#1079#1072#1082#1088#1077#1087#1083#1077#1085#1085#1072#1103' '#1074#1085#1080#1079#1091'.'#13#10'  var toolbar=sender.getDockedItems()' +
+        '[1]; '#13#10'  toolbar.items.getAt(10).hide(); //'#1059#1073#1080#1088#1072#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1054#1073#1085#1086#1074#1080 +
+        #1090#1100' '#1074' '#1055#1072#1085#1077#1083#1080' '#1080#1085#1089#1090#1088#1091#1084#1077#1085#1090#1086#1074', '#1085#1086#1084#1077#1088' 10, '#1089#1082#1088#1099#1074#1072#1077#1084' '#1077#1075#1086#13#10'  '#13#10'  '#13#10#13#10'}')
     RowEditor = True
     DataSource = DataSource
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgRowNumbers]
@@ -75,6 +75,7 @@ object BalanceT: TBalanceT
     ParentColor = False
     Color = clBtnFace
     PreventWrap = True
+    Exporter.Enabled = True
     OnKeyDown = GridKeyDown
     OnCellContextClick = GridCellContextClick
     Columns = <
@@ -96,7 +97,7 @@ object BalanceT: TBalanceT
         FieldName = 'Number'
         Title.Alignment = taCenter
         Title.Caption = #1053#1086#1084#1077#1088
-        Width = 188
+        Width = 157
       end
       item
         FieldName = 'Date'
@@ -126,7 +127,7 @@ object BalanceT: TBalanceT
   object UniPanel1: TUniPanel
     Left = 0
     Top = 0
-    Width = 1132
+    Width = 1098
     Height = 128
     Hint = ''
     ShowHint = True
@@ -135,12 +136,7 @@ object BalanceT: TBalanceT
     TabOrder = 1
     ShowCaption = False
     Caption = 'UniPanel1'
-    ExplicitLeft = 528
-    ExplicitTop = 56
-    ExplicitWidth = 256
-    DesignSize = (
-      1132
-      128)
+    ExplicitWidth = 1094
     object UniButton1: TUniButton
       Left = 265
       Top = 89
@@ -174,43 +170,64 @@ object BalanceT: TBalanceT
       TimeFormat = 'HH:mm:ss'
       TabOrder = 3
     end
-    object UniLabel1: TUniLabel
-      Left = 928
-      Top = 15
-      Width = 48
-      Height = 17
-      Hint = #1057#1088#1077#1076#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1077#1089#1103' '#1085#1072' '#1073#1072#1083#1072#1085#1089#1077
+    object UniPanel2: TUniPanel
+      Left = 822
+      Top = 1
+      Width = 275
+      Height = 126
+      Hint = ''
       ShowHint = True
-      Caption = #1041#1072#1083#1072#1085#1089':'
-      Anchors = [akTop, akRight]
-      ParentFont = False
-      Font.Height = -13
-      Font.Style = [fsBold]
+      Align = alRight
       TabOrder = 4
-    end
-    object edtBalance: TUniFormattedNumberEdit
-      Left = 992
-      Top = 12
-      Width = 129
-      Hint = ''
-      ShowHint = True
       BorderStyle = ubsNone
-      Anchors = [akTop, akRight]
-      TabOrder = 5
-      Color = clBtnFace
-      DecimalSeparator = ','
-      ThousandSeparator = #160
-    end
-    object btnBalanceAdd: TUniButton
-      Left = 992
-      Top = 89
-      Width = 129
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      Caption = #1055#1086#1087#1086#1083#1085#1080#1090#1100' '#1073#1072#1083#1072#1085#1089
-      TabOrder = 6
-      OnClick = btnBalanceAddClick
+      ShowCaption = False
+      Caption = 'UniPanel2'
+      ExplicitLeft = 818
+      DesignSize = (
+        275
+        126)
+      object edtBalance: TUniFormattedNumberEdit
+        Left = 135
+        Top = 19
+        Width = 129
+        Hint = ''
+        ShowHint = True
+        BorderStyle = ubsNone
+        Alignment = taCenter
+        ParentFont = False
+        Font.Height = -12
+        Anchors = [akTop, akRight]
+        TabOrder = 1
+        Color = clBtnFace
+        DecimalSeparator = ','
+        ThousandSeparator = #160
+      end
+      object UniLabel1: TUniLabel
+        Left = 51
+        Top = 19
+        Width = 48
+        Height = 17
+        Hint = #1057#1088#1077#1076#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1077#1089#1103' '#1085#1072' '#1073#1072#1083#1072#1085#1089#1077
+        ShowHint = True
+        Caption = #1041#1072#1083#1072#1085#1089':'
+        Anchors = [akTop, akRight]
+        ParentFont = False
+        Font.Height = -13
+        Font.Style = [fsBold]
+        TabOrder = 2
+      end
+      object btnBalanceAdd: TUniButton
+        Left = 135
+        Top = 88
+        Width = 129
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        Caption = #1055#1086#1087#1086#1083#1085#1080#1090#1100' '#1073#1072#1083#1072#1085#1089
+        Anchors = [akTop, akRight]
+        TabOrder = 3
+        OnClick = btnBalanceAddClick
+      end
     end
   end
   object DataSource: TDataSource

@@ -37,6 +37,6 @@ Delete pAccrualAction -- нужно чтобы не добавлялся про�
 go
 grant exec on EmexCreateOrderCheck to public
 go
-exec setOV 'EmexCreateOrderCheck', 'P', '20240402', '2'
+exec setOV 'EmexCreateOrderCheck', 'P', '20240521', '4'
 go
  

@@ -105,9 +105,9 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <Icon_MainIcon>SpareParts_Icon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>73</VerInfo_Build>
+        <VerInfo_Build>74</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.73;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.5;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.74;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.5;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
@@ -191,11 +191,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsT.pas">
             <Form>ShipmentsT</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="App\Employees\uEmployeesT.pas">
-            <Form>EmployeesT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
@@ -318,11 +313,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTaskUtils.pas"/>
-        <DCCReference Include="App\Employees\uEmployeesF.pas">
-            <Form>EmployeesF</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
         <DCCReference Include="App\Clients\uClientsTypeT.pas">
             <Form>ClientsTypeT</Form>
             <FormType>dfm</FormType>
@@ -371,6 +361,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\CommonApp\uConstant.pas"/>
         <DCCReference Include="App\emexdwc\uEmexUtils.pas"/>
         <DCCReference Include="App\Orders\uAccrualUtils.pas"/>
+        <DCCReference Include="App\Common\uStatusForm.pas">
+            <Form>StatusForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

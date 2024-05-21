@@ -99,7 +99,15 @@ object OrdersT: TOrdersT
           'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}'
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(10).hide();'#13#10'}')
+          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(9).hide();'#13#10'  tool' +
+          'bar.items.getAt(10).hide();'#13#10'  '#13#10'  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' ' +
+          #1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!toolbar.exportBtn) {'#13#10'     toolbar.exportBtn =' +
+          ' toolbar.insert('#13#10'       0, '#13#10'       //{ xtype: '#39'tbseparator'#39' }'#13 +
+          #10'       {xtype: '#39'button'#39', text: '#39#39', tooltip : '#39#1054#1087#1080#1089#1072#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1086#1074 +
+          ' '#1079#1072#1082#1072#1079#1086#1074#39', handler: function() {'#13#10'          ajaxRequest(sender, ' +
+          '"btnStatusFormShow", {})'#13#10'       }}'#13#10'       '#13#10'     '#13#10'     );'#13#10'  ' +
+          '   toolbar.exportBtn.setIconCls('#39'StatusIcons'#39');// icon...'#13#10'  }  ' +
+          #13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource

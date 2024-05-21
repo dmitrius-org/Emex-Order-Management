@@ -59,16 +59,17 @@ object UserF: TUserF
     TabOrder = 1
     Font.Height = -12
     ParentFont = False
+    ExplicitWidth = 592
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
-      Top = 17
+      Top = 15
       Width = 592
       Height = 170
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitTop = 15
+      ExplicitWidth = 588
       DesignSize = (
         592
         170)
@@ -138,8 +139,8 @@ object UserF: TUserF
       object lblBrief: TUniLabel
         Left = 25
         Top = 44
-        Width = 86
-        Height = 15
+        Width = 84
+        Height = 13
         Hint = ''
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
         ParentFont = False
@@ -149,8 +150,8 @@ object UserF: TUserF
       object lblName: TUniLabel
         Left = 25
         Top = 16
-        Width = 37
-        Height = 15
+        Width = 36
+        Height = 13
         Hint = ''
         Caption = #1051#1086#1075#1080#1085':'
         ParentFont = False
@@ -160,8 +161,8 @@ object UserF: TUserF
       object lbDateBlock: TUniLabel
         Left = 294
         Top = 132
-        Width = 98
-        Height = 15
+        Width = 97
+        Height = 13
         Hint = ''
         Caption = #1044#1072#1090#1072' '#1073#1083#1086#1082#1080#1088#1086#1074#1082#1080':'
         ParentFont = False
@@ -182,11 +183,11 @@ object UserF: TUserF
         TabOrder = 9
         ClearButton = True
       end
-      object UniLabel4: TUniLabel
+      object lblPass: TUniLabel
         Left = 25
         Top = 72
-        Width = 45
-        Height = 15
+        Width = 43
+        Height = 13
         Hint = ''
         Caption = #1055#1072#1088#1086#1083#1100':'
         ParentFont = False

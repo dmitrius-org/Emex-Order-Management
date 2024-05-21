@@ -12,31 +12,31 @@ as
     set p.OrderID = o.OrderID
    from pMovement p (updlock) 
   cross apply (select top 1 *
-                 from tOrders o (nolock) 
-                where o.DetailNumber = p.DetailNum
-                 order by case 
-				            when o.CustomerSubId = p.CustomerSubId 
-							  then 1
-                              else 2
+                 from pAccrualAction a (nolock)
+				inner join tOrders o (nolock) 
+                        on o.OrderID                = a.ObjectID 
+					   and o.DetailNumber           = p.DetailNum
+				       --and isnull(o.EmexOrderID, 0) = 0
+				       --and isnull(o.isCancel, 0 )   = 0
+                where a.Spid   = @@SPID
+                order by case 
+				            when o.CustomerSubId = p.CustomerSubId then 1
+                            else 2
 						  end
 						 ,case 
-				            when o.Reference     = p.Reference 
-							  then 1
-                              else 2
+				            when o.Reference     = p.Reference then 1
+                            else 2
 						  end
                          ,case 
-				            when o.MakeLogo      = p.MakeLogo 
-							  then 1
-                              else 2
+				            when o.MakeLogo      = p.MakeLogo  then 1
+                            else 2
 						  end
 						 ,case 
-				            when o.PriceLogo     = p.PriceLogo
-							  then 1
-                              else 2
+				            when o.PriceLogo     = p.PriceLogo then 1
+                            else 2
 						  end
-
                ) o   
- where p.Spid               = @@SPID
+ where p.Spid = @@SPID
   
  -- ошибка нужна для того, чтобы деталь не изменила статус
  Update p
@@ -56,7 +56,8 @@ as
    from pMovement p (nolock)
   inner join tOrders o (updlock)
           on o.OrderID = p.OrderID
- where p.Spid       = @@SPID
+ where p.Spid = @@SPID
+   
 
 
 /**
@@ -70,12 +71,13 @@ as
   inner join tPrice pr (updlock)
           on pr.PriceID = o.PriceID
  where p.Spid       = @@SPID
+ 
 
   exit_:
   return @r
 go
 grant exec on EmexOrderCreateSync to public
 go
-exec setOV 'EmexOrderCreateSync', 'P', '20240515', '1'
+exec setOV 'EmexOrderCreateSync', 'P', '20240521', '4'
 go
   

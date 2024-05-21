@@ -81,14 +81,17 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       function InsertPartToBasketByPart(): integer;
 
       /// <summary>
-      /// InsertPartToBasketByPartDelete - Удаление запчастей из корзины
+      /// InsertPartToBasketByPartDelete -  Удаление запчастей из корзины. Вызывается при откате действия добавить в корзину.
       /// </summary>
       /// <returns>Ошибки пишем в pAccrualAction</returns>
       procedure InsertPartToBasketByPartDelete();
 
       procedure InsertPartToBasketCancel();
-
-      procedure PartToBasketDelete();
+      /// <summary>
+      /// PartToBasketDelete - Удаление запчастей из корзины. Вызывается при обнаружении дублей при создании заказа
+      /// </summary>
+      /// <returns></returns>
+//      procedure PartToBasketDelete();
 
       /// <summary>
       /// CreateOrder - создание заказа клиента по данным корзины.
@@ -506,6 +509,9 @@ begin
 
       SQl.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID=:OrderID',
               ['OrderID','Message'],[OrderID, e.Message]);
+
+      SQl.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID<>:OrderID',
+              ['OrderID','Message'],[OrderID, '']);
     end;
   end;
 
@@ -570,7 +576,7 @@ begin
 
   logger.Info('TEmex.InsertPartToBasketCancel End');
 end;
-
+         {
 procedure TEmex.PartToBasketDelete;
 var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
@@ -630,7 +636,7 @@ begin
 
   end;
   logger.Info('TEmex.PartToBasketDelete End');
-end;
+end;      }
 
 function TEmex.Login(AAccount: Integer): String;
 var c: Customer;

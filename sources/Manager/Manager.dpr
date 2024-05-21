@@ -41,7 +41,6 @@ uses
   uBalanceT in 'App\Clients\uBalanceT.pas' {BalanceT: TUniForm},
   uRefusalsT in 'App\Orders\uRefusalsT.pas' {RefusalsT: TUniFrame},
   uShipmentsT in 'App\Shipments\uShipmentsT.pas' {ShipmentsT: TUniFrame},
-  uEmployeesT in 'App\Employees\uEmployeesT.pas' {EmployeesT: TUniFrame},
   uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
   uTexT in 'Core\uTexT.pas' {TexT: TUniFrame},
   uClientsT in 'App\Clients\uClientsT.pas' {ClientsT: TUniFrame},
@@ -79,7 +78,6 @@ uses
   uTask_F in '..\Scheduler\Task\uTask_F.pas' {Task_F: TUniForm},
   uTask_T in '..\Scheduler\Task\uTask_T.pas' {Task_T: TUniFrame},
   uTaskUtils in '..\Scheduler\Task\uTaskUtils.pas',
-  uEmployeesF in 'App\Employees\uEmployeesF.pas' {EmployeesF: TUniForm},
   uClientsTypeT in 'App\Clients\uClientsTypeT.pas' {ClientsTypeT: TUniFrame},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uTaskBat_F in '..\Scheduler\Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
@@ -91,7 +89,8 @@ uses
   uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm},
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uEmexUtils in 'App\emexdwc\uEmexUtils.pas',
-  uAccrualUtils in 'App\Orders\uAccrualUtils.pas';
+  uAccrualUtils in 'App\Orders\uAccrualUtils.pas',
+  uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm};
 
 {$R *.res}
 

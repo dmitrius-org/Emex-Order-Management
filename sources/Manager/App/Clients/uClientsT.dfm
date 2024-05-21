@@ -92,9 +92,6 @@ object ClientsT: TClientsT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitLeft = 3
-    ExplicitTop = 3
-    ExplicitWidth = 1059
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -114,10 +111,6 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 3
-      ExplicitTop = 3
-      ExplicitWidth = 1053
-      ExplicitHeight = 64
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -221,8 +214,6 @@ object ClientsT: TClientsT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
-    ExplicitTop = 70
-    ExplicitHeight = 504
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -305,6 +296,12 @@ object ClientsT: TClientsT
           Title.Alignment = taCenter
           Title.Caption = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
           Width = 273
+        end
+        item
+          FieldName = 'Supplier'
+          Title.Alignment = taCenter
+          Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          Width = 200
         end>
     end
     object UniHiddenPanel: TUniHiddenPanel
@@ -375,6 +372,10 @@ object ClientsT: TClientsT
     object QueryClientTypeName: TWideStringField
       FieldName = 'ClientTypeName'
       Size = 200
+    end
+    object QuerySupplier: TWideStringField
+      FieldName = 'Supplier'
+      Size = 512
     end
   end
   object DataSource: TDataSource

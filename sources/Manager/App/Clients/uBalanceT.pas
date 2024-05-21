@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
-  uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit;
+  uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid;
 
 type
   TBalanceT = class(TUniForm)
@@ -32,9 +32,10 @@ type
     QueryAmount: TCurrencyField;
     QueryBalance: TCurrencyField;
     QueryComment: TWideStringField;
-    UniLabel1: TUniLabel;
     QueryRest: TCurrencyField;
+    UniPanel2: TUniPanel;
     edtBalance: TUniFormattedNumberEdit;
+    UniLabel1: TUniLabel;
     btnBalanceAdd: TUniButton;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);

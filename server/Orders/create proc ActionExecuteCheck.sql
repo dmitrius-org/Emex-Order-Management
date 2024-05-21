@@ -114,7 +114,7 @@ as
    inner join tClients c (nolock)
            on c.SuppliersID = cp.SuppliersID
    inner join tOrders o (nolock)
-           on o.ClientID    = cp.ClientID
+           on o.ClientID    = c.ClientID
    inner join tNodes n2 (nolock)
            on n2.NodeID     = o.StatusID
 		  and n2.Brief      = 'InBasket'-- В корзине
@@ -196,6 +196,6 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20240418', '3'
+exec setOV 'ActionExecuteCheck', 'P', '20240521', '3'
 go
  
