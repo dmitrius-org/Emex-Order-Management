@@ -1,2 +1,2 @@
---alter table tOrders add DeliveryTerm	int
---alter table hOrders add DeliveryTerm	int
+
+alter table tBasket add InDateTime  datetime default getdate()        -- Дата добавления детали в корзину

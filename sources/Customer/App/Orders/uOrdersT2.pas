@@ -188,7 +188,7 @@ type
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
-    procedure UserFCallBack(Sender: TComponent; AResult:Integer);
+//    procedure OrderFCallBack(Sender: TComponent; AResult:Integer);
     procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
 
     procedure CancelRequest();
@@ -800,10 +800,10 @@ begin
   qPriceLogo.Open();
 end;
 
-procedure TOrdersT2.UserFCallBack(Sender: TComponent; AResult: Integer);
-begin
-
-end;
+//procedure TOrdersT2.OrderFCallBack(Sender: TComponent; AResult: Integer);
+//begin
+//
+//end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
@@ -833,23 +833,21 @@ procedure tMarks.DataRefresh;
 var Key: Integer;
     BM : TBookmark;
 begin
-  begin
-      FGrid.DataSource.DataSet.DisableControls;
-      BM := FGrid.DataSource.DataSet.GetBookmark;
-      try
-        for Key in Marks.FMarks.Keys  do
-        begin
-          if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
-          begin
-            tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-            FGrid.RefreshCurrentRow();
-          end;
-        end;
-      finally
-        FGrid.DataSource.DataSet.GotoBookmark(BM);
-        FGrid.DataSource.DataSet.FreeBookmark(BM);
-        FGrid.DataSource.DataSet.EnableControls;
+  FGrid.DataSource.DataSet.DisableControls;
+  BM := FGrid.DataSource.DataSet.GetBookmark;
+  try
+    for Key in Marks.FMarks.Keys  do
+    begin
+      if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+      begin
+        tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
+        FGrid.RefreshCurrentRow();
       end;
+    end;
+  finally
+    FGrid.DataSource.DataSet.GotoBookmark(BM);
+    FGrid.DataSource.DataSet.FreeBookmark(BM);
+    FGrid.DataSource.DataSet.EnableControls;
   end;
 end;
 

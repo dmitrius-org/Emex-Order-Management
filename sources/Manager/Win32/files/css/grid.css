@@ -86,10 +86,31 @@
     text-align: left
 }
 
-/* таблица форматов загрузки заказов на форме редактирования клентов */
-.grid-clients-file-format .x-column-header-inner .x-column-header-text {
-    white-space: normal;
-    text-align: center;
+/* Иконка: Запрос отказа*/
+.grid-order .x-request-cancellation {
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #FF033E
+}
+
+/* Иконка: Отказ*/
+.grid-order .x-cancellation {
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #FF033E
+}
+
+/* Иконка: сообщение по заказу*/
+.x-orders-message {
+    /* position: absolute; */
+    overflow: visible;
+    /* z-index: 999999; */
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #1E90FF
 }
 
 /* таблица пользователи*/
@@ -129,36 +150,23 @@
     text-align: center;
 }
 
-/* Иконка: Запрос отказа*/
-.grid-order .x-request-cancellation {
-    width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
-    color: #FF033E
-}
-
-/* Иконка: Отказ*/
-.grid-order .x-cancellation {
-    width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
-    color: #FF033E
-}
-
-/* Иконка: сообщение по заказу*/
-.x-orders-message {
-    /* position: absolute; */
-    overflow: visible;
-    /* z-index: 999999; */
-    width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
-    color: #1E90FF
-}
-
 
 /* Перенос строки в заголовке таблицы планировщика */
 .grid-task .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
 }
+
+/* табица Баланс */
+/*StatusIcons - иконка экспортв в excel*/
+.grid-balance .ToExcel{
+    background-image:url("/files/img/ToExcel16.png") !important; 
+    width:24px !important;
+    height:24px !important;
+}
+
+/* таблица форматов загрузки заказов на форме редактирования клентов */
+.grid-clients-file-format .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}  

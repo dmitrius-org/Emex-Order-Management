@@ -18,8 +18,14 @@ select
 	  ,t.Quantity         -- 
       ,t.PriceRub
       ,t.Amount           -- 
+      ,(case 
+              when datediff(hh, t.InDateTime, getdate()) >= 24 then 1
+              else 0
+            end ) IsUpdating -- прошло 24 часа, необходимо обновить цену
+
+
   from tBasket t (nolock)
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240403', '1'
+exec setOV 'vBasket', 'V', '20240522', '5'

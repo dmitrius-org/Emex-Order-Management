@@ -163,7 +163,7 @@ object OrdersT: TOrdersT
         item
           FieldName = 'ClientID'
           Title.Alignment = taCenter
-          Title.Caption = ' '
+          Title.Caption = 'ClientID'
           Width = 85
           Visible = False
           ReadOnly = True
@@ -779,7 +779,7 @@ object OrdersT: TOrdersT
         object fPriceLogo: TUniCheckComboBox
           Left = 259
           Top = 35
-          Width = 114
+          Width = 94
           Hint = ''
           ShowHint = True
           Text = ''
@@ -821,9 +821,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fClient: TUniCheckComboBox
-          Left = 379
+          Left = 359
           Top = 35
-          Width = 196
+          Width = 216
           Hint = ''
           ShowHint = True
           Text = ''

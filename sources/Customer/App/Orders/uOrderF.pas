@@ -1,4 +1,4 @@
-unit uOrderF;
+п»їunit uOrderF;
 
 interface
 
@@ -30,12 +30,12 @@ type
     isPosExist: Boolean;
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
   public
@@ -64,11 +64,9 @@ begin
 
   if RetVal.Code = 0 then
       begin
-        sqltext :=' declare @R      int                       '+
-                  ' exec @r = OrderCreateFromBasket           '+
-                  '           '+
-                  ' select @r as retcode '+
-                  ' ';
+        sqltext :=' declare @R  int                    '+
+                  '    exec @r = OrderCreateFromBasket '+
+                  '  select @r as retcode ';
 
         Sql.Open(sqltext, [], []);
 
@@ -77,7 +75,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    ToastOK('Заказ успешно создан!', UniSession);
+    ToastOK('Р—Р°РєР°Р· СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ!', UniSession);
     ModalResult:=mrOK;
   end
   else
@@ -92,8 +90,7 @@ begin
 
   if not isPosExist then
   begin
-    RetVal.Code := 527;
-    //RetVal.Message := 'Не выбраны позиции для заказа';
+    RetVal.Code := 527; // 'РќРµ РІС‹Р±СЂР°РЅС‹ РїРѕР·РёС†РёРё РґР»СЏ Р·Р°РєР°Р·Р°';
     Exit();
   end
 end;
@@ -108,13 +105,13 @@ begin
 
   lblCount.Text  := UniMainModule.Query.FieldByName('DetailPosCount').AsString;
   lblRowCount.Text  := UniMainModule.Query.FieldByName('DetailCount').AsString;
-  lblSum.text:= UniMainModule.Query.FieldByName('OrderAmount').AsString + ' руб.';
-  lblW.text:= UniMainModule.Query.FieldByName('OrderWeight').AsString + ' кг.';
+  lblSum.text:= FormatFloat('###,##0.00 в‚Ѕ',uniMainModule.Query.FieldByName('OrderAmount').Value);
+  lblW.text:= UniMainModule.Query.FieldByName('OrderWeight').AsString + ' РєРі.';
 end;
 
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
-  DataLoad;// начитываем данные с базы
+  DataLoad;// РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
 end;
 
 end.

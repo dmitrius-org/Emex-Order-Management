@@ -30,13 +30,14 @@ tBasket - корзина деталей
   ,ExtraKurs               money          -- 
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
+  ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   );
 
   grant all on tBasket to public;
   --
   create unique index ao1 on tBasket(BasketID);
   --
-  create unique index ao2 on tBasket(ClientID);
+  create index ao2 on tBasket(ClientID);
 end
 go
 exec setOV 'tBasket', 'U', '20240101', '0'

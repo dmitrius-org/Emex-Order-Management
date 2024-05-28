@@ -61,7 +61,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// <summary>Login - Авторизация </summary>
       function Login(AAccount: Integer): String;
 
-      /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
+      /// <summary>FindByDetailNumber - поиск детали по номеру</summary>
       procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
   end;
 

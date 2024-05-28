@@ -235,3 +235,22 @@
 .grid-search .column-btn-info:hover {
     color: #337AB7;
 }
+
+/* Иконка: Нобходимо обновить цену*/
+.grid-basket .x-price-is-updating {
+    /* width: 100%; */
+    /* margin: 1% auto; */
+    /* font-size: 14px; */
+    color: #FF033E
+}
+
+/* Иконка: Нобходимо обновить цену*/
+/* .grid-basket .fa-exclamation-triangle { */
+    /* width: 100%; */
+    /* margin: 1% auto; */
+    /* font-size: 14px; */
+    /* color: #FF033E */
+/* } */
+
+
+

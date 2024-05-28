@@ -83,8 +83,6 @@ object SearchF: TSearchF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
-    ExplicitTop = 55
-    ExplicitHeight = 563
     object SearchGrid: TUniDBGrid
       Left = 0
       Top = 0

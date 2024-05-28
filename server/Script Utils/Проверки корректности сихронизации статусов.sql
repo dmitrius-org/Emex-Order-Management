@@ -97,8 +97,14 @@ delete p
 
 
 --
---select 'Заказы, которые не удалось разбить на части', *
---  from tMovement (nolock)
+select 'Заказы, которые не удалось разбить на части', *
+  from tMovement (nolock)
+ where OrderID is null
+
+
+
+--delete
+--  from tMovement 
 -- where OrderID is null
 
 -- заказы, которых нет в emex

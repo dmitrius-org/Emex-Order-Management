@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, Vcl.Menus, uniButton, uniLabel,
-  System.Generics.Collections, uniSpinEdit, uniDBEdit;
+  System.Generics.Collections, uniSpinEdit, uniDBEdit, uniScreenMask;
 
 type
   tMarks = class
@@ -76,32 +76,39 @@ type
     edtOrderAmount: TUniLabel;
     edtWeight: TUniLabel;
     edtCount: TUniLabel;
-    UniProgressbarWidget1: TUniProgressbarWidget;
     UniSpinEdit1: TUniSpinEdit;
-    procedure edtSearchTriggerEvent(Sender: TUniFormControl;
-      AButtonId: Integer);
+    QueryIsUpdating: TIntegerField;
+    btnPriceRefresh: TUniButtonWidget;
+    QueryIsUpdatingExists: TIntegerField;
+
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnDeleteBasketClick(Sender: TObject);
-    procedure GridCellContextClick(Column: TUniDBGridColumn; X,
-      Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
-    procedure UniFrameReady(Sender: TObject);
-    procedure UniFrameAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
     procedure GridSelectionChange(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
     procedure addOrderClick(Sender: TObject);
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
+    procedure btnPriceRefreshClick(Sender: TObject);
   private
     { Private declarations }
 
     Marks: TMarks;
 
     procedure GetAgregateDate();
+
+    /// <summary>
+    /// PartPriceRefresh - обновление цены для выбранной позиции в корзине
+    /// </summary>
+    procedure PartPriceRefresh();
+
+    /// <summary>
+    /// PriceCalc - расчет цены и срока поставки
+    /// </summary>
+    procedure PriceCalc();
 
   public
     { Public declarations }
@@ -124,8 +131,32 @@ end;
 
 procedure TBasketF.addOrderClick(Sender: TObject);
 var f:TOrderF;
+var sqltext: string;
+     Field:string;
 begin
   try
+    RetVal.Clear;
+    // Проверяем что по всем позициям актуальные цены
+    if RetVal.Code = 0 then
+    begin
+      sqltext :=' declare @R      int                        ' +
+                ' exec @r = OrderCreateFromBasketCheckBefore ' +
+                '           '+
+                ' select @r as retcode '+
+                ' ';
+
+      Sql.Open(sqltext, [], []);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
+
+
+    if RetVal.Code>0 then
+    begin
+      MessageDlg(RetVal.Message, mtError, [mbOK]);
+      exit;
+    end;
+
     f := TOrderF.Create(UniApplication);
     if f.ShowModal = mrOk then
     begin
@@ -134,7 +165,6 @@ begin
   finally
     f.Free
   end;
-
 end;
 
 procedure TBasketF.btnDeleteBasketClick(Sender: TObject);
@@ -144,10 +174,18 @@ begin
   GetAgregateDate;
 end;
 
-procedure TBasketF.edtSearchTriggerEvent(Sender: TUniFormControl; AButtonId: Integer);
-var emex: TEmex;
-begin
 
+procedure TBasketF.btnPriceRefreshClick(Sender: TObject);
+begin
+  PartPriceRefresh;
+end;
+
+procedure TBasketF.PriceCalc;
+begin
+  RetVal.Clear;
+  Sql.exec('exec BasketPriceCalc @BasketID = :BasketID',
+          ['BasketID'],
+          [Query.FieldByName('BasketID').AsInteger ]);
 end;
 
 procedure TBasketF.GridRefresh;
@@ -155,6 +193,8 @@ begin
   Query.Close;
   Query.ParamByName('ClientID').AsInteger := UniMainModule.AUserID;
   Query.Open;
+
+  Grid.Columns[0].Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
 
   GetAgregateDate;
 end;
@@ -165,12 +205,51 @@ begin
 
   Marks.Select;
 
- // GetMarksInfo;
-
- // ActionExecuteEnabled;
-
   logger.Info('TBasketF.GridSelectionChange End');
 end;
+
+procedure TBasketF.PartPriceRefresh;
+var
+  emex: TEmex;
+begin
+  emex := TEmex.Create;
+  try
+    ShowMask('');
+    UniSession.Synchronize;
+    emex.Connection := UniMainModule.FDConnection;
+    emex.FindByDetailNumber(UniMainModule.AUserID, Query.FieldByName('DetailNum').AsString );
+
+    PriceCalc;
+
+    GridRefresh();
+  finally
+    FreeAndNil(emex);
+
+    HideMask();
+    UniSession.Synchronize;
+  end;
+end;
+
+//procedure TBasketF.QueryIsUpdatingGetText(Sender: TField; var Text: string;
+//  DisplayText: Boolean);
+//begin
+//  // иконка для выбора аналогов
+//  if Sender.Value > 0 then
+//  begin
+//    Text := '<form method="post" action="">' +
+//            '<span  data-qtip="Необходимо обновить цену">'+
+//            '<a>'+
+//            '<button type="button" onclick="setMakelogo()" class="x-btn x-unselectable x-btn-default-small x-border-box"> '+
+////            '<button type="button" onclick="setMakelogo()" style="border: 0; background: none;"> '+
+//            '  <i class="x-price-is-updating fa fa-exclamation-triangle fa-lg"></i>Обновить'+
+//            '</button>'+
+//            '</a>'+
+//            '</span>'+
+//            '</form>';
+//  end
+//  else
+//    Text := '';
+//end;
 
 procedure TBasketF.GetAgregateDate;
 begin
@@ -186,30 +265,23 @@ end;
 
 procedure TBasketF.GridAfterLoad(Sender: TUniCustomDBGrid);
 begin
-   with Grid, JSInterface do
+  Logger.Info('TBasketF.GridAfterLoad Begin');
+  with Grid, JSInterface do
     JSCallDefer('getSelectionModel().selectAll', [], 100 );
+  Logger.Info('GridAfterLoad End ');
 end;
 
 procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  Logger.Info('GridAjaxEvent: ' + EventName);
-  Logger.Info('GridAjaxEvent: ' + Params.text);
+ // Logger.Info('TBasketF.GridAjaxEvent: ' + EventName);
+ // Logger.Info('TBasketF.GridAjaxEvent: ' + Params.text);
 
   if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
   begin
     Query.Post;
     Query.Refresh
-   // Query.RefreshRecord();
   end;
-
-
-end;
-
-procedure TBasketF.GridCellContextClick(Column: TUniDBGridColumn; X,
-  Y: Integer);
-begin
- // ppMain.Popup(X, Y, Grid);
 end;
 
 procedure TBasketF.GridKeyDown(Sender: TObject; var Key: Word;
@@ -224,20 +296,8 @@ begin
   end;
 end;
 
-procedure TBasketF.UniFrameAjaxEvent(Sender: TComponent; EventName: string;
-  Params: TUniStrings);
-begin
-//if EventName='MyEvent1' then
-//  begin
-//    Logger.Info(EventName);
-//   // UniButton1.Caption:=Params.Values['param0'] + Params.Values['param1'];
-//   // showmessage(Params.Values['param0'] + Params.Values['param1']);
-//  end;
-end;
-
 procedure TBasketF.UniFrameCreate(Sender: TObject);
 begin
-  Logger.Info('TBasketF.UniFrameCreate');
   // объект для упраления метками
   Marks := tMarks.Create(Grid);
   Marks.Clear;
@@ -247,13 +307,6 @@ procedure TBasketF.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
 end;
-
-procedure TBasketF.UniFrameReady(Sender: TObject);
-begin
-  Logger.Info('TBasketF.UniFrameReady');
-  // Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
-end;
-
 
 constructor tMarks.Create(AGrid: TUniDBGrid);
 begin
@@ -303,6 +356,7 @@ begin
   begin
     BM := FGrid.DataSource.DataSet.GetBookmark;
     try
+      //DeleteInDB;
       for I := 0 to FGrid.SelectedRows.Count - 1 do
       begin
         FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
@@ -323,6 +377,8 @@ begin
     end;
 
   end;
+//  else
+//    DeleteInDB;
 
   logger.Info('tMarks.Count: ' + Count.ToString);
   logger.Info('tMarks.Select End');

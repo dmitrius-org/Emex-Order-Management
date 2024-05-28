@@ -1,10 +1,13 @@
 if OBJECT_ID('CustomerPriceCalc', 'P') is not null
     drop proc CustomerPriceCalc	 
 go
+if OBJECT_ID('SearchPriceCalc', 'P') is not null
+    drop proc SearchPriceCalc	 
+go
 /* --------------------------------------------------------
-  CustomerPriceCalc - расчет цены 
+  SearchPriceCalc - расчет цены 
 -------------------------------------------------------- */
-create proc CustomerPriceCalc
+create proc SearchPriceCalc
               @DestinationLogo	nvarchar(20),
 			  @DetailNum        nvarchar(40)
 as
@@ -226,7 +229,7 @@ Update f
 exit_:
 return @RetVal    
 go
-grant all on CustomerPriceCalc to public
+grant all on SearchPriceCalc to public
 go
-exec setOV 'CustomerPriceCalc', 'P', '20240417', '5'
+exec setOV 'SearchPriceCalc', 'P', '20240528', '1'
 go

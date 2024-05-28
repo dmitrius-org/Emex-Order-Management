@@ -158,7 +158,7 @@ DEALLOCATE my_cur
  exec MovementArchive
 
  -- чистим ошибочные заказа после разбиения, иногда такое бывает
- /*
+ 
  delete o
    from pMovement p (nolock) 
   inner join tOrders op (rowlock)
@@ -183,7 +183,7 @@ DEALLOCATE my_cur
  where p.Spid = @@SPID
    and p.Flag&8>0
 
-*/
+--*/
 
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)

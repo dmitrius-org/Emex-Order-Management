@@ -124,8 +124,10 @@ object OrdersT2: TOrdersT2
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
           'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10'}')
+          #10'  toolbar.items.getAt(9).hide(); //Remove the Refresh button in' +
+          ' the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(10).hid' +
+          'e(); //Remove the Refresh button in the ToolBar, number 10, hide' +
+          ' him'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource

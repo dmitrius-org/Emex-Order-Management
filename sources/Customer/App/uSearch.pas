@@ -54,7 +54,6 @@ type
     procedure edtSearchKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure QueryDeliveryTypeGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure SearchGridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
-    procedure UniHTMLFrameAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
     procedure UniFrameReady(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
     procedure SearchGridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -89,22 +88,30 @@ type
 
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
+    /// <summary>
+    /// PartSearch - поиск детали по номеру
+    /// </summary>
     procedure PartSearch();
-
+    /// <summary>
+    /// GridRefresh -обновление таблицы
+    /// </summary>
     procedure GridRefresh();
-    procedure MakeLogoGridRefresh();
-
+    /// <summary>
+    /// PartToBasket - добавление детали в корзину
+    /// </summary>
     procedure PartToBasket();
     /// <summary>
-    /// CustomerPriceCalc - расчет цены и срока поставки
+    /// PriceCalc - расчет цены и срока поставки
     /// </summary>
-    procedure CustomerPriceCalc();
+    procedure PriceCalc();
 
     procedure SearchHistoryLoad();
 
     procedure SetMakeName();
+
     procedure MakeLogoGridShow();
     procedure MakeLogoGridHide();
+    procedure MakeLogoGridRefresh();
 
 
   public
@@ -129,13 +136,13 @@ begin
   if edtSearch.Text = '' then
     Exit;
 
-    PartSearch;
+  PartSearch;
 end;
 
-procedure TSearchF.CustomerPriceCalc;
+procedure TSearchF.PriceCalc;
 begin
   RetVal.Clear;
-  Sql.exec('exec CustomerPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
+  Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo', 'DetailNum'],
           [FDestinationLogo, FDetailNum ]);
 end;
@@ -144,7 +151,7 @@ procedure TSearchF.edtSearchClick(Sender: TObject);
 begin
  // edtSearch.RemoteUpdate := true;
 
- edtSearch.Expand;
+  edtSearch.Expand;
 
 end;
 
@@ -250,7 +257,7 @@ begin
     emex.Connection := UniMainModule.FDConnection;
     emex.FindByDetailNumber(UniMainModule.AUserID, edtSearch.Text);
 
-    CustomerPriceCalc;
+    PriceCalc;
 
     SetMakeName;
 
@@ -379,7 +386,7 @@ begin
   begin
     FDestinationLogo := Params.Values['P1'];
 
-    CustomerPriceCalc();
+    PriceCalc();
 
     GridRefresh();
   end;
@@ -524,12 +531,6 @@ begin
     Options := Options + [dgDontShowSelected];
     JSInterface.JSConfig('disableSelection', [True]);
   end;
-end;
-
-procedure TSearchF.UniHTMLFrameAjaxEvent(Sender: TComponent; EventName: string;
-  Params: TUniStrings);
-begin
-  logger.Info(Sender.Name + ': ' + EventName)
 end;
 
 initialization

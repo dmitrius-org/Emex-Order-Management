@@ -57,8 +57,8 @@ object LoginF: TLoginF
       TabOrder = 2
     end
     object btnOk: TUniButton
-      Left = 256
-      Top = 236
+      Left = 200
+      Top = 248
       Width = 115
       Height = 25
       Hint = ''
