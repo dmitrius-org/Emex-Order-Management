@@ -1,4 +1,4 @@
-unit uInstructionsF;
+unit uConfluencePagesF;
 
 interface
 
@@ -10,7 +10,7 @@ uses
   uniDateTimePicker, uCommonType, uniRadioGroup, uniMemo;
 
 type
-  TInstructionsF = class(TUniForm)
+  TConfluencePagesF = class(TUniForm)
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
@@ -30,6 +30,8 @@ type
     { Private declarations }
     FAction: TFormAction;
     FID: Integer;
+    FArticleType: Integer;
+    FPID: Integer;
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
@@ -45,9 +47,11 @@ type
     { Public declarations }
     property FormAction: TFormAction read FAction write SetAction;
     property ID: Integer read FID write FID;
+    property PID: Integer read FPID write FPID;
+    property ArticleType: Integer read FArticleType write FArticleType;
   end;
 
-function InstructionsF: TInstructionsF;
+function ConfluencePagesF: TConfluencePagesF;
 
 implementation
 
@@ -56,60 +60,60 @@ implementation
 uses
   MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uLogger, uMainVar;
 
-function InstructionsF: TInstructionsF;
+function ConfluencePagesF: TConfluencePagesF;
 begin
-  Result := TInstructionsF(UniMainModule.GetFormInstance(TInstructionsF));
+  Result := TConfluencePagesF(UniMainModule.GetFormInstance(TConfluencePagesF));
 end;
 
 { TUserF }
 
-procedure TInstructionsF.btnCancelClick(Sender: TObject);
+procedure TConfluencePagesF.btnCancelClick(Sender: TObject);
 begin
   ModalResult:=mrCancel;
 end;
 
-procedure TInstructionsF.btnOkClick(Sender: TObject);
+procedure TConfluencePagesF.btnOkClick(Sender: TObject);
 var sqltext: string;
 begin
   RetVal.Clear;
-  logger.Info(RetVal.Message);
+
   DataCheck();
-  logger.Info(RetVal.Message);
-  logger.Info(RetVal.Code.ToString);
+
   if RetVal.Code = 0 then
   case FAction of
-    acInsert:
+    acInsert, acChildInsert:
     begin
+
       sqltext :=' declare @R      int                '+
-                '        ,@InstructionID numeric(18, 0) '+
+                '        ,@ArticleID numeric(18, 0)  '+
                 '                                    '+
-                ' exec @r = InstructionInsert        '+
-                '             @InstructionID = @InstructionID out'+
+                ' exec @r = ArticleAdd        '+
+                '             @ArticleID = @ArticleID out'+
                 '            ,@Name     = :Name      '+
                 '            ,@Comment  = :Comment   '+
                 '            ,@ParentID = :ParentID  '+
                 '            ,@Type     = :Type      '+
-                ' select @r as retcode, @InstructionID as InstructionID '+
+                ' select @r as retcode, @ArticleID as ArticleID '+
                 ' ';
 
       Sql.Open(sqltext,
                ['Name','Comment','ParentID','Type'],
                [edtName.Text,
                 edtComment.Text,
-                0,
-                1]);
+                FPID,
+                FArticleType]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
-      FID :=  Sql.Q.FieldByName('InstructionID').Value;
+      FID :=  Sql.Q.FieldByName('ArticleID').Value;
 
     end;
     acUpdate:
     begin
       sqltext :=' declare @R      int                '+
                 '                                    '+
-                ' exec @r = InstructionUpdate                 '+
-                '             @InstructionID = :InstructionID '+
+                ' exec @r = ArticleUpdate            '+
+                '             @ArticleID= :ArticleID '+
                 '            ,@Name     = :Name      '+
                 '            ,@Comment  = :Comment   '+
                 '            ,@ParentID = :ParentID  '+
@@ -118,7 +122,7 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['InstructionID','Name','Comment','ParentID'],
+               ['ArticleID','Name','Comment','ParentID'],
                [FID,
                 edtName.Text,
                 edtComment.Text,
@@ -131,13 +135,13 @@ begin
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := ' declare @R      int           '+
                                       '         '+
-                                      ' exec @r = InstructionDelete   '+
-                                      '             @InstructionID   = :InstructionID '+
+                                      ' exec @r = ArticleDelete   '+
+                                      '             @ArticleID = :ArticleID '+
                                       '                               '+
                                       ' select @r as retcode          '+
                                       ' ';
 
-      UniMainModule.Query.ParamByName('InstructionID').Value := FID;
+      UniMainModule.Query.ParamByName('ArticleID').Value := FID;
       UniMainModule.Query.Open;
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
     end;
@@ -154,7 +158,7 @@ begin
 
 end;
 
-procedure TInstructionsF.DataCheck;
+procedure TConfluencePagesF.DataCheck;
 begin
   RetVal.Clear;
 
@@ -171,14 +175,14 @@ begin
   end;
 end;
 
-procedure TInstructionsF.DataLoad;
+procedure TConfluencePagesF.DataLoad;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := ' select t.*, u.Name as UserName '+
-                                  '   from tInstructions t  (nolock) '+
+                                  '   from tArticles t  (nolock) '+
                                   '  inner join tUser u (nolock)   '+
                                   '          on u.UserID = t.UserID  '+
-                                  '  where t.InstructionID = :InstructionID '+
+                                  '  where t.ArticleID = :InstructionID '+
                                   ' ';
   UniMainModule.Query.ParamByName('InstructionID').Value := FID;
   UniMainModule.Query.Open;
@@ -190,17 +194,17 @@ begin
   lblInDateTime.Caption:= 'Дата создания: '+UniMainModule.Query.FieldByName('InDateTime').AsString;
 end;
 
-procedure TInstructionsF.SetAction(const Value: TFormAction);
+procedure TConfluencePagesF.SetAction(const Value: TFormAction);
 begin
   FAction := Value;
 end;
 
-procedure TInstructionsF.UniFormShow(Sender: TObject);
+procedure TConfluencePagesF.UniFormShow(Sender: TObject);
 begin
   case FAction of
-    acInsert, acReportCreate:
+    acInsert, acReportCreate, acChildInsert:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Сохранить';
 
       AuditPanel.Visible:=False;
     end;

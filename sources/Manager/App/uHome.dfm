@@ -1,8 +1,9 @@
 object HomeF: THomeF
   Left = 0
   Top = 0
-  Width = 845
+  Width = 932
   Height = 609
+  OnCreate = UniFrameCreate
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
@@ -13,4 +14,37 @@ object HomeF: THomeF
   TabOrder = 0
   ParentColor = False
   ParentBackground = False
+  object pcMain: TUniPageControl
+    Left = 0
+    Top = 0
+    Width = 932
+    Height = 609
+    Hint = ''
+    ActivePage = Dashboard
+    Align = alClient
+    LayoutConfig.IgnorePosition = False
+    LayoutConfig.DockWhenAligned = False
+    TabOrder = 0
+    object Dashboard: TUniTabSheet
+      AlignWithMargins = True
+      Hint = ''
+      Caption = 'Dashboard'
+      Layout = 'fit'
+      LayoutConfig.IgnorePosition = False
+      LayoutConfig.DockWhenAligned = False
+      object edt: TUniHTMLFrame
+        AlignWithMargins = True
+        Left = 10
+        Top = 3
+        Width = 904
+        Height = 575
+        Hint = ''
+        Margins.Left = 10
+        Margins.Right = 10
+        ShowHint = True
+        ParentShowHint = False
+        Align = alClient
+      end
+    end
+  end
 end

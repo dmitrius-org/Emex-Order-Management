@@ -194,7 +194,7 @@ begin
   Query.ParamByName('ClientID').AsInteger := UniMainModule.AUserID;
   Query.Open;
 
-  Grid.Columns[0].Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
+  Grid.Columns.ColumnFromFieldName('IsUpdating').Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
 
   GetAgregateDate;
 end;

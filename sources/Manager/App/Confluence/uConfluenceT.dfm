@@ -1,8 +1,8 @@
-object InstructionsT: TInstructionsT
+object ConfluenceT: TConfluenceT
   Left = 0
   Top = 0
-  Width = 992
-  Height = 525
+  Width = 894
+  Height = 404
   OnReady = UniFrameReady
   Layout = 'fit'
   ParentAlignmentControl = False
@@ -13,19 +13,21 @@ object InstructionsT: TInstructionsT
   object UniPanel1: TUniPanel
     Left = 0
     Top = 0
-    Width = 992
-    Height = 525
+    Width = 894
+    Height = 404
     Hint = ''
     Align = alClient
     TabOrder = 0
     ShowCaption = False
     Caption = 'UniPanel1'
     Layout = 'border'
+    ExplicitWidth = 992
+    ExplicitHeight = 525
     object MenuPanel: TUniContainerPanel
       Left = 1
       Top = 1
       Width = 300
-      Height = 523
+      Height = 402
       Hint = ''
       ParentColor = False
       Align = alLeft
@@ -35,11 +37,12 @@ object InstructionsT: TInstructionsT
       Layout = 'fit'
       LayoutConfig.Split = True
       LayoutConfig.Region = 'west'
+      ExplicitHeight = 523
       object TreeMenu: TUniTreeView
         Left = 0
         Top = 0
         Width = 300
-        Height = 523
+        Height = 402
         Hint = ''
         ShowHint = True
         ParentShowHint = False
@@ -59,7 +62,7 @@ object InstructionsT: TInstructionsT
             Action = actAdd
             ButtonId = 0
             IconCls = 'add'
-            ImageIndex = 0
+            ImageIndex = 3
             Hint = #1044#1086#1073#1072#1074#1080#1090#1100
           end
           item
@@ -71,13 +74,14 @@ object InstructionsT: TInstructionsT
           end>
         OnClick = TreeMenuClick
         OnCellContextClick = TreeMenuCellContextClick
+        ExplicitHeight = 523
       end
     end
     object ContentPanel: TUniContainerPanel
       Left = 301
       Top = 1
-      Width = 690
-      Height = 523
+      Width = 592
+      Height = 402
       Hint = ''
       ParentColor = False
       Align = alClient
@@ -86,12 +90,14 @@ object InstructionsT: TInstructionsT
       TabOrder = 2
       Layout = 'fit'
       LayoutConfig.Region = 'center'
+      ExplicitWidth = 690
+      ExplicitHeight = 523
       object UniPanel2: TUniPanel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 684
-        Height = 520
+        Width = 586
+        Height = 399
         Hint = ''
         Margins.Bottom = 0
         ShowHint = True
@@ -107,11 +113,13 @@ object InstructionsT: TInstructionsT
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Flex = 1
         LayoutConfig.Width = '100'
+        ExplicitWidth = 684
+        ExplicitHeight = 520
         object ArticleToolBar: TUniPanel
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 678
+          Width = 580
           Height = 49
           Hint = ''
           ShowHint = True
@@ -123,6 +131,7 @@ object InstructionsT: TInstructionsT
           AlignmentControl = uniAlignmentClient
           ParentAlignmentControl = False
           LayoutConfig.Region = 'north'
+          ExplicitWidth = 678
           object lblArticle: TUniLabel
             Left = 16
             Top = 8
@@ -139,7 +148,7 @@ object InstructionsT: TInstructionsT
           end
           object UniPanel: TUniPanel
             AlignWithMargins = True
-            Left = 282
+            Left = 184
             Top = 3
             Width = 393
             Height = 43
@@ -151,6 +160,7 @@ object InstructionsT: TInstructionsT
             Caption = ''
             AlignmentControl = uniAlignmentClient
             ParentAlignmentControl = False
+            ExplicitLeft = 282
             DesignSize = (
               393
               43)
@@ -191,8 +201,8 @@ object InstructionsT: TInstructionsT
         object ArticleContent: TUniContainerPanel
           Left = 0
           Top = 55
-          Width = 684
-          Height = 465
+          Width = 586
+          Height = 344
           Hint = ''
           Margins.Left = 5
           ShowHint = True
@@ -201,16 +211,20 @@ object InstructionsT: TInstructionsT
           TabOrder = 2
           Layout = 'fit'
           LayoutConfig.Region = 'center'
+          ExplicitWidth = 684
+          ExplicitHeight = 465
           object edt1: TUniHTMLFrame
             AlignWithMargins = True
             Left = 3
             Top = 3
-            Width = 678
-            Height = 459
+            Width = 580
+            Height = 338
             Hint = ''
             ShowHint = True
             Align = alClient
             OnAjaxEvent = edt1AjaxEvent
+            ExplicitWidth = 678
+            ExplicitHeight = 459
           end
         end
       end
@@ -284,7 +298,7 @@ object InstructionsT: TInstructionsT
     end
   end
   object UniNativeImageList1: TUniNativeImageList
-    Left = 858
+    Left = 658
     Top = 114
     Images = {
       06000000FFFFFF1F061300000070656E63696C2D7371756172652D6F3B66613B

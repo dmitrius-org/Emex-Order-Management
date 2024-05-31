@@ -1,10 +1,10 @@
-drop proc if exists InstructionInsert
+drop proc if exists ArticleAdd
 /*
-  InstructionInsert - 
+  ArticleAdd - 
 */
 go
-create proc InstructionInsert
-              @InstructionID numeric(18,0) out
+create proc ArticleAdd
+              @ArticleID     numeric(18,0) out
              ,@ParentID      numeric(18,0) 
              ,@Name          nvarchar(256)
              ,@Comment       nvarchar(512)= null  
@@ -14,7 +14,7 @@ as
   declare @r int = 0
 
   declare @ID as table (ID numeric(18, 0))
-  insert into tInstructions
+  insert into tArticles
          (
           ParentID
          ,Name
@@ -22,7 +22,7 @@ as
 		 ,Type
          ,UserID
          )
-  OUTPUT INSERTED.InstructionID INTO @ID
+  OUTPUT INSERTED.ArticleID INTO @ID
   select @ParentID    
         ,@Name	     
         ,@Comment	 
@@ -30,12 +30,12 @@ as
 		,dbo.GetUserID()
 
 
-   Select @InstructionID = ID from @ID
+   Select @ArticleID = ID from @ID
 
  exit_:
  return @r
 go
-grant exec on InstructionInsert to public
+grant exec on ArticleAdd to public
 go
-exec setOV 'InstructionInsert', 'P', '20240412', '1'
+exec setOV 'ArticleAdd', 'P', '20240412', '1'
 go

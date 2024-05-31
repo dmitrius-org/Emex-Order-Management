@@ -1,10 +1,6 @@
 drop proc if exists OrderCreateFromBasket
 /*
   OrderCreateFromBasket - создание заказа на основе корзины
-
-
-  @ClientID  - ид клиента
-  @PartID    - ид детали с формы поиска детали
 */
 go
 
@@ -23,8 +19,8 @@ declare @r int = 0
   if isnull(@StatusID, 0) = 0
   begin
     set @r = 530 -- '[OrderCreateFromBasket] Не определен идентификатор начального состояния!'
-	goto exit_
-  end	
+    goto exit_
+  end    
 
   select @ClientID = max(b.ClientID)
     from tMarks m (nolock)
@@ -65,10 +61,88 @@ declare @r int = 0
   
   select @ClientOrderNum = max(ClientOrderNum)
     from tOrders (nolock)
-   where ClientID = @ClientID
+   where ClientID = @ClientID  
+
+  declare @P table -- тут детали которые сужествуют в нашей базе
+         (BasketID  numeric(18, 0) 
+         ,PriceID   numeric(18, 0)
+         ,Make      nvarchar(30)
+         ,DetailNum nvarchar(128)
+         ,PriceLogo nvarchar(30)
+         );
+
+  declare @PNew table -- новые детали
+         (BasketID  numeric(18, 0) 
+         ,PriceID   numeric(18, 0)
+         ,Make      nvarchar(30)
+         ,DetailNum nvarchar(128)
+         ,PriceLogo nvarchar(30)
+         );
+
+  insert @P
+        (BasketID,
+         PriceID,
+         Make, 
+         DetailNum, 
+         PriceLogo
+        )
+  select b.BasketID,
+         pp.PriceID,
+         b.Make,
+         b.DetailNum,
+         b.PriceLogo
+    from tMarks m (nolock)
+   inner join tBasket b (nolock)
+           on b.BasketID = m.ID
+    left join tPrice pp with (nolock index=ao3) 
+           on pp.PriceLogo = b.PriceLogo 
+          and pp.DetailNum = b.DetailNum
+          and pp.MakeLogo  = b.Make
+   where m.spid = @@spid   
+     and m.Type = 6 -- Корзина
+     
+  insert into tPrice with (rowlock)
+        (     
+         MakeLogo 
+  	    ,Brand    
+        ,DetailNum	  
+        ,DetailName	  
+        ,PriceLogo    
+        ,WeightKG     
+        ,VolumeKG 
+        ,WeightKGF	
+        ,VolumeKGf
+  	    ,MOSA  
+        ,DetailPrice 
+         ) 
+  OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum, INSERTED.PriceLogo 
+    INTO @PNew(PriceID, Make, DetailNum, PriceLogo)
+  select b.Make 
+        ,b.MakeName
+  	    ,b.DetailNum     
+  	    ,b.PartNameRus --DetailName
+  	    ,b.PriceLogo  
+  	    ,b.WeightKG
+        ,b.VolumeKG
+  	    ,b.WeightKG
+        ,b.VolumeKG
+        ,b.Price
+        ,b.Price
+    from @P p
+   inner join tBasket b (nolock)
+           on b.BasketID = p.BasketID
+   where p.PriceID is null
+  
+  Update p
+     set p.PriceID = b.PriceID
+    from @P p
+   inner join @PNew b 
+           on b.Make      = p.Make 
+          and b.DetailNum = p.DetailNum
+          and b.PriceLogo = p.PriceLogo
+   where p.PriceID is null
 
   declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0))
-
   insert tOrders
         (ClientID
         ,Manufacturer
@@ -85,8 +159,8 @@ declare @r int = 0
         ,PriceLogo
         ,ProfilesDeliveryID
         ,isCancel
-		,MakeLogo
-		,DetailName 
+        ,MakeLogo
+        ,DetailName 
         ,Reference
         ,Flag
         
@@ -95,13 +169,13 @@ declare @r int = 0
         ,DestinationLogo
         ,Margin
         ,Discount
-        --
+
         ,ClientOrderNum
-		,DeliveryTerm
+        ,DeliveryTerm
 
-		,DetailID
-		,CustomerSubId
-
+        ,DetailID
+        ,CustomerSubId
+        ,PriceID  
         ,ID
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
@@ -112,50 +186,52 @@ declare @r int = 0
         ,b.PriceRub
         ,b.Amount
         ,b.Price --PricePurchaseOrg
-        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки	 PricePurchase
-        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки	 AmountPurchase
+        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     PricePurchase
+        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     AmountPurchase
         ,@OrderNum               -- OrderNum
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
         ,pd.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
-		,b.Make		             -- Бренд
-		,b.PartNameRus           -- наименование детали
+        ,b.Make                     -- Бренд
+        ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
-        ,b.WeightKG -- Вес Физический из прайса	
+        ,b.WeightKG -- Вес Физический из прайса    
         ,b.VolumeKG -- Вес Объемный из прайса
         ,b.DestinationLogo
         ,b.Margin  -- Наценка из прайса
         ,b.Discount-- Скидка  
         --
         ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
-		,b.GuaranteedDay
-        ,b.BasketID -- DetailID 
-		,b.BasketID -- CustomerSubId
+        ,b.GuaranteedDay
 
-		,b.BasketID -- ID
+        ,b.BasketID -- DetailID 
+        ,b.BasketID -- CustomerSubId
+        ,p.PriceID  -- tPrice.PriceID
+        ,b.BasketID -- ID
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
-
-   --inner join tClients c (nolock)
-   --        on c.ClientID = b.ClientID 
    inner join tProfilesCustomer pc (nolock)
            on pc.ClientID = b.ClientID
    inner join tSupplierDeliveryProfiles pd (nolock)
            on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
           and pd.DestinationLogo    = b.DestinationLogo
+
+   inner join @P p
+           on p.BasketID = b.BasketID
+
    where m.spid = @@spid   
      and m.Type = 6--Корзина
    -- - - -
 
    --    Update o
-   --  set o.PricePurchase    = round(p.DetailPrice - (p.DetailPrice * (o.Discount / 100)), 2)-- Цена закупки с учетом скидки	
-	  --  ,o.PricePurchaseOrg = round(p.DetailPrice, 2) 
-   --     ,o.WeightKG         = p.WeightKG -- Вес Физический из прайса	
-   --     ,o.VolumeKG         = p.VolumeKG -- Вес Объемный из прайса	
+   --  set o.PricePurchase    = round(p.DetailPrice - (p.DetailPrice * (o.Discount / 100)), 2)-- Цена закупки с учетом скидки    
+      --  ,o.PricePurchaseOrg = round(p.DetailPrice, 2) 
+   --     ,o.WeightKG         = p.WeightKG -- Вес Физический из прайса    
+   --     ,o.VolumeKG         = p.VolumeKG -- Вес Объемный из прайса    
    -- from @ID i
    --inner join tOrders o with (updlock)
    --        on o.OrderID = i.OrderID
@@ -166,15 +242,15 @@ declare @r int = 0
    --               from tPrice p (nolock) 
    --              where p.DetailNum= o.DetailNumber
    --              order by case
-			--	            when p.Brand = o.Manufacturer then 0
-			--				else 1
-			--	          end
+            --                when p.Brand = o.Manufacturer then 0
+            --                else 1
+            --              end
    --                      ,case
-			--	            when p.PriceLogo= pc.UploadPriceName then 0
-			--				else 1
+            --                when p.PriceLogo= pc.UploadPriceName then 0
+            --                else 1
    --                       end
-			--			 ,p.DetailPrice 
-			--    ) p
+            --             ,p.DetailPrice 
+            --    ) p
 
      --and not exists (select 1
      --                  from tOrders t (nolock)
@@ -193,18 +269,18 @@ declare @r int = 0
   delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
   insert into pAccrualAction
         (Spid,
-		 ObjectID,
-		 ActionID,
-		 StateID,
-		 NewStateID,
-		 sgn -- признак для понимания где сделали insert
-		 )
+         ObjectID,
+         ActionID,
+         StateID,
+         NewStateID,
+         sgn -- признак для понимания где сделали insert
+         )
   Select @@Spid,
          i.OrderID ,
-		 isnull(@ToNew, 0),
-		 @StatusID, -- текущее состояние
-		 @StatusID,
-		 8
+         isnull(@ToNew, 0),
+         @StatusID, -- текущее состояние
+         @StatusID,
+         8
     from @ID i
 
   exec ProtocolAdd
@@ -232,13 +308,12 @@ declare @r int = 0
   
   exec LoadOrdersDeliveryTermCalc @IsSave = 1
 
-
   exit_:
 
   return @r
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240423', '5'
+exec setOV 'OrderCreateFromBasket', 'P', '20240529', '6'
 go
  

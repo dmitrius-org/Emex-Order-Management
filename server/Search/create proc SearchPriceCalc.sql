@@ -24,6 +24,8 @@ if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 create table #Price 
 (
  ID                  numeric(18,0)  --  
+--,PriceID             numeric(18, 0) -- идентификатор детали tPrice.PriceID
+
 ,Brand               varchar(60)    --
 ,DetailNum	         varchar(30)    -- Номер детали 
 ,DetailPrice         float          -- Цена
@@ -87,7 +89,7 @@ insert @Price
 		VolumeKGf
 		)
 select top 1 
-	   pp.DetailNum,
+       pp.DetailNum,
 	   pp.MakeLogo,
 	   pp.WeightKGF,
 	   pp.VolumeKGf
@@ -231,5 +233,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240528', '1'
+exec setOV 'SearchPriceCalc', 'P', '20240529', '1'
 go

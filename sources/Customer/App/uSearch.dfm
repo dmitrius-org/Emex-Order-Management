@@ -161,13 +161,11 @@ object SearchF: TSearchF
       Color = clBtnFace
       OnKeyDown = SearchGridKeyDown
       OnAjaxEvent = SearchGridAjaxEvent
-      OnBodyClick = SearchGridBodyClick
       OnCellClick = SearchGridCellClick
       OnColumnSort = SearchGridColumnSort
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
       OnAfterLoad = SearchGridAfterLoad
-      OnBeforeLoad = SearchGridBeforeLoad
       Columns = <
         item
           FieldName = 'MakeName'

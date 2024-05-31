@@ -1049,10 +1049,6 @@ begin
   begin
     Attribs.Color:=rgb(242, 169, 210);
   end;
-//  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
-//  begin
-//    Attribs.Color:=rgb(255,219,88); //#F34723
-//  end;
 
   if (Query.FieldByName('IsCancel').AsBoolean) then // отказан
   begin
@@ -1351,7 +1347,6 @@ begin
 end;
 
 { tMarks }
-
 constructor tMarks.Create(AGrid: TUniDBGrid);
 begin
   if Assigned(AGrid) then

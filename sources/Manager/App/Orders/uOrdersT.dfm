@@ -146,9 +146,10 @@ object OrdersT: TOrdersT
         item
           FieldName = 'Status'
           Title.Alignment = taCenter
-          Title.Caption = ' '
+          Title.Caption = #1057#1090#1072#1090#1091#1089#1099
           Width = 64
           Alignment = taLeftJustify
+          Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1087#1088#1080#1079#1085#1072#1082#1080' '#1093#1072#1088#1072#1082#1090#1077#1088#1080#1079#1091#1102#1097#1080#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
         end
         item
           ShowToolTip = True
@@ -210,7 +211,7 @@ object OrdersT: TOrdersT
         item
           FieldName = 'StatusName'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Title.Caption = #1057#1090#1072#1090#1091#1089'/'#1057#1086#1089#1090#1086#1103#1085#1080#1077
           Width = 173
           ReadOnly = True
           Hint = #1057#1090#1072#1090#1091#1089
@@ -555,7 +556,8 @@ object OrdersT: TOrdersT
         end
         item
           FieldName = 'Flag'
-          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Title.Alignment = taCenter
+          Title.Caption = 'Flag'
           Width = 64
           Visible = False
           ReadOnly = True

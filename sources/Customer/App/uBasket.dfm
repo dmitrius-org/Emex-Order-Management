@@ -41,7 +41,7 @@ object BasketF: TBasketF
       ClientEvents.ExtEvents.Strings = (
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
-          'e, oldColumns, eOpts)'#13#10'{'#13#10'    var widgetColIndx=0;'#13#10'    columns[' +
+          'e, oldColumns, eOpts)'#13#10'{'#13#10'    var widgetColIndx=8;'#13#10'    columns[' +
           'widgetColIndx].onWidgetAttach = function(column, widget, record)' +
           ' {'#13#10'        widget.setHidden(record.get(widgetColIndx) == 0);'#13#10' ' +
           '   };'#13#10'}')
@@ -83,16 +83,6 @@ object BasketF: TBasketF
       OnSelectionChange = GridSelectionChange
       OnAfterLoad = GridAfterLoad
       Columns = <
-        item
-          WidgetColumn.Enabled = True
-          WidgetColumn.Widget = btnPriceRefresh
-          WidgetColumn.Height = 25
-          ShowToolTip = True
-          FieldName = 'IsUpdating'
-          Title.Caption = ' '
-          Width = 137
-          Alignment = taLeftJustify
-        end
         item
           FieldName = 'MakeName'
           Title.Alignment = taCenter
@@ -170,6 +160,16 @@ object BasketF: TBasketF
           ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
+        end
+        item
+          WidgetColumn.Enabled = True
+          WidgetColumn.Widget = btnPriceRefresh
+          WidgetColumn.Height = 25
+          ShowToolTip = True
+          FieldName = 'IsUpdating'
+          Title.Caption = ' '
+          Width = 137
+          Alignment = taLeftJustify
         end
         item
           WidgetColumn.Enabled = True

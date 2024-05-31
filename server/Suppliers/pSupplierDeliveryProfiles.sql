@@ -24,6 +24,8 @@ create table pSupplierDeliveryProfiles
 ,Restrictions       bit                    -- Признак выгружать детали с ограничениями или нет
 ,IsActive           bit 
 ,Delivery           int                    -- наш срок поставки, добавляем к сроку emex
+,[Image]            nvarchar(256)
+,ImageHelp          nvarchar(2048)
 )
 go
 create index ao1 on pSupplierDeliveryProfiles(ID)
@@ -32,5 +34,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240403', '1'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240531', '2'
 go

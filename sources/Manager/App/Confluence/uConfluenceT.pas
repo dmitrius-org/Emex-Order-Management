@@ -1,4 +1,4 @@
-﻿unit uInstructionsT;
+﻿unit uConfluenceT;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   uniGroupBox ;
 
 type
-  TInstructionsT = class(TUniFrame)
+  TConfluenceT = class(TUniFrame)
     MenuPanel: TUniContainerPanel;
     ContentPanel: TUniContainerPanel;
     edt1: TUniHTMLFrame;
@@ -59,6 +59,7 @@ type
 
     IsEdit: Boolean;
 
+
     /// <summary>
     ///  ConstructNavigator - создание меню
     ///</summary>
@@ -78,60 +79,64 @@ type
 
 
     procedure SetArticleEditEnabled;
-    procedure ArticleSave(AInstructionID:Integer; Atext: String);
+    procedure ArticleSave(AArticleID:Integer; Atext: String);
 
     procedure SetArticleData;
+
+    function GetEditor(): string;
   public
     { Public declarations }
+    ArticleType: Integer;
   end;
 
 implementation
 
 uses
-  uCommonType, uInstructionsF, ServerModule, MainModule, uLogger, uMainVar;
+  uCommonType, uConfluencePagesF, ServerModule, MainModule, uLogger, uMainVar;
 
 {$R *.dfm}
 
 
-procedure TInstructionsT.actAddChildExecute(Sender: TObject);
+procedure TConfluenceT.actAddChildExecute(Sender: TObject);
+var Nd : TUniTreeNode;
 begin
-  InstructionsF.FormAction := TFormAction.acChildInsert;
-  InstructionsF.ShowModal(EditFCallBack);
+  logger.Info('TConfluenceT.actAddChildExecute');
+
+  try
+    if SelectedNode.Tag = 0  then Exit;
+  except
+    Exit;
+  end;
+  Nd := SelectedNode;
+
+  ConfluencePagesF.FormAction := TFormAction.acChildInsert;
+  ConfluencePagesF.PID := Nd.Tag;
+  ConfluencePagesF.ShowModal(EditFCallBack);
 end;
 
-procedure TInstructionsT.actAddExecute(Sender: TObject);
+procedure TConfluenceT.actAddExecute(Sender: TObject);
 begin
-  InstructionsF.FormAction := TFormAction.acInsert;
-  InstructionsF.ShowModal(EditFCallBack);
+  ConfluencePagesF.FormAction := TFormAction.acInsert;
+  ConfluencePagesF.ArticleType:= ArticleType;
+  ConfluencePagesF.ShowModal(EditFCallBack);
 end;
 
-procedure TInstructionsT.actArticleEditExecute(Sender: TObject);
+procedure TConfluenceT.actArticleEditExecute(Sender: TObject);
 begin
-  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("contenteditable", false)');
-  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("toolbar", false)');
-//  UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("menubar", false)');
-//   UniSession.AddJS('tinyMCE.get("myEditor").getBody().setAttribute("statusbar", false)');
+  UniSession.AddJS('tinyMCE.get("' + GetEditor + '").getBody().setAttribute("contenteditable", false)');
+  UniSession.AddJS('tinyMCE.get("' + GetEditor + '").getBody().setAttribute("toolbar", false)');
 
-
-//tinymce.activeEditor.mode.set("readonly");
-  // edt1.HTML.Clear;
-  // edt1.HTML.LoadFromFile('./files/tinymce5/index.html');
    IsEdit := True;
 
    SetArticleData;
 
-   UniSession.AddJS('tinyMCE.get("myEditor").mode.set("design")');
+   UniSession.AddJS('tinyMCE.get("' + GetEditor + '").mode.set("design")');
 
-//  UniSession.AddJS('tinymce.activeEditor.setMode("readonly")');
 
    SetArticleEditEnabled;
-
-  //edt1.HTML.Clear;
-
-
 end;
 
-procedure TInstructionsT.actDeleteExecute(Sender: TObject);
+procedure TConfluenceT.actDeleteExecute(Sender: TObject);
 var Nd : TUniTreeNode;
 begin
   try
@@ -141,12 +146,12 @@ begin
   end;
   Nd := SelectedNode;
 
-  InstructionsF.FormAction := TFormAction.acDelete;
-  InstructionsF.ID:=Nd.Tag;
-  InstructionsF.ShowModal(EditFCallBack);
+  ConfluencePagesF.FormAction := TFormAction.acDelete;
+  ConfluencePagesF.ID:=Nd.Tag;
+  ConfluencePagesF.ShowModal(EditFCallBack);
 end;
 
-procedure TInstructionsT.actEditExecute(Sender: TObject);
+procedure TConfluenceT.actEditExecute(Sender: TObject);
 var Nd : TUniTreeNode;
 begin
   try
@@ -156,36 +161,36 @@ begin
   end;
   Nd := SelectedNode;
 
-  InstructionsF.FormAction := TFormAction.acUpdate;
-  InstructionsF.ID:=Nd.Tag;
-  InstructionsF.ShowModal(EditFCallBack);
+  ConfluencePagesF.FormAction := TFormAction.acUpdate;
+  ConfluencePagesF.ID:=Nd.Tag;
+  ConfluencePagesF.ShowModal(EditFCallBack);
 end;
 
-procedure TInstructionsT.actRefreshAllExecute(Sender: TObject);
+procedure TConfluenceT.actRefreshAllExecute(Sender: TObject);
 begin
   ConstructNavigator;
 end;
 
-procedure TInstructionsT.actSaveExecute(Sender: TObject);
+procedure TConfluenceT.actSaveExecute(Sender: TObject);
 begin
   isEdit:=False;
 
-  UniSession.AddJS('ajaxRequest(' + edt1.JSName + ', "myCustomSaveButton", ["text="+tinyMCE.get("myEditor").getContent(), "InstructionID=' + SelectedNode.tag.ToString +'"])');
+  UniSession.AddJS('ajaxRequest(' + edt1.JSName + ', "myCustomSaveButton", ["text="+tinyMCE.get("' + GetEditor + '").getContent(), "ArticleID=' + SelectedNode.tag.ToString +'"])');
 end;
 
-procedure TInstructionsT.ArticleSave(AInstructionID:Integer; Atext: String);   var sqltext: string;
+procedure TConfluenceT.ArticleSave(AArticleID:Integer; Atext: String);   var sqltext: string;
 begin
-    sqltext :=  ' declare @R      int  '+
+    sqltext :=  ' declare @R int  '+
                 ''+
-                ' exec @r = InstructionsDetailEdit            '+
-                '             @InstructionID = :InstructionID '+
-                '            ,@Text          = :Text          '+
+                ' exec @r = ArticleDetailEdit         '+
+                '             @ArticleID = :ArticleID '+
+                '            ,@Text      = :Text      '+
                 ''+
                 ' select @r as retcode ';
 
     Sql.Open(sqltext,
-               ['InstructionID','Text'],
-               [AInstructionID, Atext]);
+               ['ArticleID','Text'],
+               [AArticleID, Atext]);
 
     RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
@@ -199,7 +204,7 @@ begin
     end;
 end;
 
-procedure TInstructionsT.ConstructNavigator;
+procedure TConfluenceT.ConstructNavigator;
 var
   c, Path: string;
   PID, I, ID: Integer;
@@ -214,7 +219,7 @@ begin
   begin
     close;
     sql.Clear;
-    sql.Add( ' select * from tInstructions (nolock) where Type = 1 order by ParentID ');
+    sql.Add( ' select * from tArticles (nolock) where Type = ' + ArticleType.ToString + ' order by ParentID ');
     open;
     if RecordCount = 0 then
     begin
@@ -226,7 +231,7 @@ begin
     UniMainModule.Query.First;
     for I := 0 to UniMainModule.Query.RecordCount -1  do
     begin
-      ID  := UniMainModule.Query.FieldByName('InstructionID').Value;
+      ID  := UniMainModule.Query.FieldByName('ArticleID').Value;
       PID := UniMainModule.Query.FieldByName('ParentID').Value;
       c   := UniMainModule.Query.FieldByName('Name').Value;
 
@@ -249,31 +254,31 @@ begin
   end;
 end;
 
-procedure TInstructionsT.EditFCallBack(Sender: TComponent; AResult: Integer);
+procedure TConfluenceT.EditFCallBack(Sender: TComponent; AResult: Integer);
 var Nd, NdNew: TUniTreeNode;
 begin
   if AResult <> mrOK then Exit;
 
-  if InstructionsF.FormAction = acInsert then
+  if ConfluencePagesF.FormAction = acInsert then
   begin
-    NdNew := TreeMenu.Items.Add(nil, InstructionsF.edtName.text);
-    NdNew.Tag :=InstructionsF.ID
+    NdNew := TreeMenu.Items.Add(nil, ConfluencePagesF.edtName.text);
+    NdNew.Tag :=ConfluencePagesF.ID
   end
   else
-  if InstructionsF.FormAction = acChildInsert then
-  begin
-    Nd := SelectedNode;
-    NdNew := TreeMenu.Items.Add(Nd, InstructionsF.edtName.text);
-    NdNew.Tag :=InstructionsF.ID
-  end
-  else
-  if InstructionsF.FormAction = acUpdate then
+  if ConfluencePagesF.FormAction = acChildInsert then
   begin
     Nd := SelectedNode;
-    Nd.Text := InstructionsF.edtName.text;
+    NdNew := TreeMenu.Items.Add(Nd, ConfluencePagesF.edtName.text);
+    NdNew.Tag :=ConfluencePagesF.ID
   end
   else
-  if InstructionsF.FormAction = acDelete then
+  if ConfluencePagesF.FormAction = acUpdate then
+  begin
+    Nd := SelectedNode;
+    Nd.Text := ConfluencePagesF.edtName.text;
+  end
+  else
+  if ConfluencePagesF.FormAction = acDelete then
   begin
     Nd := SelectedNode;
     TreeMenu.Items.Delete(Nd);
@@ -284,26 +289,26 @@ begin
   SetEditorEnabled;
 end;
 
-procedure TInstructionsT.edt1AjaxEvent(Sender: TComponent; EventName: string;
+procedure TConfluenceT.edt1AjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 var sqltext: string;
 begin
-  logger.Info('TInstructionsT.edt1AjaxEvent: ' + EventName);
+  logger.Info('TConfluenceT.edt1AjaxEvent: ' + EventName);
 
   if EventName = 'myCustomSaveButton' then
   begin
     actSave.Enabled := False;
-    ArticleSave(Params.Values['InstructionID'].ToInteger, Params.Values['text']);
+    ArticleSave(Params.Values['ArticleID'].ToInteger, Params.Values['text']);
   end;
 
-  if EventName = 'mycustomSaveButtonEnabled' then
+  if EventName = 'ArticleSaveButtonEnabled' then
   begin
     actSave.Enabled := True;
     isEdit:=True;
   end;
 end;
 
-function TInstructionsT.FindNodeByID(AID: Integer): TUniTreeNode;
+function TConfluenceT.FindNodeByID(AID: Integer): TUniTreeNode;
 var i:integer;
 begin
   result:= nil;
@@ -317,74 +322,79 @@ begin
   end;
 end;
 
-procedure TInstructionsT.PopupMenuPopup(Sender: TObject);
+function TConfluenceT.GetEditor: string;
+begin
+  Result := 'myEditor' + ArticleType.ToString;
+end;
+
+procedure TConfluenceT.PopupMenuPopup(Sender: TObject);
 begin
   SetButtonEnabled;
 end;
 
-procedure TInstructionsT.SetArticleData;
+procedure TConfluenceT.SetArticleData;
 begin
   with UniMainModule.Query do
   begin
     close;
     sql.Clear;
     sql.Text := ' select i.Name, d.[Text]          ' +
-                '   from tInstructions i (nolock)  ' +
-                '   left join tInstructionsDetail d (nolock)    ' +
-                '          on i.InstructionID = d.InstructionID ' +
-                '  where i.InstructionID = :InstructionID       ';
+                '   from tArticles i (nolock)  ' +
+                '   left join tArticleDetail d (nolock)    ' +
+                '          on i.ArticleID = d.ArticleID ' +
+                '  where i.ArticleID = :ArticleID       ';
 
-    ParamByName('InstructionID').Value := SelectedNode.Tag;
+    ParamByName('ArticleID').Value := SelectedNode.Tag;
     Open;
 
     lblArticle.Caption := FieldByName('Name').asstring;
 
     if RecordCount = 0 then
     begin
-      UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
+      UniSession.AddJS('tinyMCE.get("' + GetEditor + '").setContent("")');
       exit;
     end
     else
     begin
       try
-        UniSession.AddJS('tinyMCE.get("myEditor").setContent(' + StrToJS(FieldByName('Text').AsString) + ')');
+        UniSession.AddJS('tinyMCE.get("' + GetEditor + '").setContent(' + StrToJS(FieldByName('Text').AsString) + ')');
       except
-        UniSession.AddJS('tinyMCE.get("myEditor").setContent("")');
+        UniSession.AddJS('tinyMCE.get("' + GetEditor + '").setContent("")');
       end;
     end;
   end;
 
   if not IsEdit then
-    UniSession.AddJS('tinyMCE.get("myEditor").mode.set("readonly")');
+    UniSession.AddJS('tinyMCE.get("' + GetEditor + '").mode.set("readonly")');
 end;
 
-procedure TInstructionsT.SetArticleEditEnabled;
+procedure TConfluenceT.SetArticleEditEnabled;
 begin
   actArticleEdit.Enabled := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) and not IsEdit);
 
   actSave.Enabled := False;
 end;
 
-procedure TInstructionsT.SetButtonEnabled;
+procedure TConfluenceT.SetButtonEnabled;
 begin
   actEdit.Enabled := TreeMenu.Items.Count > 0;
   actDelete.Enabled := TreeMenu.Items.Count > 0;
   actAddChild.Enabled := TreeMenu.Items.Count > 0;
 end;
 
-procedure TInstructionsT.SetEditorEnabled;
+procedure TConfluenceT.SetEditorEnabled;
 begin
  // edt1. := ((TreeMenu.Items.Count > 0) and (Assigned(SelectedNode)) );
 end;
 
-procedure TInstructionsT.TreeMenuCellContextClick(ANode: TUniTreeNode; X,
+procedure TConfluenceT.TreeMenuCellContextClick(ANode: TUniTreeNode; X,
   Y: Integer);
 begin
   SelectedNode := TreeMenu.Selected;
   PopupMenu.Popup(x, y, TreeMenu);
 end;
 
-procedure TInstructionsT.TreeMenuClick(Sender: TObject);
+procedure TConfluenceT.TreeMenuClick(Sender: TObject);
 begin
 
   if (IsEdit) then
@@ -402,11 +412,12 @@ begin
   SetArticleEditEnabled;
 end;
 
-procedure TInstructionsT.UniFrameReady(Sender: TObject);
+procedure TConfluenceT.UniFrameReady(Sender: TObject);
 var
   js: string;
+  tmp : TStringList;
 begin
-  logger.Info('TInstructionsT.UniFrameReady');
+  logger.Info('TConfluenceT.UniFrameReady');
 
   lblArticle.Caption := '';
 
@@ -417,14 +428,18 @@ begin
   SetButtonEnabled;
 
   SetArticleEditEnabled;
+  tmp := TStringList.Create;
+  tmp.LoadFromFile(UniServerModule.StartPath + '\files\tinymce5\index.html');
 
+  tmp.Text := StringReplace(tmp.Text, 'myEditor', GetEditor, [rfReplaceAll]);
   edt1.HTML.Clear;
-  edt1.HTML.LoadFromFile(UniServerModule.StartPath + '\files\tinymce5\index.html');
-
-  js := ' mycustomSaveButtonEnabled = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "mycustomSaveButtonEnabled", []);' + ' } ;';
+  edt1.HTML.SetStrings(tmp);
+  tmp.Free;
+//
+  js := GetEditor + '_ArticleSaveButtonEnabled = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "ArticleSaveButtonEnabled", []);' + ' } ;';
   UniSession.JSCode(js);
 end;
 
 initialization
-  RegisterClass(TInstructionsT);
+  RegisterClass(TConfluenceT);
 end.

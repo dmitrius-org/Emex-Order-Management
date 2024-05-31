@@ -66,7 +66,7 @@ as
        ,p.ObjectID       	         
        ,3        
        ,5 -- acCancel        
-       ,'Установка прихзнака: Запрошен отказ' 
+       ,'Установка признака: Запрошен отказ' 
   from pAccrualAction p (nolock)
    where p.Spid   = @@spid
 	 and p.Retval = 0

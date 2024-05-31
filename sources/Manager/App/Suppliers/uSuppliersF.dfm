@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 886
+      Left = 882
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 882
+      ExplicitLeft = 878
     end
     object btnCancel: TUniBitBtn
-      Left = 799
+      Left = 795
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 795
+      ExplicitLeft = 791
     end
   end
   object pcCommon: TUniPageControl
@@ -55,7 +55,7 @@ object SuppliersF: TSuppliersF
     Width = 1018
     Height = 408
     Hint = ''
-    ActivePage = tabCommon
+    ActivePage = tabDelivery
     Align = alClient
     TabOrder = 1
     ExplicitWidth = 1014
@@ -197,13 +197,13 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 252
+        Width = 248
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 248
+        ExplicitWidth = 244
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -217,13 +217,13 @@ object SuppliersF: TSuppliersF
       object edtEmexPassword: TUniEdit
         Left = 238
         Top = 63
-        Width = 252
+        Width = 248
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 248
+        ExplicitWidth = 244
       end
       object UniLabel5: TUniLabel
         Left = 33
@@ -346,33 +346,41 @@ object SuppliersF: TSuppliersF
               FieldName = 'IsActive'
               Title.Alignment = taCenter
               Title.Caption = 'IsActive'
-              Width = 94
+              Width = 67
               CheckBoxField.AutoPost = True
+            end
+            item
+              FieldName = 'Image'
+              Title.Alignment = taCenter
+              Title.Caption = #1050#1072#1088#1090#1080#1085#1082#1072
+              Width = 82
+              Alignment = taCenter
+              Editor = UniComboBox1
             end
             item
               FieldName = 'DestinationLogo'
               Title.Alignment = taCenter
               Title.Caption = #1057#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080
-              Width = 160
+              Width = 136
               Hint = #1057#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080' (DestinationLogo)'
             end
             item
               FieldName = 'Name'
               Title.Alignment = taCenter
               Title.Caption = 'Name'
-              Width = 256
+              Width = 157
             end
             item
               FieldName = 'WeightKG'
               Title.Alignment = taCenter
               Title.Caption = 'WeightKG'
-              Width = 111
+              Width = 101
             end
             item
               FieldName = 'VolumeKG'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG'
-              Width = 98
+              Width = 91
             end
             item
               FieldName = 'DenVyleta'
@@ -420,19 +428,25 @@ object SuppliersF: TSuppliersF
               Title.Caption = 'Restrictions'
               Width = 157
               CheckBoxField.AutoPost = True
+            end
+            item
+              FieldName = 'ImageHelp'
+              Title.Alignment = taCenter
+              Title.Caption = #1058#1077#1082#1089#1090' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' '#1082' '#1089#1087#1086#1089#1086#1073#1091' '#1076#1086#1089#1090#1072#1074#1082#1080
+              Width = 300
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
-          Left = 90
-          Top = 88
+          Left = 117
+          Top = 72
           Width = 167
           Height = 155
           Hint = ''
           Visible = True
           object cbDenVileta: TUniCheckComboBox
-            Left = 12
+            Left = 19
             Top = 32
-            Width = 145
+            Width = 137
             Height = 23
             Hint = ''
             Text = ''
@@ -445,6 +459,20 @@ object SuppliersF: TSuppliersF
               #1057#1091#1073#1073#1086#1090#1072
               #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077)
             TabOrder = 1
+            IconItems = <>
+          end
+          object UniComboBox1: TUniComboBox
+            Left = 19
+            Top = 88
+            Width = 145
+            Hint = ''
+            Style = csDropDownList
+            Text = ''
+            Items.Strings = (
+              '<i class="fa fa-plane"></i>'
+              '<i class="fa fa-car"></i>'
+              '<i class="fa fa-ship"></i>')
+            TabOrder = 2
             IconItems = <>
           end
         end
@@ -496,6 +524,8 @@ object SuppliersF: TSuppliersF
       '         Restrictions, '
       '         IsActive,'
       '         Delivery,'
+      '        [Image],'
+      '        ImageHelp,'
       '         Spid)'
       'VALUES (:NEW_SuppliersID, '
       '        :NEW_Name, '
@@ -513,6 +543,8 @@ object SuppliersF: TSuppliersF
       '        :NEW_Restrictions, '
       '        :NEW_IsActive,'
       '        :NEW_Delivery,'
+      '        :NEW_Image,'
+      '        :NEW_ImageHelp,'
       '        @@Spid);'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
@@ -555,7 +587,9 @@ object SuppliersF: TSuppliersF
       '      DestinationLogo = :NEW_DestinationLogo, '
       '      Restrictions = :NEW_Restrictions, '
       '      IsActive = :NEW_IsActive,'
-      '      Delivery = :NEW_Delivery'
+      '      Delivery = :NEW_Delivery,'
+      '      [Image] = :NEW_Image,'
+      '      [ImageHelp]=:New_ImageHelp'
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (
@@ -920,6 +954,8 @@ object SuppliersF: TSuppliersF
       '      ,Restrictions'
       '      ,IsActive'
       '      ,Delivery'
+      '      ,[Image]'
+      '      ,ImageHelp'
       '  from pSupplierDeliveryProfiles (nolock)'
       ' where Spid = @@Spid ')
     Left = 767
@@ -1011,6 +1047,14 @@ object SuppliersF: TSuppliersF
     end
     object qDeliveryDelivery: TIntegerField
       FieldName = 'Delivery'
+    end
+    object qDeliveryImage: TWideStringField
+      FieldName = 'Image'
+      Size = 256
+    end
+    object qDeliveryImageHelp: TWideStringField
+      FieldName = 'ImageHelp'
+      Size = 248
     end
   end
   object dsDelivery: TDataSource

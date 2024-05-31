@@ -1,6 +1,6 @@
 <div id="myEditor" style="width: 100%;"></div>
 <script>
-  tinyMCE.remove();
+  tinyMCE.remove("#myEditor");
 
   tinyMCE.init({
     selector: "#myEditor",
@@ -9,7 +9,7 @@
 
     a11y_advanced_options: true,
     image_title: true,
-    /*�������� �������������� �������� �����������, �������������� BLOB-��������� ��� URI ������*/
+  
     automatic_uploads: true,
     /*
       URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
@@ -21,7 +21,7 @@
     //plugins: [ 'quickbars' ],
     //toolbar: false,
     //menubar: false,
-    //inline: true,// ��������� ������ ����������� ��������������
+    //inline: true,
 
     file_picker_callback: function (cb, value, meta) {
       var input = document.createElement('input');
@@ -39,7 +39,7 @@
           var blobInfo = blobCache.create(id, file, base64);
           blobCache.add(blobInfo);
   
-          /* �������� �������� ����� � ��������� ���� ���������� ������ �����. */
+         
           cb(blobInfo.blobUri(), { title: file.name });
         };
         reader.readAsDataURL(file);
@@ -63,27 +63,10 @@
 
     setup: function(editor) {
       editor.on('Paste Change input Undo Redo', function () {
-         // clearTimeout(editorChangeHandlerId);
-          //editorChangeHandlerId = setTimeout(function() {
               console.log('changed');
-              mycustomSaveButtonEnabled();
-          //}, 100);
+              myEditor_ArticleSaveButtonEnabled();
       });
   }
 
-
-    //setup: (editor) => {
-    //  var myButton = null;
-    //  editor.ui.registry.addButton('customSaveButton', {
-    //    text: '��������� ���������',
-    //    enabled: false,
-    //    tooltip: "���������� ��������� ���������",
-    //    onAction:() => mycustomSaveButtonEnabled(),
-    //  });      
-    //},        
-    //content_css: [
-    //],
-    //mode: "exact",
-    //elements : "edt1",
   });
 </script>

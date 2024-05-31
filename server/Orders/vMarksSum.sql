@@ -3,7 +3,7 @@
 if OBJECT_ID('vMarksSum') is not null
     drop view vMarksSum
 go
-/* **********************************************************						
+/* **********************************************************
 vMarksSum - сумма выделенный заказов/деталей
              
 ********************************************************** */
@@ -23,8 +23,11 @@ where m.Spid   = @@spid
   and m.Type   = 3
 
 go
+exec setOV 'vMarksSum', 'V', '20240529', '1'
+go
 grant select on vMarksSum to public
 go
+
 
 
 select * from vMarksSum

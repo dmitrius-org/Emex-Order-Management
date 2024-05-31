@@ -31,7 +31,7 @@ uses
   uGrant in 'Core\User\uGrant.pas' {GrantF: TUniForm},
   uGroupsT in 'Core\User\uGroupsT.pas' {GroupsT: TUniFrame},
   uNodesT in 'Core\Instrument\uNodesT.pas' {NodesT: TUniFrame},
-  uInstructionsF in 'App\Instructions\uInstructionsF.pas' {InstructionsF: TUniForm},
+  uConfluencePagesF in 'App\Confluence\uConfluencePagesF.pas' {ConfluencePagesF: TUniForm},
   uInstrumentStateT in 'Core\Instrument\uInstrumentStateT.pas' {InstrumentStateT: TUniFrame},
   uGrantClient in 'Core\User\uGrantClient.pas' {GrantClientT: TUniFrame},
   uSettingsT in 'Core\Instrument\uSettingsT.pas' {SettingsT: TUniFrame},
@@ -85,12 +85,15 @@ uses
   uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
   uGroupSetFragileSignF in 'App\Orders\uGroupSetFragileSignF.pas' {GroupSetFragileSignF: TUniForm},
   uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
-  uInstructionsT in 'App\Instructions\uInstructionsT.pas' {InstructionsT: TUniFrame},
+  uConfluenceT in 'App\Confluence\uConfluenceT.pas' {ConfluenceT: TUniFrame},
   uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm},
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uEmexUtils in 'App\emexdwc\uEmexUtils.pas',
   uAccrualUtils in 'App\Orders\uAccrualUtils.pas',
-  uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm};
+  uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
+  uInstructionT in 'App\Confluence\uInstructionT.pas' {InstructionT: TUniFrame},
+  uInstructionDevT in 'App\Confluence\uInstructionDevT.pas' {InstructionDevT: TUniFrame},
+  PriceUpdate in 'App\DashBoard\PriceUpdate.pas' {PriceUpdateT: TUniFrame};
 
 {$R *.res}
 

@@ -1,4 +1,4 @@
-object InstructionsF: TInstructionsF
+object ConfluencePagesF: TConfluencePagesF
   Left = 0
   Top = 0
   ClientHeight = 260
@@ -24,7 +24,7 @@ object InstructionsF: TInstructionsF
       617
       44)
     object btnOk: TUniBitBtn
-      Left = 507
+      Left = 495
       Top = 10
       Width = 82
       Height = 25
@@ -33,10 +33,10 @@ object InstructionsF: TInstructionsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 503
+      ExplicitLeft = 491
     end
     object btnCancel: TUniBitBtn
-      Left = 414
+      Left = 402
       Top = 10
       Width = 87
       Height = 25
@@ -45,7 +45,7 @@ object InstructionsF: TInstructionsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 410
+      ExplicitLeft = 398
     end
     object AuditPanel: TUniPanel
       Left = 1

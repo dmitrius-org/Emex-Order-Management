@@ -67,8 +67,6 @@ type
       DisplayText: Boolean);
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
-    procedure SearchGridBodyClick(Sender: TObject);
-    procedure SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
     procedure edtSearchClick(Sender: TObject);
 
@@ -76,6 +74,8 @@ type
     { Private declarations }
 
     FDestinationLogo: string;
+    FDestinationStr: string;
+
     FMakeName: string;
     FMakeCount: integer; // Количество уникальных брендов
     FDetailNum: string;
@@ -113,6 +113,11 @@ type
     procedure MakeLogoGridHide();
     procedure MakeLogoGridRefresh();
 
+    /// <summary>
+    /// DestinationLogo - формирование способов доставки для клиента
+    /// </summary>
+    procedure DestinationLogo();
+
 
   public
     { Public declarations }
@@ -143,16 +148,14 @@ procedure TSearchF.PriceCalc;
 begin
   RetVal.Clear;
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
-          ['DestinationLogo', 'DetailNum'],
+          ['DestinationLogo',
+           'DetailNum'],
           [FDestinationLogo, FDetailNum ]);
 end;
 
 procedure TSearchF.edtSearchClick(Sender: TObject);
 begin
- // edtSearch.RemoteUpdate := true;
-
   edtSearch.Expand;
-
 end;
 
 procedure TSearchF.edtSearchKeyDown(Sender: TObject; var Key: Word;
@@ -167,8 +170,8 @@ end;
 procedure TSearchF.edtSearchRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
-  //qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
-  //qSearchHistory.Filtered := True;
+//qSearchHistory.Filter:='DetailNum LIKE ''%'+QueryString+'%''';
+//qSearchHistory.Filtered := True;
 
 //  qSearchHistory.First;
 //  while not qSearchHistory.Eof do
@@ -184,13 +187,10 @@ begin
   sql.Open('Select Count(distinct Make) from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
   FMakeCount := sql.Q.Fields[0].AsInteger;
 
-
   Query.Close;
-
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
-  Query.ParamByName('MakeName').Value  := FMakeName;
-  Query.ParamByName('DetailNum').Value := FDetailNum;
-
+  Query.ParamByName('MakeName').Value        := FMakeName;
+  Query.ParamByName('DetailNum').Value       := FDetailNum;
   Query.Open;
 end;
 
@@ -215,11 +215,9 @@ end;
 procedure TSearchF.MakeLogoGridRefresh;
 begin
   qMakeLogo.Close;
-
   qMakeLogo.ParamByName('DestinationLogo').Value := FDestinationLogo;
-  qMakeLogo.ParamByName('MakeName').Value := FMakeName;
+  qMakeLogo.ParamByName('MakeName').Value  := FMakeName;
   qMakeLogo.ParamByName('DetailNum').Value := FDetailNum;
-
   qMakeLogo.Open;
 end;
 
@@ -252,22 +250,45 @@ var
   emex: TEmex;
 begin
   emex := TEmex.Create;
-  btnSearch.ScreenMask.ShowMask();
+  ShowMask();
+  UniSession.Synchronize();
   try
     emex.Connection := UniMainModule.FDConnection;
-    emex.FindByDetailNumber(UniMainModule.AUserID, edtSearch.Text);
-
-    PriceCalc;
+    emex.FindByDetailNumber(UniMainModule.AUserID, Trim(edtSearch.Text));
 
     SetMakeName;
 
-    SearchHistoryLoad;
+    PriceCalc;
 
     GridRefresh();
+
+    if (Query.RecordCount > 1) and  (edtSearch.Items.IndexOf(Trim(edtSearch.Text)) < 0 )then
+      edtSearch.Items.Add(Trim(edtSearch.Text));
+
   finally
     FreeAndNil(emex);
-    btnSearch.ScreenMask.HideMask;
+    HideMask;
+    UniSession.Synchronize();
   end;
+end;
+
+procedure TSearchF.SetMakeName;
+begin
+  sql.Open('select top 1 * '+
+           '  from pFindByNumber pp with (nolock index=ao2) ' +
+           ' where pp.Spid = @@spid ' +
+           ' order by case '+
+           '            when DetailNum = :DetailNum then 0'+
+           '            else 2 '+
+           '          end'+
+//           '         ,case '+
+//           '            when MakeName = :MakeName   then 0'+
+//           '            else 2 '+
+//           '          end'+
+           '', ['DetailNum'] , [Trim(edtSearch.Text)]);
+
+  FMakeName := sql.Q.FieldByName('MakeName').AsString;
+  FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
 end;
 
 procedure TSearchF.PartToBasket;
@@ -292,27 +313,40 @@ begin
   end;
 end;
 
-procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
+procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
 begin
+  Text := FDestinationStr
+end;
 
-  Text := StringReplace('<form id="frmDestLogo" method="post" action=""> ' +
-    '<div class="radio-form">' +
-    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoExpress')+ '">' +
-    '       <input type="radio" value="0001" onchange="setDestLogo(value)" /> ' +
-    '       <span class="radio-input"><i class="fa fa-plane"></i></span> ' +
-    '   </label>    ' +
-    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoCharter')+ '">' +
-    '       <input type="radio" value="0002" onchange="setDestLogo(value)" /> ' +
-    '       <span class="radio-input"><i class="fa fa-car"></i></span>  ' +
-    '   </label>      ' +
-    '   <label class="radio-control" data-qtip="' +sql.GetSetting('DeliveryInfoContainer')+ '">' +
-    '       <input type="radio"  value="0003" onchange="setDestLogo(value)" />  '  +
-    '       <span class="radio-input"><i class="fa fa-ship"></i></span> ' +
-    '   </label>' +
-    '</div>' +
-    '</form>', FDestinationLogo + '"',
-    FDestinationLogo + '" checked', []);
+procedure TSearchF.DestinationLogo; var i: Integer;
+begin
+  logger.Info('TSearchF.DestinationLogo'); 
+  sql.Open(' Select sp.*  '+
+           '   from tClients c (nolock)  '+
+           '  inner join tSupplierDeliveryProfiles sp (nolock)  '+
+           '          on sp.SuppliersID = c.SuppliersID   '+
+           '         and sp.IsActive    = 1   '+
+           '   where c.ClientID = :ClientID   '+
+           '   order by sp.DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+           
+  FDestinationStr := '<form id="frmDestLogo" method="post" action=""> ' +
+                     '<div class="radio-form">';
+  sql.Q.First;
+  for I := 0 to sql.Q.RecordCount - 1 do
+  begin
+    FDestinationStr := FDestinationStr +
+    '   <label class="radio-control" data-qtip="' + sql.Q.FieldByName('ImageHelp').AsString + '">' +
+    '       <input type="radio" value="' + sql.Q.FieldByName('DestinationLogo').AsString + '" onchange="setDestLogo(value)" /> ' +
+    '       <span class="radio-input">' + sql.Q.FieldByName('Image').AsString + '</span> ' +
+    '   </label>    '; 
+    sql.Q.Next; 
+  end;
+  
+  FDestinationStr := FDestinationStr + '</div>' + '</form>';
+
+  FDestinationStr := StringReplace(FDestinationStr, FDestinationLogo + '"',  FDestinationLogo + '" checked', []);
+
+  logger.Info(FDestinationStr); 
 end;
 
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string;
@@ -355,13 +389,8 @@ begin
 
   js := '<span class="column-info">  '+
         '<span>ColName</span>        '+
-       // '<form class="column-info" method="post" action=""> '+
-        '' +
-       // '<button type="button" onclick="clickInfoButton(''ColInfo'')" style="border: 0; background: none;"> '+
         '<span class="" data-qtip="ColDataQtip">'+
         '<i class="fa fa-info-circle column-btn-info"></i> </span> '+
-       // '</button>'+
-       // '</form> '+        data-qtip="Ghbdtn"
         '</span> ';
 
   SearchGrid.Columns.ColumnFromFieldName('Weight').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вес', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoWeight'), []);
@@ -385,7 +414,8 @@ begin
   if EventName = 'setDestLogo' then
   begin
     FDestinationLogo := Params.Values['P1'];
-
+    DestinationLogo;
+    
     PriceCalc();
 
     GridRefresh();
@@ -396,36 +426,12 @@ begin
     MakeLogoGridShow;
   end;
 
-//  if EventName = 'clickInfoButton' then
-//  begin
-//    logger.Info('TSearchF.SearchGridAjaxEvent Params: ' + Params.Values['P1']);
-//
-//    FInfoButton := True;
-//
-//    with SearchGrid.JSInterface do
-//    begin
-//      JSCall('getStore().sorters.clear', []);
-//      //JSCall('getStore().reload', []);
-//    end;
-//  end;
-
   if EventName = 'MakeLogoPanelVisibleFalse' then
   begin
     logger.Info('TSearchF.SearchGridAjaxEvent');
 
     MakeLogoGridHide();
   end;
-
-end;
-
-procedure TSearchF.SearchGridBeforeLoad(Sender: TUniCustomDBGrid);
-begin
-  Logger.Info('TSearchF.SearchGridBeforeLoad');
-end;
-
-procedure TSearchF.SearchGridBodyClick(Sender: TObject);
-begin
-  Logger.Info('TSearchF.SearchGridBodyClick');
 end;
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
@@ -478,25 +484,23 @@ end;
 
 procedure TSearchF.SearchHistoryLoad;
 begin
-  qSearchHistory.Close;
-  qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
-  qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
-  qSearchHistory.Open();
+
+  if not qSearchHistory.Active then
+  begin
+    qSearchHistory.Close;
+    qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
+    qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
+    qSearchHistory.Open();
+  end;
 
   edtSearch.Items.Clear;
+
   qSearchHistory.First;
   while not qSearchHistory.Eof do
   begin
     edtSearch.Items.Add( qSearchHistory.FieldByName('DetailNum').AsString );
     qSearchHistory.Next;
   end;
-end;
-
-procedure TSearchF.SetMakeName;
-begin
-  sql.Open('select top 1 * from pFindByNumber pp with (nolock index=ao2) where pp.Spid = @@spid', [] , []);
-  FMakeName := sql.Q.FieldByName('MakeName').AsString;
-  FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);
@@ -513,14 +517,22 @@ end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-  {$IFDEF Debug}
-    Sql.exec('update pFindByNumber set spid = @@spid', [], []);
-  {$ENDIF}
+//  {$IFDEF Debug}
+//    Sql.exec('update pFindByNumber set spid = @@spid', [], []);
+//  {$ENDIF}
 
-  FDestinationLogo := '0001';
+  sql.Open(' Select sp.DestinationLogo  '+
+           '   from tClients c (nolock)  '+
+           '  inner join tSupplierDeliveryProfiles sp (nolock)  '+
+           '          on sp.SuppliersID = c.SuppliersID   '+
+           '         and sp.IsActive    = 1  '+
+           '   where c.ClientID = :ClientID  '+
+           '   order by sp.DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+  
+  if sql.Q.RecordCount > 0 then
+    FDestinationLogo := sql.Q.FieldByName('DestinationLogo').AsString; 
 
-  //получаем текущий бренд
-  SetMakeName;
+  DestinationLogo;
 
   GridRefresh();
 

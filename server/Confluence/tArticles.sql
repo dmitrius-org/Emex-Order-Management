@@ -1,31 +1,32 @@
-if OBJECT_ID('tInstructions') is null
+if OBJECT_ID('tArticles') is null
 /* **********************************************************
-tInstructions - Инструкции
+tArticles - Статьи
 
-drop table tInstructions
+drop table tArticles
 ********************************************************** */
 begin
-	create table tInstructions
+	create table tArticles
 	(
-	 InstructionID     numeric(18,0)  identity --  
+	 ArticleID         numeric(18,0)  identity --  
 	,ParentID          numeric(18,0)
 	,Name	           nvarchar(256)           -- Название
 	,Comment           nvarchar(512)           -- Описание 
 	,Type              int
+   -- ,              int
 	
  	,UserID            numeric(18,0) default dbo.GetUserID()
 	,inDatetime        datetime      default GetDate()      --
 	,updDatetime       datetime      default GetDate()      --
 	);
 
-	create unique index ao1 on tInstructions(InstructionID);
+	create unique index ao1 on tArticles(ArticleID);
 
-	create index ao2 on tInstructions(Name);
+	create index ao2 on tArticles(Name);
 
-	grant all on tInstructions to public;
+	grant all on tArticles to public;
 end
 go
-exec setOV 'tInstructions', 'U', '20240325', '0';
+exec setOV 'tArticles', 'U', '20240325', '0';
 go
-exec dbo.sys_setTableDescription @table = 'tInstructions', @desc = 'Инструкции'
+exec dbo.sys_setTableDescription @table = 'tArticles', @desc = 'Статьи'
 go

@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  UniFSCombobox;
+  UniFSCombobox, Vcl.ExtCtrls;
 
 type
   TSuppliersF = class(TUniForm)
@@ -81,6 +81,9 @@ type
     qDeliveryDenVyleta: TWideStringField;
     cbDenVileta: TUniCheckComboBox;
     qDeliveryDelivery: TIntegerField;
+    qDeliveryImage: TWideStringField;
+    UniComboBox1: TUniComboBox;
+    qDeliveryImageHelp: TWideStringField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

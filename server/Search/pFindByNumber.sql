@@ -46,7 +46,7 @@ create index ao1 on pFindByNumber(Spid, ID)
 go
 create index ao2 on pFindByNumber(Spid, DestinationLogo)
 go
-exec setOV 'pFindByNumber', 'U', '20240416', '2'
+exec setOV 'pFindByNumber', 'U', '20240529', '2'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pFindByNumber', @desc = 'Результат поиска детали'

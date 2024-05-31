@@ -23,6 +23,8 @@ begin
 	,Restrictions       bit                    -- Признак выгружать детали с ограничениями или нет
 	,IsActive           bit     
 	,Delivery           int                    -- наш срок поставки, добавляем к сроку emex
+    ,[Image]            nvarchar(256)
+    ,ImageHelp          nvarchar(2048)
 	);
 
 	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
