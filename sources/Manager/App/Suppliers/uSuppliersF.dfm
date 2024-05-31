@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 882
+      Left = 921
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,9 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 878
     end
     object btnCancel: TUniBitBtn
-      Left = 795
+      Left = 834
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +45,6 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 791
     end
   end
   object pcCommon: TUniPageControl
@@ -55,7 +53,7 @@ object SuppliersF: TSuppliersF
     Width = 1018
     Height = 408
     Hint = ''
-    ActivePage = tabDelivery
+    ActivePage = tabCommon
     Align = alClient
     TabOrder = 1
     ExplicitWidth = 1014
@@ -244,9 +242,10 @@ object SuppliersF: TSuppliersF
       ExplicitWidth = 1006
       ExplicitHeight = 379
       object ToolBar: TUniToolBar
-        Left = 0
-        Top = 0
-        Width = 1010
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1004
         Height = 48
         Hint = ''
         ShowHint = True
@@ -261,6 +260,8 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitLeft = 0
+        ExplicitTop = 0
         ExplicitWidth = 1006
         object UniToolButton1: TUniToolButton
           Left = 0
@@ -292,23 +293,26 @@ object SuppliersF: TSuppliersF
       end
       object UniPanel1: TUniPanel
         Left = 0
-        Top = 48
+        Top = 54
         Width = 1010
-        Height = 332
+        Height = 326
         Hint = ''
         Align = alClient
         TabOrder = 1
+        BorderStyle = ubsNone
         Caption = 'UniPanel1'
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitTop = 48
         ExplicitWidth = 1006
         ExplicitHeight = 331
         object Grid: TUniDBGrid
-          Left = 1
-          Top = 1
-          Width = 1008
-          Height = 330
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 1004
+          Height = 320
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -465,6 +469,7 @@ object SuppliersF: TSuppliersF
             Left = 19
             Top = 88
             Width = 145
+            Height = 23
             Hint = ''
             Style = csDropDownList
             Text = ''

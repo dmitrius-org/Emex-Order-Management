@@ -651,7 +651,7 @@ object OrdersT: TOrdersT
           TabOrder = 2
         end
         object UniLabel3: TUniLabel
-          Left = 379
+          Left = 375
           Top = 16
           Width = 40
           Height = 13
@@ -781,7 +781,7 @@ object OrdersT: TOrdersT
         object fPriceLogo: TUniCheckComboBox
           Left = 259
           Top = 35
-          Width = 94
+          Width = 110
           Hint = ''
           ShowHint = True
           Text = ''
@@ -823,9 +823,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fClient: TUniCheckComboBox
-          Left = 359
+          Left = 375
           Top = 35
-          Width = 216
+          Width = 200
           Hint = ''
           ShowHint = True
           Text = ''

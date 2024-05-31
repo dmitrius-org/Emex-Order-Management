@@ -20,5 +20,24 @@ alter table tSupplierDeliveryProfiles add [ImageHelp]        nvarchar(2048)
 
 
 
-select * from tSupplierDeliveryProfiles
---select * from tSettings 
+Update tSupplierDeliveryProfiles
+   set [Image] = '<i class="fa fa-plane"></i>'
+      ,ImageHelp = 'Экспресс доставка: “Прямая авиадоставка: быстро и дорого. Этим способом выгодно заказывать небольшие детали без объемного веса. К доставке не принимается опасный груз. Внизу поставить перечеркнутые логотипчики как в брошуре самолета, что нельзя возить взрывоопасные и легковоспламеняющиеся товары ( масла, подушки безопасности и т.д.)'
+   where Name = 'ADQ-Express'
+   
+
+Update tSupplierDeliveryProfiles
+   set [Image] = '<i class="fa fa-car"></i>'
+      ,ImageHelp = 'Стандартная доставка: “Непрямая авиадоставка с пересадкой и перегрузкой в грузовой транспорт. Этим способом выгодно доставлять 90% деталей, но для доставки деталей с большим объемным весом лучше выбрать Контейнерную доставку.'
+   where Name = 'ADQ-Charter'
+   
+
+
+Update tSupplierDeliveryProfiles
+   set [Image] = '<i class="fa fa-ship"></i>'
+      ,ImageHelp = 'Контейнерная доставка: Самый дешевый способ доставки грузов, он же и самый долгий. Этот способ подходит для доставки тяжелых или крупных деталей с большим объемом. Также можно доставлять любой опасный груз: масла, подушки безопасности с пиропатронами и так далее.”'
+   where Name = 'ADQ-Container'
+
+delete from tSettings 
+where SettingsID in (70,71,72)
+

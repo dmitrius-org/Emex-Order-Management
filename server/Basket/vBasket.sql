@@ -1,5 +1,4 @@
-if OBJECT_ID('vBasket') is not null
-    drop view vBasket
+drop view if exists vBasket
 go
 /* **********************************************************						
 vBasket - 
@@ -28,4 +27,4 @@ select
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240522', '5'
+exec setOV 'vBasket', 'V', '20240522', '6'

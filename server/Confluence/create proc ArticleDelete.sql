@@ -1,6 +1,6 @@
 drop proc if exists ArticleDelete
 /*
-  ArticleDelete - Удаление Статьи
+  ArticleDelete - РЈРґР°Р»РµРЅРёРµ РЎС‚Р°С‚СЊРё
 */
 go
 create proc ArticleDelete
@@ -39,5 +39,5 @@ as
 go
 grant exec on ArticleDelete to public
 go
-exec setOV 'ArticleDelete', 'P', '20240326', '1'
+exec setOV 'ArticleDelete', 'P', '20240326', '2'
 go

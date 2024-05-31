@@ -412,7 +412,6 @@ object SearchF: TSearchF
       ' where MakeName        = :MakeName '
       '   and DetailNum       = :DetailNum'
       '   and DestinationLogo = :DestinationLogo  '
-      ''
       '   '
       'order by N  '
       ''

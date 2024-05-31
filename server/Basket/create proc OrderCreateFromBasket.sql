@@ -112,8 +112,8 @@ declare @r int = 0
         ,VolumeKG 
         ,WeightKGF	
         ,VolumeKGf
-  	    ,MOSA  
-        ,DetailPrice 
+  	    --,MOSA  
+        --,DetailPrice 
          ) 
   OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum, INSERTED.PriceLogo 
     INTO @PNew(PriceID, Make, DetailNum, PriceLogo)
@@ -126,8 +126,8 @@ declare @r int = 0
         ,b.VolumeKG
   	    ,b.WeightKG
         ,b.VolumeKG
-        ,b.Price
-        ,b.Price
+        --,b.Price
+        --,b.Price
     from @P p
    inner join tBasket b (nolock)
            on b.BasketID = p.BasketID

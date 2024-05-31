@@ -105,7 +105,15 @@ type
     /// </summary>
     procedure PriceCalc();
 
+    /// <summary>
+    /// SearchHistoryLoad - Загрузка истории поиска
+    /// </summary>
     procedure SearchHistoryLoad();
+
+    /// <summary>
+    /// SearchHistorySave - сохранение истории поиска
+    /// </summary>
+    procedure SearchHistorySave();
 
     procedure SetMakeName();
 
@@ -262,8 +270,14 @@ begin
 
     GridRefresh();
 
-    if (Query.RecordCount > 1) and  (edtSearch.Items.IndexOf(Trim(edtSearch.Text)) < 0 )then
-      edtSearch.Items.Add(Trim(edtSearch.Text));
+    if (Query.RecordCount > 1) then
+    begin
+
+      if (edtSearch.Items.IndexOf(FDetailNum) < 0 ) then
+        edtSearch.Items.Add(FDetailNum);
+
+      SearchHistorySave;
+    end;
 
   finally
     FreeAndNil(emex);
@@ -501,6 +515,22 @@ begin
     edtSearch.Items.Add( qSearchHistory.FieldByName('DetailNum').AsString );
     qSearchHistory.Next;
   end;
+end;
+
+procedure TSearchF.SearchHistorySave;
+begin
+  Sql.Exec('insert tSearchHistory (ClientID, DetailNum)  '+
+  'select distinct        '+
+  '       f.ClientID    '+
+  '      ,f.DetailNum    '+
+  '  from pFindByNumber f (nolock) '+
+  ' where f.Spid      = @@Spid    '+
+  '   and f.DetailNum = :DetailNum  '+
+  '   and not exists (select 1      '+
+  '                     from tSearchHistory sh with (nolock index=ao1) '+
+  '                    where sh.ClientID  = f.ClientID '+
+  '                     and sh.DetailNum = f.DetailNum)   '+
+  '', ['DetailNum'], [FDetailNum]);
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);
