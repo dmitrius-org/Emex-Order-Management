@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
-  uniCheckBox;
+  uniCheckBox, uniLabel;
 
 type
   TSearchF = class(TUniFrame)
@@ -48,6 +48,7 @@ type
     qMakeLogoPriceRub: TCurrencyField;
     UniCheckBox1: TUniCheckBox;
     QueryOurDeliverySTR: TWideStringField;
+    lblAnalog: TUniLabel;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -69,6 +70,7 @@ type
     procedure TopPanelClick(Sender: TObject);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
     procedure edtSearchClick(Sender: TObject);
+    procedure lblAnalogClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -117,9 +119,17 @@ type
 
     procedure SetMakeName();
 
+    /// <summary>
+    /// MakeLogoGridShow - показать таблицу выбора замен
+    /// </summary>
     procedure MakeLogoGridShow();
+    /// <summary>
+    /// MakeLogoGridHide - скрыть таблицу выбора замен
+    /// </summary>
     procedure MakeLogoGridHide();
     procedure MakeLogoGridRefresh();
+
+    procedure AnalogLblVisible();
 
     /// <summary>
     /// DestinationLogo - формирование способов доставки для клиента
@@ -200,11 +210,18 @@ begin
   Query.ParamByName('MakeName').Value        := FMakeName;
   Query.ParamByName('DetailNum').Value       := FDetailNum;
   Query.Open;
+
+  AnalogLblVisible;
+end;
+
+procedure TSearchF.lblAnalogClick(Sender: TObject);
+begin
+  MakeLogoGridShow;
 end;
 
 procedure TSearchF.MakeLogoGridDblClick(Sender: TObject);
 begin
-  MakeLogoPanel.Visible := False;
+  MakeLogoGridHide;
 
   if qMakeLogo.RecordCount > 0 then
   begin
@@ -215,11 +232,6 @@ begin
   end;
 end;
 
-procedure TSearchF.MakeLogoGridHide;
-begin
-  MakeLogoPanel.Visible := False;
-end;
-
 procedure TSearchF.MakeLogoGridRefresh;
 begin
   qMakeLogo.Close;
@@ -227,6 +239,13 @@ begin
   qMakeLogo.ParamByName('MakeName').Value  := FMakeName;
   qMakeLogo.ParamByName('DetailNum').Value := FDetailNum;
   qMakeLogo.Open;
+end;
+
+procedure TSearchF.MakeLogoGridHide;
+begin
+  MakeLogoPanel.Visible := False;
+
+  AnalogLblVisible;
 end;
 
 procedure TSearchF.MakeLogoGridShow;
@@ -250,7 +269,16 @@ begin
                          MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width+25;
 
   MakeLogoGridRefresh;
+
   MakeLogoPanel.Visible := True;
+
+  AnalogLblVisible;
+end;
+
+procedure TSearchF.AnalogLblVisible;
+begin
+  logger.Info(FMakeCount.ToString);
+  lblAnalog.Visible :=(not MakeLogoPanel.Visible) and (FMakeCount > 1) and (Query.RecordCount > 0);
 end;
 
 procedure TSearchF.PartSearch;
@@ -278,7 +306,6 @@ begin
 
       SearchHistorySave;
     end;
-
   finally
     FreeAndNil(emex);
     HideMask;
@@ -352,7 +379,7 @@ begin
     '   <label class="radio-control" data-qtip="' + sql.Q.FieldByName('ImageHelp').AsString + '">' +
     '       <input type="radio" value="' + sql.Q.FieldByName('DestinationLogo').AsString + '" onchange="setDestLogo(value)" /> ' +
     '       <span class="radio-input">' + sql.Q.FieldByName('Image').AsString + '</span> ' +
-    '   </label>    '; 
+    '   </label>';
     sql.Q.Next; 
   end;
   
@@ -393,7 +420,7 @@ begin
   js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
 
-  js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "setMakelogo", []); } ;';
+  js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "MakeLogoGridShow", []); } ;';
   UniSession.JSCode(js);
 
   js := ' clickInfoButton = function(AVal) {  ajaxRequest(' + SearchGrid.JSName    + ', "clickInfoButton", [ "P1=" + AVal ]); } ;';
@@ -435,7 +462,7 @@ begin
     GridRefresh();
   end;
 
-  if EventName = 'setMakelogo' then
+  if EventName = 'MakeLogoGridShow' then
   begin
     MakeLogoGridShow;
   end;

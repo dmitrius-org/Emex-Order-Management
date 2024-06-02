@@ -254,3 +254,13 @@
 
 
 
+.analogLBL {
+    text-align: center;
+    color: #094c99  
+}
+
+.analogLBL:hover {
+    border-bottom: 1px solid;
+    color: #337AB7;
+    cursor: pointer;
+}

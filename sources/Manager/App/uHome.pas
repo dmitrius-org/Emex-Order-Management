@@ -12,7 +12,6 @@ type
   THomeF = class(TUniFrame)
     pcMain: TUniPageControl;
     Dashboard: TUniTabSheet;
-    edt: TUniHTMLFrame;
     procedure UniFrameCreate(Sender: TObject);
   private
     { Private declarations }

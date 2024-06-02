@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 921
+      Left = 917
       Top = 10
       Width = 85
       Height = 25
@@ -34,9 +34,10 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
+      ExplicitLeft = 913
     end
     object btnCancel: TUniBitBtn
-      Left = 834
+      Left = 830
       Top = 10
       Width = 81
       Height = 25
@@ -45,6 +46,7 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
+      ExplicitLeft = 826
     end
   end
   object pcCommon: TUniPageControl
@@ -195,13 +197,13 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 248
+        Width = 244
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 244
+        ExplicitWidth = 240
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -215,13 +217,13 @@ object SuppliersF: TSuppliersF
       object edtEmexPassword: TUniEdit
         Left = 238
         Top = 63
-        Width = 248
+        Width = 244
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 244
+        ExplicitWidth = 240
       end
       object UniLabel5: TUniLabel
         Left = 33
@@ -260,9 +262,7 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 1006
+        ExplicitWidth = 1000
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -304,9 +304,8 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitTop = 48
         ExplicitWidth = 1006
-        ExplicitHeight = 331
+        ExplicitHeight = 325
         object Grid: TUniDBGrid
           AlignWithMargins = True
           Left = 3
@@ -349,7 +348,7 @@ object SuppliersF: TSuppliersF
             item
               FieldName = 'IsActive'
               Title.Alignment = taCenter
-              Title.Caption = 'IsActive'
+              Title.Caption = #1057#1090#1072#1090#1091#1089
               Width = 67
               CheckBoxField.AutoPost = True
             end
@@ -1055,6 +1054,7 @@ object SuppliersF: TSuppliersF
     end
     object qDeliveryImage: TWideStringField
       FieldName = 'Image'
+      Required = True
       Size = 256
     end
     object qDeliveryImageHelp: TWideStringField

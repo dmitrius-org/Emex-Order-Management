@@ -93,7 +93,8 @@ uses
   uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
   uInstructionT in 'App\Confluence\uInstructionT.pas' {InstructionT: TUniFrame},
   uInstructionDevT in 'App\Confluence\uInstructionDevT.pas' {InstructionDevT: TUniFrame},
-  PriceUpdate in 'App\DashBoard\PriceUpdate.pas' {PriceUpdateT: TUniFrame};
+  PriceUpdate in 'App\DashBoard\PriceUpdate.pas' {PriceUpdateT: TUniFrame},
+  uDashBoardItem in 'App\DashBoard\uDashBoardItem.pas' {UniFrame1: TUniFrame};
 
 {$R *.res}
 

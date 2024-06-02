@@ -91,4 +91,3 @@ grant all on vFindByNumber to public
 go
 exec setOV 'vFindByNumber', 'V', '20240416', '5'
 go
--- select * from tPrice where DetailNum =  '09G301469A'

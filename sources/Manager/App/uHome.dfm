@@ -32,19 +32,6 @@ object HomeF: THomeF
       Layout = 'fit'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
-      object edt: TUniHTMLFrame
-        AlignWithMargins = True
-        Left = 10
-        Top = 3
-        Width = 904
-        Height = 575
-        Hint = ''
-        Margins.Left = 10
-        Margins.Right = 10
-        ShowHint = True
-        ParentShowHint = False
-        Align = alClient
-      end
     end
   end
 end

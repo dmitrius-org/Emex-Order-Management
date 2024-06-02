@@ -379,6 +379,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="App\DashBoard\uDashBoardItem.pas">
+            <Form>UniFrame1</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

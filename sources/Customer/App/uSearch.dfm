@@ -386,6 +386,21 @@ object SearchF: TSearchF
           end>
       end
     end
+    object lblAnalog: TUniLabel
+      Left = 32
+      Top = 64
+      Width = 96
+      Height = 15
+      Hint = ''
+      Visible = False
+      Alignment = taCenter
+      Caption = #1048#1084#1077#1102#1090#1089#1103' '#1079#1072#1084#1077#1085#1099
+      ParentFont = False
+      Font.Height = -12
+      TabOrder = 4
+      LayoutConfig.ComponentCls = 'analogLBL'
+      OnClick = lblAnalogClick
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -575,12 +590,11 @@ object SearchF: TSearchF
       '  '
       '  '
       ' order by case'
-      '            when p.MakeName = :MakeName then 1'
+      '            when p.DetailNum = :DetailNum then 1'
       '            else 2'
       '          end '
-      '          '
       '         ,case'
-      '            when p.DetailNum = :DetailNum then 1'
+      '            when p.MakeName = :MakeName then 1'
       '            else 2'
       '          end '
       '          '
@@ -597,14 +611,14 @@ object SearchF: TSearchF
         Value = Null
       end
       item
+        Name = 'DETAILNUM'
+        ParamType = ptInput
+      end
+      item
         Name = 'MAKENAME'
         DataType = ftString
         ParamType = ptInput
         Value = Null
-      end
-      item
-        Name = 'DETAILNUM'
-        ParamType = ptInput
       end>
     object WideStringField1: TWideStringField
       FieldName = 'MakeName'
