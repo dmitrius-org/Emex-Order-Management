@@ -1,18 +1,18 @@
 -- сумма не сходится с количеством и ценой
 Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurchaseF,  o.AmountPurchaseF
   from tOrders o (nolock)
- where o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+ where isnull(o.PricePurchaseF, 0) * o.Quantity <> o.AmountPurchaseF
 
 
 
  Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum', PricePurchase, AmountPurchase
   from tOrders o (nolock)
- where o.PricePurchase * o.Quantity <> o.AmountPurchase
+ where isnull(o.PricePurchase, 0) * o.Quantity <> o.AmountPurchase
 
 
   Select o.OrderID, Quantity, o.Price * o.Quantity 'calc sum',Price,  o.Amount
   from tOrders o (nolock)
- where o.Price * o.Quantity <> o.Amount
+ where isnull(o.Price, 0) * o.Quantity <> o.Amount
 
 /* -- исправление
   update o 

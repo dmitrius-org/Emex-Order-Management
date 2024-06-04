@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
-  uniCheckBox, uniLabel;
+  uniCheckBox, uniLabel, uniSpinEdit;
 
 type
   TSearchF = class(TUniFrame)
@@ -49,6 +49,8 @@ type
     UniCheckBox1: TUniCheckBox;
     QueryOurDeliverySTR: TWideStringField;
     lblAnalog: TUniLabel;
+    UpdateSQL: TFDUpdateSQL;
+    UniNumberEdit1: TUniNumberEdit;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -71,6 +73,9 @@ type
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
     procedure edtSearchClick(Sender: TObject);
     procedure lblAnalogClick(Sender: TObject);
+    procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+
 
   private
     { Private declarations }
@@ -286,7 +291,7 @@ var
   emex: TEmex;
 begin
   emex := TEmex.Create;
-  ShowMask();
+  ShowMask('Поиск...');
   UniSession.Synchronize();
   try
     emex.Connection := UniMainModule.FDConnection;
@@ -390,8 +395,7 @@ begin
   logger.Info(FDestinationStr); 
 end;
 
-procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
+procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   // иконка для выбора аналогов
   if FMakeCount > 1 then
@@ -401,7 +405,7 @@ begin
             '<button type="button" onclick="setMakelogo()" style="border: 0; background: none;"> '+
             '  <i class="fa fa-caret-down fa-lg"></i>'+
             '</button>'+
-            '</a> </span>'+
+            '</a></span>'+
             '<span>' + Sender.AsString + ' </span>' +
             '</form>';
   end
@@ -449,7 +453,6 @@ end;
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  logger.Info('TSearchF.SearchGridAjaxEvent');
   logger.Info('TSearchF.SearchGridAjaxEvent EventName: ' + EventName);
 
   if EventName = 'setDestLogo' then
@@ -469,15 +472,37 @@ begin
 
   if EventName = 'MakeLogoPanelVisibleFalse' then
   begin
-    logger.Info('TSearchF.SearchGridAjaxEvent');
-
     MakeLogoGridHide();
   end;
+
+  if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
+  begin
+    Query.Post;
+
+    PriceCalc();
+
+    GridRefresh();
+  end;
+
+//  if EventName = 'getRowCheck' then
+//  begin
+//    logger.Info('TSearchF.SearchGridAjaxEvent Query.RecNo: ' + SearchGrid.CurrRow.ToString);
+//    if Query.RecNo = 1 then
+//      UniSession.SendResponse('true')
+//    else
+//      UniSession.SendResponse('false');
+//  end;
 end;
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
+
+//  if Query.RecNo = 1 then
+//    SearchGrid.Options := SearchGrid.Options + [dgEditing] // Разрешаем редактирование
+//  else
+//    SearchGrid.Options := SearchGrid.Options - [dgEditing]
+
 end;
 
 procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
@@ -511,6 +536,13 @@ begin
   end;
 end;
 
+procedure TSearchF.SearchGridDrawColumnCell(Sender: TObject; ACol,
+  ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+begin
+  if Column.FieldName  = 'VolumeAdd' then
+   Attribs.Style.Style := 'cursor:pointer;' ;
+end;
+
 procedure TSearchF.SearchGridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -525,7 +557,6 @@ end;
 
 procedure TSearchF.SearchHistoryLoad;
 begin
-
   if not qSearchHistory.Active then
   begin
     qSearchHistory.Close;
@@ -546,18 +577,20 @@ end;
 
 procedure TSearchF.SearchHistorySave;
 begin
-  Sql.Exec('insert tSearchHistory (ClientID, DetailNum)  '+
-  'select distinct        '+
+  Sql.Exec('insert tSearchHistory (ClientID, DetailNum) '+
+  'select distinct      '+
   '       f.ClientID    '+
-  '      ,f.DetailNum    '+
-  '  from pFindByNumber f (nolock) '+
+  '      ,f.DetailNum   '+
+  '  from pFindByNumber f with (nolock index=ao1) '+
   ' where f.Spid      = @@Spid    '+
   '   and f.DetailNum = :DetailNum  '+
   '   and not exists (select 1      '+
   '                     from tSearchHistory sh with (nolock index=ao1) '+
-  '                    where sh.ClientID  = f.ClientID '+
-  '                     and sh.DetailNum = f.DetailNum)   '+
-  '', ['DetailNum'], [FDetailNum]);
+  '                    where sh.ClientID  = f.ClientID   '+
+  '                      and sh.DetailNum = f.DetailNum) '+
+  '',
+  ['DetailNum'],
+  [FDetailNum]);
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);
@@ -574,9 +607,17 @@ end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-//  {$IFDEF Debug}
-//    Sql.exec('update pFindByNumber set spid = @@spid', [], []);
-//  {$ENDIF}
+  {$IFDEF Debug}
+    sql.Open(' update pFindByNumber set spid = @@spid; ' +
+             ' Select top 1 * from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
+
+    if sql.q.RecordCount > 0 then
+    begin
+      FDestinationLogo := sql.q.FieldByName('DestinationLogo').AsString;
+      FMakeName        := sql.q.FieldByName('Make').Value;
+      FDetailNum       := sql.q.FieldByName('DetailNum').Value;
+    end;
+  {$ENDIF}
 
   sql.Open(' Select sp.DestinationLogo  '+
            '   from tClients c (nolock)  '+

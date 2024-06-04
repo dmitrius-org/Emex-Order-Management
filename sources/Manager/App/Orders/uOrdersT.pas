@@ -302,7 +302,7 @@ type
     procedure SelectAll();
     /// <summary>DeselectAll - снять выделения со всех записей таблицы</summary>
     procedure DeselectAll();
-
+    /// <summary>GetMarksInfo - получение информации по выделенным строкам (сумма, количество)</summary>
     procedure GetMarksInfo();
 
     procedure OrderSetCancellation();
@@ -734,7 +734,7 @@ begin
     else
       FClient := '';
 
-    if FStatus <> '' then
+    if (FStatus <> '') or (not edtInvoice.IsBlank )then
     begin
       Grid.Refresh;
       Grid.WebOptions.Paged := True;
@@ -848,8 +848,8 @@ begin
   begin
     Sql.Open('Select Amount, AmountPurchase, WeightKG, VolumeKG, OverVolume from vMarksSum', [], []);
 
-    lblRowSum1.Caption := Sql.Q.FieldByName('Amount').AsString+  ' ₽';
-    lblRowSum2.Caption := Sql.Q.FieldByName('AmountPurchase').AsString+  ' $';
+    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('Amount').Value );
+    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('AmountPurchase').Value);
 
     lblWeightKG.Caption := Sql.Q.FieldByName('WeightKG').AsString+  ' Кг';
     lblVolumeKG.Caption := Sql.Q.FieldByName('VolumeKG').AsString+  ' V';
@@ -924,10 +924,15 @@ end;
 procedure TOrdersT.QueryPricePurchaseFGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  if not IsEmptyOrNull(Sender.Value) and  (Sender.Value > QueryPricePurchase.Value)  then
+  if not IsEmptyOrNull(Sender.Value) then
   begin
-    Text := '<span class="x-replacement-price-arrow">&#10144; </span><span class="x-replacement-price">' +
-    FormatFloat('###,##0.00 $', Sender.Value) + '</span>';
+    if (Sender.Value > QueryPricePurchase.Value)  then
+      Text := '<span class="x-replacement-price-arrow-inc">&#11014; </span><span class="x-replacement-price">' +FormatFloat('###,##0.00 $', Sender.Value) + '</span>'
+    else
+    if  (Sender.Value < QueryPricePurchase.Value)  then
+      Text := '<span class="x-replacement-price-arrow-dec">&#11015; </span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', Sender.Value) + '</span>'
+    else
+      Text := Sender.AsString;
   end
   else
     Text := Sender.AsString;
@@ -958,12 +963,17 @@ begin
 
   if (Sender.AsInteger and 64) > 0 then
   begin
-    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа от клиента"><i class="fa fa-question-circle"></i></span> ';
+    t := t + '<span class="grid-order-request-cancellation" data-qtip="Клиент запросил отказ по детали"><i class="fa fa-question-circle"></i></span> ';
   end;
 
   if (Sender.AsInteger and 128) > 0 then
   begin
     t := t + '<span class="x-cancellation" data-qtip="Запрошен отказ"><i class="fa fa-ban"></i></span> ';
+  end;
+
+  if (Sender.AsInteger and 512) > 0 then
+  begin
+    t := t + '<span class="grid-order-balance-scale " data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
   end;
 
   Text := t;

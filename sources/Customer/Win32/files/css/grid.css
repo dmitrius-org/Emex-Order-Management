@@ -100,10 +100,21 @@
     position: relative;
 }
 
-/* .grid-search .fa-1x {
-    margin-top:0px;
-} */
+.grid-search .makelogo-caret-down :hover {
+    color: hsl(36, 91%, 50%);
+    cursor: pointer;
+}
 
+/* .grid-search .volume-edit {
+    float: left;
+    position: relative;
+    color: #094c99;  
+}
+
+.grid-search .volume-edit :hover {
+    color: hsl(36, 91%, 50%);
+    cursor: pointer;
+} */
 
 .grid-search .x-keyboard-mode .x-grid-item-focused .x-grid-cell-inner:before {
     content: "";
@@ -261,6 +272,6 @@
 
 .analogLBL:hover {
     border-bottom: 1px solid;
-    color: #337AB7;
+    color: hsl(36, 91%, 50%);
     cursor: pointer;
 }

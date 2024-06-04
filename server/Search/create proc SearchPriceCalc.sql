@@ -70,6 +70,12 @@ create table #Price
 declare @Num as table
        (DetailNum nvarchar(40));
 
+Update p
+   set p.WeightGr  = isnull((Select max(pp.WeightGr)  from pFindByNumber pp (nolock) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
+      ,p.VolumeAdd = isnull((Select max(pp.VolumeAdd) from pFindByNumber pp (nolock) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
+  from pFindByNumber p (nolock)
+ where p.Spid = @@Spid
+
 declare  @Price  table
        ( DetailNum nvarchar(40)
         ,MakeLogo  nvarchar(40)
@@ -135,15 +141,22 @@ select p.ID,
 	   1, 
 	   p.Packing, 
 	   0,--pt.Term,
-	   isnull(pp.WeightKGF,p.WeightGr),
-	   isnull(pp.VolumeKGf,p.VolumeAdd) 
-                    * case --коэффициенты [VolumeKG]
-                        when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
-                        when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
-                        when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
-                        when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
-                        else 1
-                      end,
+       case
+         when (p.flag&512)>0 then p.WeightGr
+	     else isnull(pp.WeightKGF,p.WeightGr)
+       end,
+
+       case
+         when (p.flag&512)>0 then p.VolumeAdd
+	     else isnull(pp.VolumeKGf,p.VolumeAdd) 
+       end	   
+           * case --коэффициенты [VolumeKG]
+               when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
+               when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
+               when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
+               when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
+               else 1
+             end,
 	   p.Price,
        pc.Margin,		
        @Kurs, 	
@@ -233,5 +246,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240529', '1'
+exec setOV 'SearchPriceCalc', 'P', '20240603', '2'
 go

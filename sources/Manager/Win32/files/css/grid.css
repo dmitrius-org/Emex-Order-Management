@@ -54,10 +54,17 @@
 }
 
 /* Цена замены*/
-.grid-order .x-replacement-price-arrow{
+.grid-order .x-replacement-price-arrow-inc{
     line-height: 0.0; 
     color: #fc0101;
-    text-align: left
+    text-align: left;
+    font-size: 16px;
+}
+.grid-order .x-replacement-price-arrow-dec{
+    line-height: 0.0; 
+    color: hwb(101 3% 34%);
+    text-align: left;
+    font-size: 16px;
 }
 
 .grid-order .x-replacement-price{
@@ -87,7 +94,7 @@
 }
 
 /* Иконка: Запрос отказа*/
-.grid-order .x-request-cancellation {
+.grid-order-request-cancellation {
     width: 100%;
     /* margin: 1% auto; */
     /* font-size: 16px; */
@@ -100,6 +107,13 @@
     /* margin: 1% auto; */
     /* font-size: 16px; */
     color: #FF033E
+}
+
+.grid-order-balance-scale {
+    width: 100%;
+    /* margin: 1% auto; */
+    /* font-size: 16px; */
+    color: #ff0303
 }
 
 /* Иконка: сообщение по заказу*/

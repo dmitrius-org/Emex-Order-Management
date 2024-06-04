@@ -47,6 +47,7 @@ declare @r int = 0
         ,DestinationLogo
         ,Margin
         ,Discount
+        ,Flag          
         )
   select @ClientID
         ,p.Make
@@ -65,6 +66,7 @@ declare @r int = 0
         ,p.DestinationLogo
         ,p.Margin
         ,p.Discount
+        ,p.Flag
     from pFindByNumber p (nolock)
    where p.Spid = @@Spid
      and p.ID   = @PartID
@@ -82,5 +84,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240404', '3'
+exec setOV 'PartToBasket', 'P', '20240603', '5'
 go

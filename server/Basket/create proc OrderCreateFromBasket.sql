@@ -198,8 +198,9 @@ declare @r int = 0
         ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
-        ,b.WeightKG -- Вес Физический из прайса    
-        ,b.VolumeKG -- Вес Объемный из прайса
+         + iif((isnull(b.flag, 0)&512)>0, 512/*Вес изменен клиентом*/, 0)
+        ,b.WeightKG              -- Вес Физический из прайса    
+        ,b.VolumeKG              -- Вес Объемный из прайса
         ,b.DestinationLogo
         ,b.Margin  -- Наценка из прайса
         ,b.Discount-- Скидка  
@@ -314,6 +315,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240529', '6'
+exec setOV 'OrderCreateFromBasket', 'P', '20240603', '7'
 go
  

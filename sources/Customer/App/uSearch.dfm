@@ -93,7 +93,12 @@ object SearchF: TSearchF
         
           'click=function click(sender, eOpts)'#13#10'{'#13#10'  if (SearchF.MakeLogoPa' +
           'nel.isVisible()){'#13#10'    ajaxRequest(this, '#39'MakeLogoPanelVisibleFa' +
-          'lse'#39', []);'#13#10'  }  '#13#10'}')
+          'lse'#39', []);'#13#10'  }  '#13#10'}'
+        
+          'beforeedit=function beforeedit(editor, context, eOpts)'#13#10'{'#13#10'  //c' +
+          'onsole.log('#39'beforeedit'#39');'#13#10'  //console.log(context);'#13#10'  //return' +
+          ' ajaxRequest(this, '#39'getRowCheck'#39', [], false).responseText == '#39'tr' +
+          'ue'#39';'#13#10'  return (context.rowIdx == 0);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -140,9 +145,9 @@ object SearchF: TSearchF
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
           'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
+      ClicksToEdit = 1
       DataSource = DataSource
-      Options = [dgTitles, dgColumnResize, dgTitleClick]
-      ReadOnly = True
+      Options = [dgEditing, dgTitles, dgColumnResize, dgTitleClick]
       WebOptions.Paged = False
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
@@ -165,6 +170,7 @@ object SearchF: TSearchF
       OnColumnSort = SearchGridColumnSort
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
+      OnDrawColumnCell = SearchGridDrawColumnCell
       OnAfterLoad = SearchGridAfterLoad
       Columns = <
         item
@@ -174,6 +180,7 @@ object SearchF: TSearchF
           Title.Font.Height = -13
           Width = 166
           Alignment = taCenter
+          ReadOnly = True
           MemoOptions.ConvertNewLineToBreak = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -185,6 +192,7 @@ object SearchF: TSearchF
           Title.Font.Height = -13
           Width = 149
           Alignment = taCenter
+          ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -195,6 +203,7 @@ object SearchF: TSearchF
           Title.Font.Height = -13
           Width = 350
           Alignment = taCenter
+          ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -204,6 +213,7 @@ object SearchF: TSearchF
           Title.Caption = #1042#1089#1077
           Title.Font.Height = -13
           Width = 100
+          ReadOnly = True
         end
         item
           FieldName = 'VolumeAdd'
@@ -211,6 +221,7 @@ object SearchF: TSearchF
           Title.Caption = #1054#1073#1098#1077#1084
           Title.Font.Height = -13
           Width = 100
+          Editor = UniNumberEdit1
         end
         item
           FieldName = 'DeliveryType'
@@ -230,6 +241,7 @@ object SearchF: TSearchF
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
           Width = 146
+          ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -252,6 +264,7 @@ object SearchF: TSearchF
           Title.Caption = #1062#1077#1085#1072
           Title.Font.Height = -13
           Width = 115
+          ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -263,6 +276,7 @@ object SearchF: TSearchF
           Title.Font.Height = -13
           Width = 76
           Alignment = taRightJustify
+          ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -329,6 +343,15 @@ object SearchF: TSearchF
         Caption = 'UniCheckBox1'
         TabOrder = 3
       end
+      object UniNumberEdit1: TUniNumberEdit
+        Left = 16
+        Top = 168
+        Width = 121
+        Hint = ''
+        TabOrder = 4
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+      end
     end
     object MakeLogoPanel: TUniContainerPanel
       Left = 3
@@ -387,10 +410,10 @@ object SearchF: TSearchF
       end
     end
     object lblAnalog: TUniLabel
-      Left = 32
+      Left = 46
       Top = 64
-      Width = 96
-      Height = 15
+      Width = 90
+      Height = 13
       Hint = ''
       Visible = False
       Alignment = taCenter
@@ -399,6 +422,8 @@ object SearchF: TSearchF
       Font.Height = -12
       TabOrder = 4
       LayoutConfig.ComponentCls = 'analogLBL'
+      LayoutConfig.IgnorePosition = False
+      LayoutConfig.DockWhenAligned = False
       OnClick = lblAnalogClick
     end
   end
@@ -414,13 +439,16 @@ object SearchF: TSearchF
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
     UpdateOptions.EnableDelete = False
     UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
     UpdateOptions.UpdateChangedFields = False
     UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
+    UpdateOptions.RefreshMode = rmManual
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
+    UpdateOptions.CheckReadOnly = False
+    UpdateOptions.CheckUpdatable = False
+    UpdateOptions.AutoIncFields = 'ID'
+    UpdateObject = UpdateSQL
     SQL.Strings = (
       'Select *'
       '  from vFindByNumber'
@@ -462,17 +490,20 @@ object SearchF: TSearchF
     object QueryMakeName: TWideStringField
       FieldName = 'MakeName'
       Origin = 'MakeName'
+      ReadOnly = True
       OnGetText = QueryMakeNameGetText
       Size = 64
     end
     object QueryDetailNum: TWideStringField
       FieldName = 'DetailNum'
       Origin = 'DetailNum'
+      ReadOnly = True
       Size = 64
     end
     object QueryPartNameRus: TWideStringField
       FieldName = 'PartNameRus'
       Origin = 'PartNameRus'
+      ReadOnly = True
       Size = 256
     end
     object QueryDeliveryType: TIntegerField
@@ -485,30 +516,37 @@ object SearchF: TSearchF
     object QueryPercentSupped: TIntegerField
       FieldName = 'PercentSupped'
       Origin = 'PercentSupped'
+      ReadOnly = True
     end
     object QueryPrice: TCurrencyField
       FieldName = 'PriceRub'
       Origin = 'PriceRub'
+      ReadOnly = True
     end
     object QueryAvailable: TWideStringField
       FieldName = 'Available'
       Origin = 'Available'
+      ReadOnly = True
       Size = 128
     end
     object QueryRating: TStringField
       FieldName = 'Rating'
+      ReadOnly = True
       Size = 1048
     end
     object QueryWeight: TCurrencyField
       FieldName = 'Weight'
+      ReadOnly = True
       DisplayFormat = '###,##0.000'
     end
     object QueryVolumeAdd: TCurrencyField
       FieldName = 'VolumeAdd'
       DisplayFormat = '###,##0.00'
+      MaxValue = 1000.000000000000000000
     end
     object QueryOurDeliverySTR: TWideStringField
       FieldName = 'OurDeliverySTR'
+      ReadOnly = True
       Size = 256
     end
   end
@@ -645,5 +683,27 @@ object SearchF: TSearchF
     DataSet = qMakeLogo
     Left = 760
     Top = 357
+  end
+  object UpdateSQL: TFDUpdateSQL
+    Connection = UniMainModule.FDConnection
+    ConnectionName = 'Connection'
+    ModifySQL.Strings = (
+      'Update pFindByNumber'
+      '       set VolumeAdd =  isnull(:NEW_VolumeAdd, VolumeAdd)'
+      
+        '            ,Flag            =  isnull(flag, 0) | 512 -- '#1042#1077#1089' '#1080#1079#1084 +
+        #1077#1085#1077#1085' '#1082#1083#1080#1077#1085#1090#1086#1084
+      '  where spid = @@spid')
+    DeleteSQL.Strings = (
+      
+        'Delete tBasket from tBasket (rowlock) where BasketID=:OLD_Basket' +
+        'ID')
+    FetchRowSQL.Strings = (
+      'select *'
+      '  from pFindByNumber (nolock)'
+      'where spid = @@spid'
+      '    and ID   = :ID')
+    Left = 497
+    Top = 254
   end
 end

@@ -984,7 +984,7 @@ object OrdersT: TOrdersT
       object UniPanel3: TUniPanel
         Left = 0
         Top = 0
-        Width = 175
+        Width = 161
         Height = 40
         Hint = ''
         ShowHint = True
@@ -1008,9 +1008,9 @@ object OrdersT: TOrdersT
         end
       end
       object UniPanel4: TUniPanel
-        Left = 175
+        Left = 161
         Top = 0
-        Width = 175
+        Width = 183
         Height = 40
         Hint = ''
         ShowHint = True
@@ -1058,9 +1058,9 @@ object OrdersT: TOrdersT
         end
       end
       object UniPanel5: TUniPanel
-        Left = 350
+        Left = 344
         Top = 0
-        Width = 175
+        Width = 181
         Height = 40
         Hint = ''
         ShowHint = True
@@ -1069,6 +1069,8 @@ object OrdersT: TOrdersT
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel5'
+        ExplicitLeft = 350
+        ExplicitWidth = 175
         object UniLabel7: TUniLabel
           AlignWithMargins = True
           Left = 5

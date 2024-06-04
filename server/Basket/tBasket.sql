@@ -31,6 +31,7 @@ tBasket - корзина деталей
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
+  ,Flag                    int
   );
 
   grant all on tBasket to public;

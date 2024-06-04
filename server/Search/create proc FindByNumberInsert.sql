@@ -49,7 +49,30 @@ set nocount on;
 declare @RetVal       int
 
 insert into pFindByNumber
-       (Spid, ClientID, DestinationLogo, Available, bitOldNum, PercentSupped, PriceId, Region, Delivery, Make, DetailNum, PriceLogo, Price, PartNameRus, PartNameEng, WeightGr, MakeName, Packing, VolumeAdd, GuaranteedDay, bitECO, bitWeightMeasured)               
+       (Spid, 
+        ClientID, 
+        DestinationLogo, 
+        Available, 
+        bitOldNum, 
+        PercentSupped, 
+        PriceId, 
+        Region, 
+        Delivery, 
+        Make,
+        DetailNum, 
+        PriceLogo, 
+        Price, 
+        PartNameRus, 
+        PartNameEng, 
+        WeightGr, 
+        MakeName, 
+        Packing, 
+        VolumeAdd, 
+        GuaranteedDay, 
+        bitECO, 
+        bitWeightMeasured,
+        flag
+        )               
 select  @@Spid
        ,@ClientID 
        ,null 
@@ -72,12 +95,13 @@ select  @@Spid
        ,@GuaranteedDay   
        ,@bitECO           
        ,@bitWeightMeasured
+       ,0
        
 exit_:
 return @RetVal    
 go
 grant all on FindByNumberInsert to public
 go
-exec setOV 'FindByNumberInsert', 'P', '20240101', '0'
+exec setOV 'FindByNumberInsert', 'P', '20240603', '2'
 go
  

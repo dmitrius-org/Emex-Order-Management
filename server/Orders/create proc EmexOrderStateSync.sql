@@ -235,13 +235,13 @@ DEALLOCATE my_cur
        ,o.ReplacementDetailNumber = p.ReplacementDetailNumber
        ,o.ReplacementPrice        = case 
                                       when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
-                                      else null
+                                      else o.PricePurchase
                                     end    
         /*Если у детали обновляется цена, то прописывать ее не стрелкой внизу, а в поле “Цена закупки Факт” и ставить красную стрелочку перед ней. Но делать это в одну строку. 
 		Таким образом мы увидим какое превышение цены было пропущено в работу менеджером, а какое прислал сам поставщик. Пересчитывать сумму закупки Факт соответственно.*/
        ,o.PricePurchaseF         = case 
                                       when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
-                                      else null
+                                      else o.PricePurchase
                                     end   									
        ,o.OrderDetailSubId        = p.OrderDetailSubId
        ,o.Invoice                 = case 
