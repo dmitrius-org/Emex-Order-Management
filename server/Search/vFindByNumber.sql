@@ -76,7 +76,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 
  where p.Spid             = @@spid
    --
-   and p.Available        > 0
+   --and p.Available        > 0
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
 

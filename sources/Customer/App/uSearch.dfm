@@ -527,6 +527,7 @@ object SearchF: TSearchF
       FieldName = 'Available'
       Origin = 'Available'
       ReadOnly = True
+      OnGetText = QueryAvailableGetText
       Size = 128
     end
     object QueryRating: TStringField

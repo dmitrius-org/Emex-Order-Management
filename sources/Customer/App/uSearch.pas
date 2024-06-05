@@ -75,6 +75,8 @@ type
     procedure lblAnalogClick(Sender: TObject);
     procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
       Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure QueryAvailableGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
 
 
   private
@@ -357,6 +359,17 @@ begin
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
+end;
+
+procedure TSearchF.QueryAvailableGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if Sender.Value = -1 then
+  begin
+    Text := '<span class="">под заказ</span>';
+  end
+  else
+    Text := '<span>' + Sender.AsString + ' </span>';
 end;
 
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
