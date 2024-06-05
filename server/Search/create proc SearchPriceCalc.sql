@@ -24,8 +24,6 @@ if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 create table #Price 
 (
  ID                  numeric(18,0)  --  
---,PriceID             numeric(18, 0) -- идентификатор детали tPrice.PriceID
-
 ,Brand               varchar(60)    --
 ,DetailNum	         varchar(30)    -- Номер детали 
 ,DetailPrice         float          -- Цена

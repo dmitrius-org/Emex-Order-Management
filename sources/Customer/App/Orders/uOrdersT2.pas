@@ -162,7 +162,6 @@ type
     procedure cbCancelSelect(Sender: TObject);
     procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
-    procedure GridBodyDblClick(Sender: TObject);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
@@ -573,7 +572,7 @@ begin
   // запрошен отказ по детали
   if (Sender.AsInteger and 64) > 0 then
   begin
-    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа от клиента"><i class="fa fa-question-circle"></i></span> ';
+    t := t + '<span class="x-request-cancellation" data-qtip="Запрос отказа"><i class="fa fa-question-circle"></i></span> ';
   end;
 
    // отказ по детали
@@ -624,16 +623,6 @@ begin
   logger.Info('QueryUpdateRecord: ');
 end;
 
-procedure TOrdersT2.GridBodyDblClick(Sender: TObject);
-begin
-//  if (Query.FieldByName('Flag').AsInteger and 32) = 32 then
-//  begin
-//    OrdersMessageF.FormAction := TFormAction.acMessage;
-//    OrdersMessageF.ID:=QueryOrderID.AsInteger;
-//    OrdersMessageF.ShowModal(OrdersMessageFCallBack);
-//  end;
-end;
-
 procedure TOrdersT2.GridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
@@ -642,14 +631,6 @@ end;
 procedure TOrdersT2.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer);
 begin
   ACurrColumn := Column;
-
-//  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions + [boDisableMouseRightClick];
-//  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
-
- // ppMain.Popup(X, Y, Grid);
-
-//  MainModule.UniMainModule.BrowserOptions := MainModule.UniMainModule.BrowserOptions - [boDisableMouseRightClick];
-//  UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true; }');
 end;
 
 procedure TOrdersT2.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
@@ -684,35 +665,10 @@ begin
 
 end;
 
-//procedure TOrdersT2.Select;
-//begin
-// // Grid.JSInterface.JSCall('getSelectionModel().select', [Grid.CurrRow, true]);
-//end;
-
-//procedure TOrdersT2.SelectAll;
-//begin
-//  // Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
-//end;
-
-//procedure TOrdersT2.DeselectAll;
-//begin
-//  //Grid.JSInterface.JSCall('getSelectionModel().deselectAll', []);
-//end;
-
 procedure TOrdersT2.StateActionMenuCreate;
 begin
 
 end;
-
-//procedure TOrdersT2.actSelectExecute(Sender: TObject);
-//begin
-// // SelectAll;
-//end;
-
-//procedure TOrdersT2.actUnselectExecute(Sender: TObject);
-//begin
-//  //DeselectAll;
-//end;
 
 procedure TOrdersT2.cbCancelSelect(Sender: TObject);
 begin
@@ -853,7 +809,7 @@ end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid', [], [])
+  Sql.Exec('Delete tMarks from tMarks with (rowlock index=pk_tMarks) where Spid=@@Spid', [], [])
 end;
 
 procedure tMarks.Clear;

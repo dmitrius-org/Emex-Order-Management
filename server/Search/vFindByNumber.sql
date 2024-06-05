@@ -49,6 +49,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        p.PriceRub,        -- цена детали, показаваемая на сайте
        p.Available,       -- наличие детали на складе
        p.PriceLogo,
+       '<span class="" data-qtip="Прайс: ' + convert(varchar, p.PriceLogo) + '">'+
        '<fieldset class="rating">'+
        '<input type="radio" ' + iif(p.PercentSupped between 91 and 100,'checked', '') + '/><label class="full" for="star5"    ></label>'+
        '<input type="radio" ' + iif(p.PercentSupped between 81 and 90, 'checked', '') + '/><label class="half" for="star4half"></label>'+
@@ -60,26 +61,15 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        '<input type="radio" ' + iif(p.PercentSupped between 21 and 30, 'checked', '') + '/><label class="half" for="star1half"></label>'+
        '<input type="radio" ' + iif(p.PercentSupped between 11 and 20, 'checked', '') + '/><label class="full" for="star1"    ></label>'+
        '<input type="radio" ' + iif(p.PercentSupped between 1  and 10, 'checked', '') + '/><label class="half" for="star0half"></label>'+
-       '</fieldset>'+
+       '</fieldset></span>'+
        '<label id="prc" class="ratingprc"> ' + cast(p.PercentSupped as varchar(30)) + '%</label>' as Rating,
        p.DestinationLogo
   from pFindByNumber p with (nolock index=ao2)
-
- --cross apply (select top 1 * 
- --               from pFindByNumber pp  with (nolock index=ao2)
-	--	   	   where pp.Spid = @@spid
-	--		 ) pp
- 
- left join tSettings st (nolock)
-        on st.Brief = 'PercentSupped'
-
-
+  left join tSettings st with (nolock index=ao2)
+         on st.Brief = 'PercentSupped'
  where p.Spid             = @@spid
-   --
-   --and p.Available        > 0
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
-
    and not exists (select 1
                      from tPrices sp with (nolock index=a1)
                     where sp.Name         = p.PriceLogo
@@ -87,7 +77,6 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 
 go
 grant all on vFindByNumber to public
-
 go
-exec setOV 'vFindByNumber', 'V', '20240416', '5'
+exec setOV 'vFindByNumber', 'V', '20240606', '6'
 go

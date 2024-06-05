@@ -85,7 +85,7 @@ select  @@Spid
        ,@Make             
        ,@DetailNum        
        ,@PriceLogo        
-       ,@Price                   
+       ,@Price  
        ,@PartNameRus      
        ,@PartNameEng      
        ,@WeightGr / 1000         
@@ -102,6 +102,6 @@ return @RetVal
 go
 grant all on FindByNumberInsert to public
 go
-exec setOV 'FindByNumberInsert', 'P', '20240603', '2'
+exec setOV 'FindByNumberInsert', 'P', '20240605', '3'
 go
  

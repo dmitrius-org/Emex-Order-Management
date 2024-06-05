@@ -186,8 +186,8 @@ declare @r int = 0
         ,b.PriceRub
         ,b.Amount
         ,b.Price --PricePurchaseOrg
-        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     PricePurchase
-        ,b.Price - (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     AmountPurchase
+        ,b.Price -- (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     PricePurchase
+        ,b.Quantity * b.Price -- (b.Price * (b.Discount / 100)))-- Цена закупки с учетом скидки     AmountPurchase
         ,@OrderNum               -- OrderNum
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
@@ -226,40 +226,6 @@ declare @r int = 0
 
    where m.spid = @@spid   
      and m.Type = 6--Корзина
-   -- - - -
-
-   --    Update o
-   --  set o.PricePurchase    = round(p.DetailPrice - (p.DetailPrice * (o.Discount / 100)), 2)-- Цена закупки с учетом скидки    
-      --  ,o.PricePurchaseOrg = round(p.DetailPrice, 2) 
-   --     ,o.WeightKG         = p.WeightKG -- Вес Физический из прайса    
-   --     ,o.VolumeKG         = p.VolumeKG -- Вес Объемный из прайса    
-   -- from @ID i
-   --inner join tOrders o with (updlock)
-   --        on o.OrderID = i.OrderID
-   --inner join tPrice p (nolock) 
-   --        on p.PriceID = o.PriceID
-
-   --outer apply (select top 1 *
-   --               from tPrice p (nolock) 
-   --              where p.DetailNum= o.DetailNumber
-   --              order by case
-            --                when p.Brand = o.Manufacturer then 0
-            --                else 1
-            --              end
-   --                      ,case
-            --                when p.PriceLogo= pc.UploadPriceName then 0
-            --                else 1
-   --                       end
-            --             ,p.DetailPrice 
-            --    ) p
-
-     --and not exists (select 1
-     --                  from tOrders t (nolock)
-     --                 where t.ClientID          = o.ClientID
-     --                   and t.CustomerPriceLogo = o.PriceNum
-     --                   and t.OrderNum          = o.OrderNum
-     --                   )
-
 
   -- Протокол
   declare @ToNew numeric(18, 0)
@@ -315,6 +281,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240603', '7'
+exec setOV 'OrderCreateFromBasket', 'P', '20240605', '8'
 go
  

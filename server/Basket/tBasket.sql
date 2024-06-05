@@ -17,7 +17,7 @@ tBasket - корзина деталей
   ,GuaranteedDay           nvarchar(64)   -- гарантированный срок поставки детали
   ,OurDelivery             int            -- наш срок поставки, показываем клиенту
   ,Quantity                int            -- Количество
-  ,Price                   money          -- цена детали
+  ,Price                   money          -- цена детали в $ от emex
   ,PriceRub                money          -- цена детали в рублях
   ,Amount                  money          -- сумма 
   ,Reference               nvarchar(32)   -- reference

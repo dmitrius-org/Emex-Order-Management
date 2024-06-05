@@ -496,26 +496,11 @@ begin
 
     GridRefresh();
   end;
-
-//  if EventName = 'getRowCheck' then
-//  begin
-//    logger.Info('TSearchF.SearchGridAjaxEvent Query.RecNo: ' + SearchGrid.CurrRow.ToString);
-//    if Query.RecNo = 1 then
-//      UniSession.SendResponse('true')
-//    else
-//      UniSession.SendResponse('false');
-//  end;
 end;
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
   ACurrColumn := Column;
-
-//  if Query.RecNo = 1 then
-//    SearchGrid.Options := SearchGrid.Options + [dgEditing] // Разрешаем редактирование
-//  else
-//    SearchGrid.Options := SearchGrid.Options - [dgEditing]
-
 end;
 
 procedure TSearchF.SearchGridCellContextClick(Column: TUniDBGridColumn; X,
@@ -527,9 +512,6 @@ end;
 procedure TSearchF.SearchGridColumnSort(Column: TUniDBGridColumn;
   Direction: Boolean);
 begin
-  Logger.Info('TSearchF.SearchGridColumnSort');
-  Logger.Info('TSearchF.SearchGridColumnSort FInfoButton ' + FInfoButton.ToString());
-
   if Direction then
     Query.IndexName := Column.FieldName+'_index_asc'
   else

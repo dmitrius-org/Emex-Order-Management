@@ -153,7 +153,6 @@ object OrdersT2: TOrdersT2
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
       OnSelectionChange = GridSelectionChange
-      OnBodyDblClick = GridBodyDblClick
       OnCellClick = GridCellClick
       OnColumnSort = GridColumnSort
       OnCellContextClick = GridCellContextClick

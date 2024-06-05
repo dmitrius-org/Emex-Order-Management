@@ -84,5 +84,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240603', '5'
+exec setOV 'PartToBasket', 'P', '20240605', '6'
 go

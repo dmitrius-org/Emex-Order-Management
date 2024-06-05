@@ -18,7 +18,7 @@ create table pFindByNumber
 ,Make                    nvarchar(10)   -- лого бренда детали
 ,DetailNum               nvarchar(64)   -- номер детали
 ,PriceLogo               nvarchar(64)   -- лого прайслиста
-,Price                   money          -- цена детали, показаваемая на сайте
+,Price                   money          -- цена детали в $ с учетом скидки
 ,PriceRub                money          -- цена детали в рублях
 ,PartNameRus             nvarchar(256)  -- русское название детали
 ,PartNameEng             nvarchar(256)  -- английское название детали
@@ -47,7 +47,7 @@ create index ao1 on pFindByNumber(Spid, ID)
 go
 create index ao2 on pFindByNumber(Spid, DestinationLogo)
 go
-exec setOV 'pFindByNumber', 'U', '20240603', '3'
+exec setOV 'pFindByNumber', 'U', '20240605', '4'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pFindByNumber', @desc = 'Результат поиска детали'
