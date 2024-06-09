@@ -280,7 +280,7 @@ DEALLOCATE my_cur
     set o.AmountPurchaseF = o.Quantity * o.PricePurchaseF
    from pMovement p (nolock) 
   inner join tOrders o (updlock)
-          on o.OrderID = p.OrderID and o.PricePurchaseF * o.Quantity <> o.AmountPurchaseF
+          on o.OrderID = p.OrderID and o.Quantity * isnull(o.PricePurchaseF, 0) <> isnull(o.AmountPurchaseF, 0)
   where p.Spid = @@SPID
 
  update o 

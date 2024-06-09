@@ -47,6 +47,22 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// FillMovement - Вспомогательная процедура для заполнения pMovement
       /// </summary>
       procedure FillMovement(AParts: ArrayOfMovement);
+
+      /// <summary>
+      /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
+      /// </summary>
+      procedure FillFindByNumber(APparts: ArrayOfFindByNumber);
+
+      /// <summary>
+      /// FillBasketDetails - Вспомогательная процедура для заполнения pBasketDetails данными корзины
+      /// </summary>
+      procedure FillBasketDetails(ABasket: ArrayOfBasketDetails; ASupplier: Integer = 0);
+
+
+      /// <summary>
+      /// DeleteBasketDetails - Удаление детали из корзины
+      /// </summary>
+      procedure DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer = 0);
     public
       destructor Destroy; override;
       property Connection: TFDConnection read GetConnection write SetConnection;
@@ -54,11 +70,17 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       property Emex: ServiceSoap read GetEmex;
       property SQl: TSQL read GetSQl write SetSQl;
 
+      /// <summary>Login - Авторизация </summary>
+      function Login(AAccount: Integer): String;
+
       /// <summary>
       /// TestConnect - тестовый метод для проверки работоспособности сервисов emex.
       /// </summary>
       /// <returns>Возвращает тестовую стоку с текущим временем</returns>
       function TestConnect(): string;
+
+      /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
+      procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
 
       /// <summary>
       /// getCustomer -Подготовка авторизационных данных (пользователь, пароль).
@@ -87,11 +109,6 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       procedure InsertPartToBasketByPartDelete();
 
       procedure InsertPartToBasketCancel();
-      /// <summary>
-      /// PartToBasketDelete - Удаление запчастей из корзины. Вызывается при обнаружении дублей при создании заказа
-      /// </summary>
-      /// <returns></returns>
-//      procedure PartToBasketDelete();
 
       /// <summary>
       /// CreateOrder - создание заказа клиента по данным корзины.
@@ -110,34 +127,24 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// <summary>OrderStateSyncByOrderNum - синхронизация статуса заявки </summary>
       procedure OrderStateSyncByOrderNum();
 
-      /// <summary>GetBasketDetails - получение корзины.
-      ///      Результат пишется в pBasketDetails
-      /// </summary>
-      procedure GetBasketDetails();
-
       /// <summary>MovementByOrderNumber - просмотр движения по номеру заказа.
       ///  Результат пишется в pMovement
       /// </summary>
       procedure MovementByOrderNumber(ASupplierID: Integer; AEmexOrderID: integer);
 
-      /// <summary>MovementInWork Просмотр движения по статусу 'В работе' </summary>
+      /// <summary>GetBasketDetailsByMarks - получение корзины.
+      ///      Результат пишется в pBasketDetails
+      /// </summary>
+      procedure GetBasketDetailsByMarks();
+
+      /// <summary>MovementInWorkByMarks Просмотр движения по статусу 'В работе' </summary>
       /// <returns>Результат пишется в pMovement </returns
-      procedure MovementInWork();
+      procedure MovementInWorkByMarks();
 
       /// <summary>BasketСheck - проверка корзины </summary>
       /// <returns>Результат пишется в pBasketDetails </returns
-      procedure BasketСheck();
+      // procedure BasketСheck();
 
-      /// <summary>Login - Авторизация </summary>
-      function Login(AAccount: Integer): String;
-
-      /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
-      procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
-
-      /// <summary>
-      /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
-      /// </summary>
-      procedure FillFindByNumber(APparts: ArrayOfFindByNumber);
   end;
 
 implementation
@@ -148,18 +155,18 @@ uses
 
 { TEmex }
 
-procedure TEmex.BasketСheck;
-begin
-  logger.Info('TEmex.BasketСheck Begin');
-  // получаем данные корзины emex
-  GetBasketDetails();
-
-  Qry.Close;
-  Qry.SQL.Text := ' declare @R int; exec @r = BasketСheck; select @r as retcode ';
-  Qry.Open;
-
-  logger.Info('TEmex.BasketСheck End');
-end;
+//procedure TEmex.BasketСheck;
+//begin
+//  logger.Info('TEmex.BasketСheck Begin');
+//  // получаем данные корзины emex
+//  GetBasketDetailsByMarks();
+//
+//  Qry.Close;
+//  Qry.SQL.Text := ' declare @R int; exec @r = BasketСheck; select @r as retcode ';
+//  Qry.Open;
+//
+//  logger.Info('TEmex.BasketСheck End');
+//end;
 
 procedure TEmex.CreateOrder();
 var Suppliers : TStringList;
@@ -181,11 +188,51 @@ begin
   end;
 
   Suppliers := ForSupplier();
-  // Цикл по клиентам
-  for Supplier in Suppliers do
+
+  for Supplier in Suppliers do // Цикл по поставщикам
   begin
-    logger.Info('TEmex.CreateOrder Поставщик:' + Supplier);
-    // создание заказа
+
+
+    // *** Проверка корзины *** \\
+    var Basket: ArrayOfBasketDetails;
+    Basket:=Emex.GetBasketDetails(getCustomer(Supplier.ToInteger));
+
+    FillBasketDetails(Basket, Supplier.ToInteger);
+
+    SQl.Exec('exec EmexCreateOrderBasketCheck', [], []);
+    SQl.Open(' select * '+
+             '   from pBasketDetails with (nolock index=ao1) '+
+             '  where Spid   = @@spid '+
+             '    and RetVal > 0      ',
+             [],[]);
+
+    if SQl.Q.RecordCount > 0 then
+    begin
+        DeleteBasketDetails(SQl.Q, Supplier.ToInteger);
+
+        SQl.Open(' select 1 '+
+                 '   from pBasketDetails with (nolock index=ao1) '+
+                 '  where Spid   = @@spid '+
+                 '    and RetVal = 537    ', [],[]);
+
+        if SQl.Q.RecordCount > 0 then // если имеются ошибки удаления, то оста
+        begin
+            logger.Info('TEmex.CreateOrder End Ошибка: 537');
+
+            Qry.Close;
+            Qry.SQL.Text := ' Update p                 '+
+                            '    set p.Retval = 537    '+
+                            '   from pAccrualAction p with (updlock index=ao2) '+
+                            '  where p.spid   = @@spid '+
+                            '    and p.Retval = 0      ';
+            Qry.ExecSQL;
+
+            Exit;
+        end;
+    end;
+
+
+    // *** Создание заказа *** \\
     Order:=Emex.CreateOrder(getCustomer(Supplier.ToInteger));
 
     logger.Info('TEmex.CreateOrder Создан заказ: ' + Order.ToString);
@@ -199,33 +246,92 @@ begin
       MovementByOrderNumber(Supplier.ToInteger, Order);
 
       Qry.Close;
-      Qry.SQL.Text := ' EmexOrderCreateSync ';
+      Qry.SQL.Text := 'exec EmexOrderCreateSync ';
       Qry.ExecSQL;
     end
     else
     begin
-      logger.Info('TEmex.CreateOrder Order ERR: ' + Order.ToString);
+      logger.Info('TEmex.CreateOrder Error: ' + Order.ToString);
 
       case Order of
-        -1: retval := 507;// Клиенту запрещено создавать заказ!
-        -2: retval := 508;// Недостаточно средств на балансе клиента!
-        -3: retval := 509;// Ошибка с типом отгрузки!
-        -4: retval := 510;// Нет позиций для заказа!
+        -1: retval := 507; // Клиенту запрещено создавать заказ!
+        -2: retval := 508; // Недостаточно средств на балансе клиента!
+        -3: retval := 509; // Ошибка с типом отгрузки!
+        -4: retval := 510; // Нет позиций для заказа!
       else
         retval := 511;// Неизвестная ошибка!
       end;
 
       Qry.Close;
-      Qry.SQL.Text := ' Update p set p.Retval=:Retval     '+
+      Qry.SQL.Text := ' Update p '+
+                      '    set p.Retval=:Retval           '+
                       '   from pAccrualAction p (updlock) '+
                       '  where p.spid   = @@spid '+
-                      '    and p.Retval = 0';
+                      '    and p.Retval = 0      ';
       Qry.ParamByName('Retval').AsInteger := retval;
       Qry.ExecSQL;
     end;
+
   end;
   FreeAndNil(Suppliers);
   logger.Info('TEmex.CreateOrder End');
+end;
+
+procedure TEmex.DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer);
+var part: BasketDetails;
+    outBasket: ArrayOfBasketDetails;
+    I, R: Integer;
+begin
+  logger.Info('TEmex.DeleteBasketDetails Begin');
+  if AQry.RecordCount > 0 then
+  begin
+    SetLength(outBasket, 1);
+
+    part:= BasketDetails.Create;
+
+    AQry.First;
+    for I := 0 to AQry.RecordCount - 1 do // удаление выполняем по одному, чтобы можно было понять по какой детали получили ошибку
+    begin
+      logger.Info('TEmex.DeleteBasketDetails BasketId: ' + AQry.FieldByName('BasketId').AsString);
+
+      part.BasketId := AQry.FieldByName('BasketId').AsLargeInt;
+      part.Date_add:= TXSDateTime.Create;
+
+      outBasket[0]:= part;
+
+      R:=Emex.DeleteFromBasket(getCustomer(ASupplier), outBasket);
+
+      if R <> 1 then
+      begin
+        logger.Info('TEmex.DeleteBasketDetails 537 Количество удаленных товаров: ' + R.ToString);
+        logger.Info('TEmex.DeleteBasketDetails 537 Ошибка удаления товара из корзины, требуется ручная проверка! '+
+        '[ASupplier: ' + ASupplier.ToString + ', BasketId: ' + part.BasketId.ToString +  ']');
+
+        Qry.Close;
+        Qry.SQL.Text := ' Update pBasketDetails '+
+                 '    set Retval = 537   '+
+                 '   from pBasketDetails with (updlock index=ao2) '+
+                 '  where Spid     = @@spid     '+
+                 '    and BasketId = :BasketId  ';
+        Qry.ParamByName('BasketId').Value := part.BasketId;
+        Qry.ExecSQL;
+
+
+        Sql.Exec(' Update pBasketDetails '+
+                 '    set Retval = 537   '+
+                 '   from pBasketDetails with (updlock index=ao2) '+
+                 '  where Spid     = @@spid     '+
+                 '    and BasketId = :BasketId  ',
+                 ['BasketId'],
+                 [AQry.FieldByName('BasketId').AsLargeInt]);
+      end;
+
+      AQry.Next;
+    end;
+
+    part.Destroy;
+  end;
+  logger.Info('TEmex.DeleteBasketDetails End');
 end;
 
 destructor TEmex.Destroy;
@@ -258,15 +364,15 @@ var i: Integer;
 begin
     result := TStringList.Create;
     Qry.Close;
-    Qry.Open('Select distinct s.SuppliersID              '+
-             '  from pAccrualAction p (nolock)           '+
-             ' inner join tOrders o (nolock)             '+
-             '         on o.OrderID = p.ObjectID         '+
-             ' inner join tClients c (nolock)            '+
-             '         on c.ClientID=o.ClientID          '+
-             ' inner join tSuppliers  s (nolock)         '+
-             '         on s.SuppliersID = c.SuppliersID  '+
-             ' where p.Spid = @@spid '+
+    Qry.Open('Select distinct s.SuppliersID                   '+
+             '  from pAccrualAction p with (nolock index=ao2) '+
+             ' inner join tOrders o (nolock)                  '+
+             '         on o.OrderID = p.ObjectID              '+
+             ' inner join tClients c (nolock)                 '+
+             '         on c.ClientID=o.ClientID               '+
+             ' inner join tSuppliers  s (nolock)              '+
+             '         on s.SuppliersID = c.SuppliersID       '+
+             ' where p.Spid   = @@spid                        '+
              '   and p.Retval = 0    ', [], []);
     Qry.First;
     for I := 0 to qry.RecordCount - 1 do
@@ -287,11 +393,10 @@ begin
   logger.Info('TEmex.getCustomer ASuppliersID: ' + ASuppliersID.ToString);
   begin
     //данные для интеграции берем из справочника "Клиенты"
-    SQl.Open('Select s.emexUsername, s.emexPassword '+
-             '  from tSuppliers  s (nolock)         ' +
-             ' where s.SuppliersID = :SuppliersID ',
+    SQl.Open('Select s.emexUsername, s.emexPassword        '+
+             '  from tSuppliers  s with (nolock index=ao1) '+
+             ' where s.SuppliersID = :SuppliersID          ',
             ['SuppliersID'], [ASuppliersID]);
-
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -307,13 +412,12 @@ begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AClientID: ' + AClientID.ToString);
   begin
-    SQl.Open('Select s.emexUsername, s.emexPassword '+
-             '  from tClients c (nolock)            ' +
-             '  join tSuppliers  s (nolock)         ' +
-             '    on s.SuppliersID = c.SuppliersID  ' +
+    SQl.Open('Select s.emexUsername, s.emexPassword        '+
+             '  from tClients c with (nolock index=ao1)    '+
+             '  join tSuppliers  s with (nolock index=ao1) '+
+             '    on s.SuppliersID = c.SuppliersID         '+
              ' where c.ClientID = :ClientID',
             ['ClientID'], [AClientID]);
-
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -490,7 +594,6 @@ begin
         begin
           logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Количество удаленных товаров: ' +  R.ToString);
           logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
-         // tsql.Exec('Update pAccrualAction set retval = 505 where spid = @@spid and ObjectID=:OrderID',['OrderID'],[OrderID]);
         end;
 
         qry.Next;
@@ -576,67 +679,6 @@ begin
 
   logger.Info('TEmex.InsertPartToBasketCancel End');
 end;
-         {
-procedure TEmex.PartToBasketDelete;
-var part: BasketDetails;
-    outBasket: ArrayOfBasketDetails;
-    OrderID: Integer;
-    I, RCount, R: Integer;
-    dat: TXSDateTime;
-begin
-  logger.Info('TEmex.PartToBasketDelete Begin');
-
-  qry.Close;
-  Qry.Open('Select o.OrderID,  o.BasketId, o.ClientID '+
-           '  from pAccrualAction p (nolock)'+
-           ' inner join tOrders o (nolock)  '+
-           '         on o.OrderID=p.ObjectID'+
-           '        and isnull(o.BasketId, 0) <> 0'+
-           ' where p.Spid   = @@spid        '+
-           '   and p.Retval = 534           ', [], []);
-  qry.Open;
-  RCount := qry.RecordCount;
-
-  if RCount > 0 then
-  begin
-
-    OrderID:=Qry.FieldByName('OrderID').Value;
-
-    SetLength(outBasket, 1);
-
-    dat := TXSDateTime.Create;
-    part:= BasketDetails.Create;
-
-    qry.First;
-    for I := 0 to qry.RecordCount - 1 do // удаление выполняем по одному, чтобы можно было понять по какой детали получили ошибку
-    begin
-      part.BasketId := Qry.FieldByName('BasketId').AsLargeInt;
-      part.Date_add:= dat;
-
-
-      outBasket[0]:= part;
-
-      logger.Info('TEmex.PartToBasketDelete DeleteFromBasket: ' +  part.BasketId.ToString);
-
-      R:=Emex.DeleteFromBasket(getCustomerByClient(Qry.FieldByName('ClientID').AsInteger), outBasket);
-
-      if R <> 1 then
-      begin
-        logger.Info('TEmex.PartToBasketDelete 505 Количество удаленных товаров: ' +  R.ToString);
-        logger.Info('TEmex.PartToBasketDelete 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
-
-        // если тут ошибка, то вызываем глобальную ошибку. В противном случае заказ по детали может сформироваться
-        Raise Exception.CreateFmt('Ошибка удаления товара из корзины, требуется ручная проверка! OrderID: %d', [OrderID]);
-      end;
-
-      qry.Next;
-    end;
-
-    part.Destroy;
-
-  end;
-  logger.Info('TEmex.PartToBasketDelete End');
-end;      }
 
 function TEmex.Login(AAccount: Integer): String;
 var c: Customer;
@@ -653,6 +695,44 @@ begin
                 E.Message;
     end;
   end;
+end;
+
+procedure TEmex.FillBasketDetails(ABasket: ArrayOfBasketDetails; ASupplier: Integer = 0);
+var I: Integer;
+    part    : BasketDetails;
+begin
+  SQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
+
+  for I := 0 to Length(ABasket)-1 do
+    begin
+      part:= BasketDetails.Create;
+      part:= ABasket[i];
+
+      SQl.Exec(''+
+               ' insert into pBasketDetails'+
+               '       (Spid, BasketId, MakeLogo, DetailNum, PriceLogo, Price, Quantity, Comments, DetailWeight, EmExWeight, DestinationLogo, UploadedPrice, CoeffMaxAgree, CustomerSubId, Reference, SupplierID) '+
+               ' select @@spid, :BasketId,:MakeLogo,:DetailNum,:PriceLogo,:Price, :Quantity, :Comments, :DetailWeight, :EmExWeight, :DestinationLogo, :UploadedPrice, :CoeffMaxAgree, :CustomerSubId, :Reference, :SupplierID'+
+               '       ',
+               ['BasketId','MakeLogo','DetailNum','PriceLogo','Price','Quantity', 'Comments', 'DetailWeight', 'EmExWeight', 'DestinationLogo', 'UploadedPrice', 'CoeffMaxAgree', 'CustomerSubId', 'Reference', 'SupplierID'],
+               [part.BasketId,
+                part.MakeLogo,
+                part.DetailNum,
+                part.PriceLogo,
+                part.Price,
+                part.Quantity,
+                part.Comments,
+                part.DetailWeight,
+                part.EmExWeight,
+                part.DestinationLogo,
+                part.UploadedPrice,
+                part.CoeffMaxAgree,
+                part.CustomerSubId,
+                part.Reference,
+                ASupplier]
+               );
+
+      freeandnil(part);
+    end;
 end;
 
 procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber);
@@ -765,16 +845,16 @@ begin
   logger.Info('TEmex.MovementByOrderNumber End');
 end;
 
-procedure TEmex.MovementInWork;
+procedure TEmex.MovementInWorkByMarks;
 var parts : ArrayOfMovement;
  Suppliers: TStringList;
   Supplier: string;
 begin
-  logger.Info('TEmex.MovementInWork Begin');
+  logger.Info('TEmex.MovementInWorkByMarks Begin');
   {
   TProcExec.EmexCreateOrderCheck -> ...
 
-  MovementInWork -> ServiceSoap.MovementInWork
+  MovementInWorkByMarks -> ServiceSoap.MovementInWork
   }
   SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
 
@@ -789,7 +869,7 @@ begin
 
   FreeAndNil(Suppliers);
 
-  logger.Info('TEmex.MovementInWork Begin');
+  logger.Info('TEmex.MovementInWorkByMarks Begin');
 end;
 
 procedure TEmex.OrderStateSyncByOrderNum;
@@ -847,43 +927,26 @@ begin
   logger.Info('TEmex.OrderStateSyncByOrderNum End');
 end;
 
-procedure TEmex.GetBasketDetails;
-var inBasket: ArrayOfBasketDetails;
-    part    : BasketDetails;
-           i: Integer;
+procedure TEmex.GetBasketDetailsByMarks;
+var Basket : ArrayOfBasketDetails;
+    part   : BasketDetails;
+          i: Integer;
 
-   Suppliers: TStringList;
-    Supplier: string;
+  Suppliers: TStringList;
+   Supplier: string;
 begin
   logger.Info('TEmex.GetBasketDetails Begin');
 
   Qry.ExecSQL('delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [],[]);
 
-  // Получаем список клиентов
+  // Получаем список поставщиков/личный кабинет emex
   Suppliers := ForSupplier();
 
   for Supplier in Suppliers do
   begin
-    inBasket:=Emex.GetBasketDetails(getCustomer(Supplier.ToInteger));
+    Basket:=Emex.GetBasketDetails(getCustomer(Supplier.ToInteger));
 
-    for I := 0 to Length(inBasket)-1 do
-    begin
-      part:= BasketDetails.Create;
-      part:= inBasket[i];
-
-      SQl.Exec(''+
-               ' insert into pBasketDetails'+
-               '       (Spid, BasketId, MakeLogo, DetailNum, PriceLogo, Price, Quantity, Comments, DetailWeight, EmExWeight, DestinationLogo, UploadedPrice, CoeffMaxAgree, CustomerSubId, Reference, SupplierID) '+
-               ' select @@spid, :BasketId,:MakeLogo,:DetailNum,:PriceLogo,:Price, :Quantity, :Comments, :DetailWeight, :EmExWeight, :DestinationLogo, :UploadedPrice, :CoeffMaxAgree, :CustomerSubId, :Reference, :SupplierID'+
-               '       ',
-               ['BasketId','MakeLogo','DetailNum','PriceLogo','Price','Quantity', 'Comments', 'DetailWeight', 'EmExWeight', 'DestinationLogo', 'UploadedPrice', 'CoeffMaxAgree', 'CustomerSubId', 'Reference', 'SupplierID'],
-               [part.BasketId, part.MakeLogo, part.DetailNum, part.PriceLogo, part.Price, part.Quantity
-               ,part.Comments, part.DetailWeight, part.EmExWeight, part.DestinationLogo, part.UploadedPrice
-               ,part.CoeffMaxAgree, part.CustomerSubId, part.Reference, Supplier.ToInteger]
-               );
-    end;
-
-    freeandnil(part);
+    FillBasketDetails(Basket, Supplier.ToInteger);
   end;
   freeandnil(Suppliers);
 

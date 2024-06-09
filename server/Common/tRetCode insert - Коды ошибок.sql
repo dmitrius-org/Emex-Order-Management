@@ -90,6 +90,8 @@ insert tRetCode (RetCode, Message) select 530, '[OrderCreateFromBasket] Не о�
 insert tRetCode (RetCode, Message) select 533, '[OrderCreateFromBasket] Не определен поставщик, обратитесь к администратору системы!'
 insert tRetCode (RetCode, Message) select 534, '[EmexCreateOrderCheck] Деталь уже размещена!'
 insert tRetCode (RetCode, Message) select 535, 'Нет позиций для заказа!'
+insert tRetCode (RetCode, Message) select 536, 'В корзине emex имеются отказанные детали!'
+insert tRetCode (RetCode, Message) select 537, 'Ошибка удаления из корзины emex!'
 --
 
 

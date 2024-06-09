@@ -1,6 +1,6 @@
-unit uAccrualUtils;
+п»їunit uAccrualUtils;
 
- {                            Оработка действий                                }
+ {                            РћСЂР°Р±РѕС‚РєР° РґРµР№СЃС‚РІРёР№                                }
 
 interface
 
@@ -20,27 +20,27 @@ type
     Emex:TEmex;
   published
     /// <summary>
-    /// InsertPartToBasketByPartFromMark - Помещение запчастей в корзину на основе меток tMarks
+    /// InsertPartToBasketByPartFromMark - РџРѕРјРµС‰РµРЅРёРµ Р·Р°РїС‡Р°СЃС‚РµР№ РІ РєРѕСЂР·РёРЅСѓ РЅР° РѕСЃРЅРѕРІРµ РјРµС‚РѕРє tMarks
     /// </summary>
     procedure InsertPartToBasketByPartFromMark();
 
     /// <summary>
-    /// InsertPartToBasketByPartRollBack - Удаление запчастей из корзины на основе меток tMarks
+    /// InsertPartToBasketByPartRollBack - РЈРґР°Р»РµРЅРёРµ Р·Р°РїС‡Р°СЃС‚РµР№ РёР· РєРѕСЂР·РёРЅС‹ РЅР° РѕСЃРЅРѕРІРµ РјРµС‚РѕРє tMarks
     /// </summary>
     procedure InsertPartToBasketByPartRollBack();
 
     /// <summary>
-    /// EmexCreateOrderCheck - Проверка наличия заказа в Emex по данным корзины
+    /// EmexCreateOrderCheck - РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ Р·Р°РєР°Р·Р° РІ Emex РїРѕ РґР°РЅРЅС‹Рј РєРѕСЂР·РёРЅС‹
     /// </summary>
     procedure EmexCreateOrderCheck();
 
     /// <summary>
-    /// EmexCreateOrder - Создание заказа клиента по данным корзины
+    /// EmexCreateOrder - РЎРѕР·РґР°РЅРёРµ Р·Р°РєР°Р·Р° РєР»РёРµРЅС‚Р° РїРѕ РґР°РЅРЅС‹Рј РєРѕСЂР·РёРЅС‹
     /// </summary>
     procedure EmexCreateOrder();
 
     /// <summary>
-    /// EmexOrderStateSync - Синхронизация статусов
+    /// EmexOrderStateSync - РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃС‚Р°С‚СѓСЃРѕРІ
     /// </summary>
     procedure EmexOrderStateSync();
 
@@ -53,7 +53,7 @@ type
 
 
 /// <summary>
-///  TAccrual - класс для выполнения действий
+///  TAccrual - РєР»Р°СЃСЃ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёР№
 ///</summary>
 TAccrual = class
   private
@@ -65,25 +65,25 @@ TAccrual = class
     procedure SetSQL(const Value: TSql);
 
     /// <summary>
-    ///  ActionExecuteBefore - предобработчик действия. Набор данных в pAccrualAction
+    ///  ActionExecuteBefore - РїСЂРµРґРѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ. РќР°Р±РѕСЂ РґР°РЅРЅС‹С… РІ pAccrualAction
     ///</summary>
     function ActionExecuteBefore(AActionID: integer; AResult:TFormAction): integer;
 
     /// <summary>
-    ///  ActionExecuteAfter - постобработчик действия. Набор данных в pAccrualAction
+    ///  ActionExecuteAfter - РїРѕСЃС‚РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ. РќР°Р±РѕСЂ РґР°РЅРЅС‹С… РІ pAccrualAction
     ///</summary>
-    procedure ActionExecuteAfter(AResult:TFormAction);
+    //procedure ActionExecuteAfter(AResult:TFormAction);
   public
     constructor Create(AConnection: TFDConnection);
     destructor Destroy; override;
 
     /// <summary>
-    /// ActionExecute - выполнение действия. Набор данных в pAccrualAction
+    /// ActionExecute - РІС‹РїРѕР»РЅРµРЅРёРµ РґРµР№СЃС‚РІРёСЏ. РќР°Р±РѕСЂ РґР°РЅРЅС‹С… РІ pAccrualAction
     /// </summary>
     function ActionExecute(ActionID: integer): Integer;
 
     /// <summary>
-    /// ActionExecuteRollback - откат выполнения действия. Набор данных в pAccrualAction
+    /// ActionExecuteRollback - РѕС‚РєР°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ. РќР°Р±РѕСЂ РґР°РЅРЅС‹С… РІ pAccrualAction
     /// </summary>
     function ActionExecuteRollback(): Integer;
 
@@ -115,9 +115,7 @@ end;
 
 destructor TProcExec.Destroy;
 begin
-  //Emex.Free;
   Emex.Destroy;
-  //FreeAndNil(Emex);
   inherited;
 end;
 
@@ -130,70 +128,45 @@ procedure TProcExec.EmexCreateOrderCheck;
 begin
   logger.Info('TProcExec.EmexCreateOrderCheck Begin ');
 
-  //Запрашиваем заказы в статусе в Работе
-  Emex.MovementInWork;
+  //Р—Р°РїСЂР°С€РёРІР°РµРј Р·Р°РєР°Р·С‹ РІ СЃС‚Р°С‚СѓСЃРµ РІ Р Р°Р±РѕС‚Рµ
+  Emex.MovementInWorkByMarks;
 
-  // Выполняем проверку, результат пишем pAccrualAction.RetVal
+  // Р’С‹РїРѕР»РЅСЏРµРј РїСЂРѕРІРµСЂРєСѓ, СЂРµР·СѓР»СЊС‚Р°С‚ РїРёС€РµРј pAccrualAction.RetVal
   Emex.SQl.Exec('exec EmexCreateOrderCheck', [], []);
 
-  // если имеются заказанные детали удаляем их из корзины
-  //Emex.PartToBasketDelete();
-
-  // пробуем синхронизировать статусы
-//  Emex.SQl.Exec('delete m '+
-//                '  from pAccrualAction p (nolock)    '+
-//                ' inner join tOrders o(nolock)       '+
-//                '         on o.OrderID = p.ObjectID  '+
-//                ' inner join pMovement m (rowlock)   '+
-//                '         on m.Spid          = @@SPID           '+
-//                '        and m.Reference     = o.Reference      '+
-//                '        and m.CustomerSubId = o.CustomerSubId  '+
-//                '  where p.Spid   = @@SPID   '+
-//                '    and p.RetVal<> 534;     '+
-//                ''+
-//                ''+
-//                ' if exists(select 1 from pMovement (nolock) where Spid=@@Spid)'+
-//                '   exec EmexOrderCreateSync;  '+
-//                '   ', [],[]);
-//
-//  logger.Info('TProcExec.EmexCreateOrderCheck End ');
+  logger.Info('TProcExec.EmexCreateOrderCheck End ');
 end;
 
 procedure TProcExec.EmexOrderStateSync;
 begin
   Emex.Connection.ExecSQL(
-                    ' delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid');
+    ' delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid');
 
   Emex.Connection.ExecSQL(
-                    ' insert pAccrualAction (Spid, ObjectID, StateID, Retval) ' +
-                    ' Select @@Spid, OrderID, StatusID, 0        '+
-                    '   from vOrderStateSyncByOrderNum  ');
+    ' insert pAccrualAction (Spid, ObjectID, StateID, Retval) ' +
+    ' Select @@Spid, OrderID, StatusID, 0        '+
+    '   from vOrderStateSyncByOrderNum  ');
 
   Emex.OrderStateSyncByOrderNum;
 end;
 
-procedure TProcExec.InsertPartToBasketByPartFromMark;
-var R: Integer;
+procedure TProcExec.InsertPartToBasketByPartFromMark; var R: Integer;
 begin
   logger.Info('TProcExec.InsertPartToBasketByPartFromMark Begin ');
+
   R := Emex.InsertPartToBasketByPart;
-  logger.Info('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString);
+  logger.Info('TProcExec.InsertPartToBasketByPartFromMark РљРѕР»РёС‡РµСЃС‚РІРѕ РґРѕР±Р°РІР»РµРЅРЅС‹С… РїРѕР·РёС†РёР№: ' + R.ToString);
 
   if R > 0 then
   begin
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark GetBasketDetails Begin ');
-    Emex.GetBasketDetails;
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark GetBasketDetails End ');
+    Emex.GetBasketDetailsByMarks;
 
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark BasketStateSync Begin ');
     Emex.Qry.ExecSQL('exec BasketStateSync select 0', [],[]);
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark BasketStateSync End ');
 
-    // Удаление деталей из корзины которые не смогли смапить с заказами на нашей стороне
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark InsertPartToBasketCancel Begin ');
+    // РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РёР· РєРѕСЂР·РёРЅС‹ РєРѕС‚РѕСЂС‹Рµ РЅРµ СЃРјРѕРіР»Рё СЃРјР°РїРёС‚СЊ СЃ Р·Р°РєР°Р·Р°РјРё РЅР° РЅР°С€РµР№ СЃС‚РѕСЂРѕРЅРµ
     Emex.InsertPartToBasketCancel();
-    logger.Info('TProcExec.InsertPartToBasketByPartFromMark InsertPartToBasketCancel End ');
   end;
+
   logger.Info('TProcExec.InsertPartToBasketByPartFromMark End ');
 end;
 
@@ -204,11 +177,9 @@ end;
 
 
 { TAccrual }
-
 function TAccrual.ActionExecute(ActionID: integer): integer;
 var
   i, j: Integer;
- // MessageResult: Integer;
   Proc: TProcExec;
   qActionMetod: TFDQuery;
   qMetod: TFDQuery;
@@ -224,15 +195,15 @@ begin
 
     if FRetVal.Code = 0 then
     begin
-      // Настройка: Автоматический отказ деталей с ошибками при создании заказа
+      // РќР°СЃС‚СЂРѕР№РєР°: РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ РѕС‚РєР°Р· РґРµС‚Р°Р»РµР№ СЃ РѕС€РёР±РєР°РјРё РїСЂРё СЃРѕР·РґР°РЅРёРё Р·Р°РєР°Р·Р°
       if sql.GetSetting('AutomaticRejectionPartsByCreatOrder', false)  then
       begin
-        logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: ДА');
+        logger.Info('TAccrual.ActionExecute РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ РѕС‚РєР°Р· РґРµС‚Р°Р»РµР№ СЃ РѕС€РёР±РєР°РјРё РїСЂРё СЃРѕР·РґР°РЅРёРё Р·Р°РєР°Р·Р°: Р”Рђ');
         Sql.Open('Select 1 from vOrdersWarningList where ActionBrief = ''ToInWork'' ', [], []);
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
-          case (MessageDlg('По некоторым позициям имеются замечания, данные детали будут перенесены в состояние "Отказан" ' , mtConfirmation, mbYesNo))  of
+          case (MessageDlg('РџРѕ РЅРµРєРѕС‚РѕСЂС‹Рј РїРѕР·РёС†РёСЏРј РёРјРµСЋС‚СЃСЏ Р·Р°РјРµС‡Р°РЅРёСЏ, РґР°РЅРЅС‹Рµ РґРµС‚Р°Р»Рё Р±СѓРґСѓС‚ РїРµСЂРµРЅРµСЃРµРЅС‹ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ "РћС‚РєР°Р·Р°РЅ" ' , mtConfirmation, mbYesNo))  of
             mrYes:
             begin
               Sql.Exec('exec ActionObjectCancel ', [], []);
@@ -246,12 +217,12 @@ begin
       end
       else
       begin
-        logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: НЕТ');
+        logger.Info('TAccrual.ActionExecute РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ РѕС‚РєР°Р· РґРµС‚Р°Р»РµР№ СЃ РѕС€РёР±РєР°РјРё РїСЂРё СЃРѕР·РґР°РЅРёРё Р·Р°РєР°Р·Р°: РќР•Рў');
         Sql.Open('Select 1 from vOrdersWarningList where ActionBrief = ''ToInWork'' ', [], []);
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
-          case (MessageDlg('Уверены что хотите разместить заказ несмотря на замечания? ' , mtConfirmation, mbYesNo))  of
+          case (MessageDlg('РЈРІРµСЂРµРЅС‹ С‡С‚Рѕ С…РѕС‚РёС‚Рµ СЂР°Р·РјРµСЃС‚РёС‚СЊ Р·Р°РєР°Р· РЅРµСЃРјРѕС‚СЂСЏ РЅР° Р·Р°РјРµС‡Р°РЅРёСЏ? ' , mtConfirmation, mbYesNo))  of
 //            mrYes:
 //            begin
 //
@@ -266,7 +237,7 @@ begin
 
     end;
 
-    // ВЫПОЛНЕНИЕ ПРОЦЕДУРЫ НАСТРОЕННОЙ НА МОДЕЛИ СОСТОЯНИЯ ПОД ДЕЙСТВИЕМ
+    // Р’Р«РџРћР›РќР•РќРР• РџР РћР¦Р•Р”РЈР Р« РќРђРЎРўР РћР•РќРќРћР™ РќРђ РњРћР”Р•Р›Р РЎРћРЎРўРћРЇРќРРЇ РџРћР” Р”Р•Р™РЎРўР’РР•Рњ
     if FRetVal.Code = 0 then
     begin
 
@@ -300,14 +271,14 @@ begin
             qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
             qMetod.Open;
 
-            logger.Info('TAccrual.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString());
+            logger.Info('TAccrual.РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РЅР°СЃС‚СЂРѕРµРЅРЅРѕР№ РїРѕРґ РґРµР№СЃС‚РІРёРµРј РїСЂРѕС†РµРґСѓСЂ: ' + (qMetod.RecordCount > 0).ToString());
 
             if qMetod.RecordCount > 0 then
             begin
               qMetod.First;
               for I := 0 to qMetod.RecordCount-1 do
               begin
-                logger.Info('TAccrual.ActionExecute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
+                logger.Info('TAccrual.ActionExecute ActionMetod РџСЂРѕС†РµРґСѓСЂР°: ' + qMetod.FieldByName('Metod').AsString);
 
                 Proc := TProcExec.Create(FConnection);
 
@@ -328,7 +299,7 @@ begin
           logger.Info('TAccrual.ActionExecute ActionMetod End');
        // end;
 
-        // Добавление протокола
+        // Р”РѕР±Р°РІР»РµРЅРёРµ РїСЂРѕС‚РѕРєРѕР»Р°
         if FRetVal.Code = 0 then
         begin
           logger.Info('TAccrual.ProtocolAdd Begin');
@@ -341,25 +312,25 @@ begin
       finally
         FreeAndNil(qMetod);
         FreeAndNil(qActionMetod);
-        //logger.Info('qMetod End');
       end;
     end;
 
-    // ОБРАБОТКА ОШИБОК
-    // проверка наличия серверных ошибок
+    // РћР‘Р РђР‘РћРўРљРђ РћРЁРР‘РћРљ
+    // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ СЃРµСЂРІРµСЂРЅС‹С… РѕС€РёР±РѕРє
     Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
     var ServerErr:integer;
     ServerErr := Sql.Q.RecordCount;
 
     if (FRetVal.Code = 0) and (ServerErr = 0) then
     begin
-      ActionExecuteAfter(acRefresh);
+      //ActionExecuteAfter(acRefresh);
       result:= 0;
     end
     else
     begin
       logger.Info('TAccrual.ActionExecute RetVal: ' + FRetVal.Code.ToString);
       logger.Info('TAccrual.ActionExecute Message: ' + FRetVal.Message);
+
       if ServerErr > 0 then
       begin
         Error_T.ShowModal;
@@ -373,12 +344,12 @@ begin
   logger.Info('TAccrual.ActionExecute End ');
 end;
 
-procedure TAccrual.ActionExecuteAfter(AResult: TFormAction);
-begin
-  logger.Info('TAccrual.ActionExecuteAfter Begin');
-
-  logger.Info('TAccrual.ActionExecuteAfter End');
-end;
+//procedure TAccrual.ActionExecuteAfter(AResult: TFormAction);
+//begin
+//  logger.Info('TAccrual.ActionExecuteAfter Begin');
+//
+//  logger.Info('TAccrual.ActionExecuteAfter End');
+//end;
 
 function TAccrual.ActionExecuteBefore(AActionID: integer; AResult: TFormAction): integer;
 var Query: TFDQuery;
@@ -391,10 +362,10 @@ begin
     if AResult = acVerify then
     begin
       Query.Close;
-      Query.SQL.Text := ' declare @R  int                    '+
-                        ' exec @r = ActionExecuteCheck       '+
-                        '             @ActionID   = :ActionID'+
-                        ' select @r as retcode               ';
+      Query.SQL.Text := ' declare @R  int                  '+
+                        ' exec @r = ActionExecuteCheck     '+
+                        '             @ActionID = :ActionID'+
+                        ' select @r as retcode             ';
 
       Query.ParamByName('ActionID').Value := AActionID;
       Query.Open;
@@ -422,18 +393,18 @@ begin
     result:=0;
     FRetVal.Clear;
     begin
-      // Откат протокола
+      // РћС‚РєР°С‚ РїСЂРѕС‚РѕРєРѕР»Р°
       if FRetVal.Code = 0 then
       begin
         Query.Close;
-        Query.SQL.Text := ' declare @R            int        '+
+        Query.SQL.Text := ' declare @R int        '+
                           ' exec @r = ProtocolRollBackCheck  '+
-                          ' select @r          as retcode    ';
+                          ' select @r as retcode  ';
         Query.Open;
         FRetVal.Code := Query.FieldByName('retcode').Value;
       end;
 
-       // выполнение процедуры настроенной на модели состояния под действием
+      // РІС‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕС†РµРґСѓСЂС‹ РЅР°СЃС‚СЂРѕРµРЅРЅРѕР№ РЅР° РјРѕРґРµР»Рё СЃРѕСЃС‚РѕСЏРЅРёСЏ РїРѕРґ РґРµР№СЃС‚РІРёРµРј
       if FRetVal.Code = 0 then
       begin
         Sql.Open('Select distinct a.Number, p.ActionID, a.MetodRollback, a.MetodType '+
@@ -447,10 +418,10 @@ begin
                   ' order by a.Number     ',
                  [],[]);
 
-        logger.Info('Проверка наличия настроенной под действием процедур: ' + (Sql.Q.RecordCount > 0).ToString(True));
+        logger.Info('РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РЅР°СЃС‚СЂРѕРµРЅРЅРѕР№ РїРѕРґ РґРµР№СЃС‚РІРёРµРј РїСЂРѕС†РµРґСѓСЂ: ' + (Sql.Q.RecordCount > 0).ToString(True));
         if Sql.Q.RecordCount > 0 then
         begin
-          logger.Info('Процедура: ' + Sql.Q.FieldByName('MetodRollback').AsString);
+          logger.Info('РџСЂРѕС†РµРґСѓСЂР°: ' + Sql.Q.FieldByName('MetodRollback').AsString);
 
           Proc := TProcExec.Create(FConnection);
           if Sql.Q.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
@@ -461,7 +432,7 @@ begin
         end;
       end;
 
-      // Откат протокола
+      // РћС‚РєР°С‚ РїСЂРѕС‚РѕРєРѕР»Р°
       if FRetVal.Code = 0 then
       begin
         Query.Close;
@@ -469,13 +440,13 @@ begin
         Query.ExecSQL;
       end;
 
-      // проверка наличия серверных ошибок
-      Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+      // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ СЃРµСЂРІРµСЂРЅС‹С… РѕС€РёР±РѕРє
+      Sql.Open(' select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0 ', [], []);
       ServerErr := Sql.Q.RecordCount;
 
       if (FRetVal.Code = 0) and (ServerErr = 0) then
       begin
-        ActionExecuteAfter(acRefresh);
+        //ActionExecuteAfter(acRefresh);
         result:=0;
       end
       else

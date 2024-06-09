@@ -11,11 +11,11 @@ vMarksSum - сумма выделенный заказов/деталей
 create view vMarksSum
 as
 
-select Sum(o.Amount)           as Amount, 
-       sum(o.AmountPurchaseF)  as AmountPurchase,
-       sum(isnull(p.WeightKGF, o.WeightKG) * o.Quantity) as WeightKG,
-       sum(isnull(p.VolumeKGF, o.VolumeKG) * o.Quantity) as VolumeKG,
-       sum(isnull(p.WeightKGF, o.WeightKG)*o.Quantity  - isnull(p.VolumeKGF, o.VolumeKG)*o.Quantity)  as OverVolume  -- превышение объема, разница Объемный вес - Физический вес по данным прайс-листа.
+select round( Sum(o.Amount), 2)           as Amount, 
+       round( sum(coalesce(o.AmountPurchaseF, o.AmountPurchase, 0)),  2)  as AmountPurchase,
+       round( sum(coalesce(p.WeightKGF, o.WeightKG, 0) * o.Quantity), 2) as WeightKG,
+       round( sum(coalesce(p.VolumeKGF, o.VolumeKG, 0) * o.Quantity), 2) as VolumeKG,
+       round( sum(coalesce(p.WeightKGF, o.WeightKG, 0) * o.Quantity - coalesce(p.VolumeKGF, o.VolumeKG, 0) * o.Quantity), 2)  as OverVolume  -- превышение объема, разница Объемный вес - Физический вес по данным прайс-листа.
   from tMarks m with (nolock index=pk_tMarks)
  inner join tOrders o with (nolock index=ao1)
          on o.OrderID = m.ID
@@ -25,14 +25,7 @@ where m.Spid   = @@spid
   and m.Type   = 3
 
 go
-exec setOV 'vMarksSum', 'V', '20240604', '2'
+exec setOV 'vMarksSum', 'V', '20240606', '3'
 go
 grant select on vMarksSum to public
 go
-
-
-
-select * from vMarksSum
-
-
---select * from tOrders

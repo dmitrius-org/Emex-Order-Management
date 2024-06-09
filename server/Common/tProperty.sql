@@ -29,7 +29,7 @@ exec dbo.sys_setTableDescription 'tProperty', 'PropertyID'                 ,'И�
 go
 
 delete from tProperty
-insert tProperty (PropertyID, ObjectTypeID, Brief, Name) select 1, 101, 'EmexOrderStateSync', 'Синхронизация статусов заказов' 
+insert tProperty (PropertyID, ObjectTypeID, Brief, Name)       select 1, 101, 'EmexOrderStateSync', 'Синхронизация статусов заказов' 
 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 102, 1, 'EmexCreateOrder', 'Создание заказа' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 3, 102, 1, 'EmexOrderStateSync', 'Синхронизация статусов заказов' 
@@ -38,3 +38,7 @@ insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 4, 102, 1,
 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 5, 102, 1, 'InsertPartToBasketByPartFromMark', 'Добавление заказов в корзину' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 6, 102, 2, 'InsertPartToBasketByPartRollBack', 'Удаление деталей из корзины при откате' 
+
+--insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 7, 102, 1, 'EmexCreateOrderBasketCheck', 'Проверка корзины. (Проверка наличия отказанных деталей, в случае наличия таких деталь автоматически удаляется из корзины emex)' 
+
+select * from tProperty

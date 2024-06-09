@@ -72,7 +72,7 @@ as
        ,p.ObjectID       	         
        ,3        
        ,5 -- acCancel        
-       ,'Запрос на отказа' 
+       ,'Запрос на отказ' 
   from pAccrualAction p (nolock)
   --inner join tOrders o (nolock)
   --		on o.ClientID     = p.ClientID
@@ -95,6 +95,6 @@ as
 go
 grant exec on CustomerOrderCancelRequest to public
 go
-exec setOV 'CustomerOrderCancelRequest', 'P', '20240418', '1'
+exec setOV 'CustomerOrderCancelRequest', 'P', '20240609', '2'
 go
  

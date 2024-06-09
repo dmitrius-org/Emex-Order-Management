@@ -1,4 +1,4 @@
-// ************************************************************************ //
+п»ї// ************************************************************************ //
 // The types declared in this file were generated from data read from the
 // WSDL File described below:
 // WSDL     : http://emexonline.com:3000/MaximaWS/service.asmx?WSDL
@@ -1066,9 +1066,9 @@ type
     function  QuotationList(const Customer: Customer; const P: ArrayOfQuotationList): ArrayOfQuotationList; stdcall;
     function  QuotationList_v2(const Customer: Customer; const P: ArrayOfQuotationList_v2): ArrayOfQuotationList_v2; stdcall;
     /// <summary>
-    /// InsertPartToBasket - Помещение запчастей в корзину
+    /// InsertPartToBasket - РџРѕРјРµС‰РµРЅРёРµ Р·Р°РїС‡Р°СЃС‚РµР№ РІ РєРѕСЂР·РёРЅСѓ
     /// </summary>
-    /// <returns> число строк, добавленных в корзину</returns>
+    /// <returns> С‡РёСЃР»Рѕ СЃС‚СЂРѕРє, РґРѕР±Р°РІР»РµРЅРЅС‹С… РІ РєРѕСЂР·РёРЅСѓ</returns>
     function  InsertPartToBasket(const Customer: Customer; const Array_: ArrayOfPartstobasket): Integer; stdcall;
     function  GetBasketDetails(const Customer: Customer): ArrayOfBasketDetails; stdcall;
     function  UpdateBasketDetails(const Customer: Customer; const P: ArrayOfBasketDetails): Integer; stdcall;

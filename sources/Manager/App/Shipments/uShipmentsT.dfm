@@ -178,7 +178,7 @@ object ShipmentsT: TShipmentsT
           FieldName = 'Invoice'
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
-          Width = 205
+          Width = 150
           ReadOnly = True
           Sortable = True
         end

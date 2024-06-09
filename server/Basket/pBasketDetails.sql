@@ -32,13 +32,16 @@ create table pBasketDetails
 ,TransportPack         nvarchar(100) -- тип упаковки (WOOD – требуется деревянная обрешетка, CARTON – отправка в картонной коробке)
 ,DetailWeight          decimal(18,2) -- вес детали в кг
 ,EmExWeight            decimal(18,2) -- последнее изменение веса детали, сделанное на нашем складе
+,RetVal	               int
 )
 go
 grant all on pBasketDetails to public
 go
 create index ao1 on pBasketDetails(Spid, OrderID)
 go
-exec setOV 'pBasketDetails', 'U', '20240515', '1'
+create index ao2 on pBasketDetails(Spid, BasketId)
+go
+exec setOV 'pBasketDetails', 'U', '20240606', '2'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pBasketDetails', @desc = 'Корзина клиента (подклиента). Результат выполнения сервиса GetBasketDetails'

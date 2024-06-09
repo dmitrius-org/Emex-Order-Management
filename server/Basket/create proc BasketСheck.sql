@@ -42,4 +42,3 @@ grant exec on BasketCheck to public
 go
 exec setOV 'BasketCheck', 'P', '20240101', '1'
 go
-  
