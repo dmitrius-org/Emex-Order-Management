@@ -14,6 +14,8 @@ object UniServerModule: TUniServerModule
     'files/css/main_menu.css'
     'files/css/grid.css'
     ''
+    'files/css/dashboard.css'
+    ''
     'files/tinyMCE5/tinymce.js')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'

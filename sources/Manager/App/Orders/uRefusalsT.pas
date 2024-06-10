@@ -13,7 +13,8 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, uCommonType, uniFileUpload;
+  uUserF, uGrant, uCommonType, uniFileUpload, uniDateTimePicker, uniLabel,
+  uniButton, uniBitBtn, uniGroupBox;
 
 type
   TRefusalsT = class(TUniFrame)
@@ -45,6 +46,20 @@ type
     actUploadingRefusalsEmex: TAction;
     UniFileUpload: TUniFileUpload;
     GridPanel: TUniContainerPanel;
+    actToArchive: TAction;
+    N1: TUniMenuItem;
+    N2: TUniMenuItem;
+    gbFilter: TUniGroupBox;
+    fCancel: TUniBitBtn;
+    fOk: TUniBitBtn;
+    fFileName: TUniEdit;
+    UniLabel4: TUniLabel;
+    fDate: TUniDateTimePicker;
+    UniLabel8: TUniLabel;
+    UniLabel5: TUniLabel;
+    fArchive: TUniComboBox;
+    actFilterClear: TAction;
+    actFilter: TAction;
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -56,6 +71,10 @@ type
     procedure UniFrameReady(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
     procedure actUploadingRefusalsEmexExecute(Sender: TObject);
+    procedure actToArchiveExecute(Sender: TObject);
+    procedure actFilterClearExecute(Sender: TObject);
+    procedure actFilterExecute(Sender: TObject);
+    procedure PopupMenuPopup(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -115,9 +134,86 @@ begin
   end);
 end;
 
+procedure TRefusalsT.actFilterClearExecute(Sender: TObject);
+begin
+  ShowMask;
+  UniSession.Synchronize();
+  fFileName.Text := '';
+  fArchive.Clear;
+  fDate.Text := '';
+
+
+  HideMask;
+  UniSession.Synchronize();
+end;
+
+procedure TRefusalsT.actFilterExecute(Sender: TObject);
+begin
+  GridRefresh;
+end;
+
 procedure TRefusalsT.actRefreshAllExecute(Sender: TObject);
 begin
   GridRefresh;
+end;
+
+procedure TRefusalsT.actToArchiveExecute(Sender: TObject);
+var i, id:Integer;
+    SqlText, Fn, Fp: string;
+    BM : TBookmark;
+
+    AFnabled: LongBool;
+begin
+  logger.Info('TRefusalsT.actToArchiveExecute Begin');
+
+
+  if Grid.SelectedRows.Count>0 then
+  begin
+    Query.DisableControls;
+    BM := Query.GetBookmark;
+    try
+      logger.Info('Count: ' + Grid.SelectedRows.Count.ToString);
+      for I := 0 to Grid.SelectedRows.Count - 1 do
+      begin
+        Query.Bookmark := Grid.SelectedRows[I];
+
+        id := Query.FieldByName('OrderRefusalsID').AsInteger;
+        fn := Query.FieldByName('FileName').AsString;
+
+        logger.Info(id.ToString );
+
+        if Query.FieldByName('Flag').AsInteger and 16 = 0 then
+        if FileExists(fn) then
+        begin
+
+          Fp :=  ExtractFilePath(fn) + 'Archive\';
+
+          if not DirectoryExists(Fp) then ForceDirectories(Fp);
+
+          AFnabled:= MoveFile(PChar(fn), PChar(Fp + ExtractFileName(fn)));
+
+          if not AFnabled then
+            ToastERR('Ошибка обработки файла: ' + fn, unisession)
+          else
+            Sql.Exec('Update tOrderRefusals set Flag = isnull(Flag, 0)|16 where OrderRefusalsID=:OrderRefusalsID',
+                    ['OrderRefusalsID'], [id]);
+
+        end;
+      end;
+
+      ToastOK('Операция выполнена успешно!', unisession);
+      //GridRefresh;
+
+    finally
+      Query.GotoBookmark(BM);
+      Query.FreeBookmark(BM);
+
+      Query.EnableControls;
+
+      GridRefresh;
+    end;
+  end;
+  logger.Info('TRefusalsT.actToArchiveExecute End');
 end;
 
 procedure TRefusalsT.actUploadExecute(Sender: TObject);
@@ -181,8 +277,31 @@ end;
 
 procedure TRefusalsT.GridRefresh;
 begin
+  if fFileName.Text <> '' then
+    Query.MacroByName('fFileName').Value := ' and FileName like ''%'   + fFileName.Text + '%'''
+  else
+    Query.MacroByName('fFileName').Value := '';
+
+  if (fDate.Text <> '') and (fDate.Text <> '30.12.1899') then
+    Query.MacroByName('fInDateTime').Value := ' and cast(InDateTime as date) = '''   + FormatDateTime('yyyymmdd', fDate.DateTime) + ''''
+  else
+    Query.MacroByName('fInDateTime').Value := '';
+
+  if fArchive.ItemIndex = 0 then
+    Query.MacroByName('fArchive').Value := ' and Flag & 16 = 0'
+  else
+  if fArchive.ItemIndex = 1 then
+    Query.MacroByName('fArchive').Value := ' and Flag & 16 > 0'
+  else
+    Query.MacroByName('fArchive').Value := '';
+
   Query.Close;
   Query.Open;
+end;
+
+procedure TRefusalsT.PopupMenuPopup(Sender: TObject);
+begin
+  actToArchive.Enabled := (actToArchive.Tag=1) and (Grid.SelectedRows.Count>0);
 end;
 
 procedure TRefusalsT.UniFileUploadMultiCompleted(Sender: TObject;
@@ -256,6 +375,7 @@ end;
 
 procedure TRefusalsT.UniFrameReady(Sender: TObject);
 begin
+  fDate.Text := '';
   GridRefresh;
 end;
 

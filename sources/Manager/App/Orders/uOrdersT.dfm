@@ -1069,8 +1069,6 @@ object OrdersT: TOrdersT
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel5'
-        ExplicitLeft = 344
-        ExplicitWidth = 181
         object UniLabel7: TUniLabel
           AlignWithMargins = True
           Left = 5

@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniPanel, uniGUIBaseClasses, uniHTMLFrame,
-  unimHTMLFrame, uniPageControl;
+  unimHTMLFrame, uniPageControl, uDashBoard;
 
 type
   THomeF = class(TUniFrame)
@@ -15,6 +15,10 @@ type
     procedure UniFrameCreate(Sender: TObject);
   private
     { Private declarations }
+
+    FCurrentPage:integer;
+
+    FDashBoard: TDashBoardFrame;
   public
     { Public declarations }
   end;
@@ -30,25 +34,34 @@ uses
 procedure THomeF.UniFrameCreate(Sender: TObject);
 var fr : TPriceUpdateT;
   tmp : TStringList;
-begin
-//    Fr := TPriceUpdateT.Create(Self);
-//    Fr.Align := alClient;
-//    Fr.Parent := pnlPriceUpdate;
+begin   // TUniShowCaseFrame
 
-    //  Nd.Data := Ts;
- // pcMain.Layout := 'Fit';
+  FDashBoard:=TDashBoardFrame.Create(Self);
+  FDashBoard.Parent:=Dashboard;// Self;
+//FUniShowCaseFrame.Align:=alClient;
 
-//  tmp := TStringList.Create;
-//  tmp.LoadFromFile(UniServerModule.StartPath + '\files\tinymce5\index.html');
+  FCurrentPage:=0;
+
+  FDashBoard.MaxWidth:=Self.Width;
+
+
+
+
+  FDashBoard.ProductsOnPage:=10;
+
+  FDashBoard.MaxWidth:=Self.Width;
+  FDashBoard.LoadDashBoardDataFromDB;
+  FDashBoard.OpenPage(0);
+
+ // lPages.Text:=FCurrentPage.ToString+ ' / '+FUniShowCaseFrame.PagesCount.ToString;
+
+
+//FUniShowCaseFrameAlign;
 //
 //
-// // tmp.Text := StringReplace(tmp.Text, 'myEditor', GetEditor, [rfReplaceAll]);
-//
-//
-//  edt.HTML.Clear;
-//  edt.HTML.LoadFromFile(UniServerModule.StartPath + '\files\html\Dashboard.html');
-//  tmp.Free;
-//
+//CenterElements;
+
+
 end;
 
 initialization

@@ -94,7 +94,8 @@ uses
   uInstructionT in 'App\Confluence\uInstructionT.pas' {InstructionT: TUniFrame},
   uInstructionDevT in 'App\Confluence\uInstructionDevT.pas' {InstructionDevT: TUniFrame},
   PriceUpdate in 'App\DashBoard\PriceUpdate.pas' {PriceUpdateT: TUniFrame},
-  uDashBoardItem in 'App\DashBoard\uDashBoardItem.pas' {UniFrame1: TUniFrame};
+  uDashBoardItem in 'App\DashBoard\uDashBoardItem.pas' {DashBoardItem: TUniFrame},
+  uDashBoard in 'App\DashBoard\uDashBoard.pas' {DashBoardFrame: TUniFrame};
 
 {$R *.res}
 

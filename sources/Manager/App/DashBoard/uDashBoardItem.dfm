@@ -1,56 +1,134 @@
-object UniFrame1: TUniFrame1
+object DashBoardItem: TDashBoardItem
+  AlignWithMargins = True
   Left = 0
   Top = 0
-  Width = 448
-  Height = 208
+  Width = 270
+  Height = 131
+  LayoutConfig.ComponentCls = 'col-lg-3'
+  ParentAlignmentControl = False
+  AlignmentControl = uniAlignmentClient
   TabOrder = 0
-  object UniImage1: TUniImage
-    Left = 16
-    Top = 16
-    Width = 128
-    Height = 128
-    Hint = ''
-  end
-  object UniPanel1: TUniPanel
+  object ItemPanel: TUniContainerPanel
     Left = 0
-    Top = 159
-    Width = 448
-    Height = 49
+    Top = 0
+    Width = 270
+    Height = 131
     Hint = ''
-    Align = alBottom
-    TabOrder = 1
-    ShowCaption = False
-    Caption = 'UniPanel1'
-    ExplicitLeft = 71
-    ExplicitTop = 184
+    ParentColor = False
+    Align = alClient
+    TabOrder = 0
+    LayoutConfig.ComponentCls = 'panel'
+    ExplicitLeft = 32
+    ExplicitTop = 11
     ExplicitWidth = 256
-    object UniBitBtn1: TUniBitBtn
-      Left = 3
-      Top = 13
-      Width = 75
-      Height = 25
+    ExplicitHeight = 128
+    object UniContainerPanel2: TUniContainerPanel
+      Left = 0
+      Top = 0
+      Width = 270
+      Height = 91
       Hint = ''
-      Caption = 'UniBitBtn1'
+      ParentColor = False
+      Align = alClient
       TabOrder = 1
+      LayoutConfig.ComponentCls = 'panel-heading'
+      ExplicitWidth = 256
+      ExplicitHeight = 128
+      object UniImage1: TUniImage
+        AlignWithMargins = True
+        Left = 5
+        Top = 5
+        Width = 85
+        Height = 81
+        Hint = ''
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Align = alLeft
+        Transparent = True
+        ExplicitHeight = 85
+      end
+      object UniContainerPanel5: TUniContainerPanel
+        AlignWithMargins = True
+        Left = 98
+        Top = 3
+        Width = 157
+        Height = 85
+        Hint = ''
+        Margins.Right = 15
+        ParentColor = False
+        Align = alClient
+        TabOrder = 2
+        Layout = 'vbox'
+        LayoutAttribs.Align = 'right'
+        LayoutAttribs.Pack = 'center'
+        LayoutConfig.ComponentCls = 'col-xs-6 text-right'
+        ExplicitLeft = 3
+        ExplicitTop = 10
+        ExplicitWidth = 256
+        ExplicitHeight = 93
+        object lblName: TUniLabel
+          AlignWithMargins = True
+          Left = 99
+          Top = 49
+          Width = 49
+          Height = 17
+          Hint = ''
+          Alignment = taRightJustify
+          Caption = 'lblName'
+          Align = alCustom
+          Anchors = [akTop, akRight]
+          ParentFont = False
+          Font.Height = -13
+          ParentColor = False
+          Color = clBtnFace
+          TabOrder = 1
+          ExplicitLeft = 102
+          ExplicitTop = 34
+        end
+      end
     end
-  end
-  object UniPanel2: TUniPanel
-    Left = 160
-    Top = 16
-    Width = 272
-    Height = 128
-    Hint = ''
-    TabOrder = 2
-    ShowCaption = False
-    Caption = 'UniPanel2'
-    object UniLabel1: TUniLabel
-      Left = 200
-      Top = 56
-      Width = 51
-      Height = 13
+    object UniContainerPanel3: TUniContainerPanel
+      Left = 0
+      Top = 91
+      Width = 270
+      Height = 40
       Hint = ''
-      Caption = 'UniLabel1'
-      TabOrder = 1
+      ParentColor = False
+      Align = alBottom
+      TabOrder = 2
+      LayoutConfig.ComponentCls = 'panel-footer'
+      object UniContainerPanel4: TUniContainerPanel
+        Left = 0
+        Top = 0
+        Width = 270
+        Height = 40
+        Hint = ''
+        Margins.Left = 15
+        ParentColor = False
+        Align = alClient
+        TabOrder = 1
+        Layout = 'vbox'
+        LayoutAttribs.Align = 'left'
+        LayoutAttribs.Pack = 'center'
+        ExplicitHeight = 131
+        object UniLabel1: TUniLabel
+          AlignWithMargins = True
+          Left = 16
+          Top = 10
+          Width = 63
+          Height = 17
+          Hint = ''
+          Caption = #1055#1086#1076#1088#1086#1073#1085#1086
+          ParentFont = False
+          Font.Height = -13
+          ParentColor = False
+          Color = clBtnFace
+          TabOrder = 1
+          LayoutConfig.Padding = '5'
+        end
+      end
     end
   end
 end
