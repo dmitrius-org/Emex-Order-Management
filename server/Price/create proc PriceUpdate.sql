@@ -100,7 +100,7 @@ Update p
                      from @ID t
 					where t.ID = p.PriceID)	
 					
-
+-- сохранение сведений об обновлении прайса
 if not exists (select 1
                  from tProfilesPrice (nolock)
                 where PriceName = @PriceLogo
@@ -114,7 +114,7 @@ begin
   update tProfilesPrice
      set UpdateDate=GetDate()
    where PriceName=@PriceLogo
-     and isActive = 1
+     --and isActive = 1
 end
 
 

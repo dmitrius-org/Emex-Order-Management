@@ -6,7 +6,8 @@ hOrders - Заказы
 	create table hOrders
 	(
 	 OrderID                         numeric(18,0)  not null--
-	,ClientID                        numeric(18,0)  not null-- Клиент	
+	,ClientID                        numeric(18,0)  not null-- Клиент
+    ,SuppliersID                     numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
 	,OrderDate                       datetime       not null-- Дата заказа	
 	,OrderNum                        nvarchar(64)   -- Номер заказа	
 	,StatusID                        numeric(18,0)  -- Статус	

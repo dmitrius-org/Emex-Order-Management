@@ -2,6 +2,8 @@ if OBJECT_ID('ShipmentsUpdate') is not null
     drop proc ShipmentsUpdate
 /*
   ShipmentsUpdate - 
+
+  вызывается  из клиентской части при зменении данных
 */
 go
 

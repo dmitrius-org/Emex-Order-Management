@@ -658,6 +658,8 @@ object ShipmentsT: TShipmentsT
       '   '
       '   !Invoice'
       '   '
+      '   '
+      ' order by s.ShipmentsDate  desc   '
       '   ')
     Left = 575
     Top = 255

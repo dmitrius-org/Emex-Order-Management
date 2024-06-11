@@ -224,7 +224,6 @@ begin
   begin
     while not EOF do
     begin
-
       i:=FCaseItems.Add( TDashBoardItem.Create(Self) );
 
       FPagesCount:=trunc(i/FProductsOnPage);
@@ -238,17 +237,19 @@ begin
 
         Name:='SomeName'+FNameCount.ToString;
 
-        ItemName:= FieldByName('name').AsString;
-        Status:= FieldByName('status').AsString;
-        Images:= FieldByName('icon').AsString;
+        Title:= FieldByName('Title').AsString;
+        Detail := FieldByName('Detail').AsString;
 
-        Next;
+        UniContainerPanel5.Hint :=  FieldByName('Hint').AsString;
+
+        Status:= FieldByName('Status').AsString;
+        Images:= FieldByName('Icon').AsString;
 
       end;
 
-      Close();
-
+      Next;
     end;
+   // Close();
   end;
 end;
 

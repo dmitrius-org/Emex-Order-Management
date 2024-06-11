@@ -34,18 +34,15 @@ uses
 procedure THomeF.UniFrameCreate(Sender: TObject);
 var fr : TPriceUpdateT;
   tmp : TStringList;
-begin   // TUniShowCaseFrame
+begin
 
   FDashBoard:=TDashBoardFrame.Create(Self);
-  FDashBoard.Parent:=Dashboard;// Self;
+  FDashBoard.Parent:=Dashboard;
 //FUniShowCaseFrame.Align:=alClient;
 
   FCurrentPage:=0;
 
   FDashBoard.MaxWidth:=Self.Width;
-
-
-
 
   FDashBoard.ProductsOnPage:=10;
 

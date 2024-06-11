@@ -28,17 +28,17 @@ as
         ,s.WeightKGDiff        = o.WeightKGF - o.WeightKG    -- указать разницу сумм вес физический факт минус вес физический из прайса  
         ,s.VolumeKGDiff        = o.VolumeKGF - o.VolumeKG    -- указать разницу сумм вес объемный факт минус вес объемный из прайса   
         ,s.SuppliersID         = o.SuppliersID
-    from pShipments s (Updlock)
-   cross apply (select Sum(o.AmountPurchaseF)            ShipmentsAmount
-                      ,min(o.DestinationLogo)            DestinationLogo
-                      ,sum(o.Quantity)                   DetailCount
-                      ,sum(isnull(o.WeightKG, 0))        WeightKG
-                      ,sum(isnull(o.VolumeKG, 0))        VolumeKG
-                      ,sum(isnull(p.WeightKGF, 0))       WeightKGF
-                      ,sum(isnull(p.VolumeKGF, 0))       VolumeKGF
-                      ,Max(isnull(o.WeightKGAmount, 0))  WeightKGAmount
-                      ,max(isnull(o.VolumeKGAmount, 0))  VolumeKGAmount
-                      ,min(sp.SuppliersID)               SuppliersID
+    from pShipments s with (Updlock index=ao1)
+   cross apply (select Sum(o.AmountPurchaseF)                    as ShipmentsAmount
+                      ,min(o.DestinationLogo)                    as DestinationLogo
+                      ,sum(o.Quantity)                           as DetailCount
+                      ,sum(isnull(o.WeightKG, 0)  * o.Quantity)  as WeightKG
+                      ,sum(isnull(o.VolumeKG, 0)  * o.Quantity)  as VolumeKG
+                      ,sum(coalesce(p.WeightKGF, o.WeightKG, 0) * o.Quantity) as WeightKGF
+                      ,sum(coalesce(p.VolumeKGF, o.VolumeKG, 0) * o.Quantity) as VolumeKGF
+                      ,Max(isnull(o.WeightKGAmount, 0))          as WeightKGAmount -- Стоимость кг физического веса. Данные из  tSupplierDeliveryProfiles.WeightKG 
+                      ,max(isnull(o.VolumeKGAmount, 0))          as VolumeKGAmount -- Стоимость кг объемного веса. Данные из  tSupplierDeliveryProfiles.VolumeKG
+                      ,min(sp.SuppliersID)                       as SuppliersID
                   from tOrders o with (nolock)
                   inner join tClients c with (nolock index=ao1)
                           on c.ClientID = o.ClientID
@@ -49,6 +49,23 @@ as
                  where o.Invoice = s.Invoice 
                 ) o
    where s.Spid = @@SPID
+
+
+  Update s 
+     set s.ShipmentsDate = o.OperDate
+    from pShipments s with (Updlock index=ao1)
+   cross apply (select Max(p.OperDate)  OperDate
+                  from tOrders o with (nolock index=ao1)
+                  inner join tProtocol p with (nolock index=ao2)
+                          on p.ObjectID = o.OrderID 
+                  inner join tNodes n  with (nolock index=ao2)
+                          on n.Brief  = 'Send'
+                         and n.NodeID = p.NewStateID
+                 where o.Invoice = s.Invoice
+                ) o
+   where s.Spid = @@SPID
+     and isnull(s.ShipmentsDate, '') = ''
+
 
   insert tShipments (       
                          
@@ -100,10 +117,11 @@ select
         ,p.TransporterVolumeKG        
        -- ,p.TransporterDiffVolumeWeigh 
         ,SuppliersID
-  from pShipments p (nolock)
+  from pShipments p with (nolock index=ao1)
  where p.Spid = @@SPid
+   and p.ShipmentsDate is not null
    and not exists (select 1
-                     from tShipments t (nolock)
+                     from tShipments t with (nolock index=ao2)
                     where t.Invoice = p.Invoice)
 
 
@@ -112,7 +130,7 @@ select
   Update p
      set p.Amount  = p.WeightKGF * p.WeightKGAmount + (iif(p.VolumeKGF > p.WeightKGF, (p.VolumeKGF-p.WeightKGF) * p.VolumeKGAmount, 0))  
      
-    from pShipments p (updlock)
+    from pShipments p with (Updlock index=ao1)
    --inner join tShipments t (updlock)
    --        on t.Invoice = p.Invoice
    where p.Spid = @@SPid
@@ -131,8 +149,8 @@ select
         ,t.WeightKGAmount   = p.WeightKGAmount          
         ,t.VolumeKGAmount	= p.VolumeKGAmount  
         ,t.Amount           = p.Amount
-  from pShipments p (nolock)
- inner join tShipments t (updlock)
+  from pShipments p with (nolock index=ao1)
+ inner join tShipments t with (Updlock index=ao2)
          on t.Invoice = p.Invoice
  where p.Spid = @@SPid
 

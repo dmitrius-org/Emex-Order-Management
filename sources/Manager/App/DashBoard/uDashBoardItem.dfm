@@ -4,7 +4,7 @@ object DashBoardItem: TDashBoardItem
   Top = 0
   Width = 270
   Height = 131
-  LayoutConfig.ComponentCls = 'col-lg-3'
+  LayoutConfig.Margin = '5'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
   TabOrder = 0
@@ -38,7 +38,7 @@ object DashBoardItem: TDashBoardItem
         AlignWithMargins = True
         Left = 5
         Top = 5
-        Width = 85
+        Width = 74
         Height = 81
         Hint = ''
         Margins.Left = 5
@@ -47,45 +47,64 @@ object DashBoardItem: TDashBoardItem
         Margins.Bottom = 5
         Align = alLeft
         Transparent = True
-        ExplicitHeight = 85
       end
       object UniContainerPanel5: TUniContainerPanel
         AlignWithMargins = True
-        Left = 98
+        Left = 87
         Top = 3
-        Width = 157
+        Width = 180
         Height = 85
         Hint = ''
-        Margins.Right = 15
+        ShowHint = True
+        ParentShowHint = False
         ParentColor = False
         Align = alClient
         TabOrder = 2
         Layout = 'vbox'
         LayoutAttribs.Align = 'right'
         LayoutAttribs.Pack = 'center'
-        LayoutConfig.ComponentCls = 'col-xs-6 text-right'
-        ExplicitLeft = 3
-        ExplicitTop = 10
-        ExplicitWidth = 256
-        ExplicitHeight = 93
+        ExplicitLeft = 98
+        ExplicitTop = -13
+        ExplicitWidth = 157
         object lblName: TUniLabel
           AlignWithMargins = True
-          Left = 99
-          Top = 49
-          Width = 49
+          Left = 149
+          Top = 3
+          Width = 28
           Height = 17
           Hint = ''
+          ShowHint = True
           Alignment = taRightJustify
-          Caption = 'lblName'
-          Align = alCustom
-          Anchors = [akTop, akRight]
+          Caption = 'Title'
+          Align = alRight
           ParentFont = False
           Font.Height = -13
+          Font.Style = [fsBold]
           ParentColor = False
           Color = clBtnFace
           TabOrder = 1
-          ExplicitLeft = 102
-          ExplicitTop = 34
+          LayoutConfig.Padding = '5'
+          ExplicitLeft = 91
+          ExplicitTop = 14
+        end
+        object lblDetail: TUniLabel
+          AlignWithMargins = True
+          Left = -32
+          Top = 3
+          Width = 175
+          Height = 79
+          Hint = ''
+          ShowHint = True
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Detail'
+          Align = alRight
+          ParentFont = False
+          ParentColor = False
+          Color = clBtnFace
+          TabOrder = 2
+          LayoutConfig.Padding = '5'
+          ExplicitLeft = 0
         end
       end
     end

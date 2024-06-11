@@ -7,6 +7,7 @@ begin
 	(
 	 OrderID                         numeric(18,0)  identity --
 	,ClientID                        numeric(18,0)  not null-- Клиент	
+    ,SuppliersID                     numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
 	,OrderDate                       datetime       not null-- Дата заказа	
 	,OrderNum                        nvarchar(64)   -- Номер заказа	
 	,StatusID                        numeric(18,0)  -- Статус	
@@ -65,8 +66,7 @@ begin
 	,OverPricing                     money          -- Превышение Цены
 
 	,DestinationLogo                 nvarchar(20)   -- Направление отгрузки
-	,PriceID	                     numeric(18, 0) -- Ид детали tPrice.PriceID
-
+	,PriceID	                     numeric(18, 0) -- Ид детали tPrice.PriceID   
 	--                               
 	,Flag                            int            -- битовые признаки, смотри flags.md     
 	,ParentID                        numeric(18,0)  -- Родительский идентификатор заказа. Проставляется при дроблении заказа.
@@ -82,8 +82,8 @@ begin
 	,ExtraKurs	                     money          -- Наценка на курс
 	,CommissionAmount                money          -- Комиссия от продажи. Рассчитывается в момент создания заказа и не меняется
 	,Taxes                           money          -- Комиссия и налоги
-	,WeightKGAmount                  money          -- Стоимость кг физического веса
-	,VolumeKGAmount                  money          -- Стоимость кг объемного веса
+	,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG
+	,VolumeKGAmount                  money          -- Стоимость кг объемного веса   tSupplierDeliveryProfiles.VolumeKG
 	--   
 	,ID                              numeric(18,0)  -- техническое поле 
 	,UserID                          numeric(18,0) default dbo.GetUserID()

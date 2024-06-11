@@ -18,15 +18,19 @@ type
     UniContainerPanel4: TUniContainerPanel;
     UniContainerPanel5: TUniContainerPanel;
     UniLabel1: TUniLabel;
+    lblDetail: TUniLabel;
   private
-    procedure SetItemName(const Value: string);
+    procedure SetTitle(const Value: string);
     procedure SetImages(const Value: string);
     procedure SetStatus(const Value: string);
+    procedure SetDetail(const Value: string);
     { Private declarations }
   public
     { Public declarations }
 
-    property ItemName:string write SetItemName;
+    property Title:string write SetTitle;
+    property Detail:string write SetDetail;
+
     property Images:string write SetImages;
 
     property Status:string write SetStatus;
@@ -49,7 +53,12 @@ begin
     '}';
 end;
 
-procedure TDashBoardItem.SetItemName(const Value: string);
+procedure TDashBoardItem.SetDetail(const Value: string);
+begin
+  lblDetail.Caption := Value;
+end;
+
+procedure TDashBoardItem.SetTitle(const Value: string);
 begin
   lblName.Caption := Value;
 end;

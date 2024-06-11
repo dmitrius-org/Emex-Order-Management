@@ -37,7 +37,6 @@ object RefusalsT: TRefusalsT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 968
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -59,7 +58,6 @@ object RefusalsT: TRefusalsT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 968
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -111,9 +109,6 @@ object RefusalsT: TRefusalsT
     Layout = 'fit'
     LayoutConfig.Flex = 1
     LayoutConfig.Region = 'center'
-    ExplicitTop = 74
-    ExplicitWidth = 968
-    ExplicitHeight = 381
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -245,6 +240,7 @@ object RefusalsT: TRefusalsT
       Height = 21
       Hint = ''
       ShowHint = True
+      DateTime = 45454.000000000000000000
       DateFormat = 'dd/MM/yyyy'
       TimeFormat = 'HH:mm:ss'
       TabOrder = 5

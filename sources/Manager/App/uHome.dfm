@@ -28,7 +28,7 @@ object HomeF: THomeF
     object Dashboard: TUniTabSheet
       AlignWithMargins = True
       Hint = ''
-      Caption = 'Dashboard'
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1089#1077#1088#1074#1080#1089#1086#1074
       Layout = 'fit'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
