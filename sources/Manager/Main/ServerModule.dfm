@@ -11,8 +11,10 @@ object UniServerModule: TUniServerModule
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (
     'files/css/custom.css '
-    'files/css/main_menu.css'
+    ''
     'files/css/grid.css'
+    ''
+    'files/css/main_menu.css'
     ''
     'files/css/dashboard.css'
     ''

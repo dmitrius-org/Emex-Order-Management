@@ -9,7 +9,7 @@ uses
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
-  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg
+  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg, uniSpeedButton
   ;
 
 type
@@ -27,14 +27,19 @@ type
     MainMenuImage: TUniNativeImageList;
     MainMenu: TUniTreeMenu;
     UniNativeImageList1: TUniNativeImageList;
-    LogoPanel: TUniSimplePanel;
-    LogoImage: TUniImage;
-    LogoLabel: TUniLabel;
     MainMenuPanel: TUniPanel;
     MainMenuPanelDetail: TUniPanel;
     UniContainerPanel: TUniContainerPanel;
     UniPanel: TUniPanel;
     pcMain: TUniPageControl;
+    btnExit: TUniSpeedButton;
+    UniContainerPanel1: TUniContainerPanel;
+    UserLabel: TUniLabel;
+    LogoLabel: TUniLabel;
+    UniContainerPanel3: TUniContainerPanel;
+    UniContainerPanel2: TUniContainerPanel;
+    LogoImage: TUniImage;
+    LogoPanel: TUniContainerPanel;
     procedure UniFormShow(Sender: TObject);
     procedure MainMenuClick(Sender: TObject);
     procedure TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -44,8 +49,6 @@ type
     procedure actinfoExecute(Sender: TObject);
     procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
     procedure UniFormCreate(Sender: TObject);
-    procedure UniFormAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -230,8 +233,6 @@ begin
 
       Fr := FrC.Create(Self);
       Fr.Align := alClient;
-//      Fr.Color := clRed;
-      //Fr.Layout := 'fit';
       Fr.Parent := Ts;
 
       Nd.Data := Ts;
@@ -259,30 +260,28 @@ end;
 
 procedure TMainForm.ProfileMenuAdd;
 begin
-  Profile := MainMenu.Items.Add(nil, 'О программе');
-  Profile.ImageIndex := 2;
-  Profile.Tag:=-999;
+  Profile := FindNodeByID(600);
 
   with MainMenu.Items.Add(Profile, 'О системе') do
   begin
-      Tag := -999;
-      Action := actinfo;
-      ImageIndex := 18;
+    Tag := -999;
+    Action := actinfo;
+    ImageIndex := 18;
   end;
 
   with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
   begin
-      Tag := -999;
-      Action := actEditPas;
-      ImageIndex := 16;
+    Tag := -999;
+    Action := actEditPas;
+    ImageIndex := 16;
   end;
 
-  with MainMenu.Items.Add(Profile, 'Выйти из программы') do
-  begin
-      Tag := -999;
-      Action := actExit;
-      ImageIndex := 17;
-  end;
+//  with MainMenu.Items.Add(Profile, 'Выйти из программы') do
+//  begin
+//    Tag := -999;
+//    Action := actExit;
+//    ImageIndex := 17;
+//  end;
 end;
 
 procedure TMainForm.SetMainMenuMicroName;
@@ -314,15 +313,11 @@ begin
   end;
 end;
 
-procedure TMainForm.UniFormAjaxEvent(Sender: TComponent; EventName: string;
-  Params: TUniStrings);
-begin
-  //logger.Info('TMainForm.UniFormAjaxEvent: ' + EventName);
-end;
-
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
+
+  UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select Name from tUser (nolock) where UserID=dbo.GetUserID()') + ' (' + UniMainModule.AUserName + ')';
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

@@ -5,18 +5,34 @@
     line-height: 35px;
 }
 
-.x-panel-body-default .logo-caption  {
+.logo-caption  {
     background-color: #32404e;
     color: #fff;
 } 
 
-.x-panel-body-default .logo-image  {
-    background-color: #32404e;
+.user-label {
+    color: #fff;
+    font: normal 10px tahoma, arial, helvetica, sans-serif;
+} 
+
+.logo-btn-exit {
+    border-color: #32404e ;
+    background-color: #32404e ;
+
+
 }
 
-/* .main-menu-detail {
-    height: 100%;
-} */
+.logo-btn-exit .x-btn-inner {
+    overflow: visible !important;
+    font: normal 10px tahoma, arial, helvetica, sans-serif;
+}
+
+.logo-btn-exit .x-btn-inner-default-medium {
+
+    color: #fff;
+    padding: 0 0px !important;
+    max-width: 100%;
+} 
 
 .main-menu-detail .x-tab-close-btn {
         background-image: url("/files/img/Close.png");

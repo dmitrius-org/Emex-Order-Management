@@ -63,6 +63,10 @@ type
     actLookup: TAction;
     N9: TUniMenuItem;
     UniToolButton5: TUniToolButton;
+    UniToolButton6: TUniToolButton;
+    UniToolButton7: TUniToolButton;
+    actGroup: TAction;
+    N10: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -79,6 +83,7 @@ type
       Shift: TShiftState);
     procedure UniFrameReady(Sender: TObject);
     procedure actLookupExecute(Sender: TObject);
+    procedure actGroupExecute(Sender: TObject);
   private
     FAction: Integer;
     procedure SetAction(const Value: Integer);
@@ -98,7 +103,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uLookupF;
+  MainModule, uGrantUtils, uMainVar, uLookupF, uGroups2T;
 
 {$R *.dfm}
 
@@ -128,6 +133,11 @@ begin
   GrantF.ObjectType := 0;
 
   GrantF.ShowModal();
+end;
+
+procedure TUsersT.actGroupExecute(Sender: TObject);
+begin
+  Groups2T.ShowModal;
 end;
 
 procedure TUsersT.actLookupExecute(Sender: TObject);

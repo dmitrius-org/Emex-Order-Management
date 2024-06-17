@@ -15,7 +15,6 @@ object MainForm: TMainForm
   MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
   Layout = 'fit'
-  OnAjaxEvent = UniFormAjaxEvent
   OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
   TextHeight = 15
@@ -58,28 +57,52 @@ object MainForm: TMainForm
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Region = 'west'
         LayoutConfig.DockWhenAligned = False
-        object LogoPanel: TUniSimplePanel
+        object MainMenu: TUniTreeMenu
+          AlignWithMargins = True
           Left = 0
-          Top = 0
+          Top = 41
           Width = 300
-          Height = 38
+          Height = 368
           Hint = ''
           Margins.Left = 0
           Margins.Top = 0
           Margins.Right = 0
           Margins.Bottom = 0
+          ParentRTL = False
+          ShowHint = True
+          ParentShowHint = False
+          BodyRTL = False
+          Align = alClient
+          Items.NodeData = {
+            0301000000260000000F0000000F0000000F000000FFFFFFFF0F000000000000
+            0000000000010420002E002E002E00}
+          Items.FontData = {
+            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
+            53696D53756E}
+          Images = MainMenuImage
+          MicroWidth = 50
+          OnClick = MainMenuClick
+          ExplicitTop = 38
+          ExplicitHeight = 371
+        end
+        object LogoPanel: TUniContainerPanel
+          Left = 0
+          Top = 0
+          Width = 300
+          Height = 41
+          Hint = ''
           ParentColor = False
           Align = alTop
-          TabOrder = 1
-          LayoutConfig.Cls = 'logo-caption'
-          LayoutConfig.BodyCls = 'logo-caption'
+          TabOrder = 2
+          LayoutConfig.ComponentCls = 'logo-caption'
           object LogoImage: TUniImage
             Left = 0
             Top = 0
-            Width = 50
-            Height = 38
+            Width = 52
+            Height = 41
             Cursor = crHandPoint
             Hint = ''
+            Center = True
             Stretch = True
             Picture.Data = {
               0A544A504547496D6167657BAF0100FFD8FFE000104A46494600010101004800
@@ -3539,53 +3562,115 @@ object MainForm: TMainForm
             Transparent = True
             LayoutConfig.Cls = 'logo-image '
             LayoutConfig.BodyCls = 'logo-image '
+            LayoutConfig.IgnorePosition = False
+            LayoutConfig.DockWhenAligned = False
+            ExplicitHeight = 38
           end
-          object LogoLabel: TUniLabel
-            AlignWithMargins = True
-            Left = 53
-            Top = 9
-            Width = 4
-            Height = 20
+          object UniContainerPanel1: TUniContainerPanel
+            Left = 52
+            Top = 0
+            Width = 212
+            Height = 41
             Hint = ''
-            Margins.Top = 9
-            Alignment = taCenter
-            Caption = ''
-            Align = alClient
-            ParentFont = False
-            Font.Color = clWindow
-            Font.Height = -15
-            Font.Style = [fsBold]
             ParentColor = False
-            Color = clBtnFace
+            Align = alClient
+            ParentAlignmentControl = False
             TabOrder = 2
-            LayoutConfig.ComponentCls = 'logo-caption'
+            Layout = 'vbox'
+            LayoutAttribs.Align = 'stretch'
+            LayoutAttribs.Pack = 'start'
+            LayoutConfig.IgnorePosition = False
+            LayoutConfig.DockWhenAligned = False
+            ExplicitLeft = 0
+            ExplicitWidth = 264
+            ExplicitHeight = 38
+            object UniContainerPanel3: TUniContainerPanel
+              Left = 0
+              Top = 23
+              Width = 212
+              Height = 18
+              Hint = ''
+              Margins.Bottom = 0
+              ParentColor = False
+              Align = alBottom
+              TabOrder = 0
+              Layout = 'hbox'
+              LayoutAttribs.Align = 'middle'
+              LayoutAttribs.Pack = 'center'
+              ExplicitTop = 20
+              ExplicitWidth = 264
+              object UserLabel: TUniLabel
+                Left = 0
+                Top = 5
+                Width = 212
+                Height = 13
+                Hint = ''
+                Margins.Bottom = 0
+                Alignment = taCenter
+                AutoSize = False
+                Caption = 'UserLabel'
+                Align = alBottom
+                ParentColor = False
+                Color = clBtnFace
+                TabOrder = 1
+                LayoutConfig.ComponentCls = 'user-label'
+                ExplicitWidth = 264
+              end
+            end
+            object UniContainerPanel2: TUniContainerPanel
+              Left = 0
+              Top = 0
+              Width = 212
+              Height = 20
+              Hint = ''
+              ParentColor = False
+              Align = alTop
+              TabOrder = 2
+              Layout = 'hbox'
+              LayoutAttribs.Align = 'middle'
+              LayoutAttribs.Pack = 'center'
+              ExplicitWidth = 264
+              object LogoLabel: TUniLabel
+                Left = 0
+                Top = 0
+                Width = 212
+                Height = 21
+                Hint = ''
+                Margins.Top = 5
+                Alignment = taCenter
+                AutoSize = False
+                Caption = 'logo'
+                Align = alTop
+                ParentFont = False
+                Font.Color = clWindow
+                Font.Height = -16
+                Font.Style = [fsBold]
+                ParentColor = False
+                Color = clBtnFace
+                TabOrder = 1
+                LayoutConfig.ComponentCls = 'logo-caption'
+                ExplicitWidth = 264
+              end
+            end
           end
-        end
-        object MainMenu: TUniTreeMenu
-          AlignWithMargins = True
-          Left = 0
-          Top = 38
-          Width = 300
-          Height = 371
-          Hint = ''
-          Margins.Left = 0
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          ParentRTL = False
-          ShowHint = True
-          ParentShowHint = False
-          BodyRTL = False
-          Align = alClient
-          Items.NodeData = {
-            0301000000260000000F0000000F0000000F000000FFFFFFFF0F000000000000
-            0000000000010420002E002E002E00}
-          Items.FontData = {
-            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
-            53696D53756E}
-          Images = MainMenuImage
-          MicroWidth = 50
-          OnClick = MainMenuClick
+          object btnExit: TUniSpeedButton
+            Left = 264
+            Top = 0
+            Width = 36
+            Height = 41
+            Margins.Right = 5
+            Action = actExit
+            Align = alRight
+            ParentColor = False
+            IconAlign = iaTop
+            IconPosition = ipButtonEdge
+            Images = MainMenuImage
+            ImageIndex = 17
+            LayoutConfig.ComponentCls = 'logo-btn-exit'
+            LayoutConfig.IgnorePosition = False
+            TabOrder = 3
+            ExplicitHeight = 38
+          end
         end
       end
       object MainMenuPanelDetail: TUniPanel
@@ -3643,6 +3728,7 @@ object MainForm: TMainForm
     object actExit: TAction
       Caption = #1042#1099#1081#1090#1080
       Hint = #1042#1099#1081#1090#1080
+      ImageIndex = 17
       OnExecute = actExitExecute
     end
     object actEditPas: TAction

@@ -69,6 +69,8 @@ type
     UniToolButton7: TUniToolButton;
     UniToolButton8: TUniToolButton;
     QuerySupplier: TWideStringField;
+    UniToolButton9: TUniToolButton;
+    actClientType: TAction;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -82,6 +84,7 @@ type
     procedure actLookupExecute(Sender: TObject);
     procedure actBalanceAddExecute(Sender: TObject);
     procedure actBalanceExecute(Sender: TObject);
+    procedure actClientTypeExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -98,7 +101,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT;
+  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T;
 
 {$R *.dfm}
 
@@ -119,6 +122,11 @@ procedure TClientsT.actBalanceExecute(Sender: TObject);
 begin
   BalanceT.ID:= QueryClientID.AsInteger;
   BalanceT.ShowModal;
+end;
+
+procedure TClientsT.actClientTypeExecute(Sender: TObject);
+begin
+  ClientType2T.ShowModal;
 end;
 
 procedure TClientsT.actDeleteExecute(Sender: TObject);

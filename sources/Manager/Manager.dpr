@@ -95,7 +95,9 @@ uses
   uInstructionDevT in 'App\Confluence\uInstructionDevT.pas' {InstructionDevT: TUniFrame},
   PriceUpdate in 'App\DashBoard\PriceUpdate.pas' {PriceUpdateT: TUniFrame},
   uDashBoardItem in 'App\DashBoard\uDashBoardItem.pas' {DashBoardItem: TUniFrame},
-  uDashBoard in 'App\DashBoard\uDashBoard.pas' {DashBoardFrame: TUniFrame};
+  uDashBoard in 'App\DashBoard\uDashBoard.pas' {DashBoardFrame: TUniFrame},
+  uGroups2T in 'Core\User\uGroups2T.pas' {Groups2T: TUniForm},
+  uClientsType2T in 'App\Clients\uClientsType2T.pas' {ClientType2T: TUniForm};
 
 {$R *.res}
 
