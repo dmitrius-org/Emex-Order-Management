@@ -10,7 +10,9 @@ create proc SupplierUpdate
              ,@Name                 nvarchar(1024)-- 
              ,@emexUsername         nvarchar(32)=null--Пользователь для интеграции
              ,@emexPassword         nvarchar(32)=null--Пароль для интеграции
-           --  ,@FolderSavingFailures nvarchar(512)=null--Папка для сохранения отказов
+             ,@Discount             money  
+             ,@Commission           money  
+             ,@ExtraKurs            money  
 as
   declare @r int = 0
 
@@ -41,6 +43,9 @@ as
               ,Name                 = @Name
               ,emexUsername         = @emexUsername
               ,emexPassword         = @emexPassword
+              ,Discount             = @Discount    
+              ,Commission           = @Commission  
+              ,ExtraKurs            = @ExtraKurs   
           from tSuppliers (rowlock)
          where SuppliersID     = @SuppliersID
 
@@ -61,5 +66,5 @@ return @r
 go
 grant exec on SupplierUpdate to public
 go
-exec setOV 'SupplierUpdate', 'P', '20240101', '0'
+exec setOV 'SupplierUpdate', 'P', '20240618', '1'
 go

@@ -80,6 +80,7 @@ begin
 	,Discount                        money          -- Скидка поставщика на закупку товара
 	,Commission	                     money          -- Комиссия эквайера
 	,ExtraKurs	                     money          -- Наценка на курс
+    ,Kurs                            money
 	,CommissionAmount                money          -- Комиссия от продажи. Рассчитывается в момент создания заказа и не меняется
 	,Taxes                           money          -- Комиссия и налоги
 	,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG

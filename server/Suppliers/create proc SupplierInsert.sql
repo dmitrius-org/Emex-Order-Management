@@ -10,7 +10,9 @@ create proc SupplierInsert
              ,@Name	                nvarchar(1024)  -- 
 			 ,@emexUsername         nvarchar(32)=null--Пользователь для интеграции
              ,@emexPassword         nvarchar(32)=null--Пароль для интеграции
-            -- ,@FolderSavingFailures nvarchar(512)=null--Папка для сохранения отказов
+             ,@Discount             money  
+             ,@Commission           money  
+             ,@ExtraKurs            money  
 
 as
   declare @r int = 0
@@ -35,14 +37,18 @@ as
 		      ,Name
 		      ,emexUsername
 		      ,emexPassword
-            ---  ,FolderSavingFailures
+              ,Discount  
+              ,Commission
+              ,ExtraKurs 
 		       )
 		OUTPUT INSERTED.SuppliersID INTO @ID
 		select @Brief     
 		      ,@Name	
 		      ,@emexUsername
 		      ,@emexPassword
-            --  ,@FolderSavingFailures
+              ,@Discount  
+              ,@Commission
+              ,@ExtraKurs 
 
 		Select @SuppliersID = ID from @ID	
         
@@ -72,5 +78,5 @@ return @r
 go
 grant exec on SupplierInsert to public
 go
-exec setOV 'SupplierInsert', 'P', '20240101', '0'
+exec setOV 'SupplierInsert', 'P', '20240618', '1'
 go

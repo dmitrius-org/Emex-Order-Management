@@ -20,12 +20,8 @@ begin
 	,NotificationMethod   int          -- Способ оповещения
 	,NotificationAddress  nvarchar(256)-- Адрес оповещения
 	,SuppliersID          numeric(18,0)-- Поставщик
-
-	,ClientTypeID         int
-	,Margin               money         -- Наценка в процентах
-	,Reliability          money         -- Вероятность поставки 
-	,Discount             money         -- Скидка Discount -- Скидка поставщика на закупку товара
-	,Commission           money         -- Комиссия эквайера 
+    --
+	,ClientTypeID         int          -- Тип клиента
 	--
 	,UserID               numeric(18,0) default dbo.GetUserID()
 	,inDatetime           datetime      default GetDate()      --

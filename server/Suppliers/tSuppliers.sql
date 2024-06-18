@@ -1,5 +1,4 @@
 if OBJECT_ID('tSuppliers') is null
---  drop table tSuppliers
 /* **********************************************************
 tSuppliers - Поставщики
 ********************************************************** */
@@ -14,7 +13,9 @@ begin
 	,EmexUsername      nvarchar(32)   null  --Пользователь для интеграции
 	,EmexPassword      nvarchar(32)   null  --Пароль для интеграции
 
-	--,FolderSavingFailures nvarchar(512)     --Папка для сохранения файлов отказов
+	,Discount          money        -- Скидка (discount, текстовое поле, по умолчанию установить значение "5", -- Discount -- Скидка поставщика на закупку товара
+	,Commission        money        --  
+	,ExtraKurs         money        -- Комиссия эквайера
 	--
 	,UserID            numeric(18,0) default dbo.GetUserID()
 	,inDatetime        datetime      default GetDate()      --
@@ -33,4 +34,4 @@ exec setOV 'tSuppliers', 'U', '20240101', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tSuppliers', @desc = 'Таблица Поставщики'
---alter table tSuppliers drop column FolderSavingFailures
+

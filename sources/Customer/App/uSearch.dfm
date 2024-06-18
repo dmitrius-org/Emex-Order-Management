@@ -213,7 +213,7 @@ object SearchF: TSearchF
           Title.Caption = #1042#1089#1077
           Title.Font.Height = -13
           Width = 100
-          ReadOnly = True
+          Editor = UniNumberEdit1
         end
         item
           FieldName = 'VolumeAdd'
@@ -537,7 +537,6 @@ object SearchF: TSearchF
     end
     object QueryWeight: TCurrencyField
       FieldName = 'Weight'
-      ReadOnly = True
       DisplayFormat = '###,##0.000'
     end
     object QueryVolumeAdd: TCurrencyField
@@ -691,6 +690,7 @@ object SearchF: TSearchF
     ModifySQL.Strings = (
       'Update pFindByNumber'
       '       set VolumeAdd =  isnull(:NEW_VolumeAdd, VolumeAdd)'
+      '            ,WeightGr=  isnull(:NEW_Weight, WeightGr)'
       
         '            ,Flag            =  isnull(flag, 0) | 512 -- '#1042#1077#1089' '#1080#1079#1084 +
         #1077#1085#1077#1085' '#1082#1083#1080#1077#1085#1090#1086#1084

@@ -25,7 +25,7 @@ object SuppliersF: TSuppliersF
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 917
+      Left = 901
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 913
+      ExplicitLeft = 897
     end
     object btnCancel: TUniBitBtn
-      Left = 830
+      Left = 814
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 826
+      ExplicitLeft = 810
     end
   end
   object pcCommon: TUniPageControl
@@ -188,7 +188,7 @@ object SuppliersF: TSuppliersF
     end
     object tabSuppliers: TUniTabSheet
       Hint = ''
-      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1072#1074#1090#1086#1088#1080#1079#1072#1094#1080#1080
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
       ExplicitWidth = 1006
       ExplicitHeight = 379
       DesignSize = (
@@ -197,13 +197,13 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 244
+        Width = 228
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 240
+        ExplicitWidth = 224
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -214,17 +214,6 @@ object SuppliersF: TSuppliersF
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1076#1083#1103' '#1080#1085#1090#1077#1075#1088#1072#1094#1080#1080':'
         TabOrder = 1
       end
-      object edtEmexPassword: TUniEdit
-        Left = 238
-        Top = 63
-        Width = 244
-        Hint = ''
-        Text = ''
-        Anchors = [akLeft, akTop, akRight]
-        TabOrder = 2
-        ClearButton = True
-        ExplicitWidth = 240
-      end
       object UniLabel5: TUniLabel
         Left = 33
         Top = 65
@@ -232,7 +221,69 @@ object SuppliersF: TSuppliersF
         Height = 13
         Hint = ''
         Caption = #1055#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1080#1085#1090#1077#1075#1088#1072#1094#1080#1080':'
+        TabOrder = 2
+      end
+      object edtDiscount: TUniNumberEdit
+        Left = 238
+        Top = 118
+        Width = 121
+        Hint = ''
         TabOrder = 3
+        MaxValue = 100.000000000000000000
+        DecimalSeparator = ','
+      end
+      object UniLabel6: TUniLabel
+        Left = 33
+        Top = 120
+        Width = 108
+        Height = 13
+        Hint = ''
+        Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072':'
+        TabOrder = 4
+      end
+      object edtCommission: TUniNumberEdit
+        Left = 238
+        Top = 148
+        Width = 121
+        Hint = ''
+        TabOrder = 5
+        MaxValue = 100.000000000000000000
+        DecimalSeparator = ','
+      end
+      object edtExtraKurs: TUniNumberEdit
+        Left = 238
+        Top = 178
+        Width = 121
+        Hint = ''
+        TabOrder = 6
+        MaxValue = 100.000000000000000000
+        DecimalSeparator = ','
+      end
+      object UniLabel7: TUniLabel
+        Left = 33
+        Top = 149
+        Width = 106
+        Height = 13
+        Hint = ''
+        Caption = #1050#1086#1084#1080#1089#1089#1080#1103' '#1101#1082#1074#1072#1081#1077#1088#1072':'
+        TabOrder = 7
+      end
+      object UniLabel8: TUniLabel
+        Left = 33
+        Top = 177
+        Width = 91
+        Height = 13
+        Hint = ''
+        Caption = #1053#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1082#1091#1088#1089':'
+        TabOrder = 8
+      end
+      object edtEmexPassword: TUniEdit
+        Left = 238
+        Top = 57
+        Width = 240
+        Hint = ''
+        Text = ''
+        TabOrder = 9
       end
     end
     object tabDelivery: TUniTabSheet
@@ -378,12 +429,14 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = 'WeightKG'
               Width = 101
+              Hint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1075'. '#1092#1080#1079#1080#1095#1077#1089#1082#1086#1075#1086' '#1074#1077#1089#1072' '
             end
             item
               FieldName = 'VolumeKG'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG'
               Width = 91
+              Hint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1075'. '#1086#1073#1098#1077#1084#1085#1086#1075#1086' '#1074#1077#1089#1072' '
             end
             item
               FieldName = 'DenVyleta'
@@ -437,6 +490,20 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = #1058#1077#1082#1089#1090' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' '#1082' '#1089#1087#1086#1089#1086#1073#1091' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 300
+            end
+            item
+              FieldName = 'isMyDelivery'
+              Title.Caption = 'isMyDelivery'
+              Width = 92
+              Hint = #1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
+              CheckBoxField.AutoPost = True
+            end
+            item
+              FieldName = 'isIgnore'
+              Title.Caption = 'isIgnore'
+              Width = 91
+              Hint = #1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
+              CheckBoxField.AutoPost = True
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
@@ -516,9 +583,6 @@ object SuppliersF: TSuppliersF
       '         Name, '
       '         WeightKG, '
       '         VolumeKG, '
-      '         --PDelivery1, '
-      '         --PDelivery2, '
-      '         --PDelivery3, '
       '         DenVyleta, '
       '         VolumeKG_Rate1, '
       '         VolumeKG_Rate2, '
@@ -530,14 +594,13 @@ object SuppliersF: TSuppliersF
       '         Delivery,'
       '        [Image],'
       '        ImageHelp,'
+      '        isMyDelivery,'
+      '        isIgnore,'
       '         Spid)'
       'VALUES (:NEW_SuppliersID, '
       '        :NEW_Name, '
       '        :NEW_WeightKG, '
       '        :NEW_VolumeKG, '
-      '       -- :NEW_PDelivery1, '
-      '       -- :NEW_PDelivery2, '
-      '       -- :NEW_PDelivery3, '
       '        :NEW_DenVyleta, '
       '        :NEW_VolumeKG_Rate1, '
       '        :NEW_VolumeKG_Rate2, '
@@ -549,6 +612,8 @@ object SuppliersF: TSuppliersF
       '        :NEW_Delivery,'
       '        :NEW_Image,'
       '        :NEW_ImageHelp,'
+      '        :NEW_isMyDelivery,'
+      '        :NEW_isIgnore,'
       '        @@Spid);'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
@@ -577,13 +642,10 @@ object SuppliersF: TSuppliersF
       'UPDATE pSupplierDeliveryProfiles'
       '   SET '
       '      SuppliersID = :NEW_SuppliersID, '
-      '      Name = :NEW_Name, '
-      '      WeightKG = :NEW_WeightKG, '
-      '      VolumeKG = :NEW_VolumeKG, '
-      '--PDelivery1 = :NEW_PDelivery1, '
-      '--PDelivery2 = :NEW_PDelivery2, '
-      '--PDelivery3 = :NEW_PDelivery3, '
-      '  DenVyleta = :NEW_DenVyleta, '
+      '      Name          = :NEW_Name, '
+      '      WeightKG   = :NEW_WeightKG, '
+      '      VolumeKG   = :NEW_VolumeKG, '
+      '      DenVyleta   = :NEW_DenVyleta, '
       '      VolumeKG_Rate1 = :NEW_VolumeKG_Rate1, '
       '      VolumeKG_Rate2 = :NEW_VolumeKG_Rate2, '
       '      VolumeKG_Rate3 = :NEW_VolumeKG_Rate3, '
@@ -593,7 +655,9 @@ object SuppliersF: TSuppliersF
       '      IsActive = :NEW_IsActive,'
       '      Delivery = :NEW_Delivery,'
       '      [Image] = :NEW_Image,'
-      '      [ImageHelp]=:New_ImageHelp'
+      '      [ImageHelp]=:New_ImageHelp,'
+      '       isMyDelivery=:New_isMyDelivery,'
+      '       isIgnore=:New_isIgnore'
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (
@@ -960,6 +1024,8 @@ object SuppliersF: TSuppliersF
       '      ,Delivery'
       '      ,[Image]'
       '      ,ImageHelp'
+      '      ,isMyDelivery-- '#1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
+      '      ,isIgnore    -- '#1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
       '  from pSupplierDeliveryProfiles (nolock)'
       ' where Spid = @@Spid ')
     Left = 767
@@ -1060,6 +1126,12 @@ object SuppliersF: TSuppliersF
     object qDeliveryImageHelp: TWideStringField
       FieldName = 'ImageHelp'
       Size = 248
+    end
+    object qDeliveryisMyDelivery: TBooleanField
+      FieldName = 'isMyDelivery'
+    end
+    object qDeliveryisIgnore: TBooleanField
+      FieldName = 'isIgnore'
     end
   end
   object dsDelivery: TDataSource

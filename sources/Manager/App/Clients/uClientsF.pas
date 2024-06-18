@@ -120,61 +120,50 @@ type
     LookupManager: TUniDBLookupComboBox;
     UniLabel5: TUniLabel;
     cbClientType: TUniFSComboBox;
-    edtMargin: TUniNumberEdit;
-    edtReliability: TUniNumberEdit;
-    edtDiscount: TUniNumberEdit;
-    edtCommission: TUniNumberEdit;
-    UniLabel10: TUniLabel;
-    UniLabel11: TUniLabel;
-    UniLabel12: TUniLabel;
-    UniLabel13: TUniLabel;
     tabPriceProfiles: TUniTabSheet;
     UniToolBar2: TUniToolBar;
     UniToolButton7: TUniToolButton;
     UniToolButton8: TUniToolButton;
     UniToolButton9: TUniToolButton;
     UniPanel3: TUniPanel;
-    UniDBGrid1: TUniDBGrid;
-    qPriceProfiles: TFDQuery;
-    dsPriceProfiles: TDataSource;
-    uPriceProfiles: TFDUpdateSQL;
-    qPriceProfilesSpid: TIntegerField;
-    qPriceProfilesProfilesCustomerID: TIntegerField;
-    qPriceProfilesClientID: TFMTBCDField;
-    qPriceProfilesBrief: TStringField;
-    qPriceProfilesProfilesDeliveryID: TIntegerField;
-    qPriceProfilesMargin: TCurrencyField;
-    qPriceProfilesReliability: TCurrencyField;
-    qPriceProfilesDiscount: TCurrencyField;
-    qPriceProfilesCommission: TCurrencyField;
-    qPriceProfilesExtraKurs: TCurrencyField;
-    qPriceProfilesisMyDelivery: TBooleanField;
-    qPriceProfilesisIgnore: TBooleanField;
-    qPriceProfilesUploadFolder: TStringField;
-    qPriceProfilesUploadPriceName: TStringField;
-    qPriceProfilesUploadFileName: TStringField;
-    qPriceProfilesisActive: TBooleanField;
-    qPriceProfilesClientPriceLogo: TWideStringField;
-    qPriceProfilesUploadDelimiterID: TIntegerField;
-    qPriceProfilesID: TFMTBCDField;
+    ProfilesCustomerGrid: TUniDBGrid;
+    qProfilesCustomer: TFDQuery;
+    dsProfilesCustomer: TDataSource;
+    uProfilesCustomer: TFDUpdateSQL;
+    qProfilesCustomerSpid: TIntegerField;
+    qProfilesCustomerProfilesCustomerID: TIntegerField;
+    qProfilesCustomerClientID: TFMTBCDField;
+    qProfilesCustomerBrief: TStringField;
+    qProfilesCustomerProfilesDeliveryID: TIntegerField;
+    qProfilesCustomerMargin: TCurrencyField;
+    qProfilesCustomerReliability: TCurrencyField;
+    qProfilesCustomerisMyDelivery: TBooleanField;
+    qProfilesCustomerisIgnore: TBooleanField;
+    qProfilesCustomerUploadFolder: TStringField;
+    qProfilesCustomerUploadPriceName: TStringField;
+    qProfilesCustomerUploadFileName: TStringField;
+    qProfilesCustomerisActive: TBooleanField;
+    qProfilesCustomerClientPriceLogo: TWideStringField;
+    qProfilesCustomerUploadDelimiterID: TIntegerField;
+    qProfilesCustomerID: TFMTBCDField;
     actPriceProfilesAdd: TAction;
     actPriceProfilesEdit: TAction;
     actPriceProfilesDelete: TAction;
     actPriceProfilesRefresh: TAction;
     UniToolButton10: TUniToolButton;
-    qPriceProfilesUploadDelimiter: TStringField;
+    qProfilesCustomerUploadDelimiter: TStringField;
     qProfilesDeliveryList: TFDQuery;
     qProfilesDeliveryListProfilesDeliveryID: TFDAutoIncField;
-    qProfilesDeliveryListDestinationLogo: TWideStringField;
+    qProfilesDeliveryListDestinationName: TWideStringField;
     qDelimiterList: TFDQuery;
     qDelimiterListDelimiterID: TFDAutoIncField;
     qDelimiterListName: TStringField;
-    qPriceProfilesDestinationLogo: TWideStringField;
     UniHiddenPanel3: TUniHiddenPanel;
     lkPriceProfiles: TUniDBLookupComboBox;
     dsProfilesDeliveryList: TDataSource;
     dsDelimiterList: TDataSource;
     lkUploadDelimiter: TUniDBLookupComboBox;
+    qProfilesCustomerDestinationName: TWideStringField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -195,10 +184,12 @@ type
     procedure actPriceProfilesEditExecute(Sender: TObject);
     procedure actPriceProfilesDeleteExecute(Sender: TObject);
     procedure actPriceProfilesRefreshExecute(Sender: TObject);
-    procedure UniDBGrid1ColumnSort(Column: TUniDBGridColumn;
+    procedure ProfilesCustomerGridColumnSort(Column: TUniDBGridColumn;
       Direction: Boolean);
     procedure ManagerGridColumnSort(Column: TUniDBGridColumn;
       Direction: Boolean);
+    procedure tabPriceProfilesBeforeActivate(Sender: TObject;
+      var AllowActivate: Boolean);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -285,19 +276,19 @@ procedure TClientsF.actPriceProfilesAddExecute(Sender: TObject);
 begin
   ProfilesDeliveryList;
 
-  qPriceProfiles.Insert;
-  qPriceProfiles.FieldByName('ClientID').AsInteger := FID;
+  qProfilesCustomer.Insert;
+  qProfilesCustomer.FieldByName('ClientID').AsInteger := FID;
 end;
 
 procedure TClientsF.actPriceProfilesDeleteExecute(Sender: TObject);
 begin
- qPriceProfiles.Delete;
+ qProfilesCustomer.Delete;
 end;
 
 procedure TClientsF.actPriceProfilesEditExecute(Sender: TObject);
 begin
  ProfilesDeliveryList;
- qPriceProfiles.Edit;
+ qProfilesCustomer.Edit;
 end;
 
 procedure TClientsF.actPriceProfilesRefreshExecute(Sender: TObject);
@@ -337,17 +328,11 @@ begin
                 '            ,@NotificationMethod  = :NotificationMethod '+
                 '            ,@NotificationAddress = :NotificationAddress'+
                 '            ,@ClientTypeID	       = :ClientTypeID	     '+
-//                '            ,@Margin              = :Margin	           '+
-//                '            ,@Reliability	       = :Reliability  	     '+
-//                '            ,@Discount   	       = :Discount    	     '+
-//                '            ,@Commission 	       = :Commission  	     '+
                 '' +
                 ' select @r as retcode      ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'//,
-//               'Margin', 'Reliability', 'Discount', 'Commission'
-               ],
+               ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -357,10 +342,6 @@ begin
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
                cbClientType.Value//,
-//               edtMargin.Value,
-//               edtReliability.Value,
-//               edtDiscount.Value,
-//               edtCommission.Value
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -381,17 +362,11 @@ begin
                 '            ,@NotificationMethod  = :NotificationMethod '+
                 '            ,@NotificationAddress = :NotificationAddress'+
                 '            ,@ClientTypeID	       = :ClientTypeID	     '+
-//                '            ,@Margin              = :Margin	           '+
-//                '            ,@Reliability	       = :Reliability  	     '+
-//                '            ,@Discount   	       = :Discount    	     '+
-//                '            ,@Commission 	       = :Commission  	     '+
                 ''+
                 ' select @r as retcode      ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'//,
-//               'Margin', 'Reliability', 'Discount', 'Commission'
-               ],
+               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -402,10 +377,6 @@ begin
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
                cbClientType.Value
-//               edtMargin.Value,
-//               edtReliability.Value,
-//               edtDiscount.Value,
-//               edtCommission.Value
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -428,7 +399,6 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    //Audit.Add(TObjectType.otUser, FID, FAction, '');
     ModalResult:=mrOK;
   end
   else
@@ -471,10 +441,6 @@ begin
   cbResponseType.ItemIndex       := UniMainModule.Query.FieldByName('ResponseType').AsInteger;
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
-//  edtMargin.Text                 := UniMainModule.Query.FieldByName('Margin').AsString;
-//  edtReliability.Text            := UniMainModule.Query.FieldByName('Reliability').AsString;
-//  edtDiscount.Text               := UniMainModule.Query.FieldByName('Discount').AsString;
-//  edtCommission.Text             := UniMainModule.Query.FieldByName('Commission').AsString;
 
   //
   ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
@@ -527,8 +493,8 @@ end;
 
 procedure TClientsF.PriceProfilesGridRefresh;
 begin
-  qPriceProfiles.Close;
-  qPriceProfiles.Open;
+  qProfilesCustomer.Close;
+  qProfilesCustomer.Open;
 end;
 
 procedure TClientsF.ProfilesDeliveryList;
@@ -548,13 +514,24 @@ begin
   FAction := Value;
 end;
 
-procedure TClientsF.UniDBGrid1ColumnSort(Column: TUniDBGridColumn;
+procedure TClientsF.tabPriceProfilesBeforeActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  actPriceProfilesAdd.Enabled := cbClientType.Value = '3';
+  actPriceProfilesEdit.Enabled := cbClientType.Value = '3';
+  actPriceProfilesDelete.Enabled := cbClientType.Value = '3';
+
+  ProfilesCustomerGrid.ReadOnly :=  cbClientType.Value <> '3';
+
+end;
+
+procedure TClientsF.ProfilesCustomerGridColumnSort(Column: TUniDBGridColumn;
   Direction: Boolean);
 begin
   if Direction then
-    qPriceProfiles.IndexName := Column.FieldName+'_index_asc'
+    qProfilesCustomer.IndexName := Column.FieldName+'_index_asc'
   else
-    qPriceProfiles.IndexName := Column.FieldName+'_index_des';
+    qProfilesCustomer.IndexName := Column.FieldName+'_index_des';
 end;
 
 procedure TClientsF.UniFormClose(Sender: TObject; var Action: TCloseAction);
@@ -571,6 +548,7 @@ procedure TClientsF.UniFormShow(Sender: TObject);
 begin
  // edtBrief.ReadOnly:= FAction <> acInsert;
   fsAudit.Visible:= FAction <> acInsert;
+  pcCommon.ActivePage := tabHome;
 
   case FAction of
     acInsert, acReportCreate:
@@ -592,7 +570,7 @@ begin
   qSuppliers.Close;
   qSuppliers.Open;
 
-  GridExt.SortColumnCreate(UniDBGrid1);//(qPriceProfiles);
+  GridExt.SortColumnCreate(ProfilesCustomerGrid);//(qPriceProfiles);
   GridExt.SortColumnCreate(ManagerGrid);//(qManager);
 
   // начитываем данные с базы

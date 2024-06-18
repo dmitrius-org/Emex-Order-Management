@@ -9,8 +9,6 @@ create view vClientEdit
 
 as
 
---SET DATEFIRST 1;
-
 select c.ClientID      
       ,c.Brief       
       ,c.Name	     
@@ -24,14 +22,10 @@ select c.ClientID
       ,isnull(c.NotificationMethod, -1) NotificationMethod
       ,c.NotificationAddress
       ,c.ClientTypeID
-      ,c.Margin
-      ,c.Reliability
-      ,c.Discount
-      ,c.Commission
   from tClients c (nolock)
 
 go
 grant all on vClientEdit to public
 go
-exec setOV 'vClientEdit', 'V', '20240101', '0'
+exec setOV 'vClientEdit', 'V', '20240618', '2'
 go

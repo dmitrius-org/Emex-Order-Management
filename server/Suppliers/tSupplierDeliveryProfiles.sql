@@ -25,6 +25,8 @@ begin
 	,Delivery           int                    -- наш срок поставки, добавляем к сроку emex
     ,[Image]            nvarchar(256)
     ,ImageHelp          nvarchar(2048)
+ 	,isMyDelivery       bit                    -- Считать с учетом доставки
+	,isIgnore           bit                    -- Игнорировать детали без веса
 	);
 
 	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);

@@ -15,21 +15,26 @@ SELECT p.[ProtocolID]  ProtocolID
       ,a.Name          ActionName 
       ,p.OperDate      OperDate
       ,p.[Comment]     Comment
-      ,u.Name          UserName
+      ,case 
+         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
+         else u.Name
+       end as UserName
 	  ,p.InDateTime    InDateTime
       ,0               ProtocolType
   FROM [tProtocol] p (nolock)
- inner join tOrders o (nolock)
+ inner join tOrders o with (nolock index=ao1)
          on o.OrderID = p.ObjectID
- inner join tNodes n (nolock)
+ inner join tClients c with (nolock index=ao1)
+         on c.ClientID = o.ClientID  
+ inner join tNodes n with (nolock index=ao1)
          on n.NodeID = p.NewStateID
-  left join tNodes s (nolock)
+  left join tNodes s with (nolock index=ao1)
          on s.NodeID = p.StateID
-  left join tNodes a (nolock)
+  left join tNodes a with (nolock index=ao1)
          on a.NodeID = p.ActionID
- inner join tUser u (nolock)
+ inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
-
+         
  union all
 /*Отказы*/
 SELECT p.[AuditID]          ProtocolID
@@ -42,9 +47,9 @@ SELECT p.[AuditID]          ProtocolID
 	  ,p.InDateTime    InDateTime
       ,1               ProtocolType
   FROM tAudit p (nolock)
- inner join tOrders o (nolock)
+ inner join tOrders o with (nolock index=ao1)
          on o.OrderID = p.ObjectID
- inner join tUser u (nolock)
+ inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 5 -- acCancel
  union all
@@ -55,20 +60,26 @@ SELECT p.[AuditID]     ProtocolID
       ,'Изменение'     ActionName 
       ,p.InDateTime    OperDate
       ,p.[Comment]     Comment
-      ,u.Name          UserName
+      ,case 
+         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
+         else u.Name
+       end as UserName
 	  ,p.InDateTime    InDateTime
       ,2               ProtocolType
-  FROM tAudit p (nolock)
- inner join tOrders o (nolock)
+  FROM tAudit p with (nolock)
+ inner join tOrders o with (nolock index=ao1)
          on o.OrderID = p.ObjectID
- inner join tUser u (nolock)
+ inner join tClients c with (nolock index=ao1)
+         on c.ClientID = o.ClientID  
+ inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 2 -- acUpdate
  
 go
 grant all on vProtocolSelect to public
 go
-
+exec setOV 'vProtocolSelect', 'V', '20240618', '1'
+go
 select * 
   from vProtocolSelect
  where ObjectID=51970

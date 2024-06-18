@@ -42,7 +42,9 @@ as
             ,IsActive  
 			,Delivery
             ,[Image]
-            ,ImageHelp          
+            ,ImageHelp  
+            ,isMyDelivery                           -- Считать с учетом доставки
+	        ,isIgnore                               -- Игнорировать детали без веса
 			)
      select @@SPID
            ,ProfilesDeliveryID
@@ -64,6 +66,8 @@ as
 		   ,Delivery
            ,[Image]
            ,ImageHelp
+           ,isMyDelivery
+           ,isIgnore    
        from tSupplierDeliveryProfiles (nolock)
       where SuppliersID = @SuppliersID
   end
@@ -99,6 +103,8 @@ as
 			,Delivery
             ,[Image]
             ,ImageHelp
+            ,isMyDelivery
+            ,isIgnore    
 			)
      select @SuppliersID
            ,Name
@@ -118,6 +124,8 @@ as
 		   ,Delivery
            ,[Image]
            ,ImageHelp
+           ,isMyDelivery
+           ,isIgnore    
        from pSupplierDeliveryProfiles (nolock)
       where Spid = @@Spid --SuppliersID = @SuppliersID
 	    and isnull(ProfilesDeliveryID, 0) = 0
@@ -140,6 +148,8 @@ as
 		   ,t.Delivery         = p.Delivery
            ,t.[Image]          = p.[Image]
            ,t.ImageHelp        = p.ImageHelp
+           ,t.isMyDelivery     = p.isMyDelivery
+           ,t.isIgnore         = p.isIgnore
        from pSupplierDeliveryProfiles p (nolock)
       inner join tSupplierDeliveryProfiles t (updlock)
               on t.SuppliersID        = @SuppliersID
@@ -152,5 +162,5 @@ return @r
 go
 grant exec on SupplierDeliveryProfilesLoad to public
 go
-exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240531', '2'
+exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240618', '3'
 go

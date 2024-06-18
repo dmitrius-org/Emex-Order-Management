@@ -117,12 +117,14 @@ insert #Price
 	  ,WeightKG 
 	  ,VolumeKG 
       ,TPrice  
-      ,Margin		
+
+      ,Margin	
+      ,Reliability
       ,Kurs	
       ,ExtraKurs
       ,Commission	
       ,Discount	
-      ,Reliability
+      
       ,PDWeightKG	
       ,PDVolumeKG      
       ,DestinationLogo
@@ -156,27 +158,37 @@ select p.ID,
                else 1
              end,
 	   p.Price,
-       pc.Margin,		
-       @Kurs, 	
-       pc.ExtraKurs,
-       pc.Commission,
-       pc.Discount,	
+
+       pc.Margin,
        pc.Reliability,
+       @Kurs, 
+       s.ExtraKurs,
+       s.Commission,
+       s.Discount,	
+
        pd.WeightKG,
        pd.VolumeKG,
        pd.DestinationLogo,
 	   pd.ProfilesDeliveryID,
 	   pd.Delivery,
+
 	   p.GuaranteedDay
-  from pFindByNumber p (nolock)
- inner join tProfilesCustomer pc (nolock)
-         on pc.ClientID = p.ClientID
- inner join tSupplierDeliveryProfiles pd (nolock)
-         on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-        and pd.DestinationLogo    = @DestinationLogo
+  from pFindByNumber p with (nolock index=ao1)
+ inner join tClients c  with (nolock index=ao1)
+         on c.ClientID = p.ClientID 
+ inner join tSuppliers s  with (nolock index=ao1)
+         on S.SuppliersID = c.SuppliersID
+ inner join tSupplierDeliveryProfiles pd  with (nolock index=ao1)
+         on pd.SuppliersID     = s.SuppliersID
+        and pd.DestinationLogo = @DestinationLogo    
+ inner join tProfilesCustomer pc  with (nolock index=ao2)
+         on pc.ClientID           = c.ClientID
+        and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+
  left join @Price pp
         on pp.DetailNum = p.DetailNum
-	   and pp.MakeLogo  = p.Make	   
+	   and pp.MakeLogo  = p.Make	
+       
  where p.Spid = @@Spid
 
 Update #Price  
@@ -206,8 +218,14 @@ Update #Price set FinalPrice = TFinPriceKurs --CEILING(TFinPriceKurs)
 	  
 Update f 
    set f.PriceRub        = CEILING(p.FinalPrice)
+
       ,f.Margin          = p.Margin
       ,f.Discount        = p.Discount
+      ,f.Kurs            = p.Kurs
+      ,f.ExtraKurs       = p.ExtraKurs
+      ,f.Commission      = p.Commission
+      ,f.Reliability     = p.Reliability
+
       ,f.DestinationLogo = p.DestinationLogo
 	  ,f.WeightGr	     = p.WeightKG   
 	  ,f.VolumeAdd       = p.VolumeKG   
@@ -244,5 +262,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240603', '2'
+exec setOV 'SearchPriceCalc', 'P', '20240618', '3'
 go

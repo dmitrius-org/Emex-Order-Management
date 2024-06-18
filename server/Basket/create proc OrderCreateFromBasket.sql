@@ -145,6 +145,7 @@ declare @r int = 0
   declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0))
   insert tOrders
         (ClientID
+        ,SuppliersID 
         ,Manufacturer
         ,DetailNumber
         ,Quantity
@@ -169,6 +170,10 @@ declare @r int = 0
         ,DestinationLogo
         ,Margin
         ,Discount
+        ,Kurs
+        ,ExtraKurs
+        ,Commission
+        ,Reliability
 
         ,ClientOrderNum
         ,DeliveryTerm
@@ -180,6 +185,7 @@ declare @r int = 0
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
+        ,c.SuppliersID
         ,b.MakeName--Manufacturer
         ,b.DetailNum
         ,b.Quantity
@@ -202,8 +208,13 @@ declare @r int = 0
         ,b.WeightKG              -- Вес Физический из прайса    
         ,b.VolumeKG              -- Вес Объемный из прайса
         ,b.DestinationLogo
+        --
         ,b.Margin  -- Наценка из прайса
         ,b.Discount-- Скидка  
+        ,b.Kurs
+        ,b.ExtraKurs
+        ,b.Commission
+        ,b.Reliability
         --
         ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
         ,b.GuaranteedDay
@@ -215,11 +226,17 @@ declare @r int = 0
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
-   inner join tProfilesCustomer pc (nolock)
-           on pc.ClientID = b.ClientID
+   
+   inner join tClients c (nolock)
+           on c.ClientID = b.ClientID 
+   inner join tSuppliers s (nolock)
+           on S.SuppliersID = c.SuppliersID
    inner join tSupplierDeliveryProfiles pd (nolock)
-           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-          and pd.DestinationLogo    = b.DestinationLogo
+           on pd.SuppliersID     = s.SuppliersID
+          and pd.DestinationLogo = b.DestinationLogo    
+   inner join tProfilesCustomer pc (nolock)
+           on pc.ClientID           = c.ClientID
+          and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
 
    inner join @P p
            on p.BasketID = b.BasketID
@@ -281,6 +298,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240605', '8'
+exec setOV 'OrderCreateFromBasket', 'P', '20240618', '9'
 go
  

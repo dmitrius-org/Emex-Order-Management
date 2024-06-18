@@ -12,12 +12,7 @@ begin
 
 	,Margin              money          -- Наценка в процентах (margin, текстовое поле, по умолчанию установить значение "25"
 	,Reliability         money          -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70"
-	,Discount            money          -- Скидка (discount, текстовое поле, по умолчанию установить значение "5", -- Discount -- Скидка поставщика на закупку товара
-	,Commission          money          -- Комиссия эквайера (commission, текстовое поле, по умолчанию установить значение "3,5"
-	,ExtraKurs           money
 
-	,isMyDelivery        bit            -- Поле для галочки "Считать с учетом доставки"
-	,isIgnore            bit            -- Поле для галочки "Игнорировать детали без веса"
 	,UploadFolder        varchar(255)   -- Каталог для сохранения прайс-файлов
 	,UploadPriceName     varchar(255)   -- 
 	,UploadFileName      varchar(255)   -- 

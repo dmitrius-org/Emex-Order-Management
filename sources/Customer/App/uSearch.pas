@@ -172,6 +172,7 @@ end;
 procedure TSearchF.PriceCalc;
 begin
   RetVal.Clear;
+
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo',
            'DetailNum'],
@@ -380,13 +381,10 @@ end;
 procedure TSearchF.DestinationLogo; var i: Integer;
 begin
   logger.Info('TSearchF.DestinationLogo'); 
-  sql.Open(' Select sp.*  '+
-           '   from tClients c (nolock)  '+
-           '  inner join tSupplierDeliveryProfiles sp (nolock)  '+
-           '          on sp.SuppliersID = c.SuppliersID   '+
-           '         and sp.IsActive    = 1   '+
-           '   where c.ClientID = :ClientID   '+
-           '   order by sp.DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+  sql.Open(' Select *  '+
+           '   from vDestinationLogo  '+
+           '  where ClientID = :ClientID   '+
+           '  order by DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
            
   FDestinationStr := '<form id="frmDestLogo" method="post" action=""> ' +
                      '<div class="radio-form">';
@@ -404,8 +402,6 @@ begin
   FDestinationStr := FDestinationStr + '</div>' + '</form>';
 
   FDestinationStr := StringReplace(FDestinationStr, FDestinationLogo + '"',  FDestinationLogo + '" checked', []);
-
-  logger.Info(FDestinationStr); 
 end;
 
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -614,13 +610,10 @@ begin
     end;
   {$ENDIF}
 
-  sql.Open(' Select sp.DestinationLogo  '+
-           '   from tClients c (nolock)  '+
-           '  inner join tSupplierDeliveryProfiles sp (nolock)  '+
-           '          on sp.SuppliersID = c.SuppliersID   '+
-           '         and sp.IsActive    = 1  '+
-           '   where c.ClientID = :ClientID  '+
-           '   order by sp.DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+  sql.Open(' Select top 1 DestinationLogo  '+
+           '   from vDestinationLogo '+
+           '   where ClientID = :ClientID  '+
+           '   order by DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
   
   if sql.Q.RecordCount > 0 then
     FDestinationLogo := sql.Q.FieldByName('DestinationLogo').AsString; 

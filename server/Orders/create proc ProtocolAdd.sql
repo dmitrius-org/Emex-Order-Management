@@ -29,7 +29,7 @@ as
         ,p.StateID
 		,p.NewStateID
 		,p.ActionID		
-		,p.OperDate
+		,isnull(p.OperDate, cast(getDate() as date))
 		,isnull(p.Message, '')
 		,dbo.GetUserID()
     from pAccrualAction p (nolock)

@@ -1,8 +1,8 @@
 drop table if exists pFindByNumber
 go
-/* **********************************************************
-pFindByNumber - 
-********************************************************** */
+/* 
+pFindByNumber - Результат поиска детали
+*/
 create table pFindByNumber
 (
  ID                      numeric(18, 0) identity
@@ -32,12 +32,14 @@ create table pFindByNumber
 
 ,OurDelivery             int            -- наш срок поставки
 ,OurDeliverySTR          nvarchar(256)  -- наш срок поставки стройкой, показываем клиенту
+
 ,Margin		             money
 ,Discount	             money          -- Скидка
 ,Kurs		             money
 ,ExtraKurs               money
 ,Commission	             money          -- Комиссия эквайера
 ,Reliability             money          -- Вероятность поставки
+
 ,Flag                    int
 )
 go
@@ -47,7 +49,7 @@ create index ao1 on pFindByNumber(Spid, ID)
 go
 create index ao2 on pFindByNumber(Spid, DestinationLogo)
 go
-exec setOV 'pFindByNumber', 'U', '20240605', '4'
+exec setOV 'pFindByNumber', 'U', '20240605', '5'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pFindByNumber', @desc = 'Результат поиска детали'

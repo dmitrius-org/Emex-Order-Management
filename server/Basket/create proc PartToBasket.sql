@@ -45,8 +45,14 @@ declare @r int = 0
         ,WeightKG
         ,VolumeKG
         ,DestinationLogo
+        
         ,Margin
         ,Discount
+        ,Kurs
+        ,ExtraKurs
+        ,Commission
+        ,Reliability
+                          
         ,Flag          
         )
   select @ClientID
@@ -64,8 +70,14 @@ declare @r int = 0
         ,p.WeightGr
         ,p.VolumeAdd
         ,p.DestinationLogo
+
         ,p.Margin
         ,p.Discount
+        ,p.Kurs
+        ,p.ExtraKurs
+        ,p.Commission
+        ,p.Reliability
+
         ,p.Flag
     from pFindByNumber p (nolock)
    where p.Spid = @@Spid
@@ -84,5 +96,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240605', '6'
+exec setOV 'PartToBasket', 'P', '20240618', '7'
 go

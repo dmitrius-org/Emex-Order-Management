@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  UniFSCombobox, Vcl.ExtCtrls;
+  UniFSCombobox, Vcl.ExtCtrls, UniFSEdit;
 
 type
   TSuppliersF = class(TUniForm)
@@ -37,7 +37,6 @@ type
     UniLabel3: TUniLabel;
     edtEmexUsername: TUniEdit;
     UniLabel4: TUniLabel;
-    edtEmexPassword: TUniEdit;
     UniLabel5: TUniLabel;
     DataSource: TDataSource;
     UpdateSQL: TFDUpdateSQL;
@@ -84,6 +83,15 @@ type
     qDeliveryImage: TWideStringField;
     UniComboBox1: TUniComboBox;
     qDeliveryImageHelp: TWideStringField;
+    edtDiscount: TUniNumberEdit;
+    UniLabel6: TUniLabel;
+    edtCommission: TUniNumberEdit;
+    edtExtraKurs: TUniNumberEdit;
+    UniLabel7: TUniLabel;
+    UniLabel8: TUniLabel;
+    edtEmexPassword: TUniEdit;
+    qDeliveryisMyDelivery: TBooleanField;
+    qDeliveryisIgnore: TBooleanField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -178,16 +186,22 @@ begin
                 '            ,@Name         = :Name            '+
                 '            ,@emexUsername = :emexUsername    '+
                 '            ,@emexPassword = :emexPassword    '+
+                '            ,@Discount     = :Discount        '+
+                '            ,@Commission   = :Commission      '+
+                '            ,@ExtraKurs    = :ExtraKurs       '+
                 '   '+
                 '   '+
                 ' select @r as retcode      ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','emexUsername', 'emexPassword'],
+               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs'],
                [edtBrief.Text,
                '',
                edtEmexUsername.text,
-               edtEmexPassword.text
+               edtEmexPassword.text,
+               edtDiscount.Value,
+               edtCommission.Value,
+               edtExtraKurs.Value
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -203,16 +217,22 @@ begin
                 '            ,@Name          = :Name         '+
                 '            ,@emexUsername  = :emexUsername '+
                 '            ,@emexPassword  = :emexPassword '+
+                '            ,@Discount      = :Discount     '+
+                '            ,@Commission    = :Commission   '+
+                '            ,@ExtraKurs     = :ExtraKurs    '+
                 '   '+
                 '   '+
                 ' select @r as retcode      ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','emexUsername', 'emexPassword', 'SuppliersID'],
+               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs', 'SuppliersID'],
                [edtBrief.Text,
                '',
                edtEmexUsername.text,
                edtEmexPassword.text,
+               edtDiscount.Value,
+               edtCommission.Value,
+               edtExtraKurs.Value,
                FID
                ]);
 
@@ -236,7 +256,6 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    //Audit.Add(TObjectType.otUser, FID, FAction, '');
     ModalResult:=mrOK;
   end
   else
@@ -256,16 +275,19 @@ begin
   UniMainModule.Query.ParamByName('SuppliersID').Value := FID;
   UniMainModule.Query.Open;
 
+  edtBrief.Text:= UniMainModule.Query.FieldByName('Brief').AsString;
+
+  edtDiscount.Value:= UniMainModule.Query.FieldByName('Discount').AsFloat;
+  edtCommission.Value:= UniMainModule.Query.FieldByName('Commission').AsFloat;
+  edtExtraKurs.Value:= UniMainModule.Query.FieldByName('ExtraKurs').AsFloat;
+
+  edtEmexUsername.Text:= UniMainModule.Query.FieldByName('emexUsername').AsString;
+  edtEmexPassword.Text:= UniMainModule.Query.FieldByName('emexPassword').AsString;
+
   // аудит
   edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
   edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
-
-  edtBrief.Text:= UniMainModule.Query.FieldByName('Brief').AsString;
-  //edtFolderSavingFailures.text:= UniMainModule.Query.FieldByName('FolderSavingFailures').AsString;
-
-  edtEmexUsername.Text:= UniMainModule.Query.FieldByName('emexUsername').AsString;
-  edtEmexPassword.Text:= UniMainModule.Query.FieldByName('emexPassword').AsString;
 end;
 
 procedure TSuppliersF.DeliveryDataLoad;

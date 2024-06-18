@@ -75,12 +75,9 @@ Update tMenu
    set  N = 502, ParentID = 400
   from tMenu where MenuID = 81	--Статусы
  
-
- 
  Update tMenu
    set Caption='Прайслисты'
   from tMenu where MenuID = 83
-
 
   Update tMenu
    set ParentID = (select MenuID from tMenu where Name = 'TClientsT.actClientType')
