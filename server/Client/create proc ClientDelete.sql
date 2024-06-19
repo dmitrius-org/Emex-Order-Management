@@ -28,12 +28,17 @@ as
                     @ClientID = @ClientID
 
         if @r = 0
-          exec @r=ClientReliationDelete
+          exec @r=ClientReliationDelete -- tProfilesCustomer
                     @ClientID  = @ClientID 
 
         if @r = 0
           exec @r=ClientGrantDelete
                     @ClientID  = @ClientID 
+
+        if @r = 0
+          exec @r=ClientGrantDelete
+                    @ClientID  = @ClientID 
+                    egud@mail.ru
 		
 		if @r <> 0
 		begin 

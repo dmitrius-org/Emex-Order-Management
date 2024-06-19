@@ -33,6 +33,7 @@ DECLARE IndexCursor CURSOR
 FOR
 SELECT DB_NAME(), schemas.name, tables.name, indexes.name
 FROM sys.schemas as schemas inner join sys.tables as tables inner join sys.indexes as indexes on tables.object_id = indexes.object_id on schemas.schema_id = tables.schema_id
+where tables.name <> 'tPrice'
 ORDER BY schemas.name, tables.name, indexes.name;
 
 OPEN IndexCursor
@@ -53,7 +54,7 @@ DEALLOCATE IndexCursor
 
 --DBCC SHRINKDATABASE Ц это команда дл€ сжати€ базы данных;
 --DBCC SHRINKFILE Ц с помощью данной команды можно выполнить сжатие некоторых файлов базы данных (например, только журнала транзакций).
---DBCC SHRINKDATABASE (PriceDB, 50)
+--DBCC SHRINKDATABASE (PartsDB, 50)
 
 -- Shrink the truncated log file to 1 MB.
 --DBCC SHRINKFILE (PriceDB_log, 1);

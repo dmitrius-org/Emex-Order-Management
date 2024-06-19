@@ -330,13 +330,13 @@ DEALLOCATE my_cur
    from pMovement (nolock)
   where Spid = @@SPID
   
- exec OrdersDeliveryTermCalc @IsSave = 1
+ exec OrdersDeliveryTermCalcNext @IsSave = 1
 
  exit_:
  return @r
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240514', '3'
+exec setOV 'EmexOrderStateSync', 'P', '20240619', '4'
 go
  

@@ -58,8 +58,6 @@ type
     QueryMargin: TCurrencyField;
     QueryIsActive: TBooleanField;
     QueryReliability: TCurrencyField;
-    QueryDiscount: TCurrencyField;
-    QueryCommission: TCurrencyField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

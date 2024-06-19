@@ -254,6 +254,8 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
+          ShowToolTip = True
+          ShowToolTipAlways = False
           FieldName = 'DetailName'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080

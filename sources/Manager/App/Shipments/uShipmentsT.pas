@@ -306,7 +306,7 @@ begin
       Query.MacroByName('Invoice').Value := '';
 
     if (fShipmentsDate.Text <> '') and (fShipmentsDate.Text <> '30.12.1899') then
-      Query.MacroByName('ShipmentsDate').Value := ' and ShipmentsDate = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
+      Query.MacroByName('ShipmentsDate').Value := ' and cast(ShipmentsDate as date) = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
     else
       Query.MacroByName('ShipmentsDate').Value := '';
 

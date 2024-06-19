@@ -18,6 +18,14 @@ as
   set nocount on;
   declare @r int = 0
 
+  if not exists (select 1
+               from tSettings (nolock)
+              where Brief = 'OrderAutoSetStatus'
+                and Val   = '1')
+  begin
+      goto exit_
+  end
+
   declare @InChecked numeric(18, 0)
   select @InChecked = NodeID
     from tNodes (nolock)
@@ -66,6 +74,6 @@ return @r
 GO
 grant exec on OrderAutoSetStatus to public
 go
-exec setOV 'OrderAutoSetStatus', 'P', '20240101', '0'
+exec setOV 'OrderAutoSetStatus', 'P', '20240619', '1'
 go
  

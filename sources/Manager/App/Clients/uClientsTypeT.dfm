@@ -1,7 +1,7 @@
 object ClientsTypeT: TClientsTypeT
   Left = 0
   Top = 0
-  Width = 1065
+  Width = 1114
   Height = 574
   OnCreate = UniFrameCreate
   Layout = 'fit'
@@ -75,7 +75,7 @@ object ClientsTypeT: TClientsTypeT
   object UniPanel: TUniPanel
     Left = 0
     Top = 0
-    Width = 1065
+    Width = 1114
     Height = 67
     Hint = ''
     Margins.Bottom = 0
@@ -93,13 +93,11 @@ object ClientsTypeT: TClientsTypeT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitLeft = 3
-    ExplicitTop = 3
-    ExplicitWidth = 1059
+    ExplicitWidth = 1065
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
-      Width = 1065
+      Width = 1114
       Height = 67
       Hint = ''
       Margins.Bottom = 0
@@ -113,10 +111,7 @@ object ClientsTypeT: TClientsTypeT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 3
-      ExplicitTop = 3
-      ExplicitWidth = 1053
-      ExplicitHeight = 64
+      ExplicitWidth = 1065
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -125,8 +120,6 @@ object ClientsTypeT: TClientsTypeT
         Action = actAdd
         ImageIndex = 1
         TabOrder = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
       end
       object UniToolButton2: TUniToolButton
         AlignWithMargins = True
@@ -136,8 +129,6 @@ object ClientsTypeT: TClientsTypeT
         Action = actEdit
         ImageIndex = 3
         TabOrder = 2
-        ExplicitLeft = 90
-        ExplicitTop = 0
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
@@ -147,8 +138,6 @@ object ClientsTypeT: TClientsTypeT
         Action = actView
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 180
-        ExplicitTop = 0
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
@@ -158,15 +147,13 @@ object ClientsTypeT: TClientsTypeT
         Action = actDelete
         ImageIndex = 0
         TabOrder = 4
-        ExplicitLeft = 270
-        ExplicitTop = 0
       end
     end
   end
   object UniPanel2: TUniPanel
     Left = 0
     Top = 67
-    Width = 1065
+    Width = 1114
     Height = 507
     Hint = ''
     ShowHint = True
@@ -180,12 +167,11 @@ object ClientsTypeT: TClientsTypeT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
-    ExplicitTop = 70
-    ExplicitHeight = 504
+    ExplicitWidth = 1065
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 1065
+      Width = 1114
       Height = 507
       Hint = ''
       ShowHint = True
@@ -217,7 +203,7 @@ object ClientsTypeT: TClientsTypeT
       LoadMask.Color = clActiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
       LayoutConfig.Cls = 'GridLotacao'
-      LayoutConfig.ComponentCls = 'grid-clients'
+      LayoutConfig.ComponentCls = 'grid-client-Type'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
@@ -235,14 +221,14 @@ object ClientsTypeT: TClientsTypeT
           FieldName = 'ClientTypeID'
           Title.Alignment = taCenter
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
-          Width = 118
+          Width = 127
           ReadOnly = True
         end
         item
           FieldName = 'Name'
           Title.Alignment = taCenter
-          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          Width = 287
+          Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          Width = 201
         end
         item
           FieldName = 'Comment'
@@ -266,33 +252,20 @@ object ClientsTypeT: TClientsTypeT
           FieldName = 'Margin'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1094#1077#1085#1082#1072
-          Width = 109
-        end
-        item
-          FieldName = 'IsActive'
-          Title.Alignment = taCenter
-          Title.Caption = #1040#1082#1090#1080#1074#1077#1085
-          Width = 83
+          Width = 95
         end
         item
           FieldName = 'Reliability'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 143
+          Width = 104
           Hint = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080' '
         end
         item
-          FieldName = 'Discount'
+          FieldName = 'IsActive'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1082#1080#1076#1082#1072
-          Width = 64
-          Hint = 'Discount -- '#1057#1082#1080#1076#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1079#1072#1082#1091#1087#1082#1091' '#1090#1086#1074#1072#1088#1072
-        end
-        item
-          FieldName = 'Commission'
-          Title.Alignment = taCenter
-          Title.Caption = #1050#1086#1084#1080#1089#1089#1080#1103' '#1101#1082#1074#1072#1081#1077#1088#1072
-          Width = 112
+          Title.Caption = #1040#1082#1090#1080#1074#1077#1085
+          Width = 75
         end>
     end
     object UniHiddenPanel: TUniHiddenPanel
@@ -328,8 +301,7 @@ object ClientsTypeT: TClientsTypeT
       '        ,Margin           '
       '        ,IsActive  '
       '        ,Reliability'
-      '        ,Discount'
-      '        ,Commission       '
+      '              '
       '    from tClientType (nolock)')
     Left = 610
     Top = 179
@@ -374,16 +346,6 @@ object ClientsTypeT: TClientsTypeT
     end
     object QueryReliability: TCurrencyField
       FieldName = 'Reliability'
-      DisplayFormat = '###,##0 %'
-      MaxValue = 100.000000000000000000
-    end
-    object QueryDiscount: TCurrencyField
-      FieldName = 'Discount'
-      DisplayFormat = '###,##0 %'
-      MaxValue = 100.000000000000000000
-    end
-    object QueryCommission: TCurrencyField
-      FieldName = 'Commission'
       DisplayFormat = '###,##0 %'
       MaxValue = 100.000000000000000000
     end
@@ -1810,10 +1772,10 @@ object ClientsTypeT: TClientsTypeT
       
         '            ,@Reliability      = :NEW_Reliability -- '#1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100 +
         ' '#1087#1086#1089#1090#1072#1074#1082#1080' '
-      '            ,@Discount         = :NEW_Discount    -- '#1057#1082#1080#1076#1082#1072' '
+      '           -- ,@Discount         = :NEW_Discount    -- '#1057#1082#1080#1076#1082#1072' '
       
-        '            ,@Commission       = :NEW_Commission  -- '#1050#1086#1084#1080#1089#1089#1080#1103' '#1101#1082 +
-        #1074#1072#1081#1077#1088#1072' '
+        '           -- ,@Commission       = :NEW_Commission  -- '#1050#1086#1084#1080#1089#1089#1080#1103' ' +
+        #1101#1082#1074#1072#1081#1077#1088#1072' '
       '            ,@IsActive         = :NEW_IsActive '
       '           '
       'if @R > 0'
@@ -1839,10 +1801,10 @@ object ClientsTypeT: TClientsTypeT
       
         '            ,@Reliability      = :NEW_Reliability -- '#1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100 +
         ' '#1087#1086#1089#1090#1072#1074#1082#1080' '
-      '            ,@Discount         = :NEW_Discount    -- '#1057#1082#1080#1076#1082#1072' '
+      '          --  ,@Discount         = :NEW_Discount    -- '#1057#1082#1080#1076#1082#1072' '
       
-        '            ,@Commission       = :NEW_Commission  -- '#1050#1086#1084#1080#1089#1089#1080#1103' '#1101#1082 +
-        #1074#1072#1081#1077#1088#1072'   '
+        '           -- ,@Commission       = :NEW_Commission  -- '#1050#1086#1084#1080#1089#1089#1080#1103' ' +
+        #1101#1082#1074#1072#1081#1077#1088#1072'   '
       '            ,@IsActive         = :NEW_IsActive '
       '           '
       'if @R > 0'

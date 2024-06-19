@@ -195,20 +195,19 @@ begin
 
     // *** Проверка корзины *** \\
     var Basket: ArrayOfBasketDetails;
-    Basket:=Emex.GetBasketDetails(getCustomer(Supplier.ToInteger));
+    Basket:=Emex.GetBasketDetails(getCustomer(Supplier.ToInteger));  // запрос корзыну в emex
 
-    FillBasketDetails(Basket, Supplier.ToInteger);
+    FillBasketDetails(Basket, Supplier.ToInteger); // запись в БД
 
     SQl.Exec('exec EmexCreateOrderBasketCheck', [], []);
-    SQl.Open(' select * '+
+    Qry.Open(' select * '+
              '   from pBasketDetails with (nolock index=ao1) '+
              '  where Spid   = @@spid '+
-             '    and RetVal > 0      ',
-             [],[]);
+             '    and RetVal > 0      ');
 
-    if SQl.Q.RecordCount > 0 then
+    if Qry.RecordCount > 0 then
     begin
-        DeleteBasketDetails(SQl.Q, Supplier.ToInteger);
+        DeleteBasketDetails(Qry, Supplier.ToInteger);
 
         SQl.Open(' select 1 '+
                  '   from pBasketDetails with (nolock index=ao1) '+

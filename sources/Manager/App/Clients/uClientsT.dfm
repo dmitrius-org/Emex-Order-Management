@@ -170,7 +170,6 @@ object ClientsT: TClientsT
         Action = actClientType
         ImageIndex = 7
         TabOrder = 9
-        ExplicitLeft = 581
       end
       object UniToolButton8: TUniToolButton
         AlignWithMargins = True
@@ -184,7 +183,6 @@ object ClientsT: TClientsT
         Style = tbsSeparator
         Caption = 'UniToolButton8'
         TabOrder = 8
-        ExplicitLeft = 696
       end
       object UniToolButton6: TUniToolButton
         AlignWithMargins = True
@@ -195,7 +193,6 @@ object ClientsT: TClientsT
         Action = actBalance
         ImageIndex = 4
         TabOrder = 6
-        ExplicitLeft = 704
       end
       object UniToolButton7: TUniToolButton
         AlignWithMargins = True
@@ -206,7 +203,6 @@ object ClientsT: TClientsT
         Action = actBalanceAdd
         ImageIndex = 5
         TabOrder = 7
-        ExplicitLeft = 819
       end
     end
   end
@@ -347,7 +343,8 @@ object ClientsT: TClientsT
       'select * '
       '  from vClients c'
       ' where 1=1'
-      '')
+      ''
+      ' Order by c.ClientID    ')
     Left = 611
     Top = 180
     object QueryClientID: TFMTBCDField

@@ -11,7 +11,7 @@ uses
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
 
 
-  , uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage
+  , uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
   ;
 
 type
@@ -40,11 +40,16 @@ type
     tsB: TUniTabSheet;
     tsO: TUniTabSheet;
     MainMenuPanel: TUniPanel;
-    LogoPanel: TUniSimplePanel;
-    LogoImage: TUniImage;
-    LogoLabel: TUniLabel;
     MainMenu: TUniTreeMenu;
     MainMenuImage: TUniNativeImageList;
+    LogoPanel: TUniContainerPanel;
+    LogoImage: TUniImage;
+    UniContainerPanel1: TUniContainerPanel;
+    UniContainerPanel3: TUniContainerPanel;
+    UserLabel: TUniLabel;
+    UniContainerPanel2: TUniContainerPanel;
+    LogoLabel: TUniLabel;
+    btnExit: TUniSpeedButton;
     procedure UniFormShow(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
@@ -241,6 +246,7 @@ procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
 //  lblVersion.Caption := GetAppVersionStr();
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
+   UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select case when Brief <> email then Brief + '' (''+ email + '')'' else Brief  end from tClients (nolock) where ClientID=' + UniMainModule.AUserID.ToString );
 
   if not Assigned(FSearchF) then
   begin

@@ -11,22 +11,23 @@
 } 
 
 .user-label {
-    color: #fff;
+    color: #adb3b8;
     font: normal 10px tahoma, arial, helvetica, sans-serif;
 } 
 
 .logo-btn-exit {
     border-color: #32404e ;
-    background-color: #32404e ;
+    background-color: #32404e ;    
 }
 
 .logo-btn-exit .x-btn-inner {
     overflow: visible !important;
     font: normal 10px tahoma, arial, helvetica, sans-serif;
+    color: #adb3b8;
 }
 
 .logo-btn-exit .x-btn-inner-default-medium {
-    color: #fff;
+    color: #adb3b8;
     padding: 0 0px !important;
     max-width: 100%;
 } 

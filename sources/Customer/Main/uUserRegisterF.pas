@@ -100,6 +100,8 @@ begin
               Gmail.Send([edtEmail.Text], 'Подтвердите Email', '', htmlBody, '');
 
               MessageDlg('На вашу почту отправлена ссылка для подтверждения регистрации!', mtInformation, [mbOK]);
+
+              UniSession.UrlRedirect('/');
             except
               on E: Exception do
                  raise Exception.Create(E.Message);

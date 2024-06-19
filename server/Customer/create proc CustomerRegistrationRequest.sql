@@ -88,23 +88,15 @@ as
                ,ProfilesDeliveryID
                ,Margin
                ,Reliability
-               ,Discount
-               ,Commission
                ,isActive
-               ,ExtraKurs
                ,ClientID
-			   ,isMyDelivery
                )
          select sdp.Name
                ,sdp.ProfilesDeliveryID
                ,ct.Margin
                ,ct.Reliability
-               ,ct.Discount
-               ,ct.Commission
                ,1
-               ,2
                ,@ClientID
-			   ,1
            from tSupplierDeliveryProfiles sdp (nolock)
            left join tClientType ct (nolock)
                   on ct.ClientTypeID=@ClientTypeID
@@ -116,5 +108,5 @@ return @r
 go
 grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'CustomerRegistrationRequest', 'P', '20240320', '0'
+exec setOV 'CustomerRegistrationRequest', 'P', '20240618', '1'
 go

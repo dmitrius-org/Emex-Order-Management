@@ -290,7 +290,7 @@ declare @r int = 0
   Select @@spid, OrderID
     from @ID
   
-  exec LoadOrdersDeliveryTermCalc @IsSave = 1
+  exec OrdersDeliveryTermCalc @IsSave = 1
 
   exit_:
 
@@ -298,6 +298,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240618', '9'
+exec setOV 'OrderCreateFromBasket', 'P', '20240619', '10'
 go
  

@@ -184,3 +184,11 @@
     white-space: normal;
     text-align: center;
 }  
+
+
+/* таблица типы клиентов */
+/* Перенос строки в заголовке таблицы */
+.grid-client-Type .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}

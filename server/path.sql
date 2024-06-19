@@ -15,6 +15,7 @@ Update tMenu
   from tMenu where MenuID = 90
 
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 600,  600,  'О программе',                 '',                        0,   0,  '2'
+--delete from tMenu where MenuID =600
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 400,  400,  'Настройка',                   '',                        0,   0,  '11'
 
 --Информация
@@ -38,7 +39,10 @@ Update tMenu
 
 Update tMenu
    set ParentID = (select MenuID from tMenu where Name = 'TUsersT.actGroup')
-  from tMenu where ParentID = 914
+  from tMenu where ParentID = 101
+
+
+ -- select * from tMenu
 
 Update tMenu
    set ParentID = 80,
@@ -83,7 +87,11 @@ Update tMenu
    set ParentID = (select MenuID from tMenu where Name = 'TClientsT.actClientType')
   from tMenu where ParentID = 82
 
- 
-select * from tMenu where Type = 0
+-- delete from PartsDB.dbo.tMenu
+
+
+--insert PartsDB.dbo.tMenu 
+
+--select * from tMenu 
 
 

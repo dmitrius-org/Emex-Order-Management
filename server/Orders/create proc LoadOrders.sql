@@ -1,7 +1,7 @@
 if OBJECT_ID('LoadOrders') is not null
     drop proc LoadOrders
 /*
-  LoadOrders - загрузка заказов в БД
+  LoadOrders - загрузка заказов из файла
 
 
   pOrders - входящий набор данных
@@ -43,6 +43,7 @@ as
   declare @ID as table (OrderID numeric(18, 0))
   insert tOrders
         (ClientID
+        ,SuppliersID
         ,Manufacturer
         ,DetailNumber
         ,Quantity
@@ -66,6 +67,7 @@ as
         ,Reliability
         ,Commission
         ,ExtraKurs
+        --,Kurs
         ,Taxes
         ,WeightKGAmount     -- Стоимость кг физического веса
         ,VolumeKGAmount   
@@ -73,6 +75,7 @@ as
         )
   output inserted.OrderID into @ID (OrderID)
   select o.ClientID
+        ,c.SuppliersID
         ,o.Manufacturer
         ,o.DetailNumber
         ,o.Quantity
@@ -87,8 +90,8 @@ as
 
         ,0                      -- isCancel
 		,p.PriceID              -- 
-		,p.MakeLogo				-- 
-		,o.DetailName           -- наименование детали
+		,p.MakeLogo				-- Код бренда
+		,coalesce(pd.Name_RUS, o.DetailName) -- наименование детали
         ,o.FileDate  
 
         ,pc.Margin              -- Наценка из прайса
@@ -108,22 +111,24 @@ as
                        pc.UploadPriceName,
                        pc.ProfilesDeliveryID,
                        pc.Margin,
-					   pc.Discount,
+					   s.Discount,
                        pc.Reliability,
-                       pc.Commission,
-                       pc.ExtraKurs,
+                       s.Commission,
+                       s.ExtraKurs,
                        pd.DestinationLogo,
                        pd.WeightKG,   -- Стоимость кг физического веса
                        pd.VolumeKG 
-                  from tProfilesCustomer pc (nolock)
-                 inner join tSupplierDeliveryProfiles pd (nolock)
+                  from tProfilesCustomer pc with (nolock index=ao2)
+                 inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
                          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-                 where pc.ClientID        = o.ClientID
+                 inner join tSuppliers s with (nolock index=ao1)
+                         on s.SuppliersID = pd.SuppliersID 
+                 where pc.ClientID        = c.ClientID
                    and pc.ClientPriceLogo = o.PriceNum -- CustomerPriceLogo
                  order by pc.ProfilesCustomerID) pc
    -- - - -
    outer apply (select top 1 *
-                  from tPrice p (nolock) 
+                  from tPrice p with (nolock index=ao2) 
                  where p.DetailNum= o.DetailNumber
                  order by case
 				            when p.Brand = o.Manufacturer then 0
@@ -135,9 +140,14 @@ as
                           end
 						 ,p.DetailPrice 
 			    ) p
+  -- - - -
+  left join tPartDescription pd with (nolock index=ao2)     
+         on pd.Make   = p.MakeLogo	
+        and pd.Number = p.DetailNum 
+
    where o.Spid = @@Spid
      and not exists (select 1 -- проверка на повторную загрузку
-                       from tOrders t (nolock)
+                       from tOrders t with (nolock index=ao2)
                       where t.ClientID          = o.ClientID
                         and t.CustomerPriceLogo = o.PriceNum
                         and t.OrderNum          = o.OrderNum
@@ -160,10 +170,7 @@ as
    inner join tOrders o with (updlock)
            on o.OrderID = i.OrderID
 
-  -- проставляем поля Reference и CustomerSubID
-  exec OrdersReferenceCalc
-
-  -- Протокол
+  --! Протокол
   declare @ToNew numeric(18, 0)
   select @ToNew = NodeID
     from tNodes (nolock)
@@ -187,39 +194,32 @@ as
 
   exec ProtocolAdd
 
--- расчет финнасовых показателей
-delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
-insert pOrdersFinIn (Spid, OrderID)
-Select @@spid, OrderID
-  from @ID
+  --! проставляем поля Reference и CustomerSubID
+  exec OrdersReferenceCalc
 
-exec OrdersFinCalc @IsSave = 1
+  --! расчет финнасовых показателей
+  delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
+  insert pOrdersFinIn (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+  
+  exec OrdersFinCalc @IsSave = 1
+  
+  --! расчет сроков дотавки
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+  
+  exec OrdersDeliveryTermCalc @IsSave = 1
 
--- расчет сроков дотавки
-delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-insert pDeliveryTerm (Spid, OrderID)
-Select @@spid, OrderID
-  from @ID
+  --! Автоматический перевод в Проверено при загрузке заказа
+  if OBJECT_ID('tempdb..#Order') is not null drop table #Order
+  CREATE TABLE #Order ( OrderID  numeric(18,0) );
 
-exec LoadOrdersDeliveryTermCalc @IsSave = 1
+  insert #Order (OrderID) Select OrderID from @ID
 
--- OrderAutoSetStatus  - Автоматический перевод в Проверено при загрузке заказа
-if exists (select 1
-             from tSettings (nolock)
-            where Brief = 'OrderAutoSetStatus'
-              and Val   = '1')
-begin
-    
-    if OBJECT_ID('tempdb..#Order') is not null
-        drop table #Order
-    CREATE TABLE #Order ( OrderID  numeric(18,0) );
-
-    insert #Order (OrderID)
-    Select OrderID
-      from @ID
-
-    exec OrderAutoSetStatus
-end
+  exec OrderAutoSetStatus
 
 exit_:
 
@@ -227,6 +227,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240101', '0'
+exec setOV 'LoadOrders', 'P', '20240619', '1'
 go
  

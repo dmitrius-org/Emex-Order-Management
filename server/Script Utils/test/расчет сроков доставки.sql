@@ -1,33 +1,45 @@
  
- update tOrders 
- set DeliveryNextDate2 = null
- where OrderID=75141
-
-
-
 
 -- расчет сроков дотавки
 delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
 insert pDeliveryTerm
       (Spid
       ,OrderID)
-Select @@spid
-      ,75141 --75141
+Select @@spid,OrderID
+  from tOrders 
+ where OrderID >= 119086
 
-exec OrdersDeliveryTermCalc @IsSave = 1
 
+--Update o
+--   set o.DeliveryNextDate = null
+--      ,o.DeliveryNextDate2 = null
+--      ,o.DeliveryDaysReserve = null
+--      ,o.DeliveryPlanDateSupplier = null
+--  from pDeliveryTerm p (nolock)
+-- inner join tOrders o (nolock)
+--         on o.OrderID = p.OrderID
+-- where p.spid = @@Spid
 
-select p.DeliveryNextDate,
-       p.DeliveryDaysReserve,
+exec OrdersDeliveryTermCalc @IsSave = 0
+
+select p.DeliveryNextDate DeliveryNextDateP,
+       p.DeliveryDaysReserve DeliveryDaysReserveP, -- ƒней запаса до вылета	
+      
        o.DeliveryNextDate,
 	   o.DeliveryNextDate2,
-       o.DeliveryDaysReserve,
-	   p.DeliveryPlanDateSupplier,
-       *  
+       o.DeliveryDaysReserve,-- ƒней запаса до вылета	
+	   p.DeliveryPlanDateSupplier DeliveryPlanDateSupplierP,
+       o.ProfilesDeliveryID 
+
+
+       ,p.*
   from pDeliveryTerm p (nolock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
  where p.spid = @@Spid
+
+
+
 
 
 

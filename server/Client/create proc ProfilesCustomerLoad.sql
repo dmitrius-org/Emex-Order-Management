@@ -1,10 +1,10 @@
 if OBJECT_ID('ProfilesCustomerLoad') is not null
     drop proc ProfilesCustomerLoad
 /*
-  ProfilesCustomerLoad - копирование профилей во временную таблицу и обратно
-  @SuppliersID - Клиент
-  @Direction   - 0 - с постоянной во временную
-                 1 - с временной в постоянную
+  ProfilesCustomerLoad - РєРѕРїРёСЂРѕРІР°РЅРёРµ РїСЂРѕС„РёР»РµР№ РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ Рё РѕР±СЂР°С‚РЅРѕ
+  @SuppliersID - В Р»РёРµРЅС‚
+  @Direction   - 0 - СЃ РїРѕСЃС‚РѕВ¤РЅРЅРѕР№ РІРѕ РІСЂРµРјРµРЅРЅСѓСЋ
+                 1 - СЃ РІСЂРµРјРµРЅРЅРѕР№ РІ РїРѕСЃС‚РѕВ¤РЅРЅСѓСЋ
 */
 go
 create proc ProfilesCustomerLoad
@@ -117,5 +117,5 @@ return @r
 go
 grant exec on ProfilesCustomerLoad to public
 go
-exec setOV 'ProfilesCustomerLoad', 'P', '20240618', '1'
+exec setOV 'ProfilesCustomerLoad', 'P', '20240618', '2'
 go

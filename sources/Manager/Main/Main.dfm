@@ -82,8 +82,6 @@ object MainForm: TMainForm
           Images = MainMenuImage
           MicroWidth = 50
           OnClick = MainMenuClick
-          ExplicitTop = 38
-          ExplicitHeight = 371
         end
         object LogoPanel: TUniContainerPanel
           Left = 0
@@ -3564,7 +3562,6 @@ object MainForm: TMainForm
             LayoutConfig.BodyCls = 'logo-image '
             LayoutConfig.IgnorePosition = False
             LayoutConfig.DockWhenAligned = False
-            ExplicitHeight = 38
           end
           object UniContainerPanel1: TUniContainerPanel
             Left = 52
@@ -3581,9 +3578,6 @@ object MainForm: TMainForm
             LayoutAttribs.Pack = 'start'
             LayoutConfig.IgnorePosition = False
             LayoutConfig.DockWhenAligned = False
-            ExplicitLeft = 0
-            ExplicitWidth = 264
-            ExplicitHeight = 38
             object UniContainerPanel3: TUniContainerPanel
               Left = 0
               Top = 23
@@ -3597,8 +3591,6 @@ object MainForm: TMainForm
               Layout = 'hbox'
               LayoutAttribs.Align = 'middle'
               LayoutAttribs.Pack = 'center'
-              ExplicitTop = 20
-              ExplicitWidth = 264
               object UserLabel: TUniLabel
                 Left = 0
                 Top = 5
@@ -3614,7 +3606,6 @@ object MainForm: TMainForm
                 Color = clBtnFace
                 TabOrder = 1
                 LayoutConfig.ComponentCls = 'user-label'
-                ExplicitWidth = 264
               end
             end
             object UniContainerPanel2: TUniContainerPanel
@@ -3629,7 +3620,6 @@ object MainForm: TMainForm
               Layout = 'hbox'
               LayoutAttribs.Align = 'middle'
               LayoutAttribs.Pack = 'center'
-              ExplicitWidth = 264
               object LogoLabel: TUniLabel
                 Left = 0
                 Top = 0
@@ -3649,7 +3639,6 @@ object MainForm: TMainForm
                 Color = clBtnFace
                 TabOrder = 1
                 LayoutConfig.ComponentCls = 'logo-caption'
-                ExplicitWidth = 264
               end
             end
           end
@@ -3669,7 +3658,6 @@ object MainForm: TMainForm
             LayoutConfig.ComponentCls = 'logo-btn-exit'
             LayoutConfig.IgnorePosition = False
             TabOrder = 3
-            ExplicitHeight = 38
           end
         end
       end

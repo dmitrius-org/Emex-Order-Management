@@ -214,7 +214,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20240423', '1'
+exec setOV 'OrdersFinCalc', 'P', '20240619', '2'
 go
  
  

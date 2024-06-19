@@ -12,8 +12,8 @@ create proc ClientTypeInsert
              ,@PrepaymentAmount  money         
              ,@Margin            money  -- Наценка в процентах  
              ,@Reliability       money  -- Вероятность поставки 
-             ,@Discount          money  -- Скидка 
-             ,@Commission        money  -- Комиссия эквайера 
+             --,@Discount          money  -- Скидка 
+             --,@Commission        money  -- Комиссия эквайера 
              ,@IsActive          bit           
 
 as
@@ -38,9 +38,7 @@ as
 		,Prepayment       
 		,PrepaymentAmount 
 		,Margin       
-        ,Reliability
-        ,Discount
-        ,Commission        
+        ,Reliability     
 		,IsActive         
         )
   OUTPUT INSERTED.ClientTypeID INTO @ID
@@ -50,8 +48,6 @@ as
 		,@PrepaymentAmount 
 		,@Margin 
         ,@Reliability
-        ,@Discount
-        ,@Commission
 		,@IsActive   
 		 
   Select @ClientTypeID = ID from @ID
@@ -61,5 +57,5 @@ return @r
 go
 grant exec on ClientTypeInsert to public
 go
-exec setOV 'ClientTypeInsert', 'P', '20240101', '0'
+exec setOV 'ClientTypeInsert', 'P', '20240619', '1'
 go

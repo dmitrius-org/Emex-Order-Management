@@ -11,9 +11,7 @@ create proc ClientTypeUpdate
              ,@Prepayment        bit           
              ,@PrepaymentAmount  money         
              ,@Margin            money  -- Наценка в процентах   
-             ,@Reliability       money  -- Вероятность поставки 
-             ,@Discount          money  -- Скидка 
-             ,@Commission        money  -- Комиссия эквайера              
+             ,@Reliability       money  -- Вероятность поставки            
              ,@IsActive          bit           
 
 as
@@ -39,8 +37,6 @@ as
 		,PrepaymentAmount  =@PrepaymentAmount
 		,Margin            =@Margin
         ,Reliability       =@Reliability -- Вероятность поставки 
-        ,Discount          =@Discount    -- Скидка 
-        ,Commission        =@Commission  -- Комиссия эквайера    
 		,IsActive          =@IsActive
    where ClientTypeID = @ClientTypeID		 	            
 
@@ -49,5 +45,5 @@ return @r
 go
 grant exec on ClientTypeUpdate to public
 go
-exec setOV 'ClientTypeUpdate', 'P', '20240101', '0'
+exec setOV 'ClientTypeUpdate', 'P', '20240619', '2'
 go

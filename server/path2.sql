@@ -27,3 +27,12 @@ alter table tSupplierDeliveryProfiles alter column name nVarchar(60)
 
 alter table tOrders  add Kurs                            money
 alter table hOrders  add Kurs                            money
+
+go
+
+
+Update tSuppliers
+   set Discount    = 9
+      ,Commission  = 2
+      ,ExtraKurs   = 2.50
+  --where Brief=        'EmEx QBOW'

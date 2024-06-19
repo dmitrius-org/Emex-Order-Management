@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  UniFSCombobox, Vcl.ExtCtrls, UniFSEdit;
+  UniFSCombobox, Vcl.ExtCtrls;
 
 type
   TSuppliersF = class(TUniForm)

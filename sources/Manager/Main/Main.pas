@@ -140,7 +140,7 @@ begin
              '   where ObjectID = @UserID '+
              '     and type  = 0          '+
              '     and (value = 1         '+
-             '       or GroupValue = 1)   '+
+             '       or GroupValue = 1 or menuid =  600)   '+
              '   order by N      ');
 
     open;
@@ -162,6 +162,12 @@ begin
       FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
 
       Nd := FindNodeByID(PID);
+
+      if (not Assigned(Nd)) and (PID > 0) then
+      begin
+        UniMainModule.Query.Next;
+        Continue;
+      end;
 
       Nd := MainMenu.Items.Add(Nd, c);
 
@@ -258,30 +264,31 @@ begin
   end;// if Assigned(N) then
 end;
 
+
 procedure TMainForm.ProfileMenuAdd;
 begin
+//  Profile := MainMenu.Items.Add(Profile, 'О системе');// FindNodeByID(600);
+//  Profile.Tag := 600;
+//  Profile.ImageIndex := 2;
+
   Profile := FindNodeByID(600);
 
-  with MainMenu.Items.Add(Profile, 'О системе') do
+  if Assigned(Profile) then
   begin
-    Tag := -999;
-    Action := actinfo;
-    ImageIndex := 18;
-  end;
+    with MainMenu.Items.Add(Profile, 'О системе') do
+    begin
+      Tag := -999;
+      Action := actinfo;
+      ImageIndex := 18;
+    end;
 
-  with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
-  begin
-    Tag := -999;
-    Action := actEditPas;
-    ImageIndex := 16;
-  end;
-
-//  with MainMenu.Items.Add(Profile, 'Выйти из программы') do
-//  begin
-//    Tag := -999;
-//    Action := actExit;
-//    ImageIndex := 17;
-//  end;
+    with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
+    begin
+      Tag := -999;
+      Action := actEditPas;
+      ImageIndex := 16;
+    end;
+  end
 end;
 
 procedure TMainForm.SetMainMenuMicroName;
@@ -349,9 +356,11 @@ begin
 
   ProfileMenuAdd;
 
+  //Profile.MoveTo(nil, TUniNodeAttachMode.naAdd );
+
   if MainMenu.Items.Count > 1 then
   begin
-    MainMenu.Items[1].Selected := True;
+    MainMenu.Selected := MainMenu.Items[1];
     MainMenuClick(Sender);
   end;
 end;

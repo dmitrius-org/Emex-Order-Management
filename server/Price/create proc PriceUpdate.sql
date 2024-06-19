@@ -17,8 +17,16 @@ select top 1
 if isnull(@PriceLogo, '') = ''
   goto exit_
 
+
+update p
+   set p.DetailName = pd.Name_RUS -- Русские наименования    
+  from tPartDescription  pd  with (nolock index=ao2)     
+ Inner join #Price p with (updlock) -- unique index ao3 on  [#Price] (PriceLogo, DetailNum, MakeLogo);
+         on p.DetailNum = pd.Number
+        and p.MakeLogo  = pd.Make
+
 update t
-   set 	t.DetailPrice  = p.DetailPrice
+   set  t.DetailPrice  = p.DetailPrice
 	   ,t.DetailName   = p.DetailName  
 	   ,t.PriceLogo    = rtrim(p.PriceLogo)
 	   ,t.Quantity     = iif(p.Quantity = 0, 999, p.Quantity)  
@@ -32,7 +40,7 @@ update t
 OUTPUT INSERTED.PriceID INTO @ID(ID)      
   from #Price p with (nolock index=ao3)       
  inner join tPrice t with (updlock index=ao3) 
-         on t.PriceLogo = @PriceLogo--p.PriceLogo
+         on t.PriceLogo = @PriceLogo
 	    and t.DetailNum = p.DetailNum
 	    and t.MakeLogo  = p.MakeLogo
 
@@ -71,7 +79,7 @@ select p.MakeLogo
          on p.MakeLogo = m.Code  
  where not exists (select 1
                      from tPrice t with (nolock index=ao3)
-                    where t.PriceLogo = @PriceLogo--p.PriceLogo
+                    where t.PriceLogo = @PriceLogo
 					  and t.DetailNum = p.DetailNum
 					  and t.MakeLogo  = p.MakeLogo
 				   )
@@ -89,7 +97,7 @@ delete p
 
 Update p
    set p.Reliability  = 0 
-  from tPrice p with (rowlock index=ao3)
+  from tPrice p with (updlock index=ao3)
  where p.PriceLogo = @PriceLogo    
    and (isnull(p.WeightKGF  , '') <> ''
      or isnull(p.VolumeKGf  , '') <> ''
@@ -122,4 +130,4 @@ exit_:
 go
 grant execute on PriceUpdate to public
 go
-exec setOV 'PriceUpdate', 'P', '20240101', '0'
+exec setOV 'PriceUpdate', 'P', '20240619', '1'
