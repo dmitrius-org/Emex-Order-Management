@@ -432,6 +432,8 @@ end;
 
 procedure TTask_F.UniFormShow(Sender: TObject);
 begin
+  MainPage.ActivePage := MainSheet;
+
   case FAction of
     acInsert, acReportCreate:
     begin

@@ -15,14 +15,15 @@
 .grid-order .x-replacement-detail-number-arrow{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;    
 }
 
 /* Номер детали замены*/
 .grid-order .x-replacement-detail-number{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    /* font: normal 12px tahoma, arial, helvetica, sans-serif; */
 }
 
 /* Стрелка бренд замены*/

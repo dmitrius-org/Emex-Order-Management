@@ -1,7 +1,7 @@
 object OrderF: TOrderF
   Left = 0
   Top = 0
-  ClientHeight = 320
+  ClientHeight = 434
   ClientWidth = 867
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
@@ -15,21 +15,21 @@ object OrderF: TOrderF
     Left = 0
     Top = 30
     Width = 867
-    Height = 290
+    Height = 404
     Hint = ''
     ShowHint = True
     ParentColor = False
     Align = alClient
     TabOrder = 0
     ExplicitWidth = 863
-    ExplicitHeight = 289
+    ExplicitHeight = 403
     DesignSize = (
       867
-      290)
+      404)
     object edtDetailNameF: TUniEdit
       Left = 173
-      Top = 68
-      Width = 671
+      Top = 70
+      Width = 676
       Hint = ''
       ShowHint = True
       Text = ''
@@ -37,8 +37,8 @@ object OrderF: TOrderF
       ClearButton = True
     end
     object lblWeightKGF: TUniLabel
-      Left = 16
-      Top = 99
+      Left = 18
+      Top = 107
       Width = 117
       Height = 13
       Hint = ''
@@ -47,8 +47,8 @@ object OrderF: TOrderF
       TabOrder = 7
     end
     object lblVolumeKGF: TUniLabel
-      Left = 16
-      Top = 131
+      Left = 18
+      Top = 135
       Width = 112
       Height = 13
       Hint = ''
@@ -58,7 +58,7 @@ object OrderF: TOrderF
     end
     object edtWeightKGF: TUniNumberEdit
       Left = 173
-      Top = 99
+      Top = 98
       Width = 190
       Hint = ''
       ShowHint = True
@@ -68,7 +68,7 @@ object OrderF: TOrderF
     end
     object edtVolumeKGF: TUniNumberEdit
       Left = 173
-      Top = 131
+      Top = 126
       Width = 190
       Hint = ''
       ShowHint = True
@@ -77,8 +77,8 @@ object OrderF: TOrderF
       DecimalSeparator = ','
     end
     object lblDetailNameF: TUniLabel
-      Left = 16
-      Top = 68
+      Left = 18
+      Top = 76
       Width = 84
       Height = 13
       Hint = ''
@@ -89,7 +89,7 @@ object OrderF: TOrderF
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
       Left = 675
-      Top = 255
+      Top = 369
       Width = 81
       Height = 27
       Hint = ''
@@ -99,12 +99,12 @@ object OrderF: TOrderF
       TabStop = False
       TabOrder = 6
       OnClick = btnCancelClick
-      ExplicitTop = 254
+      ExplicitTop = 368
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 762
-      Top = 255
+      Top = 369
       Width = 82
       Height = 27
       Hint = ''
@@ -114,11 +114,11 @@ object OrderF: TOrderF
       Anchors = [akLeft, akBottom]
       TabOrder = 5
       OnClick = btnOkClick
-      ExplicitTop = 254
+      ExplicitTop = 368
     end
     object UniGroupBox1: TUniGroupBox
-      Left = 376
-      Top = 93
+      Left = 382
+      Top = 149
       Width = 468
       Height = 60
       Hint = 
@@ -244,7 +244,7 @@ object OrderF: TOrderF
     object UniGroupBox3: TUniGroupBox
       Left = 250
       Top = 3
-      Width = 594
+      Width = 599
       Height = 56
       Hint = ''
       ShowHint = True
@@ -313,7 +313,7 @@ object OrderF: TOrderF
     end
     object UniLabel1: TUniLabel
       Left = 18
-      Top = 163
+      Top = 162
       Width = 77
       Height = 13
       Hint = ''
@@ -323,7 +323,7 @@ object OrderF: TOrderF
     end
     object UniLabel2: TUniLabel
       Left = 18
-      Top = 194
+      Top = 188
       Width = 113
       Height = 13
       Hint = ''
@@ -331,40 +331,29 @@ object OrderF: TOrderF
       Caption = #1051#1086#1075#1086' '#1080' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077':'
       TabOrder = 13
     end
-    object cbRestrictions: TUniComboBox
-      Left = 173
-      Top = 163
-      Width = 190
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      TabOrder = 14
-      TabStop = False
-      IconItems = <>
-    end
     object cbPrice: TUniComboBox
       Left = 173
-      Top = 193
+      Top = 184
       Width = 72
       Hint = ''
       Enabled = False
       ShowHint = True
       Text = ''
-      TabOrder = 15
+      TabOrder = 14
       TabStop = False
       Images = ImageList16
       IconItems = <>
       OnChange = cbPriceChange
     end
     object UniBitBtn1: TUniBitBtn
-      Left = 246
-      Top = 193
+      Left = 249
+      Top = 184
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1083#1086#1075#1086
       ShowHint = True
       Caption = ''
-      TabOrder = 16
+      TabOrder = 15
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       Images = ImageList16
@@ -372,21 +361,21 @@ object OrderF: TOrderF
       OnClick = UniBitBtn1Click
     end
     object UniGroupBox4: TUniGroupBox
-      Left = 376
-      Top = 159
+      Left = 381
+      Top = 98
       Width = 468
-      Height = 59
+      Height = 50
       Hint = ''
       Enabled = False
       ShowHint = True
       Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
-      TabOrder = 17
+      TabOrder = 16
       object UniHTMLFrame: TUniHTMLFrame
         AlignWithMargins = True
         Left = 5
         Top = 18
         Width = 458
-        Height = 36
+        Height = 27
         Hint = ''
         ShowHint = True
         HTML.Strings = (
@@ -430,33 +419,221 @@ object OrderF: TOrderF
       end
     end
     object cbDestinationLogo: TUniComboBox
-      Left = 270
-      Top = 194
+      Left = 279
+      Top = 185
       Width = 71
       Hint = ''
       Enabled = False
       ShowHint = True
       Text = ''
-      TabOrder = 18
+      TabOrder = 17
       TabStop = False
       MatchFieldWidth = False
       Images = ImageList16
       IconItems = <>
     end
     object btnDestinationLogo: TUniBitBtn
-      Left = 342
-      Top = 193
+      Left = 354
+      Top = 185
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       ShowHint = True
       Caption = ''
-      TabOrder = 19
+      TabOrder = 18
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       Images = ImageList16
       ImageIndex = 2
       OnClick = btnDestinationLogoClick
+    end
+    object cbFragile: TUniCheckBox
+      Left = 173
+      Top = 158
+      Width = 97
+      Height = 17
+      Hint = ''
+      ShowHint = True
+      Caption = 'Fragile'
+      TabOrder = 19
+    end
+    object cbNoAir: TUniCheckBox
+      Left = 276
+      Top = 158
+      Width = 97
+      Height = 17
+      Hint = ''
+      ShowHint = True
+      Caption = 'NoAir'
+      TabOrder = 20
+    end
+    object edtPrice: TUniNumberEdit
+      Left = 173
+      Top = 237
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 21
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object UniLabel4: TUniLabel
+      Left = 173
+      Top = 221
+      Width = 45
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1047#1072#1082#1091#1087#1082#1072':'
+      TabOrder = 22
+    end
+    object edtMarginF: TUniNumberEdit
+      Left = 449
+      Top = 237
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 23
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object edtMargin: TUniNumberEdit
+      Left = 311
+      Top = 237
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 24
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object edtIncome: TUniNumberEdit
+      Left = 587
+      Top = 237
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 25
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object UniLabel5: TUniLabel
+      Left = 311
+      Top = 221
+      Width = 67
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1053#1072#1094#1077#1085#1082#1072' (%):'
+      TabOrder = 26
+    end
+    object UniLabel6: TUniLabel
+      Left = 449
+      Top = 221
+      Width = 96
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090' (%):'
+      TabOrder = 27
+    end
+    object UniLabel7: TUniLabel
+      Left = 587
+      Top = 221
+      Width = 54
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1044#1086#1093#1086#1076' (%):'
+      TabOrder = 28
+    end
+    object edtProfit: TUniNumberEdit
+      Left = 725
+      Top = 237
+      Width = 124
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 29
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object UniLabel8: TUniLabel
+      Left = 725
+      Top = 218
+      Width = 106
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100' (%):'
+      TabOrder = 30
+    end
+    object edtOrderCount: TUniNumberEdit
+      Left = 173
+      Top = 292
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 31
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+      OnChange = edtLChange
+    end
+    object UniLabel9: TUniLabel
+      Left = 173
+      Top = 273
+      Width = 111
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077':'
+      TabOrder = 32
+    end
+    object edtPriceCount: TUniNumberEdit
+      Left = 311
+      Top = 292
+      Width = 132
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 33
+      ReadOnly = True
+      FieldLabelWidth = 15
+      DecimalSeparator = ','
+    end
+    object UniLabel10: TUniLabel
+      Left = 311
+      Top = 273
+      Width = 115
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077':'
+      TabOrder = 34
     end
   end
   object MessageContainer: TUniFieldContainer
@@ -492,8 +669,8 @@ object OrderF: TOrderF
     end
   end
   object ImageList16: TUniImageList
-    Left = 138
-    Top = 148
+    Left = 674
+    Top = 260
     Bitmap = {
       494C010104003C00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
@@ -774,7 +951,7 @@ object OrderF: TOrderF
       '}')
     Sequenced = False
     OnTimer = UniTimerTimer
-    Left = 51
-    Top = 179
+    Left = 747
+    Top = 275
   end
 end

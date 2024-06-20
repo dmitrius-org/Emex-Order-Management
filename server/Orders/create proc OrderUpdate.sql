@@ -2,8 +2,6 @@ drop proc if exists OrderUpdate
 /*
   OrderUpdate - изменение данных по заказу/детали
 
-
-
   -- 20.10.2023 - добавлен расчет финансовых показателей
 */
 go
@@ -12,7 +10,8 @@ create proc OrderUpdate
               ,@DetailNameF             nvarchar(512) = null -- Наименование факт
               ,@WeightKGF               money         = null -- Вес Физический факт	
               ,@VolumeKGF               money         = null -- Вес Объемный факт
-              ,@Restriction             nvarchar(64)  = null -- Ограничение
+              ,@Fragile                 bit           = null 
+              ,@NoAir                   bit           = null 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
               
@@ -27,7 +26,11 @@ as
      set p.DetailNameF	   = nullif(@DetailNameF, '')
         ,p.WeightKGF	   = nullif(@WeightKGF, -1)
         ,p.VolumeKGF	   = nullif(@VolumeKGF, -1)
-        ,p.Restrictions    = nullif(@Restriction, '')
+        ,p.Restrictions    = case
+                               when @NoAir = 1 then 'NOAIR'
+                               else null
+                             end
+         ,Fragile          = nullif(@Fragile, 0)
    OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
 	from tOrders t (nolock)
    inner join tPrice p (updlock)
@@ -70,6 +73,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240514', '1'
+exec setOV 'OrderUpdate', 'P', '20240620', '1'
 go
  

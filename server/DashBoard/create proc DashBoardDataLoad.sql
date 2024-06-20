@@ -34,7 +34,7 @@ as
       Detail   nvarchar(128),
   );
   
-  goto exit_
+  
 
   -- Проверка закрузки курсов
   insert #result (Id, Title, Status, Icon, Detail, Hint) 
@@ -54,7 +54,7 @@ as
             order by OnDate desc
           ) as t
   
-
+   goto exit_
   -- проверка загрузки прайсов
   insert #result (Id, Title, Status, Icon, Detail, Hint) 
   select 2,
@@ -75,6 +75,7 @@ as
                  where datediff(dd, UpdateDate, Getdate()) > 0
               ) as t on 1=1
 
+  
 
   -- проверка выгрузки ответов/отказов
   insert #result (Id, Title, Status, Icon, Detail, Hint) 

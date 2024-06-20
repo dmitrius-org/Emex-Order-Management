@@ -500,10 +500,12 @@ end;
 
 procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
 begin
-  Sql.Exec('delete tGridOptions '+
-           '  from tGridOptions (rowlock)   ' +
-           ' where UserID = dbo.GetUserID() ' +
-           '   and Grid   = :Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
+  Sql.Exec(' delete tGridOptions '+
+           '   from tGridOptions (rowlock)   ' +
+           '  where UserID = dbo.GetUserID() ' +
+           '    and Grid   = :Grid',
+           ['Grid'],
+           [self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
 
@@ -751,14 +753,18 @@ begin
     Query.MacroByName('Client').Value    := FClient;
 
     if fOrderNum.Text <> '' then
-      Query.MacroByName('OrderNum').Value := ' and o.OrderNum like ''%'   + fOrderNum.Text + '%'''
+      Query.MacroByName('OrderNum').Value := ' and o.OrderNum like '''   + fOrderNum.Text + ''''
     else
       Query.MacroByName('OrderNum').Value := '';
 
     if fDetailNum.Text <> '' then
-      Query.MacroByName('DetailNum').Value := ' and o.DetailNumber like ''%'   + fDetailNum.Text + '%'''
+      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like '''   + Trim(fDetailNum.Text) + '''' +
+                                              '   or o.ReplacementDetailNumber like '''   + Trim(fDetailNum.Text) + ''')'
     else
       Query.MacroByName('DetailNum').Value := '';
+
+
+
 
     if cbCancel.ItemIndex > -1 then
       Query.MacroByName('isCancel').Value := ' and o.isCancel = ' + cbCancel.ItemIndex.ToString
@@ -776,7 +782,7 @@ begin
       Query.MacroByName('updDateTime').Value := '';
 
     if edtInvoice.Text <> '' then
-      Query.MacroByName('Invoice').Value := ' and o.Invoice like ''%'   + edtInvoice.Text + '%'''
+      Query.MacroByName('Invoice').Value := ' and o.Invoice like '''   + edtInvoice.Text + ''''
     else
       Query.MacroByName('Invoice').Value := '';
 

@@ -83,24 +83,24 @@ object Task_F: TTask_F
         object edtBrief: TUniEdit
           Left = 150
           Top = 42
-          Width = 676
+          Width = 672
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 672
+          ExplicitWidth = 668
         end
         object edtName: TUniEdit
           Left = 150
           Top = 70
-          Width = 676
+          Width = 672
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
           ClearButton = True
-          ExplicitWidth = 672
+          ExplicitWidth = 668
         end
         object lblBruef: TUniLabel
           Left = 17
@@ -143,7 +143,7 @@ object Task_F: TTask_F
         object ebtIsActive: TUniCheckBox
           Left = 150
           Top = 14
-          Width = 133
+          Width = 129
           Height = 22
           Hint = ''
           Caption = #1047#1072#1076#1072#1085#1080#1077' '#1072#1082#1090#1080#1074#1085#1086
@@ -151,7 +151,7 @@ object Task_F: TTask_F
           Font.Height = -13
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 7
-          ExplicitWidth = 129
+          ExplicitWidth = 125
         end
         object pnlInteval: TUniPanel
           Left = 17
@@ -480,7 +480,7 @@ object Task_F: TTask_F
           Top = 32
           Width = 163
           Hint = ''
-          Text = 'edtID'
+          Text = ''
           Anchors = [akLeft, akBottom]
           TabOrder = 2
           ReadOnly = True

@@ -36,9 +36,9 @@ object OrdersT: TOrdersT
     LayoutConfig.Width = '100'
     object Grid: TUniDBGrid
       Left = 0
-      Top = 121
+      Top = 113
       Width = 1640
-      Height = 475
+      Height = 483
       Hint = ''
       Margins.Bottom = 0
       ShowHint = True
@@ -609,7 +609,7 @@ object OrdersT: TOrdersT
       Left = 0
       Top = 0
       Width = 1640
-      Height = 121
+      Height = 113
       Hint = ''
       ShowHint = True
       Align = alTop
@@ -622,19 +622,27 @@ object OrdersT: TOrdersT
       LayoutConfig.Region = 'north'
       object gbFilter: TUniGroupBox
         AlignWithMargins = True
-        Left = 4
-        Top = 4
-        Width = 1632
-        Height = 113
+        Left = 2
+        Top = 3
+        Width = 1636
+        Height = 108
         Hint = ''
+        Margins.Left = 1
+        Margins.Top = 2
+        Margins.Right = 1
+        Margins.Bottom = 1
         ShowHint = True
         Caption = #1060#1080#1083#1100#1090#1088
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
+        ExplicitLeft = 4
+        ExplicitTop = 4
+        ExplicitWidth = 1632
+        ExplicitHeight = 111
         object UniLabel1: TUniLabel
-          Left = 17
-          Top = 16
+          Left = 6
+          Top = 14
           Width = 36
           Height = 13
           Hint = ''
@@ -643,8 +651,8 @@ object OrdersT: TOrdersT
           TabOrder = 1
         end
         object UniLabel2: TUniLabel
-          Left = 259
-          Top = 16
+          Left = 224
+          Top = 58
           Width = 36
           Height = 13
           Hint = ''
@@ -653,8 +661,8 @@ object OrdersT: TOrdersT
           TabOrder = 2
         end
         object UniLabel3: TUniLabel
-          Left = 375
-          Top = 16
+          Left = 6
+          Top = 58
           Width = 40
           Height = 13
           Hint = ''
@@ -663,9 +671,9 @@ object OrdersT: TOrdersT
           TabOrder = 3
         end
         object fCancel: TUniBitBtn
-          Left = 1135
-          Top = 35
-          Width = 128
+          Left = 771
+          Top = 31
+          Width = 146
           Height = 24
           ShowHint = True
           Action = actFilterClear
@@ -673,9 +681,9 @@ object OrdersT: TOrdersT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 1285
-          Top = 35
-          Width = 137
+          Left = 771
+          Top = 73
+          Width = 146
           Height = 24
           ShowHint = True
           Action = actFilter
@@ -688,8 +696,8 @@ object OrdersT: TOrdersT
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
-          Left = 581
-          Top = 35
+          Left = 462
+          Top = 33
           Width = 167
           Hint = ''
           ShowHint = True
@@ -701,8 +709,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel4: TUniLabel
-          Left = 581
-          Top = 16
+          Left = 462
+          Top = 14
           Width = 76
           Height = 13
           Hint = ''
@@ -711,8 +719,8 @@ object OrdersT: TOrdersT
           TabOrder = 9
         end
         object UniLabel5: TUniLabel
-          Left = 890
-          Top = 16
+          Left = 681
+          Top = 58
           Width = 34
           Height = 13
           Hint = ''
@@ -721,9 +729,9 @@ object OrdersT: TOrdersT
           TabOrder = 11
         end
         object cbCancel: TUniComboBox
-          Left = 890
-          Top = 35
-          Width = 81
+          Left = 681
+          Top = 75
+          Width = 84
           Height = 23
           Hint = ''
           ShowHint = True
@@ -739,9 +747,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fStatus2: TUniCheckComboBox
-          Left = 17
-          Top = 35
-          Width = 236
+          Left = 6
+          Top = 33
+          Width = 314
           Hint = ''
           ShowHint = True
           Text = ''
@@ -781,9 +789,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fPriceLogo: TUniCheckComboBox
-          Left = 259
-          Top = 35
-          Width = 110
+          Left = 224
+          Top = 75
+          Width = 96
           Hint = ''
           ShowHint = True
           Text = ''
@@ -825,9 +833,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fClient: TUniCheckComboBox
-          Left = 375
-          Top = 35
-          Width = 200
+          Left = 6
+          Top = 75
+          Width = 212
           Hint = ''
           ShowHint = True
           Text = ''
@@ -867,8 +875,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel6: TUniLabel
-          Left = 581
-          Top = 63
+          Left = 462
+          Top = 58
           Width = 78
           Height = 13
           Hint = ''
@@ -877,10 +885,9 @@ object OrdersT: TOrdersT
           TabOrder = 13
         end
         object fOrderDate: TUniDateTimePicker
-          Left = 754
-          Top = 35
+          Left = 326
+          Top = 33
           Width = 130
-          Height = 21
           Hint = ''
           ShowHint = True
           DateTime = 45257.000000000000000000
@@ -892,8 +899,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel8: TUniLabel
-          Left = 754
-          Top = 16
+          Left = 326
+          Top = 14
           Width = 65
           Height = 13
           Hint = ''
@@ -902,10 +909,9 @@ object OrdersT: TOrdersT
           TabOrder = 15
         end
         object edtUpdDate: TUniDateTimePicker
-          Left = 977
-          Top = 35
+          Left = 326
+          Top = 75
           Width = 130
-          Height = 21
           Hint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           ShowHint = True
           DateTime = 45257.000000000000000000
@@ -917,8 +923,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel10: TUniLabel
-          Left = 977
-          Top = 16
+          Left = 326
+          Top = 58
           Width = 97
           Height = 13
           Hint = ''
@@ -927,8 +933,8 @@ object OrdersT: TOrdersT
           TabOrder = 17
         end
         object edtInvoice: TUniEdit
-          Left = 977
-          Top = 81
+          Left = 635
+          Top = 33
           Width = 130
           Hint = ''
           ShowHint = True
@@ -940,8 +946,8 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel11: TUniLabel
-          Left = 977
-          Top = 63
+          Left = 635
+          Top = 14
           Width = 87
           Height = 13
           Hint = ''
@@ -950,9 +956,9 @@ object OrdersT: TOrdersT
           TabOrder = 19
         end
         object fDetailNum: TUniEdit
-          Left = 581
-          Top = 81
-          Width = 167
+          Left = 462
+          Top = 75
+          Width = 213
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''

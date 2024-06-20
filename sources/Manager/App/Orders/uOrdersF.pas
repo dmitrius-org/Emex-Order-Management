@@ -10,7 +10,7 @@ uses
   uniComboBox, uniImageList, uniHTMLFrame, uniURLFrame,
 
   Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer,
-  unimURLFrame;
+  unimURLFrame, uniCheckBox;
 
 type
 
@@ -50,7 +50,6 @@ type
     btnEmEx: TUniButton;
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
-    cbRestrictions: TUniComboBox;
     cbPrice: TUniComboBox;
     ImageList16: TUniImageList;
     UniBitBtn1: TUniBitBtn;
@@ -63,6 +62,22 @@ type
     btnDestinationLogo: TUniBitBtn;
     MessageContainer: TUniFieldContainer;
     UniLabel3: TUniLabel;
+    cbFragile: TUniCheckBox;
+    cbNoAir: TUniCheckBox;
+    edtPrice: TUniNumberEdit;
+    UniLabel4: TUniLabel;
+    edtMarginF: TUniNumberEdit;
+    edtMargin: TUniNumberEdit;
+    edtIncome: TUniNumberEdit;
+    UniLabel5: TUniLabel;
+    UniLabel6: TUniLabel;
+    UniLabel7: TUniLabel;
+    edtProfit: TUniNumberEdit;
+    UniLabel8: TUniLabel;
+    edtOrderCount: TUniNumberEdit;
+    UniLabel9: TUniLabel;
+    edtPriceCount: TUniNumberEdit;
+    UniLabel10: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -214,21 +229,24 @@ begin
                   '            ,@DetailNameF  = :DetailNameF  '+
                   '            ,@WeightKGF    = :WeightKGF    '+
                   '            ,@VolumeKGF    = :VolumeKGF    '+
-                  '            ,@Restriction  = :Restriction  '+
+                  '            ,@Fragile      = :Fragile      '+
+                  '            ,@NoAir        = :NoAir        '+
                   '            ,@Price        = :Price        '+
                   '            ,@DestinationLogo=:DestinationLogo '+
                   ' select @r as retcode '+
                   ' ';
 
         Sql.Open(sqltext,
-                 ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Restriction', 'Price','DestinationLogo'],
+                 ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price',
+                  'DestinationLogo', 'Fragile', 'NoAir'],
                  [edtWeightKGF.Value,
                   edtVolumeKGF.Value,
                   edtDetailNameF.Text,
                   FID,
-                  cbRestrictions.Text,
                   cbPrice.Text,
-                  cbDestinationLogo.text
+                  cbDestinationLogo.text ,
+                  cbFragile.Checked,
+                  cbNoAir.Checked
                   ]);
 
         RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -270,7 +288,8 @@ begin
                                   '       ,DetailName as DetailName '+
                                   '       ,Manufacturer    ' +
                                   '       ,DetailNumber    ' +
-                                  '       ,Restrictions    ' +
+                                  '       ,NoAir           ' +
+                                  '       ,Fragile         ' +
                                   '       ,PriceLogo       ' +
                                   '       ,Manufacturer    ' +
                                   '       ,DestinationLogo ' +
@@ -278,6 +297,14 @@ begin
                                   '       ,PriceID         ' +
                                   '       ,ClientID        ' +
                                   '       ,Flag            ' +
+                                  '       ,Quantity        ' +
+                                  '       ,[Margin]        ' +
+                                  '       ,[MarginF]       ' +
+                                  '       ,[Profit]        ' +
+                                  '       ,[Income]        ' +
+                                  '       ,[IncomePRC]     ' +
+                                  '       ,[Price]         ' +
+                                  '       ,PriceQuantity   ' +
                                   '   from vOrders         '+
                                   '  where OrderID = :OrderID '+
                                   ' ';
@@ -292,11 +319,23 @@ begin
   edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    //Вес Физический факт
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    //Вес Объемный факт
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;  //
-  cbRestrictions.text:= UniMainModule.Query.FieldByName('Restrictions').AsString; //Ограничение
+
   cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
   cbDestinationLogo.text:= UniMainModule.Query.FieldByName('DestinationLogo').AsString;    // направление отгрузки
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
+
+  cbFragile.Checked  :=  UniMainModule.Query.FieldByName('Fragile').AsBoolean;
+  cbNoAir.Checked    :=  UniMainModule.Query.FieldByName('NoAir').AsBoolean;
+
+  edtOrderCount.Value:= UniMainModule.Query.FieldByName('Quantity').AsInteger;
+  edtPriceCount.Value:= UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
+
+  edtMargin.Value    := UniMainModule.Query.FieldByName('Margin').Value;
+  edtMarginF.Value   := UniMainModule.Query.FieldByName('MarginF').Value;
+  edtProfit.Value    := UniMainModule.Query.FieldByName('Profit').Value;
+  edtPrice.Value     := UniMainModule.Query.FieldByName('Price').Value;
+  edtIncome.Value    := UniMainModule.Query.FieldByName('IncomePRC').Value;
 
   //16 - Онлайн заказ
   MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
@@ -444,7 +483,7 @@ begin
     btnOk.Caption := ' Выполнить';
   end;
 
-  ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
+  //ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
   ComboBoxFill(cbPrice,        ' Select Name from tPrices       (nolock) where Flag&1=1 ');
 
   // начитываем данные с базы
@@ -453,9 +492,10 @@ begin
     begin
       DataLoad;
 
-      Self.Caption:= 'Изменение детали ' +
+      Self.Caption:= ' ' +
       UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
-      UniMainModule.Query.FieldByName('DetailNumber').AsString;
+      UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
+      UniMainModule.Query.FieldByName('DetailName').AsString;
 
       edtDetailNameF.SetFocus;
 

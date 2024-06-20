@@ -25,7 +25,7 @@ object ClientsF: TClientsF
       1179
       44)
     object btnOk: TUniBitBtn
-      Left = 1033
+      Left = 1017
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +34,10 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 1029
+      ExplicitLeft = 1013
     end
     object btnCancel: TUniBitBtn
-      Left = 946
+      Left = 930
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +46,7 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 942
+      ExplicitLeft = 926
     end
   end
   object pcCommon: TUniPageControl
@@ -55,7 +55,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabHome
+    ActivePage = tabPriceProfiles
     Align = alClient
     TabOrder = 1
     ExplicitLeft = -138
@@ -453,8 +453,6 @@ object ClientsF: TClientsF
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1088#1072#1081#1089#1083#1080#1089#1090#1086#1074
       LayoutConfig.Width = '100'
       OnBeforeActivate = tabPriceProfilesBeforeActivate
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object UniToolBar2: TUniToolBar
         Left = 0
         Top = 0
@@ -578,13 +576,6 @@ object ClientsF: TClientsF
               Sortable = True
             end
             item
-              FieldName = 'Brief'
-              Title.Alignment = taCenter
-              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103
-              Width = 230
-              Sortable = True
-            end
-            item
               FieldName = 'ProfilesDeliveryID'
               Title.Alignment = taCenter
               Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
@@ -595,8 +586,8 @@ object ClientsF: TClientsF
             item
               FieldName = 'DestinationName'
               Title.Alignment = taCenter
-              Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
-              Width = 137
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103
+              Width = 172
               Editor = lkPriceProfiles
               Sortable = True
             end
@@ -613,26 +604,6 @@ object ClientsF: TClientsF
               Title.Caption = 'Reliability'
               Width = 96
               Sortable = True
-            end
-            item
-              FieldName = 'isMyDelivery'
-              Title.Alignment = taCenter
-              Title.Caption = 'isMyDelivery'
-              Width = 110
-              ReadOnly = True
-              Hint = #1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
-              Sortable = True
-              CheckBoxField.AutoPost = True
-            end
-            item
-              FieldName = 'isIgnore'
-              Title.Alignment = taCenter
-              Title.Caption = 'isIgnore'
-              Width = 99
-              ReadOnly = True
-              Hint = #1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
-              Sortable = True
-              CheckBoxField.AutoPost = True
             end
             item
               ShowToolTip = True
@@ -777,19 +748,17 @@ object ClientsF: TClientsF
       object edtNotificationAddress: TUniEdit
         Left = 196
         Top = 117
-        Width = 845
+        Width = 829
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
-        ExplicitWidth = 841
+        ExplicitWidth = 825
       end
     end
     object pcSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object UniLabel4: TUniLabel
         Left = 33
         Top = 37
@@ -812,6 +781,7 @@ object ClientsF: TClientsF
         ClearButton = True
         TabOrder = 1
         Color = clWindow
+        OnChange = cbSuppliersChange
       end
     end
     object pcCommision: TUniTabSheet
@@ -845,8 +815,6 @@ object ClientsF: TClientsF
       ParentAlignmentControl = False
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088#1099
       LayoutConfig.Width = '100'
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object UniPanel2: TUniPanel
         Left = 0
         Top = 48
@@ -1772,12 +1740,6 @@ object ClientsF: TClientsF
       'select p.*'
       '      ,sp.Name   DestinationName'
       '      ,d.Name    UploadDelimiter'
-      
-        '      ,sp.isMyDelivery                           -- '#1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095 +
-        #1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
-      
-        '      ,sp.isIgnore                               -- '#1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100 +
-        ' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
       '  from pProfilesCustomer p (nolock)'
       '  left join tSupplierDeliveryProfiles sp (nolock)'
       '         on sp.ProfilesDeliveryID = p.ProfilesDeliveryID'
@@ -1800,11 +1762,6 @@ object ClientsF: TClientsF
       Precision = 18
       Size = 0
     end
-    object qProfilesCustomerBrief: TStringField
-      FieldName = 'Brief'
-      Origin = 'Brief'
-      Size = 60
-    end
     object qProfilesCustomerProfilesDeliveryID: TIntegerField
       FieldName = 'ProfilesDeliveryID'
       LookupCache = True
@@ -1821,14 +1778,6 @@ object ClientsF: TClientsF
       Origin = 'Reliability'
       DisplayFormat = '###,##0.00 %'
       MaxValue = 100.000000000000000000
-    end
-    object qProfilesCustomerisMyDelivery: TBooleanField
-      FieldName = 'isMyDelivery'
-      Origin = 'isMyDelivery'
-    end
-    object qProfilesCustomerisIgnore: TBooleanField
-      FieldName = 'isIgnore'
-      Origin = 'isIgnore'
     end
     object qProfilesCustomerUploadFolder: TStringField
       FieldName = 'UploadFolder'
@@ -1912,12 +1861,10 @@ object ClientsF: TClientsF
       '           ([Spid]'
       '           ,[ProfilesCustomerID]'
       '           ,[ClientID]'
-      '           ,[Brief]'
+      '          -- ,[Brief]'
       '           ,[ProfilesDeliveryID]'
       '           ,[Margin]'
       '           ,[Reliability]'
-      '           --,[isMyDelivery]'
-      '           --,[isIgnore]'
       '           ,[UploadFolder]'
       '           ,[UploadPriceName]'
       '           ,[UploadFileName]'
@@ -1928,12 +1875,10 @@ object ClientsF: TClientsF
       'VALUES (@@Spid, '
       '        0, '
       '        :NEW_ClientID, '
-      '        :NEW_Brief, '
+      '       -- :NEW_Brief, '
       '        :NEW_ProfilesDeliveryID, '
       '        :NEW_Margin, '
       '        :NEW_Reliability,         '
-      '        --:NEW_isMyDelivery, '
-      '      --  :NEW_isIgnore, '
       '        :NEW_UploadFolder, '
       '        :NEW_UploadPriceName,         '
       '        :NEW_UploadFileName,  '
@@ -1969,12 +1914,10 @@ object ClientsF: TClientsF
       ''
       'Update pProfilesCustomer'
       '   set'
-      '       [Brief]               = :NEW_Brief'
-      '      ,[ProfilesDeliveryID]  = :NEW_ProfilesDeliveryID'
+      '       --[Brief]               = :NEW_Brief'
+      '      [ProfilesDeliveryID]  = :NEW_ProfilesDeliveryID'
       '      ,[Margin]              = :NEW_Margin'
       '      ,[Reliability]         = :NEW_Reliability'
-      '     -- ,[isMyDelivery]        = :NEW_isMyDelivery'
-      '     -- ,[isIgnore]            = :NEW_isIgnore'
       '      ,[UploadFolder]        = :NEW_UploadFolder'
       '      ,[UploadPriceName]     = :NEW_UploadPriceName'
       '      ,[UploadFileName]      = :NEW_UploadFileName'

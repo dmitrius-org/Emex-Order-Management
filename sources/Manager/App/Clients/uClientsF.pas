@@ -133,12 +133,9 @@ type
     qProfilesCustomerSpid: TIntegerField;
     qProfilesCustomerProfilesCustomerID: TIntegerField;
     qProfilesCustomerClientID: TFMTBCDField;
-    qProfilesCustomerBrief: TStringField;
     qProfilesCustomerProfilesDeliveryID: TIntegerField;
     qProfilesCustomerMargin: TCurrencyField;
     qProfilesCustomerReliability: TCurrencyField;
-    qProfilesCustomerisMyDelivery: TBooleanField;
-    qProfilesCustomerisIgnore: TBooleanField;
     qProfilesCustomerUploadFolder: TStringField;
     qProfilesCustomerUploadPriceName: TStringField;
     qProfilesCustomerUploadFileName: TStringField;
@@ -190,6 +187,7 @@ type
       Direction: Boolean);
     procedure tabPriceProfilesBeforeActivate(Sender: TObject;
       var AllowActivate: Boolean);
+    procedure cbSuppliersChange(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -201,11 +199,21 @@ type
     ///</summary>
     procedure DataLoad();
 
-
+    /// <summary>
+    ///  ManagerGridRefresh - Обновление таблицы: Менеджеры
+    ///</summary>
     procedure ManagerGridRefresh();
+    /// <summary>
+    ///  PriceProfilesGridRefresh - Обновление таблицы: Профили обработки прайслистов
+    ///</summary>
     procedure PriceProfilesGridRefresh();
-
+    /// <summary>
+    ///  ProfilesDeliveryList - получение списка поставщиков
+    ///</summary>
     procedure ProfilesDeliveryList();
+    /// <summary>
+    ///  DelimiterList - Список разделителей
+    ///</summary>
     procedure DelimiterList();
   public
     { Public declarations }
@@ -406,6 +414,19 @@ begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
 
+end;
+
+procedure TClientsF.cbSuppliersChange(Sender: TObject);
+begin
+  Sql.Exec(' exec ProfilesCustomerRefresh @SuppliersID = :SuppliersID, @ClientID = :ClientID',
+           ['SuppliersID', 'ClientID'], [cbSuppliers.KeyValue, FID ]);
+
+  PriceProfilesGridRefresh;
+
+  ProfilesDeliveryList;
+
+  MessageDlg('При изменении поставщика автоматически обновляются способы доставки, проверьте настройки на вкладке "' +
+             tabPriceProfiles.Caption + '" ', TMsgDlgType.mtWarning, [mbOK]);
 end;
 
 procedure TClientsF.DataLoad;
