@@ -33,7 +33,6 @@ type
   public
     { Public declarations }
 
-
   end;
 
   function UniServerModule: TUniServerModule;
@@ -95,6 +94,9 @@ begin
     SessionTimeout := 600000; // 10 минут
 
   Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
+
+  if  FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot']<> '' then
+    FrameworkFilesRoot := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot'];
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;

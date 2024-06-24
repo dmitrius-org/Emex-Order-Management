@@ -119,7 +119,6 @@ type
     UniHiddenPanel2: TUniHiddenPanel;
     LookupManager: TUniDBLookupComboBox;
     UniLabel5: TUniLabel;
-    cbClientType: TUniFSComboBox;
     tabPriceProfiles: TUniTabSheet;
     UniToolBar2: TUniToolBar;
     UniToolButton7: TUniToolButton;
@@ -161,6 +160,7 @@ type
     dsDelimiterList: TDataSource;
     lkUploadDelimiter: TUniDBLookupComboBox;
     qProfilesCustomerDestinationName: TWideStringField;
+    cbClientType: TUniFSComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -384,7 +384,7 @@ begin
                cbResponseType.ItemIndex,
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
-               cbClientType.Value
+               cbClientType.value
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;

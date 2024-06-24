@@ -2,7 +2,7 @@ object UniServerModule: TUniServerModule
   OnCreate = UniGUIServerModuleCreate
   OnDestroy = UniGUIServerModuleDestroy
   TempFolder = 'temp\'
-  FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\Framework\uniGUI'
+  FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\1583\Framework\uniGUI'
   SessionTimeout = 86400000
   Title = 'Managers'
   AjaxTimeout = 500000

@@ -19,8 +19,6 @@ object ClientsF: TClientsF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 488
-    ExplicitWidth = 1175
     DesignSize = (
       1179
       44)
@@ -34,7 +32,6 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 1013
     end
     object btnCancel: TUniBitBtn
       Left = 930
@@ -46,7 +43,6 @@ object ClientsF: TClientsF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 926
     end
   end
   object pcCommon: TUniPageControl
@@ -55,18 +51,12 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabPriceProfiles
+    ActivePage = tabHome
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -138
-    ExplicitTop = 8
-    ExplicitWidth = 1123
-    ExplicitHeight = 487
     object tabHome: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -76,7 +66,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 1173
         DesignSize = (
           1177
           143)
@@ -89,7 +78,6 @@ object ClientsF: TClientsF
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 1005
         end
         object cbIsActive: TUniCheckBox
           Left = 144
@@ -119,9 +107,9 @@ object ClientsF: TClientsF
           TabOrder = 4
         end
         object cbClientType: TUniFSComboBox
-          Left = 146
-          Top = 63
-          Width = 385
+          Left = 144
+          Top = 56
+          Width = 183
           Hint = ''
           Text = ''
           TabOrder = 5
@@ -142,8 +130,6 @@ object ClientsF: TClientsF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 1
-        ExplicitTop = 374
-        ExplicitWidth = 1167
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
@@ -153,7 +139,6 @@ object ClientsF: TClientsF
           ParentColor = False
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 1163
           object edtID: TUniEdit
             Left = 141
             Top = 8
@@ -223,8 +208,6 @@ object ClientsF: TClientsF
       ParentAlignmentControl = False
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
       LayoutConfig.Width = '100'
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object ToolBar: TUniToolBar
         Left = 0
         Top = 0
@@ -243,7 +226,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 1173
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -284,8 +266,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitWidth = 1173
-        ExplicitHeight = 409
         object Grid: TUniDBGrid
           Left = 1
           Top = 1
@@ -471,7 +451,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 1173
         object UniToolButton7: TUniToolButton
           Left = 0
           Top = 0
@@ -519,7 +498,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitWidth = 1111
         object ProfilesCustomerGrid: TUniDBGrid
           Left = 1
           Top = 1
@@ -687,8 +665,6 @@ object ClientsF: TClientsF
     object pcRefusals: TUniTabSheet
       Hint = ''
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1086#1090#1074#1077#1090#1086#1074
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       DesignSize = (
         1177
         458)
@@ -753,7 +729,6 @@ object ClientsF: TClientsF
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
-        ExplicitWidth = 825
       end
     end
     object pcSuppliers: TUniTabSheet
@@ -787,8 +762,6 @@ object ClientsF: TClientsF
     object pcCommision: TUniTabSheet
       Hint = ''
       Caption = #1050#1086#1084#1080#1089#1089#1080#1103' '#1080' '#1085#1072#1083#1086#1075#1080
-      ExplicitWidth = 1173
-      ExplicitHeight = 457
       object UniLabel6: TUniLabel
         Left = 41
         Top = 37
@@ -827,8 +800,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitWidth = 1115
-        ExplicitHeight = 409
         object UniHiddenPanel1: TUniHiddenPanel
           Left = 25
           Top = 191
@@ -951,7 +922,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 1173
         object UniToolButton3: TUniToolButton
           Left = 0
           Top = 0
@@ -1984,7 +1954,6 @@ object ClientsF: TClientsF
       FieldName = 'ProfilesDeliveryID'
       KeyFields = 'ProfilesDeliveryID'
       Origin = 'ProfilesDeliveryID'
-      ReadOnly = True
     end
     object qProfilesDeliveryListDestinationName: TWideStringField
       DisplayWidth = 60
@@ -2012,7 +1981,6 @@ object ClientsF: TClientsF
     object qDelimiterListDelimiterID: TFDAutoIncField
       FieldName = 'DelimiterID'
       Origin = 'DelimiterID'
-      ReadOnly = True
     end
     object qDelimiterListName: TStringField
       FieldName = 'Name'
