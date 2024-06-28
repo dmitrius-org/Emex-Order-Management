@@ -49,7 +49,7 @@ object UniServerModule: TUniServerModule
     Top = 26
   end
   object FDGUIxWaitCursor: TFDGUIxWaitCursor
-    Provider = 'Console'
+    Provider = 'Forms'
     ScreenCursor = gcrAppWait
     Left = 209
     Top = 25

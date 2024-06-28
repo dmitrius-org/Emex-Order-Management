@@ -51,7 +51,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// <summary>
       /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
       /// </summary>
-      procedure FillFindByNumber(APparts: ArrayOfFindByNumber);
+      procedure FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongInt = 0);
 
       /// <summary>
       /// FillBasketDetails - Вспомогательная процедура для заполнения pBasketDetails данными корзины
@@ -84,15 +84,15 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
       /// <summary>
       /// getCustomer -Подготовка авторизационных данных (пользователь, пароль).
-      /// ASuppliersID - идентификатор постащика
       /// </summary>
+      /// <param name="ASuppliersID">идентификатор постащика </param>
       /// <returns> объект Customer</returns>
       function getCustomer(ASuppliersID: Integer): Customer;
 
       /// <summary>
       /// getCustomerByClient -Подготовка авторизационных данных (пользователь, пароль).
-      /// AClientID - идентификатор клиента
       /// </summary>
+      /// <param name="AClientID">идентификатор клиента</param>
       /// <returns> объект Customer</returns>
       function getCustomerByClient(AClientID: Integer): Customer;
 
@@ -128,7 +128,9 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       procedure OrderStateSyncByOrderNum();
 
       /// <summary>MovementByOrderNumber - просмотр движения по номеру заказа.
-      ///  Результат пишется в pMovement
+      /// <param name="ASupplierID">идентификатор постащика </param>
+      /// <param name="AEmexOrderID">идентификатор заказа в emex </param>
+      /// <returns>Результат пишется в pMovement </returns
       /// </summary>
       procedure MovementByOrderNumber(ASupplierID: Integer; AEmexOrderID: integer);
 
@@ -734,7 +736,7 @@ begin
     end;
 end;
 
-procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber);
+procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongInt = 0);
 var part: FindByNumber;
     I: Integer;
 begin
@@ -744,11 +746,14 @@ begin
     part:= FindByNumber.Create;
     part :=  APparts[i];
 
-    SQl.Exec( 'insert into pFindByNumber'+
-              '       (Spid,    Available, bitOldNum, PercentSupped, PriceId, Region, Delivery, Make, DetailNum, PriceLogo, Price, PartNameRus, PartNameEng,  WeightGr,  MakeName,   Packing,  VolumeAdd,  GuaranteedDay, bitECO, bitWeightMeasured) '+
-              ' select @@spid, :Available,:bitOldNum,:PercentSupped,:PriceId,:Region,:Delivery,:Make,:DetailNum,:PriceLogo,:Price,:PartNameRus,:PartNameEng, :WeightGr, :MakeName,  :Packing, :VolumeAdd, :GuaranteedDay, :bitECO, :bitWeightMeasured ',
-             ['Available','bitOldNum','PercentSupped','PriceId','Region','Delivery', 'Make', 'DetailNum', 'PriceLogo', 'Price', 'PartNameRus', 'PartNameEng','WeightGr','MakeName', 'Packing','VolumeAdd','GuaranteedDay', 'bitECO', 'bitWeightMeasured'],
-             [part.Available,
+    SQl.Exec( '''
+                insert into pFindByNumber
+                     (Spid,    ClientID, Available, bitOldNum, PercentSupped, PriceId, Region, Delivery, Make, DetailNum, PriceLogo, Price, PartNameRus, PartNameEng,  WeightGr,  MakeName,   Packing,  VolumeAdd,  GuaranteedDay, bitECO, bitWeightMeasured)
+               select @@spid, :ClientID, :Available,:bitOldNum,:PercentSupped,:PriceId,:Region,:Delivery,:Make,:DetailNum,:PriceLogo,:Price,:PartNameRus,:PartNameEng, :WeightGr, :MakeName,  :Packing, :VolumeAdd, :GuaranteedDay, :bitECO, :bitWeightMeasured
+              ''' ,
+             ['ClientID','Available','bitOldNum','PercentSupped','PriceId','Region','Delivery', 'Make', 'DetailNum', 'PriceLogo', 'Price', 'PartNameRus', 'PartNameEng','WeightGr','MakeName', 'Packing','VolumeAdd','GuaranteedDay', 'bitECO', 'bitWeightMeasured'],
+             [AClientID,
+              part.Available,
               part.bitOldNum,
               part.PercentSupped,
               part.PriceId,
@@ -825,7 +830,7 @@ begin
 
   parts:=Emex.SearchPart(getCustomerByClient(AClientID), ADetailNum, False);
 
-  FillFindByNumber(parts);
+  FillFindByNumber(parts, AClientID);
 
   logger.Info('TEmex.MovementByOrderNumber End');
 end;
@@ -895,7 +900,7 @@ begin
     logger.Info('TEmex.OrderStateSyncByOrderNum Клиент:' + Client);
 
     Qry.Close;
-    Qry.Sql.Text := ' Select distinct EmexOrderID      '+
+    Qry.Sql.Text := ' Select distinct EmexOrderID, SuppliersID '+
                     '   from vOrderStateSyncByOrderNum '+
                     '  where ClientID = :CID           ';
 
@@ -910,7 +915,7 @@ begin
 
       SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
 
-      MovementByOrderNumber(Client.ToInteger, Order);
+      MovementByOrderNumber(Qry.FieldByName('SuppliersID').AsInteger, Order);
 
       SQl.Exec(' exec EmexOrderStateSync select 0 ', [],[]);
 

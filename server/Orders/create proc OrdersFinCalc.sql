@@ -4,72 +4,73 @@ if OBJECT_ID('OrdersFinCalc') is not null
   OrdersFinCalc - расчет финансовых показателей
 
   @IsSave - сохраняет данные в tOrders
-            0 - нет
+            0 - нет (по умолчанию)
             1 - да
-
+  @IsFilled - данные для расчета уже заполнены
+            0 - нет (по умолчанию)
+            1 - да
   Входящий набор данных: pOrdersFinIn
-  Результат расчета: pOrdersFin
+  Результат расчета:     pOrdersFin
 */
 go
 create proc OrdersFinCalc
-              @IsSave bit =  null
+              @IsSave   bit =  null,
+              @IsFilled bit =  null
              
 as
 declare @r int = 0
 
-delete pOrdersFin from pOrdersFin where spid = @@Spid
-insert pOrdersFin
-      (Spid
-      ,OrderID
-      ,OrderDate
-      ,ClientID
-      ,PriceName
-      ,Quantity
-      ,Price  -- продажа
-      ,PricePurchase
-      ,WeightKG   
-      ,VolumeKG 
-      ,WeightKGF
-      ,VolumeKGF
-      ,Taxes
-      ,Commission
-      ,Margin     
-      ,ExtraKurs  
-      ,PdWeightKG 
-      ,PdVolumeKG 
-      ,PriceCommission -- Комиссия от продажи	
-      )
-Select @@spid
-      ,o.OrderID
-      ,o.OrderDate
-      ,o.ClientID
-      ,o.CustomerPriceLogo
-      ,o.Quantity
-      ,o.Price                  -- цена продажи в рублях
-      ,isnull(nullif(o.PricePurchaseF, 0), o.PricePurchase) -- цена закупки в долларах
-      ,isnull(o.WeightKG,  0)
-      ,isnull(o.VolumeKG , 0)
-      ,isnull(p.WeightKGF, 0)
-      ,isnull(p.VolumeKGF, 0)
-      ,isnull(o.Taxes, c.Taxes) -- Комиссия + Налоги
-      ,isnull(o.Commission, 0)/100         -- Комиссия за оплату  Comission ExtraKurs
-      ,isnull(o.Margin, 0)/100             -- Наценка             Margin
-      ,isnull(o.ExtraKurs, 0)/100          -- Комиссия на курс    ExtraKurs
-      ,isnull(o.WeightKGAmount, pd.WeightKG)              -- Стоимость кг	
-      ,isnull(o.VolumeKGAmount, pd.VolumeKG)              -- Стоимость vкг
-      ,o.CommissionAmount       -- Комиссия от продажи	 
-  from pOrdersFinIn i (nolock)
- inner join tOrders o (nolock)
-         on o.OrderID = i.OrderID
- inner join tClients c (nolock)
-         on c.ClientID = o.ClientID
- --inner join tProfilesCustomer pc (nolock)
- --        on pc.ClientPriceLogo = o.CustomerPriceLogo
- inner join tSupplierDeliveryProfiles pd (nolock)
-         on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
-  left join tPrice p (nolock)
-         on p.PriceID = o.PriceID
- where i.Spid = @@Spid
+select @IsFilled = isnull(@IsFilled, 0)
+
+
+if @IsFilled  = 0
+begin
+  delete pOrdersFin from pOrdersFin (rowlock) where spid = @@Spid
+  insert pOrdersFin
+        (Spid
+        ,OrderID
+        ,OrderDate
+        ,Price  -- продажа
+        ,PricePurchase
+        ,WeightKG   
+        ,VolumeKG 
+        ,WeightKGF
+        ,VolumeKGF
+        ,Taxes
+        ,Commission
+        ,Margin     
+        ,ExtraKurs  
+        ,PdWeightKG 
+        ,PdVolumeKG 
+        ,PriceCommission -- Комиссия от продажи	
+        )
+  Select @@spid
+        ,o.OrderID
+        ,o.OrderDate
+        ,o.Price                  -- цена продажи в рублях
+        ,isnull(nullif(o.PricePurchaseF, 0), o.PricePurchase) -- цена закупки в долларах
+        ,isnull(o.WeightKG,  0)
+        ,isnull(o.VolumeKG , 0)
+        ,isnull(p.WeightKGF, 0)
+        ,isnull(p.VolumeKGF, 0)
+        ,isnull(o.Taxes, c.Taxes) -- Комиссия + Налоги
+        ,isnull(o.Commission, 0)/100         -- Комиссия за оплату  Comission ExtraKurs
+        ,isnull(o.Margin, 0)/100             -- Наценка             Margin
+        ,isnull(o.ExtraKurs, 0)/100          -- Комиссия на курс    ExtraKurs
+        ,isnull(o.WeightKGAmount, pd.WeightKG)              -- Стоимость кг	
+        ,isnull(o.VolumeKGAmount, pd.VolumeKG)              -- Стоимость vкг
+        ,o.CommissionAmount       -- Комиссия от продажи	 
+    from pOrdersFinIn i (nolock)
+   inner join tOrders o (nolock)
+           on o.OrderID = i.OrderID
+   inner join tClients c (nolock)
+           on c.ClientID = o.ClientID
+   inner join tSupplierDeliveryProfiles pd (nolock)
+           on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
+    left join tPrice p (nolock)
+           on p.PriceID = o.PriceID
+   where i.Spid = @@Spid
+end
 
 Update p
    set p.Course    = c.Value
@@ -194,10 +195,10 @@ Update pOrdersFin --Рентабельность
 if isnull(@IsSave, 0) = 1
 begin
   Update o
-     set o.MarginF          = p.MarginF
-        ,o.Income           = p.Income	
-		,o.IncomePrc        = p.IncomePrc
-        ,o.Profit           = p.Profit -- Рентабельность
+     set o.MarginF          = p.MarginF    -- маржа факт
+        ,o.Income           = p.Income	   -- доход
+		,o.IncomePrc        = p.IncomePrc  -- доход в процентах
+        ,o.Profit           = p.Profit     -- Рентабельность
         ,o.CommissionAmount = isnull(o.CommissionAmount, p.PriceCommission) -- Комиссия от продажи
     from pOrdersFin p (nolock)
    inner join tOrders o with (updlock)
@@ -214,7 +215,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20240619', '2'
+exec setOV 'OrdersFinCalc', 'P', '20240628', '3'
 go
  
  

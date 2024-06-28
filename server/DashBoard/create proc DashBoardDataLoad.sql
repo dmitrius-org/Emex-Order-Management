@@ -54,7 +54,6 @@ as
             order by OnDate desc
           ) as t
   
-   goto exit_
   -- проверка загрузки прайсов
   insert #result (Id, Title, Status, Icon, Detail, Hint) 
   select 2,

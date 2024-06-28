@@ -33,10 +33,11 @@ create table pFindByNumber
 ,OurDelivery             int            -- наш срок поставки
 ,OurDeliverySTR          nvarchar(256)  -- наш срок поставки стройкой, показываем клиенту
 
+-- расчетные данные
 ,Margin		             money
 ,Discount	             money          -- Скидка
-,Kurs		             money
-,ExtraKurs               money
+,Kurs		             money          -- Курс
+,ExtraKurs               money          -- 
 ,Commission	             money          -- Комиссия эквайера
 ,Reliability             money          -- Вероятность поставки
 

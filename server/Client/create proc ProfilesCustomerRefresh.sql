@@ -83,7 +83,7 @@ select @@SPID
       ,p.UploadFolder       
       ,p.UploadPriceName    
       ,p.UploadFileName     
-      ,p.isActive           
+      ,s.isActive           
       ,s.ProfilesDeliveryID 
       ,p.ClientPriceLogo                    
       ,p.UploadDelimiterID  

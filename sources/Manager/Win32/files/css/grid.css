@@ -103,7 +103,7 @@
 }
 
 /* Иконка: Отказ*/
-.grid-order .x-cancellation {
+.grid-order-cancellation {
     width: 100%;
     /* margin: 1% auto; */
     /* font-size: 16px; */
@@ -118,7 +118,7 @@
 }
 
 /* Иконка: сообщение по заказу*/
-.x-orders-message {
+.grid-order-message {
     /* position: absolute; */
     overflow: visible;
     /* z-index: 999999; */

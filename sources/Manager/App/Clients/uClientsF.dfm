@@ -23,7 +23,7 @@ object ClientsF: TClientsF
       1179
       44)
     object btnOk: TUniBitBtn
-      Left = 1017
+      Left = 1086
       Top = 10
       Width = 85
       Height = 25
@@ -34,7 +34,7 @@ object ClientsF: TClientsF
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
-      Left = 930
+      Left = 996
       Top = 10
       Width = 81
       Height = 25
@@ -51,7 +51,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabHome
+    ActivePage = tabPriceProfiles
     Align = alClient
     TabOrder = 1
     object tabHome: TUniTabSheet
@@ -546,25 +546,32 @@ object ClientsF: TClientsF
               CheckBoxField.AutoPost = True
             end
             item
+              FieldName = 'Brief'
+              Title.Alignment = taCenter
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103
+              Width = 166
+            end
+            item
               FieldName = 'ProfilesCustomerID'
               Title.Alignment = taCenter
               Title.Caption = 'ProfilesCustomerID'
               Width = 150
               Visible = False
+              ReadOnly = True
               Sortable = True
             end
             item
               FieldName = 'ProfilesDeliveryID'
               Title.Alignment = taCenter
-              Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
+              Title.Caption = #1048#1044' '#1089#1087#1086#1089#1086#1073#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 133
               Visible = False
               Sortable = True
             end
             item
-              FieldName = 'DestinationName'
+              FieldName = 'ProfilesDeliveryName'
               Title.Alignment = taCenter
-              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103
+              Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 172
               Editor = lkPriceProfiles
               Sortable = True
@@ -1708,7 +1715,7 @@ object ClientsF: TClientsF
     UpdateObject = uProfilesCustomer
     SQL.Strings = (
       'select p.*'
-      '      ,sp.Name   DestinationName'
+      '      ,sp.Name   ProfilesDeliveryName'
       '      ,d.Name    UploadDelimiter'
       '  from pProfilesCustomer p (nolock)'
       '  left join tSupplierDeliveryProfiles sp (nolock)'
@@ -1725,6 +1732,7 @@ object ClientsF: TClientsF
     object qProfilesCustomerProfilesCustomerID: TIntegerField
       FieldName = 'ProfilesCustomerID'
       Origin = 'ProfilesCustomerID'
+      ReadOnly = True
     end
     object qProfilesCustomerClientID: TFMTBCDField
       FieldName = 'ClientID'
@@ -1790,8 +1798,12 @@ object ClientsF: TClientsF
       Precision = 18
       Size = 0
     end
-    object qProfilesCustomerDestinationName: TWideStringField
-      FieldName = 'DestinationName'
+    object qProfilesCustomerProfilesDeliveryName: TWideStringField
+      FieldName = 'ProfilesDeliveryName'
+      Size = 60
+    end
+    object qProfilesCustomerBrief: TStringField
+      FieldName = 'Brief'
       Size = 60
     end
   end

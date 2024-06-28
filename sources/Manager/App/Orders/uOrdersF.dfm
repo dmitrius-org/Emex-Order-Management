@@ -21,15 +21,13 @@ object OrderF: TOrderF
     ParentColor = False
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 863
-    ExplicitHeight = 403
     DesignSize = (
       867
       404)
     object edtDetailNameF: TUniEdit
-      Left = 173
-      Top = 70
-      Width = 676
+      Left = 118
+      Top = 63
+      Width = 733
       Hint = ''
       ShowHint = True
       Text = ''
@@ -37,54 +35,34 @@ object OrderF: TOrderF
       ClearButton = True
     end
     object lblWeightKGF: TUniLabel
-      Left = 18
-      Top = 107
-      Width = 117
+      Left = 17
+      Top = 102
+      Width = 88
       Height = 13
       Hint = ''
       ShowHint = True
-      Caption = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090':'
-      TabOrder = 7
+      Caption = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081':'
+      TabOrder = 5
     end
     object lblVolumeKGF: TUniLabel
-      Left = 18
-      Top = 135
-      Width = 112
+      Left = 17
+      Top = 144
+      Width = 83
       Height = 13
       Hint = ''
       ShowHint = True
-      Caption = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090':'
-      TabOrder = 8
-    end
-    object edtWeightKGF: TUniNumberEdit
-      Left = 173
-      Top = 98
-      Width = 190
-      Hint = ''
-      ShowHint = True
-      TabOrder = 2
-      DecimalPrecision = 3
-      DecimalSeparator = ','
-    end
-    object edtVolumeKGF: TUniNumberEdit
-      Left = 173
-      Top = 126
-      Width = 190
-      Hint = ''
-      ShowHint = True
-      TabOrder = 3
-      DecimalPrecision = 3
-      DecimalSeparator = ','
+      Caption = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081':'
+      TabOrder = 6
     end
     object lblDetailNameF: TUniLabel
-      Left = 18
-      Top = 76
+      Left = 17
+      Top = 66
       Width = 84
       Height = 13
       Hint = ''
       ShowHint = True
       Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
-      TabOrder = 9
+      TabOrder = 7
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -97,9 +75,8 @@ object OrderF: TOrderF
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akLeft, akBottom]
       TabStop = False
-      TabOrder = 6
+      TabOrder = 4
       OnClick = btnCancelClick
-      ExplicitTop = 368
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -112,42 +89,51 @@ object OrderF: TOrderF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akLeft, akBottom]
-      TabOrder = 5
+      TabOrder = 3
       OnClick = btnOkClick
-      ExplicitTop = 368
     end
     object UniGroupBox1: TUniGroupBox
-      Left = 382
-      Top = 149
-      Width = 468
-      Height = 60
+      Left = 267
+      Top = 85
+      Width = 110
+      Height = 124
       Hint = 
         '|('#1044#1083#1080#1085#1072' (1-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1064#1080#1088#1080#1085#1072' (2-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1042#1099#1089#1086#1090#1072' (3-'#1103' '#1075#1088#1072#1092#1072')) /' +
         ' 5000'#13#10#1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1086#1082#1088#1091#1075#1083#1103#1077#1084' '#1076#1086' '#1076#1077#1089#1103#1090#1099#1093' '
       ShowHint = True
-      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' '#1086#1073#1098#1077#1084#1085#1086#1075#1086' '#1074#1077#1089#1072
-      Layout = 'hbox'
-      TabOrder = 4
+      AlignmentControl = uniAlignmentClient
+      Caption = #1056#1072#1079#1084#1077#1088
+      Layout = 'vbox'
+      LayoutAttribs.Align = 'center'
+      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Padding = '1'
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      TabOrder = 2
       object edtL: TUniNumberEdit
-        Left = 18
-        Top = 25
-        Width = 100
-        Height = 25
+        Left = 3
+        Top = 15
+        Width = 86
         Hint = ''
+        Margins.Left = 0
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
         ShowHint = True
         ParentFont = False
         Font.Height = -13
         TabOrder = 1
         FieldLabel = 'L'
         FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '0'
         DecimalSeparator = ','
         OnChange = edtLChange
       end
       object edtW: TUniNumberEdit
-        Left = 124
-        Top = 25
-        Width = 100
-        Height = 25
+        Left = 3
+        Top = 38
+        Width = 86
         Hint = ''
         ShowHint = True
         ParentFont = False
@@ -155,14 +141,15 @@ object OrderF: TOrderF
         TabOrder = 2
         FieldLabel = 'W'
         FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
         DecimalSeparator = ','
         OnChange = edtLChange
       end
       object edtH: TUniNumberEdit
-        Left = 230
-        Top = 25
-        Width = 100
-        Height = 25
+        Left = 3
+        Top = 61
+        Width = 86
         Hint = ''
         ShowHint = True
         ParentFont = False
@@ -170,14 +157,15 @@ object OrderF: TOrderF
         TabOrder = 3
         FieldLabel = 'H'
         FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
         DecimalSeparator = ','
         OnChange = edtLChange
       end
       object edtVKG: TUniNumberEdit
-        Left = 336
-        Top = 25
-        Width = 110
-        Height = 25
+        Left = 3
+        Top = 84
+        Width = 86
         Hint = ''
         ShowHint = True
         ParentFont = False
@@ -186,6 +174,9 @@ object OrderF: TOrderF
         ReadOnly = True
         FieldLabel = 'VKG'
         FieldLabelWidth = 30
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
         DecimalPrecision = 1
         DecimalSeparator = ','
         OnKeyDown = edtVKGKeyDown
@@ -199,7 +190,7 @@ object OrderF: TOrderF
       Hint = ''
       ShowHint = True
       Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100':'
-      TabOrder = 10
+      TabOrder = 8
       object btnNumber: TUniButton
         Left = 9
         Top = 20
@@ -249,7 +240,7 @@ object OrderF: TOrderF
       Hint = ''
       ShowHint = True
       Caption = #1055#1086#1080#1089#1082':'
-      TabOrder = 11
+      TabOrder = 9
       object btnGoogleImages: TUniButton
         Left = 13
         Top = 20
@@ -312,135 +303,54 @@ object OrderF: TOrderF
       end
     end
     object UniLabel1: TUniLabel
-      Left = 18
-      Top = 162
+      Left = 17
+      Top = 187
       Width = 77
       Height = 13
       Hint = ''
       ShowHint = True
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103':'
-      TabOrder = 12
-    end
-    object UniLabel2: TUniLabel
-      Left = 18
-      Top = 188
-      Width = 113
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1051#1086#1075#1086' '#1080' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077':'
-      TabOrder = 13
+      TabOrder = 10
     end
     object cbPrice: TUniComboBox
-      Left = 173
-      Top = 184
-      Width = 72
+      Left = 472
+      Top = 128
+      Width = 351
       Hint = ''
       Enabled = False
       ShowHint = True
       Text = ''
-      TabOrder = 14
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 11
       TabStop = False
       Images = ImageList16
       IconItems = <>
       OnChange = cbPriceChange
     end
     object UniBitBtn1: TUniBitBtn
-      Left = 249
-      Top = 184
+      Left = 829
+      Top = 128
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1083#1086#1075#1086
       ShowHint = True
       Caption = ''
-      TabOrder = 15
+      TabOrder = 12
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       Images = ImageList16
       ImageIndex = 2
       OnClick = UniBitBtn1Click
     end
-    object UniGroupBox4: TUniGroupBox
-      Left = 381
-      Top = 98
-      Width = 468
-      Height = 50
-      Hint = ''
-      Enabled = False
-      ShowHint = True
-      Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
-      TabOrder = 16
-      object UniHTMLFrame: TUniHTMLFrame
-        AlignWithMargins = True
-        Left = 5
-        Top = 18
-        Width = 458
-        Height = 27
-        Hint = ''
-        ShowHint = True
-        HTML.Strings = (
-          '<fieldset class="rating">'
-          
-            '    <input type="radio" id="star100" name="rating" value="100"/>' +
-            '<label class="full" for="star5" title="100 %"></label>'
-          
-            '    <input type="radio" id="star90"  name="rating" value="90" />' +
-            '<label class="half" for="star4half" title="90 %"></label>'
-          
-            '    <input type="radio" id="star80"  name="rating" value="80" />' +
-            '<label class="full" for="star4" title="80 %"></label>'
-          
-            '    <input type="radio" id="star70"  name="rating" value="70" />' +
-            '<label class="half" for="star3half" title="70 %"></label>'
-          
-            '    <input type="radio" id="star60"  name="rating" value="60" />' +
-            '<label class="full" for="star3" title="60 %"></label>'
-          
-            '    <input type="radio" id="star50"  name="rating" value="50" />' +
-            '<label class="half" for="star2half" title="50 %"></label>'
-          
-            '    <input type="radio" id="star40"  name="rating" value="40" />' +
-            '<label class="full" for="star2" title="40 %"></label>'
-          
-            '    <input type="radio" id="star30"  name="rating" value="30" />' +
-            '<label class="half" for="star1half" title="30 %"></label>'
-          
-            '    <input type="radio" id="star20"  name="rating" value="20" />' +
-            '<label class="full" for="star1" title="20 %"></label>'
-          
-            '    <input type="radio" id="star10"  name="rating" value="10" />' +
-            '<label class="half" for="starhalf" title="10 %"></label>'
-          
-            '    <input type="radio" id="star"    name="rating" value="9"  />' +
-            '<label class="half" for="star" title="0 %"></label>    '
-          '</fieldset>'
-          '<label id="prc" class="ratingprc" ></label>')
-        Align = alClient
-      end
-    end
-    object cbDestinationLogo: TUniComboBox
-      Left = 279
-      Top = 185
-      Width = 71
-      Hint = ''
-      Enabled = False
-      ShowHint = True
-      Text = ''
-      TabOrder = 17
-      TabStop = False
-      MatchFieldWidth = False
-      Images = ImageList16
-      IconItems = <>
-    end
     object btnDestinationLogo: TUniBitBtn
-      Left = 354
-      Top = 185
+      Left = 829
+      Top = 100
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       ShowHint = True
       Caption = ''
-      TabOrder = 18
+      TabOrder = 13
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       Images = ImageList16
@@ -448,192 +358,673 @@ object OrderF: TOrderF
       OnClick = btnDestinationLogoClick
     end
     object cbFragile: TUniCheckBox
-      Left = 173
-      Top = 158
-      Width = 97
+      Left = 195
+      Top = 187
+      Width = 66
       Height = 17
       Hint = ''
       ShowHint = True
       Caption = 'Fragile'
-      TabOrder = 19
+      TabOrder = 14
     end
     object cbNoAir: TUniCheckBox
-      Left = 276
-      Top = 158
-      Width = 97
+      Left = 117
+      Top = 187
+      Width = 60
       Height = 17
       Hint = ''
       ShowHint = True
       Caption = 'NoAir'
+      TabOrder = 15
+    end
+    object UniGroupBox5: TUniGroupBox
+      AlignWithMargins = True
+      Left = 117
+      Top = 85
+      Width = 72
+      Height = 42
+      Hint = ''
+      ShowHint = True
+      AlignmentControl = uniAlignmentClient
+      Caption = #1055#1088#1072#1081#1089
+      Layout = 'vbox'
+      TabOrder = 16
+      object edtWeightKG: TUniNumberEdit
+        Left = 2
+        Top = 15
+        Width = 68
+        Hint = ''
+        Enabled = False
+        ShowHint = True
+        BorderStyle = ubsNone
+        TabOrder = 1
+        ReadOnlyMode = urmNotEditable
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+      end
+    end
+    object UniGroupBox6: TUniGroupBox
+      Left = 193
+      Top = 85
+      Width = 70
+      Height = 42
+      Hint = ''
+      ShowHint = True
+      AlignmentControl = uniAlignmentClient
+      Caption = #1060#1072#1082#1090
+      Layout = 'vbox'
+      TabOrder = 17
+      object edtWeightKGF: TUniNumberEdit
+        Left = 3
+        Top = 14
+        Width = 66
+        Hint = ''
+        ShowHint = True
+        BorderStyle = ubsNone
+        TabOrder = 1
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+        OnExit = edtWeightKGFExit
+        OnKeyDown = edtWeightKGFKeyDown
+      end
+    end
+    object UniGroupBox7: TUniGroupBox
+      Left = 117
+      Top = 127
+      Width = 72
+      Height = 42
+      Hint = ''
+      ShowHint = True
+      AlignmentControl = uniAlignmentClient
+      Caption = #1055#1088#1072#1081#1089
+      Layout = 'vbox'
+      TabOrder = 18
+      object edtVolumeKG: TUniNumberEdit
+        Left = 2
+        Top = 15
+        Width = 68
+        Hint = ''
+        Enabled = False
+        ShowHint = True
+        BorderStyle = ubsNone
+        TabOrder = 1
+        ReadOnlyMode = urmNotEditable
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+      end
+    end
+    object UniGroupBox8: TUniGroupBox
+      Left = 193
+      Top = 127
+      Width = 70
+      Height = 42
+      Hint = ''
+      ShowHint = True
+      AlignmentControl = uniAlignmentClient
+      Caption = #1060#1072#1082#1090
+      Layout = 'vbox'
+      TabOrder = 19
+      object edtVolumeKGF: TUniNumberEdit
+        Left = 2
+        Top = 15
+        Width = 66
+        Hint = ''
+        ShowHint = True
+        BorderStyle = ubsNone
+        TabOrder = 1
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+        OnExit = edtWeightKGFExit
+        OnKeyDown = edtWeightKGFKeyDown
+      end
+    end
+    object UniLabel11: TUniLabel
+      Left = 383
+      Top = 104
+      Width = 52
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1044#1086#1089#1090#1072#1074#1082#1072':'
       TabOrder = 20
     end
-    object edtPrice: TUniNumberEdit
-      Left = 173
-      Top = 237
-      Width = 132
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      ParentFont = False
-      Font.Height = -13
-      TabOrder = 21
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
-    end
-    object UniLabel4: TUniLabel
-      Left = 173
-      Top = 221
-      Width = 45
+    object UniLabel12: TUniLabel
+      Left = 383
+      Top = 132
+      Width = 62
       Height = 13
       Hint = ''
       ShowHint = True
-      Caption = #1047#1072#1082#1091#1087#1082#1072':'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      TabOrder = 21
+    end
+    object UniLabel13: TUniLabel
+      Left = 382
+      Top = 160
+      Width = 66
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077':'
       TabOrder = 22
     end
-    object edtMarginF: TUniNumberEdit
-      Left = 449
-      Top = 237
-      Width = 132
-      Height = 25
+    object edtMessage: TUniEdit
+      Left = 472
+      Top = 156
+      Width = 379
       Hint = ''
       ShowHint = True
-      ParentFont = False
-      Font.Height = -13
+      Text = ''
+      Anchors = [akLeft, akTop, akRight]
       TabOrder = 23
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
+      ClearButton = True
     end
-    object edtMargin: TUniNumberEdit
-      Left = 311
-      Top = 237
-      Width = 132
-      Height = 25
+    object UniGroupBox9: TUniGroupBox
+      Left = 19
+      Top = 209
+      Width = 828
+      Height = 60
       Hint = ''
       ShowHint = True
-      ParentFont = False
-      Font.Height = -13
+      AlignmentControl = uniAlignmentClient
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1077#1083#1080' '#1076#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+      Anchors = [akLeft, akTop, akRight]
+      Layout = 'hbox'
+      LayoutAttribs.Align = 'top'
+      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Padding = '1'
+      LayoutAttribs.Columns = 9
+      LayoutConfig.ComponentCls = 'order-indicators'
       TabOrder = 24
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
+      DesignSize = (
+        828
+        60)
+      object edtPrice: TUniEdit
+        Left = 3
+        Top = 18
+        Width = 85
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        ShowHint = True
+        Text = ''
+        TabOrder = 1
+        ReadOnly = True
+        FieldLabel = #1047#1072#1082#1091#1087#1082#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtMargin: TUniEdit
+        Left = 91
+        Top = 18
+        Width = 70
+        Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 2
+        ReadOnly = True
+        FieldLabel = #1053#1072#1094#1077#1085#1082#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtMarginF: TUniEdit
+        Left = 164
+        Top = 26
+        Width = 80
+        Hint = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 3
+        ReadOnly = True
+        FieldLabel = #1053#1072#1094#1077#1085#1082#1072'  '#1092#1072#1082#1090
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtIncome: TUniEdit
+        Left = 237
+        Top = 26
+        Width = 70
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 4
+        ReadOnly = True
+        FieldLabel = #1044#1086#1093#1086#1076
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtProfit: TUniEdit
+        Left = 310
+        Top = 23
+        Width = 90
+        Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 5
+        ReadOnly = True
+        FieldLabel = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtReliabilityGroup: TUniFieldContainer
+        Left = 403
+        Top = 16
+        Width = 121
+        Height = 35
+        Hint = ''
+        ShowHint = True
+        ParentColor = False
+        FieldLabel = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100
+        FieldLabelWidth = 100
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        TabOrder = 6
+        Layout = 'vbox'
+        LayoutAttribs.Align = 'end'
+        LayoutAttribs.Pack = 'end'
+        LayoutConfig.ComponentCls = 'order-rating-body'
+        LayoutConfig.Padding = '1'
+        LayoutConfig.IgnorePosition = False
+        LayoutConfig.Margin = '3'
+        LayoutConfig.DockWhenAligned = False
+        object edtReliability: TUniHTMLFrame
+          Left = 0
+          Top = 15
+          Width = 121
+          Height = 22
+          Hint = ''
+          Margins.Left = 0
+          Margins.Top = 5
+          Margins.Right = 0
+          Margins.Bottom = 0
+          ShowHint = True
+          HTML.Strings = (
+            '<fieldset class="rating">'
+            
+              '    <input type="radio" id="star100" name="rating" value="100"/>' +
+              '<label class="full" for="star5" title="100 %"></label>'
+            
+              '    <input type="radio" id="star90"  name="rating" value="90" />' +
+              '<label class="half" for="star4half" title="90 %"></label>'
+            
+              '    <input type="radio" id="star80"  name="rating" value="80" />' +
+              '<label class="full" for="star4" title="80 %"></label>'
+            
+              '    <input type="radio" id="star70"  name="rating" value="70" />' +
+              '<label class="half" for="star3half" title="70 %"></label>'
+            
+              '    <input type="radio" id="star60"  name="rating" value="60" />' +
+              '<label class="full" for="star3" title="60 %"></label>'
+            
+              '    <input type="radio" id="star50"  name="rating" value="50" />' +
+              '<label class="half" for="star2half" title="50 %"></label>'
+            
+              '    <input type="radio" id="star40"  name="rating" value="40" />' +
+              '<label class="full" for="star2" title="40 %"></label>'
+            
+              '    <input type="radio" id="star30"  name="rating" value="30" />' +
+              '<label class="half" for="star1half" title="30 %"></label>'
+            
+              '    <input type="radio" id="star20"  name="rating" value="20" />' +
+              '<label class="full" for="star1" title="20 %"></label>'
+            
+              '    <input type="radio" id="star10"  name="rating" value="10" />' +
+              '<label class="half" for="starhalf" title="10 %"></label>'
+            
+              '    <input type="radio" id="star"    name="rating" value="9"  />' +
+              '<label class="half" for="star" title="0 %"></label>    '
+            '</fieldset>'
+            '<label id="prc" class="ratingprc" ></label>')
+          ScreenMask.Enabled = True
+          ScreenMask.WaitData = True
+          LayoutConfig.ComponentCls = 'order-rating'
+          LayoutConfig.IgnorePosition = False
+          LayoutConfig.DockWhenAligned = False
+        end
+      end
+      object edtDelivery: TUniEdit
+        Left = 527
+        Top = 26
+        Width = 79
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 7
+        ReadOnly = True
+        FieldLabel = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtDeliveryClient: TUniEdit
+        Left = 609
+        Top = 26
+        Width = 87
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 8
+        ReadOnly = True
+        FieldLabel = #1057#1088#1086#1082' '#1082#1083#1080#1077#1085#1090#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtCount: TUniEdit
+        Left = 699
+        Top = 27
+        Width = 94
+        Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 9
+        ReadOnly = True
+        FieldLabel = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
     end
-    object edtIncome: TUniNumberEdit
-      Left = 587
-      Top = 237
-      Width = 132
-      Height = 25
+    object UniGroupBox4: TUniGroupBox
+      Left = 19
+      Top = 269
+      Width = 828
+      Height = 60
       Hint = ''
       ShowHint = True
-      ParentFont = False
-      Font.Height = -13
+      AlignmentControl = uniAlignmentClient
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1077#1083#1080' '#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+      Anchors = [akLeft, akTop, akRight]
+      Layout = 'hbox'
+      LayoutAttribs.Align = 'top'
+      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Padding = '1'
+      LayoutAttribs.Columns = 9
+      LayoutConfig.ComponentCls = 'order-indicators'
       TabOrder = 25
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
+      DesignSize = (
+        828
+        60)
+      object edtPrice2: TUniEdit
+        Left = 3
+        Top = 18
+        Width = 85
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        ShowHint = True
+        Text = ''
+        TabOrder = 1
+        ReadOnly = True
+        FieldLabel = #1047#1072#1082#1091#1087#1082#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtMargin2: TUniEdit
+        Left = 91
+        Top = 18
+        Width = 70
+        Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 2
+        ReadOnly = True
+        FieldLabel = #1053#1072#1094#1077#1085#1082#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtMarginF2: TUniEdit
+        Left = 164
+        Top = 26
+        Width = 80
+        Hint = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 3
+        ReadOnly = True
+        FieldLabel = #1053#1072#1094#1077#1085#1082#1072'  '#1092#1072#1082#1090
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtIncome2: TUniEdit
+        Left = 237
+        Top = 26
+        Width = 70
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 4
+        ReadOnly = True
+        FieldLabel = #1044#1086#1093#1086#1076
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtProfit2: TUniEdit
+        Left = 310
+        Top = 31
+        Width = 90
+        Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 5
+        ReadOnly = True
+        FieldLabel = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtReliabilityGroup2: TUniFieldContainer
+        Left = 403
+        Top = 11
+        Width = 121
+        Height = 35
+        Hint = ''
+        ShowHint = True
+        ParentColor = False
+        FieldLabel = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100
+        FieldLabelWidth = 100
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        TabOrder = 6
+        Layout = 'vbox'
+        LayoutAttribs.Align = 'end'
+        LayoutAttribs.Pack = 'end'
+        LayoutConfig.ComponentCls = 'order-rating-body'
+        LayoutConfig.Padding = '1'
+        LayoutConfig.IgnorePosition = False
+        LayoutConfig.Margin = '3'
+        LayoutConfig.DockWhenAligned = False
+        object edtReliability2: TUniHTMLFrame
+          Left = 0
+          Top = 13
+          Width = 121
+          Height = 22
+          Hint = ''
+          ShowHint = True
+          HTML.Strings = (
+            '<fieldset class="rating2">'
+            
+              '    <input type="radio" id="star1002" name="rating2" value="100"' +
+              '/><label class="full" for="star5" title="100 %"></label>'
+            
+              '    <input type="radio" id="star902"  name="rating2" value="90" ' +
+              '/><label class="half" for="star4half" title="90 %"></label>'
+            
+              '    <input type="radio" id="star802"  name="rating2" value="80" ' +
+              '/><label class="full" for="star4" title="80 %"></label>'
+            
+              '    <input type="radio" id="star702"  name="rating2" value="70" ' +
+              '/><label class="half" for="star3half" title="70 %"></label>'
+            
+              '    <input type="radio" id="star602"  name="rating2" value="60" ' +
+              '/><label class="full" for="star3" title="60 %"></label>'
+            
+              '    <input type="radio" id="star502"  name="rating2" value="50" ' +
+              '/><label class="half" for="star2half" title="50 %"></label>'
+            
+              '    <input type="radio" id="star402"  name="rating2" value="40" ' +
+              '/><label class="full" for="star2" title="40 %"></label>'
+            
+              '    <input type="radio" id="star302"  name="rating2" value="30" ' +
+              '/><label class="half" for="star1half" title="30 %"></label>'
+            
+              '    <input type="radio" id="star202"  name="rating2" value="20" ' +
+              '/><label class="full" for="star1" title="20 %"></label>'
+            
+              '    <input type="radio" id="star102"  name="rating2" value="10" ' +
+              '/><label class="half" for="starhalf" title="10 %"></label>'
+            
+              '    <input type="radio" id="star2"    name="rating2" value="9"  ' +
+              '/><label class="half" for="star" title="0 %"></label>    '
+            '</fieldset>'
+            '<label id="prc2" class="ratingprc" ></label>')
+          Align = alBottom
+          ScreenMask.Enabled = True
+          ScreenMask.WaitData = True
+          LayoutConfig.ComponentCls = 'order-rating'
+          LayoutConfig.IgnorePosition = False
+          LayoutConfig.DockWhenAligned = False
+        end
+      end
+      object edtDelivery2: TUniEdit
+        Left = 527
+        Top = 26
+        Width = 79
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 7
+        ReadOnly = True
+        FieldLabel = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtDeliveryClient2: TUniEdit
+        Left = 609
+        Top = 26
+        Width = 87
+        Height = 31
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 8
+        ReadOnly = True
+        FieldLabel = #1057#1088#1086#1082' '#1082#1083#1080#1077#1085#1090#1072
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtCount2: TUniEdit
+        Left = 699
+        Top = 27
+        Width = 94
+        Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 9
+        ReadOnly = True
+        FieldLabel = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
     end
-    object UniLabel5: TUniLabel
-      Left = 311
-      Top = 221
-      Width = 67
-      Height = 13
+    object cbDestinationLogo: TUniFSComboBox
+      Left = 472
+      Top = 100
+      Width = 351
       Hint = ''
+      Enabled = False
       ShowHint = True
-      Caption = #1053#1072#1094#1077#1085#1082#1072' (%):'
+      Text = ''
+      Anchors = [akLeft, akTop, akRight]
       TabOrder = 26
-    end
-    object UniLabel6: TUniLabel
-      Left = 449
-      Top = 221
-      Width = 96
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090' (%):'
-      TabOrder = 27
-    end
-    object UniLabel7: TUniLabel
-      Left = 587
-      Top = 221
-      Width = 54
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1044#1086#1093#1086#1076' (%):'
-      TabOrder = 28
-    end
-    object edtProfit: TUniNumberEdit
-      Left = 725
-      Top = 237
-      Width = 124
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      ParentFont = False
-      Font.Height = -13
-      TabOrder = 29
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
-    end
-    object UniLabel8: TUniLabel
-      Left = 725
-      Top = 218
-      Width = 106
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100' (%):'
-      TabOrder = 30
-    end
-    object edtOrderCount: TUniNumberEdit
-      Left = 173
-      Top = 292
-      Width = 132
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      ParentFont = False
-      Font.Height = -13
-      TabOrder = 31
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-      OnChange = edtLChange
-    end
-    object UniLabel9: TUniLabel
-      Left = 173
-      Top = 273
-      Width = 111
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077':'
-      TabOrder = 32
-    end
-    object edtPriceCount: TUniNumberEdit
-      Left = 311
-      Top = 292
-      Width = 132
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      ParentFont = False
-      Font.Height = -13
-      TabOrder = 33
-      ReadOnly = True
-      FieldLabelWidth = 15
-      DecimalSeparator = ','
-    end
-    object UniLabel10: TUniLabel
-      Left = 311
-      Top = 273
-      Width = 115
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077':'
-      TabOrder = 34
+      AnyMatch = True
+      IconItems = <>
+      OnChange = cbDestinationLogoChange
+      Value = '-1'
     end
   end
   object MessageContainer: TUniFieldContainer
@@ -648,7 +1039,6 @@ object OrderF: TOrderF
     TabOrder = 1
     Layout = 'hbox'
     LayoutAttribs.Columns = 1
-    ExplicitWidth = 863
     object UniLabel3: TUniLabel
       AlignWithMargins = True
       Left = 342
@@ -669,8 +1059,8 @@ object OrderF: TOrderF
     end
   end
   object ImageList16: TUniImageList
-    Left = 674
-    Top = 260
+    Left = 722
+    Top = 188
     Bitmap = {
       494C010104003C00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
@@ -949,9 +1339,8 @@ object OrderF: TOrderF
       '{'
       ' '
       '}')
-    Sequenced = False
     OnTimer = UniTimerTimer
-    Left = 747
-    Top = 275
+    Left = 771
+    Top = 195
   end
 end

@@ -1,3 +1,4 @@
+п»ї
 unit uOrdersF;
 
 interface
@@ -10,7 +11,8 @@ uses
   uniComboBox, uniImageList, uniHTMLFrame, uniURLFrame,
 
   Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer,
-  unimURLFrame, uniCheckBox;
+  unimURLFrame, uniCheckBox, uniMemo, uniHTMLMemo, uniListBox, uniFieldSet,
+  UniFSCombobox;
 
 type
 
@@ -31,8 +33,6 @@ type
     edtDetailNameF: TUniEdit;
     lblWeightKGF: TUniLabel;
     lblVolumeKGF: TUniLabel;
-    edtWeightKGF: TUniNumberEdit;
-    edtVolumeKGF: TUniNumberEdit;
     lblDetailNameF: TUniLabel;
     btnCancel: TUniBitBtn;
     btnOk: TUniBitBtn;
@@ -49,35 +49,52 @@ type
     btnZZAP: TUniButton;
     btnEmEx: TUniButton;
     UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
     cbPrice: TUniComboBox;
     ImageList16: TUniImageList;
     UniBitBtn1: TUniBitBtn;
-    UniGroupBox4: TUniGroupBox;
-    UniHTMLFrame: TUniHTMLFrame;
     UniTimer: TUniTimer;
     btnNumber: TUniButton;
     btnNumber2: TUniButton;
-    cbDestinationLogo: TUniComboBox;
     btnDestinationLogo: TUniBitBtn;
     MessageContainer: TUniFieldContainer;
     UniLabel3: TUniLabel;
     cbFragile: TUniCheckBox;
     cbNoAir: TUniCheckBox;
-    edtPrice: TUniNumberEdit;
-    UniLabel4: TUniLabel;
-    edtMarginF: TUniNumberEdit;
-    edtMargin: TUniNumberEdit;
-    edtIncome: TUniNumberEdit;
-    UniLabel5: TUniLabel;
-    UniLabel6: TUniLabel;
-    UniLabel7: TUniLabel;
-    edtProfit: TUniNumberEdit;
-    UniLabel8: TUniLabel;
-    edtOrderCount: TUniNumberEdit;
-    UniLabel9: TUniLabel;
-    edtPriceCount: TUniNumberEdit;
-    UniLabel10: TUniLabel;
+    UniGroupBox5: TUniGroupBox;
+    edtWeightKG: TUniNumberEdit;
+    UniGroupBox6: TUniGroupBox;
+    edtWeightKGF: TUniNumberEdit;
+    UniGroupBox7: TUniGroupBox;
+    edtVolumeKG: TUniNumberEdit;
+    UniGroupBox8: TUniGroupBox;
+    edtVolumeKGF: TUniNumberEdit;
+    UniLabel11: TUniLabel;
+    UniLabel12: TUniLabel;
+    UniLabel13: TUniLabel;
+    edtMessage: TUniEdit;
+    UniGroupBox9: TUniGroupBox;
+    edtPrice: TUniEdit;
+    edtMargin: TUniEdit;
+    edtMarginF: TUniEdit;
+    edtIncome: TUniEdit;
+    edtProfit: TUniEdit;
+    edtDelivery: TUniEdit;
+    edtDeliveryClient: TUniEdit;
+    edtCount: TUniEdit;
+    edtReliabilityGroup: TUniFieldContainer;
+    edtReliability: TUniHTMLFrame;
+    UniGroupBox4: TUniGroupBox;
+    edtPrice2: TUniEdit;
+    edtMargin2: TUniEdit;
+    edtMarginF2: TUniEdit;
+    edtIncome2: TUniEdit;
+    edtProfit2: TUniEdit;
+    edtReliabilityGroup2: TUniFieldContainer;
+    edtReliability2: TUniHTMLFrame;
+    edtDelivery2: TUniEdit;
+    edtDeliveryClient2: TUniEdit;
+    edtCount2: TUniEdit;
+    cbDestinationLogo: TUniFSComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -96,6 +113,10 @@ type
     procedure btnDestinationLogoClick(Sender: TObject);
     procedure cbPriceChange(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
+    procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtWeightKGFExit(Sender: TObject);
+    procedure cbDestinationLogoChange(Sender: TObject);
 
 
   private
@@ -108,32 +129,39 @@ type
     FDetailNumber2: string;
     FPriceLogo: string;
     FManufacturer:string;
+    FQuantity: Integer;
+    FMargin: Real;
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
-
-//    procedure getPartRatingFromEmex(AConnection: tFDConnection; AClientID: Integer; ADetailNumber: string);
 
 
     procedure setOpenUrl(AUrl: string);
   public
     { Public declarations }
-    { Public declarations }
-
-   // IsParts: Boolean;
 
     property FormAction: TFormAction read FAction write SetAction;
     property ID: Integer read FID write FID;
 
-    procedure getPartRatingFromDB(DetailNumber, PriceLogo: string);
+    procedure GetPartRatingFromDB(DetailNumber, PriceLogo: string);
+
+    ///<summary>
+    ///  GetPartDataFromDB - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РїРѕ РґРµС‚Р°Р»Рё РїРѕСЃР»Рµ РёР·РјРµРЅРµРЅРёСЏ РґР°РЅРЅС‹С…
+    ///</summary>
+    procedure GetPartDataFromDB();
+
+    /// <summary>
+    /// PriceCalc - СЂР°СЃС‡РµС‚ С†РµРЅС‹ Рё СЃСЂРѕРєР° РїРѕСЃС‚Р°РІРєРё
+    /// </summary>
+    procedure PriceCalc();
   end;
 
 function OrderF: TOrderF;
@@ -194,9 +222,19 @@ begin
   setOpenUrl(Format('https://www.zzap.ru/public/search.aspx#rawdata=%s', [FDetailNumber]));
 end;
 
+procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
+begin
+   PriceCalc();
+   GetPartDataFromDB;
+end;
+
 procedure TOrderF.cbPriceChange(Sender: TObject);
 begin
-  getPartRatingFromDB(FDetailNumber, cbPrice.Text);
+  //getPartRatingFromDB(FDetailNumber, cbPrice.Text);
+
+  PriceCalc();
+  GetPartDataFromDB;
+
 end;
 
 procedure TOrderF.btnNumber2Click(Sender: TObject);
@@ -222,23 +260,25 @@ begin
     case FAction of
       acUpdate:
       begin
-        sqltext :=' declare @R      int                       '+
-                  '                                           '+
-                  ' exec @r = OrderUpdate                     '+
-                  '             @OrderID      = :OrderID      '+
-                  '            ,@DetailNameF  = :DetailNameF  '+
-                  '            ,@WeightKGF    = :WeightKGF    '+
-                  '            ,@VolumeKGF    = :VolumeKGF    '+
-                  '            ,@Fragile      = :Fragile      '+
-                  '            ,@NoAir        = :NoAir        '+
-                  '            ,@Price        = :Price        '+
-                  '            ,@DestinationLogo=:DestinationLogo '+
-                  ' select @r as retcode '+
-                  ' ';
+        sqltext :='''
+                   declare @R      int
+
+                   exec @r = OrderUpdate
+                               @OrderID      = :OrderID
+                              ,@DetailNameF  = :DetailNameF
+                              ,@WeightKGF    = :WeightKGF
+                              ,@VolumeKGF    = :VolumeKGF
+                              ,@Fragile      = :Fragile
+                              ,@NoAir        = :NoAir
+                              ,@Price        = :Price
+                              ,@DestinationLogo=:DestinationLogo
+                              ,@Comment        =:Comment
+                   select @r as retcode
+                  ''';
 
         Sql.Open(sqltext,
                  ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price',
-                  'DestinationLogo', 'Fragile', 'NoAir'],
+                  'DestinationLogo', 'Fragile', 'NoAir', 'Comment'],
                  [edtWeightKGF.Value,
                   edtVolumeKGF.Value,
                   edtDetailNameF.Text,
@@ -246,7 +286,8 @@ begin
                   cbPrice.Text,
                   cbDestinationLogo.text ,
                   cbFragile.Checked,
-                  cbNoAir.Checked
+                  cbNoAir.Checked,
+                  edtMessage.Text
                   ]);
 
         RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -274,7 +315,7 @@ begin
 //      if edtBrief.IsBlank then
 //      begin
 //        RetVal.Code := 1;
-//        RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!'; Exit();
+//        RetVal.Message := 'РџРѕР»Рµ [РЎРѕРєСЂР°С‰РµРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!'; Exit();
 //      end
 //    end;
 //  end;
@@ -283,31 +324,35 @@ end;
 procedure TOrderF.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select isnull(WeightKGF, WeightKG) as WeightKGF  '+
-                                  '       ,isnull(VolumeKGF, VolumeKG) as VolumeKGF  ' +
-                                  '       ,DetailName as DetailName '+
-                                  '       ,Manufacturer    ' +
-                                  '       ,DetailNumber    ' +
-                                  '       ,NoAir           ' +
-                                  '       ,Fragile         ' +
-                                  '       ,PriceLogo       ' +
-                                  '       ,Manufacturer    ' +
-                                  '       ,DestinationLogo ' +
-                                  '       ,SuppliersID     ' +
-                                  '       ,PriceID         ' +
-                                  '       ,ClientID        ' +
-                                  '       ,Flag            ' +
-                                  '       ,Quantity        ' +
-                                  '       ,[Margin]        ' +
-                                  '       ,[MarginF]       ' +
-                                  '       ,[Profit]        ' +
-                                  '       ,[Income]        ' +
-                                  '       ,[IncomePRC]     ' +
-                                  '       ,[Price]         ' +
-                                  '       ,PriceQuantity   ' +
-                                  '   from vOrders         '+
-                                  '  where OrderID = :OrderID '+
-                                  ' ';
+  UniMainModule.Query.SQL.Text := '''
+                                    select WeightKG
+                                         ,VolumeKG
+                                         ,WeightKGF
+                                         ,VolumeKGF
+                                         ,DetailName as DetailName
+                                         ,Manufacturer
+                                         ,DetailNumber
+                                         ,NoAir
+                                         ,Fragile
+                                         ,PriceLogo
+                                         ,Manufacturer
+                                         ,DestinationLogo
+                                         ,SuppliersID
+                                         ,PriceID
+                                         ,ClientID
+                                         ,Flag
+                                         ,Quantity
+                                         ,[Margin]
+                                         ,[MarginF]
+                                         ,[Profit]
+                                         ,[Income]
+                                         ,[IncomePRC]
+                                         ,[PricePurchase]
+                                         ,PriceQuantity
+                                         ,Comment
+                                     from vOrders
+                                    where OrderID = :OrderID
+                                  ''';
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.Open;
 
@@ -315,29 +360,36 @@ begin
   FDetailNumber2     := UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' + FDetailNumber;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
+  FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
+  FMargin            := UniMainModule.Query.FieldByName('Margin').Value;
 
-  edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    //Вес Физический факт
-  edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    //Вес Объемный факт
+  edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
+  edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
+  edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    //Р’РµСЃ Р¤РёР·РёС‡РµСЃРєРёР№ С„Р°РєС‚
+  edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    //Р’РµСЃ РћР±СЉРµРјРЅС‹Р№ С„Р°РєС‚
+
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;  //
 
   cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
-  cbDestinationLogo.text:= UniMainModule.Query.FieldByName('DestinationLogo').AsString;    // направление отгрузки
+  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString;    // РЅР°РїСЂР°РІР»РµРЅРёРµ РѕС‚РіСЂСѓР·РєРё
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
 
-  cbFragile.Checked  :=  UniMainModule.Query.FieldByName('Fragile').AsBoolean;
-  cbNoAir.Checked    :=  UniMainModule.Query.FieldByName('NoAir').AsBoolean;
+  cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
+  cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
 
-  edtOrderCount.Value:= UniMainModule.Query.FieldByName('Quantity').AsInteger;
-  edtPriceCount.Value:= UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
+  edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
 
-  edtMargin.Value    := UniMainModule.Query.FieldByName('Margin').Value;
-  edtMarginF.Value   := UniMainModule.Query.FieldByName('MarginF').Value;
-  edtProfit.Value    := UniMainModule.Query.FieldByName('Profit').Value;
-  edtPrice.Value     := UniMainModule.Query.FieldByName('Price').Value;
-  edtIncome.Value    := UniMainModule.Query.FieldByName('IncomePRC').Value;
+  edtCount.Text      := FQuantity.ToString + '/' +
+                        UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
-  //16 - Онлайн заказ
+  edtMargin.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').Value);
+  edtMarginF.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').Value);
+  edtProfit.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').Value);
+  edtPrice.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').Value);
+  edtIncome.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').Value);
+
+  //16 - РћРЅР»Р°Р№РЅ Р·Р°РєР°Р·
   MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
 end;
 
@@ -349,11 +401,109 @@ end;
 procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  ShowMessage(KEY.ToString);
+//  ShowMessage(KEY.ToString);
   if (KEY = 13) then //enter
   begin
      edtVolumeKGF.Value := edtVKG.Value;
   end;
+end;
+
+procedure TOrderF.edtWeightKGFExit(Sender: TObject);
+begin
+//   PriceCalc();
+//   GetPartDataFromDB;
+end;
+
+procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 13) then
+  begin
+    PriceCalc();
+    GetPartDataFromDB;
+  end;
+end;
+
+procedure TOrderF.GetPartDataFromDB;
+var js: string;
+     r: string;
+begin
+  logger.Info('GetPartDataFromDB begin');
+  logger.Info('GetPartDataFromDB DetailNum:' + FDetailNumber);
+  logger.Info('GetPartDataFromDB PriceLogo:' + cbPrice.Text);
+  logger.Info('GetPartDataFromDB DestinationLogo:' + cbDestinationLogo.Value);
+
+  sql.Open('''
+           select top 1 *,
+                  case
+                    when p.Available = -1 then 'РїРѕРґ Р·Р°РєР°Р·'
+                    else cast(p.Available as nvarchar)
+                  end as AvailableStr -- РЅР°Р»РёС‡РёРµ РґРµС‚Р°Р»Рё РЅР° СЃРєР»Р°РґРµ
+                 ,f.MarginF
+                 ,f.IncomePrc
+                 ,f.Profit
+             from pFindByNumber p (nolock)
+            inner join pOrdersFin f (nolock) on f.spid = @@spid
+            where p.spid = @@spid
+              and p.DetailNum = :DetailNum
+              and p.PriceLogo = :PriceLogo
+              and p.DestinationLogo = :DestinationLogo
+            order by PercentSupped desc
+           ''',
+           ['DetailNum', 'PriceLogo', 'DestinationLogo'],
+           [FDetailNumber, cbPrice.Text, cbDestinationLogo.Value]);
+
+  if sql.Q.RecordCount>0 then
+  begin
+    edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').Value;
+
+
+    edtMargin2.Text    := FormatFloat('##0%', FMargin);
+    edtMarginF2.Text   := FormatFloat('##0%',  sql.q.FieldByName('MarginF').Value);
+    edtProfit2.Text    := FormatFloat('##0%', sql.q.FieldByName('Profit').Value);
+    edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').Value);
+    edtIncome2.Text    := FormatFloat('##0%', sql.q.FieldByName('IncomePrc').Value);
+
+    case sql.Q.FieldByName('PercentSupped').AsInteger  of
+      0..9:
+        r:= 'star';
+      10..19:
+        r:= 'star10';
+      20..29:
+        r:= 'star20';
+      30..39:
+        r:= 'star30';
+      40..49:
+        r:= 'star40';
+      50..59:
+        r:= 'star50';
+      60..69:
+        r:= 'star60';
+      70..79:
+        r:= 'star70';
+      80..89:
+        r:= 'star80';
+      90..99:
+        r:= 'star90';
+      100:
+        r:= 'star100';
+    else
+      r:= 'star';
+    end;
+
+    js :=
+    '''
+    function setRatingVal2(AVal, APercent)
+    {
+     document.getElementById(AVal).checked = true;
+     document.getElementById("prc2").innerText = APercent + '%';
+    }
+    ''' +
+    'ajaxRequest(' + edtReliability2.JSName + ', ''rating2'', [setRatingVal2("' + r + '2", "' + sql.Q.FieldByName('PercentSupped').asstring +'")]);';
+
+    UniSession.JSCode(js);
+  end;
+  logger.Info('GetPartDataFromDB end');
 end;
 
 procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
@@ -361,12 +511,14 @@ var js: string;
      r: string;
 begin
   logger.Info('getPartRatingFromDB');
-  sql.Open('select top 1 PercentSupped   ' +
-           '  from pFindByNumber (nolock)' +
-           ' where spid     = @@spid     ' +
-           '   and DetailNum=:DetailNum  ' +
-           '   and PriceLogo=:PriceLogo  ' +
-           ' order by PercentSupped desc ',
+  sql.Open('''
+           select top 1 PercentSupped
+             from pFindByNumber (nolock)
+            where spid     = @@spid
+              and DetailNum=:DetailNum
+              and PriceLogo=:PriceLogo
+            order by PercentSupped desc
+           ''',
            ['DetailNum', 'PriceLogo'],
            [DetailNumber, PriceLogo]);
 
@@ -405,26 +557,88 @@ begin
     ' document.getElementById("'+r+'").checked = true; ' +
     ' document.getElementById("prc").innerText = ''' + sql.Q.FieldByName('PercentSupped').AsString + '%''; ' +
     '} ' +
-    'ajaxRequest(' + UniHTMLFrame.JSName + ', ''rating'', [setRatingVal()]);';
+    'ajaxRequest(' + edtReliability.JSName + ', ''rating'', [setRatingVal()]);';
 
     UniSession.JSCode(js);
 
   end
   else
   begin
-     MessageContainer.Visible := (FFlag and 16) > 0; //16 - Онлайн заказ
+     MessageContainer.Visible := (FFlag and 16) > 0; //16 - РћРЅР»Р°Р№РЅ Р·Р°РєР°Р·
   end;
 end;
 
-//procedure TOrderF.getPartRatingFromEmex(AConnection: tFDConnection; AClientID: Integer; ADetailNumber: string);
-//var Emex:TEmex;
-//begin
-//  Emex := TEmex.Create;
-//  Emex.Connection := AConnection;
-//  Emex.FindByDetailNumber(FClientID, FDetailNumber);
-//  FreeAndNil(Emex);
-//end;
+procedure TOrderF.PriceCalc;
+begin
+  RetVal.Clear;
 
+  Sql.exec(
+  '''
+          Update pFindByNumber
+             set WeightGr  = isnull(nullif(:WeightGr, -1), 0)
+                ,VolumeAdd = isnull(nullif(:VolumeAdd, -1), 0)
+                ,DestinationLogo=:DestinationLogo
+                ,Flag      = isnull(Flag, 0) | 512 -- 512 - Р’РµСЃ РёР·РјРµРЅРµРЅ РєР»РёРµРЅС‚РѕРј
+           where Spid = @@Spid
+
+          exec SearchPriceCalc
+                  @DestinationLogo = :DestinationLogo,
+                  @DetailNum       = :DetailNum
+
+          delete pOrdersFin from pOrdersFin (rowlock) where spid = @@Spid
+          insert pOrdersFin
+                (Spid
+                ,OrderDate
+                ,ClientID
+                ,Price  -- РїСЂРѕРґР°Р¶Р°
+                ,PricePurchase
+                ,WeightKG
+                ,VolumeKG
+                ,WeightKGF
+                ,VolumeKGF
+                ,Taxes
+                ,Commission
+                ,Margin
+                ,ExtraKurs
+                ,PdWeightKG
+                ,PdVolumeKG
+                )
+          Select @@spid
+                ,cast(getdate() as date)
+                ,p.ClientID
+                ,p.PriceRub -- С†РµРЅР° РїСЂРѕРґР°Р¶Рё РІ СЂСѓР±Р»СЏС…
+                ,p.Price-- С†РµРЅР° Р·Р°РєСѓРїРєРё РІ РґРѕР»Р»Р°СЂР°С…
+                ,isnull(o.WeightKG,  0)
+                ,isnull(o.VolumeKG , 0)
+                ,isnull(p.WeightGr, 0)
+                ,isnull(p.VolumeAdd, 0)
+                ,isnull(o.Taxes, c.Taxes)    -- РљРѕРјРёСЃСЃРёСЏ + РќР°Р»РѕРіРё
+                ,isnull(p.Commission, 0)/100 -- РљРѕРјРёСЃСЃРёСЏ Р·Р° РѕРїР»Р°С‚Сѓ  Comission ExtraKurs
+                ,isnull(p.Margin, 0)/100     -- РќР°С†РµРЅРєР°             Margin
+                ,isnull(p.ExtraKurs, 0)/100  -- РљРѕРјРёСЃСЃРёСЏ РЅР° РєСѓСЂСЃ    ExtraKurs
+                ,pd.WeightKG                 -- РЎС‚РѕРёРјРѕСЃС‚СЊ РєРі
+                ,pd.VolumeKG                 -- РЎС‚РѕРёРјРѕСЃС‚СЊ vРєРі
+            from pFindByNumber p (nolock)
+           inner join tOrders o (nolock)
+                   on o.OrderID = :OrderID
+           inner join tClients c (nolock)
+                   on c.ClientID = o.ClientID
+           inner join tSupplierDeliveryProfiles pd (nolock)
+                   on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
+           where p.spid = @@spid
+             and p.DetailNum = :DetailNum
+             and p.PriceLogo = :PriceLogo
+             and p.DestinationLogo = :DestinationLogo
+
+
+            exec OrdersFinCalc
+                   @IsSave = 0,
+                   @IsFilled=1
+
+''',
+          ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID'],
+          [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Text, edtWeightKGF.Value, edtVolumeKGF.Value, FID]);
+end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
 begin
@@ -456,10 +670,10 @@ begin
     sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
 
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
-    t.FreeOnTerminate := true; // Экземпляр должен само уничтожиться после выполнения
-    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+    t.FreeOnTerminate := true; // Р­РєР·РµРјРїР»СЏСЂ РґРѕР»Р¶РµРЅ СЃР°РјРѕ СѓРЅРёС‡С‚РѕР¶РёС‚СЊСЃСЏ РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ
+    t.Priority := tThreadPriority.tpNormal; // Р’С‹СЃС‚Р°РІР»СЏРµРј РїСЂРёРѕСЂРёС‚РµС‚ РїРѕС‚РѕРєР°
 
-    t.Resume; // непосредственно ручной запуск потока
+    t.Resume; // РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ СЂСѓС‡РЅРѕР№ Р·Р°РїСѓСЃРє РїРѕС‚РѕРєР°
   finally
   end;
 end;
@@ -469,24 +683,36 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
     end;
     acUpdate, acReportEdit, acUserAction:
     begin
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     end;
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
   //ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
-  ComboBoxFill(cbPrice,        ' Select Name from tPrices       (nolock) where Flag&1=1 ');
+  ComboBoxFill(cbPrice,        ' Select Name from tPrices (nolock) where Flag&1=1 ');
 
-  // начитываем данные с базы
+  ComboBoxFill(cbDestinationLogo,'''
+        SELECT distinct
+               pd.[DestinationLogo] as id
+              ,pd.[Name]
+          FROM tOrders o (nolock)
+         inner join tProfilesCustomer pc with (nolock)
+                 on pc.ClientID = o.ClientID
+         inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+                 on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+         where o.OrderID =
+        ''' + FID.ToString );
+
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
@@ -498,8 +724,6 @@ begin
       UniMainModule.Query.FieldByName('DetailName').AsString;
 
       edtDetailNameF.SetFocus;
-
-      ComboBoxFill(cbDestinationLogo,' SELECT distinct [DestinationLogo] as Name FROM tSupplierDeliveryProfiles (nolock) where SuppliersID = ' + UniMainModule.Query.FieldByName('SuppliersID').AsString );
     end
   else
     //
@@ -514,7 +738,6 @@ begin
     if Sql.Q.RecordCount > 0 then
     begin
       getPartRatingFromDB(FDetailNumber, FPriceLogo);
-      UniMainModule.MemTable.EmptyDataSet;
 
       UniTimer.Enabled := False;
     end;

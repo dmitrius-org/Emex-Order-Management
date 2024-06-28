@@ -203,7 +203,7 @@ begin
   end;
 
   logger.Info('set _MicroWidth:' + MainMenu.Micro.ToString());
-  UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString()); // Expires 7 days from now
+  UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;

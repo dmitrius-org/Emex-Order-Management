@@ -80,7 +80,3 @@ grant all on vProtocolSelect to public
 go
 exec setOV 'vProtocolSelect', 'V', '20240618', '1'
 go
-select * 
-  from vProtocolSelect
- where ObjectID=51970
- order by InDateTime desc

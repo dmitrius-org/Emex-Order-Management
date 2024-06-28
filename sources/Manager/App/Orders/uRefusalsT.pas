@@ -142,6 +142,7 @@ begin
   fArchive.Clear;
   fDate.Text := '';
 
+  GridRefresh;
 
   HideMask;
   UniSession.Synchronize();

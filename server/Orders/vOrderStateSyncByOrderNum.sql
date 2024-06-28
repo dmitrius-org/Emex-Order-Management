@@ -11,8 +11,12 @@ as
 Select o.ClientID,
 	   o.OrderID,
 	   o.StatusID,
-       o.EmexOrderID as EmexOrderID 
-  from tOrders o (nolock)            
+       o.EmexOrderID as EmexOrderID,
+       c.SuppliersID
+
+  from tOrders o (nolock)   
+ inner join tClients c (nolock)
+         on c.ClientID = o.ClientID 
  inner join tNodes n (nolock) 
          on n.NodeID = o.StatusID
 		and n.EID not in (5 /*Отправлено*/
@@ -25,5 +29,5 @@ go
 grant all on vOrderStateSyncByOrderNum to public
 go
 go
-exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240101', '0'
+exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240626', '1'
 go

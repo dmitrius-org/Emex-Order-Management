@@ -241,6 +241,7 @@ type
     procedure actCancellationExecute(Sender: TObject);
     procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure UniFrameReady(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -304,7 +305,7 @@ type
     procedure DeselectAll();
     /// <summary>GetMarksInfo - получение информации по выделенным строкам (сумма, количество)</summary>
     procedure GetMarksInfo();
-
+    /// <summary>OrderSetCancellation - установка признака: Запрошен отказ</summary>
     procedure OrderSetCancellation();
   public
     { Public declarations }
@@ -359,6 +360,8 @@ begin
 
   if (ServerErr = 0) then
   begin
+
+    Marks.DataRefresh;
     ToastOK ('Операция успешно выполнена!', UniSession);
     //OrdersMessageFCallBack(self, mrOk)
   end
@@ -763,9 +766,6 @@ begin
     else
       Query.MacroByName('DetailNum').Value := '';
 
-
-
-
     if cbCancel.ItemIndex > -1 then
       Query.MacroByName('isCancel').Value := ' and o.isCancel = ' + cbCancel.ItemIndex.ToString
     else
@@ -883,6 +883,8 @@ begin
 
   actExecuteActionEnabled.Enabled  := (actExecuteActionEnabled.Tag = 1) and (Marks.Count > 0);
   actExecuteActionRollback.Enabled := (actExecuteActionRollback.Tag= 1) and (Marks.Count > 0);
+
+  actCancellation.Enabled :=  (actCancellation.Tag = 1) and (Marks.Count > 0);
 end;
 
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -964,7 +966,7 @@ begin
 
   if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
+    t := t + '<div class="grid-order-message" data-qtip="Сообщение клиенту"><i class="fa fa-exclamation-triangle"></i></div> ';
   end;
 
   if (Sender.AsInteger and 64) > 0 then
@@ -974,12 +976,12 @@ begin
 
   if (Sender.AsInteger and 128) > 0 then
   begin
-    t := t + '<span class="x-cancellation" data-qtip="Запрошен отказ"><i class="fa fa-ban"></i></span> ';
+    t := t + '<span class="grid-order-cancellation" data-qtip="Запрошен отказ"><i class="fa fa-ban"></i></span> ';
   end;
 
   if (Sender.AsInteger and 512) > 0 then
   begin
-    t := t + '<span class="grid-order-balance-scale " data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
+    t := t + '<span class="grid-order-balance-scale" data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
   end;
 
   Text := t;
@@ -1259,7 +1261,6 @@ begin
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
 
-
   {$IFDEF Release}
     Grid.Columns.ColumnFromFieldName('Flag').Visible := False;
   {$ENDIF}
@@ -1280,6 +1281,13 @@ end;
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
+end;
+
+procedure TOrdersT.UniFrameReady(Sender: TObject);
+begin
+  {$IFDEF Debug}
+     fDetailNum.Text := 'AC3555122RS';
+  {$ENDIF}
 end;
 
 procedure TOrdersT.OrdersFCallBack(Sender: TComponent; AResult: Integer);

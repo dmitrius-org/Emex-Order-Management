@@ -79,7 +79,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uVarUtils;
 
 function MainForm: TMainForm;
 begin
@@ -296,13 +296,17 @@ begin
   if MainMenu.Micro then
   begin
       MainMenu.Items[0].Text := 'Развернуть';
-      MainMenuPanel.Width := MainMenu.MicroWidth ;
+      MainMenuPanel.Width := MainMenu.MicroWidth;
+      btnExit.Visible :=  false;
   end
   else
   begin
       MainMenu.Items[0].Text := 'Свернуть';
       MainMenuPanel.Width := 300;
+      btnExit.Visible :=  True;
   end;
+
+  UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
 end;
 
 procedure TMainForm.TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -350,6 +354,8 @@ begin
   MainMenu.Width := 300;
   MainMenu.Items[0].Tag := -1;
 
+  MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);
+
   SetMainMenuMicroName;
 
   ConstructNavigator;
@@ -361,6 +367,9 @@ begin
   if MainMenu.Items.Count > 1 then
   begin
     MainMenu.Selected := MainMenu.Items[1];
+    {$IFDEF Debug}
+    MainMenu.Selected := MainMenu.Items[2];
+    {$ENDIF}
     MainMenuClick(Sender);
   end;
 end;

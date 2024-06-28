@@ -6,6 +6,7 @@ object OrdersT: TOrdersT
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
+  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
@@ -636,10 +637,6 @@ object OrdersT: TOrdersT
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        ExplicitLeft = 4
-        ExplicitTop = 4
-        ExplicitWidth = 1632
-        ExplicitHeight = 111
         object UniLabel1: TUniLabel
           Left = 6
           Top = 14
@@ -672,7 +669,7 @@ object OrdersT: TOrdersT
         end
         object fCancel: TUniBitBtn
           Left = 771
-          Top = 31
+          Top = 32
           Width = 146
           Height = 24
           ShowHint = True
@@ -682,7 +679,7 @@ object OrdersT: TOrdersT
         end
         object fOk: TUniBitBtn
           Left = 771
-          Top = 73
+          Top = 75
           Width = 146
           Height = 24
           ShowHint = True
@@ -1741,8 +1738,8 @@ object OrdersT: TOrdersT
     DeleteSQL.Strings = (
       'DELETE FROM tOrders WHERE OrderID = :OLD_OrderID')
     FetchRowSQL.Strings = (
-      'SELECT StatusID, '
-      '       StatusName,'
+      'SELECT StatusID, -- '#1089#1086#1089#1090#1086#1103#1085#1080#1077
+      '       StatusName, -- '#1089#1086#1089#1090#1086#1103#1085#1080#1077
       '       PricePurchaseF,'
       '       AmountPurchaseF,'
       '       ReplacementMakeLogo,'
@@ -1758,14 +1755,14 @@ object OrdersT: TOrdersT
       '       WeightKG,'
       '       VolumeKG,'
       '       isCancel,'
-      '       --isCancelToClient,'
       '       PriceLogo,'
       '       Margin,'
       '       MarginF,'
       '       Income,'
       '       IncomePRC,'
       '       Profit,'
-      '       DestinationLogo'
+      '       DestinationLogo,'
+      '       Flag as Status -- '#1080#1082#1086#1085#1082#1080
       '  FROM vOrders'
       ' WHERE OrderID = :OrderID')
     Left = 497

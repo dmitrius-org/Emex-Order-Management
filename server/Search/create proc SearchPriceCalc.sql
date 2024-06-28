@@ -1,6 +1,3 @@
-if OBJECT_ID('CustomerPriceCalc', 'P') is not null
-    drop proc CustomerPriceCalc	 
-go
 if OBJECT_ID('SearchPriceCalc', 'P') is not null
     drop proc SearchPriceCalc	 
 go
@@ -18,7 +15,7 @@ declare @Kurs		  float
 
 -- курс доллара
 select @Kurs = dbo.GetCurrencyRate('840', null)
-
+      ,@RetVal = 0
 if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 
 create table #Price 
@@ -142,12 +139,12 @@ select p.ID,
 	   p.Packing, 
 	   0,--pt.Term,
        case
-         when (p.flag&512)>0 then p.WeightGr
+         when (p.flag&512)>0 then p.WeightGr -- 512 - Вес изменен клиентом
 	     else isnull(pp.WeightKGF,p.WeightGr)
        end,
 
        case
-         when (p.flag&512)>0 then p.VolumeAdd
+         when (p.flag&512)>0 then p.VolumeAdd-- 512 - Вес изменен клиентом
 	     else isnull(pp.VolumeKGf,p.VolumeAdd) 
        end	   
            * case --коэффициенты [VolumeKG]
@@ -159,8 +156,8 @@ select p.ID,
              end,
 	   p.Price,
 
-       pc.Margin,
-       pc.Reliability,
+       pd.Margin,
+       pd.Reliability,
        @Kurs, 
        s.ExtraKurs,
        s.Commission,
@@ -178,12 +175,41 @@ select p.ID,
          on c.ClientID = p.ClientID 
  inner join tSuppliers s  with (nolock index=ao1)
          on S.SuppliersID = c.SuppliersID
- inner join tSupplierDeliveryProfiles pd  with (nolock index=ao1)
-         on pd.SuppliersID     = s.SuppliersID
-        and pd.DestinationLogo = @DestinationLogo    
- inner join tProfilesCustomer pc  with (nolock index=ao2)
-         on pc.ClientID           = c.ClientID
-        and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+ --inner join tSupplierDeliveryProfiles pd  with (nolock index=ao1)
+ --        on pd.SuppliersID     = s.SuppliersID
+ --       and pd.DestinationLogo = @DestinationLogo    
+ --inner join tProfilesCustomer pc  with (nolock index=ao2)
+ --        on pc.ClientID           = c.ClientID
+ --       and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+
+ outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
+      select top 1
+             pd.DestinationLogo, 
+             pd.Name,
+
+             pd.WeightKG,
+             pd.VolumeKG,
+	         pd.ProfilesDeliveryID,
+	         pd.Delivery,
+
+             pc.Margin,
+             pc.Reliability,
+
+             pd.VolumeKG_Rate1,
+             pd.VolumeKG_Rate2,
+             pd.VolumeKG_Rate3,
+             pd.VolumeKG_Rate4
+
+        from tProfilesCustomer pc with (nolock)
+        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+       where pc.ClientID = c.ClientID
+         and pd.DestinationLogo    = @DestinationLogo   
+       --order by case 
+       --           when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
+       --           else 555
+       --         end
+     ) as pd
 
  left join @Price pp
         on pp.DetailNum = p.DetailNum
@@ -262,5 +288,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240618', '3'
+exec setOV 'SearchPriceCalc', 'P', '20240628', '4'
 go

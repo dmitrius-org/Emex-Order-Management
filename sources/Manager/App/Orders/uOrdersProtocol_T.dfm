@@ -1,11 +1,12 @@
 object OrdersProtocol_T: TOrdersProtocol_T
   Left = 0
   Top = 0
-  ClientHeight = 580
-  ClientWidth = 1381
+  ClientHeight = 491
+  ClientWidth = 1324
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083
   OnShow = UniFormShow
   OldCreateOrder = False
+  OnClose = UniFormClose
   MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
   Layout = 'fit'
@@ -13,8 +14,8 @@ object OrdersProtocol_T: TOrdersProtocol_T
   object Grid: TUniDBGrid
     Left = 0
     Top = 69
-    Width = 1381
-    Height = 511
+    Width = 1324
+    Height = 422
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -22,19 +23,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     ClientEvents.ExtEvents.Strings = (
       
         'store.load=function store.load(sender, records, successful, oper' +
-        'ation, eOpts)'#13#10'{'#13#10'    sender.grid.columnManager.columns.forEach(' +
-        'function(col){'#13#10'      if (col.text == '#39#1057#1090#1072#1090#1091#1089#1099#39') {'#13#10'        col.' +
-        'innerCls = '#39'statusFlag'#39';'#13#10'      }'#13#10'    });'#13#10'    '#13#10'$('#39'.statusFlag' +
-        #39').children().andSelf().contents().each('#13#10#9'function () {'#13#10'//'#9'con' +
-        'sole.log('#39'records'#39');'#13#10#9'if (this.nodeType == 3) {'#13#10'//   console.l' +
-        'og('#39'records2'#39');'#13#10#9#9'$(this).replaceWith(function () {'#13#10'      cons' +
-        'ole.log('#39'records3'#39');'#13#10#9#9#9#9'var t='#39#39';'#13#10#9#9#9#9'var flags=parseInt($(th' +
-        'is).text());'#9#13#10#9#9#9#9'if ((flags&1)==1)'#9'{'#13#10#9#9#9#9#9#9't = t + '#39'<span cla' +
-        'ss="flagSystem">u</span>'#39';'#13#10#9#9#9#9'};'#9#9#13#10#9#9#9#9'if ((flags&2)==2)'#9'{'#13#10#9 +
-        #9#9#9#9#9't = t + '#39'<span class="flagBegin">u</span>'#39';'#13#10#9#9#9#9'};'#9#13#10#9#9#9#9'i' +
-        'f ((flags&4)==4)'#9'{'#13#10#9#9#9#9#9#9't = t + '#39'<span class="flagDefault">u</' +
-        'span>'#39';'#13#10#9#9#9#9'};'#9#13#10'            console.log(t);'#13#10#9#9#9#9'return t;'#9#13#10#9 +
-        #9#9'}'#13#10#9#9')'#13#10#9'};'#13#10'}'#13#10');'#13#10'   '#13#10'}'
+        'ation, eOpts)'#13#10'{'#13#10#13#10'    '#13#10#13#10'   '#13#10'}'
       'added=function added(sender, container, pos, eOpts)'#13#10'{'#13#10#13#10'}')
     ClientEvents.UniEvents.Strings = (
       
@@ -54,15 +43,19 @@ object OrdersProtocol_T: TOrdersProtocol_T
         'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
         'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
         #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-        'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+        'n the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(9).hid' +
+        'e(); //Remove the Refresh button in the ToolBar, number 10, hide' +
+        ' him'#13#10#13#10'}')
     RowEditor = True
     DataSource = DataSource
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgRowNumbers]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgAutoRefreshRow, dgRowNumbers]
     ReadOnly = True
     WebOptions.PageSize = 500
     WebOptions.CustomizableCells = False
     WebOptions.AppendPosition = tpCurrentRow
     WebOptions.FetchAll = True
+    WebOptions.RetainCursorOnSort = True
+    LoadMask.WaitData = True
     LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
     LoadMask.Color = clActiveCaption
     EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
@@ -121,7 +114,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'Comment'
         Title.Alignment = taCenter
         Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-        Width = 332
+        Width = 276
       end
       item
         FieldName = 'InDateTime'
@@ -133,7 +126,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 1375
+    Width = 1318
     Height = 63
     Hint = ''
     Align = alTop
@@ -142,8 +135,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     Caption = 'UniPanel1'
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
-    ExplicitWidth = 1371
-    object UniButton1: TUniButton
+    object btnFilter: TUniButton
       Left = 267
       Top = 25
       Width = 75
@@ -151,7 +143,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       TabOrder = 1
-      OnClick = UniButton1Click
+      OnClick = btnFilterClick
     end
     object fProtocol: TUniCheckComboBox
       Left = 9
@@ -178,6 +170,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
           '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
           '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
           '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
+      EmptyText = #1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1080#1087' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       CheckChangeDelay = 100
       ClearButton = True
       Triggers = <
@@ -211,14 +204,14 @@ object OrdersProtocol_T: TOrdersProtocol_T
     end
   end
   object DataSource: TDataSource
-    DataSet = Query
+    DataSet = ProtocolQuery
     Left = 541
     Top = 178
   end
-  object Query: TFDQuery
+  object ProtocolQuery: TFDQuery
     AutoCalcFields = False
     Connection = UniMainModule.FDConnection
-    FetchOptions.AssignedValues = [evAutoFetchAll]
+    FetchOptions.AssignedValues = [evAutoClose, evAutoFetchAll]
     FormatOptions.AssignedValues = [fvDefaultParamDataType]
     FormatOptions.DefaultParamDataType = ftString
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
@@ -232,61 +225,67 @@ object OrdersProtocol_T: TOrdersProtocol_T
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
-    UpdateOptions.UpdateTableName = 'tNodes'
+    UpdateOptions.KeyFields = 'ProtocolID'
+    UpdateOptions.AutoIncFields = 'ProtocolID'
     SQL.Strings = (
       'select * '
       '  from vProtocolSelect'
       ' where ObjectID = :ID'
-      '   !ProtocolType    '
+      ' '
+      '       !ProtocolType '
+      '      '
       ' order by InDateTime desc')
     Left = 540
     Top = 114
     ParamData = <
       item
         Name = 'ID'
+        DataType = ftLargeint
         ParamType = ptInput
+        Value = Null
       end>
     MacroData = <
       item
         Value = Null
         Name = 'PROTOCOLTYPE'
       end>
-    object QueryProtocolID: TFMTBCDField
+    object ProtocolQueryProtocolID: TFMTBCDField
       FieldName = 'ProtocolID'
+      KeyFields = 'ProtocolID'
       Required = True
       Precision = 18
       Size = 0
     end
-    object QueryObjectID: TFMTBCDField
+    object ProtocolQueryObjectID: TFMTBCDField
       FieldName = 'ObjectID'
       Precision = 18
       Size = 0
     end
-    object QueryCurState: TWideStringField
+    object ProtocolQueryCurState: TWideStringField
       FieldName = 'CurState'
       Required = True
       Size = 256
     end
-    object QueryActionName: TWideStringField
+    object ProtocolQueryActionName: TWideStringField
       FieldName = 'ActionName'
       Required = True
       Size = 256
     end
-    object QueryProtocDate: TSQLTimeStampField
+    object ProtocolQueryProtocDate: TSQLTimeStampField
       FieldName = 'OperDate'
     end
-    object QueryComment: TWideStringField
+    object ProtocolQueryComment: TWideStringField
       FieldName = 'Comment'
       Size = 1024
     end
-    object QueryName: TWideStringField
+    object ProtocolQueryName: TWideStringField
       FieldName = 'UserName'
       Size = 512
     end
-    object QueryInDateTime: TSQLTimeStampField
+    object ProtocolQueryInDateTime: TSQLTimeStampField
       FieldName = 'InDateTime'
     end
-    object QueryProtocolType: TIntegerField
+    object ProtocolQueryProtocolType: TIntegerField
       FieldName = 'ProtocolType'
     end
   end

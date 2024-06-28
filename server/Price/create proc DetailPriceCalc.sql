@@ -39,16 +39,18 @@ declare @IsDelivery   bit    -- Считать с учетом доставки
 
 Select @Margin      = pc.Margin     
 	  ,@Reliability = pc.Reliability 
-	  ,@Discount    = pc.Discount   
-	  ,@Commission  = pc.Commission 
-	  ,@IsMyDelivery= pc.isMyDelivery 
-      ,@isIgnore    = pc.isIgnore
+	  ,@Discount    = s.Discount   
+	  ,@Commission  = s.Commission 
+	  ,@IsMyDelivery= isnull(pd.isMyDelivery , 0)
+      ,@isIgnore    = isnull(pd.isIgnore, 0)
 	  ,@WeightKG	= pd.WeightKG
 	  ,@VolumeKG    = pd.VolumeKG                     
-	  ,@ExtraKurs   = pc.ExtraKurs
+	  ,@ExtraKurs   = s.ExtraKurs
   from tProfilesCustomer pc (nolock)
   inner join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+  inner join tSuppliers s (nolock)
+          on s.SuppliersID = pd.SuppliersID
  where pc.Brief =  @ProfileName
 
 if @@ROWCOUNT = 0
@@ -239,4 +241,4 @@ return @RetVal
 go
 grant all on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20240101', '0'
+exec setOV 'DetailPriceCalc', 'P', '20240627', '1'

@@ -16,32 +16,32 @@ type
   TOrdersProtocol_T = class(TUniForm)
     Grid: TUniDBGrid;
     DataSource: TDataSource;
-    Query: TFDQuery;
-    QueryProtocolID: TFMTBCDField;
-    QueryObjectID: TFMTBCDField;
-    QueryCurState: TWideStringField;
-    QueryActionName: TWideStringField;
-    QueryProtocDate: TSQLTimeStampField;
-    QueryComment: TWideStringField;
-    QueryName: TWideStringField;
+    ProtocolQuery: TFDQuery;
+    ProtocolQueryProtocolID: TFMTBCDField;
+    ProtocolQueryObjectID: TFMTBCDField;
+    ProtocolQueryCurState: TWideStringField;
+    ProtocolQueryActionName: TWideStringField;
+    ProtocolQueryProtocDate: TSQLTimeStampField;
+    ProtocolQueryComment: TWideStringField;
+    ProtocolQueryName: TWideStringField;
     actMain: TUniActionList;
     actRefreshAll: TAction;
     ppMain: TUniPopupMenu;
     N6: TUniMenuItem;
-    QueryInDateTime: TSQLTimeStampField;
+    ProtocolQueryInDateTime: TSQLTimeStampField;
     UniPanel1: TUniPanel;
-    UniButton1: TUniButton;
+    btnFilter: TUniButton;
     fProtocol: TUniCheckComboBox;
     UniLabel3: TUniLabel;
-    QueryProtocolType: TIntegerField;
+    ProtocolQueryProtocolType: TIntegerField;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure UniFormShow(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure UniButton1Click(Sender: TObject);
+    procedure btnFilterClick(Sender: TObject);
     procedure fProtocolSelect(Sender: TObject);
-    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
-      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;  Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
   private
     FID: integer;
     FFilterTextProtocol: string;
@@ -62,7 +62,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uMainVar;
+  MainModule, uniGUIApplication, uMainVar, uLogger;
 
 function OrdersProtocol_T: TOrdersProtocol_T;
 begin
@@ -77,14 +77,22 @@ end;
 procedure TOrdersProtocol_T.DataRefresh;
 var FProtocol:string;
 begin
-  if FFilterTextProtocol <> '' then FProtocol := ' and ProtocolType in (' + FFilterTextProtocol + ')'
-  else
-    FProtocol := '';
+//  try
+    if FFilterTextProtocol <> '' then FProtocol := ' and ProtocolType in (' + FFilterTextProtocol + ')'
+    else
+      FProtocol := '';
 
-  Query.Close;
-  Query.ParamByName('ID').AsInteger := FID;
-  Query.MacroByName('ProtocolType').Value    := FProtocol;
-  Query.Open;
+    logger.Info(FProtocol);
+
+    ProtocolQuery.Close();
+    ProtocolQuery.ParamByName('ID').AsLargeInt := FID;
+    ProtocolQuery.MacroByName('ProtocolType').Value := FProtocol;
+    ProtocolQuery.Open();
+
+//  finally
+//    grid.ScreenMask.HideMask;
+//    UniSession.Synchronize;
+//  end;
 end;
 
 procedure TOrdersProtocol_T.fProtocolSelect(Sender: TObject);
@@ -99,7 +107,6 @@ begin
   begin
     if (Sender as TUniCheckComboBox).Selected[i] = True then
     begin
-      //s:= s + integer((Sender as TUniCheckComboBox).Selected[i]).ToString +',';
       s:= s + i.ToString +',';
     end;
   end;
@@ -108,6 +115,8 @@ begin
     delete(s,length(s),1);
 
   FFilterTextProtocol := s;
+
+  logger.Info(FFilterTextProtocol);
 end;
 
 procedure TOrdersProtocol_T.GridCellContextClick(Column: TUniDBGridColumn; X,
@@ -119,7 +128,7 @@ end;
 procedure TOrdersProtocol_T.GridDrawColumnCell(Sender: TObject; ACol,
   ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
-  if (Query.FieldByName('ProtocolType').AsInteger in [1, 2]) then
+  if (ProtocolQuery.FieldByName('ProtocolType').AsInteger in [1, 2]) then
   begin
     Attribs.Font.Color:=clGray//rgb(70 ,	68,	81);
     //Attribs.Font.Style:=[fsBold, fsItalic];
@@ -144,13 +153,20 @@ begin
   FID := Value;
 end;
 
-procedure TOrdersProtocol_T.UniButton1Click(Sender: TObject);
+procedure TOrdersProtocol_T.btnFilterClick(Sender: TObject);
 begin
   DataRefresh;
 end;
 
+procedure TOrdersProtocol_T.UniFormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  ProtocolQuery.Close;
+end;
+
 procedure TOrdersProtocol_T.UniFormShow(Sender: TObject);  var i: Integer;
 begin
+  logger.Info('TOrdersProtocol_T.UniFormShow');
   sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 
   Self.Caption:= 'Протокол по [' +
@@ -168,7 +184,6 @@ begin
   fProtocolSelect(fProtocol);
 
   DataRefresh;
-
 end;
 
 end.

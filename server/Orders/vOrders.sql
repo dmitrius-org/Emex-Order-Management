@@ -89,13 +89,14 @@ SELECT o.[OrderID]
                                        
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
+      ,o.Comment                       -- 
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementMakeLogo           -- бренд замены
 	  ,o.ReplacementDetailNumber       -- номер замены
 	  ,o.ReplacementPrice              -- Изменение цены
 	  ,o.CustomerPriceLogo             -- Наименование прайса заказа от клиента
-	  ,isnull(o.DestinationLogo, pd.DestinationLogo)  DestinationLogo     -- Направление отгрузки      
-
+	  ,isnull(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo     -- Направление отгрузки
+      ,pd.Name  as DestinationName     -- Направление отгрузки    
       ,o.Invoice                       -- номер инвойса
       ,o.FileDate                      -- Дата файла
 
@@ -141,12 +142,19 @@ SELECT o.[OrderID]
 
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
+ outer apply (
+      select top 1 pd.DestinationLogo, pd.Name
+        from tProfilesCustomer pc with (nolock)
+        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+       where pc.ClientID = c.ClientID
+         and pd.DestinationLogo    = o.DestinationLogo
+       order by case 
+                  when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
+                  else 555
+                end
+     ) as pd
 
- left join tProfilesCustomer pc with (nolock)
-         on pc.ClientID        = c.ClientID
-        and pc.ClientPriceLogo = o.CustomerPriceLogo
-  left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-         on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
 
   left join tMakes b with (nolock index=ao2) -- брент замены
          on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
@@ -159,9 +167,9 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240620', '3'
+exec setOV 'vOrders', 'V', '20240628', '5'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
-select IsStartState, * from vOrders --where OrderID=327
+select IsStartState, * from vOrders where OrderID=39162

@@ -14,6 +14,7 @@ create proc OrderUpdate
               ,@NoAir                   bit           = null 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
+              ,@Comment                 nvarchar(1024)= null
               
 as
   declare @r       int = 0
@@ -31,6 +32,7 @@ as
                                else null
                              end
          ,Fragile          = nullif(@Fragile, 0)
+         
    OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
 	from tOrders t (nolock)
    inner join tPrice p (updlock)
@@ -44,7 +46,8 @@ as
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
-                                                  end  
+                                                  end
+        ,t.Comment         = @Comment                                          
 	from tOrders t (nolock)
    where t.OrderID       = @OrderID
 
@@ -73,6 +76,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240620', '1'
+exec setOV 'OrderUpdate', 'P', '20240620', '2'
 go
  

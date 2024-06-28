@@ -2,7 +2,7 @@ object Error_T: TError_T
   Left = 0
   Top = 0
   ClientHeight = 499
-  ClientWidth = 1388
+  ClientWidth = 1370
   Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -13,28 +13,13 @@ object Error_T: TError_T
   object Grid: TUniDBGrid
     Left = 0
     Top = 0
-    Width = 1388
+    Width = 1370
     Height = 499
     Hint = ''
     ShowHint = True
     ParentShowHint = False
     BodyRTL = False
     ClientEvents.ExtEvents.Strings = (
-      
-        'store.load=function store.load(sender, records, successful, oper' +
-        'ation, eOpts)'#13#10'{'#13#10'    sender.grid.columnManager.columns.forEach(' +
-        'function(col){'#13#10'      if (col.text == '#39#1057#1090#1072#1090#1091#1089#1099#39') {'#13#10'        col.' +
-        'innerCls = '#39'statusFlag'#39';'#13#10'      }'#13#10'    });'#13#10'    '#13#10'$('#39'.statusFlag' +
-        #39').children().andSelf().contents().each('#13#10#9'function () {'#13#10'//'#9'con' +
-        'sole.log('#39'records'#39');'#13#10#9'if (this.nodeType == 3) {'#13#10'//   console.l' +
-        'og('#39'records2'#39');'#13#10#9#9'$(this).replaceWith(function () {'#13#10'      cons' +
-        'ole.log('#39'records3'#39');'#13#10#9#9#9#9'var t='#39#39';'#13#10#9#9#9#9'var flags=parseInt($(th' +
-        'is).text());'#9#13#10#9#9#9#9'if ((flags&1)==1)'#9'{'#13#10#9#9#9#9#9#9't = t + '#39'<span cla' +
-        'ss="flagSystem">u</span>'#39';'#13#10#9#9#9#9'};'#9#9#13#10#9#9#9#9'if ((flags&2)==2)'#9'{'#13#10#9 +
-        #9#9#9#9#9't = t + '#39'<span class="flagBegin">u</span>'#39';'#13#10#9#9#9#9'};'#9#13#10#9#9#9#9'i' +
-        'f ((flags&4)==4)'#9'{'#13#10#9#9#9#9#9#9't = t + '#39'<span class="flagDefault">u</' +
-        'span>'#39';'#13#10#9#9#9#9'};'#9#13#10'            console.log(t);'#13#10#9#9#9#9'return t;'#9#13#10#9 +
-        #9#9'}'#13#10#9#9')'#13#10#9'};'#13#10'}'#13#10');'#13#10'   '#13#10'}'
       'added=function added(sender, container, pos, eOpts)'#13#10'{'#13#10#13#10'}')
     ClientEvents.UniEvents.Strings = (
       
@@ -58,6 +43,7 @@ object Error_T: TError_T
     WebOptions.CustomizableCells = False
     WebOptions.AppendPosition = tpCurrentRow
     WebOptions.FetchAll = True
+    LoadMask.WaitData = True
     LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
     LoadMask.Color = clActiveCaption
     EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
