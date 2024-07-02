@@ -15,6 +15,7 @@ create proc OrderUpdate
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
               ,@Comment                 nvarchar(1024)= null
+              ,@TargetStateID           numeric(18,0) = null
               
 as
   declare @r       int = 0
@@ -48,11 +49,11 @@ as
 							                        else 0
                                                   end
         ,t.Comment         = @Comment                                          
-	from tOrders t (nolock)
-   where t.OrderID       = @OrderID
+	from tOrders t (updlock)
+   where t.OrderID = @OrderID
 
   -- расчет финнасовых показателей
-  delete pOrdersFinIn from pOrdersFinIn where spid = @@Spid
+  delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
   insert pOrdersFinIn
         (Spid, OrderID)
   Select @@spid, t.OrderID
@@ -62,6 +63,28 @@ as
 
   exec OrdersFinCalc @IsSave = 1
 
+  insert pAccrualAction 
+        (Spid,   
+         ObjectID,  
+         StateID,
+         NewStateID,
+         ActionID,
+         OperDate)
+  select @@Spid, 
+         o.OrderID, 
+         o.StatusID, 
+         @TargetStateID,
+         case
+           when @TargetStateID = 2  then 13	--ToChecked	Проверка выполнена 
+           when @TargetStateID = 12 then 16	--ToCancel	Отказать
+           else 0
+         end,
+         cast(getdate() as date)
+    from tOrders o (nolock) 
+   where o.OrderID = @OrderID
+  
+  exec ProtocolAdd
+
   -- аудит
   exec AuditInsert
          @AuditID          = @AuditID out         
@@ -70,12 +93,13 @@ as
         ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
         ,@Comment          = 'Изменение DetailNameF, WeightKGF, VolumeKGF' 
 
+  delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
 
- exit_:
- return @r
+  exit_:
+  return @r
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240620', '2'
+exec setOV 'OrderUpdate', 'P', '20240702', '3'
 go
  

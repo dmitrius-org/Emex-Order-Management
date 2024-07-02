@@ -9,17 +9,6 @@ declare
 --  from tProfilesCustomer pc (nolock)
 
 
-select * 
-  from tProfilesCustomer pc (nolock)
-  left join tSupplierDeliveryProfiles pd (nolock)
-          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
- where pc.UploadFileName =  'MZYH'
-
-
-
-
-
-
 declare @IsDelivery   bit    -- Считать с учетом доставки
 	   ,@IsMyDelivery bit    -- Поле для галочки "Игнорировать детали без веса"
        ,@Margin		  float
@@ -32,19 +21,41 @@ declare @IsDelivery   bit    -- Считать с учетом доставки
 	   ,@VolumeKG     float
 	   ,@isIgnore     bit
 	   ,@ExtraKurs    float
+       ,@Fragile      float
 
 Select @Margin      = pc.Margin     
 	  ,@Reliability = pc.Reliability 
-	  ,@Discount    = pc.Discount   
-	  ,@Commission  = pc.Commission 
-	  ,@IsMyDelivery= pc.isMyDelivery 
-      ,@isIgnore    = pc.isIgnore
+	  ,@Discount    = s.Discount   
+	  ,@Commission  = s.Commission 
+	  ,@IsMyDelivery= isnull(pd.isMyDelivery , 0)
+      ,@isIgnore    = isnull(pd.isIgnore, 0)
 	  ,@WeightKG	= pd.WeightKG
 	  ,@VolumeKG    = pd.VolumeKG                     
-	  ,@ExtraKurs   = pc.ExtraKurs
+	  ,@ExtraKurs   = s.ExtraKurs
+      ,@Fragile     = isnull(pd.Fragile, 0)
   from tProfilesCustomer pc (nolock)
   inner join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+  inner join tSuppliers s (nolock)
+          on s.SuppliersID = pd.SuppliersID
+ where pc.Brief =  @ProfileName
+
+
+Select Margin      = pc.Margin     
+	  ,Reliability = pc.Reliability 
+	  ,Discount    = s.Discount   
+	  ,Commission  = s.Commission 
+	  ,IsMyDelivery= isnull(pd.isMyDelivery , 0)
+      ,isIgnore    = isnull(pd.isIgnore, 0)
+	  ,WeightKG	= pd.WeightKG
+	  ,VolumeKG    = pd.VolumeKG                     
+	  ,ExtraKurs   = s.ExtraKurs
+      ,Fragile     = pd.Fragile
+  from tProfilesCustomer pc (nolock)
+  inner join tSupplierDeliveryProfiles pd (nolock)
+          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+  inner join tSuppliers s (nolock)
+          on s.SuppliersID = pd.SuppliersID
  where pc.Brief =  @ProfileName
 
 if @@ROWCOUNT = 0
@@ -83,6 +94,7 @@ create table #Price
 ,TFinPrice         float
 ,Term              int            -- срок доставки
 ,TFinPriceKurs     money
+,Fragile           bit
 )
 
 insert #Price
@@ -98,7 +110,8 @@ insert #Price
 	  ,Term
 	  ,WeightKG 
 	  ,VolumeKG 
-      ,TPrice    
+      ,TPrice
+      ,Fragile -- признак хрупкости
 	  )
 select-- top 200000 
        t.PriceID,
@@ -119,7 +132,8 @@ select-- top 200000
                         when isnull(t.VolumeKGf, t.VolumeKG) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
                         else 1
                       end,
-	   t.MOSA
+	   t.MOSA,
+       t.Fragile
   from tProfilesCustomer pc (nolock)
   inner join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -131,16 +145,16 @@ select-- top 200000
          and (@isIgnore = 0
           or (@isIgnore = 1 and not (isnull(t.WeightKGF, t.WeightKG) = 0 and isnull(t.VolumeKGf, t.VolumeKG) = 0)))
              --Убираем все строки, у которых значения в столбце Reliability строго меньше, чем reliability из формы
-         --and t.Reliability >= @Reliability
+         and t.Reliability >= @Reliability
 		 --and t.Quantity > 0
-		 --and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
-		 --                                    when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
-			--								 else isnull(t.Restrictions, '')
-   --                                        end
+		 and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
+		                                     when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
+											 else isnull(t.Restrictions, '')
+                                           end
 
  where pc.Brief =  @ProfileName
 
-  and t.DetailNum = @DetailNum --'85022JG04H' --46676
+  and t.DetailNum = @DetailNum
 
 if @IsMyDelivery = 0 /*сторонняя доставка*/
 begin
@@ -212,10 +226,14 @@ end
 Update #Price 
    set TFinPriceKurs  = TFinPrice * (@Kurs + (@Kurs * (isnull(@ExtraKurs, 0)/100)))
 
+--Если у детали установлен пункт Fragile, считать ее сразу с этой наценкой
+--Например, если мы ставим галочку во Fragile, то к себестоимости детали добавляется 3%
+Update #Price 
+   set TFinPriceKurs  =  TFinPriceKurs  + (TFinPriceKurs * (@Fragile/100))
+ where Fragile > 0
 
 Update #Price 
    set FinalPrice = CEILING(TFinPriceKurs)
-      --,IsDelivery = @IsDelivery
 
 	  --MakeLogo, DetailNum, DetailName, Quantity, PackQuantity, FinalPrice
 	  
@@ -229,4 +247,8 @@ select Brand,
  order by PriceLogo
  --*/
 
+
 exit_:
+
+
+select * from tPrice where DetailNum='6102B303'

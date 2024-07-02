@@ -27,6 +27,7 @@ begin
     ,ImageHelp          nvarchar(2048)
  	,isMyDelivery       bit                    -- Считать с учетом доставки
 	,isIgnore           bit                    -- Игнорировать детали без веса
+    ,Fragile            float                  -- Наценка за страховку
 	);
 
 	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
@@ -57,4 +58,7 @@ exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'VolumeKG_Rate4'  
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'DestinationLogo'       ,'Направление заказа. Передается в emex при добалении детали в корзину' 
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Restrictions'          ,'Признак выгружать детали с ограничениями или нет' 
 exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Delivery'              ,'Наш срок поставки, добавляем к сроку emex' 
+exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'isMyDelivery'          ,'Считать с учетом доставки'
+exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'isIgnore'              ,'Игнорировать детали без веса'
+exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Fragile'               ,'Наценка за страховку'
 go

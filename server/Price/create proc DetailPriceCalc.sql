@@ -17,6 +17,9 @@ go
 
 01.05.2023
   добавлен контроль ограничения NOAIR
+01.07.2024
+  + Fragile 
+
 -------------------------------------------------------- */
 create proc DetailPriceCalc
               @ProfileName  varchar(30),
@@ -36,6 +39,7 @@ declare @IsDelivery   bit    -- Считать с учетом доставки
 	   ,@VolumeKG     float
 	   ,@isIgnore     bit
 	   ,@ExtraKurs    float
+       ,@Fragile      float
 
 Select @Margin      = pc.Margin     
 	  ,@Reliability = pc.Reliability 
@@ -46,6 +50,7 @@ Select @Margin      = pc.Margin
 	  ,@WeightKG	= pd.WeightKG
 	  ,@VolumeKG    = pd.VolumeKG                     
 	  ,@ExtraKurs   = s.ExtraKurs
+      ,@Fragile     = isnull(pd.Fragile, 0)
   from tProfilesCustomer pc (nolock)
   inner join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -89,6 +94,7 @@ create table #Price
 ,TFinPrice         float
 ,Term              int            -- срок доставки
 ,TFinPriceKurs     money
+,Fragile           bit
 )
 
 insert #Price
@@ -104,7 +110,8 @@ insert #Price
 	  ,Term
 	  ,WeightKG 
 	  ,VolumeKG 
-      ,TPrice    
+      ,TPrice
+      ,Fragile -- признак хрупкости
 	  )
 select-- top 200000 
        t.PriceID,
@@ -125,7 +132,8 @@ select-- top 200000
                         when isnull(t.VolumeKGf, t.VolumeKG) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
                         else 1
                       end,
-	   t.MOSA
+	   t.MOSA,
+       t.Fragile
   from tProfilesCustomer pc (nolock)
   inner join tSupplierDeliveryProfiles pd (nolock)
           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -218,10 +226,14 @@ end
 Update #Price 
    set TFinPriceKurs  = TFinPrice * (@Kurs + (@Kurs * (isnull(@ExtraKurs, 0)/100)))
 
+--Если у детали установлен пункт Fragile, считать ее сразу с этой наценкой
+--Например, если мы ставим галочку во Fragile, то к себестоимости детали добавляется 3%
+Update #Price 
+   set TFinPriceKurs  =  TFinPriceKurs  + (TFinPriceKurs * (@Fragile/100))
+ where Fragile > 0
 
 Update #Price 
    set FinalPrice = CEILING(TFinPriceKurs)
-      --,IsDelivery = @IsDelivery
 
 	  --MakeLogo, DetailNum, DetailName, Quantity, PackQuantity, FinalPrice
 	  
@@ -241,4 +253,4 @@ return @RetVal
 go
 grant all on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20240627', '1'
+exec setOV 'DetailPriceCalc', 'P', '20240701', '2'

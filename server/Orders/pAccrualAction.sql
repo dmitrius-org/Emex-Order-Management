@@ -14,7 +14,7 @@ create table pAccrualAction
 ,NewStateID        numeric(18,0)  
 ,Retval            numeric(18,0)  default 0 
 ,Message	       nvarchar(1024) 
-,ord               int            default 1
+,ord               int            default 1--9
 ,sgn               int            -- признак для понимания где сделали insert
 )
 go

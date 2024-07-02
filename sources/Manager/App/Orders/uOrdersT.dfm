@@ -50,29 +50,15 @@ object OrdersT: TOrdersT
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
           'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=true;'#13#10'  ' +
           '  }'#13#10'}'
-        'hide=function hide(sender, eOpts)'#13#10'{'#13#10#13#10'}'
         
           'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
           'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
           't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
           '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
         
-          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  //consol' +
-          'e.log(column); '#13#10'  //console.log(eOpts);'#13#10'  //console.log(ct);'#13#10 +
-          '  ajaxRequest(this, '#39'_columnshow'#39', ["column=" + column.dataIndex' +
-          ', "hidden=" + column.hidden]);'#13#10'}'
-        
-          'columnmove=function columnmove(ct, column, fromIdx, toIdx, eOpts' +
-          ')'#13#10'{'#13#10'  //ajaxRequest(this, '#39'_columnmove'#39', ["column=" + fromIdx,' +
-          ' "columnTo=" + toIdx]);'#13#10'}'
-        
-          'columnresize=function columnresize(ct, column, width, eOpts)'#13#10'{'#13 +
-          #10'  //  ajaxRequest(this, '#39'_columnresize'#39', ["column=" + column.da' +
-          'taIndex, "hidden=" + column.hidden]);'#13#10'}'
-        
-          'columnschanged=function columnschanged(ct, eOpts)'#13#10'{'#13#10' // ajaxRe' +
-          'quest(this, '#39'_columnschanged'#39', ['#39'colIndx='#39' + column.dataIndex])'#13 +
-          #10'}')
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -1246,6 +1232,7 @@ object OrdersT: TOrdersT
         #1074#1077#1089' - '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'.'
       '      ,o.DateDeparture   -- '#1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
       '      ,o.DaysInWork      -- '#1044#1085#1077#1081' '#1074' '#1088#1072#1073#1086#1090#1077
+      '      ,o.Fragile'
       '      '
       '  FROM [vOrders] o'
       ' where 1=1'
@@ -1576,6 +1563,9 @@ object OrdersT: TOrdersT
       FieldName = 'Status'
       OnGetText = QueryStatusGetText
     end
+    object QueryFragile: TBooleanField
+      FieldName = 'Fragile'
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1762,6 +1752,7 @@ object OrdersT: TOrdersT
       '       IncomePRC,'
       '       Profit,'
       '       DestinationLogo,'
+      '       Fragile,'
       '       Flag as Status -- '#1080#1082#1086#1085#1082#1080
       '  FROM vOrders'
       ' WHERE OrderID = :OrderID')

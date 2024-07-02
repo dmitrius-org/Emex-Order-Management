@@ -429,6 +429,7 @@ object BasketF: TBasketF
         Align = alRight
         TabOrder = 2
         BorderStyle = ubsNone
+        ShowCaption = False
         Caption = 'UniPanel2'
         LayoutConfig.Region = 'east'
         DesignSize = (

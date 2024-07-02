@@ -8,6 +8,7 @@ object ClientsF: TClientsF
   OldCreateOrder = False
   OnClose = UniFormClose
   MonitoredKeys.Keys = <>
+  OnCreate = UniFormCreate
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
@@ -51,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabPriceProfiles
+    ActivePage = tabHome
     Align = alClient
     TabOrder = 1
     object tabHome: TUniTabSheet

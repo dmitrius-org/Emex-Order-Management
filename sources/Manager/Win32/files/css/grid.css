@@ -78,7 +78,7 @@
     background-image:url("/files/img/status.png") !important; 
     width:24px !important;
     height:24px !important;
-  }
+}
 
 /* Стрелка ближайшая дата вылета*/
 .grid-order .x-delivery-next-date-arrow{
@@ -97,34 +97,31 @@
 /* Иконка: Запрос отказа*/
 .grid-order-request-cancellation {
     width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
     color: #FF033E
 }
 
 /* Иконка: Отказ*/
 .grid-order-cancellation {
     width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
     color: #FF033E
 }
 
 .grid-order-balance-scale {
     width: 100%;
+    color: #ff0303
+}
+
+.grid-order-fragile{
+    width: 100%;
     /* margin: 1% auto; */
-    /* font-size: 16px; */
+    font-size: 16px;
     color: #ff0303
 }
 
 /* Иконка: сообщение по заказу*/
 .grid-order-message {
-    /* position: absolute; */
     overflow: visible;
-    /* z-index: 999999; */
     width: 100%;
-    /* margin: 1% auto; */
-    /* font-size: 16px; */
     color: #1E90FF
 }
 
@@ -190,6 +187,11 @@
 /* таблица типы клиентов */
 /* Перенос строки в заголовке таблицы */
 .grid-client-Type .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+.grid-suppliers .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
 }

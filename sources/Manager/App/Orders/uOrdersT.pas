@@ -193,6 +193,7 @@ type
     QueryStatus: TIntegerField;
     actCancellation: TAction;
     N8: TUniMenuItem;
+    QueryFragile: TBooleanField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -984,6 +985,11 @@ begin
     t := t + '<span class="grid-order-balance-scale" data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
   end;
 
+  if Query.FieldByName('Fragile').AsBoolean then
+  begin
+    t := t + '<span class="grid-order-fragile" data-qtip="Fragile - Хрупкий товар"><i class="fa fa-fragile"></i></span> ';
+  end;
+
   Text := t;
 end;
 
@@ -1286,7 +1292,8 @@ end;
 procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
-     fDetailNum.Text := 'AC3555122RS';
+     fOrderDate.DateTime := date();
+     fDetailNum.Text := '214432E110';
   {$ENDIF}
 end;
 

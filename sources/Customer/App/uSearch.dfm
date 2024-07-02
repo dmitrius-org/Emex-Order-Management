@@ -247,7 +247,7 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'Rating'
+          FieldName = 'PercentSupped'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
@@ -517,6 +517,7 @@ object SearchF: TSearchF
       FieldName = 'PercentSupped'
       Origin = 'PercentSupped'
       ReadOnly = True
+      OnGetText = QueryPercentSuppedGetText
     end
     object QueryPrice: TCurrencyField
       FieldName = 'PriceRub'
@@ -529,11 +530,6 @@ object SearchF: TSearchF
       ReadOnly = True
       OnGetText = QueryAvailableGetText
       Size = 128
-    end
-    object QueryRating: TStringField
-      FieldName = 'Rating'
-      ReadOnly = True
-      Size = 1048
     end
     object QueryWeight: TCurrencyField
       FieldName = 'Weight'
@@ -548,6 +544,10 @@ object SearchF: TSearchF
       FieldName = 'OurDeliverySTR'
       ReadOnly = True
       Size = 256
+    end
+    object QueryPriceLogo: TWideStringField
+      FieldName = 'PriceLogo'
+      Size = 128
     end
   end
   object qSearchHistory: TFDQuery

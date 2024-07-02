@@ -193,7 +193,11 @@ begin
 
   DataRefresh;
 
-  GridExt.SortColumnCreate(Grid) //SortColumnCreate(Query);
+  GridExt.SortColumnCreate(Grid); //SortColumnCreate(Query);
+
+  with Grid, Grid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
 end;
 
 procedure TPricesT.UniFrameDestroy(Sender: TObject);

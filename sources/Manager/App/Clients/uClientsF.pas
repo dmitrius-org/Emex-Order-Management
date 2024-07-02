@@ -189,6 +189,7 @@ type
     procedure tabPriceProfilesBeforeActivate(Sender: TObject;
       var AllowActivate: Boolean);
     procedure cbSuppliersChange(Sender: TObject);
+    procedure UniFormCreate(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -565,6 +566,21 @@ begin
            'delete pProfilesCustomer from pProfilesCustomer (rowlock) where spid = @@spid;', [], []);
 
   {$ENDIF}
+end;
+
+procedure TClientsF.UniFormCreate(Sender: TObject);
+begin
+  with Grid, Grid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+
+  with ProfilesCustomerGrid, ProfilesCustomerGrid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+
+  with ManagerGrid, ManagerGrid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
 end;
 
 procedure TClientsF.UniFormShow(Sender: TObject);

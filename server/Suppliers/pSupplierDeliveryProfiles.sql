@@ -28,6 +28,7 @@ create table pSupplierDeliveryProfiles
 ,ImageHelp          nvarchar(2048)
 ,isMyDelivery       bit                    -- Считать с учетом доставки
 ,isIgnore           bit                    -- Игнорировать детали без веса
+,Fragile            float                  -- Наценка за страховку
 )
 go
 create index ao1 on pSupplierDeliveryProfiles(ID)
@@ -36,5 +37,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240618', '3'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240701', '4'
 go

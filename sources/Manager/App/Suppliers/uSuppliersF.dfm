@@ -8,6 +8,7 @@ object SuppliersF: TSuppliersF
   OldCreateOrder = False
   OnClose = UniFormClose
   MonitoredKeys.Keys = <>
+  OnCreate = UniFormCreate
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
@@ -19,13 +20,11 @@ object SuppliersF: TSuppliersF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 410
-    ExplicitWidth = 1008
     DesignSize = (
       1012
       44)
     object btnOk: TUniBitBtn
-      Left = 901
+      Left = 897
       Top = 10
       Width = 85
       Height = 25
@@ -34,10 +33,9 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 897
     end
     object btnCancel: TUniBitBtn
-      Left = 814
+      Left = 810
       Top = 10
       Width = 81
       Height = 25
@@ -46,7 +44,6 @@ object SuppliersF: TSuppliersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 810
     end
   end
   object pcCommon: TUniPageControl
@@ -58,13 +55,9 @@ object SuppliersF: TSuppliersF
     ActivePage = tabCommon
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 1014
-    ExplicitHeight = 407
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 1006
-      ExplicitHeight = 379
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -74,7 +67,6 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 1006
         DesignSize = (
           1010
           143)
@@ -87,7 +79,6 @@ object SuppliersF: TSuppliersF
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 826
         end
         object lblName: TUniLabel
           Left = 25
@@ -111,8 +102,6 @@ object SuppliersF: TSuppliersF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 1
-        ExplicitTop = 296
-        ExplicitWidth = 1000
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
@@ -122,7 +111,6 @@ object SuppliersF: TSuppliersF
           ParentColor = False
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 996
           object edtID: TUniEdit
             Left = 141
             Top = 8
@@ -189,21 +177,18 @@ object SuppliersF: TSuppliersF
     object tabSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
-      ExplicitWidth = 1006
-      ExplicitHeight = 379
       DesignSize = (
         1010
         380)
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 228
+        Width = 224
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
-        ExplicitWidth = 224
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -292,8 +277,6 @@ object SuppliersF: TSuppliersF
       ParentAlignmentControl = False
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
       LayoutConfig.Width = '100'
-      ExplicitWidth = 1006
-      ExplicitHeight = 379
       object ToolBar: TUniToolBar
         AlignWithMargins = True
         Left = 3
@@ -313,7 +296,6 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 1000
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -355,8 +337,6 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitWidth = 1006
-        ExplicitHeight = 325
         object Grid: TUniDBGrid
           AlignWithMargins = True
           Left = 3
@@ -385,7 +365,7 @@ object SuppliersF: TSuppliersF
           LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
           LoadMask.Color = clActiveCaption
           EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-          LayoutConfig.ComponentCls = 'grid-clients'
+          LayoutConfig.ComponentCls = 'grid-suppliers'
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Height = '100'
           LayoutConfig.Width = '100'
@@ -504,6 +484,12 @@ object SuppliersF: TSuppliersF
               Width = 91
               Hint = #1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
               CheckBoxField.AutoPost = True
+            end
+            item
+              FieldName = 'Fragile'
+              Title.Alignment = taCenter
+              Title.Caption = #1053#1072#1094#1077#1085#1082#1072' '#1079#1072' '#1089#1090#1088#1072#1093#1086#1074#1082#1091' (Fragile)'
+              Width = 168
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
@@ -596,6 +582,7 @@ object SuppliersF: TSuppliersF
       '        ImageHelp,'
       '        isMyDelivery,'
       '        isIgnore,'
+      '        Fragile,'
       '         Spid)'
       'VALUES (:NEW_SuppliersID, '
       '        :NEW_Name, '
@@ -614,6 +601,7 @@ object SuppliersF: TSuppliersF
       '        :NEW_ImageHelp,'
       '        :NEW_isMyDelivery,'
       '        :NEW_isIgnore,'
+      '        :NEW_Fragile,'
       '        @@Spid);'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
@@ -657,7 +645,8 @@ object SuppliersF: TSuppliersF
       '      [Image] = :NEW_Image,'
       '      [ImageHelp]=:New_ImageHelp,'
       '       isMyDelivery=:New_isMyDelivery,'
-      '       isIgnore=:New_isIgnore'
+      '       isIgnore=:New_isIgnore,'
+      '       Fragile =:NEW_Fragile'
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (
@@ -1026,6 +1015,7 @@ object SuppliersF: TSuppliersF
       '      ,ImageHelp'
       '      ,isMyDelivery-- '#1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       '      ,isIgnore    -- '#1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
+      '      ,Fragile'
       '  from pSupplierDeliveryProfiles (nolock)'
       ' where Spid = @@Spid ')
     Left = 767
@@ -1034,7 +1024,6 @@ object SuppliersF: TSuppliersF
       AutoGenerateValue = arNone
       FieldName = 'ProfilesDeliveryID'
       Origin = 'ProfilesDeliveryID'
-      ReadOnly = True
     end
     object qDeliverySuppliersID: TFMTBCDField
       FieldName = 'SuppliersID'
@@ -1109,7 +1098,6 @@ object SuppliersF: TSuppliersF
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInWhere, pfInKey]
-      ReadOnly = True
     end
     object qDeliveryDenVyleta: TWideStringField
       FieldName = 'DenVyleta'
@@ -1132,6 +1120,9 @@ object SuppliersF: TSuppliersF
     end
     object qDeliveryisIgnore: TBooleanField
       FieldName = 'isIgnore'
+    end
+    object qDeliveryFragile: TFloatField
+      FieldName = 'Fragile'
     end
   end
   object dsDelivery: TDataSource

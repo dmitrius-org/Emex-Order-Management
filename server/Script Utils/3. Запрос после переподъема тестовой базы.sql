@@ -1,4 +1,5 @@
-
+use testdb
+go
 
 
 Update tSuppliers 

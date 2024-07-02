@@ -42,7 +42,7 @@ as
          'Загрузка курсов',
          case 
              when datepart(dw, getdate()) = 1 and datediff(dd, t.OnDate, getdate()) >= 3 then 'panel-danger'
-             when datediff(dd, OnDate, getdate()) >= 1 then 'panel-danger'
+             when datepart(dw, getdate()) <> 1 and datediff(dd, OnDate, getdate()) >= 1 then 'panel-danger'
              else 'panel-success'
          end,
          'fa4-usd',

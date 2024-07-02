@@ -92,6 +92,7 @@ type
     edtEmexPassword: TUniEdit;
     qDeliveryisMyDelivery: TBooleanField;
     qDeliveryisIgnore: TBooleanField;
+    qDeliveryFragile: TFloatField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -106,6 +107,7 @@ type
     procedure qDeliveryAfterDelete(DataSet: TDataSet);
     procedure qDeliveryAfterEdit(DataSet: TDataSet);
     procedure qDeliveryAfterPost(DataSet: TDataSet);
+    procedure UniFormCreate(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -355,6 +357,13 @@ end;
 procedure TSuppliersF.UniFormClose(Sender: TObject; var Action: TCloseAction);
 begin
  // Sql.Exec('delete pOrderFileFormat from pOrderFileFormat (rowlock) where spid = @@spid', [], []);
+end;
+
+procedure TSuppliersF.UniFormCreate(Sender: TObject);
+begin
+  with Grid, Grid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
 end;
 
 procedure TSuppliersF.UniFormShow(Sender: TObject);

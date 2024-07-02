@@ -57,6 +57,8 @@ create table #Price
 ,ProfilesDeliveryID  numeric(18, 0)
 ,Delivery            int
 ,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
+,FragileSign         bit    default 0-- признак Хрункий на детали
+,Fragile             float  default 0-- величина процента с направления доставки 
 
 ,RetVal              int
 )
@@ -72,10 +74,11 @@ Update p
  where p.Spid = @@Spid
 
 declare  @Price  table
-       ( DetailNum nvarchar(40)
-        ,MakeLogo  nvarchar(40)
-        ,WeightKGF float
-		,VolumeKGf float);
+       ( DetailNum   nvarchar(40)
+        ,MakeLogo    nvarchar(40)
+        ,WeightKGF   float
+		,VolumeKGf   float
+        ,FragileSign bit);
 
 insert @Num (DetailNum)
 select distinct p.DetailNum
@@ -87,13 +90,14 @@ insert @Price
        (DetailNum, 
 		MakeLogo, 
 		WeightKGF, 
-		VolumeKGf
-		)
+		VolumeKGf,
+        FragileSign)
 select top 1 
        pp.DetailNum,
 	   pp.MakeLogo,
 	   pp.WeightKGF,
-	   pp.VolumeKGf
+	   pp.VolumeKGf,
+       isnull(pp.Fragile, 0)
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
@@ -128,6 +132,8 @@ insert #Price
 	  ,ProfilesDeliveryID
 	  ,Delivery -- дополнительный срок поставки с поставщика
 	  ,GuaranteedDay
+      ,FragileSign
+      ,Fragile
 	  )
 select p.ID,
        p.MakeName, 
@@ -161,26 +167,24 @@ select p.ID,
        @Kurs, 
        s.ExtraKurs,
        s.Commission,
-       s.Discount,	
-
+       --case 
+       --  when p.flag&1>0 then s.Discount
+       --  else 0 -- по АПИ цена приходит с учетом скидки
+       --end,
+       0,
        pd.WeightKG,
        pd.VolumeKG,
        pd.DestinationLogo,
 	   pd.ProfilesDeliveryID,
 	   pd.Delivery,
-
-	   p.GuaranteedDay
+	   p.GuaranteedDay,
+       isnull(pp.FragileSign, 0),
+       isnull(pd.Fragile, 0)
   from pFindByNumber p with (nolock index=ao1)
  inner join tClients c  with (nolock index=ao1)
          on c.ClientID = p.ClientID 
  inner join tSuppliers s  with (nolock index=ao1)
          on S.SuppliersID = c.SuppliersID
- --inner join tSupplierDeliveryProfiles pd  with (nolock index=ao1)
- --        on pd.SuppliersID     = s.SuppliersID
- --       and pd.DestinationLogo = @DestinationLogo    
- --inner join tProfilesCustomer pc  with (nolock index=ao2)
- --        on pc.ClientID           = c.ClientID
- --       and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
 
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
       select top 1
@@ -198,17 +202,14 @@ select p.ID,
              pd.VolumeKG_Rate1,
              pd.VolumeKG_Rate2,
              pd.VolumeKG_Rate3,
-             pd.VolumeKG_Rate4
+             pd.VolumeKG_Rate4,
+             pd.Fragile
 
         from tProfilesCustomer pc with (nolock)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
        where pc.ClientID = c.ClientID
          and pd.DestinationLogo    = @DestinationLogo   
-       --order by case 
-       --           when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
-       --           else 555
-       --         end
      ) as pd
 
  left join @Price pp
@@ -238,9 +239,15 @@ Update #Price set TMarg = TDetPrice* (Margin/100)
 
 Update #Price set TFinPrice = (TDetPrice + TDel + TMarg + TCom)
 
+--Если у детали установлен пункт Fragile, считать ее сразу с этой наценкой
+--Например, если мы ставим галочку во Fragile, то к себестоимости детали добавляется 3%
+Update #Price 
+   set TFinPrice  =  TFinPrice  + (TFinPrice * (isnull(Fragile, 0)/100))
+ where isnull(FragileSign, 0) > 0
+
 Update #Price set TFinPriceKurs  = TFinPrice * (Kurs + (Kurs * (isnull(ExtraKurs, 0)/100)))
 
-Update #Price set FinalPrice = TFinPriceKurs --CEILING(TFinPriceKurs)
+Update #Price set FinalPrice = TFinPriceKurs
 	  
 Update f 
    set f.PriceRub        = CEILING(p.FinalPrice)
@@ -275,7 +282,6 @@ exec DeliveryDateCalc
 
 Update f 
    set f.OurDelivery    = f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery
-       /**/
       ,f.OurDeliverySTR = cast(f.GuaranteedDay as nvarchar) + ' + ' + cast(DATEDIFF(dd, p.OrderDate, p.DeliveryDate) as nvarchar) + ' + ' + cast(p.Delivery as nvarchar) + ' = ' + Cast(f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery as nvarchar)
   from pDeliveryDate p with (nolock index=ao1)
  inner join pFindByNumber f with (updlock index=ao1)
@@ -288,5 +294,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240628', '4'
+exec setOV 'SearchPriceCalc', 'P', '20240701', '7'
 go

@@ -18,7 +18,9 @@ object UniServerModule: TUniServerModule
     ''
     'files/css/dashboard.css'
     ''
-    'files/tinyMCE5/tinymce.js')
+    'files/tinyMCE5/tinymce.js'
+    ''
+    'files/fonts/fontawesome-pro-5.14.0-web/css/all.css')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'

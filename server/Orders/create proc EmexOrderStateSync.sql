@@ -158,7 +158,6 @@ DEALLOCATE my_cur
  exec MovementArchive
 
  -- чистим ошибочные заказа после разбиения, иногда такое бывает
- 
  delete o
    from pMovement p (nolock) 
   inner join tOrders op (rowlock)

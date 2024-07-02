@@ -32,7 +32,6 @@ type
     UniHiddenPanel1: TUniHiddenPanel;
     btnAddBasket: TUniButtonWidget;
     QueryID: TFMTBCDField;
-    QueryRating: TStringField;
     btnSearch: TUniButton;
     QueryWeight: TCurrencyField;
     QueryVolumeAdd: TCurrencyField;
@@ -51,6 +50,7 @@ type
     lblAnalog: TUniLabel;
     UpdateSQL: TFDUpdateSQL;
     UniNumberEdit1: TUniNumberEdit;
+    QueryPriceLogo: TWideStringField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -76,6 +76,8 @@ type
     procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
       Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure QueryAvailableGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryPercentSuppedGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
 
 
@@ -422,6 +424,70 @@ begin
     Text := '<span>' + Sender.AsString + ' </span>';
 end;
 
+procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  Text := '''
+            <span class="" data-qtip="Прайс: PriceLogo">
+              <fieldset class="rating">
+          ''';
+
+  if (Sender.Value > 90) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star5"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star5"></label>';
+
+  if (Sender.Value > 80) then
+     Text := Text + '<input type="radio" checked /><label class="half" for="star4half"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="half" for="star4half"></label>';
+
+  if (Sender.Value > 70) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star4"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star4"></label>';
+
+  if (Sender.Value > 60) then
+     Text := Text + '<input type="radio" checked /><label class="half" for="star3half"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="half" for="star3half"></label>';
+
+  if (Sender.Value > 50) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star3"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star3"></label>';
+
+  if (Sender.Value > 40) then
+     Text := Text + '<input type="radio" checked /><label class="half" for="star2half"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="half" for="star2half"></label>';
+
+  if (Sender.Value > 30) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star2"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star2"></label>';
+
+  if (Sender.Value > 20) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star1half"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star1half"></label>';
+
+  if (Sender.Value > 10) then
+     Text := Text + '<input type="radio" checked /><label class="full" for="star1"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="full" for="star1"></label>';
+
+  if (Sender.Value > 0) then
+     Text := Text + '<input type="radio" checked /><label class="half" for="star0half"></label>'
+  else
+     Text := Text +'<input type="radio" /><label class="half" for="star0half"></label>';
+
+  Text := Text +'</fieldset></span><label id="prc" class="ratingprc">PercentSupped%</label>';
+
+  Text := StringReplace(Text, 'PriceLogo' , Query.FieldByName('PriceLogo').AsString, [] );
+  Text := StringReplace(Text, 'PercentSupped' , Sender.AsString, [rfReplaceAll] );
+end;
+
 procedure TSearchF.UniFrameCreate(Sender: TObject);
 var
   js: string;
@@ -451,7 +517,7 @@ begin
   SearchGrid.Columns.ColumnFromFieldName('VolumeAdd').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Объем', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoVolume'), []);
   SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
   SearchGrid.Columns.ColumnFromFieldName('OurDeliverySTR').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
-  SearchGrid.Columns.ColumnFromFieldName('Rating').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
+  SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
 end;
 
 procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
