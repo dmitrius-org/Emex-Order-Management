@@ -47,7 +47,7 @@ as
  Update p 
     set p.retval = case 
 	                 when n.Brief  = 'InWork'   then 512-- 'Состояние "В работе" запрещено откатывать!'
-					 when n.Brief  = 'InCancel' then 515-- 'Состояние "Отказан" запрещено откатывать!'
+					 when n.Brief  = 'InCancel' and p.StateID in (3	/*InBasket	В корзине*/) then 515-- 'Состояние "Отказан" запрещено откатывать!'
 					 else 0
                    end
    from pAccrualAction p (updlock)
@@ -61,6 +61,7 @@ as
 go
 grant exec on ProtocolRollBackCheck to public
 go
-exec setOV 'ProtocolRollBackCheck', 'P', '20240101', '0'
+exec setOV 'ProtocolRollBackCheck', 'P', '20240704', '1'
 go
+
  

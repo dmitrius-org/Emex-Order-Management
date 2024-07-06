@@ -173,12 +173,14 @@ end;
 
 procedure TSearchF.PriceCalc;
 begin
+  logger.Info('TSearchF.PriceCalc begin');
   RetVal.Clear;
 
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo',
            'DetailNum'],
           [FDestinationLogo, FDetailNum ]);
+  logger.Info('TSearchF.PriceCalc end');
 end;
 
 procedure TSearchF.edtSearchClick(Sender: TObject);
@@ -211,6 +213,7 @@ end;
 
 procedure TSearchF.GridRefresh();
 begin
+  logger.Info('TSearchF.GridRefresh begin');
   // определение количества уникальных брендов
   sql.Open('Select Count(distinct Make) from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
   FMakeCount := sql.Q.Fields[0].AsInteger;
@@ -222,6 +225,7 @@ begin
   Query.Open;
 
   AnalogLblVisible;
+  logger.Info('TSearchF.GridRefresh end');
 end;
 
 procedure TSearchF.lblAnalogClick(Sender: TObject);
@@ -295,6 +299,7 @@ procedure TSearchF.PartSearch;
 var
   emex: TEmex;
 begin
+  logger.Info('TSearchF.PartSearch Begin');
   emex := TEmex.Create;
   ShowMask('Поиск...');
   UniSession.Synchronize();
@@ -320,26 +325,35 @@ begin
     FreeAndNil(emex);
     HideMask;
     UniSession.Synchronize();
+
+    logger.Info('TSearchF.PartSearch end');
   end;
 end;
 
 procedure TSearchF.SetMakeName;
 begin
-  sql.Open('select top 1 * '+
-           '  from pFindByNumber pp with (nolock index=ao2) ' +
-           ' where pp.Spid = @@spid ' +
-           ' order by case '+
-           '            when DetailNum = :DetailNum then 0'+
-           '            else 2 '+
-           '          end'+
-//           '         ,case '+
-//           '            when MakeName = :MakeName   then 0'+
-//           '            else 2 '+
-//           '          end'+
-           '', ['DetailNum'] , [Trim(edtSearch.Text)]);
+  logger.Info('TSearchF.SetMakeName begin');
+  sql.Open('''
+           select top 1 pp.DetailNum, pp.MakeName
+             from pFindByNumber pp with (nolock index=ao2)
+            where pp.Spid = @@spid
+            order by case
+                       when pp.DetailNum = :DetailNum then 0
+                       else 2
+                     end
+                    ,pp.ID
+                  /* ,case
+                       when MakeName = :MakeName   then 0
+                       else 2
+                    end */
+           ''', ['DetailNum'] , [Trim(edtSearch.Text)]);
 
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
   FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
+
+  logger.Info('TSearchF.SetMakeName MakeName: ' + FMakeName);
+  logger.Info('TSearchF.SetMakeName DetailNum: ' + FDetailNum);
+  logger.Info('TSearchF.SetMakeName end');
 end;
 
 procedure TSearchF.PartToBasket;
@@ -382,7 +396,7 @@ end;
 
 procedure TSearchF.DestinationLogo; var i: Integer;
 begin
-  logger.Info('TSearchF.DestinationLogo'); 
+  logger.Info('TSearchF.DestinationLogo begin');
   sql.Open(' Select *  '+
            '   from vDestinationLogo  '+
            '  where ClientID = :ClientID   '+
@@ -404,6 +418,8 @@ begin
   FDestinationStr := FDestinationStr + '</div>' + '</form>';
 
   FDestinationStr := StringReplace(FDestinationStr, FDestinationLogo + '"',  FDestinationLogo + '" checked', []);
+
+  logger.Info('TSearchF.DestinationLogo end');
 end;
 
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -532,12 +548,20 @@ begin
 
   if EventName = 'setDestLogo' then
   begin
-    FDestinationLogo := Params.Values['P1'];
-    DestinationLogo;
-    
-    PriceCalc();
+    ShowMask('Поиск...');
+    UniSession.Synchronize();
+    try
+      FDestinationLogo := Params.Values['P1'];
+      DestinationLogo;
 
-    GridRefresh();
+      PriceCalc();
+
+      GridRefresh();
+    finally
+      HideMask;
+      UniSession.Synchronize();
+    end;
+    logger.Info('TSearchF.SearchGridAjaxEvent setDestLogo end ');
   end;
 
   if EventName = 'MakeLogoGridShow' then
@@ -618,7 +642,7 @@ begin
   begin
     qSearchHistory.Close;
     qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
-    qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
+    //qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
     qSearchHistory.Open();
   end;
 
@@ -634,20 +658,20 @@ end;
 
 procedure TSearchF.SearchHistorySave;
 begin
-  Sql.Exec('insert tSearchHistory (ClientID, DetailNum) '+
-  'select distinct      '+
-  '       f.ClientID    '+
-  '      ,f.DetailNum   '+
-  '  from pFindByNumber f with (nolock index=ao1) '+
-  ' where f.Spid      = @@Spid    '+
-  '   and f.DetailNum = :DetailNum  '+
-  '   and not exists (select 1      '+
-  '                     from tSearchHistory sh with (nolock index=ao1) '+
-  '                    where sh.ClientID  = f.ClientID   '+
-  '                      and sh.DetailNum = f.DetailNum) '+
-  '',
+  logger.Info('TSearchF.SearchHistorySave begin');
+  Sql.Exec('''
+  insert tSearchHistory (ClientID, DetailNum)
+  select distinct
+         f.ClientID
+        ,f.DetailNum
+    from pFindByNumber f with (nolock index=ao1)
+   where f.Spid      = @@Spid
+     and f.DetailNum = :DetailNum
+
+  ''',
   ['DetailNum'],
   [FDetailNum]);
+  logger.Info('TSearchF.SearchHistorySave end');
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);

@@ -790,7 +790,7 @@ object OrdersT: TOrdersT
               '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
               '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
               '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          EmptyText = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+          EmptyText = #1055#1088#1072#1081#1089
           CheckChangeDelay = 100
           ClearButton = True
           Triggers = <
@@ -1774,11 +1774,7 @@ object OrdersT: TOrdersT
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'SELECT distinct'
-      '       n.[NodeID]'
-      '      ,n.[Name]'
-      '  FROM [tNodes] n (nolock)'
-      ' where n.Type = 0 -- '#1089#1086#1089#1090#1086#1103#1085#1080#1103)
+      ' exec OrderFilter_Status ')
     Left = 575
     Top = 316
   end

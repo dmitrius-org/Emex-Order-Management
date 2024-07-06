@@ -9,6 +9,7 @@ begin
 	 SearchHistoryID   numeric(18,0) identity
 	,ClientID          numeric(18,0)
 	,DetailNum         varchar(40)
+    --,InDateTime        datetime
 	);
 
 	create index ao1 on tSearchHistory (ClientID);

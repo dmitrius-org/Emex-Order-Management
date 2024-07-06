@@ -1,6 +1,6 @@
 declare
-              @ProfileName  varchar(30)='EmEx (MZYH-EMIR)',
-			  @DetailNum    varchar(30)= '6102B303',
+              @ProfileName  varchar(30)='EEZap (BEED-48H)',
+			  @DetailNum    varchar(30)= 'HYB168NA',
 			  @ErrMessage   varchar(255) = null 
 
 --EmEx (MZYN-EMIN)
@@ -135,22 +135,22 @@ select-- top 200000
 	   t.MOSA,
        t.Fragile
   from tProfilesCustomer pc (nolock)
-  inner join tSupplierDeliveryProfiles pd (nolock)
-          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-  inner join tPrice t with (nolock index=ao3)
-          on t.PriceLogo = pc.UploadPriceName
+ inner join tSupplierDeliveryProfiles pd (nolock)
+         on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+ inner join tPrice t with (nolock index=ao3)
+         on t.PriceLogo = pc.UploadPriceName
 		 --and 1=1
              /*Если в форме была установлена галочка "Игнорировать детали без веса", то убираем все строки,
                у которых сразу в двух ячейках WeightKG и VolumeKG значение 0.*/
-         and (@isIgnore = 0
-          or (@isIgnore = 1 and not (isnull(t.WeightKGF, t.WeightKG) = 0 and isnull(t.VolumeKGf, t.VolumeKG) = 0)))
-             --Убираем все строки, у которых значения в столбце Reliability строго меньше, чем reliability из формы
-         and t.Reliability >= @Reliability
+        and (@isIgnore = 0
+         or (@isIgnore = 1 and not (isnull(t.WeightKGF, t.WeightKG) = 0 and isnull(t.VolumeKGf, t.VolumeKG) = 0)))
+            --Убираем все строки, у которых значения в столбце Reliability строго меньше, чем reliability из формы
+        and t.Reliability >= @Reliability
 		 --and t.Quantity > 0
-		 and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
-		                                     when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
-											 else isnull(t.Restrictions, '')
-                                           end
+        and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
+	                                        when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
+			                                else isnull(t.Restrictions, '')
+                                          end
 
  where pc.Brief =  @ProfileName
 
@@ -251,4 +251,4 @@ select Brand,
 exit_:
 
 
-select * from tPrice where DetailNum='6102B303'
+select * from tPrice where DetailNum='HYB168NA'

@@ -1,4 +1,4 @@
-alter table tPrice add Fragile bit
+--alter table tPrice add Fragile bit
 
 go
 Update tPrice 

@@ -57,21 +57,48 @@ as
 		   and n.Brief  = 'ToCancel'
     where p.Spid        = @@spid
 	  and p.retval      = 0
-	--  select * from tNodes
 
+  -- аудит
+  delete pAuditInsert from pAuditInsert (rowlock) where spid=@@spid
+  insert pAuditInsert
+        (Spid
+        ,ObjectID
+        ,ObjectTypeID
+        ,ActionID
+        ,Comment
+        )
+  select @@Spid 
+        ,p.ObjectID        	         
+        ,3        
+        ,27	--acRollback	Откат действия     
+        --Отменили: Действие=ОфПрПроц,  Состояние=Предоставл, Пользователь=Захарова А.И., Опер.день=30/06/2024, Физ.дата=01/07/2024 12:18:11
+        ,'Отменили: Действие=' + act.Name + ', Состояние='+ns.Name + ', Пользователь=' + u.Name + ', Опер.день=' + convert(nvarchar, p.OperDate, 21) +  ', Физ.дата=' +  convert(nvarchar, p.InDateTime, 21)
+    from pAccrualAction a (nolock)
+   inner join tProtocol p (rowlock)
+	       on p.ProtocolID = a.ProtocolID
+   inner join tNodes ns (nolock)
+           on ns.NodeID  = p.NewStateID 
+   inner join tNodes act (nolock)
+           on act.NodeID = p.ActionID  
+   inner join tUser u (nolock)
+           on u.UserID = p.UserID
+    where a.Spid        = @@spid
+	  and a.retval      = 0
+          
+  exec MassAuditInsert
 
-   delete tProtocol
-	 from pAccrualAction p
-    inner join tProtocol o (rowlock)
+  -- удаление протокола
+  delete tProtocol
+    from pAccrualAction p
+   inner join tProtocol o (rowlock)
 	        on o.ProtocolID = p.ProtocolID
-    where p.Spid        = @@spid
-	  and p.retval      = 0
+   where p.Spid        = @@spid
+     and p.retval      = 0
 
  exit_:
  return @r
 go
 grant exec on ProtocolRollBack to public
 go
-exec setOV 'ProtocolRollBack', 'P', '20240101', '0'
+exec setOV 'ProtocolRollBack', 'P', '20240704', '1'
 go
- 

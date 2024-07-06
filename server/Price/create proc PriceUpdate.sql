@@ -8,7 +8,11 @@ create proc PriceUpdate
 as
 declare @PriceLogo         varchar(30)    -- Название прайса 
 
-declare @ID as table (ID numeric(18, 0) primary key)
+declare @ID as table (
+        ID numeric(18, 0) primary key
+       ,MakeLogo	 varchar(30)
+       ,DetailNum	 varchar(40)
+       )
 
 select top 1
        @PriceLogo = PriceLogo
@@ -16,7 +20,6 @@ select top 1
 
 if isnull(@PriceLogo, '') = ''
   goto exit_
-
 
 update p
    set p.DetailName = pd.Name_RUS -- Русские наименования    
@@ -26,18 +29,18 @@ update p
         and p.MakeLogo  = pd.Make
 
 update t
-   set  t.DetailPrice  = p.DetailPrice
-	   ,t.DetailName   = p.DetailName  
-	   ,t.PriceLogo    = rtrim(p.PriceLogo)
-	   ,t.Quantity     = iif(p.Quantity = 0, 999, p.Quantity)  
-	   ,t.PackQuantity = p.PackQuantity
-	   ,t.Reliability  = p.Reliability -- Вероятность поставки 
-	   ,t.WeightKG     = p.WeightKG
-  	   ,t.VolumeKG	   = p.VolumeKG
-	   ,t.MOSA         = p.MOSA
-	   ,t.Restrictions = isnull(t.Restrictions, nullif(p.Restrictions, ''))
-       ,t.updDatetime  = GetDate()
-OUTPUT INSERTED.PriceID INTO @ID(ID)      
+   set t.DetailPrice  = p.DetailPrice
+	  ,t.DetailName   = p.DetailName  
+	  ,t.PriceLogo    = rtrim(p.PriceLogo)
+	  ,t.Quantity     = iif(p.Quantity = 0, 999, p.Quantity)  
+	  ,t.PackQuantity = p.PackQuantity
+	  ,t.Reliability  = p.Reliability -- Вероятность поставки 
+	  ,t.WeightKG     = p.WeightKG
+  	  ,t.VolumeKG	  = p.VolumeKG
+	  ,t.MOSA         = p.MOSA
+	  ,t.Restrictions = isnull(t.Restrictions, nullif(p.Restrictions, ''))
+      ,t.updDatetime  = GetDate()
+OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum INTO @ID(ID, MakeLogo, DetailNum)      
   from #Price p with (nolock index=ao3)       
  inner join tPrice t with (updlock index=ao3) 
          on t.PriceLogo = @PriceLogo
@@ -60,7 +63,7 @@ insert into tPrice with (rowlock)
 	  ,MOSA  
 	  ,Restrictions
        ) 
-OUTPUT INSERTED.PriceID INTO @ID(ID)
+OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum INTO @ID(ID, MakeLogo, DetailNum)    
 select p.MakeLogo 
 	  ,m.Name      -- наименование бренда     
 	  ,p.DetailNum	  
@@ -95,6 +98,47 @@ delete p
                      from @ID t
 					where t.ID = p.PriceID)	
 
+declare @P as table (
+        PriceID      numeric(18, 0) primary key
+       ,WeightKGF    float
+       ,VolumeKGf    float   
+       ,DetailNameF	 nvarchar(1024)
+       ,Fragile   	 bit 	
+       )
+
+insert @P 
+      (PriceID, WeightKGF, VolumeKGf, DetailNameF, Fragile)  
+select t.ID
+      ,pp.WeightKGF
+	  ,pp.VolumeKGf
+      ,pp.DetailNameF
+      ,pp.Fragile
+  from @ID as t
+ cross apply (select top 1
+                     pr.WeightKGF, 
+                     pr.VolumeKGf,
+                     pr.PriceID,
+                     pr.DetailNameF,
+                     pr.Fragile
+                from tPrice pr with (nolock index=ao2) 
+               where pr.DetailNum = t.DetailNum
+	             and pr.MakeLogo  = t.MakeLogo
+                 and ( isnull(pr.WeightKGF, 0) > 0
+                    or isnull(pr.VolumeKGf, 0) > 0 )
+               order by isnull(pr.WeightKGF, 0) desc , isnull(pr.Fragile, 0) desc
+             ) as pp
+
+
+---
+update t
+   set t.WeightKGF = p.WeightKGF
+	  ,t.VolumeKGf = p.VolumeKGf    
+      ,t.DetailNameF = p.DetailNameF
+      ,t.Fragile = p.Fragile
+  from @P as p
+ inner join tPrice t with (updlock index=ao1) 
+         on t.PriceID = p.PriceID
+
 Update p
    set p.Reliability  = 0 
   from tPrice p with (updlock index=ao3)
@@ -107,7 +151,7 @@ Update p
    and not exists (select 1
                      from @ID t
 					where t.ID = p.PriceID)	
-					
+			
 -- сохранение сведений об обновлении прайса
 if not exists (select 1
                  from tProfilesPrice (nolock)
@@ -130,4 +174,4 @@ exit_:
 go
 grant execute on PriceUpdate to public
 go
-exec setOV 'PriceUpdate', 'P', '20240619', '1'
+exec setOV 'PriceUpdate', 'P', '20240705', '2'

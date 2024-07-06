@@ -128,7 +128,7 @@ end;
 procedure TOrdersProtocol_T.GridDrawColumnCell(Sender: TObject; ACol,
   ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
-  if (ProtocolQuery.FieldByName('ProtocolType').AsInteger in [1, 2]) then
+  if (ProtocolQuery.FieldByName('ProtocolType').AsInteger in [1, 2, 3]) then
   begin
     Attribs.Font.Color:=clGray//rgb(70 ,	68,	81);
     //Attribs.Font.Style:=[fsBold, fsItalic];
@@ -175,8 +175,8 @@ begin
       sql.Q.FieldByName('DetailNumber').AsString;
   sql.Q.Close;
 
-  //fProtocol.Selected[0] := true;
-  for i:= 0 to fProtocol.Items.Count-1 do
+  // по умолчанию покзываем 3 основных действия
+  for i:= 0 to 2 do
   begin
     fProtocol.Selected[i] := True;
   end;

@@ -76,7 +76,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'ProtocolID'
         Title.Alignment = taCenter
         Title.Caption = #1048#1044' '#1086#1073#1098#1077#1082#1090#1072
-        Width = 103
+        Width = 96
       end
       item
         FieldName = 'ObjectID'
@@ -89,7 +89,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         FieldName = 'ActionName'
         Title.Alignment = taCenter
         Title.Caption = #1044#1077#1081#1089#1090#1074#1080#1077
-        Width = 245
+        Width = 237
       end
       item
         FieldName = 'CurState'
@@ -111,6 +111,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
         Width = 143
       end
       item
+        ShowToolTip = True
         FieldName = 'Comment'
         Title.Alignment = taCenter
         Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
@@ -136,7 +137,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
     object btnFilter: TUniButton
-      Left = 267
+      Left = 347
       Top = 25
       Width = 75
       Height = 25
@@ -148,7 +149,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     object fProtocol: TUniCheckComboBox
       Left = 9
       Top = 25
-      Width = 252
+      Width = 332
       Height = 23
       Hint = ''
       ShowHint = True
@@ -157,7 +158,8 @@ object OrdersProtocol_T: TOrdersProtocol_T
       Items.Strings = (
         #1057#1086#1089#1090#1086#1103#1085#1080#1077
         #1054#1090#1082#1072#1079#1099
-        #1048#1079#1084#1077#1085#1077#1085#1080#1077)
+        #1048#1079#1084#1077#1085#1077#1085#1080#1077
+        #1054#1090#1084#1077#1085#1072)
       TabOrder = 2
       ClientEvents.UniEvents.Strings = (
         'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'

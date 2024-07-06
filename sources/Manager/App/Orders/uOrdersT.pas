@@ -379,9 +379,72 @@ begin
 end;
 
 procedure TOrdersT.actEditExecute(Sender: TObject);
+var i, y: Integer;
+   BM: TBookmark;
+   SqlText: string;
 begin
   OrderF.FormAction := TFormAction.acUpdate;
   OrderF.ID:=QueryOrderID.AsInteger;
+
+  OrderF.IsCounter := False;
+
+  if fStatus2.SelCount = 1 then
+  begin
+    for i:= 0 to fStatus2.Items.Count-1 do
+    begin
+      if ((fStatus2.Selected[i] = True) and
+          (integer(fStatus2.Items.Objects[i]) in [1, //	New	Новый
+                                                  2, //	InChecked	Проверено
+                                                  22 //	Preparation	Предварительный
+                                                  ]))
+      then
+      begin
+        OrderF.IsCounter := True;
+
+
+        BM := Query.GetBookmark;
+        Query.DisableControls;
+        try
+
+          Query.first;
+          for y := 0 to Query.RecordCount - 1 do
+          begin
+            if y = 0 then
+              SqlText:= SqlText + ' Insert into #CounterPart (OrderID, N) '
+            else
+              SqlText:= SqlText + ' Union all ';
+
+            SqlText:= SqlText + ' select ' + Query.FieldByName('OrderID').AsString + ', ' + y.ToString;
+
+            Query.Next;
+          end;
+
+        finally
+          Query.GotoBookmark(BM);
+          Query.FreeBookmark(BM);
+          Query.EnableControls;
+        end;
+
+        logger.Info(SqlText);
+
+        sql.Exec('''
+                    if OBJECT_ID('tempdb..#CounterPart') is not null
+                      drop table #CounterPart
+
+                     CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
+                                               ,N         int
+                                               ,Processed bit
+                                               );
+
+                 ''' + SqlText
+                 , [], []);
+
+
+        Continue;
+      end;
+    end;
+  end;
+
   OrderF.ShowModal(OrdersFCallBack);
 end;
 
@@ -1293,7 +1356,7 @@ procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
      fOrderDate.DateTime := date();
-     fDetailNum.Text := '214432E110';
+     fDetailNum.Text := '6PK2215';
   {$ENDIF}
 end;
 

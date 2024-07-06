@@ -17,6 +17,7 @@ create proc OrderUpdate
               ,@Comment                 nvarchar(1024)= null
               ,@TargetStateID           numeric(18,0) = null
               
+              
 as
   declare @r       int = 0
 		 ,@Type    int
@@ -63,27 +64,37 @@ as
 
   exec OrdersFinCalc @IsSave = 1
 
-  insert pAccrualAction 
-        (Spid,   
-         ObjectID,  
-         StateID,
-         NewStateID,
-         ActionID,
-         OperDate)
-  select @@Spid, 
-         o.OrderID, 
-         o.StatusID, 
-         @TargetStateID,
-         case
-           when @TargetStateID = 2  then 13	--ToChecked	Проверка выполнена 
-           when @TargetStateID = 12 then 16	--ToCancel	Отказать
-           else 0
-         end,
-         cast(getdate() as date)
-    from tOrders o (nolock) 
-   where o.OrderID = @OrderID
+  if @TargetStateID > 0
+  begin
+      delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
+      insert pAccrualAction 
+            (Spid,   
+             ObjectID,  
+             StateID,
+             NewStateID,
+             ActionID,
+             OperDate,
+             Message)
+      select @@Spid, 
+             o.OrderID, 
+             o.StatusID, 
+             @TargetStateID,
+             case
+               when @TargetStateID = 2  then 13	--ToChecked	Проверка выполнена 
+               when @TargetStateID = 12 then 16	--ToCancel	Отказать
+               else 0
+             end,
+             cast(getdate() as date),
+             case
+               when @TargetStateID = 2  then 'Автоматическое подтверждение из формы изменения'
+               when @TargetStateID = 12 then 'Автоматический отказ из формы изменения'
+               else null
+             end
+        from tOrders o (nolock) 
+       where o.OrderID = @OrderID
   
-  exec ProtocolAdd
+      exec ProtocolAdd
+  end
 
   -- аудит
   exec AuditInsert
@@ -92,11 +103,11 @@ as
         ,@ObjectTypeID     = 3
         ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
         ,@Comment          = 'Изменение DetailNameF, WeightKGF, VolumeKGF' 
-
-  delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
+  
 
   exit_:
   return @r
+
 go
 grant exec on OrderUpdate to public
 go

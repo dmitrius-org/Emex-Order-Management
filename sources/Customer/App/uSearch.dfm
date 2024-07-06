@@ -43,9 +43,7 @@ object SearchF: TSearchF
       Caption = #1053#1072#1081#1090#1080
       Anchors = [akTop, akRight]
       TabOrder = 1
-      ScreenMask.Enabled = True
-      ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
-      ScreenMask.Target = SearchGrid
+      ScreenMask.ShowMessage = False
       ScreenMask.Color = clHighlight
       OnClick = btnSearchClick
     end
@@ -153,7 +151,7 @@ object SearchF: TSearchF
       WebOptions.FetchAll = True
       WebOptions.RetainCursorOnSort = True
       LoadMask.WaitData = True
-      LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
+      LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clInactiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093
       EnableColumnHide = False
@@ -567,33 +565,13 @@ object SearchF: TSearchF
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      '-- '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1086#1080#1089#1082#1072
-      'insert tSearchHistory (ClientID, DetailNum)'
-      'select distinct'
-      '       f.ClientID'
-      '      ,f.DetailNum'
-      '  from pFindByNumber f (nolock)'
-      ' where f.Spid      = @@Spid'
-      '   and f.DetailNum = :DetailNum'
-      '   and not exists (select 1'#9'                   '
-      
-        '                     from tSearchHistory sh with (nolock index=a' +
-        'o1)'#9#9#9#9#9'  '
-      '                    where sh.ClientID  = f.ClientID'#9#9#9#9#9'    '
-      '                      and sh.DetailNum = f.DetailNum)'
-      ''
-      ''
-      'select top 10 *'
-      '  from tSearchHistory sh with (nolock index=ao1)'
-      ' where sh.ClientID  = :ClientID'
-      ' order by sh.SearchHistoryID desc   ')
+      'select top 10 DetailNum '
+      '  from vSearchHistory '
+      ' where ClientID  = :ClientID'
+      ' order by SearchHistoryID desc')
     Left = 767
     Top = 220
     ParamData = <
-      item
-        Name = 'DETAILNUM'
-        ParamType = ptInput
-      end
       item
         Name = 'CLIENTID'
         ParamType = ptInput

@@ -74,9 +74,32 @@ SELECT p.[AuditID]     ProtocolID
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 2 -- acUpdate
+
+ union all
+/*Откат действия */
+SELECT p.[AuditID]     ProtocolID
+      ,p.[ObjectID]	   ObjectID
+      ,null            CurState
+      ,'Отмена'        ActionName 
+      ,p.InDateTime    OperDate
+      ,p.[Comment]     Comment
+      ,case 
+         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
+         else u.Name
+       end as UserName
+	  ,p.InDateTime    InDateTime
+      ,3               ProtocolType
+  FROM tAudit p with (nolock)
+ inner join tOrders o with (nolock index=ao1)
+         on o.OrderID = p.ObjectID
+ inner join tClients c with (nolock index=ao1)
+         on c.ClientID = o.ClientID  
+ inner join tUser u with (nolock index=ao1)
+         on u.UserID = p.UserID
+ where p.ActionID = 27	--acRollback	Откат действия    
  
 go
 grant all on vProtocolSelect to public
 go
-exec setOV 'vProtocolSelect', 'V', '20240618', '1'
+exec setOV 'vProtocolSelect', 'V', '20240704', '2'
 go

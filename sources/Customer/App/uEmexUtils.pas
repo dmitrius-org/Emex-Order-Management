@@ -204,21 +204,24 @@ var part: FindByNumber;
        I: Integer;
  ShowSubsts: Boolean;
 begin
-//  logger.Info('TEmex.MovementByOrderNumber Begin');
+  logger.Info('TEmex.MovementByOrderNumber Begin');
   // Показывать аналоги в поиске
   ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
+  logger.Info('TEmex.MovementByOrderNumber SearchPart begin');
   parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, ShowSubsts);
+  logger.Info('TEmex.MovementByOrderNumber SearchPart end');
 
   FillFindByNumber(AClientID, parts);
 
-  //logger.Info('TEmex.MovementByOrderNumber End');
+  logger.Info('TEmex.MovementByOrderNumber End');
 end;
 
 procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumber);
 var part: FindByNumber;
     I: Integer;
 begin
+  logger.Info('TEmex.FillFindByNumber Begin');
   SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
@@ -246,8 +249,32 @@ begin
               ' ,@bitWeightMeasured  = :bitWeightMeasured '+
               ' ,@VolumeAdd          = :VolumeAdd         '+
               ' ,@GuaranteedDay      = :GuaranteedDay     ',
-             ['ClientID', 'Available','bitOldNum','PercentSupped','PriceId','Region','Delivery', 'Make', 'DetailNum', 'PriceLogo', 'Price', 'PartNameRus', 'PartNameEng','WeightGr','MakeName', 'Packing','VolumeAdd','GuaranteedDay', 'bitECO', 'bitWeightMeasured'],
-             [AClientID,
+
+             [
+              'ClientID',
+              'Available',
+              'bitOldNum',
+              'PercentSupped',
+              'PriceId',
+              'Region',
+              'Delivery',
+              'Make',
+              'DetailNum',
+              'PriceLogo',
+              'Price',
+              'PartNameRus',
+              'PartNameEng',
+              'WeightGr',
+              'MakeName',
+              'Packing',
+              'VolumeAdd',
+              'GuaranteedDay',
+              'bitECO',
+              'bitWeightMeasured'
+              ],
+
+             [
+              AClientID,
               part.Available,
               part.bitOldNum,
               part.PercentSupped,
@@ -271,6 +298,7 @@ begin
 
     freeandnil(part);
   end;
+  logger.Info('TEmex.FillFindByNumber End');
 end;
 
 
