@@ -72,7 +72,7 @@ as
         ,3        
         ,27	--acRollback	Откат действия     
         --Отменили: Действие=ОфПрПроц,  Состояние=Предоставл, Пользователь=Захарова А.И., Опер.день=30/06/2024, Физ.дата=01/07/2024 12:18:11
-        ,'Отменили: Действие=' + act.Name + ', Состояние='+ns.Name + ', Пользователь=' + u.Name + ', Опер.день=' + convert(nvarchar, p.OperDate, 21) +  ', Физ.дата=' +  convert(nvarchar, p.InDateTime, 21)
+        ,'Отменили: Действие=' + isnull(act.Name, '') + ', Состояние='+isnull(ns.Name, '') + ', Пользователь=' + isnull(u.Name, '') + ', Опер.день=' + convert(nvarchar, p.OperDate, 21) +  ', Физ.дата=' +  convert(nvarchar, p.InDateTime, 21)
     from pAccrualAction a (nolock)
    inner join tProtocol p (rowlock)
 	       on p.ProtocolID = a.ProtocolID

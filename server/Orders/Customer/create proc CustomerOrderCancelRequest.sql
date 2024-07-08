@@ -67,20 +67,17 @@ as
         ,ObjectTypeID
         ,ActionID
         ,Comment
+        ,Flag
         )
   select @@Spid 
        ,p.ObjectID       	         
        ,3        
-       ,5 -- acCancel        
+       ,28 -- acCancelRequest        
        ,'Запрос на отказ' 
-  from pAccrualAction p (nolock)
-  --inner join tOrders o (nolock)
-  --		on o.ClientID     = p.ClientID
-  --		and o.DetailNumber = p.DetailNumber 
-  --		and o.Reference    = p.Reference
-  --		and o.DetailID     = p.DetailID  
-   where p.Spid   = @@spid
-	 and p.Retval = 0
+       ,1
+   from pAccrualAction p (nolock)
+  where p.Spid   = @@spid
+	and p.Retval = 0
                 
    exec MassAuditInsert
 

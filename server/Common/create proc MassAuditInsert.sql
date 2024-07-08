@@ -24,6 +24,7 @@ as
           ,ObjectTypeID     
           ,ActionID         
           ,Comment
+          ,Flag
           ,UserID
           ,HostInfoID)
     OUTPUT INSERTED.AuditID, INSERTED.ObjectID INTO @ID (ID, ObjectID)
@@ -31,6 +32,7 @@ as
           ,p.ObjectTypeID	 
           ,p.ActionID 
           ,p.Comment
+          ,p.Flag
           ,isnull(p.UserID, @UserID)
           ,p.HostInfoID
       from pAuditInsert p (nolock)
@@ -61,5 +63,5 @@ return @r
 go
 grant exec on MassAuditInsert to public
 go
-exec setOV 'MassAuditInsert', 'P', '20240101', '0'
+exec setOV 'MassAuditInsert', 'P', '20240708', '1'
 go

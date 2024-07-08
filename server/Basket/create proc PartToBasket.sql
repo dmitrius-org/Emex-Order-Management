@@ -52,6 +52,7 @@ declare @r int = 0
         ,ExtraKurs
         ,Commission
         ,Reliability
+        ,Fragile
                           
         ,Flag          
         )
@@ -77,6 +78,7 @@ declare @r int = 0
         ,p.ExtraKurs
         ,p.Commission
         ,p.Reliability
+        ,p.Fragile
 
         ,p.Flag
     from pFindByNumber p (nolock)
@@ -96,5 +98,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240618', '7'
+exec setOV 'PartToBasket', 'P', '20240709', '8'
 go

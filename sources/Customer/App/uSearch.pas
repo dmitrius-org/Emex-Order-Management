@@ -178,7 +178,8 @@ begin
 
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo',
-           'DetailNum'],
+           'DetailNum',
+           ''],
           [FDestinationLogo, FDetailNum ]);
   logger.Info('TSearchF.PriceCalc end');
 end;
@@ -342,10 +343,6 @@ begin
                        else 2
                      end
                     ,pp.ID
-                  /* ,case
-                       when MakeName = :MakeName   then 0
-                       else 2
-                    end */
            ''', ['DetailNum'] , [Trim(edtSearch.Text)]);
 
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
@@ -688,18 +685,6 @@ end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-  {$IFDEF Debug}
-    sql.Open(' update pFindByNumber set spid = @@spid; ' +
-             ' Select top 1 * from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
-
-    if sql.q.RecordCount > 0 then
-    begin
-      FDestinationLogo := sql.q.FieldByName('DestinationLogo').AsString;
-      FMakeName        := sql.q.FieldByName('Make').Value;
-      FDetailNum       := sql.q.FieldByName('DetailNum').Value;
-    end;
-  {$ENDIF}
-
   sql.Open(' Select top 1 DestinationLogo  '+
            '   from vDestinationLogo '+
            '   where ClientID = :ClientID  '+

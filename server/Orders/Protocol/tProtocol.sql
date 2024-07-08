@@ -14,6 +14,7 @@ begin
 	,OperDate          DateTime         -- Дата протокола
 	--,Type              int              -- Тип протокола
 	,Comment           nvarchar(1024)   -- Комментарий
+    ,Flag              int
 	,UserID            numeric(18, 0)   -- Пользователь
 	,InDateTime        DateTime default getdate()   -- 
 	);

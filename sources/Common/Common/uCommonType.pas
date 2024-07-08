@@ -49,6 +49,8 @@ Type
   ,acMessage       = 24
   ,acOn            = 25
   ,acOff           = 26
+  ,acRollback      = 27 // Откат действия
+  ,acCancelRequest = 28 // Запрос отмены
   );
 
    /// <summary> Типы объектов системы </summary>

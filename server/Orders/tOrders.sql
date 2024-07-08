@@ -85,6 +85,7 @@ begin
 	,Taxes                           money          -- Комиссия и налоги
 	,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG
 	,VolumeKGAmount                  money          -- Стоимость кг объемного веса   tSupplierDeliveryProfiles.VolumeKG
+    ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
 	--   
 	,ID                              numeric(18,0)  -- техническое поле 
 	,UserID                          numeric(18,0) default dbo.GetUserID()

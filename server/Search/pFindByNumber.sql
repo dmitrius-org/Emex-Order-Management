@@ -40,7 +40,7 @@ create table pFindByNumber
 ,ExtraKurs               money          -- 
 ,Commission	             money          -- Комиссия эквайера
 ,Reliability             money          -- Вероятность поставки
-
+,Fragile                 money
 ,Flag                    int
 )
 go
@@ -50,7 +50,7 @@ create index ao1 on pFindByNumber(Spid, ID)
 go
 create index ao2 on pFindByNumber(Spid, DestinationLogo)
 go
-exec setOV 'pFindByNumber', 'U', '20240605', '5'
+exec setOV 'pFindByNumber', 'U', '20240605', '6'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pFindByNumber', @desc = 'Результат поиска детали'

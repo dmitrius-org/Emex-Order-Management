@@ -67,6 +67,7 @@ as
         ,Reliability
         ,Commission
         ,ExtraKurs
+        ,Fragile
         --,Kurs
         ,Taxes
         ,WeightKGAmount     -- Стоимость кг физического веса
@@ -99,6 +100,7 @@ as
         ,pc.Reliability
         ,pc.Commission
         ,pc.ExtraKurs
+        ,pc.Fragile
         ,c.Taxes
         ,pc.WeightKG   -- Стоимость кг физического веса
         ,pc.VolumeKG 
@@ -117,7 +119,8 @@ as
                        s.ExtraKurs,
                        pd.DestinationLogo,
                        pd.WeightKG,   -- Стоимость кг физического веса
-                       pd.VolumeKG 
+                       pd.VolumeKG,
+                       pd.Fragile
                   from tProfilesCustomer pc with (nolock index=ao2)
                  inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
                          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -227,6 +230,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240619', '1'
+exec setOV 'LoadOrders', 'P', '20240709', '2'
 go
  

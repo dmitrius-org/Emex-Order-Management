@@ -21,7 +21,8 @@ as
 		,NewStateID 
         ,ActionID    
         ,OperDate  
-        ,Comment     
+        ,Comment   
+        ,Flag
         ,UserID      
         )
   OUTPUT INSERTED.ProtocolID, INSERTED.ObjectID INTO @ID
@@ -29,8 +30,9 @@ as
         ,p.StateID
 		,p.NewStateID
 		,p.ActionID		
-		,isnull(p.OperDate, cast(getDate() as date))
+		,isnull(p.OperDate, getDate())
 		,isnull(p.Message, '')
+        ,p.Flag
 		,dbo.GetUserID()
     from pAccrualAction p (nolock)
    where p.Spid              = @@spid
@@ -51,8 +53,7 @@ as
 						when act.Brief = 'ToReNew' then 0 -- вернуть в работу
 		                else o.isCancel 
 		              end
-
-	    ,o.flag     = case
+	    ,o.Flag     = case
 	                    when ns.Brief = 'InCancel' then isnull (o.flag, 0) | 4 -- признак "Отказан"
 						when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
 					    else o.flag
@@ -75,6 +76,6 @@ as
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20240101', '1';
+exec setOV 'ProtocolAdd', 'P', '20240708', '1';
 go
  

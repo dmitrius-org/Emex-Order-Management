@@ -234,10 +234,6 @@ uses
 
 procedure TOrdersT2.actCancelRequestExecute(Sender: TObject);
 begin
-  //OrdersMessageF.FormAction := TFormAction.acCancel;
-  //OrdersMessageF.ID:=QueryOrderID.AsInteger;
-  //OrdersMessageF.ShowModal(OrdersMessageFCallBack);
-
   MessageDlg('Вы действительно хотите отказаться от выбранных деталей?' , mtConfirmation, mbYesNo,
   procedure(Sender: TComponent; Res: Integer)
   begin
@@ -246,9 +242,6 @@ begin
       mrNo  : Exit;
     end;
   end);
-
-
-
 end;
 
 procedure TOrdersT2.CancelRequest;

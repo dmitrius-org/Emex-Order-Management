@@ -430,23 +430,23 @@ begin
   edtCount.Text      := FQuantity.ToString + '/' +
                         UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
-  edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').Value);
-  edtMarginF.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').Value);
-  edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').Value);
-  edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').Value);
-  edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').Value);
+  edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
+  edtMarginF.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
+  edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
+  edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
+  edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
-  FPrice             := UniMainModule.Query.FieldByName('PricePurchase').Value;
-  SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').Value);
+  FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
+  SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
   // при загрузке данные совпадают
-  edtMargin2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').Value);
-  edtMarginF2.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').Value);
-  edtProfit2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').Value);
-  edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').Value);
-  edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').Value);
+  edtMargin2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
+  edtMarginF2.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
+  edtProfit2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
+  edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
+  edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
-  SetEditDataStyle(UniMainModule.Query.FieldByName('IncomePRC').Value);
+  SetEditDataStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
   //16 - Онлайн заказ
   MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
@@ -572,22 +572,29 @@ begin
 
   if sql.Q.RecordCount>0 then
   begin
-    edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').Value;
+    edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').AsString;
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
-    edtMarginF2.Text   := FormatFloat('##0%',  sql.q.FieldByName('MarginF').Value);
-    edtProfit2.Text    := FormatFloat('##0%', sql.q.FieldByName('Profit').Value);
+    edtMarginF2.Text   := FormatFloat('##0%',  sql.q.FieldByName('MarginF').AsFloat);
+    edtProfit2.Text    := FormatFloat('##0%', sql.q.FieldByName('Profit').AsFloat);
 
     var t: Real;
     t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
 
-    if t > 0 then r := '+' else r := '-';
+
+    if t > 0 then
+      r := '+'
+    else
+    if t < 0 then
+      r := '-'
+    else
+      r := '';
 
     r := r + FloatToStr(t);
 
-    edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').Value) + ' ('+ r + '%)';
-    edtIncome2.Text    := FormatFloat('##0%', sql.q.FieldByName('IncomePrc').Value);
+    edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').AsFloat) + ' ('+ r + '%)';
+    edtIncome2.Text    := FormatFloat('##0%', sql.q.FieldByName('IncomePrc').AsFloat);
 
-    SetEditDataStyle( sql.q.FieldByName('IncomePRC').Value);
+    SetEditDataStyle( sql.q.FieldByName('IncomePRC').AsFloat);
     SetEditDataRating(sql.Q.FieldByName('PercentSupped').AsInteger);
 
   end;
@@ -741,9 +748,10 @@ begin
                 ,ExtraKurs
                 ,PdWeightKG
                 ,PdVolumeKG
+                ,PriceCommission -- Комиссия от продажи
                 )
           Select @@spid
-                ,cast(getdate() as date)
+                ,o.OrderDate
                 ,p.ClientID
                 ,o.Price -- цена продажи в рублях c заказа
                 ,p.Price -- цена закупки в долларах из АПИ
@@ -757,6 +765,7 @@ begin
                 ,isnull(o.ExtraKurs, 0)/100  -- Комиссия на курс    ExtraKurs
                 ,pd.WeightKG                 -- Стоимость кг
                 ,pd.VolumeKG                 -- Стоимость vкг
+                ,o.CommissionAmount       -- Комиссия от продажи
             from pFindByNumber p with (nolock index=ao2)
            inner join tOrders o with (nolock index=ao1)
                    on o.OrderID = :OrderID
@@ -897,10 +906,6 @@ end;
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
   LoadDataPartFromEmex;
-
-  //qDetailNameF.Close;
- // qDetailNameF.ParamByName('Number').Value := FDetailNumber;
- // qDetailNameF.open;
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);

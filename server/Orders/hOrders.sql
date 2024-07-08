@@ -86,6 +86,7 @@ hOrders - Заказы
 	,Taxes                           money          -- Комиссия и налоги
 	,WeightKGAmount                  money          -- Стоимость кг физического веса
 	,VolumeKGAmount                  money          -- Стоимость кг объемного веса
+    ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
 	--   
 	,UserID                          numeric(18,0) 
 	,inDatetime                      datetime      

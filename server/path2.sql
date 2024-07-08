@@ -1,17 +1,23 @@
---alter table tPrice add Fragile bit
+alter table tProtocol add Flag int
+go
+alter table tAudit add Flag int
 
 go
-Update tPrice 
-   set Fragile = 1,
-       Restrictions = null
- where Restrictions = 'Fragile'
-go
---  select * from tPrice where DetailNum = '32906'
+Update p
+set p.flag = 1
+ from tOrders o
+ inner join tProtocol p 
+         on p.ObjectID = o.OrderID
+         and p.NewStateID = 22
+ where o.flag&16>0
 
-alter table tSupplierDeliveryProfiles add Fragile            float                  -- Наценка за страховку
---alter table tClients drop column Reliability
-go
-exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'isMyDelivery'          ,'Считать с учетом доставки'
-exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'isIgnore'              ,'Игнорировать детали без веса'
-exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Fragile'               ,'Наценка за страховку'
+
+
+ go
+
+ alter table tOrders add Fragile                         float  
+ go
+ alter table hOrders add Fragile                         float    
+ go
+ alter table tBasket add Fragile                 money 
 

@@ -174,6 +174,7 @@ declare @r int = 0
         ,ExtraKurs
         ,Commission
         ,Reliability
+        ,Fragile
 
         ,ClientOrderNum
         ,DeliveryTerm
@@ -182,6 +183,8 @@ declare @r int = 0
         ,CustomerSubId
         ,PriceID  
         ,ID
+        ,WeightKGAmount
+        ,VolumeKGAmount
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
@@ -215,6 +218,7 @@ declare @r int = 0
         ,b.ExtraKurs
         ,b.Commission
         ,b.Reliability
+        ,b.Fragile
         --
         ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
         ,b.GuaranteedDay
@@ -223,6 +227,8 @@ declare @r int = 0
         ,b.BasketID -- CustomerSubId
         ,p.PriceID  -- tPrice.PriceID
         ,b.BasketID -- ID
+        ,pd.WeightKG
+        ,pd.VolumeKG
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
@@ -257,6 +263,7 @@ declare @r int = 0
          ActionID,
          StateID,
          NewStateID,
+         Flag,
          sgn -- признак для понимания где сделали insert
          )
   Select @@Spid,
@@ -264,6 +271,7 @@ declare @r int = 0
          isnull(@ToNew, 0),
          @StatusID, -- текущее состояние
          @StatusID,
+         1,
          8
     from @ID i
 
@@ -298,6 +306,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240619', '10'
+exec setOV 'OrderCreateFromBasket', 'P', '20240709', '12'
 go
  

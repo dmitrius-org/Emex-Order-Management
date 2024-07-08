@@ -46,6 +46,7 @@ insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 0, 'LessMi
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 0, 'PriceChange',               'Изменение цены'				            ,7   ,'AGREE'             ,'Изменение цены'
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 0, 'InCancel',                  'Отказан'	  			                    ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 0, 'Preparation',               'Предварительный'	  		                ,0   ,''                  ,''
+insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 0, 'Received',                  'Получено'	  		                    ,0   ,''                  ,''
 	                                                                                                                                           
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToChecked',                 'Проверка выполнена'			            ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToBasket',                  'Добавить в корзину'			            ,0   ,''                  ,''
@@ -56,4 +57,5 @@ insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToReNe
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'AutomaticSynchronization',  'Синхронизация статусов'	                ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'AutomaticToChecked',        'Автоматический перевод в проверено'	    ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToСonfirm',                 'Подтвердить'	                            ,0   ,''                  ,''
+insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToReceived',                'Получено'	                            ,0   ,''                  ,''
 --*/

@@ -16,7 +16,7 @@ SELECT p.[ProtocolID]  ProtocolID
       ,p.OperDate      OperDate
       ,p.[Comment]     Comment
       ,case 
-         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
+         when p.Flag & 1 > 0 /*Протокол по клиентскому приложению*/ then c.Brief
          else u.Name
        end as UserName
 	  ,p.InDateTime    InDateTime
@@ -41,17 +41,18 @@ SELECT p.[AuditID]          ProtocolID
       ,p.[ObjectID]	        ObjectID
       ,null                 CurState
       ,'Выгрузка отказов'   ActionName 
-      ,p.InDateTime    OperDate
-      ,p.[Comment]     Comment
-      ,u.Name          UserName
-	  ,p.InDateTime    InDateTime
-      ,1               ProtocolType
+      ,p.InDateTime         OperDate
+      ,p.[Comment]          Comment
+      ,u.Name               UserName
+	  ,p.InDateTime         InDateTime
+      ,1                    ProtocolType
   FROM tAudit p (nolock)
  inner join tOrders o with (nolock index=ao1)
          on o.OrderID = p.ObjectID
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 5 -- acCancel
+
  union all
 /*Изменения*/
 SELECT p.[AuditID]     ProtocolID
@@ -61,7 +62,7 @@ SELECT p.[AuditID]     ProtocolID
       ,p.InDateTime    OperDate
       ,p.[Comment]     Comment
       ,case 
-         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
+         when p.Flag & 1 > 0 /*Протокол по клиентскому приложению*/ then c.Brief
          else u.Name
        end as UserName
 	  ,p.InDateTime    InDateTime
@@ -73,8 +74,9 @@ SELECT p.[AuditID]     ProtocolID
          on c.ClientID = o.ClientID  
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
- where p.ActionID = 2 -- acUpdate
-
+ where p.ActionID in ( 2 -- acUpdate
+                      ,28--	acCancelRequest
+                     )
  union all
 /*Откат действия */
 SELECT p.[AuditID]     ProtocolID
@@ -83,23 +85,21 @@ SELECT p.[AuditID]     ProtocolID
       ,'Отмена'        ActionName 
       ,p.InDateTime    OperDate
       ,p.[Comment]     Comment
-      ,case 
-         when o.Flag & 16 > 0 /*если он-лайн заказ*/ then c.Brief
-         else u.Name
-       end as UserName
+      ,u.Name          UserName
 	  ,p.InDateTime    InDateTime
       ,3               ProtocolType
   FROM tAudit p with (nolock)
  inner join tOrders o with (nolock index=ao1)
          on o.OrderID = p.ObjectID
- inner join tClients c with (nolock index=ao1)
-         on c.ClientID = o.ClientID  
+ --inner join tClients c with (nolock index=ao1)
+ --        on c.ClientID = o.ClientID  
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
- where p.ActionID = 27	--acRollback	Откат действия    
+ where p.ActionID = 27	--acRollback	Откат действия   
+
  
 go
 grant all on vProtocolSelect to public
 go
-exec setOV 'vProtocolSelect', 'V', '20240704', '2'
+exec setOV 'vProtocolSelect', 'V', '20240708', '3'
 go

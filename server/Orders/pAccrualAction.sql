@@ -14,8 +14,9 @@ create table pAccrualAction
 ,NewStateID        numeric(18,0)  
 ,Retval            numeric(18,0)  default 0 
 ,Message	       nvarchar(1024) 
-,ord               int            default 1--9
-,sgn               int            -- признак для понимания где сделали insert
+,Flag              int
+,ord               int            default 1
+,sgn               int            -- признак для понимания где сделали insert - 9
 )
 go
 create index ao1 on pAccrualAction(Spid, ObjectID, ActionID)
@@ -24,7 +25,7 @@ create index ao2 on pAccrualAction(Spid, Retval)
 go
 grant all on pAccrualAction to public
 go
-exec setOV 'pAccrualAction', 'U', '20240101', '0'
+exec setOV 'pAccrualAction', 'U', '20240708', '10'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pAccrualAction', @desc = 'Временная таблица для выполнения действий'

@@ -30,6 +30,7 @@ tBasket - корзина деталей
   ,ExtraKurs               money          -- 
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
+  ,Fragile                 money 
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
   );

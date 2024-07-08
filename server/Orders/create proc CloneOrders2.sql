@@ -86,6 +86,7 @@ INSERT INTO [tOrders]
       ,DateDeparture
       ,DaysInWork  
 	  ,DeliveryTerm
+      ,Fragile
 	  ,ID)	  
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
   INTO  @ID (OrderID, ParentID, StateID, ID)
@@ -159,6 +160,7 @@ select o.ClientID
       ,o.DateDeparture
       ,o.DaysInWork   
 	  ,o.DeliveryTerm
+      ,o.Fragile -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
 	  ,p.ID
   from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join pMovement pp (nolock)
@@ -230,6 +232,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders2 to public
 go
-exec setOV 'CloneOrders2', 'P', '20240323', '2'
+exec setOV 'CloneOrders2', 'P', '20240709', '3'
 go
  

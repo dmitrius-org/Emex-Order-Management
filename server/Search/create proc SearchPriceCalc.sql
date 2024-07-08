@@ -16,8 +16,8 @@ declare @Kurs		  float
 -- курс доллара
 select @Kurs = dbo.GetCurrencyRate('840', null)
       ,@RetVal = 0
-if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 
+if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 create table #Price 
 (
  ID                  numeric(18,0)  --  
@@ -65,7 +65,8 @@ create table #Price
 
 -- для получения даных с таблицы tPrice
 declare @Num as table
-       (DetailNum nvarchar(40));
+       (DetailNum nvarchar(40)
+       ,Make      nvarchar(40));
 
 Update p
    set p.WeightGr  = isnull((Select max(pp.WeightGr)  from pFindByNumber pp (nolock) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
@@ -80,8 +81,8 @@ declare  @Price  table
 		,VolumeKGf   float
         ,FragileSign bit);
 
-insert @Num (DetailNum)
-select distinct p.DetailNum
+insert @Num (DetailNum, Make)
+select distinct p.DetailNum, p.Make
   from pFindByNumber p with (nolock index=ao2)
  where p.Spid = @@spid
    and p.DetailNum = @DetailNum
@@ -93,16 +94,17 @@ insert @Price
 		VolumeKGf,
         FragileSign)
 select top 1 
-       pp.DetailNum,
-	   pp.MakeLogo,
-	   pp.WeightKGF,
-	   pp.VolumeKGf,
-       isnull(pp.Fragile, 0)
+       p.DetailNum,
+	   p.Make,
+	   max(pp.WeightKGF),
+	   max(pp.VolumeKGf),
+       max( cast(isnull(pp.Fragile, 0) as int))
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
-order by pp.WeightKGF desc, pp.VolumeKGf desc
-
+        and pp.MakeLogo  = p.Make
+group by p.DetailNum , p.Make
+--order by pp.WeightKGF desc, pp.VolumeKGf desc
 
 -- расчет цены
 insert #Price
@@ -258,6 +260,7 @@ Update f
       ,f.ExtraKurs       = p.ExtraKurs
       ,f.Commission      = p.Commission
       ,f.Reliability     = p.Reliability
+      ,f.Fragile         = p.Fragile
 
       ,f.DestinationLogo = p.DestinationLogo
 	  ,f.WeightGr	     = p.WeightKG   
@@ -294,5 +297,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240701', '7'
+exec setOV 'SearchPriceCalc', 'P', '20240709', '8'
 go
