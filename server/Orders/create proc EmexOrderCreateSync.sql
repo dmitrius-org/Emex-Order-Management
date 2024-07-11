@@ -11,7 +11,7 @@ as
  Update p
     set p.OrderID = o.OrderID
    from pMovement p (updlock) 
-  cross apply (select top 1 *
+  cross apply (select top 1 o.OrderID
                  from pAccrualAction a (nolock)
 				inner join tOrders o (nolock) 
                         on o.OrderID                = a.ObjectID 
