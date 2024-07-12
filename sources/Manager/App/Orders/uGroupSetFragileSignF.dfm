@@ -20,7 +20,6 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
     ParentColor = False
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 667
     DesignSize = (
       460
       310)
@@ -32,7 +31,7 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       Hint = ''
       ShowHint = True
       Caption = #1055#1088#1080#1079#1085#1072#1082':'
-      TabOrder = 3
+      TabOrder = 1
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -45,7 +44,7 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akRight, akBottom]
       TabStop = False
-      TabOrder = 2
+      TabOrder = 3
       OnClick = btnCancelClick
     end
     object btnOk: TUniBitBtn
@@ -59,7 +58,7 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akRight, akBottom]
-      TabOrder = 1
+      TabOrder = 4
       OnClick = btnOkClick
     end
     object cbRestrictions: TUniComboBox
@@ -71,7 +70,7 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       Text = ''
       Items.Strings = (
         'Fragile')
-      TabOrder = 4
+      TabOrder = 2
       TabStop = False
       IconItems = <>
     end

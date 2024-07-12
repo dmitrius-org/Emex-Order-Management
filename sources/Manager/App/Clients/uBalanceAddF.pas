@@ -1,4 +1,4 @@
-unit uBalanceAddF;
+п»їunit uBalanceAddF;
 
 interface
 
@@ -66,11 +66,11 @@ type
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
 
@@ -195,7 +195,7 @@ begin
       if (edtAmount.IsBlank) or (edtAmount.value = 0) then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Сумма] обязательна к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [РЎСѓРјРјР°] РѕР±СЏР·Р°С‚РµР»СЊРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
         edtAmount.SetFocus;
         Exit();
       end;
@@ -203,7 +203,7 @@ begin
       if edtDate.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Дата] обязательна к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [Р”Р°С‚Р°] РѕР±СЏР·Р°С‚РµР»СЊРЅР° Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
         edtDate.SetFocus;
         Exit();
       end;
@@ -221,7 +221,7 @@ begin
 //  UniMainModule.Query.ParamByName('ClientID').Value := FID;
 //  UniMainModule.Query.Open;
 
-  // аудит
+  // Р°СѓРґРёС‚
   //edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
   //edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
  // edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
@@ -249,28 +249,28 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      Self.Caption := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
-      btnOk.Caption := ' Пополнить';
+      Self.Caption := 'РџРѕРїРѕР»РЅРµРЅРёРµ Р±Р°Р»Р°РЅСЃР° РїРѕ РєР»РёРµРЅС‚Сѓ: ' + UniMainModule.Query.FieldbyName('Brief').asString;
+      btnOk.Caption := ' РџРѕРїРѕР»РЅРёС‚СЊ';
       edtInDate.Text := '';
       edtUpdDate.Text := '';
 
       edtDate.DateTime:=now();
     end;
     acUpdate, acReportEdit, acUserAction:
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption   := ' Выполнить';
+    btnOk.Caption   := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
-      Self.Caption := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
+      Self.Caption := 'РџРѕРїРѕР»РЅРµРЅРёРµ Р±Р°Р»Р°РЅСЃР° РїРѕ РєР»РёРµРЅС‚Сѓ: ' + UniMainModule.Query.FieldbyName('Brief').asString;
       DataLoad;
     end
   else

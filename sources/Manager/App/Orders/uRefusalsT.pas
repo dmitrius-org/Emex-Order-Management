@@ -1,4 +1,4 @@
-unit uRefusalsT;
+п»їunit uRefusalsT;
 
 interface
 
@@ -85,7 +85,7 @@ type
   public
     { Public declarations }
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
 
@@ -108,8 +108,8 @@ end;
 
 procedure TRefusalsT.actDeleteExecute(Sender: TObject);  var isCancel: Boolean;
 begin
-  //MessageDlg('Отказ дан?' +#13+#10 , mtConfirmation, mbYesNo,
-  MessageDlg('Вы действительно хотите удалить файл?' +#13+#10 , mtConfirmation, mbYesNo,
+  //MessageDlg('РћС‚РєР°Р· РґР°РЅ?' +#13+#10 , mtConfirmation, mbYesNo,
+  MessageDlg('Р’С‹ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ С„Р°Р№Р»?' +#13+#10 , mtConfirmation, mbYesNo,
   procedure(Sender: TComponent; Res: Integer)
   begin
     case Res of
@@ -194,7 +194,7 @@ begin
           AFnabled:= MoveFile(PChar(fn), PChar(Fp + ExtractFileName(fn)));
 
           if not AFnabled then
-            ToastERR('Ошибка обработки файла: ' + fn, unisession)
+            ToastERR('РћС€РёР±РєР° РѕР±СЂР°Р±РѕС‚РєРё С„Р°Р№Р»Р°: ' + fn, unisession)
           else
             Sql.Exec('Update tOrderRefusals set Flag = isnull(Flag, 0)|16 where OrderRefusalsID=:OrderRefusalsID',
                     ['OrderRefusalsID'], [id]);
@@ -202,7 +202,7 @@ begin
         end;
       end;
 
-      ToastOK('Операция выполнена успешно!', unisession);
+      ToastOK('РћРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ!', unisession);
       //GridRefresh;
 
     finally
@@ -349,7 +349,7 @@ begin
         if  RetVal.Code > 0   then
           ToastERR(RetVal.Message, UniSession)
         else
-          ToastOK('Ответ сформирован!', UniSession)
+          ToastOK('РћС‚РІРµС‚ СЃС„РѕСЂРјРёСЂРѕРІР°РЅ!', UniSession)
 
       finally
         FreeAndNil(e)

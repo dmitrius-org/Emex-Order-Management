@@ -1,4 +1,4 @@
-unit uClientsT;
+п»їunit uClientsT;
 
 interface
 
@@ -92,7 +92,7 @@ type
   public
     { Public declarations }
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
     property FormAction: Integer read FAction write SetAction;

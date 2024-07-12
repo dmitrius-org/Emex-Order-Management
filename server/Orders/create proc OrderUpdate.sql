@@ -27,8 +27,14 @@ as
 
   update p
      set p.DetailNameF	   = nullif(@DetailNameF, '')
-        ,p.WeightKGF	   = nullif(@WeightKGF, -1)
-        ,p.VolumeKGF	   = nullif(@VolumeKGF, -1)
+        ,p.WeightKGF	   = case 
+                               when isnull(@WeightKGF, 0) = 0 and p.WeightKG>0 then p.WeightKG
+                               else @WeightKGF
+                             end  
+        ,p.VolumeKGF	   = case 
+                               when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
+                               else @VolumeKGF
+                             end  
         ,p.Restrictions    = case
                                when @NoAir = 1 then 'NOAIR'
                                else null

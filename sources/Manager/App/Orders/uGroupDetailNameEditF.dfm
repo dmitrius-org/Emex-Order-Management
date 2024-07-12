@@ -20,7 +20,6 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
     ParentColor = False
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 667
     DesignSize = (
       671
       310)
@@ -32,9 +31,8 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       ShowHint = True
       Text = ''
       Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
+      TabOrder = 2
       ClearButton = True
-      ExplicitWidth = 606
     end
     object lblDetailNameF: TUniLabel
       Left = 21
@@ -44,7 +42,7 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       Hint = ''
       ShowHint = True
       Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
-      TabOrder = 4
+      TabOrder = 1
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -59,7 +57,6 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       TabStop = False
       TabOrder = 3
       OnClick = btnCancelClick
-      ExplicitLeft = 458
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -72,9 +69,8 @@ object GroupDetailNameEditF: TGroupDetailNameEditF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akRight, akBottom]
-      TabOrder = 2
+      TabOrder = 4
       OnClick = btnOkClick
-      ExplicitLeft = 545
     end
   end
 end

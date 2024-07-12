@@ -57,8 +57,6 @@ type
     btnNumber: TUniButton;
     btnNumber2: TUniButton;
     btnDestinationLogo: TUniBitBtn;
-    MessageContainer: TUniFieldContainer;
-    UniLabel3: TUniLabel;
     cbFragile: TUniCheckBox;
     cbNoAir: TUniCheckBox;
     UniGroupBox5: TUniGroupBox;
@@ -100,6 +98,7 @@ type
     btnOkToProc: TUniBitBtn;
     edtNextPart: TUniCheckBox;
     edtDetailNameF: TUniComboBox;
+    NotExists: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -119,7 +118,6 @@ type
     procedure cbPriceChange(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
     procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edtWeightKGFExit(Sender: TObject);
     procedure cbDestinationLogoChange(Sender: TObject);
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
@@ -137,10 +135,21 @@ type
     FDetailNumber2: string;
     FPriceLogo: string;
     FManufacturer:string;
+    FMakeLogo:string;
+    FPrice:   Real;
+    FMargin:  Real;
+
+    FMarginF: Real;
+    FIncome:  Real;
+    FProfin:  Real;
     FQuantity: Integer;
-    FMargin: Real;
-    FPrice: Real;
-    //FStatus: string;
+    FPriceQuantity: Integer;
+
+    FMarginF2: Real;
+    FIncome2:  Real;
+    FProfin2:  Real;
+    FQuantity2: Integer;
+
     FStatusID: Integer;
     FIsCounter: Boolean;
 
@@ -179,8 +188,15 @@ type
     /// </summary>
     procedure PriceCalc();
 
+    /// <summary>
+    /// SetIndicatorsStyle - Установка стилей для показателей: Показатели до изменения
+    /// </summary>
     procedure SetIndicatorsStyle(AIncome: real);
-    procedure SetEditDataStyle(AIncome: real);
+
+    /// <summary>
+    /// PriceCalc - Установка стилей для показателей: Показатели после изменения
+    /// </summary>
+    procedure SetEditDataStyle();
 
     procedure SetBtnEnabled();
 
@@ -383,20 +399,18 @@ begin
                                          ,v.PriceID
                                          ,v.ClientID
                                          ,v.Flag
-                                         ,v.[Quantity]
-                                         ,v.[Margin]
-                                         ,v.[MarginF]
-                                         ,v.[Profit]
-                                         ,v.[Income]
-                                         ,v.[IncomePRC]
-                                         ,v.[PricePurchase]
-                                         ,v.[PriceQuantity]
-                                         ,v.[Comment]
+                                         ,v.Quantity
+                                         ,v.Margin
+                                         ,v.MarginF
+                                         ,v.Profit
+                                         ,v.Income
+                                         ,v.IncomePRC
+                                         ,v.PricePurchase
+                                         ,v.PriceQuantity
+                                         ,v.Comment
                                          ,v.StatusID
-                                         --,n.Brief as Status
+                                         ,v.MakeLogo
                                      from vOrders v
-                                    --inner join tNodes n (nololck)
-                                      --      on n.NodeID = v.StatusID
                                     where v.OrderID = :OrderID
                                   ''';
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
@@ -404,29 +418,26 @@ begin
 
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
   FDetailNumber2     := UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' + FDetailNumber;
+  FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
   FMargin            := UniMainModule.Query.FieldByName('Margin').Value;
-  //FStatus            := UniMainModule.Query.FieldByName('Status').AsString;
+  FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
+  FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
+
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
   edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
-
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
-
   cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
-  FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
-  FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
-
   edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
-
   edtCount.Text      := FQuantity.ToString + '/' +
                         UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
@@ -435,23 +446,30 @@ begin
   edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
-
   FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
-  SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
+  //
+  FMarginF           := UniMainModule.Query.FieldByName('MarginF').AsFloat;
+  FIncome            := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
+  FProfin            := UniMainModule.Query.FieldByName('Profit').AsFloat;
+  FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
+  FPriceQuantity     := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
+  //
+  FMarginF2          := UniMainModule.Query.FieldByName('MarginF').AsFloat;
+  FIncome2           := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
+  FProfin2           := UniMainModule.Query.FieldByName('Profit').AsFloat;
+  FQuantity2         := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
 
-  // при загрузке данные совпадают
-  edtMargin2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
+  edtMargin2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Margin').AsFloat);
   edtMarginF2.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
-  edtProfit2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
+  edtProfit2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
-  SetEditDataStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
+  SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
-  //16 - Онлайн заказ
-  MessageContainer.Visible := ((FFlag and 16) = 0)  and (UniMainModule.Query.FieldByName('PriceID').AsInteger = 0);
+  SetEditDataStyle();
 
-  Self.Caption:= ' ' +
+  Self.Caption:=
       UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
       UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
       UniMainModule.Query.FieldByName('DetailName').AsString;
@@ -464,40 +482,46 @@ begin
   else
     edtMarginF.Color :=   $008080FF;
 
-  edtProfit.Color :=   edtMarginF.Color;
-  edtIncome.Color :=   edtMarginF.Color;
-  edtDelivery.Color :=   edtMarginF.Color;
-  edtDeliveryClient.Color :=   edtMarginF.Color;
-  edtCount.Color :=  edtMarginF.Color;
-  edtReliability.Color :=   edtMarginF.Color;
+  edtProfit.Color         := edtMarginF.Color;
+  edtIncome.Color         := edtMarginF.Color;
+  edtDelivery.Color       := edtMarginF.Color;
+  edtDeliveryClient.Color := edtMarginF.Color;
+  edtCount.Color          := edtMarginF.Color;
+  edtReliability.Color    := edtMarginF.Color;
 end;
 
-procedure TOrderF.SetEditDataStyle(AIncome: real);
+procedure TOrderF.SetEditDataStyle();
+  procedure setColor(aVal: Real; aVal2: Real; AEdit: TUniEdit);
+  begin
+      if aVal < 0 then
+          AEdit.Color := $008080FF
+      else
+      if aVal = 0 then
+          AEdit.Color := clWhite
+      else
+      if (aVal > 0 ) and (aVal < aVal2) then
+          AEdit.Color := clYellow
+      else
+          AEdit.Color := $0080FF80;
+  end;
 begin
-  if AIncome >= 0 then
-    edtMarginF2.Color :=   $0080FF80
-  else
-    edtMarginF2.Color :=   $008080FF;
-
-  edtProfit2.Color :=   edtMarginF2.Color;
-  edtIncome2.Color :=   edtMarginF2.Color;
-  edtDelivery2.Color :=   edtMarginF2.Color;
-  edtDeliveryClient2.Color :=   edtMarginF2.Color;
-  edtCount2.Color :=  edtMarginF2.Color;
-  edtReliability2.Color :=   edtMarginF2.Color;
+  setColor(FMarginF2,  FMarginF,  edtMarginF2);
+  setColor(FIncome2,   FIncome,   edtIncome2);
+  setColor(FProfin2,   FProfin,   edtProfit2);
+  setColor(FMarginF2,  FMarginF,  edtDelivery2);
+  setColor(FMarginF2,  FMarginF,  edtDeliveryClient2);
+  setColor(FQuantity2, FPriceQuantity, edtCount2);
 end;
-
-
 
 procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
    sql.Open(
    '''
-    select distinct top 50 Name_RUS
+    select distinct top 50
+           Name_RUS
       from tPartDescription  (nolock)
      where Name_RUS LIKE '' + :Number + '%'
-
    ''',
    ['Number'], [QueryString]);
 
@@ -517,17 +541,10 @@ end;
 procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-//  ShowMessage(KEY.ToString);
   if (KEY = 13) then //enter
   begin
      edtVolumeKGF.Value := edtVKG.Value;
   end;
-end;
-
-procedure TOrderF.edtWeightKGFExit(Sender: TObject);
-begin
-//   PriceCalc();
-//   GetPartDataFromDB;
 end;
 
 procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
@@ -545,9 +562,6 @@ var js: string;
      r: string;
 begin
   logger.Info('getPartRatingFromDB2 begin');
-  logger.Info('getPartRatingFromDB2 DetailNum:' + FDetailNumber);
-  logger.Info('getPartRatingFromDB2 PriceLogo:' + cbPrice.Text);
-  logger.Info('getPartRatingFromDB2 DestinationLogo:' + cbDestinationLogo.Value);
 
   sql.Open('''
            select top 1 *,
@@ -558,45 +572,69 @@ begin
                  ,f.MarginF
                  ,f.IncomePrc
                  ,f.Profit
-             from pFindByNumber p (nolock)
-            inner join pOrdersFin f (nolock)
+             from pFindByNumber p with (nolock index= ao3)
+            inner join pOrdersFin f with (nolock index= ao1)
                     on f.spid = @@spid
-            where p.spid            = @@spid
-              and p.DetailNum       = :DetailNum
-              and p.PriceLogo       = :PriceLogo
-              --and p.DestinationLogo = :DestinationLogo
+            where p.spid      = @@spid
+              and p.Make      = :MakeLogo
+              and p.DetailNum = :DetailNum
+              and p.PriceLogo = :PriceLogo
+
             order by p.PercentSupped desc
            ''',
-           ['DetailNum', 'PriceLogo'{, 'DestinationLogo'}],
-           [FDetailNumber, cbPrice.Text{, cbDestinationLogo.Value}]);
+           ['DetailNum', 'PriceLogo', 'MakeLogo'],
+           [FDetailNumber, cbPrice.Text, FMakeLogo]);
 
   if sql.Q.RecordCount>0 then
   begin
+
+    FMarginF2          := sql.q.FieldByName('MarginF').AsFloat;
+    FIncome2           := sql.q.FieldByName('IncomePrc').AsFloat;
+    FProfin2           := sql.q.FieldByName('Profit').AsFloat;
+    FQuantity2         := sql.Q.FieldByName('Available').AsInteger;
+
     edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').AsString;
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
-    edtMarginF2.Text   := FormatFloat('##0%',  sql.q.FieldByName('MarginF').AsFloat);
-    edtProfit2.Text    := FormatFloat('##0%', sql.q.FieldByName('Profit').AsFloat);
+    edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
+    edtProfit2.Text    := FormatFloat('##0%', FIncome2);
 
-    var t: Real;
-    t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
-
-
-    if t > 0 then
-      r := '+'
+    var t: Real; t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
+    if t > 0 then r := '+'
     else
-    if t < 0 then
-      r := '-'
+    if t = 0 then r := ''
     else
       r := '';
 
     r := r + FloatToStr(t);
 
     edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').AsFloat) + ' ('+ r + '%)';
-    edtIncome2.Text    := FormatFloat('##0%', sql.q.FieldByName('IncomePrc').AsFloat);
+    edtIncome2.Text    := FormatFloat('##0%', FProfin2);
 
-    SetEditDataStyle( sql.q.FieldByName('IncomePRC').AsFloat);
+    SetEditDataStyle();
     SetEditDataRating(sql.Q.FieldByName('PercentSupped').AsInteger);
 
+    NotExists.Visible := false;
+    edtReliability2.Visible := true;
+  end
+  else
+  begin
+    edtCount2.Clear;
+    edtMargin2.Clear;
+    edtMarginF2.Clear;
+    edtProfit2.Clear;
+    edtPrice2.Clear  ;
+    edtIncome2.Clear ;
+
+    FMarginF2 :=0;
+    FIncome2  :=0;
+    FProfin2  :=0;
+    FQuantity2:=0;
+
+    NotExists.Visible := True;
+    edtReliability2.Visible := False;
+
+    SetEditDataStyle();
+   // SetEditDataRating(0);
   end;
   logger.Info('getPartRatingFromDB2 end');
 end;
@@ -610,20 +648,17 @@ begin
            select top 1 PercentSupped
              from pFindByNumber (nolock)
             where spid     = @@spid
+              and Make     =:MakeLogo
               and DetailNum=:DetailNum
               and PriceLogo=:PriceLogo
             order by PercentSupped desc
            ''',
-           ['DetailNum', 'PriceLogo'],
-           [DetailNumber, PriceLogo]);
+           ['DetailNum', 'PriceLogo', 'MakeLogo'],
+           [DetailNumber, PriceLogo, FMakeLogo]);
 
   if sql.Q.RecordCount>0 then
   begin
     SetRating(sql.Q.FieldByName('PercentSupped').AsInteger);
-  end
-  else
-  begin
-     MessageContainer.Visible := (FFlag and 16) > 0; //16 - Онлайн заказ
   end;
 end;
 
@@ -716,18 +751,7 @@ end;
 procedure TOrderF.PriceCalc;
 begin
   RetVal.Clear;
-    //  /*
-//          Update pFindByNumber
-//             set WeightGr        = isnull(nullif(:WeightGr, -1), 0)
-//                ,VolumeAdd       = isnull(nullif(:VolumeAdd, -1), 0)
-//                ,DestinationLogo =:DestinationLogo
-//                ,Flag      = isnull(Flag, 0) | 512 -- 512 - Вес изменен клиентом
-//           where Spid = @@Spid
-//
-//          exec SearchPriceCalc
-//                  @DestinationLogo = :DestinationLogo,
-//                  @DetailNum       = :DetailNum
-//                        */
+
   Sql.exec(
   '''
 
@@ -777,7 +801,7 @@ begin
                    on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
                   and pd.DestinationLogo = :DestinationLogo
            where p.spid = @@spid
-
+             and p.Make            = :MakeLogo
              and p.DetailNum       = :DetailNum
              and p.PriceLogo       = :PriceLogo
 
@@ -786,8 +810,8 @@ begin
                    @IsFilled=1
 
   ''',
-  ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID'],
-  [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Text, edtWeightKGF.Value, edtVolumeKGF.Value, FID]);
+  ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID', 'MakeLogo'],
+  [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Text, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -801,7 +825,7 @@ begin
 
   if IsCounter then
   begin
-
+    //
   end;
 
   btnOkToCancel.Enabled := FStatusID in [1, 2, 3, 22];

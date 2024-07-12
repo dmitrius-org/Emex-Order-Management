@@ -38,7 +38,7 @@ object ClientsTypeT: TClientsTypeT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 2
+      TabOrder = 3
       EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
     end
     object fBrief: TUniEdit
@@ -48,7 +48,7 @@ object ClientsTypeT: TClientsTypeT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 3
+      TabOrder = 2
       EmptyText = #1051#1086#1075#1080#1085'...'
     end
     object fisAdmin: TUniCheckBox
@@ -81,7 +81,7 @@ object ClientsTypeT: TClientsTypeT
     Margins.Bottom = 0
     ShowHint = True
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
     Color = clBtnShadow
@@ -93,7 +93,6 @@ object ClientsTypeT: TClientsTypeT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 1065
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -111,7 +110,6 @@ object ClientsTypeT: TClientsTypeT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 1065
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -158,7 +156,7 @@ object ClientsTypeT: TClientsTypeT
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -167,7 +165,6 @@ object ClientsTypeT: TClientsTypeT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
-    ExplicitWidth = 1065
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -209,7 +206,7 @@ object ClientsTypeT: TClientsTypeT
       BorderStyle = ubsNone
       Align = alClient
       Anchors = []
-      TabOrder = 1
+      TabOrder = 0
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown

@@ -1,4 +1,4 @@
-unit uBalanceT;
+п»їunit uBalanceT;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
-  System.ImageList, Vcl.ImgList;
+  System.ImageList, Vcl.ImgList, cxImageList, cxGraphics;
 
 type
   TBalanceT = class(TUniForm)
@@ -137,7 +137,7 @@ procedure TBalanceT.UniFormShow(Sender: TObject);
 begin
 //  sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 //
-//  Self.Caption:= 'Протокол по [' +
+//  Self.Caption:= 'РџСЂРѕС‚РѕРєРѕР» РїРѕ [' +
 //      sql.Q.FieldByName('OrderID').AsString + '] ' +
 //      sql.Q.FieldByName('Manufacturer').AsString + ' ' +
 //      sql.Q.FieldByName('DetailNumber').AsString;

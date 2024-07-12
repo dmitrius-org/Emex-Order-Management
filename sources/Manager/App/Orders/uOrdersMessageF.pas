@@ -1,4 +1,4 @@
-unit uOrdersMessageF;
+п»їunit uOrdersMessageF;
 
 interface
 
@@ -38,12 +38,12 @@ type
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
 
@@ -151,39 +151,39 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
     end;
     acUpdate, acReportEdit, acUserAction:
     begin
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
 
     end;
     acDelete:
     begin
       edtMessage.ReadOnly := True;
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     end;
     acShow:
     begin
       edtMessage.ReadOnly := True;
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
     end;
     acMessage:
     begin
       edtMessage.ReadOnly := True;
-      btnOk.Caption := ' Прочитано';
+      btnOk.Caption := ' РџСЂРѕС‡РёС‚Р°РЅРѕ';
     end;
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow, acMessage:
     begin
       DataLoad;
 
-      Self.Caption:= 'Сообщение клиенту по детали: ' +
+      Self.Caption:= 'РЎРѕРѕР±С‰РµРЅРёРµ РєР»РёРµРЅС‚Сѓ РїРѕ РґРµС‚Р°Р»Рё: ' +
       UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
       UniMainModule.Query.FieldByName('DetailNumber').AsString;
     end

@@ -1,6 +1,6 @@
-unit uUploadingRefusals;
+п»їunit uUploadingRefusals;
 
-//                        выгрузка отказов в excel
+//                        РІС‹РіСЂСѓР·РєР° РѕС‚РєР°Р·РѕРІ РІ excel
 
 interface
 
@@ -11,7 +11,7 @@ uses System.SysUtils, System.UITypes, Variants,  Data.DB,
 
 Type
   /// <summary>
-  /// Класс для обработки отказов
+  /// РљР»Р°СЃСЃ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РѕС‚РєР°Р·РѕРІ
   /// </summary>
   tUploadingRefusals = class
   private
@@ -97,7 +97,7 @@ begin
   TemplateFile:= FQuery.FieldByName('Val').AsString;
   if TemplateFile= '' then
   begin
-    exit(519); // 'Не задан шаблон Excel для экспорта отказов!'
+    exit(519); // 'РќРµ Р·Р°РґР°РЅ С€Р°Р±Р»РѕРЅ Excel РґР»СЏ СЌРєСЃРїРѕСЂС‚Р° РѕС‚РєР°Р·РѕРІ!'
   end
   else
   begin
@@ -109,7 +109,7 @@ begin
   ExelOtch:= FQuery.FieldByName('Val').AsString;
   if ExelOtch= '' then
   begin
-    exit(520); // 'Не задана папка для сохранения файлов отказов!'
+    exit(520); // 'РќРµ Р·Р°РґР°РЅР° РїР°РїРєР° РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ С„Р°Р№Р»РѕРІ РѕС‚РєР°Р·РѕРІ!'
   end
   else
   begin

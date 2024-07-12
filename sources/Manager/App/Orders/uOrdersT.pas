@@ -227,33 +227,24 @@ type
 
     procedure actSetCommentExecute(Sender: TObject);
     procedure actGroupDetailNameEditExecute(Sender: TObject);
-    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
-    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
-      NewIndex: Integer);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
-    procedure fStatus2KeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure fStatus2KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actGroupSetFragileSignExecute(Sender: TObject);
-    procedure QueryNextDateDepartureGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryStatusGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryNextDateDepartureGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actCancellationExecute(Sender: TObject);
-    procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
     FAccrual: TAccrual;
-
     FFilterTextStatus: string;
     FFilterTextPriceLogo: string;
     FFilterTextClient: string;
-
     Marks: TMarks;                  // отметки
-
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
     /// <summary>
@@ -1010,18 +1001,6 @@ begin
     Text := Sender.AsString;
 end;
 
-//procedure TOrdersT.QueryPricePurchaseGetText(Sender: TField; var Text: string;
-//  DisplayText: Boolean);
-//begin
-//  if (Sender.FieldName = 'PricePurchase') and (QueryReplacementPrice.Value > 0)  then
-//  begin
-//    Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
-//    '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
-//  end
-//  else
-//    Text := Sender.AsString;
-//end;
-
 procedure TOrdersT.QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 var t: string;
 begin
@@ -1071,7 +1050,8 @@ begin
               [self.ClassName +'.' + Grid.Name,
                Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
   end
-  else if (EventName = '_columnshow')
+  else
+  if (EventName = '_columnshow')
   then
   begin
     Sql.Exec('exec GridOptionsVisible ' +
@@ -1082,7 +1062,8 @@ begin
             [self.ClassName +'.' + Grid.Name,
              Grid.Columns[Params['column'].Value.ToInteger].FieldName ]);
   end
-  else if (EventName = 'btnStatusFormShow')
+  else
+  if (EventName = 'btnStatusFormShow')
   then
   begin
     var StatusForm: TStatusForm;
@@ -1356,7 +1337,7 @@ procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
      fOrderDate.DateTime := date();
-     fDetailNum.Text := '6PK2215';
+     fDetailNum.Text := '608zz';
   {$ENDIF}
 end;
 

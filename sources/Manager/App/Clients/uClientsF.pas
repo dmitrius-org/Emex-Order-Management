@@ -1,4 +1,4 @@
-unit uClientsF;
+п»їunit uClientsF;
 
 interface
 
@@ -197,24 +197,24 @@ type
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  ManagerGridRefresh - Обновление таблицы: Менеджеры
+    ///  ManagerGridRefresh - РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹: РњРµРЅРµРґР¶РµСЂС‹
     ///</summary>
     procedure ManagerGridRefresh();
     /// <summary>
-    ///  PriceProfilesGridRefresh - Обновление таблицы: Профили обработки прайслистов
+    ///  PriceProfilesGridRefresh - РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹: РџСЂРѕС„РёР»Рё РѕР±СЂР°Р±РѕС‚РєРё РїСЂР°Р№СЃР»РёСЃС‚РѕРІ
     ///</summary>
     procedure PriceProfilesGridRefresh();
     /// <summary>
-    ///  ProfilesDeliveryList - получение списка поставщиков
+    ///  ProfilesDeliveryList - РїРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° РїРѕСЃС‚Р°РІС‰РёРєРѕРІ
     ///</summary>
     procedure ProfilesDeliveryList();
     /// <summary>
-    ///  DelimiterList - Список разделителей
+    ///  DelimiterList - РЎРїРёСЃРѕРє СЂР°Р·РґРµР»РёС‚РµР»РµР№
     ///</summary>
     procedure DelimiterList();
   public
@@ -427,7 +427,7 @@ begin
 
   ProfilesDeliveryList;
 
-  MessageDlg('При изменении поставщика автоматически обновляются способы доставки, проверьте настройки на вкладке "' +
+  MessageDlg('РџСЂРё РёР·РјРµРЅРµРЅРёРё РїРѕСЃС‚Р°РІС‰РёРєР° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕР±РЅРѕРІР»СЏСЋС‚СЃСЏ СЃРїРѕСЃРѕР±С‹ РґРѕСЃС‚Р°РІРєРё, РїСЂРѕРІРµСЂСЊС‚Рµ РЅР°СЃС‚СЂРѕР№РєРё РЅР° РІРєР»Р°РґРєРµ "' +
              tabPriceProfiles.Caption + '" ', TMsgDlgType.mtWarning, [mbOK]);
 end;
 
@@ -453,13 +453,13 @@ begin
   UniMainModule.Query.ParamByName('ClientID').Value := FID;
   UniMainModule.Query.Open;
 
-  // аудит
+  // Р°СѓРґРёС‚
   edtID.Text           := UniMainModule.Query.FieldValues['UserID'];
   edtInDate.DateTime   := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime  := UniMainModule.Query.FieldValues['updDatetime'];
   edtBrief.Text        := UniMainModule.Query.FieldValues['Brief'];
   cbIsActive.Checked   := UniMainModule.Query.FieldValues['IsActive'];
-  edtTaxes.Value       := UniMainModule.Query.FieldByName('Taxes').AsFloat; // налоги
+  edtTaxes.Value       := UniMainModule.Query.FieldByName('Taxes').AsFloat; // РЅР°Р»РѕРіРё
   cbSuppliers.KeyValue := UniMainModule.Query.FieldValues['SuppliersID'];
   cbResponseType.ItemIndex       := UniMainModule.Query.FieldByName('ResponseType').AsInteger;
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
@@ -572,15 +572,15 @@ procedure TClientsF.UniFormCreate(Sender: TObject);
 begin
   with Grid, Grid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'РЎРѕС…СЂР°РЅРёС‚СЊ', 'cancelBtnText', 'РћС‚РјРµРЅРёС‚СЊ']);
 
   with ProfilesCustomerGrid, ProfilesCustomerGrid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'РЎРѕС…СЂР°РЅРёС‚СЊ', 'cancelBtnText', 'РћС‚РјРµРЅРёС‚СЊ']);
 
   with ManagerGrid, ManagerGrid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'РЎРѕС…СЂР°РЅРёС‚СЊ', 'cancelBtnText', 'РћС‚РјРµРЅРёС‚СЊ'])
 end;
 
 procedure TClientsF.UniFormShow(Sender: TObject);
@@ -592,18 +592,18 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
       edtInDate.Text := '';
       edtUpdDate.Text := '';
     end;
     acUpdate, acReportEdit, acUserAction:
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption   := ' Выполнить';
+    btnOk.Caption   := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
   qSuppliers.Close;
@@ -612,17 +612,17 @@ begin
   GridExt.SortColumnCreate(ProfilesCustomerGrid);//(qPriceProfiles);
   GridExt.SortColumnCreate(ManagerGrid);//(qManager);
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;
   end;
 
-  Self.Caption := 'Клиент: ' + edtBrief.Text;
+  Self.Caption := 'РљР»РёРµРЅС‚: ' + edtBrief.Text;
 
-  ProfilesDeliveryList; // способ доставки
+  ProfilesDeliveryList; // СЃРїРѕСЃРѕР± РґРѕСЃС‚Р°РІРєРё
   DelimiterList;
-  PriceProfilesGridRefresh; // профили выгрузки/загрузки
+  PriceProfilesGridRefresh; // РїСЂРѕС„РёР»Рё РІС‹РіСЂСѓР·РєРё/Р·Р°РіСЂСѓР·РєРё
   ManagerGridRefresh;
 
   Query.Close;

@@ -1,4 +1,4 @@
-unit uPricesT;
+п»їunit uPricesT;
 
 interface
 
@@ -78,7 +78,7 @@ type
   public
     { Public declarations }
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
 
@@ -197,7 +197,7 @@ begin
 
   with Grid, Grid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'РЎРѕС…СЂР°РЅРёС‚СЊ', 'cancelBtnText', 'РћС‚РјРµРЅРёС‚СЊ'])
 end;
 
 procedure TPricesT.UniFrameDestroy(Sender: TObject);

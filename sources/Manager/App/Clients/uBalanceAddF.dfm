@@ -17,10 +17,8 @@ object BalanceAddF: TBalanceAddF
     Height = 44
     Hint = ''
     Align = alBottom
-    TabOrder = 0
+    TabOrder = 1
     Caption = ''
-    ExplicitTop = 410
-    ExplicitWidth = 922
     DesignSize = (
       597
       44)
@@ -32,9 +30,8 @@ object BalanceAddF: TBalanceAddF
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akTop, akRight]
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnOkClick
-      ExplicitLeft = 481
     end
     object btnCancel: TUniBitBtn
       Left = 392
@@ -44,9 +41,8 @@ object BalanceAddF: TBalanceAddF
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akTop, akRight]
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 395
     end
   end
   object pcCommon: TUniPageControl
@@ -58,14 +54,10 @@ object BalanceAddF: TBalanceAddF
     ActivePage = tabCommon
     TabBarVisible = False
     Align = alClient
-    TabOrder = 1
-    ExplicitWidth = 928
-    ExplicitHeight = 407
+    TabOrder = 0
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 920
-      ExplicitHeight = 379
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -91,14 +83,14 @@ object BalanceAddF: TBalanceAddF
           Height = 13
           Hint = ''
           Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081':'
-          TabOrder = 2
+          TabOrder = 5
         end
         object edtAmount: TUniNumberEdit
           Left = 128
           Top = 32
           Width = 121
           Hint = ''
-          TabOrder = 3
+          TabOrder = 2
           DecimalSeparator = ','
         end
         object edtComment: TUniMemo
@@ -107,7 +99,7 @@ object BalanceAddF: TBalanceAddF
           Width = 437
           Height = 73
           Hint = ''
-          TabOrder = 4
+          TabOrder = 6
         end
         object lblDate: TUniLabel
           Left = 26
@@ -116,7 +108,7 @@ object BalanceAddF: TBalanceAddF
           Height = 13
           Hint = ''
           Caption = #1044#1072#1090#1072':'
-          TabOrder = 5
+          TabOrder = 3
         end
         object edtDate: TUniDateTimePicker
           Left = 129
@@ -127,7 +119,7 @@ object BalanceAddF: TBalanceAddF
           DateFormat = 'dd.MM.yyyy'
           TimeFormat = 'HH:mm:ss'
           ReadOnly = True
-          TabOrder = 6
+          TabOrder = 4
         end
       end
     end
@@ -138,8 +130,6 @@ object BalanceAddF: TBalanceAddF
       ParentAlignmentControl = False
       Caption = #1040#1091#1076#1080#1090
       LayoutConfig.Width = '100'
-      ExplicitWidth = 924
-      ExplicitHeight = 380
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
@@ -152,8 +142,6 @@ object BalanceAddF: TBalanceAddF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 0
-        ExplicitTop = 296
-        ExplicitWidth = 914
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
@@ -163,7 +151,6 @@ object BalanceAddF: TBalanceAddF
           ParentColor = False
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 914
           object edtID: TUniEdit
             Left = 141
             Top = 8
@@ -182,7 +169,7 @@ object BalanceAddF: TBalanceAddF
             DateFormat = 'dd.MM.yyyy'
             TimeFormat = 'HH:mm:ss'
             ReadOnly = True
-            TabOrder = 2
+            TabOrder = 3
             DateMode = dtmDateTime
           end
           object edtUpdDate: TUniDateTimePicker
@@ -194,7 +181,7 @@ object BalanceAddF: TBalanceAddF
             DateFormat = 'dd.MM.yyyy'
             TimeFormat = 'HH:mm:ss'
             ReadOnly = True
-            TabOrder = 3
+            TabOrder = 4
             DateMode = dtmDateTime
           end
           object UniLabel1: TUniLabel
@@ -204,7 +191,7 @@ object BalanceAddF: TBalanceAddF
             Height = 13
             Hint = ''
             Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088':'
-            TabOrder = 4
+            TabOrder = 2
           end
           object UniLabel2: TUniLabel
             Left = 25

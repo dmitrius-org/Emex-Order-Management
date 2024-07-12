@@ -1,4 +1,4 @@
-unit uOrdersProtocol_T;
+п»їunit uOrdersProtocol_T;
 
 interface
 
@@ -169,13 +169,13 @@ begin
   logger.Info('TOrdersProtocol_T.UniFormShow');
   sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 
-  Self.Caption:= 'Протокол по [' +
+  Self.Caption:= 'РџСЂРѕС‚РѕРєРѕР» РїРѕ [' +
       sql.Q.FieldByName('OrderID').AsString + '] ' +
       sql.Q.FieldByName('Manufacturer').AsString + ' ' +
       sql.Q.FieldByName('DetailNumber').AsString;
   sql.Q.Close;
 
-  // по умолчанию покзываем 3 основных действия
+  // РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РїРѕРєР·С‹РІР°РµРј 3 РѕСЃРЅРѕРІРЅС‹С… РґРµР№СЃС‚РІРёСЏ
   for i:= 0 to 2 do
   begin
     fProtocol.Selected[i] := True;

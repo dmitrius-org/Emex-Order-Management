@@ -19,9 +19,7 @@ object OrdersMessageF: TOrdersMessageF
     ShowHint = True
     ParentColor = False
     Align = alBottom
-    TabOrder = 0
-    ExplicitTop = 310
-    ExplicitWidth = 491
+    TabOrder = 1
     DesignSize = (
       488
       39)
@@ -36,7 +34,7 @@ object OrdersMessageF: TOrdersMessageF
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akRight, akBottom]
       TabStop = False
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnCancelClick
     end
     object btnOk: TUniBitBtn
@@ -50,9 +48,8 @@ object OrdersMessageF: TOrdersMessageF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akRight, akBottom]
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnOkClick
-      ExplicitLeft = 398
     end
   end
   object edtMessage: TUniMemo
@@ -63,9 +60,7 @@ object OrdersMessageF: TOrdersMessageF
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     ClearButton = True
-    ExplicitWidth = 491
-    ExplicitHeight = 310
   end
 end
