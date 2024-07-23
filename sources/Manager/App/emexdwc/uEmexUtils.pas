@@ -152,7 +152,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 implementation
 
 uses
-  uLogger;
+  uLogger, uOrdersT;
 
 
 { TEmex }
@@ -478,67 +478,77 @@ begin
     // Цикл по поставщикам
     for Supplier in Suppliers do
     begin
-        logger.Info('TEmex.InsertPartToBasketByPart Supplier:' + Supplier);
-        Qry.Close;
-        Qry.SQL.Text:='Select distinct * '+
-                      '  from vInsertPartToBasketByPart p '+
-                      ' where SuppliersID=:SuppliersID';
-        Qry.ParamByName('SuppliersID').AsInteger := Supplier.ToInteger;
-        Qry.Open;
+      logger.Info('TEmex.InsertPartToBasketByPart Supplier:' + Supplier);
+      Qry.Close;
+      Qry.SQL.Text:='Select distinct * '+
+                    '  from vInsertPartToBasketByPart p '+
+                    ' where SuppliersID=:SuppliersID';
+      Qry.ParamByName('SuppliersID').AsInteger := Supplier.ToInteger;
+      Qry.Open;
 
-        RCount := Qry.RecordCount;
-        if RCount > 0 then
+      RCount := Qry.RecordCount;
+      if RCount > 0 then
+      begin
+        Qry.First;
+        logger.Info('TEmex.InsertPartToBasketByPart RecordCount ' + Qry.RecordCount.ToString);
+
+        for I := 0 to Qry.RecordCount - 1 do
         begin
-          Qry.First;
-          logger.Info('TEmex.InsertPartToBasketByPart RecordCount ' + Qry.RecordCount.ToString);
+          SetLength(outBasket, i+1);
 
-          for I := 0 to Qry.RecordCount - 1 do
-          begin
-            SetLength(outBasket, i+1);
+          part := partstobasket.Create;
+          // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
+          part.Reference       := Qry.FindField('Reference').AsString;
+          part.CoeffMaxAgree   := SQl.GetSetting('CoeffMaxAgree', 1.1);  //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
 
-            part := partstobasket.Create;
-            // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
-            part.Reference       := Qry.FindField('Reference').AsString;
-            part.CoeffMaxAgree   := SQl.GetSetting('CoeffMaxAgree', 1.1);  //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
+          //Если у детали изменили прайс-лист по которому она будет поставляться, нужно отправлять ее в корзину EmEx DWC без указания закупочной цены,
+          //тогда в корзине отобразится и нам по API в обратку передастся реальная цена по которой деталь будет поставлена. Иначе, если мы понимаем что готовы на превышение
+          //или понижение цены, но передадим изначальную закупочную цену, то нам дадут отказ по несоответствию цены.
+          if Qry.FindField('Flag').Value  and TOrderFlag.ORDER_CHANGE_PRICELOGO = 0 then
+            part.UploadedPrice   := Qry.FindField('PricePurchase').Value;  //цена, заданная клиентом
 
-            //Если у детали изменили прайс-лист по которому она будет поставляться, нужно отправлять ее в корзину EmEx DWC без указания закупочной цены,
-            //тогда в корзине отобразится и нам по API в обратку передастся реальная цена по которой деталь будет поставлена. Иначе, если мы понимаем что готовы на превышение
-            //или понижение цены, но передадим изначальную закупочную цену, то нам дадут отказ по несоответствию цены.
-            if Qry.FindField('Flag').Value  and TOrderFlag.ORDER_CHANGE_PRICELOGO = 0 then
-              part.UploadedPrice   := Qry.FindField('PricePurchase').Value;  //цена, заданная клиентом
+          part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
+          part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
+          part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
+          part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
+          part.MakeLogo        := Qry.FindField('MakeLogo').AsString;;    // – лого бренда
+          part.DetailNum       := Qry.FindField('DetailNumber').AsString; // – номер детали
+          part.PriceLogo       := Qry.FindField('PriceLogo').AsString;    // – лого прайслиста
+          part.Quantity        := Qry.FindField('Quantity').Value;        // – количество
+          part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
+          part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
+          part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
+          part.CustomerSubId   := Qry.FindField('CustomerSubID').Value;  // – идентификатор запчасти клиента
+          part.TransportPack   := '';   // – тип упаковки (WOOD – требуется деревянная обрешетка, CARTON := '' – отправка в картонной коробке)
+          part.DetailWeight    := Qry.FindField('WeightKG').Value; //  – вес детали в кг
+          part.EmExWeight      := Qry.FindField('WeightKG').Value; //  – последнее изменение веса датали, сделанное  на нашем складе
+          part.DestinationLogo := Qry.FindField('DestinationLogo').AsString; // – тип отгрузки (EMEW – авиа, CNTE – контейнер)
+          part.CustomerStickerData:= '';
 
-            part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
-            part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
-            part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
-            part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
-            part.MakeLogo        := Qry.FindField('MakeLogo').AsString;;    // – лого бренда
-            part.DetailNum       := Qry.FindField('DetailNumber').AsString; // – номер детали
-            part.PriceLogo       := Qry.FindField('PriceLogo').AsString;    // – лого прайслиста
-            part.Quantity        := Qry.FindField('Quantity').Value;        // – количество
-            part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
-            part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
-            part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
-            part.CustomerSubId   := Qry.FindField('CustomerSubID').Value;  // – идентификатор запчасти клиента
-            part.TransportPack   := '';   // – тип упаковки (WOOD – требуется деревянная обрешетка, CARTON := '' – отправка в картонной коробке)
-            part.DetailWeight    := Qry.FindField('WeightKG').Value; //  – вес детали в кг
-            part.EmExWeight      := Qry.FindField('WeightKG').Value; //  – последнее изменение веса датали, сделанное  на нашем складе
-            part.DestinationLogo := Qry.FindField('DestinationLogo').AsString; // – тип отгрузки (EMEW – авиа, CNTE – контейнер)
-            part.CustomerStickerData:= '';
-
-            outBasket[i]:= part;
-
-            //logger.Info('TEmex.InsertPartToBasketByPart I= ' + i.ToString);
-            Qry.Next;
-          end;
-
+          outBasket[i]:= part;
 
           logger.Info('Emex.InsertPartToBasket Begin');
-          R:=R+Emex.InsertPartToBasket(getCustomer(Supplier.ToInteger), outBasket);
-          logger.Info('Emex.InsertPartToBasket End');
-          SetLength(outBasket, 0);
+          R:=Emex.InsertPartToBasket(getCustomer(Supplier.ToInteger), outBasket);
+          if R > 0 then
+          begin
+            Sql.exec('''
+              -- обработанные детали
+              Update #ProcessedRecords
+                 set Processed = :Processed,
+                     Total     = :Total
+            ''', ['Processed', 'Total'], [i+1,  Qry.RecordCount]);
 
-          FreeAndNil(part);
+            logger.Info('Emex.InsertPartToBasket End');
+            SetLength(outBasket, 0);
+          end;
+
+          Result:=Result+R;
+
+          Qry.Next;
         end;
+
+        FreeAndNil(part);
+      end;
     end;
 
     FreeAndNil(Suppliers);
@@ -591,7 +601,16 @@ begin
 
         R:=Emex.DeleteFromBasket(getCustomerByClient(Qry.FieldByName('ClientID').AsInteger), outBasket);
 
-        if R <> 1 then
+        if R = 1 then
+        begin
+          Sql.exec('''
+            -- обработанные детали
+            Update #ProcessedRecords
+               set Processed = :Processed,
+                   Total     = :Total
+          ''', ['Processed', 'Total'], [i+1,  Qry.RecordCount]);
+        end
+        else
         begin
           logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Количество удаленных товаров: ' +  R.ToString);
           logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
@@ -632,11 +651,15 @@ begin
   try
 
     qry.Close;
-    Qry.Open('Select distinct BasketId, SupplierID '+
-             '  from pBasketDetails (nolock) '+
-             ' where Spid   = @@spid         '+
-             '   and isnull(OrderID, 0) = 0  '+
-             '   and isnull(BasketId, 0)> 0  ', [], []);
+    Qry.Open('''
+              Select distinct
+                     BasketId,
+                     SupplierID
+                from pBasketDetails (nolock)
+               where Spid   = @@spid
+                 and isnull(OrderID, 0) = 0
+                 and isnull(BasketId, 0)> 0
+             ''', [], []);
     qry.Open;
 
     RCount := qry.RecordCount;

@@ -92,7 +92,7 @@ object MainForm: TMainForm
           Hint = ''
           ParentColor = False
           Align = alTop
-          TabOrder = 2
+          TabOrder = 1
           LayoutConfig.ComponentCls = 'logo-caption'
           object LogoImage: TUniImage
             Left = 0
@@ -3588,7 +3588,7 @@ object MainForm: TMainForm
               Margins.Bottom = 0
               ParentColor = False
               Align = alBottom
-              TabOrder = 0
+              TabOrder = 2
               Layout = 'hbox'
               LayoutAttribs.Align = 'middle'
               LayoutAttribs.Pack = 'center'
@@ -3617,7 +3617,7 @@ object MainForm: TMainForm
               Hint = ''
               ParentColor = False
               Align = alTop
-              TabOrder = 2
+              TabOrder = 1
               Layout = 'hbox'
               LayoutAttribs.Align = 'middle'
               LayoutAttribs.Pack = 'center'

@@ -51,28 +51,30 @@ type
     procedure Call(MethodName: string);
   end;
 
-
 /// <summary>
 ///  TAccrual - класс для выполнения действий
 ///</summary>
 TAccrual = class
   private
     var FConnection: TFDConnection;
+    function GetShowProgress: Boolean;
+    procedure SetShowProgress(const Value: Boolean);
+    procedure SetFinished(const Value: Boolean);
+
+    var FFinished: Boolean;
+    var FShowProgress:  Boolean;   // показывать ход выполнения операции
+
     var FSQl: TSql;
-    var FRetVal: tRetVal;  //RetVal := tRetVal.Create;
+    var FRetVal: tRetVal;
 
     function GetSQL: TSql;
-    procedure SetSQL(const Value: TSql);
+    function GetFinished: Boolean;
 
     /// <summary>
-    ///  ActionExecuteBefore - предобработчик действия. Набор данных в pAccrualAction
+    ///  ActionExecuteCheck - предобработчик действия. Набор данных в pAccrualAction
     ///</summary>
-    function ActionExecuteBefore(AActionID: integer; AResult:TFormAction): integer;
+    function ActionExecuteCheck(AActionID: integer; AResult:TFormAction): integer;
 
-    /// <summary>
-    ///  ActionExecuteAfter - постобработчик действия. Набор данных в pAccrualAction
-    ///</summary>
-    //procedure ActionExecuteAfter(AResult:TFormAction);
   public
     constructor Create(AConnection: TFDConnection);
     destructor Destroy; override;
@@ -87,8 +89,30 @@ TAccrual = class
     /// </summary>
     function ActionExecuteRollback(): Integer;
 
-    property SQL: TSql read GetSQL write SetSQL;
+    property SQL: TSql read GetSQL;
+
+    /// <summary>
+    /// Finished - признак завершения операции
+    /// </summary>
+    property Finished: Boolean read GetFinished write SetFinished;
+    /// <summary>
+    /// ShowProgress - показывать ход выполнения операции
+    /// </summary>
+    property ShowProgress: Boolean read GetShowProgress write SetShowProgress;
   end;
+
+TAccrualThread = class(TThread)
+protected
+  private
+    FAccrual : TAccrual;
+    FActionID: Integer;
+
+    procedure Finished();
+  protected
+    procedure Execute(); override;
+  public
+    constructor Create(AAccrual: TAccrual; AActionID: Integer);
+end;
 
 
 implementation
@@ -139,13 +163,17 @@ end;
 
 procedure TProcExec.EmexOrderStateSync;
 begin
-  Emex.Connection.ExecSQL(
-    ' delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid');
+  Emex.Connection.ExecSQL('''
+       delete pAccrualAction
+         from pAccrualAction (rowlock)
+        where spid = @@Spid
+    ''');
 
-  Emex.Connection.ExecSQL(
-    ' insert pAccrualAction (Spid, ObjectID, StateID, Retval) ' +
-    ' Select @@Spid, OrderID, StatusID, 0        '+
-    '   from vOrderStateSyncByOrderNum  ');
+  Emex.Connection.ExecSQL('''
+       insert pAccrualAction (Spid, ObjectID, StateID, Retval)
+       Select @@Spid, OrderID, StatusID, 0
+         from vOrderStateSyncByOrderNum
+    ''');
 
   Emex.OrderStateSyncByOrderNum;
 end;
@@ -178,39 +206,40 @@ end;
 
 { TAccrual }
 function TAccrual.ActionExecute(ActionID: integer): integer;
-var
-  i, j: Integer;
-  Proc: TProcExec;
-  qActionMetod: TFDQuery;
-  qMetod: TFDQuery;
+var t: TAccrualThread;
 begin
+  //FEnabled := True;
+
   logger.Info('TAccrual.ActionExecute Begin ');
   logger.Info('TAccrual.ActionExecute ActionID: ' + ActionID.ToString);
-  result:= 0;
+  result    := 0;
+  FFinished := False;
 
   FRetVal.Clear;
-  FRetVal.Code := ActionExecuteBefore(ActionID, acVerify);
-
+  FRetVal.Code := ActionExecuteCheck(ActionID, acVerify);
   begin
-
     if FRetVal.Code = 0 then
     begin
       // Настройка: Автоматический отказ деталей с ошибками при создании заказа
       if sql.GetSetting('AutomaticRejectionPartsByCreatOrder', false)  then
       begin
         logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: ДА');
-        Sql.Open('Select 1 from vOrdersWarningList where ActionBrief = ''ToInWork'' ', [], []);
+        Sql.Open('''
+                    Select 1
+                      from vOrdersWarningList
+                     where ActionBrief = 'ToInWork'
+                 ''', [], []);
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
-          case (MessageDlg('По некоторым позициям имеются замечания, данные детали будут перенесены в состояние "Отказан" ' , mtConfirmation, mbYesNo))  of
+          case (MessageDlg('По некоторым позициям имеются замечания, данные детали будут перенесены в состояние "Отказан"', mtConfirmation, mbYesNo))  of
             mrYes:
             begin
-              Sql.Exec('exec ActionObjectCancel ', [], []);
+                Sql.Exec('exec ActionObjectCancel ', [], []);
             end;
             mrNo:
             begin
-              Exit;
+                Exit;
             end;
           end;
         end;
@@ -218,143 +247,48 @@ begin
       else
       begin
         logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: НЕТ');
-        Sql.Open('Select 1 from vOrdersWarningList where ActionBrief = ''ToInWork'' ', [], []);
+        Sql.Open('''
+           Select 1
+             from vOrdersWarningList
+            where ActionBrief = 'ToInWork'
+        ''', [], []);
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
           case (MessageDlg('Уверены что хотите разместить заказ несмотря на замечания? ' , mtConfirmation, mbYesNo))  of
 //            mrYes:
 //            begin
-//
 //            end;
             mrNo:
             begin
-              Exit;
+                Exit;
             end;
           end;
         end;
       end;
-
     end;
 
     // ВЫПОЛНЕНИЕ ПРОЦЕДУРЫ НАСТРОЕННОЙ НА МОДЕЛИ СОСТОЯНИЯ ПОД ДЕЙСТВИЕМ
     if FRetVal.Code = 0 then
     begin
-
-      if not Assigned(qMetod) then qMetod := TFDQuery.Create(nil);
-      if not Assigned(qActionMetod) then qActionMetod := TFDQuery.Create(nil);
-      try
-          qMetod.Connection := FConnection;
-
-       // try
-          qActionMetod.Connection := FConnection;
-          qActionMetod.Close;
-          qActionMetod.Open('Select distinct ord, ActionID, StateID from pAccrualAction (nolock) where spid = @@spid and retval = 0 order by ord', [], []);
-          qActionMetod.First;
-
-          logger.Info('TAccrual.ActionExecute ActionMetod Begin');
-          for j := 0 to qActionMetod.RecordCount-1 do
-          begin
-
-            qMetod.Close;
-            qMetod.SQL.Text :=
-                      'Select distinct Number, ActionID, Metod, MetodType '+
-                      '  from vActionMetod '+
-                      ' where ActionID  =:ActionID '+
-                      '   and StateID   =:StateID '+
-                      '   and MetodType =:MetodType '+
-                      ' order by Number';
-
-            logger.Info('TAccrual.ActionExecute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
-            qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;
-            qMetod.ParamByName('StateID').Value := qActionMetod.FieldByName('StateID').AsInteger;
-            qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
-            qMetod.Open;
-
-            logger.Info('TAccrual.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString());
-
-            if qMetod.RecordCount > 0 then
-            begin
-              qMetod.First;
-              for I := 0 to qMetod.RecordCount-1 do
-              begin
-                logger.Info('TAccrual.ActionExecute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
-
-                Proc := TProcExec.Create(FConnection);
-
-                if qMetod.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
-                begin
-                  Proc.Call(qMetod.FieldByName('Metod').AsString);
-                end;
-
-                Proc.Destroy;
-                qMetod.Next;
-              end;
-            end;
-
-            qActionMetod.Next;
-          end;
-      //  finally
-        //  FreeAndNil(qActionMetod);
-          logger.Info('TAccrual.ActionExecute ActionMetod End');
-       // end;
-
-        // Добавление протокола
-        if FRetVal.Code = 0 then
-        begin
-          logger.Info('TAccrual.ProtocolAdd Begin');
-          qMetod.Close;
-          qMetod.SQL.Text := ' exec ProtocolAdd  ';
-          qMetod.ExecSQL;
-          logger.Info('TAccrual.ActionExecute ProtocolAdd End');
-        end;
-
-      finally
-        FreeAndNil(qMetod);
-        FreeAndNil(qActionMetod);
-      end;
-    end;
-
-    // ОБРАБОТКА ОШИБОК
-    // проверка наличия серверных ошибок
-    Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
-    var ServerErr:integer;
-    ServerErr := Sql.Q.RecordCount;
-
-    if (FRetVal.Code = 0) and (ServerErr = 0) then
-    begin
-      //ActionExecuteAfter(acRefresh);
-      result:= 0;
+        t := TAccrualThread.Create(self, ActionID);
+        t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
+        t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+        t.Resume; // непосредственно ручной запуск потока
     end
     else
     begin
-      logger.Info('TAccrual.ActionExecute RetVal: ' + FRetVal.Code.ToString);
-      logger.Info('TAccrual.ActionExecute Message: ' + FRetVal.Message);
-
-      if ServerErr > 0 then
-      begin
-        Error_T.ShowModal;
-      end
-      else
-        MessageDlg(FRetVal.Message, mtError, [mbOK]);
-
-      result:= 1;
+      FShowProgress := False;
+      FFinished := True;
     end;
   end;
   logger.Info('TAccrual.ActionExecute End ');
 end;
 
-//procedure TAccrual.ActionExecuteAfter(AResult: TFormAction);
-//begin
-//  logger.Info('TAccrual.ActionExecuteAfter Begin');
-//
-//  logger.Info('TAccrual.ActionExecuteAfter End');
-//end;
-
-function TAccrual.ActionExecuteBefore(AActionID: integer; AResult: TFormAction): integer;
+function TAccrual.ActionExecuteCheck(AActionID: integer; AResult: TFormAction): integer;
 var Query: TFDQuery;
 begin
-  logger.Info('TAccrual.ActionExecuteBefore. Begin ');
+  logger.Info('TAccrual.ActionExecuteCheck Begin ');
   if not Assigned(Query) then Query := TFDQuery.Create(nil);
   Try
     Query.Connection := FConnection;
@@ -372,11 +306,11 @@ begin
 
       Result := Query.FieldByName('retcode').Value;
     end;
-    logger.Info('TAccrual.ActionExecuteBefore. Result: ' + Result.ToString);
+    logger.Info('TAccrual.ActionExecuteCheck. Result: ' + Result.ToString);
   finally
     FreeAndNil(Query);
   end;
-  logger.Info('TAccrual.ActionExecuteBefore. end ');
+  logger.Info('TAccrual.ActionExecuteCheck. end ');
 end;
 
 function TAccrual.ActionExecuteRollback: integer;
@@ -488,6 +422,16 @@ begin
   inherited;
 end;
 
+function TAccrual.GetShowProgress: Boolean;
+begin
+  Result := FShowProgress;
+end;
+
+function TAccrual.GetFinished: Boolean;
+begin
+  Result := FFinished;
+end;
+
 function TAccrual.GetSQl: TSql;
 begin
   if not Assigned(FSQl) then
@@ -497,8 +441,119 @@ begin
   Result := FSQl;
 end;
 
-procedure TAccrual.SetSQL(const Value: TSql);
+procedure TAccrual.SetShowProgress(const Value: Boolean);
 begin
+  FShowProgress := Value;
+end;
+
+procedure TAccrual.SetFinished(const Value: Boolean);
+begin
+  FFinished := Value;
+  FShowProgress  := Value;
+end;
+
+{ TAccrualThread }
+
+constructor TAccrualThread.Create(AAccrual: TAccrual; AActionID: Integer);
+begin
+  inherited Create(False);
+
+  FAccrual := AAccrual;
+  FActionID:= AActionID;
+end;
+
+procedure TAccrualThread.Execute;
+var
+  i, j: Integer;
+  Proc: TProcExec;
+  qActionMetod: TFDQuery;
+  qMetod: TFDQuery;
+begin
+ // inherited;
+  if not Assigned(qMetod) then
+    qMetod := TFDQuery.Create(nil);
+
+  if not Assigned(qActionMetod) then
+    qActionMetod := TFDQuery.Create(nil);
+
+  try
+      qMetod.Connection := FAccrual.FConnection;
+
+   // try
+      qActionMetod.Connection := FAccrual.FConnection;
+      qActionMetod.Close;
+      qActionMetod.Open('Select distinct ord, ActionID, StateID from pAccrualAction (nolock) where spid = @@spid and retval = 0 order by ord', [], []);
+      qActionMetod.First;
+
+      logger.Info('TAccrualThread.Execute ActionMetod Begin');
+      for j := 0 to qActionMetod.RecordCount-1 do
+      begin
+
+        qMetod.Close;
+        qMetod.SQL.Text :=
+                  'Select distinct Number, ActionID, Metod, MetodType '+
+                  '  from vActionMetod '+
+                  ' where ActionID  =:ActionID '+
+                  '   and StateID   =:StateID '+
+                  '   and MetodType =:MetodType '+
+                  ' order by Number';
+
+        logger.Info('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
+        qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;
+        qMetod.ParamByName('StateID').Value := qActionMetod.FieldByName('StateID').AsInteger;
+        qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
+        qMetod.Open;
+
+        logger.Info('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString());
+
+        if qMetod.RecordCount > 0 then
+        begin
+          qMetod.First;
+          for I := 0 to qMetod.RecordCount-1 do
+          begin
+            logger.Info('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
+
+            Proc := TProcExec.Create(FAccrual.FConnection);
+
+            if qMetod.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
+            begin
+              Proc.Call(qMetod.FieldByName('Metod').AsString);
+            end;
+
+            Proc.Destroy;
+            qMetod.Next;
+          end;
+        end;
+
+        qActionMetod.Next;
+      end;
+  //  finally
+    //  FreeAndNil(qActionMetod);
+      logger.Info('TAccrualThread.Execute ActionMetod End');
+   // end;
+
+      // Добавление протокола
+      begin
+        logger.Info('TAccrual.ProtocolAdd Begin');
+        qMetod.Close;
+        qMetod.SQL.Text := ' exec ProtocolAdd  ';
+        qMetod.ExecSQL;
+        logger.Info('TAccrual.Execute ProtocolAdd End');
+      end;
+
+  finally
+
+    Synchronize(Finished);
+
+    FreeAndNil(qMetod);
+    FreeAndNil(qActionMetod);
+  end;
+end;
+
+procedure TAccrualThread.Finished;
+begin
+  FAccrual.FFinished := True;
+  FAccrual.FShowProgress := True;
 
 end;
 

@@ -9,7 +9,7 @@ uses
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
-  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg, uniSpeedButton
+  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg, uniSpeedButton, uniTimer
   ;
 
 type

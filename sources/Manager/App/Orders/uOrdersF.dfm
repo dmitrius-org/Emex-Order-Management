@@ -21,8 +21,6 @@ object OrderF: TOrderF
     ParentColor = False
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 30
-    ExplicitHeight = 374
     DesignSize = (
       867
       404)
@@ -37,7 +35,6 @@ object OrderF: TOrderF
       Caption = #1055#1077#1088#1077#1093#1086#1076#1080#1090#1100' '#1082' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1089#1090#1088#1086#1082#1077' '#1087#1086#1089#1083#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103
       Anchors = [akLeft, akBottom]
       TabOrder = 29
-      ExplicitTop = 342
     end
     object lblWeightKGF: TUniLabel
       Left = 17
@@ -82,7 +79,6 @@ object OrderF: TOrderF
       TabStop = False
       TabOrder = 25
       OnClick = btnCancelClick
-      ExplicitTop = 339
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -97,7 +93,6 @@ object OrderF: TOrderF
       Anchors = [akRight, akBottom]
       TabOrder = 26
       OnClick = btnOkClick
-      ExplicitTop = 339
     end
     object UniGroupBox1: TUniGroupBox
       Left = 267
@@ -1053,7 +1048,6 @@ object OrderF: TOrderF
       Anchors = [akRight, akBottom]
       TabOrder = 27
       OnClick = btnOkToCancelClick
-      ExplicitTop = 339
     end
     object btnOkToProc: TUniBitBtn
       AlignWithMargins = True
@@ -1068,7 +1062,6 @@ object OrderF: TOrderF
       Anchors = [akRight, akBottom]
       TabOrder = 28
       OnClick = btnOkToProcClick
-      ExplicitTop = 339
     end
     object edtDetailNameF: TUniComboBox
       Left = 116

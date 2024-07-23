@@ -144,6 +144,7 @@ type
     FProfin:  Real;
     FQuantity: Integer;
     FPriceQuantity: Integer;
+    FReliability: Integer; // вероятность поставки
 
     FMarginF2: Real;
     FIncome2:  Real;
@@ -172,7 +173,7 @@ type
     property ID: Integer read FID write FID;
     property IsCounter: Boolean read FIsCounter write FIsCounter;
 
-    procedure GetPartRatingFromDB(DetailNumber, PriceLogo: string);
+    //procedure GetPartRatingFromDB(DetailNumber, PriceLogo: string);
 
     ///<summary>
     ///  getPartRatingFromDB2 - получение данных по детали после изменения данных
@@ -410,6 +411,7 @@ begin
                                          ,v.Comment
                                          ,v.StatusID
                                          ,v.MakeLogo
+                                         ,v.Reliability
                                      from vOrders v
                                     where v.OrderID = :OrderID
                                   ''';
@@ -426,6 +428,7 @@ begin
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
+  FReliability       :=  UniMainModule.Query.FieldByName('Reliability').AsInteger;
 
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
@@ -438,8 +441,7 @@ begin
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
   edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
-  edtCount.Text      := FQuantity.ToString + '/' +
-                        UniMainModule.Query.FieldByName('PriceQuantity').AsString;
+  edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
   edtMarginF.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
@@ -458,21 +460,21 @@ begin
   FIncome2           := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
   FProfin2           := UniMainModule.Query.FieldByName('Profit').AsFloat;
   FQuantity2         := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
-
+  //
   edtMargin2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Margin').AsFloat);
   edtMarginF2.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
   edtProfit2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
-
+  //
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
   SetEditDataStyle();
 
   Self.Caption:=
-      UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
-      UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
-      UniMainModule.Query.FieldByName('DetailName').AsString;
+                UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
+                UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
+                UniMainModule.Query.FieldByName('DetailName').AsString;
 end;
 
 procedure TOrderF.SetIndicatorsStyle(AIncome: real);
@@ -596,7 +598,7 @@ begin
     edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').AsString;
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
     edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
-    edtProfit2.Text    := FormatFloat('##0%', FIncome2);
+    edtProfit2.Text    := FormatFloat('##0%', FProfin2);
 
     var t: Real; t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
     if t > 0 then r := '+'
@@ -608,7 +610,7 @@ begin
     r := r + FloatToStr(t);
 
     edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').AsFloat) + ' ('+ r + '%)';
-    edtIncome2.Text    := FormatFloat('##0%', FProfin2);
+    edtIncome2.Text    := FormatFloat('##0%', FIncome2);
 
     SetEditDataStyle();
     SetEditDataRating(sql.Q.FieldByName('PercentSupped').AsInteger);
@@ -618,6 +620,7 @@ begin
   end
   else
   begin
+
     edtCount2.Clear;
     edtMargin2.Clear;
     edtMarginF2.Clear;
@@ -639,28 +642,31 @@ begin
   logger.Info('getPartRatingFromDB2 end');
 end;
 
-procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
-var js: string;
-     r: string;
-begin
-  logger.Info('getPartRatingFromDB');
-  sql.Open('''
-           select top 1 PercentSupped
-             from pFindByNumber (nolock)
-            where spid     = @@spid
-              and Make     =:MakeLogo
-              and DetailNum=:DetailNum
-              and PriceLogo=:PriceLogo
-            order by PercentSupped desc
-           ''',
-           ['DetailNum', 'PriceLogo', 'MakeLogo'],
-           [DetailNumber, PriceLogo, FMakeLogo]);
-
-  if sql.Q.RecordCount>0 then
-  begin
-    SetRating(sql.Q.FieldByName('PercentSupped').AsInteger);
-  end;
-end;
+//procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
+//var js: string;
+//     r: string;
+//begin
+//  logger.Info('getPartRatingFromDB');
+//  sql.Open('''
+//           select top 1 PercentSupped
+//             from pFindByNumber (nolock)
+//            where spid     = @@spid
+//              and Make     =:MakeLogo
+//              and DetailNum=:DetailNum
+//              and PriceLogo=:PriceLogo
+//            order by PercentSupped desc
+//           ''',
+//           ['DetailNum', 'PriceLogo', 'MakeLogo'],
+//           [DetailNumber, PriceLogo, FMakeLogo]);
+//
+//  if sql.Q.RecordCount>0 then
+//  begin
+//    SetRating(sql.Q.FieldByName('PercentSupped').AsInteger);
+//  end
+//  else
+//    SetRating(FReliability);
+//
+//end;
 
 
 procedure TOrderF.SetRating(ARating: integer);
@@ -754,7 +760,6 @@ begin
 
   Sql.exec(
   '''
-
           delete pOrdersFin from pOrdersFin (rowlock) where spid = @@Spid
           insert pOrdersFin
                 (Spid
@@ -851,15 +856,15 @@ end;
 procedure TOrderF.LoadDataPart;
 begin
   ComboBoxFill(cbDestinationLogo,'''
-        SELECT distinct
-               pd.[DestinationLogo] as id
-              ,pd.[Name]
-          FROM tOrders o (nolock)
-         inner join tProfilesCustomer pc with (nolock)
-                 on pc.ClientID = o.ClientID
-         inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                 on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-         where o.OrderID =
+          SELECT distinct
+                 pd.[DestinationLogo] as id
+                ,pd.[Name]
+            FROM tOrders o (nolock)
+           inner join tProfilesCustomer pc with (nolock)
+                   on pc.ClientID = o.ClientID
+           inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+           where o.OrderID =
         ''' + FID.ToString );
 
   // начитываем данные с базы
@@ -867,7 +872,6 @@ begin
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
       DataLoad;
-
       edtDetailNameF.SetFocus;
     end
   else
@@ -886,7 +890,6 @@ begin
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
     t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
-
     t.Resume; // непосредственно ручной запуск потока
 
     UniTimer.Enabled := True;
@@ -902,7 +905,6 @@ begin
               Update #CounterPart
                  set Processed = 1
                where OrderID   = :OrderID
-
 
              Select top 1 OrderID
                from #CounterPart (nolock)
@@ -930,6 +932,8 @@ end;
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
   LoadDataPartFromEmex;
+
+  SetRating(FReliability);
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -952,7 +956,7 @@ begin
     if Sql.Q.RecordCount > 0 then
     begin
 
-      getPartRatingFromDB(FDetailNumber, FPriceLogo);
+      //getPartRatingFromDB(FDetailNumber, FPriceLogo);
 
       PriceCalc();
 

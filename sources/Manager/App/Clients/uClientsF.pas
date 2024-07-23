@@ -466,7 +466,6 @@ begin
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
 
   //
-  ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
   cbClientType.Value :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
 
   ManagerGridRefresh;
@@ -588,6 +587,8 @@ begin
  // edtBrief.ReadOnly:= FAction <> acInsert;
   fsAudit.Visible:= FAction <> acInsert;
   pcCommon.ActivePage := tabHome;
+
+  ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
 
   case FAction of
     acInsert, acReportCreate:

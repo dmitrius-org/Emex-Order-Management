@@ -39,6 +39,7 @@ SELECT o.[OrderID]
       ,o.[AmountPurchaseF]
       ,o.[WeightKG]
       ,o.[VolumeKG]
+      ,o.[Reliability]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
       
@@ -167,7 +168,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240628', '5'
+exec setOV 'vOrders', 'V', '20240722', '6'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

@@ -178,8 +178,7 @@ begin
 
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo',
-           'DetailNum',
-           ''],
+           'DetailNum'],
           [FDestinationLogo, FDetailNum ]);
   logger.Info('TSearchF.PriceCalc end');
 end;

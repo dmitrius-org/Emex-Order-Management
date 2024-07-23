@@ -19,7 +19,7 @@ uses
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
-  uniDateTimePicker, uniScreenMask;
+  uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils;
 
 type
   tMarks = class
@@ -44,6 +44,7 @@ type
 
     procedure DataRefresh();
   end;
+
 
 
   TOrdersT = class(TUniFrame)
@@ -112,7 +113,6 @@ type
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     UniLabel4: TUniLabel;
-    ppExecute: TUniPopupMenu;
     ppExecuteAction: TUniMenuItem;
     actExecuteAction: TAction;
     actExecuteActionEnabled: TAction;
@@ -194,6 +194,9 @@ type
     actCancellation: TAction;
     N8: TUniMenuItem;
     QueryFragile: TBooleanField;
+    TimerProcessedShow: TUniTimer;
+    TimerProcessed: TUniThreadTimer;
+    ppExecute: TUniPopupMenu;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -204,12 +207,9 @@ type
     procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridCellClick(Column: TUniDBGridColumn);
-    procedure QueryDetailNumberGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryMakeLogoGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryManufacturerGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actProtocolExecute(Sender: TObject);
     procedure ppMainPopup(Sender: TObject);
     procedure actFilterExecute(Sender: TObject);
@@ -237,15 +237,23 @@ type
     procedure actCancellationExecute(Sender: TObject);
     procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
+    procedure TimerProcessedTimer(Sender: TObject);
+    procedure TimerProcessedShowTimer(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
-    FAccrual: TAccrual;
+
     FFilterTextStatus: string;
     FFilterTextPriceLogo: string;
     FFilterTextClient: string;
     Marks: TMarks;                  // отметки
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
+
+    FSql: tSQL;
+    FAccrual: TAccrual;
+
+    FProcessed: Integer;
+    FTotal    : Integer;
 
     /// <summary>
     /// GridOpen - получение данных с сервера
@@ -272,16 +280,11 @@ type
     procedure StateActionMenuCreate();
     procedure ActionExecuteEnabled();
 
-    /// <summary>
-    ///  ActionExecuteAfter - постобработчик действия. Набор данных в pAccrualAction
-    ///</summary>
-    procedure ActionExecuteAfter(AResult:TFormAction);
+    /// <summary> ActionExecute - запуск выполнения действия. Набор данных в pAccrualAction </summary>
     procedure ActionExecute(ActionID: Integer);
 
-    procedure DoShowMask();
+    procedure DoShowMask(Astr: string = 'Ждите, операция выполняется');
     procedure DoHideMask();
-
-    function Accrual :TAccrual;
 
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
@@ -312,30 +315,23 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uSqlUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils, uVarUtils, uStatusForm;
+  MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uGridUtils, uVarUtils, uStatusForm;
 
 {$R *.dfm}
 
-function TOrdersT.Accrual: TAccrual;
-begin
-  if not Assigned(FAccrual) then
-  begin
-    FAccrual := TAccrual.Create(TFDConnection(Query.Connection));
-  end;
-
-  Result := FAccrual;
-end;
-
 procedure TOrdersT.actCancellationExecute(Sender: TObject);
 begin
-  MessageDlg('Вы действительно хотите проставить признак "Запрошен отказ"?' , mtConfirmation, mbYesNo,
+  MessageDlg('Вы действительно хотите проставить признак "Запрошен отказ"? ' , mtConfirmation, mbYesNo,
+
   procedure(Sender: TComponent; Res: Integer)
   begin
     case Res of
       mrYes : OrderSetCancellation;
       mrNo  : Exit;
     end;
-  end);
+  end
+
+  );
 end;
 
 procedure TOrdersT.OrderSetCancellation;
@@ -477,8 +473,6 @@ begin
     end;
   finally
     Query.RecNo:=RecNo;
-//    DeselectAll;
-
     Query.EnableControls;
   end;
 end;
@@ -486,23 +480,53 @@ end;
 procedure TOrdersT.ActionExecute(ActionID: Integer);
 begin
   logger.Info('TOrdersT.ActionExecute Begin');
+
   DoShowMask;
-  try
-    SQl.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
 
-    if Accrual.ActionExecute(ActionID) = 0 then
-      begin
-        ActionExecuteAfter(acRefresh);
+  FAccrual.ShowProgress := False;
+  FAccrual.Finished := False;
 
-        ToastOK ('Операция успешно выполнена!', UniSession);
-      end;
-  finally
-    DoHideMask;
+  FProcessed:= 0;
+  FTotal    := 0;
+
+  if ActionID = 14	{ToBasket	Добавить в корзину} then
+  begin
+    FAccrual.ShowProgress := True;
+    logger.Info('TOrdersT.ActionExecute 1');
+    Sql.exec(
+    '''
+      -- таблица для возврата количества обработанных записей
+      if OBJECT_ID('tempdb..#ProcessedRecords') is not null
+          drop table #ProcessedRecords
+
+      CREATE TABLE #ProcessedRecords (
+                   Processed  int
+                  ,Total      int
+      );
+
+      insert #ProcessedRecords (Processed, Total)
+      select 0, 0
+
+    ''', [], []);
+
+     TimerProcessed.Enabled:= True;
   end;
-  logger.Info('TOrdersT.ActionExecute Begin');
+
+  TimerProcessedShow.Enabled:=True;
+
+  RetVal.Clear;
+  RetVal.Code := FAccrual.ActionExecute(ActionID);
+
+  if (RetVal.Code > 0)then
+  begin
+    MessageDlg(RetVal.Message, mtError, [mbOK]);
+  end;
+
+  logger.Info('TOrdersT.ActionExecute End');
 end;
 
 procedure TOrdersT.actExecuteActionRollbackExecute(Sender: TObject);
+var Accrual: TAccrual;
 begin
   logger.Info('TOrdersT.actExecuteActionRollbackExecute Begin');
   Query.DisableControls;
@@ -516,9 +540,16 @@ begin
 
     DoShowMask;
 
+//    FAccrual.ShowProgress := False;
+//    FAccrual.Finished := False;
+//
+//    FProcessed:= 0;
+//    FTotal    := 0;
+
+    Accrual := TAccrual.Create(UniMainModule.FDConnection);
     if Accrual.ActionExecuteRollback() = 0 then
     begin
-      ActionExecuteAfter(acRefresh);
+      GridOpen();
 
       ToastOK('Операция успешно выполнена!', UniSession);
     end;
@@ -558,10 +589,12 @@ end;
 
 procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
 begin
-  Sql.Exec(' delete tGridOptions '+
-           '   from tGridOptions (rowlock)   ' +
-           '  where UserID = dbo.GetUserID() ' +
-           '    and Grid   = :Grid',
+  Sql.Exec('''
+              delete tGridOptions
+                from tGridOptions (rowlock)
+               where UserID = dbo.GetUserID()
+                 and Grid   = :Grid
+           ''',
            ['Grid'],
            [self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
@@ -579,14 +612,6 @@ begin
   //Групповое изменение признака Fragile
   GroupSetFragileSignF.FormAction := TFormAction.acUpdate;
   GroupSetFragileSignF.ShowModal(GroupSetFragileSignCallBack);
-end;
-
-procedure TOrdersT.ActionExecuteAfter(AResult: TFormAction);
-begin
-  if AResult = acRefresh then
-  begin
-    GridOpen();
-  end;
 end;
 
  procedure TOrdersT.ActionExecuteEnabled;
@@ -629,14 +654,13 @@ end;
 
 procedure TOrdersT.DoHideMask;
 begin
-  fOk.ScreenMask.HideMask;
-  UniSession.Synchronize;
+  HideMask();
 end;
 
-procedure TOrdersT.DoShowMask;
+procedure TOrdersT.DoShowMask(Astr: string = 'Ждите, операция выполняется');
 begin
-  fOk.ScreenMask.ShowMask();
-  UniSession.Synchronize;
+  ShowMask(Astr);
+  UniSession.Synchronize
 end;
 
 procedure TOrdersT.fClientSelect(Sender: TObject);
@@ -847,6 +871,7 @@ begin
 
   finally
     DoHideMask();
+    UniSession.Synchronize;
     logger.Info('TOrdersT.GridOpen End');
   end;
 end;
@@ -1324,6 +1349,10 @@ begin
 
   GetMarksInfo;
 
+  FSql:= tSQL.Create(UniMainModule.FDConnection);
+
+  FAccrual := TAccrual.Create(UniMainModule.FDConnection);
+
   logger.Info('TOrdersT.UniFrameCreate End');
 end;
 
@@ -1331,14 +1360,73 @@ end;
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
+  FAccrual.Free;
 end;
 
 procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
-     fOrderDate.DateTime := date();
-     fDetailNum.Text := '608zz';
+  //   fOrderDate.DateTime := date();
+//     fDetailNum.Text := '11428575211';
   {$ENDIF}
+end;
+
+procedure TOrdersT.TimerProcessedTimer(Sender: TObject);
+begin
+  logger.Info('TOrdersT.UniThreadTimerTimer');
+  FSql.Open('''
+    select top 1 Processed, Total
+      from #ProcessedRecords (nolock)
+  ''', [], []);
+
+  if FSql.q.RecordCount > 0 then
+  begin
+    TimerProcessed.Lock;
+    try
+      FProcessed:= FSql.Q.FieldByName('Processed').AsInteger;
+      FTotal    := FSql.Q.FieldByName('Total').AsInteger;
+    finally
+      TimerProcessed.Release;
+    end;
+  end;
+end;
+
+procedure TOrdersT.TimerProcessedShowTimer(Sender: TObject);
+begin
+  logger.Info('TOrdersT.UniTimerTimer');
+  try
+
+    if FAccrual.ShowProgress then
+    begin
+      HideMask();
+      DoShowMask(Format('Обработано деталей %d из %d', [FProcessed, FTotal]));
+    end;
+
+  finally
+    if FAccrual.Finished then
+    begin
+      TimerProcessed.Enabled := False;
+      TimerProcessedShow.Enabled := False;
+
+      // ОБРАБОТКА ОШИБОК
+      // проверка наличия серверных ошибок
+      Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+      var ServerErr:integer;
+      ServerErr := Sql.Q.RecordCount;
+
+      if (ServerErr <> 0) then
+      begin
+        Error_T.ShowModal;
+      end
+      else
+      begin
+         ToastOK('Операция успешно выполнена!', unisession);
+         GridOpen();
+      end;
+
+      HideMask();
+    end;
+  end;
 end;
 
 procedure TOrdersT.OrdersFCallBack(Sender: TComponent; AResult: Integer);
@@ -1424,14 +1512,14 @@ end;
 { tMarks }
 constructor tMarks.Create(AGrid: TUniDBGrid);
 begin
-  if Assigned(AGrid) then
-  begin
-    FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
-    FQuery := TFDQuery.Create(nil);
-    FQuery.Connection := FConnection;
-    FGrid := AGrid;
-  end;
-  FMarks := TDictionary <integer, integer>.Create();
+    if Assigned(AGrid) then
+    begin
+        FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
+        FQuery := TFDQuery.Create(nil);
+        FQuery.Connection := FConnection;
+        FGrid := AGrid;
+    end;
+    FMarks := TDictionary <integer, integer>.Create();
 end;
 
 procedure tMarks.DataRefresh;
@@ -1443,18 +1531,18 @@ begin
       FGrid.DataSource.DataSet.DisableControls;
       BM := FGrid.DataSource.DataSet.GetBookmark;
       try
-        for Key in FMarks.Keys  do
-        begin
-          if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+          for Key in FMarks.Keys  do
           begin
-            tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-            FGrid.RefreshCurrentRow();
+              if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+              begin
+                  tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
+                  FGrid.RefreshCurrentRow();
+              end;
           end;
-        end;
       finally
-        FGrid.DataSource.DataSet.GotoBookmark(BM);
-        FGrid.DataSource.DataSet.FreeBookmark(BM);
-        FGrid.DataSource.DataSet.EnableControls;
+          FGrid.DataSource.DataSet.GotoBookmark(BM);
+          FGrid.DataSource.DataSet.FreeBookmark(BM);
+          FGrid.DataSource.DataSet.EnableControls;
       end;
   end;
   logger.Info('tMarks.DataRefresh End');
@@ -1462,24 +1550,24 @@ end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
+    Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
 end;
 
 procedure tMarks.Clear;
 begin
-  DeleteInDB();
-  FMarks.Clear;
+    DeleteInDB();
+    FMarks.Clear;
 end;
 
 destructor tMarks.Destroy;
 begin
-  FMarks.Free;
-  inherited;
+   FMarks.Free;
+   inherited;
 end;
 
 function tMarks.GetCount: Integer;
 begin
-  Result := FMarks.Count;
+    Result := FMarks.Count;
 end;
 
 procedure tMarks.Select();

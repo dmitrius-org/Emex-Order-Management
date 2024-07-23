@@ -14,7 +14,6 @@ as
 
   -- отбор объектов к выполнению действия
   Delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
- 
   Delete pMovement from pMovement (rowlock) where spid = @@spid
 
   -- проверки
@@ -33,22 +32,23 @@ as
 
   if @NodeBrief = 'InBasket'
   begin
-    if not exists (select 1
-	                 from tSettings (nolock)
-					where Brief = 'CoeffMaxAgree')
-    begin
-	  set @r = 502 -- 'Отсутствует настройка [CoeffMaxAgree] Максимальный коэффициент превышения цены продажи для клиента над ценой!'
-	  goto exit_
-	end
+      if not exists (select 1
+	                      from tSettings (nolock)
+		                 where Brief = 'CoeffMaxAgree')
+      begin
+	      set @r = 502 -- 'Отсутствует настройка [CoeffMaxAgree] Максимальный коэффициент превышения цены продажи для клиента над ценой!'
+	      goto exit_
+      end
 
-    if not exists (select 1
-	                 from tSettings (nolock)
-					where Brief = 'CoeffMaxAgree'
-					  and val = '')
-    begin
-	  set @r = 503-- 'Необходимо проставить значение настройки [CoeffMaxAgree]. Максимальный коэффициент превышения цены продажи для клиента над ценой!'
-	  goto exit_
-	end
+      if not exists (select 1
+	                      from tSettings (nolock)
+		                 where Brief = 'CoeffMaxAgree'
+			               and val = '')
+      begin
+	      set @r = 503-- 'Необходимо проставить значение настройки [CoeffMaxAgree]. Максимальный коэффициент превышения цены продажи для клиента над ценой!'
+	      goto exit_
+      end  
+
   end
 
  -- if exists (select 1
@@ -196,6 +196,6 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20240521', '3'
+exec setOV 'ActionExecuteCheck', 'P', '20240722', '4'
 go
  

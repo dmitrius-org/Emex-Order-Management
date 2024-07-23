@@ -14,7 +14,8 @@ uses
   FireDAC.Phys.MySQL, FireDAC.Phys.ODBCBase, FireDAC.Moni.Custom,
 
   uCommonType, uAuditUtils, uAccrualUtils, uEmexUtils, uSqlUtils, uLogger,
-  uGrantUtils, FireDAC.Moni.RemoteClient, Windows
+  uGrantUtils, FireDAC.Moni.RemoteClient, Windows, uniGUIBaseClasses,
+  uniGUIClasses, uniTimer
   ;
 
 type
@@ -55,6 +56,7 @@ type
 
     const _loginname = '_loginname';
     const _pwd = '_pwd';
+
 
     function dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
   end;
