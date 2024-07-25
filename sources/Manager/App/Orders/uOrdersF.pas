@@ -50,7 +50,6 @@ type
     btnZZAP: TUniButton;
     btnEmEx: TUniButton;
     UniLabel1: TUniLabel;
-    cbPrice: TUniComboBox;
     ImageList16: TUniImageList;
     UniBitBtn1: TUniBitBtn;
     UniTimer: TUniTimer;
@@ -99,6 +98,7 @@ type
     edtNextPart: TUniCheckBox;
     edtDetailNameF: TUniComboBox;
     NotExists: TUniLabel;
+    cbPrice: TUniFSComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -121,8 +121,7 @@ type
     procedure cbDestinationLogoChange(Sender: TObject);
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
-    procedure edtDetailNameFRemoteQuery(const QueryString: string;
-      Result: TStrings);
+    procedure edtDetailNameFRemoteQuery(const QueryString: string; Result: TStrings);
 
 
   private
@@ -169,6 +168,8 @@ type
   public
     { Public declarations }
 
+    var IsExistNext: Boolean;
+
     property FormAction: TFormAction read FAction write SetAction;
     property ID: Integer read FID write FID;
     property IsCounter: Boolean read FIsCounter write FIsCounter;
@@ -203,11 +204,13 @@ type
 
     procedure OrderUpdate(ATargetStateID: integer = 0);
 
-
+    /// <summary>
+    /// LoadDataPart - получение данных по детали из базы
+    /// </summary>
     procedure LoadDataPart();
 
     procedure LoadDataPartFromEmex();
-    procedure LoadNextPart();
+    function LoadNextPart():Boolean;
   end;
 
 function OrderF: TOrderF;
@@ -217,7 +220,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast;
 
 function OrderF: TOrderF;
 begin
@@ -318,7 +321,7 @@ begin
                   edtVolumeKGF.Value,
                   edtDetailNameF.Text,
                   FID,
-                  cbPrice.Text,
+                  cbPrice.Value,
                   cbDestinationLogo.Value ,
                   cbFragile.Checked,
                   cbNoAir.Checked,
@@ -333,6 +336,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
+    ToastOK('Изменение успешно выполнено!', unisession);
 
     if not edtNextPart.Checked then
       ModalResult:=mrOK;
@@ -345,23 +349,32 @@ end;
 
 procedure TOrderF.btnOkClick(Sender: TObject);
 begin
+  btnOk.Enabled := False;
   OrderUpdate();
 
-  LoadNextPart();
+  IsExistNext := LoadNextPart();
+
+  SetBtnEnabled;
 end;
 
 procedure TOrderF.btnOkToCancelClick(Sender: TObject);
 begin
+  btnOkToCancel.Enabled := False;
   OrderUpdate(12 {InCancel	Отказан});
 
-  LoadNextPart();
+  IsExistNext := LoadNextPart();
+
+  SetBtnEnabled;
 end;
 
 procedure TOrderF.btnOkToProcClick(Sender: TObject);
 begin
+  btnOkToProc.Enabled := False;
   OrderUpdate( 2 {InChecked	Проверено});
 
-  LoadNextPart();
+  IsExistNext := LoadNextPart();
+
+  SetBtnEnabled;
 end;
 
 procedure TOrderF.DataCheck;
@@ -384,37 +397,41 @@ procedure TOrderF.DataLoad;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := '''
-                                   select v.WeightKG
-                                         ,v.VolumeKG
-                                         ,v.WeightKGF
-                                         ,v.VolumeKGF
-                                         ,v.DetailName as DetailName
-                                         ,v.Manufacturer
-                                         ,v.DetailNumber
-                                         ,v.NoAir
-                                         ,v.Fragile
-                                         ,v.PriceLogo
-                                         ,v.Manufacturer
-                                         ,v.DestinationLogo
-                                         ,v.SuppliersID
-                                         ,v.PriceID
-                                         ,v.ClientID
-                                         ,v.Flag
-                                         ,v.Quantity
-                                         ,v.Margin
-                                         ,v.MarginF
-                                         ,v.Profit
-                                         ,v.Income
-                                         ,v.IncomePRC
-                                         ,v.PricePurchase
-                                         ,v.PriceQuantity
-                                         ,v.Comment
-                                         ,v.StatusID
-                                         ,v.MakeLogo
-                                         ,v.Reliability
-                                     from vOrders v
-                                    where v.OrderID = :OrderID
-                                  ''';
+       delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid
+
+       select v.WeightKG
+             ,v.VolumeKG
+             ,v.WeightKGF
+             ,v.VolumeKGF
+             ,v.DetailName as DetailName
+             ,v.Manufacturer
+             ,v.DetailNumber
+             ,v.NoAir
+             ,v.Fragile
+             ,v.PriceLogo
+             ,v.Manufacturer
+             ,v.DestinationLogo
+             ,v.SuppliersID
+             ,v.PriceID
+             ,v.ClientID
+             ,v.Flag
+             ,v.Quantity
+             ,v.Margin
+             ,v.MarginF
+             ,v.Profit
+             ,v.Income
+             ,v.IncomePRC
+             ,v.PricePurchase
+             ,v.PriceQuantity
+             ,v.Comment
+             ,v.StatusID
+             ,v.MakeLogo
+             ,v.Reliability
+             ,v.DeliveryPlanDateSupplier
+             ,v.DeliveryRestTermSupplier
+         from vOrders v
+        where v.OrderID = :OrderID
+  ''';
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.Open;
 
@@ -435,7 +452,7 @@ begin
   edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
-  cbPrice.text       := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
+  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
@@ -448,6 +465,11 @@ begin
   edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
+  edtDelivery.Text   := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
+  edtDelivery.Hint   := 'Плановая дата поступления поставщику: ' + UniMainModule.Query.FieldByName('DeliveryPlanDateSupplier').AsString;
+
+
+
   FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
   //
   FMarginF           := UniMainModule.Query.FieldByName('MarginF').AsFloat;
@@ -475,6 +497,8 @@ begin
                 UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
                 UniMainModule.Query.FieldByName('DetailName').AsString;
+
+  IsExistNext := True;
 end;
 
 procedure TOrderF.SetIndicatorsStyle(AIncome: real);
@@ -585,7 +609,7 @@ begin
             order by p.PercentSupped desc
            ''',
            ['DetailNum', 'PriceLogo', 'MakeLogo'],
-           [FDetailNumber, cbPrice.Text, FMakeLogo]);
+           [FDetailNumber, cbPrice.Value, FMakeLogo]);
 
   if sql.Q.RecordCount>0 then
   begin
@@ -816,7 +840,7 @@ begin
 
   ''',
   ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID', 'MakeLogo'],
-  [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Text, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
+  [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Value, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -833,8 +857,10 @@ begin
     //
   end;
 
-  btnOkToCancel.Enabled := FStatusID in [1, 2, 3, 22];
-  btnOkToProc.Enabled := FStatusID in [1, 22];
+  btnOkToCancel.Enabled := (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
+  btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
+
+  btnOk.Enabled := True;
 end;
 
 procedure TOrderF.SetOpenUrl(AUrl: string);
@@ -897,8 +923,9 @@ begin
   end;
 end;
 
-procedure TOrderF.LoadNextPart;
+function TOrderF.LoadNextPart:Boolean;
 begin
+  Result := False;
   if not edtNextPart.Checked then Exit;
 
   sql.open('''
@@ -918,6 +945,7 @@ begin
 
   if sql.Q.RecordCount > 0 then
   begin
+    Result := True;
     ID := sql.Q.FieldByName('OrderID').AsInteger;
 
     SetRating(0);
@@ -942,12 +970,18 @@ begin
   btnOk.Caption := ' Сохранить';
 
   //ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
-  ComboBoxFill(cbPrice,        ' Select Name from tPrices (nolock) where Flag&1=1 ');
+  ComboBoxFill(cbPrice,
+  '''
+    -- список поставщиков
+    OrderF_SupplierList
+               @OrderID =
+  ''' + FID.ToString);
 
   LoadDataPart;
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
+var Price: string;
 begin
   try
     Sql.Open('select 1 from #IsPart (nolock)', [],[]);
@@ -963,6 +997,18 @@ begin
       getPartRatingFromDB2();
 
       UniTimer.Enabled := False;
+
+
+
+      Price:=cbPrice.Value;
+      ComboBoxFill(cbPrice,
+      '''
+        -- список поставщиков
+        OrderF_SupplierList
+                   @OrderID =
+      ''' + FID.ToString);
+
+       cbPrice.Value:=Price;
     end;
   finally
   end;

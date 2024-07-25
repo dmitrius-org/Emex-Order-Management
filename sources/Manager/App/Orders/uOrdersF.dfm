@@ -315,21 +315,6 @@ object OrderF: TOrderF
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103':'
       TabOrder = 20
     end
-    object cbPrice: TUniComboBox
-      Left = 472
-      Top = 128
-      Width = 351
-      Hint = ''
-      Enabled = False
-      ShowHint = True
-      Text = ''
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 12
-      TabStop = False
-      Images = ImageList16
-      IconItems = <>
-      OnChange = cbPriceChange
-    end
     object UniBitBtn1: TUniBitBtn
       Left = 829
       Top = 128
@@ -1075,6 +1060,23 @@ object OrderF: TOrderF
       RemoteQuery = True
       IconItems = <>
       OnRemoteQuery = edtDetailNameFRemoteQuery
+    end
+    object cbPrice: TUniFSComboBox
+      Left = 472
+      Top = 128
+      Width = 351
+      Hint = ''
+      Enabled = False
+      ShowHint = True
+      Text = ''
+      Anchors = [akLeft, akTop, akRight]
+      ParentFont = False
+      Font.Charset = ANSI_CHARSET
+      TabOrder = 12
+      AnyMatch = True
+      IconItems = <>
+      OnChange = cbDestinationLogoChange
+      Value = '-1'
     end
   end
   object ImageList16: TUniImageList

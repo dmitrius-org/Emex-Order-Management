@@ -1437,8 +1437,6 @@ begin
     begin
       Query.Edit ;
       Query.Post;
-
-      ToastOK('Изменение успешно выполнено!', unisession);
     end;
   except
     on E: Exception do

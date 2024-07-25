@@ -183,6 +183,27 @@ as
          on pd.ProfilesDeliveryID =  isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
    where p.Spid   = @@SPID
      and p.RetVal = 0
+
+
+  Update pAccrualAction
+     set RetVal =  538 -- 'Ошибка выполнения действия, по позиции выгружен отказ!'
+    from pAccrualAction p (nolock)
+   inner join tNodes n (nolock)
+           on n.NodeID = p.ActionID
+		  and n.Brief  = 'ToReNew'
+   inner join tOrders o(nolock)
+           on o.OrderID  = p.ObjectID
+          and o.StatusID = 12 -- отказан
+   where p.Spid   = @@SPID
+     and p.RetVal = 0
+     and exists (select 1
+                    from tUnloadRefusals up (nolock)
+                   where up.ClientID     = o.ClientID
+                     and up.DetailNumber = o.DetailNumber 
+                     and up.Reference    = o.Reference
+                     and up.DetailID     = o.DetailID
+                     and up.Quantity     = 0--o.Quantity
+                   )
 	
 
    if exists (select 1
@@ -196,6 +217,5 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20240722', '4'
+exec setOV 'ActionExecuteCheck', 'P', '20240723', '5'
 go
- 

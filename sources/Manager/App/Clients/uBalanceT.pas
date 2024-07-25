@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
-  System.ImageList, Vcl.ImgList, cxImageList, cxGraphics;
+  System.ImageList, Vcl.ImgList;
 
 type
   TBalanceT = class(TUniForm)

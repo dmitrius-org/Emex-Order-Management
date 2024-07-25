@@ -1,5 +1,3 @@
-drop proc if exists LoadOrdersDeliveryTermCalc
-
 drop proc if exists OrdersDeliveryTermCalc
 /*
   OrdersDeliveryTermCalc - расчет сроков доставки при создании заказа:
