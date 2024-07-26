@@ -488,6 +488,7 @@ begin
   edtProfit2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
+  edtDelivery2.text  := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
   //
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
@@ -623,6 +624,7 @@ begin
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
     edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
+    edtDelivery2.text  := sql.Q.FieldByName('GuaranteedDay').AsString;
 
     var t: Real; t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
     if t > 0 then r := '+'

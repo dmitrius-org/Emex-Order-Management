@@ -65,7 +65,7 @@ object RefusalsT: TRefusalsT
         ShowHint = True
         Action = actUploadingRefusalsEmex
         ImageIndex = 5
-        TabOrder = 4
+        TabOrder = 1
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
@@ -83,7 +83,7 @@ object RefusalsT: TRefusalsT
         ShowHint = True
         Action = actUpload
         ImageIndex = 3
-        TabOrder = 1
+        TabOrder = 3
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
@@ -92,7 +92,7 @@ object RefusalsT: TRefusalsT
         ShowHint = True
         Action = actRefreshAll
         ImageIndex = 4
-        TabOrder = 3
+        TabOrder = 4
       end
     end
   end
@@ -105,7 +105,7 @@ object RefusalsT: TRefusalsT
     ShowHint = True
     ParentColor = False
     Align = alClient
-    TabOrder = 1
+    TabOrder = 2
     Layout = 'fit'
     LayoutConfig.Flex = 1
     LayoutConfig.Region = 'center'
@@ -188,7 +188,7 @@ object RefusalsT: TRefusalsT
     Caption = #1060#1080#1083#1100#1090#1088
     Align = alTop
     LayoutConfig.Width = '0'
-    TabOrder = 2
+    TabOrder = 1
     object fCancel: TUniBitBtn
       Left = 487
       Top = 37
@@ -196,7 +196,7 @@ object RefusalsT: TRefusalsT
       Height = 24
       ShowHint = True
       Action = actFilterClear
-      TabOrder = 3
+      TabOrder = 4
     end
     object fOk: TUniBitBtn
       Left = 621
@@ -205,7 +205,7 @@ object RefusalsT: TRefusalsT
       Height = 24
       ShowHint = True
       Action = actFilter
-      TabOrder = 4
+      TabOrder = 5
       IconPosition = ipButtonEdge
       ScreenMask.Enabled = True
       ScreenMask.WaitData = True
@@ -219,7 +219,7 @@ object RefusalsT: TRefusalsT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 1
+      TabOrder = 6
       CheckChangeDelay = 200
       ClearButton = True
     end
@@ -231,19 +231,18 @@ object RefusalsT: TRefusalsT
       Hint = ''
       ShowHint = True
       Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1072':'
-      TabOrder = 2
+      TabOrder = 1
     end
     object fDate: TUniDateTimePicker
       Left = 264
       Top = 38
       Width = 130
-      Height = 21
       Hint = ''
       ShowHint = True
       DateTime = 45454.000000000000000000
       DateFormat = 'dd/MM/yyyy'
       TimeFormat = 'HH:mm:ss'
-      TabOrder = 5
+      TabOrder = 7
       ClearButton = True
     end
     object UniLabel8: TUniLabel
@@ -254,7 +253,7 @@ object RefusalsT: TRefusalsT
       Hint = ''
       ShowHint = True
       Caption = #1044#1072#1090#1072':'
-      TabOrder = 6
+      TabOrder = 2
     end
     object UniLabel5: TUniLabel
       Left = 400
@@ -264,13 +263,12 @@ object RefusalsT: TRefusalsT
       Hint = ''
       ShowHint = True
       Caption = #1042' '#1072#1088#1093#1080#1074#1077':'
-      TabOrder = 7
+      TabOrder = 3
     end
     object fArchive: TUniComboBox
       Left = 400
       Top = 38
       Width = 81
-      Height = 23
       Hint = ''
       ShowHint = True
       Text = 'fArchive'
