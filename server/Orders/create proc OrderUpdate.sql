@@ -12,18 +12,49 @@ create proc OrderUpdate
               ,@VolumeKGF               money         = null -- Вес Объемный факт
               ,@Fragile                 bit           = null 
               ,@NoAir                   bit           = null 
-              ,@Price                   nvarchar(64)  = null -- Прайс
+              
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
               ,@Comment                 nvarchar(1024)= null
               ,@TargetStateID           numeric(18,0) = null
+
+              ,@Price                   nvarchar(64)  = null -- Прайс
+              ,@MakeLogo                nvarchar(20)  = null
               
               
 as
-  declare @r       int = 0
-		 ,@Type    int
+  declare @r        int = 0
+		 ,@Type     int
 		 ,@AuditID  numeric(18,0)
 
   declare @PriceID as table(PriceID numeric(18, 0))
+
+  select @Price            = case 
+                               when @Price = '' then null
+                               when @Price = '-1' then null
+                               else @Price
+                             end             
+        ,@MakeLogo         = case 
+                              when @MakeLogo = '' then null
+                              when @MakeLogo = '-1' then null
+                              else @MakeLogo
+                            end
+        ,@DestinationLogo = case 
+                              when @DestinationLogo = '' then null
+                              when @DestinationLogo = '-1' then null
+                              else @DestinationLogo
+                            end
+
+  update t
+     set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
+        ,t.MakeLogo        = isnull(@MakeLogo , t.MakeLogo ) 
+        ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
+		,t.Flag            = isnull(t.Flag, 0) | case  
+		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
+							                        else 0
+                                                  end
+        ,t.Comment         = @Comment                                          
+	from tOrders t (updlock)
+   where t.OrderID = @OrderID
 
   update p
      set p.DetailNameF	   = nullif(@DetailNameF, '')
@@ -47,17 +78,6 @@ as
            on p.DetailNum = t.DetailNumber
 		  and p.MakeLogo  = t.MakeLogo -- производитель
    where t.OrderID       = @OrderID
-
-  update t
-     set t.PriceLogo       = nullif(@Price, '')
-        ,t.DestinationLogo = nullif(@DestinationLogo, '')
-		,t.Flag            = isnull(t.Flag, 0) | case  
-		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
-							                        else 0
-                                                  end
-        ,t.Comment         = @Comment                                          
-	from tOrders t (updlock)
-   where t.OrderID = @OrderID
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
@@ -117,6 +137,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240702', '3'
+exec setOV 'OrderUpdate', 'P', '20240702', '4'
 go
  

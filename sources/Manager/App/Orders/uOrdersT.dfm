@@ -3888,13 +3888,8 @@ object OrdersT: TOrdersT
       ' '
       '}')
     OnTimer = TimerProcessedShowTimer
-    Left = 817
-    Top = 191
-  end
-  object TimerProcessed: TUniThreadTimer
-    OnTimer = TimerProcessedTimer
-    Left = 925
-    Top = 189
+    Left = 862
+    Top = 169
   end
   object ppExecute: TUniPopupMenu
     ScreenMask.ShowMessage = False

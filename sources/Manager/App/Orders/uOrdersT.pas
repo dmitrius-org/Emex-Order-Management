@@ -195,7 +195,6 @@ type
     N8: TUniMenuItem;
     QueryFragile: TBooleanField;
     TimerProcessedShow: TUniTimer;
-    TimerProcessed: TUniThreadTimer;
     ppExecute: TUniPopupMenu;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
@@ -237,7 +236,6 @@ type
     procedure actCancellationExecute(Sender: TObject);
     procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
-    procedure TimerProcessedTimer(Sender: TObject);
     procedure TimerProcessedShowTimer(Sender: TObject);
   private
     { Private declarations }
@@ -489,27 +487,19 @@ begin
   FProcessed:= 0;
   FTotal    := 0;
 
+
+  Sql.exec(
+  '''
+    -- таблица для возврата количества обработанных записей
+    delete from #ProcessedRecords
+
+  ''', [], []);
+
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
-    FAccrual.ShowProgress := True;
     logger.Info('TOrdersT.ActionExecute 1');
-    Sql.exec(
-    '''
-      -- таблица для возврата количества обработанных записей
-      if OBJECT_ID('tempdb..#ProcessedRecords') is not null
-          drop table #ProcessedRecords
-
-      CREATE TABLE #ProcessedRecords (
-                   Processed  int
-                  ,Total      int
-      );
-
-      insert #ProcessedRecords (Processed, Total)
-      select 0, 0
-
-    ''', [], []);
-
-     TimerProcessed.Enabled:= True;
+    Sql.exec(' insert #ProcessedRecords (Processed, Total) select 0, 0 ', [], []);
+    FAccrual.ShowProgress := True;
   end;
 
   TimerProcessedShow.Enabled:=True;
@@ -539,12 +529,6 @@ begin
     end;
 
     DoShowMask;
-
-//    FAccrual.ShowProgress := False;
-//    FAccrual.Finished := False;
-//
-//    FProcessed:= 0;
-//    FTotal    := 0;
 
     Accrual := TAccrual.Create(UniMainModule.FDConnection);
     if Accrual.ActionExecuteRollback() = 0 then
@@ -655,6 +639,7 @@ end;
 procedure TOrdersT.DoHideMask;
 begin
   HideMask();
+  UniSession.Synchronize
 end;
 
 procedure TOrdersT.DoShowMask(Astr: string = 'Ждите, операция выполняется');
@@ -1367,46 +1352,61 @@ procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
   //   fOrderDate.DateTime := date();
-//     fDetailNum.Text := '11428575211';
+     fDetailNum.Text := '32008XJ';
   {$ENDIF}
 end;
 
-procedure TOrdersT.TimerProcessedTimer(Sender: TObject);
-begin
-  logger.Info('TOrdersT.UniThreadTimerTimer');
-  FSql.Open('''
-    select top 1 Processed, Total
-      from #ProcessedRecords (nolock)
-  ''', [], []);
-
-  if FSql.q.RecordCount > 0 then
-  begin
-    TimerProcessed.Lock;
-    try
-      FProcessed:= FSql.Q.FieldByName('Processed').AsInteger;
-      FTotal    := FSql.Q.FieldByName('Total').AsInteger;
-    finally
-      TimerProcessed.Release;
-    end;
-  end;
-end;
+//procedure TOrdersT.TimerProcessedTimer(Sender: TObject);
+//begin
+//  logger.Info('TOrdersT.UniThreadTimerTimer');
+//  FSql.Open('''
+//    select top 1 Processed, Total
+//      from #ProcessedRecords (nolock)
+//  ''', [], []);
+//
+//  if FSql.q.RecordCount > 0 then
+//  begin
+//    TimerProcessed.Lock;
+//    try
+//      FProcessed:= FSql.Q.FieldByName('Processed').AsInteger;
+//      FTotal    := FSql.Q.FieldByName('Total').AsInteger;
+//    finally
+//      TimerProcessed.Release;
+//    end;
+//  end;
+//end;
 
 procedure TOrdersT.TimerProcessedShowTimer(Sender: TObject);
 begin
-  logger.Info('TOrdersT.UniTimerTimer');
+  logger.Info('TOrdersT.TimerProcessedShowTimer begin');
   try
-
+    logger.Info('TOrdersT.TimerProcessedShowTimer ShowProgress: ' + FAccrual.ShowProgress.ToString());
     if FAccrual.ShowProgress then
     begin
-      HideMask();
-      DoShowMask(Format('Обработано деталей %d из %d', [FProcessed, FTotal]));
+      logger.Info('TOrdersT.TimerProcessedShowTimer ShowProgress');
+
+      FSql.Open('''
+          select top 1 Processed, Total
+            from #ProcessedRecords (nolock)
+        ''', [], []);
+
+      if FSql.q.RecordCount > 0 then
+      begin
+        HideMask();
+        try
+          FProcessed:= FSql.Q.FieldByName('Processed').AsInteger;
+          FTotal    := FSql.Q.FieldByName('Total').AsInteger;
+        finally
+          DoShowMask(Format('Обработано деталей %d из %d', [FProcessed, FTotal]));
+        end;
+      end;
+
     end;
 
   finally
+    logger.Info('TOrdersT.TimerProcessedShowTimer Finished: ' + FAccrual.Finished.ToString());
     if FAccrual.Finished then
     begin
-      TimerProcessed.Enabled := False;
-      TimerProcessedShow.Enabled := False;
 
       // ОБРАБОТКА ОШИБОК
       // проверка наличия серверных ошибок
@@ -1420,11 +1420,12 @@ begin
       end
       else
       begin
-         ToastOK('Операция успешно выполнена!', unisession);
-         GridOpen();
+        ToastOK('Операция успешно выполнена!', unisession);
+        GridOpen();
       end;
 
-      HideMask();
+      DoHideMask();
+      TimerProcessedShow.Enabled := False;
     end;
   end;
 end;

@@ -31,6 +31,7 @@ type
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
+    procedure FDConnectionAfterConnect(Sender: TObject);
   private
     { Private declarations }
 
@@ -196,6 +197,21 @@ begin
     result:=FDConnection.Connected;
     UniServerModule.Logger.AddLog('TUniMainModule.dbConnect', 'End');
   end;
+end;
+
+procedure TUniMainModule.FDConnectionAfterConnect(Sender: TObject);
+begin
+  FDConnection.ExecSQL(
+  '''
+      -- таблица для возврата количества обработанных записей
+      if OBJECT_ID('tempdb..#ProcessedRecords') is not null
+          drop table #ProcessedRecords
+
+      CREATE TABLE #ProcessedRecords (
+                   Processed  int
+                  ,Total      int
+      );
+  ''');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);

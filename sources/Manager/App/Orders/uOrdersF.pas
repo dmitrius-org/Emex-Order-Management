@@ -133,6 +133,7 @@ type
     FDetailNumber: string;
     FDetailNumber2: string;
     FPriceLogo: string;
+
     FManufacturer:string;
     FMakeLogo:string;
     FPrice:   Real;
@@ -267,6 +268,9 @@ end;
 
 procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
 begin
+  FMakeLogo          := cbPrice.Value.Substring(4);
+  FPriceLogo         := cbPrice.Value.Substring(0, 4);
+
   PriceCalc();
   getPartRatingFromDB2;
 end;
@@ -311,17 +315,19 @@ begin
                               ,@DestinationLogo=:DestinationLogo
                               ,@Comment        =:Comment
                               ,@TargetStateID  =:TargetStateID
+                              ,@MakeLogo       =:MakeLogo
                    select @r as retcode
                   ''';
 
         Sql.Open(sqltext,
-                 ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price',
+                 ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
                   'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID'],
                  [edtWeightKGF.Value,
                   edtVolumeKGF.Value,
                   edtDetailNameF.Text,
                   FID,
-                  cbPrice.Value,
+                  FPriceLogo,
+                  FMakeLogo,
                   cbDestinationLogo.Value ,
                   cbFragile.Checked,
                   cbNoAir.Checked,
@@ -352,7 +358,10 @@ begin
   btnOk.Enabled := False;
   OrderUpdate();
 
-  IsExistNext := LoadNextPart();
+  if RetVal.Code = 0 then
+  begin
+    IsExistNext := LoadNextPart();
+  end;
 
   SetBtnEnabled;
 end;
@@ -362,7 +371,10 @@ begin
   btnOkToCancel.Enabled := False;
   OrderUpdate(12 {InCancel	Отказан});
 
-  IsExistNext := LoadNextPart();
+  if RetVal.Code = 0 then
+  begin
+    IsExistNext := LoadNextPart();
+  end;
 
   SetBtnEnabled;
 end;
@@ -370,9 +382,13 @@ end;
 procedure TOrderF.btnOkToProcClick(Sender: TObject);
 begin
   btnOkToProc.Enabled := False;
+
   OrderUpdate( 2 {InChecked	Проверено});
 
-  IsExistNext := LoadNextPart();
+  if RetVal.Code = 0 then
+  begin
+    IsExistNext := LoadNextPart();
+  end;
 
   SetBtnEnabled;
 end;
@@ -435,6 +451,13 @@ begin
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.Open;
 
+  ComboBoxFill(cbPrice,
+  '''
+    -- список поставщиков
+    OrderF_SupplierList
+               @OrderID =
+  ''' + FID.ToString);
+
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
   FDetailNumber2     := UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' + FDetailNumber;
   FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
@@ -452,7 +475,7 @@ begin
   edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
-  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString;    //
+  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
@@ -584,7 +607,7 @@ begin
   end;
 end;
 
-procedure TOrderF.getPartRatingFromDB2;
+procedure TOrderF.getPartRatingFromDB2;  var Price: string;
 var js: string;
      r: string;
 begin
@@ -610,7 +633,7 @@ begin
             order by p.PercentSupped desc
            ''',
            ['DetailNum', 'PriceLogo', 'MakeLogo'],
-           [FDetailNumber, cbPrice.Value, FMakeLogo]);
+           [FDetailNumber, FPriceLogo, FMakeLogo]);
 
   if sql.Q.RecordCount>0 then
   begin
@@ -665,6 +688,17 @@ begin
     SetEditDataStyle();
    // SetEditDataRating(0);
   end;
+
+  Price:=cbPrice.Value;
+  ComboBoxFill(cbPrice,
+  '''
+    -- список поставщиков
+    OrderF_SupplierList
+               @OrderID =
+  ''' + FID.ToString);
+
+   cbPrice.Value:=Price;
+
   logger.Info('getPartRatingFromDB2 end');
 end;
 
@@ -842,7 +876,7 @@ begin
 
   ''',
   ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID', 'MakeLogo'],
-  [cbDestinationLogo.Value, FDetailNumber,  cbPrice.Value, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
+  [cbDestinationLogo.Value, FDetailNumber,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -968,16 +1002,7 @@ end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
 begin
-
   btnOk.Caption := ' Сохранить';
-
-  //ComboBoxFill(cbRestrictions, ' Select Name from tRestrictions (nolock) where Flag&1=1 ');
-  ComboBoxFill(cbPrice,
-  '''
-    -- список поставщиков
-    OrderF_SupplierList
-               @OrderID =
-  ''' + FID.ToString);
 
   LoadDataPart;
 end;
@@ -999,18 +1024,6 @@ begin
       getPartRatingFromDB2();
 
       UniTimer.Enabled := False;
-
-
-
-      Price:=cbPrice.Value;
-      ComboBoxFill(cbPrice,
-      '''
-        -- список поставщиков
-        OrderF_SupplierList
-                   @OrderID =
-      ''' + FID.ToString);
-
-       cbPrice.Value:=Price;
     end;
   finally
   end;

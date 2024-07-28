@@ -1356,6 +1356,7 @@ object OrderF: TOrderF
   end
   object UniTimer: TUniTimer
     Enabled = False
+    RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'
       '{'

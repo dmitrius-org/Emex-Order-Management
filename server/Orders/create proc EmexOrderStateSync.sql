@@ -32,6 +32,15 @@ Update p
                  and p.OrderDetailSubId<> '' ) o 
 where p.Spid = @@SPID
 
+delete p
+  from pMovement p (rowlock) 
+ where p.Spid = @@SPID
+   and exists 
+            (select 1
+               from tProtocol pr (nolock)
+              where pr.ObjectID   = p.OrderID 
+                and pr.NewStateID = 24 --24	Received	Получено
+               )
 
 Update pMovement
    set pMovement.N = p.N
@@ -336,6 +345,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240619', '4'
+exec setOV 'EmexOrderStateSync', 'P', '20240727', '5'
 go
  

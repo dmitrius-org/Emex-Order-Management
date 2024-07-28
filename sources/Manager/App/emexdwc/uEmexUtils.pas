@@ -394,24 +394,31 @@ begin
   logger.Info('TEmex.getCustomer ASuppliersID: ' + ASuppliersID.ToString);
   begin
     //данные для интеграции берем из справочника "Клиенты"
-    SQl.Open('Select s.emexUsername, s.emexPassword        '+
-             '  from tSuppliers  s with (nolock index=ao1) '+
-             ' where s.SuppliersID = :SuppliersID          ',
-            ['SuppliersID'], [ASuppliersID]);
+    SQl.Open('''
+      Select s.emexUsername, s.emexPassword
+        from tSuppliers  s with (nolock index=ao1)
+       where s.SuppliersID = :SuppliersID
+    ''',
+    ['SuppliersID'], [ASuppliersID]);
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
     result.Password      := SQl.Q.FieldByName('emexPassword').AsString;
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
+
+    //logger.Info('TEmex.getCustomer UserName: ' + result.UserName);
+    //logger.Info('TEmex.getCustomer Password: ' + result.Password );
+
+
   end;
   logger.Info('TEmex.getCustomer end');
 end;
 
 function TEmex.getCustomerByClient(AClientID: Integer): Customer;
 begin
-  logger.Info('TEmex.getCustomer begin');
-  logger.Info('TEmex.getCustomer AClientID: ' + AClientID.ToString);
+  logger.Info('TEmex.getCustomerByClient begin');
+  logger.Info('TEmex.getCustomerByClient AClientID: ' + AClientID.ToString);
   begin
     SQl.Open('Select s.emexUsername, s.emexPassword        '+
              '  from tClients c with (nolock index=ao1)    '+
@@ -423,10 +430,12 @@ begin
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
     result.Password      := SQl.Q.FieldByName('emexPassword').AsString;
+    //logger.Info('TEmex.getCustomerByClient UserName: ' + result.UserName);
+    //logger.Info('TEmex.getCustomerByClient Password: ' + result.Password );
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
   end;
-  logger.Info('TEmex.getCustomer end');
+  logger.Info('TEmex.getCustomerByClient end');
 end;
 
 function TEmex.GetEmex: ServiceSoap;
@@ -533,6 +542,7 @@ begin
           begin
             Sql.exec('''
               -- обработанные детали
+              if OBJECT_ID('tempdb..#ProcessedRecords') is not null
               Update #ProcessedRecords
                  set Processed = :Processed,
                      Total     = :Total
@@ -605,6 +615,7 @@ begin
         begin
           Sql.exec('''
             -- обработанные детали
+            if OBJECT_ID('tempdb..#ProcessedRecords') is not null
             Update #ProcessedRecords
                set Processed = :Processed,
                    Total     = :Total

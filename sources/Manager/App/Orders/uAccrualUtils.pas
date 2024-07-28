@@ -12,7 +12,6 @@ uses  Windows, Messages, SysUtils, Variants, Classes, Graphics,
       FireDAC.Comp.Client, FireDAC.Comp.Script,
 
       uCommonType, uSqlUtils, uEmexUtils;
-
 type
   TMyFuncType = function(): integer of object;
   TProcExec = class
@@ -107,7 +106,6 @@ protected
     FAccrual : TAccrual;
     FActionID: Integer;
 
-    procedure Finished();
   protected
     procedure Execute(); override;
   public
@@ -449,7 +447,6 @@ end;
 procedure TAccrual.SetFinished(const Value: Boolean);
 begin
   FFinished := Value;
-  FShowProgress  := Value;
 end;
 
 { TAccrualThread }
@@ -470,11 +467,9 @@ var
   qMetod: TFDQuery;
 begin
  // inherited;
-  if not Assigned(qMetod) then
-    qMetod := TFDQuery.Create(nil);
+  if not Assigned(qMetod) then qMetod := TFDQuery.Create(nil);
 
-  if not Assigned(qActionMetod) then
-    qActionMetod := TFDQuery.Create(nil);
+  if not Assigned(qActionMetod) then qActionMetod := TFDQuery.Create(nil);
 
   try
       qMetod.Connection := FAccrual.FConnection;
@@ -542,19 +537,11 @@ begin
       end;
 
   finally
-
-    Synchronize(Finished);
+    FAccrual.FFinished := True;
 
     FreeAndNil(qMetod);
     FreeAndNil(qActionMetod);
   end;
-end;
-
-procedure TAccrualThread.Finished;
-begin
-  FAccrual.FFinished := True;
-  FAccrual.FShowProgress := True;
-
 end;
 
 end.

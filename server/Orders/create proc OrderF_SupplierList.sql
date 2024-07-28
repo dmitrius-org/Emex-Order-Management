@@ -1,7 +1,6 @@
 drop proc if exists OrderF_SupplierList
 /*
-  OrderF_Supplier - Список поставщиков
-
+  OrderF_SupplierList - Список поставщиков
 */
 go
 create proc OrderF_SupplierList
@@ -11,24 +10,26 @@ as
   declare @r int = 0
 
 Select 
-       o.PriceLogo  as ID,
+       o.PriceLogo  + o.MakeLogo  as ID,
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, isnull(o.PricePurchaseF, o.PricePurchase)) + ' | ' + 
        convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
-       ,999 as PercentSupped
+       ,0 as Price
   from tOrders o (nolock)
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
  where o.OrderID =@OrderID
    and not exists (select 1
                      from pFindByNumber p (nolock) 
-                    where p.spid = @@SPid
-                      and p.PriceLogo = o.PriceLogo)
+                    where p.spid      = @@SPid
+                      and p.PriceLogo = o.PriceLogo
+                      and p.Make      = o.MakeLogo
+                   )
  Union all
 select 
-       p.PriceLogo  as ID,
+       p.PriceLogo  + p.Make  as ID,
        s.Brief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
@@ -40,14 +41,14 @@ select
                                                         else ''
                                                       end +' | ' + 
         convert(varchar, p.PercentSupped) + '%' as Name,
-       p.PercentSupped
+       p.Price
   from tOrders o (nolock)
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
  where o.OrderID =@OrderID
- order by PercentSupped desc
+ order by Price
 
   exit_:
   return @r
@@ -55,6 +56,6 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20240725', '1'
+exec setOV 'OrderF_SupplierList', 'P', '20240728', '2'
 go
  
