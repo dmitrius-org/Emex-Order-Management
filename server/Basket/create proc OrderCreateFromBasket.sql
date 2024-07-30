@@ -14,7 +14,7 @@ declare @r int = 0
 
   select @StatusID = NodeID
     from tNodes (nolock)
-   where Brief = 'Preparation'
+   where Brief = 'New' --'Preparation'
 
   if isnull(@StatusID, 0) = 0
   begin
@@ -250,6 +250,9 @@ declare @r int = 0
    where m.spid = @@spid   
      and m.Type = 6--Корзина
 
+
+
+
   -- Протокол
   declare @ToNew numeric(18, 0)
   select @ToNew = NodeID
@@ -306,6 +309,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240709', '12'
+exec setOV 'OrderCreateFromBasket', 'P', '20240730', '13'
 go
  

@@ -80,6 +80,7 @@ type
     QueryIsUpdating: TIntegerField;
     btnPriceRefresh: TUniButtonWidget;
     QueryIsUpdatingExists: TIntegerField;
+    QueryPacking: TIntegerField;
 
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

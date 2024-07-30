@@ -42,7 +42,7 @@ object SearchF: TSearchF
       Hint = ''
       Caption = #1053#1072#1081#1090#1080
       Anchors = [akTop, akRight]
-      TabOrder = 1
+      TabOrder = 2
       ScreenMask.ShowMessage = False
       ScreenMask.Color = clHighlight
       OnClick = btnSearchClick
@@ -56,7 +56,7 @@ object SearchF: TSearchF
       MaxLength = 40
       Text = ''
       Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
+      TabOrder = 1
       EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
       MinQueryLength = 0
       RemoteFilter = False
@@ -91,12 +91,13 @@ object SearchF: TSearchF
         
           'click=function click(sender, eOpts)'#13#10'{'#13#10'  if (SearchF.MakeLogoPa' +
           'nel.isVisible()){'#13#10'    ajaxRequest(this, '#39'MakeLogoPanelVisibleFa' +
-          'lse'#39', []);'#13#10'  }  '#13#10'}'
+          'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13 +
+          #10'    ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
         
-          'beforeedit=function beforeedit(editor, context, eOpts)'#13#10'{'#13#10'  //c' +
-          'onsole.log('#39'beforeedit'#39');'#13#10'  //console.log(context);'#13#10'  //return' +
-          ' ajaxRequest(this, '#39'getRowCheck'#39', [], false).responseText == '#39'tr' +
-          'ue'#39';'#13#10'  return (context.rowIdx == 0);'#13#10'}')
+          'beforeedit=function beforeedit(editor, context, eOpts)'#13#10'{'#13#10'  if ' +
+          '(context.colIdx==4 && context.rowIdx == 0){'#13#10'     ajaxRequest(th' +
+          'is, '#39'VKGPanelLeft'#39', ['#39'VKGPanelLeft='#39' + context.cell.offsetLeft])' +
+          ';'#13#10'  } '#13#10#13#10'  return (context.rowIdx == 0);'#13#10'  '#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -159,7 +160,7 @@ object SearchF: TSearchF
       BorderStyle = ubsNone
       StripeRows = False
       Align = alClient
-      TabOrder = 1
+      TabOrder = 0
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = SearchGridKeyDown
@@ -201,14 +202,13 @@ object SearchF: TSearchF
           Title.Font.Height = -13
           Width = 350
           Alignment = taCenter
-          ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
         item
           FieldName = 'Weight'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1089#1077
+          Title.Caption = #1042#1077#1089
           Title.Font.Height = -13
           Width = 100
           Editor = UniNumberEdit1
@@ -219,7 +219,7 @@ object SearchF: TSearchF
           Title.Caption = #1054#1073#1098#1077#1084
           Title.Font.Height = -13
           Width = 100
-          Editor = UniNumberEdit1
+          Editor = edtVolumeAdd
         end
         item
           FieldName = 'DeliveryType'
@@ -350,6 +350,15 @@ object SearchF: TSearchF
         DecimalPrecision = 3
         DecimalSeparator = ','
       end
+      object edtVolumeAdd: TUniNumberEdit
+        Left = 16
+        Top = 196
+        Width = 121
+        Hint = ''
+        TabOrder = 5
+        DecimalPrecision = 3
+        DecimalSeparator = ','
+      end
     end
     object MakeLogoPanel: TUniContainerPanel
       Left = 3
@@ -359,7 +368,7 @@ object SearchF: TSearchF
       Hint = ''
       Visible = False
       ParentColor = False
-      TabOrder = 3
+      TabOrder = 2
       ScrollDirection = sdVertical
       object MakeLogoGrid: TUniDBGrid
         Left = 0
@@ -423,6 +432,117 @@ object SearchF: TSearchF
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
       OnClick = lblAnalogClick
+    end
+    object VKGPanel: TUniGroupBox
+      AlignWithMargins = True
+      Left = 795
+      Top = 56
+      Width = 115
+      Height = 156
+      Hint = 
+        '|('#1044#1083#1080#1085#1072' (1-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1064#1080#1088#1080#1085#1072' (2-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1042#1099#1089#1086#1090#1072' (3-'#1103' '#1075#1088#1072#1092#1072')) /' +
+        ' 5000'#13#10#1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1086#1082#1088#1091#1075#1083#1103#1077#1084' '#1076#1086' '#1076#1077#1089#1103#1090#1099#1093' '
+      Visible = False
+      ShowHint = True
+      ParentShowHint = False
+      Caption = #1054#1073#1098#1105#1084#1085#1099#1081' '#1074#1077#1089
+      Layout = 'vbox'
+      LayoutAttribs.Align = 'center'
+      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Padding = '1'
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      TabOrder = 3
+      object edtL: TUniNumberEdit
+        AlignWithMargins = True
+        Left = 3
+        Top = 15
+        Width = 86
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 1
+        BlankValue = 0
+        FieldLabel = 'L'
+        FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtW: TUniNumberEdit
+        AlignWithMargins = True
+        Left = 3
+        Top = 38
+        Width = 86
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 2
+        BlankValue = 0
+        FieldLabel = 'W'
+        FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtH: TUniNumberEdit
+        AlignWithMargins = True
+        Left = 3
+        Top = 61
+        Width = 86
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 3
+        BlankValue = 0
+        FieldLabel = 'H'
+        FieldLabelWidth = 15
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
+        DecimalSeparator = ','
+        OnChange = edtLChange
+      end
+      object edtVKG: TUniNumberEdit
+        AlignWithMargins = True
+        Left = 3
+        Top = 89
+        Width = 86
+        Hint = ''
+        ShowHint = True
+        ParentFont = False
+        Font.Height = -13
+        TabOrder = 4
+        ReadOnly = True
+        BlankValue = 0
+        FieldLabel = 'VKG'
+        FieldLabelWidth = 30
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        LayoutConfig.Padding = '0'
+        LayoutConfig.Margin = '1'
+        DecimalPrecision = 1
+        DecimalSeparator = ','
+      end
+      object VolumeSave: TUniButton
+        AlignWithMargins = True
+        Left = 6
+        Top = 118
+        Width = 106
+        Height = 25
+        Hint = ''
+        Margins.Top = 15
+        ShowHint = True
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+        TabOrder = 5
+        ScreenMask.ShowMessage = False
+        ScreenMask.Color = clHighlight
+        LayoutConfig.Margin = '3'
+        OnClick = VolumeSaveClick
+      end
     end
   end
   object DataSource: TDataSource
@@ -501,7 +621,6 @@ object SearchF: TSearchF
     object QueryPartNameRus: TWideStringField
       FieldName = 'PartNameRus'
       Origin = 'PartNameRus'
-      ReadOnly = True
       Size = 256
     end
     object QueryDeliveryType: TIntegerField
@@ -546,6 +665,9 @@ object SearchF: TSearchF
     object QueryPriceLogo: TWideStringField
       FieldName = 'PriceLogo'
       Size = 128
+    end
+    object QueryPacking: TIntegerField
+      FieldName = 'Packing'
     end
   end
   object qSearchHistory: TFDQuery
@@ -672,6 +794,7 @@ object SearchF: TSearchF
       
         '            ,Flag            =  isnull(flag, 0) | 512 -- '#1042#1077#1089' '#1080#1079#1084 +
         #1077#1085#1077#1085' '#1082#1083#1080#1077#1085#1090#1086#1084
+      '            ,PartNameRus = isnull(:NEW_PartNameRus, PartNameRus)'
       '  where spid = @@spid')
     DeleteSQL.Strings = (
       

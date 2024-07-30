@@ -4,6 +4,7 @@ if OBJECT_ID('OrderArchive') is not null
   OrderArchive - Архив синхронизационных данных по заказу.
                  
 */
+/*
 go
 
 Create proc OrderArchive
@@ -177,3 +178,4 @@ go
 exec setOV 'OrderArchive', 'P', '20240323', '2'
 go
  
+-- */

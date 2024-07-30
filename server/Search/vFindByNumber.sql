@@ -53,7 +53,8 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
          else cast(p.Available as nvarchar)
        end as AvailableStr,-- наличие детали на складе
        p.PriceLogo,
-       p.DestinationLogo
+       p.DestinationLogo,
+       p.Packing
   from pFindByNumber p with (nolock index=ao2)
   left join tSettings st with (nolock index=ao2)
          on st.Brief = 'PercentSupped'
@@ -68,5 +69,5 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20240701', '8'
+exec setOV 'vFindByNumber', 'V', '20240730', '9'
 go

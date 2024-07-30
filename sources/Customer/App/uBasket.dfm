@@ -23,7 +23,7 @@ object BasketF: TBasketF
     Height = 519
     Hint = ''
     Align = alClient
-    TabOrder = 0
+    TabOrder = 1
     BorderStyle = ubsNone
     ShowCaption = False
     Caption = 'MainPanel'
@@ -75,7 +75,7 @@ object BasketF: TBasketF
       LayoutConfig.Width = '0'
       BorderStyle = ubsNone
       Align = alClient
-      TabOrder = 1
+      TabOrder = 0
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown
@@ -130,6 +130,12 @@ object BasketF: TBasketF
           ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
+        end
+        item
+          FieldName = 'Packing'
+          Title.Alignment = taCenter
+          Title.Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1087#1072#1088#1090#1080#1103
+          Width = 159
         end
         item
           FieldName = 'Quantity'
@@ -213,7 +219,7 @@ object BasketF: TBasketF
         Hint = ''
         MaxValue = 1000
         MinValue = 1
-        TabOrder = 2
+        TabOrder = 3
       end
       object btnPriceRefresh: TUniButtonWidget
         AlignWithMargins = True
@@ -240,7 +246,7 @@ object BasketF: TBasketF
     Height = 99
     Hint = ''
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     ShowCaption = False
     Caption = 'TopPanel'
@@ -263,7 +269,7 @@ object BasketF: TBasketF
         Height = 99
         Hint = ''
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel1'
@@ -278,7 +284,7 @@ object BasketF: TBasketF
           Caption = #1042#1086#1079#1084#1086#1078#1085#1086' '#1088#1072#1079#1084#1077#1089#1090#1080#1090#1100' '#1079#1072#1082#1072#1079
           ParentFont = False
           Font.Height = -13
-          TabOrder = 1
+          TabOrder = 3
         end
         object UniLabel5: TUniLabel
           Left = 545
@@ -301,7 +307,7 @@ object BasketF: TBasketF
           Hint = ''
           ParentColor = False
           Align = alLeft
-          TabOrder = 3
+          TabOrder = 1
           object UniFieldContainer1: TUniFieldContainer
             AlignWithMargins = True
             Left = 3
@@ -311,7 +317,7 @@ object BasketF: TBasketF
             Hint = ''
             ParentColor = False
             Align = alClient
-            TabOrder = 1
+            TabOrder = 2
             Layout = 'hbox'
             LayoutAttribs.Align = 'top'
             LayoutAttribs.Pack = 'center'
@@ -327,7 +333,7 @@ object BasketF: TBasketF
               Caption = '0.00'
               ParentFont = False
               Font.Height = -13
-              TabOrder = 1
+              TabOrder = 3
               LayoutConfig.Flex = 1
             end
             object edtWeight: TUniLabel
@@ -341,7 +347,7 @@ object BasketF: TBasketF
               Caption = '0.00'
               ParentFont = False
               Font.Height = -13
-              TabOrder = 2
+              TabOrder = 1
               LayoutConfig.Flex = 1
             end
             object edtCount: TUniLabel
@@ -355,7 +361,7 @@ object BasketF: TBasketF
               Caption = #1055#1086#1079#1080#1094#1080#1081
               ParentFont = False
               Font.Height = -13
-              TabOrder = 3
+              TabOrder = 2
               LayoutConfig.Flex = 1
             end
           end
@@ -369,7 +375,7 @@ object BasketF: TBasketF
             Margins.Top = 10
             ParentColor = False
             Align = alTop
-            TabOrder = 2
+            TabOrder = 1
             Layout = 'hbox'
             LayoutAttribs.Align = 'top'
             LayoutAttribs.Pack = 'center'
@@ -386,7 +392,7 @@ object BasketF: TBasketF
               ParentFont = False
               Font.Height = -12
               Font.Style = [fsBold]
-              TabOrder = 0
+              TabOrder = 2
               LayoutConfig.Flex = 1
             end
             object UniLabel10: TUniLabel
@@ -400,7 +406,7 @@ object BasketF: TBasketF
               ParentFont = False
               Font.Height = -12
               Font.Style = [fsBold]
-              TabOrder = 1
+              TabOrder = 3
               LayoutConfig.Flex = 1
             end
             object UniLabel11: TUniLabel
@@ -414,7 +420,7 @@ object BasketF: TBasketF
               ParentFont = False
               Font.Height = -12
               Font.Style = [fsBold]
-              TabOrder = 2
+              TabOrder = 1
               LayoutConfig.Flex = 1
             end
           end
@@ -444,7 +450,7 @@ object BasketF: TBasketF
           Hint = ''
           Caption = #1056#1072#1079#1084#1077#1089#1090#1080#1090#1100' '#1079#1072#1082#1072#1079
           Anchors = [akTop, akRight, akBottom]
-          TabOrder = 1
+          TabOrder = 2
           LayoutConfig.ColumnWidth = 150.000000000000000000
           OnClick = addOrderClick
         end
@@ -456,7 +462,7 @@ object BasketF: TBasketF
           Height = 63
           Action = actRefreshAll
           Anchors = [akTop, akRight, akBottom]
-          TabOrder = 2
+          TabOrder = 1
           ImageIndex = 5
           LayoutConfig.ColumnWidth = 150.000000000000000000
         end
@@ -716,6 +722,9 @@ object BasketF: TBasketF
     object QueryIsUpdatingExists: TIntegerField
       FieldName = 'IsUpdatingExists'
     end
+    object QueryPacking: TIntegerField
+      FieldName = 'Packing'
+    end
   end
   object qStatus: TFDQuery
     AutoCalcFields = False
@@ -749,8 +758,12 @@ object BasketF: TBasketF
       'select @Quantity = :NEW_Quantity      '
       ''
       'update tBasket'
-      '      set Quantity      = @Quantity '
-      '           ,Amount        = PriceRub * @Quantity '
+      
+        '      set Quantity      = (( @Quantity + Packing - 1 ) /Packing)' +
+        ' * Packing '
+      
+        '           ,Amount        =(( @Quantity + Packing - 1 ) /Packing' +
+        ') * Packing * PriceRub'
       ' FROM tBasket (updlock)'
       'WHERE BasketID = :BasketID')
     DeleteSQL.Strings = (

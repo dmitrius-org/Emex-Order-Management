@@ -33,6 +33,7 @@ tBasket - корзина деталей
   ,Fragile                 money 
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
+  ,Packing                 int            -- количество деталей в упаковке
   );
 
   grant all on tBasket to public;

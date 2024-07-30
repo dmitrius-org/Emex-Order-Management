@@ -1351,30 +1351,10 @@ end;
 procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
-  //   fOrderDate.DateTime := date();
-     fDetailNum.Text := '32008XJ';
+     fOrderDate.DateTime := date();
+    // fDetailNum.Text := '32008XJ';
   {$ENDIF}
 end;
-
-//procedure TOrdersT.TimerProcessedTimer(Sender: TObject);
-//begin
-//  logger.Info('TOrdersT.UniThreadTimerTimer');
-//  FSql.Open('''
-//    select top 1 Processed, Total
-//      from #ProcessedRecords (nolock)
-//  ''', [], []);
-//
-//  if FSql.q.RecordCount > 0 then
-//  begin
-//    TimerProcessed.Lock;
-//    try
-//      FProcessed:= FSql.Q.FieldByName('Processed').AsInteger;
-//      FTotal    := FSql.Q.FieldByName('Total').AsInteger;
-//    finally
-//      TimerProcessed.Release;
-//    end;
-//  end;
-//end;
 
 procedure TOrdersT.TimerProcessedShowTimer(Sender: TObject);
 begin

@@ -16,8 +16,8 @@ as
 declare @r int = 0
 
   Update t
-     set t.Quantity =   t.Quantity + 1 
-	    ,t.Amount   =  (t.Quantity + 1) * t.PriceRub
+     set t.Quantity =  (( (t.Quantity + 1) + p.Packing - 1) / p.Packing) * p.Packing
+	    ,t.Amount   = ((( (t.Quantity + 1) + p.Packing - 1) / p.Packing) * p.Packing) * t.PriceRub
     from pFindByNumber p (nolock)
    inner join tBasket t (updlock)
 	       on t.ClientID  = @ClientID
@@ -54,7 +54,9 @@ declare @r int = 0
         ,Reliability
         ,Fragile
                           
-        ,Flag          
+        ,Flag   
+
+        ,Packing
         )
   select @ClientID
         ,p.Make
@@ -64,7 +66,7 @@ declare @r int = 0
 		,p.PriceLogo
 		,p.OurDelivery
 		,p.GuaranteedDay
-        ,1--Quantity
+        ,((1 + p.Packing - 1) / p.Packing) * p.Packing -- Quantity
 		,p.Price
 		,p.PriceRub
 		,p.PriceRub
@@ -81,6 +83,8 @@ declare @r int = 0
         ,p.Fragile
 
         ,p.Flag
+
+        ,p.Packing -- количество деталей в упаковке
     from pFindByNumber p (nolock)
    where p.Spid = @@Spid
      and p.ID   = @PartID
@@ -98,5 +102,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240709', '8'
+exec setOV 'PartToBasket', 'P', '20240730', '9'
 go

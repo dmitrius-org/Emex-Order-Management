@@ -16,7 +16,7 @@ exec GetStartNode
        @ObjectTypeID = 3-- ид объекта системы для которого используется модель
       ,@StatusID    = @SNode output -- Ид начального состояния, данный ид пишется в tOrders.StatusID
 
-exec OrderArchive
+--exec OrderArchive
 
 delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
 
@@ -345,6 +345,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240727', '5'
+exec setOV 'EmexOrderStateSync', 'P', '20240727', '6'
 go
  

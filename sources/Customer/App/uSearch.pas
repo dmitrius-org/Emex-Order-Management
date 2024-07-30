@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
-  uniCheckBox, uniLabel, uniSpinEdit;
+  uniCheckBox, uniLabel, uniSpinEdit, uniGroupBox;
 
 type
   TSearchF = class(TUniFrame)
@@ -51,6 +51,14 @@ type
     UpdateSQL: TFDUpdateSQL;
     UniNumberEdit1: TUniNumberEdit;
     QueryPriceLogo: TWideStringField;
+    QueryPacking: TIntegerField;
+    VKGPanel: TUniGroupBox;
+    edtL: TUniNumberEdit;
+    edtW: TUniNumberEdit;
+    edtH: TUniNumberEdit;
+    edtVolumeAdd: TUniNumberEdit;
+    edtVKG: TUniNumberEdit;
+    VolumeSave: TUniButton;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -60,25 +68,22 @@ type
     procedure UniFrameReady(Sender: TObject);
     procedure btnSearchClick(Sender: TObject);
     procedure SearchGridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
-    procedure SearchGridCellContextClick(Column: TUniDBGridColumn; X,
-      Y: Integer);
+    procedure SearchGridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure SearchGridDblClick(Sender: TObject);
     procedure SearchGridCellClick(Column: TUniDBGridColumn);
     procedure UniFrameDestroy(Sender: TObject);
     procedure edtSearchRemoteQuery(const QueryString: string; Result: TStrings);
-    procedure QueryMakeNameGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
     procedure edtSearchClick(Sender: TObject);
     procedure lblAnalogClick(Sender: TObject);
-    procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
-      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
-    procedure QueryAvailableGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryPercentSuppedGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure QueryAvailableGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryPercentSuppedGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure edtLChange(Sender: TObject);
+    procedure VolumeSaveClick(Sender: TObject);
 
 
   private
@@ -145,6 +150,8 @@ type
     /// </summary>
     procedure DestinationLogo();
 
+    procedure VolumeCalc();
+
 
   public
     { Public declarations }
@@ -181,6 +188,11 @@ begin
            'DetailNum'],
           [FDestinationLogo, FDetailNum ]);
   logger.Info('TSearchF.PriceCalc end');
+end;
+
+procedure TSearchF.edtLChange(Sender: TObject);
+begin
+  VolumeCalc;
 end;
 
 procedure TSearchF.edtSearchClick(Sender: TObject);
@@ -440,7 +452,7 @@ procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
   Text := '''
-            <span class="" data-qtip="Прайс: PriceLogo">
+            <span class="" data-qtip="Прайс: PriceLogo <br> Количество в упаковке: Packing">
               <fieldset class="rating">
           ''';
 
@@ -498,6 +510,8 @@ begin
 
   Text := StringReplace(Text, 'PriceLogo' , Query.FieldByName('PriceLogo').AsString, [] );
   Text := StringReplace(Text, 'PercentSupped' , Sender.AsString, [rfReplaceAll] );
+  Text := StringReplace(Text, 'Packing' ,  Query.FieldByName('Packing').AsString, [rfReplaceAll] );
+
 end;
 
 procedure TSearchF.UniFrameCreate(Sender: TObject);
@@ -570,6 +584,11 @@ begin
     MakeLogoGridHide();
   end;
 
+  if EventName = 'VKGPanelVisibleFalse' then
+  begin
+    VKGPanel.Visible := False;
+  end;
+
   if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
   begin
     Query.Post;
@@ -578,7 +597,20 @@ begin
 
     GridRefresh();
   end;
+
+
+  if (EventName = 'VKGPanelLeft') then
+  begin
+    logger.Info(Params.Values['VKGPanelLeft']);
+
+    VKGPanel.Left :=  Params.Values['VKGPanelLeft'].ToInteger;
+    VKGPanel.Visible := True;
+   // VolumeCalcShow
+   // logger.Info(Params.ToString);
+  end;
+
 end;
+
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
@@ -688,7 +720,7 @@ begin
            '   from vDestinationLogo '+
            '   where ClientID = :ClientID  '+
            '   order by DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
-  
+
   if sql.Q.RecordCount > 0 then
     FDestinationLogo := sql.Q.FieldByName('DestinationLogo').AsString; 
 
@@ -703,6 +735,25 @@ begin
     Options := Options + [dgDontShowSelected];
     JSInterface.JSConfig('disableSelection', [True]);
   end;
+end;
+
+procedure TSearchF.VolumeCalc;
+begin
+  edtVKG.Value := ( (edtL.Value * edtW.Value * edtH.Value) / 5000 );
+end;
+
+
+
+procedure TSearchF.VolumeSaveClick(Sender: TObject);
+begin
+  QueryVolumeAdd.DataSet.Edit;
+
+
+ //edtVolumeAdd.Value := edtVKG.Value;
+  QueryVolumeAdd.Value := edtVKG.Value;
+  QueryVolumeAdd.DataSet.Post;
+
+  VKGPanel.Visible := False;
 end;
 
 initialization

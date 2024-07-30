@@ -46,7 +46,7 @@ as
 
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
-        ,t.MakeLogo        = isnull(@MakeLogo , t.MakeLogo ) 
+        --,t.MakeLogo        = isnull(@MakeLogo , t.MakeLogo ) 
         ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
@@ -137,6 +137,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240702', '4'
+exec setOV 'OrderUpdate', 'P', '20240702', '5'
 go
  

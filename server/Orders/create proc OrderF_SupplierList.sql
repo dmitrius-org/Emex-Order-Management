@@ -45,6 +45,7 @@ select
   from tOrders o (nolock)
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
+        and p.Make = o.MakeLogo
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
  where o.OrderID =@OrderID
@@ -56,6 +57,6 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20240728', '2'
+exec setOV 'OrderF_SupplierList', 'P', '20240728', '3'
 go
  

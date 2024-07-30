@@ -415,9 +415,9 @@ end;
 
 destructor TAccrual.Destroy;
 begin
-  FreeAndNil(FConnection);
-  FreeAndNil(FRetVal);
   inherited;
+
+  FreeAndNil(FRetVal);
 end;
 
 function TAccrual.GetShowProgress: Boolean;

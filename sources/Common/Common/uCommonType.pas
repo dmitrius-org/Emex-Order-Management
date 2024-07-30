@@ -210,7 +210,6 @@ end;
 
 destructor TRetVal.Destroy;
 begin
-  FreeAndNil(FConnection);
   inherited;
 end;
 

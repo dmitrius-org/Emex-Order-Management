@@ -17,6 +17,7 @@ select
 	  ,t.Quantity         -- 
       ,t.PriceRub
       ,t.Amount           -- 
+      ,t.Packing          -- количество деталей в упаковке
       ,(case 
               when datediff(hh, t.InDateTime, getdate()) >= 24 then 1
               else 0
@@ -27,4 +28,4 @@ select
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240522', '6'
+exec setOV 'vBasket', 'V', '20240730', '7'
