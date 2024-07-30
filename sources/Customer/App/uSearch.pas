@@ -743,13 +743,9 @@ begin
 end;
 
 
-
 procedure TSearchF.VolumeSaveClick(Sender: TObject);
 begin
   QueryVolumeAdd.DataSet.Edit;
-
-
- //edtVolumeAdd.Value := edtVKG.Value;
   QueryVolumeAdd.Value := edtVKG.Value;
   QueryVolumeAdd.DataSet.Post;
 

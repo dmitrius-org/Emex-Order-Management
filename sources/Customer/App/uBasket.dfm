@@ -136,6 +136,7 @@ object BasketF: TBasketF
           Title.Alignment = taCenter
           Title.Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1087#1072#1088#1090#1080#1103
           Width = 159
+          ReadOnly = True
         end
         item
           FieldName = 'Quantity'
@@ -724,6 +725,7 @@ object BasketF: TBasketF
     end
     object QueryPacking: TIntegerField
       FieldName = 'Packing'
+      ReadOnly = True
     end
   end
   object qStatus: TFDQuery

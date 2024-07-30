@@ -99,7 +99,7 @@ object OrdersT: TOrdersT
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgFilterClearButton, dgTabs, dgDontShowSelected, dgRowNumbers]
-      WebOptions.PageSize = 50
+      WebOptions.PageSize = 500
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       Grouping.ShowCaption = False
@@ -1156,6 +1156,7 @@ object OrdersT: TOrdersT
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
     FormatOptions.AssignedValues = [fvSortOptions]
+    SecurityOptions.AllowedCommandKinds = [skUnknown, skSelect, skSelectForLock, skSelectForUnLock, skInsert, skMerge, skUpdate, skCreate, skAlter, skStoredProc, skStoredProcWithCrs, skStoredProcNoCrs, skExecute, skStartTransaction, skCommit, skRollback, skSet, skSetSchema, skOther, skNotResolved]
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
     UpdateOptions.UpdateChangedFields = False
     UpdateOptions.LockWait = True
