@@ -210,7 +210,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089
           Title.Font.Height = -13
-          Width = 100
+          Width = 87
           Editor = UniNumberEdit1
         end
         item
@@ -218,7 +218,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1054#1073#1098#1077#1084
           Title.Font.Height = -13
-          Width = 100
+          Width = 85
           Editor = edtVolumeAdd
         end
         item
@@ -226,7 +226,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1082#1072
           Title.Font.Height = -13
-          Width = 105
+          Width = 100
           Alignment = taCenter
           ReadOnly = True
           ImageOptions.Visible = True
@@ -238,7 +238,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
-          Width = 146
+          Width = 142
           ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
@@ -249,7 +249,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
-          Width = 190
+          Width = 180
           Alignment = taCenter
           ReadOnly = True
           Sortable = True
@@ -261,11 +261,19 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072
           Title.Font.Height = -13
-          Width = 115
+          Width = 100
           ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
+        end
+        item
+          FieldName = 'Packing'
+          Title.Alignment = taCenter
+          Title.Caption = #1042' '#1091#1087#1072#1082#1086#1074#1082#1077
+          Title.Font.Height = -13
+          Width = 90
+          ReadOnly = True
         end
         item
           FieldName = 'Available'
@@ -668,6 +676,7 @@ object SearchF: TSearchF
     end
     object QueryPacking: TIntegerField
       FieldName = 'Packing'
+      ReadOnly = True
     end
   end
   object qSearchHistory: TFDQuery

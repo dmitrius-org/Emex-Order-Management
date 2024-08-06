@@ -1,0 +1,72 @@
+<div id="myEditor" style="width: 100%;"></div>
+<script>
+  tinyMCE.remove("#myEditor");
+
+  tinyMCE.init({
+    selector: "#myEditor",
+    height: "100pc",
+    language: 'ru',
+
+    a11y_advanced_options: true,
+    image_title: true,
+  
+    automatic_uploads: true,
+    /*
+      URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
+      images_upload_url: 'postAcceptor.php',
+      here we add custom filepicker only to Image dialog
+    */
+    file_picker_types: 'file image media',
+
+    //plugins: [ 'quickbars' ],
+    //toolbar: false,
+    //menubar: false,
+    //inline: true,
+
+    file_picker_callback: function (cb, value, meta) {
+      var input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+  
+      input.onchange = function () {
+        var file = this.files[0];
+  
+        var reader = new FileReader();
+        reader.onload = function () {
+          var id = 'blobid' + (new Date()).getTime();
+          var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+          var base64 = reader.result.split(',')[1];
+          var blobInfo = blobCache.create(id, file, base64);
+          blobCache.add(blobInfo);
+  
+         
+          cb(blobInfo.blobUri(), { title: file.name });
+        };
+        reader.readAsDataURL(file);
+      };
+  
+      input.click();
+    },
+
+    plugins: [
+       'autolink link image imagetools',
+       // 'visualchars visualblocks advlist lists charmap print preview anchor', quickbars
+       // 'searchreplace  fullscreen',
+       // 'media table contextmenu paste code',
+    ],
+    menubar: 'edit view insert tools table',
+    toolbar: ['undo redo | styleselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image visualchars',
+             // 'paste pastetext'
+    ],
+    //force_br_newlines : false,
+    //forced_root_block : '',
+
+    setup: function(editor) {
+      editor.on('Paste Change input Undo Redo', function () {
+              console.log('changed');
+              myEditor_ArticleSaveButtonEnabled();
+      });
+  }
+
+  });
+</script>
