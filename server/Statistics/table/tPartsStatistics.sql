@@ -17,7 +17,7 @@ begin
 
 	create unique CLUSTERED  index ao1 on tPartsStatistics(Make, DetailNum);
 
-	grant all on tPrice to public;
+	grant all on tPartsStatistics to public;
 end
 go
 exec setOV 'tPartsStatistics', 'U', '20240101', '0'

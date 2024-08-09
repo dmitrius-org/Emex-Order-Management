@@ -284,10 +284,12 @@ begin
 end;
 
 function TAccrual.ActionExecuteCheck(AActionID: integer; AResult: TFormAction): integer;
-var Query: TFDQuery;
+var
+  Query: TFDQuery;
 begin
   logger.Info('TAccrual.ActionExecuteCheck Begin ');
-  if not Assigned(Query) then Query := TFDQuery.Create(nil);
+
+  Query := TFDQuery.Create(nil);
   Try
     Query.Connection := FConnection;
 

@@ -457,6 +457,12 @@ begin
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.OrderUniqueCount
+             ,isnull((select count(distinct ps.OrderUniqueCount)
+                        from tPartsStatistics ps (nolock)
+                       where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
+
+
+
          from vOrders v
         where v.OrderID = :OrderID
   ''';
@@ -553,7 +559,8 @@ begin
       var div = document.createElement("div");
       div.className = "alert";
   '''+
-      'div.innerHTML = "Количество заказов:' + UniMainModule.Query.FieldByName('OrderUniqueCount').AsString + '";' +
+      'div.innerHTML = "Количество заказов:' + UniMainModule.Query.FieldByName('OrderUniqueCount').AsString +
+                      ' Топ-' + UniMainModule.Query.FieldByName('TopPosition').AsString + '";' +
   '''
       header.append(div);
     }

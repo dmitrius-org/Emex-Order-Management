@@ -42,4 +42,3 @@ EXEC PartsStatisticsCalc @Orders = @Orders;
    --                  where pp.Make      = p.Make
    --                    and pp.DetailNum = p.DetailNumber)
 
-select * from tPartsStatistics
