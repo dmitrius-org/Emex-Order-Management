@@ -1,5 +1,9 @@
 if OBJECT_ID('tClients') is null
---drop table tClients
+/*
+  ALTER TABLE tClients SET ( SYSTEM_VERSIONING = OFF )
+  drop table tClients
+  DROP TABLE History.hClients
+*/
 /* **********************************************************
 tClients - Клиенты
 ********************************************************** */
@@ -26,7 +30,15 @@ begin
 	,UserID               numeric(18,0) default dbo.GetUserID()
 	,inDatetime           datetime      default GetDate()      --
 	,updDatetime          datetime      default GetDate()      --
-	);
+     --
+    ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
+    ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
+
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tClients_ClientID PRIMARY KEY CLUSTERED (ClientID)
+	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.hClients));
 
 	create unique index ao1 on tClients(ClientID) include (Brief, Name);
 	

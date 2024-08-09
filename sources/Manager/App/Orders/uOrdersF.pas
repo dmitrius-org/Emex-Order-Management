@@ -14,7 +14,8 @@ uses
   unimURLFrame, uniCheckBox, uniMemo, uniHTMLMemo, uniListBox, uniFieldSet,
   UniFSCombobox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, System.Actions,
+  Vcl.ActnList, uniMainMenu;
 
 type
 
@@ -26,6 +27,8 @@ type
     FPriceLogo: string;
   protected
     procedure Execute(); override;
+
+
   public
     constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
   end;
@@ -99,6 +102,8 @@ type
     edtDetailNameF: TUniComboBox;
     NotExists: TUniLabel;
     cbPrice: TUniFSComboBox;
+    UniActionList1: TUniActionList;
+    Action1: TAction;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -122,6 +127,7 @@ type
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
     procedure edtDetailNameFRemoteQuery(const QueryString: string; Result: TStrings);
+    procedure UniButton1Click(Sender: TObject);
 
 
   private
@@ -153,6 +159,8 @@ type
 
     FStatusID: Integer;
     FIsCounter: Boolean;
+
+    procedure AddTextToFormHeader;
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
@@ -242,6 +250,9 @@ begin
 end;
 
 procedure TOrderF.btnEmExClick(Sender: TObject);
+var
+  HeaderPanel: TUniPanel;
+  NewButton: TUniButton;
 begin
   setOpenUrl(Format('https://emexdwc.ae/Search.aspx?n=%s&d=$DLV$1', [FDetailNumber]));
 end;
@@ -445,6 +456,7 @@ begin
              ,v.Reliability
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
+             ,v.OrderUniqueCount
          from vOrders v
         where v.OrderID = :OrderID
   ''';
@@ -491,8 +503,6 @@ begin
   edtDelivery.Text   := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
   edtDelivery.Hint   := 'Плановая дата поступления поставщику: ' + UniMainModule.Query.FieldByName('DeliveryPlanDateSupplier').AsString;
 
-
-
   FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
   //
   FMarginF           := UniMainModule.Query.FieldByName('MarginF').AsFloat;
@@ -521,6 +531,35 @@ begin
                 UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
                 UniMainModule.Query.FieldByName('DetailName').AsString;
+
+
+//  UniSession.AddJS(
+//  '''
+//    var header = document.querySelector(".x-header-orderf .x-window-header-title");
+//    if (header) {
+//      var button = document.createElement("button");
+//      button.innerText = "Моя кнопка";
+//      button.onclick = function() { alert("Кнопка нажата!"); };
+//      header.appendChild(button);
+//    }
+//    '''
+//    );
+
+
+  UniSession.AddJS(
+  '''
+    var header = document.querySelector(".x-header-orderf .x-window-header-title");
+    if (header) {
+      var div = document.createElement("div");
+      div.className = "alert";
+  '''+
+      'div.innerHTML = "Количество заказов:' + UniMainModule.Query.FieldByName('OrderUniqueCount').AsString + '";' +
+  '''
+      header.append(div);
+    }
+  '''
+  );
+  //UniSession.Synchronize();
 
   IsExistNext := True;
 end;
@@ -698,6 +737,7 @@ begin
   ''' + FID.ToString);
 
    cbPrice.Value:=Price;
+
 
   logger.Info('getPartRatingFromDB2 end');
 end;
@@ -910,6 +950,14 @@ begin
   cbPrice.SetFocus;
 end;
 
+procedure TOrderF.UniButton1Click(Sender: TObject);
+var
+  bJSName: string;
+begin
+  bJSName := (Sender as TUniButton).JSName;
+  UniSession.AddJS(bJSName + '.setBadgeText(' + bJSName + '.getBadgeText() + 1);');
+end;
+
 procedure TOrderF.UniFormDestroy(Sender: TObject);
 begin
   UniTimer.Enabled := false;
@@ -998,6 +1046,7 @@ begin
   LoadDataPartFromEmex;
 
   SetRating(FReliability);
+  AddTextToFormHeader
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -1016,9 +1065,6 @@ begin
 
     if Sql.Q.RecordCount > 0 then
     begin
-
-      //getPartRatingFromDB(FDetailNumber, FPriceLogo);
-
       PriceCalc();
 
       getPartRatingFromDB2();
@@ -1029,8 +1075,15 @@ begin
   end;
 end;
 
+procedure TOrderF.AddTextToFormHeader;
+begin
+
+end;
+
 
 { TSQLQueryThread }
+
+
 
 constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
 begin

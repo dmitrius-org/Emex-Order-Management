@@ -196,6 +196,7 @@ type
     QueryFragile: TBooleanField;
     TimerProcessedShow: TUniTimer;
     ppExecute: TUniPopupMenu;
+    QueryOrderUniqueCount: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);

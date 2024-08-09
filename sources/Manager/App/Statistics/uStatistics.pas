@@ -10,7 +10,9 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniButton,
-  cfs.GCharts.uniGUI, uniMultiItem, uniComboBox;
+  cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
+  UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
+  uniGridExporters;
 
 type
   TStatisticsT = class(TUniFrame)
@@ -31,14 +33,38 @@ type
     dsClient: TDataSource;
     fClient: TUniCheckComboBox;
     UniLabel3: TUniLabel;
+    UniPageControl1: TUniPageControl;
+    UniTabOrders: TUniTabSheet;
+    UniTabSheet1: TUniTabSheet;
+    UniPanel3: TUniPanel;
+    btnGridStatisticOpen: TUniButton;
+    UniLabel6: TUniLabel;
+    UniLabel4: TUniLabel;
+    edtDataType: TUniFSComboBox;
+    edtDataSize: TUniNumberEdit;
+    dsGridStatistics: TDataSource;
+    qGridStatistics: TFDQuery;
+    GridStatistics: TUniDBGrid;
+    qGridStatisticsManufacturer: TStringField;
+    qGridStatisticsDetailNumber: TWideStringField;
+    qGridStatisticsDetailName: TWideStringField;
+    qGridStatisticsOrderCount: TIntegerField;
+    UniGridExcelExporter1: TUniGridExcelExporter;
+    btnExcelExportButton: TUniButton;
     procedure UniFrameCreate(Sender: TObject);
     procedure UniButton1Click(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
+    procedure btnGridStatisticOpenClick(Sender: TObject);
+    procedure GridStatisticsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btnExcelExportButtonClick(Sender: TObject);
   private
     { Private declarations }
     FFilterTextClient: string;
 
     procedure FilterClientsCreate();
+
+    procedure GridStatisticsRefresh();
   public
     { Public declarations }
 
@@ -243,9 +269,63 @@ begin
   fClient.Refresh;
 end;
 
+procedure TStatisticsT.GridStatisticsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (CHAR(Key) = 'C') AND (Shift = [SSCTRL]) then
+  begin
+    if (Sender is TUniDBGrid) then
+    begin
+      GridStatistics.JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
+end;
+
+procedure TStatisticsT.GridStatisticsRefresh;
+begin
+  ShowMask('∆дите, операци€ выполн€етс€');
+  UniSession.Synchronize();
+  try
+    if edtDataType.Value = '1' then
+    begin
+      qGridStatistics.Close;
+      qGridStatistics.sql.Text := 'exec  PartsMostUniqueOrdersList @RowSize = :RowSize';
+      qGridStatistics.ParamByName('RowSize').Value := edtDataSize.Value;
+      qGridStatistics.Open;
+    end
+    else
+    if edtDataType.Value = '2' then
+    begin
+      qGridStatistics.Close;
+      qGridStatistics.sql.Text := 'exec  PartsMostOrdersList @RowSize = :RowSize';
+      qGridStatistics.ParamByName('RowSize').Value := edtDataSize.Value;
+      qGridStatistics.Open;
+    end;
+
+  finally
+    HideMask();
+    UniSession.Synchronize();
+    btnExcelExportButton.Enabled := qGridStatistics.RecordCount > 0;
+  end;
+end;
+
 procedure TStatisticsT.UniButton1Click(Sender: TObject);
 begin
   AverageCountOrders;
+end;
+
+procedure TStatisticsT.btnGridStatisticOpenClick(Sender: TObject);
+begin
+  GridStatisticsRefresh
+end;
+
+procedure TStatisticsT.btnExcelExportButtonClick(Sender: TObject); var js : string;
+begin
+  if qGridStatistics.RecordCount > 0 then
+  begin
+    GridStatistics.Exporter.Title := edtDataType.Text;
+    GridStatistics.Exporter.ExportGrid;
+  end;
 end;
 
 procedure TStatisticsT.UniFrameCreate(Sender: TObject);

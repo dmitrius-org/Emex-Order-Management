@@ -592,6 +592,12 @@ object OrdersT: TOrdersT
           ReadOnly = True
           Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
           Sortable = True
+        end
+        item
+          FieldName = 'OrderUniqueCount'
+          Title.Alignment = taCenter
+          Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1085#1080#1082#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
+          Width = 182
         end>
     end
     object pFilter: TUniPanel
@@ -1171,18 +1177,18 @@ object OrdersT: TOrdersT
     SQL.Strings = (
       'SELECT '
       '       o.[OrderID]'
-      '      ,o.Flag              Status '
+      '      ,o.[Flag]              Status '
       '      ,o.[ClientID]'
       '      ,o.[ClientName]'
       '      ,o.[OrderDate]'
       '      ,o.[PriceLogo]'
-      '      ,o.CustomerPriceLogo -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      '      ,o.[CustomerPriceLogo] -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       '      ,o.[OrderNum]'
       '      ,o.[StatusID]'
       '      ,o.[StatusName]'
       '      ,o.[isCancel]'
-      '      ,o.isCancelToClient'
-      '      ,o.MakeLogo'
+      '--      ,o.isCancelToClient'
+      '      ,o.[MakeLogo]'
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
@@ -1221,22 +1227,23 @@ object OrdersT: TOrdersT
       '      ,o.[UserName]'
       '      ,o.[inDatetime]'
       '      ,o.[updDatetime]      '
-      '      ,o.OverPricing -- '#1087#1088#1077#1074#1099#1096#1077#1085#1080#1077
-      '      ,o.Warning'
-      '      ,o.ReplacementMakeLogo'
-      '      ,o.ReplacementDetailNumber'
-      '      ,o.ReplacementManufacturer    '
+      '      ,o.[OverPricing] -- '#1087#1088#1077#1074#1099#1096#1077#1085#1080#1077
+      '      ,o.[Warning]'
+      '      ,o.[ReplacementMakeLogo]'
+      '      ,o.[ReplacementDetailNumber]'
+      '      ,o.[ReplacementManufacturer]    '
       '      --,o.ReplacementPrice  '
-      '      ,o.DestinationLogo -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-      '      ,o.Invoice'
-      '      ,o.FileDate'
-      '      ,o.Flag'
+      '      ,o.[DestinationLogo] -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      '      ,o.[Invoice]'
+      '      ,o.[FileDate]'
+      '      ,o.[Flag]'
       
-        '      ,o.OverVolume      -- '#1087#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1073#1098#1077#1084#1072', '#1088#1072#1079#1085#1080#1094#1072' '#1054#1073#1098#1077#1084#1085#1099#1081' ' +
-        #1074#1077#1089' - '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'.'
-      '      ,o.DateDeparture   -- '#1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
-      '      ,o.DaysInWork      -- '#1044#1085#1077#1081' '#1074' '#1088#1072#1073#1086#1090#1077
-      '      ,o.Fragile'
+        '      ,o.[OverVolume]      -- '#1087#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1073#1098#1077#1084#1072', '#1088#1072#1079#1085#1080#1094#1072' '#1054#1073#1098#1077#1084#1085#1099 +
+        #1081' '#1074#1077#1089' - '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'.'
+      '      ,o.[DateDeparture]   -- '#1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
+      '      ,o.[DaysInWork]      -- '#1044#1085#1077#1081' '#1074' '#1088#1072#1073#1086#1090#1077
+      '      ,o.[Fragile]'
+      '      ,o.[OrderUniqueCount]'
       '      '
       '  FROM [vOrders] o'
       ' where 1=1'
@@ -1569,6 +1576,9 @@ object OrdersT: TOrdersT
     end
     object QueryFragile: TBooleanField
       FieldName = 'Fragile'
+    end
+    object QueryOrderUniqueCount: TIntegerField
+      FieldName = 'OrderUniqueCount'
     end
   end
   object DataSource: TDataSource

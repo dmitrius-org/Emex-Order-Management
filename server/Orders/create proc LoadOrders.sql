@@ -40,7 +40,8 @@ as
 	goto exit_
   end	
 
-  declare @ID as table (OrderID numeric(18, 0))
+  declare @ID as ID
+
   insert tOrders
         (ClientID
         ,SuppliersID
@@ -74,7 +75,7 @@ as
         ,VolumeKGAmount   
         ,DestinationLogo
         )
-  output inserted.OrderID into @ID (OrderID)
+  output inserted.OrderID into @ID (ID)
   select o.ClientID
         ,c.SuppliersID
         ,o.Manufacturer
@@ -163,7 +164,7 @@ as
         ,o.VolumeKG         = p.VolumeKG -- Вес Объемный из прайса	
     from @ID i
    inner join tOrders o with (updlock)
-           on o.OrderID = i.OrderID
+           on o.OrderID = i.ID
    inner join tPrice p (nolock) 
            on p.PriceID = o.PriceID
                         
@@ -171,7 +172,7 @@ as
      set o.AmountPurchase  = o.PricePurchase * o.Quantity  -- Сумма закупки	   
     from @ID i
    inner join tOrders o with (updlock)
-           on o.OrderID = i.OrderID
+           on o.OrderID = i.ID
 
   --! Протокол
   declare @ToNew numeric(18, 0)
@@ -188,7 +189,7 @@ as
 		 NewStateID,
 		 sgn)
   Select @@Spid,
-         i.OrderID ,
+         i.ID ,
 		 isnull(@ToNew, 0),
 		 0, -- текущее состояние
 		 @StatusID,
@@ -203,7 +204,7 @@ as
   --! расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
   insert pOrdersFinIn (Spid, OrderID)
-  Select @@spid, OrderID
+  Select @@spid, ID
     from @ID
   
   exec OrdersFinCalc @IsSave = 1
@@ -211,7 +212,7 @@ as
   --! расчет сроков дотавки
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm (Spid, OrderID)
-  Select @@spid, OrderID
+  Select @@spid, ID
     from @ID
   
   exec OrdersDeliveryTermCalc @IsSave = 1
@@ -220,9 +221,12 @@ as
   if OBJECT_ID('tempdb..#Order') is not null drop table #Order
   CREATE TABLE #Order ( OrderID  numeric(18,0) );
 
-  insert #Order (OrderID) Select OrderID from @ID
+  insert #Order (OrderID) Select ID from @ID
 
   exec OrderAutoSetStatus
+
+  --! расчет статистики по заказам
+  EXEC PartsStatisticsCalc @Orders = @ID;
 
 exit_:
 
@@ -230,6 +234,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240709', '2'
+exec setOV 'LoadOrders', 'P', '20240809', '3'
 go
  

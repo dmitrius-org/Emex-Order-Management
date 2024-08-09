@@ -107,10 +107,11 @@ SELECT o.[OrderID]
       ,o.[updDatetime]
       ,c.SuppliersID
 
+      ,ps.OrderUniqueCount      -- количество уникальных заказов
+
 	  ,isnull(o.Flag, 0)        as Flag
 
       ,p.PriceID                       -- 
-      --,p.Restrictions                  -- ограничение
       ,p.Quantity               as PriceQuantity -- количество из прайса
       ,cast(Case 
               when p.Restrictions = 'NOAIR' then 1
@@ -161,7 +162,11 @@ SELECT o.[OrderID]
          on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
 
   left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID		 
+         on p.PriceID = o.PriceID	
+         
+  left join tPartsStatistics ps (nolock)
+         on ps.Make      = o.MakeLogo
+        and ps.DetailNum = o.DetailNumber
 
  where ua.UserID    = dbo.GetUserID()
    and ua.LinkType  = 7

@@ -68,11 +68,11 @@
     font-size: 16px;
 }
 
-.grid-order .x-replacement-price{
-    /* line-height: 0.0;  */
-    /* color: #c45b41; */
-    /* text-align: left */
-}
+/* .grid-order .x-replacement-price{
+     line-height: 0.0;  
+     color: #c45b41; 
+     text-align: left 
+} */
 
 .grid-order .StatusIcons{
     background-image:url("/files/img/status.png") !important; 
@@ -175,6 +175,16 @@
     background-image:url("/files/img/ToExcel16.png") !important; 
     width:24px !important;
     height:24px !important;
+}
+
+.grid-statistics .ToExcel{
+    background-image:url("/files/img/ToExcel16.png") !important; 
+    width:24px !important;
+    height:24px !important;
+}
+
+.grid-statistics-export-excel{
+    background-color: #dff0d8;
 }
 
 /* таблица форматов загрузки заказов на форме редактирования клентов */

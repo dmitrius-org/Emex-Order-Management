@@ -19,9 +19,13 @@ Select o.ClientID,
          on c.ClientID = o.ClientID 
  inner join tNodes n (nolock) 
          on n.NodeID = o.StatusID
-		and n.EID not in (5 /*Отправлено*/
-	                     ,6	/*NOT AVAILABLE*/
-		                  )     
+		--and n.EID not in (5 --Отправлено
+	 --                    ,6	--NOT AVAILABLE
+		--                  )     
+        and n.NodeID not in (8	--Send	        Отправлено
+	                        ,9	--NotAvailable	Нет в наличии 
+                            ,24	--Received	    Получено
+		                  )   
  where isnull(o.EmexOrderID, 0)  > 0
    and isnull(o.isCancel, 0)     = 0 
 

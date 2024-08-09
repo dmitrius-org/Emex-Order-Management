@@ -8,6 +8,7 @@ object OrderF: TOrderF
   OldCreateOrder = False
   ShowHint = True
   MonitoredKeys.Keys = <>
+  LayoutConfig.Cls = 'x-header-orderf'
   OnReady = UniFormReady
   OnDestroy = UniFormDestroy
   TextHeight = 15
@@ -1365,5 +1366,12 @@ object OrderF: TOrderF
     OnTimer = UniTimerTimer
     Left = 771
     Top = 195
+  end
+  object UniActionList1: TUniActionList
+    Left = 607
+    Top = 193
+    object Action1: TAction
+      Caption = 'Action1'
+    end
   end
 end

@@ -1,4 +1,9 @@
 if OBJECT_ID('tProfilesCustomer') is null
+/*
+  ALTER TABLE tProfilesCustomer SET ( SYSTEM_VERSIONING = OFF )
+  drop table tProfilesCustomer
+  DROP TABLE History.hProfilesCustomer
+*/
 /* **********************************************************
 tProfilesCustomer - профили управления выгрузкой
 ********************************************************** */
@@ -21,12 +26,23 @@ begin
 	,ClientPriceLogo     nvarchar(32)   -- Наименование прайса клиента по которым заказываются детали
 										-- по данному полю вымолняем сопоставление с tOrders.CustomerPriceLogo
 	,UploadDelimiterID   int            -- разделитель 
-	);
+     --
+    ,[ValidFrom]         DATETIME2 GENERATED ALWAYS AS ROW START
+    ,[ValidTo]           DATETIME2 GENERATED ALWAYS AS ROW END
+
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tProfilesCustomer_ProfilesCustomerID PRIMARY KEY CLUSTERED (ProfilesCustomerID)
+	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.hProfilesCustomer));
 
 	create unique index ao1 on tProfilesCustomer(ProfilesCustomerID);
+
 	create unique index ao2 on tProfilesCustomer(ClientID, Brief);
 	create index ao3 on tProfilesCustomer(UploadPriceName);	
+
 	create index ao4 on tProfilesCustomer(ClientID);	
+
 	grant all on tProfilesCustomer to public;
 end
 go
