@@ -11,7 +11,10 @@ Select c.ClientID,
        o.OrderID,  
 	   o.StatusID,    
        o.OrderNum, 
-	   o.PricePurchase, 
+       case 
+         when isnull(o.Flag, 0) & 256 > 0 then isnull(o.ReplacementPrice, o.PricePurchase) 
+	     else o.PricePurchase
+       end                              as PricePurchase, 
 	   o.MakeLogo, 
 	   o.DetailNumber, 
 	   o.PriceLogo, 
@@ -39,5 +42,5 @@ Select c.ClientID,
 go
 grant all on vInsertPartToBasketByPart to public
 go
-exec setOV 'vInsertPartToBasketByPart', 'V', '20240515', '3'
+exec setOV 'vInsertPartToBasketByPart', 'V', '20240812', '4'
 go

@@ -9,13 +9,12 @@ uses
   uniGUIClasses, uniGUIForm, uniButton, uniBitBtn, uniGUIBaseClasses, uniPanel,
   uniLabel, uniEdit, uCommonType, Vcl.ExtCtrls, uniGroupBox, Math, uniMultiItem,
   uniComboBox, uniImageList, uniHTMLFrame, uniURLFrame,
-
   Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer,
   unimURLFrame, uniCheckBox, uniMemo, uniHTMLMemo, uniListBox, uniFieldSet,
   UniFSCombobox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, System.Actions,
-  Vcl.ActnList, uniMainMenu;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
+  System.Actions, Vcl.ActnList;
 
 type
 
@@ -27,8 +26,6 @@ type
     FPriceLogo: string;
   protected
     procedure Execute(); override;
-
-
   public
     constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
   end;
@@ -103,7 +100,7 @@ type
     NotExists: TUniLabel;
     cbPrice: TUniFSComboBox;
     UniActionList1: TUniActionList;
-    Action1: TAction;
+    actRefreshFormDate: TAction;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -127,8 +124,7 @@ type
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
     procedure edtDetailNameFRemoteQuery(const QueryString: string; Result: TStrings);
-    procedure UniButton1Click(Sender: TObject);
-
+    procedure actRefreshFormDateExecute(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -152,6 +148,7 @@ type
     FPriceQuantity: Integer;
     FReliability: Integer; // вероятность поставки
 
+    FPrice2:   Real;
     FMarginF2: Real;
     FIncome2:  Real;
     FProfin2:  Real;
@@ -159,8 +156,6 @@ type
 
     FStatusID: Integer;
     FIsCounter: Boolean;
-
-    procedure AddTextToFormHeader;
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
@@ -182,8 +177,6 @@ type
     property FormAction: TFormAction read FAction write SetAction;
     property ID: Integer read FID write FID;
     property IsCounter: Boolean read FIsCounter write FIsCounter;
-
-    //procedure GetPartRatingFromDB(DetailNumber, PriceLogo: string);
 
     ///<summary>
     ///  getPartRatingFromDB2 - получение данных по детали после изменения данных
@@ -218,7 +211,7 @@ type
     /// </summary>
     procedure LoadDataPart();
 
-    procedure LoadDataPartFromEmex();
+    procedure GetPartFromEmex();
     function LoadNextPart():Boolean;
   end;
 
@@ -237,6 +230,13 @@ begin
 end;
 
 { TOrderF }
+
+procedure TOrderF.actRefreshFormDateExecute(Sender: TObject);
+begin
+    SetEditDataRating(0);
+    LoadDataPart;
+    GetPartFromEmex;
+end;
 
 procedure TOrderF.btnCancelClick(Sender: TObject);
 begin
@@ -421,6 +421,7 @@ begin
 end;
 
 procedure TOrderF.DataLoad;
+var js: string;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := '''
@@ -457,7 +458,7 @@ begin
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.OrderUniqueCount
-             ,isnull((select count(distinct ps.OrderUniqueCount)
+             ,isnull((select count(*)
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
@@ -517,6 +518,7 @@ begin
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
   FPriceQuantity     := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
   //
+  FPrice2            := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
   FMarginF2          := UniMainModule.Query.FieldByName('MarginF').AsFloat;
   FIncome2           := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
   FProfin2           := UniMainModule.Query.FieldByName('Profit').AsFloat;
@@ -539,34 +541,33 @@ begin
                 UniMainModule.Query.FieldByName('DetailName').AsString;
 
 
-//  UniSession.AddJS(
-//  '''
-//    var header = document.querySelector(".x-header-orderf .x-window-header-title");
-//    if (header) {
-//      var button = document.createElement("button");
-//      button.innerText = "Моя кнопка";
-//      button.onclick = function() { alert("Кнопка нажата!"); };
-//      header.appendChild(button);
-//    }
-//    '''
-//    );
-
-
-  UniSession.AddJS(
+  js :=
   '''
     var header = document.querySelector(".x-header-orderf .x-window-header-title");
     if (header) {
-      var div = document.createElement("div");
-      div.className = "alert";
-  '''+
-      'div.innerHTML = "Количество заказов:' + UniMainModule.Query.FieldByName('OrderUniqueCount').AsString +
-                      ' Топ-' + UniMainModule.Query.FieldByName('TopPosition').AsString + '";' +
-  '''
-      header.append(div);
-    }
-  '''
-  );
-  //UniSession.Synchronize();
+
+        var div = document.querySelector(".part-top-label");
+
+        if (div) {
+           div.remove()
+        };
+  ''';
+
+  if UniMainModule.Query.FieldByName('TopPosition').asinteger <= 100 then
+  begin
+    js := js +
+    '''
+        var div = document.createElement("div");
+        div.className = "part-top-label";
+        header.append(div);
+    '''+
+    'div.innerHTML = "Количество заказов:' + UniMainModule.Query.FieldByName('OrderUniqueCount').AsString +
+    ' Топ-' + UniMainModule.Query.FieldByName('TopPosition').AsString + '";';
+  end;
+
+  js := js + '}';
+
+  UniSession.AddJS(js);
 
   IsExistNext := True;
 end;
@@ -683,7 +684,7 @@ begin
 
   if sql.Q.RecordCount>0 then
   begin
-
+    FPrice2            := sql.q.FieldByName('Price').Value;
     FMarginF2          := sql.q.FieldByName('MarginF').AsFloat;
     FIncome2           := sql.q.FieldByName('IncomePrc').AsFloat;
     FProfin2           := sql.q.FieldByName('Profit').AsFloat;
@@ -723,6 +724,7 @@ begin
     edtPrice2.Clear  ;
     edtIncome2.Clear ;
 
+    FPrice2   :=0;
     FMarginF2 :=0;
     FIncome2  :=0;
     FProfin2  :=0;
@@ -732,7 +734,7 @@ begin
     edtReliability2.Visible := False;
 
     SetEditDataStyle();
-   // SetEditDataRating(0);
+    SetEditDataRating(0);
   end;
 
   Price:=cbPrice.Value;
@@ -745,36 +747,8 @@ begin
 
    cbPrice.Value:=Price;
 
-
   logger.Info('getPartRatingFromDB2 end');
 end;
-
-//procedure TOrderF.getPartRatingFromDB(DetailNumber, PriceLogo: string);
-//var js: string;
-//     r: string;
-//begin
-//  logger.Info('getPartRatingFromDB');
-//  sql.Open('''
-//           select top 1 PercentSupped
-//             from pFindByNumber (nolock)
-//            where spid     = @@spid
-//              and Make     =:MakeLogo
-//              and DetailNum=:DetailNum
-//              and PriceLogo=:PriceLogo
-//            order by PercentSupped desc
-//           ''',
-//           ['DetailNum', 'PriceLogo', 'MakeLogo'],
-//           [DetailNumber, PriceLogo, FMakeLogo]);
-//
-//  if sql.Q.RecordCount>0 then
-//  begin
-//    SetRating(sql.Q.FieldByName('PercentSupped').AsInteger);
-//  end
-//  else
-//    SetRating(FReliability);
-//
-//end;
-
 
 procedure TOrderF.SetRating(ARating: integer);
 var r, js: string;
@@ -957,14 +931,6 @@ begin
   cbPrice.SetFocus;
 end;
 
-procedure TOrderF.UniButton1Click(Sender: TObject);
-var
-  bJSName: string;
-begin
-  bJSName := (Sender as TUniButton).JSName;
-  UniSession.AddJS(bJSName + '.setBadgeText(' + bJSName + '.getBadgeText() + 1);');
-end;
-
 procedure TOrderF.UniFormDestroy(Sender: TObject);
 begin
   UniTimer.Enabled := false;
@@ -998,7 +964,7 @@ begin
   SetBtnEnabled;
 end;
 
-procedure TOrderF.LoadDataPartFromEmex;
+procedure TOrderF.GetPartFromEmex;
 var t: TSQLQueryThread;
 begin
   try
@@ -1043,17 +1009,15 @@ begin
     SetEditDataRating(0);
 
     LoadDataPart;
-    LoadDataPartFromEmex;
-
+    GetPartFromEmex;
   end;
 end;
 
 procedure TOrderF.UniFormReady(Sender: TObject);
 begin
-  LoadDataPartFromEmex;
+  GetPartFromEmex;
 
   SetRating(FReliability);
-  AddTextToFormHeader
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
@@ -1082,15 +1046,8 @@ begin
   end;
 end;
 
-procedure TOrderF.AddTextToFormHeader;
-begin
-
-end;
-
 
 { TSQLQueryThread }
-
-
 
 constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
 begin

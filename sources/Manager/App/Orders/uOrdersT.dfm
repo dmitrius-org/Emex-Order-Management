@@ -597,7 +597,14 @@ object OrdersT: TOrdersT
           FieldName = 'OrderUniqueCount'
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1085#1080#1082#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
-          Width = 182
+          Width = 194
+        end
+        item
+          FieldName = 'PercentSupped'
+          Title.Alignment = taCenter
+          Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 146
+          Sortable = True
         end>
     end
     object pFilter: TUniPanel
@@ -1232,7 +1239,7 @@ object OrdersT: TOrdersT
       '      ,o.[ReplacementMakeLogo]'
       '      ,o.[ReplacementDetailNumber]'
       '      ,o.[ReplacementManufacturer]    '
-      '      --,o.ReplacementPrice  '
+      '      ,o.ReplacementPrice  '
       '      ,o.[DestinationLogo] -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       '      ,o.[Invoice]'
       '      ,o.[FileDate]'
@@ -1244,6 +1251,7 @@ object OrdersT: TOrdersT
       '      ,o.[DaysInWork]      -- '#1044#1085#1077#1081' '#1074' '#1088#1072#1073#1086#1090#1077
       '      ,o.[Fragile]'
       '      ,o.[OrderUniqueCount]'
+      '      ,o.[PercentSupped]'
       '      '
       '  FROM [vOrders] o'
       ' where 1=1'
@@ -1416,6 +1424,7 @@ object OrdersT: TOrdersT
     object QueryPricePurchase: TCurrencyField
       FieldName = 'PricePurchase'
       Origin = 'PricePurchase'
+      OnGetText = QueryPricePurchaseGetText
       DisplayFormat = '###,##0.00 $'
     end
     object QueryAmountPurchase: TCurrencyField
@@ -1579,6 +1588,9 @@ object OrdersT: TOrdersT
     end
     object QueryOrderUniqueCount: TIntegerField
       FieldName = 'OrderUniqueCount'
+    end
+    object QueryReplacementPrice: TCurrencyField
+      FieldName = 'ReplacementPrice'
     end
   end
   object DataSource: TDataSource
@@ -1748,6 +1760,7 @@ object OrdersT: TOrdersT
       '       AmountPurchaseF,'
       '       ReplacementMakeLogo,'
       '       ReplacementDetailNumber,'
+      '       ReplacementPrice,'
       '       OverPricing,'
       '       Warning,'
       '       Flag,'

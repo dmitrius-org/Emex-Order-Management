@@ -74,6 +74,7 @@ as
         ,WeightKGAmount     -- Стоимость кг физического веса
         ,VolumeKGAmount   
         ,DestinationLogo
+        ,PercentSupped
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
@@ -98,7 +99,7 @@ as
 
         ,pc.Margin              -- Наценка из прайса
 		,pc.Discount            -- Скидка
-        ,pc.Reliability
+        ,pc.Reliability         -- вероятность поставки с "Профили обработки прайсов"
         ,pc.Commission
         ,pc.ExtraKurs
         ,pc.Fragile
@@ -106,6 +107,7 @@ as
         ,pc.WeightKG   -- Стоимость кг физического веса
         ,pc.VolumeKG 
         ,pc.DestinationLogo
+        ,p.Reliability -- процент поставки
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
@@ -234,6 +236,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240809', '3'
+exec setOV 'LoadOrders', 'P', '20240810', '4'
 go
  

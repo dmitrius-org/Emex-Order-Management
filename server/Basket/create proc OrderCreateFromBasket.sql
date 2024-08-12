@@ -168,7 +168,9 @@ declare @r int = 0
         ,WeightKG
         ,VolumeKG
         ,DestinationLogo
-        ,Margin
+        ,PercentSupped
+       
+       ,Margin
         ,Discount
         ,Kurs
         ,ExtraKurs
@@ -185,6 +187,7 @@ declare @r int = 0
         ,ID
         ,WeightKGAmount
         ,VolumeKGAmount
+
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
@@ -203,7 +206,7 @@ declare @r int = 0
         ,b.PriceLogo             -- PriceLogo
         ,pd.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
-        ,b.Make                     -- Бренд
+        ,b.Make                  -- Бренд
         ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
@@ -211,6 +214,7 @@ declare @r int = 0
         ,b.WeightKG              -- Вес Физический из прайса    
         ,b.VolumeKG              -- Вес Объемный из прайса
         ,b.DestinationLogo
+        ,b.PercentSupped         -- процент поставки
         --
         ,b.Margin  -- Наценка из прайса
         ,b.Discount-- Скидка  
@@ -318,6 +322,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240809', '14'
+exec setOV 'OrderCreateFromBasket', 'P', '20240810', '15'
 go
  

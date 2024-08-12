@@ -1,8 +1,8 @@
 if OBJECT_ID('tClients') is null
 /*
   ALTER TABLE tClients SET ( SYSTEM_VERSIONING = OFF )
-  drop table tClients
-  DROP TABLE History.hClients
+  --drop table tClients
+  DROP TABLE History.tClients
 */
 /* **********************************************************
 tClients - Клиенты
@@ -38,7 +38,7 @@ begin
 
     ,CONSTRAINT PK_tClients_ClientID PRIMARY KEY CLUSTERED (ClientID)
 	)
-    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.hClients));
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tClients));
 
 	create unique index ao1 on tClients(ClientID) include (Brief, Name);
 	

@@ -25,6 +25,8 @@ type
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
+    procedure FDConnectionAfterDisconnect(Sender: TObject);
+    procedure FDConnectionBeforeDisconnect(Sender: TObject);
   private
     { Private declarations }
 
@@ -112,7 +114,7 @@ end;
 
 function TUniMainModule.dbUserAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;
 begin
-  UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Begin');
+  UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'begin');
 
   Query.SQL.Text := ('  declare @R int ' +
                      '         ,@Password nvarchar(512)  ' +
@@ -135,24 +137,26 @@ begin
 
   if RetVal.Code = 0 then
   begin
-      UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
-      AUserID  := Query.FieldByName('ClientID').AsInteger;
-      AUserName:= AU;
-      Result   := True;
+    UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
+    AUserID  := Query.FieldByName('ClientID').AsInteger;
+    AUserName:= AU;
+    Result   := True;
 
-      // настройки  логирования
-      CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
+    Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
 
-      Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
+    // настройки  логирования
+    CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
 
-      if Sql.Q.RecordCount > 0 then
-      begin
-          logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-          logger.Info('Программа запущена');
+    Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
 
-          FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-          FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
-      end;
+    if Sql.Q.RecordCount > 0 then
+    begin
+      logger.isActive := Sql.Q.FindField('AppClientLog').Value;
+      logger.Info('Программа запущена');
+      FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+      FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+    end;
+
   end
   else
   begin
@@ -161,13 +165,23 @@ begin
     if not IsSaveSession then
         raise Exception.Create(RetVal.Message);
   end;
-  UniServerModule.Logger.AddLog('TUniMainModule.dbUserConnect', 'End');
+  UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'end');
+end;
+
+procedure TUniMainModule.FDConnectionAfterDisconnect(Sender: TObject);
+begin
+  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionAfterDisconnect', 'begin');
+end;
+
+procedure TUniMainModule.FDConnectionBeforeDisconnect(Sender: TObject);
+begin
+  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionBeforeDisconnect', 'begin');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
 var S1, S2 : string;
 begin
-  UniServerModule.Logger.AddLog('UniGUIMainModuleBeforeLogin', 'begin');
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'begin');
 
   S1 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_loginname2D02D0BF'];
   S2 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_pwd2D02D0BF'];
@@ -184,7 +198,7 @@ begin
 
   end;
 
-  UniServerModule.Logger.AddLog('UniGUIMainModuleBeforeLogin', 'end');
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'end');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
@@ -195,11 +209,22 @@ begin
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
+var FAudit : TAudit;
 begin
-  Audit.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'begin');
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', FDConnection.Connected.ToString());
 
+  FAudit := TAudit.Create(FDConnection);
+  FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);
+  FAudit.Free;
+
+  FDConnection.Connected := False;
+
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'Программа остановлена');
   logger.Info('Программа остановлена');
+
   FreeDefLogger;
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'end');
 end;
 
 initialization

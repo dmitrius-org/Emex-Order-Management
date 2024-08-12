@@ -6,6 +6,8 @@ uses System.SysUtils, //Vcl.Dialogs, //System.Variants,
 
      FireDAC.Comp.Client, FireDAC.Comp.Script,
 
+     uniGUIApplication,
+
      uCommonType;
 
 Type
@@ -38,7 +40,7 @@ Type
                    AActionID: TFormAction;
                    AComment: string;
                    AUserID: integer = 0;
-                   AHostInfoID: string = ''): Integer;
+                   AHostInfoID: string = ''): Integer;   //
 
   end;
 
@@ -69,6 +71,9 @@ var Qry: TFDQuery;
 Begin
   try
     Result:= 0;
+    if AHostInfoID = '' then AHostInfoID := UniSession.RemoteIP;
+    
+
     Qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
 

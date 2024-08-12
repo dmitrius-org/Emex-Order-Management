@@ -18,6 +18,8 @@ object UniMainModule: TUniMainModule
       'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
+    AfterDisconnect = FDConnectionAfterDisconnect
+    BeforeDisconnect = FDConnectionBeforeDisconnect
     Left = 42
     Top = 14
   end

@@ -86,6 +86,7 @@ begin
 	,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG
 	,VolumeKGAmount                  money          -- Стоимость кг объемного веса   tSupplierDeliveryProfiles.VolumeKG
     ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
+    ,PercentSupped                   int            -- процент поставки
 	--   
 	,ID                              numeric(18,0)  -- техническое поле 
 	,UserID                          numeric(18,0) default dbo.GetUserID()
@@ -177,3 +178,7 @@ exec dbo.sys_setTableDescription 'tOrders', 'ExtraKurs'                         
 exec dbo.sys_setTableDescription 'tOrders', 'Taxes'                             ,'Комиссия и налоги'
 exec dbo.sys_setTableDescription 'tOrders', 'WeightKGAmount'                    ,'Стоимость кг физического веса'
 exec dbo.sys_setTableDescription 'tOrders', 'VolumeKGAmount'                    ,'Стоимость кг объемного веса'
+exec dbo.sys_setTableDescription 'tOrders', 'PercentSupped'                     ,'Процент поставки'
+
+
+

@@ -45,6 +45,7 @@ declare @r int = 0
         ,WeightKG
         ,VolumeKG
         ,DestinationLogo
+        ,PercentSupped
         
         ,Margin
         ,Discount
@@ -73,6 +74,7 @@ declare @r int = 0
         ,p.WeightGr
         ,p.VolumeAdd
         ,p.DestinationLogo
+        ,p.PercentSupped
 
         ,p.Margin
         ,p.Discount
@@ -102,5 +104,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240730', '9'
+exec setOV 'PartToBasket', 'P', '20240810', '10'
 go

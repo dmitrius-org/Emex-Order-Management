@@ -26,8 +26,6 @@ type
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
     procedure UniGUIServerModuleBeforeInit(Sender: TObject);
-    procedure UniGUIServerModuleHTTPCommand(ARequestInfo: TIdHTTPRequestInfo;
-      AResponseInfo: TIdHTTPResponseInfo; var Handled: Boolean);
   private
     { Private declarations }
 
@@ -156,44 +154,6 @@ end;
 procedure TUniServerModule.UniGUIServerModuleDestroy(Sender: TObject);
 begin
   FDManager.Close;
-end;
-
-procedure TUniServerModule.UniGUIServerModuleHTTPCommand(
-  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
-  var Handled: Boolean);
-var Retval: Integer;
-begin
-// валидаци€ ссылки на регистрацию
-//  Handled := false;
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand URI', ARequestInfo.URI);
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand Document', ARequestInfo.Document);
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
-//  if ARequestInfo.URI='/confirmed' then
-//  begin
-//    Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', ARequestInfo.Params.Values['tokken']);
-//
-//    if ARequestInfo.Params.Values['tokken'] <> '' then
-//        Retval := ClientRegistrationRequest(ARequestInfo.Params.Values['tokken'])
-//    else
-//        Retval := 0;
-//
-//    if Retval = 999 then
-//    begin
-//      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '200');
-//
-//      AResponseInfo.ResponseNo := 200;
-//      AResponseInfo.ContentText := '–егистраци€ прошла успешно';
-//      AResponseInfo.WriteContent;
-//      Handled := True;
-//     // AResponseInfo.ResponseText := '–егистраци€ прошла успешно'
-//    end
-//    Else
-//    begin
-//      Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand', '400');
-//      AResponseInfo.ResponseNo := 400;
-//      Handled := True;
-//    end;
-//  end;
 end;
 
 function TUniServerModule.ClientRegistrationRequest(AHash: string): Integer;

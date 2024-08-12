@@ -31,7 +31,6 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.ErrorMessage = 'Connection Error'
   ConnectionFailureRecovery.RetryMessage = 'Retrying...'
   OnBeforeInit = UniGUIServerModuleBeforeInit
-  OnHTTPCommand = UniGUIServerModuleHTTPCommand
   Height = 261
   Width = 906
   object FDManager: TFDManager

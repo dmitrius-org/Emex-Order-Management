@@ -162,6 +162,17 @@ type
     qProfilesCustomerProfilesDeliveryName: TWideStringField;
     cbClientType: TUniFSComboBox;
     qProfilesCustomerBrief: TStringField;
+    pmProfilesCustomer: TUniPopupMenu;
+    UniMenuItem4: TUniMenuItem;
+    UniMenuItem5: TUniMenuItem;
+    actMarginEdit: TAction;
+    actReliabilityEdit: TAction;
+    N6: TUniMenuItem;
+    N7: TUniMenuItem;
+    N8: TUniMenuItem;
+    N9: TUniMenuItem;
+    N10: TUniMenuItem;
+    N11: TUniMenuItem;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -190,6 +201,11 @@ type
       var AllowActivate: Boolean);
     procedure cbSuppliersChange(Sender: TObject);
     procedure UniFormCreate(Sender: TObject);
+    procedure ProfilesCustomerGridCellContextClick(Column: TUniDBGridColumn; X,
+      Y: Integer);
+    procedure pmProfilesCustomerPopup(Sender: TObject);
+    procedure actMarginEditExecute(Sender: TObject);
+    procedure actReliabilityEditExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -217,6 +233,8 @@ type
     ///  DelimiterList - Список разделителей
     ///</summary>
     procedure DelimiterList();
+
+    procedure PromptMarginEditCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
     property FormAction: TFormAction read FAction write SetAction;
@@ -230,7 +248,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uGridUtils;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uGridUtils, uPromptMarginEdit, uPromptReliabilityEdit;
 
 function ClientsF: TClientsF;
 begin
@@ -282,6 +300,11 @@ begin
   ManagerGridRefresh;
 end;
 
+procedure TClientsF.actMarginEditExecute(Sender: TObject);
+begin
+  PromptMarginEdit.ShowModal(PromptMarginEditCallBack);
+end;
+
 procedure TClientsF.actPriceProfilesAddExecute(Sender: TObject);
 begin
   ProfilesDeliveryList;
@@ -310,6 +333,11 @@ procedure TClientsF.actRefreshAllExecute(Sender: TObject);
 begin
   Query.Close;
   Query.Open;
+end;
+
+procedure TClientsF.actReliabilityEditExecute(Sender: TObject);
+begin
+  PromptReliabilityEdit.ShowModal(PromptMarginEditCallBack);
 end;
 
 procedure TClientsF.btnCancelClick(Sender: TObject);
@@ -513,6 +541,12 @@ begin
   qManager.Open;
 end;
 
+procedure TClientsF.pmProfilesCustomerPopup(Sender: TObject);
+begin
+//  actMarginEdit.Enabled := ProfilesCustomerGrid.SelectedRows.Count > 0;
+//  actReliabilityEdit.Enabled := ProfilesCustomerGrid.SelectedRows.Count > 0;
+end;
+
 procedure TClientsF.PriceProfilesGridRefresh;
 begin
   qProfilesCustomer.Close;
@@ -524,6 +558,14 @@ begin
   qProfilesDeliveryList.Close;
   qProfilesDeliveryList.ParamByName('SuppliersID').Value :=cbSuppliers.KeyValue;
   qProfilesDeliveryList.Open;
+end;
+
+procedure TClientsF.PromptMarginEditCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult = mrOK then
+  begin
+    PriceProfilesGridRefresh
+  end;
 end;
 
 procedure TClientsF.qManagerAfterPost(DataSet: TDataSet);
@@ -546,6 +588,12 @@ begin
 //  ProfilesCustomerGrid.ReadOnly :=  cbClientType.Value <> '3';
   qProfilesCustomerProfilesDeliveryName.ReadOnly := cbClientType.Value <> '3';
  // qProfilesCustomerProfilesDeliveryID.ReadOnly := cbClientType.Value <> '3';
+end;
+
+procedure TClientsF.ProfilesCustomerGridCellContextClick(
+  Column: TUniDBGridColumn; X, Y: Integer);
+begin
+  pmProfilesCustomer.Popup(X, Y, ProfilesCustomerGrid);
 end;
 
 procedure TClientsF.ProfilesCustomerGridColumnSort(Column: TUniDBGridColumn;

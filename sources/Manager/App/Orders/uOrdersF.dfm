@@ -9,6 +9,13 @@ object OrderF: TOrderF
   ShowHint = True
   MonitoredKeys.Keys = <>
   LayoutConfig.Cls = 'x-header-orderf'
+  ToolButtons = <
+    item
+      Action = actRefreshFormDate
+      ButtonId = 0
+      IconCls = 'refresh'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    end>
   OnReady = UniFormReady
   OnDestroy = UniFormDestroy
   TextHeight = 15
@@ -1368,10 +1375,12 @@ object OrderF: TOrderF
     Top = 195
   end
   object UniActionList1: TUniActionList
-    Left = 607
-    Top = 193
-    object Action1: TAction
-      Caption = 'Action1'
+    Left = 609
+    Top = 183
+    object actRefreshFormDate: TAction
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      OnExecute = actRefreshFormDateExecute
     end
   end
 end

@@ -12,8 +12,10 @@ insert tObjectType (ObjectTypeID, Brief, Name, Flag) select   4, 'Поиск д�
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select   5, 'Связь клиентов и сотрудников', 'Связь клиентов и сотрудников', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select   6, 'Корзина',       'Интерфейс: Корзина', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select   7, 'Клиенты',       'Интерфейс: Клиенты', 4
+insert tObjectType (ObjectTypeID, Brief, Name)       select   8, 'Клиенты search','Интерфейс: Клиенты search' -- otUser
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  10, 'Shipments',     'Интерфейс: Отгрузка', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  11, 'Task',          'Автоматические задания', 0
+
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 101, 'TaskProc',      'Процедуры автоматических заданий', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 102, 'ModelMetod',    'Процедуры для подели состояния', 0
 

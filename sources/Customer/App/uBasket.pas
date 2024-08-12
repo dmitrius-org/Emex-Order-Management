@@ -202,11 +202,7 @@ end;
 
 procedure TBasketF.GridSelectionChange(Sender: TObject);
 begin
-  logger.Info('TBasketF.GridSelectionChange Begin');
-
   Marks.Select;
-
-  logger.Info('TBasketF.GridSelectionChange End');
 end;
 
 procedure TBasketF.PartPriceRefresh;

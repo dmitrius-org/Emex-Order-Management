@@ -197,6 +197,7 @@ type
     TimerProcessedShow: TUniTimer;
     ppExecute: TUniPopupMenu;
     QueryOrderUniqueCount: TIntegerField;
+    QueryReplacementPrice: TCurrencyField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -238,6 +239,8 @@ type
     procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
     procedure TimerProcessedShowTimer(Sender: TObject);
+    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -1007,6 +1010,18 @@ begin
       Text := '<span class="x-replacement-price-arrow-dec">&#11015; </span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', Sender.Value) + '</span>'
     else
       Text := Sender.AsString;
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT.QueryPricePurchaseGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if (not QueryReplacementPrice.IsNull) then
+  begin
+    Text := '<span>' +FormatFloat('###,##0.00 $', Sender.AsFloat) +  '</span><br><span class="x-replacement-price">&#10149;'+
+            '</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
   end
   else
     Text := Sender.AsString;

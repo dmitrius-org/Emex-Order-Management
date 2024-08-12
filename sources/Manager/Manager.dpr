@@ -97,7 +97,9 @@ uses
   uDashBoardItem in 'App\DashBoard\uDashBoardItem.pas' {DashBoardItem: TUniFrame},
   uDashBoard in 'App\DashBoard\uDashBoard.pas' {DashBoardFrame: TUniFrame},
   uGroups2T in 'Core\User\uGroups2T.pas' {Groups2T: TUniForm},
-  uClientsType2T in 'App\Clients\uClientsType2T.pas' {ClientType2T: TUniForm};
+  uClientsType2T in 'App\Clients\uClientsType2T.pas' {ClientType2T: TUniForm},
+  uPromptReliabilityEdit in 'App\Clients\uPromptReliabilityEdit.pas' {PromptReliabilityEdit: TUniForm},
+  uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm};
 
 {$R *.res}
 

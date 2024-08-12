@@ -41,10 +41,10 @@ object BasketF: TBasketF
       ClientEvents.ExtEvents.Strings = (
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
-          'e, oldColumns, eOpts)'#13#10'{'#13#10'    var widgetColIndx=8;'#13#10'    columns[' +
-          'widgetColIndx].onWidgetAttach = function(column, widget, record)' +
-          ' {'#13#10'        widget.setHidden(record.get(widgetColIndx) == 0);'#13#10' ' +
-          '   };'#13#10'}')
+          'e, oldColumns, eOpts)'#13#10'{'#13#10'    // '#1089#1082#1088#1099#1090#1080#1077' '#1082#1075#1086#1087#1082#1080' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091#13#10' ' +
+          '   var widgetColIndx=9;'#13#10'    columns[widgetColIndx].onWidgetAtta' +
+          'ch = function(column, widget, record) {'#13#10'        widget.setHidde' +
+          'n(record.get(widgetColIndx) == 0);'#13#10'    };'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
@@ -769,6 +769,25 @@ object BasketF: TBasketF
       ' FROM tBasket (updlock)'
       'WHERE BasketID = :BasketID')
     DeleteSQL.Strings = (
+      'declare @Comment   nvarchar(1024)'
+      '       ,@AuditID   numeric(18, 0)'
+      ''
+      
+        'select @Comment = '#39#1059#1076#1072#1083#1077#1085#1080#1077' '#1076#1077#1090#1072#1083#1080': ClientID= '#39' + convert(varcha' +
+        'r, ClientID) + '#39', Make='#39' + Make + '#39', MakeName='#39' + MakeName + '#39', ' +
+        'DetailNum='#39' + DetailNum'
+      '  from tBasket (nolock)'
+      ' where BasketID=:OLD_BasketID'
+      ''
+      '-- '#1072#1091#1076#1080#1090
+      'exec AuditInsert'
+      '         @AuditID        = @AuditID out'
+      '        ,@ObjectID       = :OLD_BasketID'
+      '        ,@ObjectTypeID   = 6'#9'-- '#1050#1086#1088#1079#1080#1085#1072
+      '        ,@ActionID       = 3'#9'-- acDelete'
+      '        ,@Comment        = @Comment'
+      ''
+      ''
       
         'Delete tBasket from tBasket (rowlock) where BasketID=:OLD_Basket' +
         'ID')

@@ -1,5 +1,9 @@
 if OBJECT_ID('tBasket') is null
---drop table tBasket
+/*
+  ALTER TABLE tBasket SET ( SYSTEM_VERSIONING = OFF )
+  --drop table tBasket
+  DROP TABLE History.tBasket
+*/
 begin
 /* **********************************************************
 tBasket - корзина деталей
@@ -24,6 +28,8 @@ tBasket - корзина деталей
   ,WeightKG                money          -- вес детали в граммах
   ,VolumeKG                money          -- объемный вес
   ,DestinationLogo         nvarchar(10)   -- направление доставки
+  ,PercentSupped           int            -- процент поставки
+
   ,Margin                  money          -- наценка
   ,Discount                money          -- Скидка
   ,Kurs                    money          -- курс
@@ -31,10 +37,19 @@ tBasket - корзина деталей
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
   ,Fragile                 money 
+  
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
   ,Packing                 int            -- количество деталей в упаковке
-  );
+     --
+    ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
+    ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
+
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tBasket_BasketID PRIMARY KEY CLUSTERED (BasketID)
+	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tBasket));
 
   grant all on tBasket to public;
   --

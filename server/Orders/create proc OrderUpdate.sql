@@ -19,7 +19,7 @@ create proc OrderUpdate
 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@MakeLogo                nvarchar(20)  = null
-              
+              ,@ReplacementPrice        money         = null -- новая цена              
               
 as
   declare @r        int = 0
@@ -52,6 +52,10 @@ as
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
                                                   end
+        ,t.ReplacementPrice= case  
+		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
+							   else null
+                             end
         ,t.Comment         = @Comment                                          
 	from tOrders t (updlock)
    where t.OrderID = @OrderID
@@ -137,6 +141,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240702', '5'
+exec setOV 'OrderUpdate', 'P', '20240812', '6'
 go
  

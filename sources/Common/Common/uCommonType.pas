@@ -55,9 +55,10 @@ Type
 
    /// <summary> Типы объектов системы </summary>
   TObjectType = (
-   //otAuthorization  = 1          //авторизация пользователя
-   otUser           = 2          //пользователи
-  ,otTask           = 11         //Автоматические задания
+   //otAuthorization  = 1        // авторизация пользователя
+   otUser           = 2          // пользователи
+  ,otSearchAppUser  = 8          // Интерфейс: Клиенты search
+  ,otTask           = 11         // Автоматические задания
 
   );
 

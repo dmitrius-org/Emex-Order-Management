@@ -76,43 +76,9 @@ begin
   Result := TUniMainModule(UniApplication.UniMainModule)
 end;
 
-//procedure TUniMainModule.AddConnectionDef(Sender: TObject);
-//var
-//  myDef: IFDStanConnectionDef;
-//  i:integer;
-//begin
-//  with UniMainModule do
-//  begin
-//    //Проверяем нет ли уже ConnDef с таким же именем
-//    if FDManager.IsConnectionDef('MSSQL_Connection') then Exit;
-//
-//    //Далее, добавляем, если ConnDef c именем MSSQL_Connection отсутствует
-//    myDef:=FDManager.ConnectionDefs.AddConnectionDef;
-//    myDef.Name:='MSSQL_Connection';
-//    myDef.Params.DriverID:='';
-//    myDef.Params.Database:='';
-//
-//    // Далее другая техника добавления параметров
-//    myDef.Params.Add('Server=');
-//    myDef.Params.Add('Port=');
-//    myDef.Params.Add('CharacterSet=utf8');
-//
-//    // Сохраняем изменения в файле FDConnectionDefs.ini
-//    myDef.Apply;
-//    FDManager.Open;
-//  end;
-//end;
 
 procedure TUniMainModule.AppVersion;
-//var
-//  major, minor, build: Cardinal;
-//  Version: String;
-
 begin
-//  if GetProductVersion('', major, minor, build) then
-//  Version := 'v' + major.ToString() + '.' + minor.ToString() + ' Beta Build ' + build.ToString();
-//
-//  UniServerModule.Logger.AddLog(Version);
 end;
 
 function TUniMainModule.dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
@@ -228,9 +194,6 @@ begin
 
     if Handled = False then
     begin
-//       UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', DateTimeToStr(Date));
-//       UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', DateTimeToStr(Date-1));
-
       (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname','',Date-1);
       (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd','',Date-1);
     end;
@@ -247,8 +210,11 @@ begin
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
+var FAudit : TAudit;
 begin
-  Audit.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
+  FAudit := TAudit.Create(FDConnection);
+  FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);
+  FAudit.Free;
 
   FDConnection.Close;
 

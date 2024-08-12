@@ -108,6 +108,7 @@ SELECT o.[OrderID]
       ,c.SuppliersID
 
       ,ps.OrderUniqueCount      -- количество уникальных заказов
+      ,o.PercentSupped          -- процент поставки детали
 
 	  ,isnull(o.Flag, 0)        as Flag
 
@@ -173,7 +174,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240722', '6'
+exec setOV 'vOrders', 'V', '20240810', '7'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

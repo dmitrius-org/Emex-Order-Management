@@ -64,6 +64,7 @@ type
       var AllowActivate: Boolean);
     procedure MainMenuClick(Sender: TObject);
     procedure btnBasketClick(Sender: TObject);
+    procedure UniFormDestroy(Sender: TObject);
 
   private
     { Private declarations }
@@ -97,7 +98,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uVarUtils;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uVarUtils, uAuditUtils, uCommonType;
 
 function MainForm: TMainForm;
 begin
@@ -113,7 +114,9 @@ end;
 procedure TMainForm.actExitExecute(Sender: TObject);
 begin
   UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
-  UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',Date-1);
+  UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',      Date-1);
+
+//  Audit.Add(TObjectType.otSearchAppUser, UniMainModule.AUserID, TFormAction.acExit, 'Выход из системы');
   UniApplication.Restart();
 end;
 
@@ -254,6 +257,11 @@ begin
     FSearchF.Align := alClient;
     FSearchF.Parent := tbS;
   end;
+end;
+
+procedure TMainForm.UniFormDestroy(Sender: TObject);
+begin
+  //Audit.Add(TObjectType.otSearchAppUser, UniMainModule.AUserID, TFormAction.acExit, 'Выход из системы');
 end;
 
 procedure TMainForm.UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
