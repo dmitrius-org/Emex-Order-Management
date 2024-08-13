@@ -97,6 +97,9 @@ delete p
    and not exists (select 1
                      from @ID t
 					where t.ID = p.PriceID)	
+   and not exists (select 1
+                     from tOrders o (nolock)
+                    where o.PriceID = p.PriceID)
 
 declare @P as table (
         PriceID      numeric(18, 0) primary key
@@ -146,7 +149,9 @@ Update p
    and (isnull(p.WeightKGF  , '') <> ''
      or isnull(p.VolumeKGf  , '') <> ''
      or isnull(p.DetailNameF, '') <> ''
-	 --or isnull(p.Restrictions, '') <> ''
+	 or exists (select 1
+                  from tOrders o (nolock)
+                 where o.PriceID = p.PriceID)
 	 )
    and not exists (select 1
                      from @ID t

@@ -146,7 +146,7 @@ type
     FProfin:  Real;
     FQuantity: Integer;
     FPriceQuantity: Integer;
-    FReliability: Integer; // вероятность поставки
+    FPercentSupped: Integer; // вероятность поставки
 
     FPrice2:   Real;
     FMarginF2: Real;
@@ -316,23 +316,24 @@ begin
                    declare @R      int
 
                    exec @r = OrderUpdate
-                               @OrderID      = :OrderID
-                              ,@DetailNameF  = :DetailNameF
-                              ,@WeightKGF    = :WeightKGF
-                              ,@VolumeKGF    = :VolumeKGF
-                              ,@Fragile      = :Fragile
-                              ,@NoAir        = :NoAir
-                              ,@Price        = :Price
+                               @OrderID        = :OrderID
+                              ,@DetailNameF    = :DetailNameF
+                              ,@WeightKGF      = :WeightKGF
+                              ,@VolumeKGF      = :VolumeKGF
+                              ,@Fragile        = :Fragile
+                              ,@NoAir          = :NoAir
+                              ,@Price          = :Price
                               ,@DestinationLogo=:DestinationLogo
                               ,@Comment        =:Comment
                               ,@TargetStateID  =:TargetStateID
                               ,@MakeLogo       =:MakeLogo
+                              ,@ReplacementPrice = :ReplacementPrice
                    select @r as retcode
                   ''';
 
         Sql.Open(sqltext,
                  ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
-                  'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID'],
+                  'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID', 'ReplacementPrice'],
                  [edtWeightKGF.Value,
                   edtVolumeKGF.Value,
                   edtDetailNameF.Text,
@@ -343,7 +344,8 @@ begin
                   cbFragile.Checked,
                   cbNoAir.Checked,
                   edtMessage.Text,
-                  ATargetStateID
+                  ATargetStateID,
+                  FPrice2
                   ]);
 
         RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -454,7 +456,7 @@ begin
              ,v.Comment
              ,v.StatusID
              ,v.MakeLogo
-             ,v.Reliability
+             ,v.PercentSupped -- вероятность доставки
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.OrderUniqueCount
@@ -487,7 +489,7 @@ begin
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
-  FReliability       :=  UniMainModule.Query.FieldByName('Reliability').AsInteger;
+  FPercentSupped     :=  UniMainModule.Query.FieldByName('PercentSupped').AsInteger;
 
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
@@ -1017,7 +1019,7 @@ procedure TOrderF.UniFormReady(Sender: TObject);
 begin
   GetPartFromEmex;
 
-  SetRating(FReliability);
+  SetRating(FPercentSupped);
 end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);

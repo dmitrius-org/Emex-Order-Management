@@ -15,6 +15,7 @@ object OrderF: TOrderF
       ButtonId = 0
       IconCls = 'refresh'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ToolType = 'refresh'
     end>
   OnReady = UniFormReady
   OnDestroy = UniFormDestroy
@@ -1364,7 +1365,6 @@ object OrderF: TOrderF
   end
   object UniTimer: TUniTimer
     Enabled = False
-    RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'
       '{'

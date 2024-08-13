@@ -8,8 +8,8 @@ go
 create proc OrderUpdate
                @OrderID                 numeric(18,0)
               ,@DetailNameF             nvarchar(512) = null -- Наименование факт
-              ,@WeightKGF               money         = null -- Вес Физический факт	
-              ,@VolumeKGF               money         = null -- Вес Объемный факт
+              ,@WeightKGF               float         = null -- Вес Физический факт	
+              ,@VolumeKGF               float         = null -- Вес Объемный факт
               ,@Fragile                 bit           = null 
               ,@NoAir                   bit           = null 
               
@@ -19,12 +19,13 @@ create proc OrderUpdate
 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@MakeLogo                nvarchar(20)  = null
-              ,@ReplacementPrice        money         = null -- новая цена              
+              ,@ReplacementPrice        float         = null -- новая цена              
               
 as
-  declare @r        int = 0
-		 ,@Type     int
-		 ,@AuditID  numeric(18,0)
+  declare @r             int = 0
+		 ,@Type          int
+		 ,@AuditID       numeric(18,0)
+         ,@AuditComment  nvarchar(2048)
 
   declare @PriceID as table(PriceID numeric(18, 0))
 
@@ -51,7 +52,7 @@ as
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
-                                                  end
+                                                 end
         ,t.ReplacementPrice= case  
 		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
 							   else null
@@ -126,13 +127,14 @@ as
       exec ProtocolAdd
   end
 
+  select @AuditComment =  'Изменение DetailNameF:' + nullif(@DetailNameF, '') + ', WeightKGF:' + cast(@WeightKGF as nvarchar) + ', VolumeKGF:' + cast(@VolumeKGF as nvarchar) 
   -- аудит
   exec AuditInsert
          @AuditID          = @AuditID out         
         ,@ObjectID         = @OrderID
         ,@ObjectTypeID     = 3
         ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
-        ,@Comment          = 'Изменение DetailNameF, WeightKGF, VolumeKGF' 
+        ,@Comment          = @AuditComment
   
 
   exit_:
@@ -141,6 +143,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240812', '6'
+exec setOV 'OrderUpdate', 'P', '20240813', '7'
 go
  

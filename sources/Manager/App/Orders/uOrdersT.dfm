@@ -603,7 +603,7 @@ object OrdersT: TOrdersT
           FieldName = 'PercentSupped'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 146
+          Width = 100
           Sortable = True
         end>
     end
@@ -1591,6 +1591,10 @@ object OrdersT: TOrdersT
     end
     object QueryReplacementPrice: TCurrencyField
       FieldName = 'ReplacementPrice'
+    end
+    object QueryPercentSupped: TIntegerField
+      FieldName = 'PercentSupped'
+      DisplayFormat = '##0 %'
     end
   end
   object DataSource: TDataSource

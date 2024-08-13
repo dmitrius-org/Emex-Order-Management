@@ -198,6 +198,7 @@ type
     ppExecute: TUniPopupMenu;
     QueryOrderUniqueCount: TIntegerField;
     QueryReplacementPrice: TCurrencyField;
+    QueryPercentSupped: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);

@@ -174,9 +174,8 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240810', '7'
+exec setOV 'vOrders', 'V', '20240810', '8'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
-select IsStartState, * from vOrders where OrderID=39162
