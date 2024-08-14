@@ -71,11 +71,18 @@ as
    inner join tNodes act (nolock)
            on act.NodeID = p.ActionID
 
+
+  --! расчет статистики по заказам
+  declare @Orders as ID
+  insert @Orders (ID) select ObjectID from @ID
+  
+  EXEC PartsStatisticsCalc @Orders = @Orders;
+
  exit_:
  return @r
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20240708', '1';
+exec setOV 'ProtocolAdd', 'P', '20240814', '2';
 go
  

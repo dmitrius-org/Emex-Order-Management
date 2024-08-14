@@ -57,6 +57,17 @@ as
 		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
 							   else null
                              end
+        ,t.PercentSupped   = case  
+		                       when t.PriceLogo <> nullif(@Price, '') then isnull((   select top 1 
+                                                                                              p.PercentSupped
+                                                                                         from pFindByNumber p with (nolock index= ao3)
+                                                                                        where p.spid      = @@spid
+                                                                                          and p.Make      = t.MakeLogo
+                                                                                          and p.DetailNum = t.DetailNumber
+                                                                                          and p.PriceLogo = @Price
+                                                                                        order by p.PercentSupped desc), t.PercentSupped) 
+							   else t.PercentSupped
+                             end
         ,t.Comment         = @Comment                                          
 	from tOrders t (updlock)
    where t.OrderID = @OrderID

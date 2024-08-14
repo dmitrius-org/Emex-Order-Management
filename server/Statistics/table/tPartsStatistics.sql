@@ -13,6 +13,9 @@ begin
     ,OrderCount        int            -- Количество заказанных позиций 
     ,OrderUniqueCount  int            -- Количество уникальных заказов
 
+    ,WorkOrderCount        int        -- Количество заказанных позиций, только в работе 
+    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе
+
 	);
 
 	create unique CLUSTERED  index ao1 on tPartsStatistics(Make, DetailNum);
@@ -30,4 +33,6 @@ exec dbo.sys_setTableDescription 'tPartsStatistics', 'Make'                    ,
 --exec dbo.sys_setTableDescription 'tPartsStatistics', 'Brand'                   ,'Бренд'
 exec dbo.sys_setTableDescription 'tPartsStatistics', 'DetailNum'               ,'Номер детали '
 exec dbo.sys_setTableDescription 'tPartsStatistics', 'OrderCount'              ,'Количество заказанных позиций '
-exec dbo.sys_setTableDescription 'tPartsStatistics', 'OrderUniqueCount'         ,'Количество уникальных заказов'
+exec dbo.sys_setTableDescription 'tPartsStatistics', 'OrderUniqueCount'        ,'Количество уникальных заказов'
+exec dbo.sys_setTableDescription 'tPartsStatistics', 'WorkOrderCount'          ,'Количество заказанных позиций, только в работе '
+exec dbo.sys_setTableDescription 'tPartsStatistics', 'WorkOrderUniqueCount'    ,'Количество уникальных заказов, только в работе '

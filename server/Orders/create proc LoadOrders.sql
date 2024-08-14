@@ -228,7 +228,7 @@ as
   exec OrderAutoSetStatus
 
   --! расчет статистики по заказам
-  EXEC PartsStatisticsCalc @Orders = @ID;
+  --EXEC PartsStatisticsCalc @Orders = @ID; -- считаем в ProtocolAdd
 
 exit_:
 
@@ -236,6 +236,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240810', '4'
+exec setOV 'LoadOrders', 'P', '20240810', '5'
 go
  

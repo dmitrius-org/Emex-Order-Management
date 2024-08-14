@@ -1784,6 +1784,7 @@ object OrdersT: TOrdersT
       '       Profit,'
       '       DestinationLogo,'
       '       Fragile,'
+      '       PercentSupped,'
       '       Flag as Status -- '#1080#1082#1086#1085#1082#1080
       '  FROM vOrders'
       ' WHERE OrderID = :OrderID')

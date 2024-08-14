@@ -51,6 +51,13 @@ type
     qGridStatisticsOrderCount: TIntegerField;
     UniGridExcelExporter1: TUniGridExcelExporter;
     btnExcelExportButton: TUniButton;
+    UniLabel5: TUniLabel;
+    edtBeginDate2: TUniDateTimePicker;
+    edtEndDate2: TUniDateTimePicker;
+    UniLabel7: TUniLabel;
+    cbCancel: TUniComboBox;
+    UniLabel8: TUniLabel;
+    fCancel: TUniBitBtn;
     procedure UniFrameCreate(Sender: TObject);
     procedure UniButton1Click(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
@@ -58,6 +65,7 @@ type
     procedure GridStatisticsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnExcelExportButtonClick(Sender: TObject);
+    procedure fCancelClick(Sender: TObject);
   private
     { Private declarations }
     FFilterTextClient: string;
@@ -74,7 +82,7 @@ type
 implementation
 
 uses
-  MainModule, cfs.GCharts;
+  MainModule, cfs.GCharts, uLogger;
 
 {$R *.dfm}
 
@@ -232,6 +240,19 @@ begin
   ChartAverage.DocumentPost;
 end;
 
+procedure TStatisticsT.fCancelClick(Sender: TObject);
+begin
+  ShowMask('∆дите, операци€ выполн€етс€');
+  UniSession.Synchronize;
+  edtBeginDate2.Text := '';
+  edtEndDate2.Text := '';
+//  edtDataType.Text := '';
+  edtDataSize.Value := 100;
+  cbCancel.ItemIndex:= 0;
+  HideMask;
+  UniSession.Synchronize;
+end;
+
 procedure TStatisticsT.fClientSelect(Sender: TObject);
 var
   s: String;
@@ -283,22 +304,56 @@ end;
 
 procedure TStatisticsT.GridStatisticsRefresh;
 begin
+  logger.Info('TStatisticsT.GridStatisticsRefresh');
   ShowMask('∆дите, операци€ выполн€етс€');
   UniSession.Synchronize();
   try
     if edtDataType.Value = '1' then
     begin
       qGridStatistics.Close;
-      qGridStatistics.sql.Text := 'exec  PartsMostUniqueOrdersList @RowSize = :RowSize';
+      qGridStatistics.sql.Text := '''
+         exec PartsMostUniqueOrdersList
+                @RowSize   = :RowSize
+               ,@isCancel  = :isCancel
+               ,@DateBegin = :DateBegin
+               ,@DateEnd   = :DateEnd
+
+      ''';
+      logger.Info(edtBeginDate2.DateTime.ToString) ;
+      logger.Info(cbCancel.ItemIndex.ToBoolean.ToString());
+
+      qGridStatistics.ParamByName('DateBegin').AsDateTime := edtBeginDate2.DateTime;
+      qGridStatistics.ParamByName('DateEnd').AsDateTime := edtEndDate2.DateTime;
       qGridStatistics.ParamByName('RowSize').Value := edtDataSize.Value;
+      if cbCancel.ItemIndex >= 0 then
+        qGridStatistics.ParamByName('isCancel').AsBoolean := cbCancel.ItemIndex.ToBoolean
+      else
+        qGridStatistics.ParamByName('isCancel').Value := null;
+
+
       qGridStatistics.Open;
     end
     else
     if edtDataType.Value = '2' then
     begin
       qGridStatistics.Close;
-      qGridStatistics.sql.Text := 'exec  PartsMostOrdersList @RowSize = :RowSize';
+      qGridStatistics.sql.Text := '''
+         exec PartsMostOrdersList
+                @RowSize   = :RowSize
+               ,@isCancel  = :isCancel
+               ,@DateBegin = :DateBegin
+               ,@DateEnd   = :DateEnd
+
+      ''';
+
+      logger.Info(cbCancel.ItemIndex.ToBoolean.ToString());
+      qGridStatistics.ParamByName('DateBegin').Value := edtBeginDate2.text;
+      qGridStatistics.ParamByName('DateEnd').Value := edtEndDate2.text;
       qGridStatistics.ParamByName('RowSize').Value := edtDataSize.Value;
+      if cbCancel.ItemIndex >= 0 then
+        qGridStatistics.ParamByName('isCancel').AsBoolean := cbCancel.ItemIndex.ToBoolean
+      else
+        qGridStatistics.ParamByName('isCancel').Value := null;
       qGridStatistics.Open;
     end;
 
@@ -335,6 +390,9 @@ begin
   edtDateBegin.DateTime := IncDay(now(), -10);
   {$ENDIF}
   edtDateEnd.DateTime := now();
+
+  edtEndDate2.DateTime := now();
+  edtBeginDate2.DateTime :=EnCodeDate(YearOf(Date), MonthOf(Date), 1);
 
 
 

@@ -308,13 +308,13 @@ declare @r int = 0
   exec OrdersDeliveryTermCalc @IsSave = 1
 
 
-  declare @Orders as ID
-  insert @Orders (ID)
-  Select i.OrderID
-    from @ID i
+  --declare @Orders as ID
+  --insert @Orders (ID)
+  --Select i.OrderID
+  --  from @ID i
 
   --! расчет статистики по заказам
-  EXEC PartsStatisticsCalc @Orders = @Orders;
+  --EXEC PartsStatisticsCalc @Orders = @Orders; -- считаем в ProtocolAdd
 
   exit_:
 
@@ -322,6 +322,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240810', '15'
+exec setOV 'OrderCreateFromBasket', 'P', '20240810', '16'
 go
  

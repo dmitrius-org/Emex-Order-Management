@@ -30,8 +30,12 @@
 --go
 
 
-alter table tBasket add PercentSupped           int            -- процент поставки
+alter table tPartsStatistics add WorkOrderCount           int            -- процент поставки
 go
 
 
-alter table tOrders add PercentSupped           int            -- процент поставки
+alter table tPartsStatistics add WorkOrderUniqueCount           int            -- процент поставки
+
+
+    ,WorkOrderCount        int        -- Количество заказанных позиций, только в работе 
+    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе

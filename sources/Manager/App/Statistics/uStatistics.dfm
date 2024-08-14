@@ -2,7 +2,7 @@ object StatisticsT: TStatisticsT
   AlignWithMargins = True
   Left = 0
   Top = 0
-  Width = 1055
+  Width = 1324
   Height = 549
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
@@ -19,21 +19,23 @@ object StatisticsT: TStatisticsT
   object UniPageControl1: TUniPageControl
     Left = 0
     Top = 0
-    Width = 1055
+    Width = 1324
     Height = 549
     Hint = ''
-    ActivePage = UniTabOrders
+    ActivePage = UniTabSheet1
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1055
     object UniTabOrders: TUniTabSheet
       Hint = ''
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1072#1084
       Layout = 'fit'
+      ExplicitWidth = 1047
       object UniPanel1: TUniPanel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 1041
+        Width = 1310
         Height = 66
         Hint = ''
         Align = alTop
@@ -43,6 +45,7 @@ object StatisticsT: TStatisticsT
         LayoutAttribs.Align = 'top'
         LayoutConfig.Width = '0'
         LayoutConfig.Region = 'north'
+        ExplicitWidth = 1041
         object UniLabel1: TUniLabel
           Left = 29
           Top = 15
@@ -147,7 +150,7 @@ object StatisticsT: TStatisticsT
       object UniPanel2: TUniPanel
         Left = 0
         Top = 72
-        Width = 1047
+        Width = 1316
         Height = 449
         Hint = ''
         Align = alClient
@@ -155,14 +158,16 @@ object StatisticsT: TStatisticsT
         Caption = 'UniPanel2'
         Layout = 'fit'
         LayoutConfig.Region = 'center'
+        ExplicitWidth = 1047
         object ChartAverage: TuniGChartsFrame
           Left = 1
           Top = 1
-          Width = 1045
+          Width = 1314
           Height = 447
           Hint = ''
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 1045
         end
       end
     end
@@ -170,12 +175,13 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
+      ExplicitWidth = 1047
       object UniPanel3: TUniPanel
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 1041
-        Height = 66
+        Width = 1310
+        Height = 101
         Hint = ''
         Align = alTop
         TabOrder = 0
@@ -184,13 +190,10 @@ object StatisticsT: TStatisticsT
         LayoutAttribs.Align = 'top'
         LayoutConfig.Width = '0'
         LayoutConfig.Region = 'north'
-        DesignSize = (
-          1041
-          66)
         object btnGridStatisticOpen: TUniButton
-          Left = 581
-          Top = 28
-          Width = 105
+          Left = 731
+          Top = 54
+          Width = 129
           Height = 25
           Hint = ''
           Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
@@ -198,37 +201,40 @@ object StatisticsT: TStatisticsT
           OnClick = btnGridStatisticOpenClick
         end
         object UniLabel6: TUniLabel
-          Left = 15
-          Top = 10
-          Width = 64
-          Height = 13
+          Left = 255
+          Top = 4
+          Width = 71
+          Height = 17
           Hint = ''
           ShowHint = True
           ParentShowHint = False
           Caption = #1058#1080#1087' '#1076#1072#1085#1085#1099#1093':'
+          ParentFont = False
+          Font.Height = -13
           TabOrder = 5
         end
         object UniLabel4: TUniLabel
-          Left = 454
-          Top = 10
-          Width = 84
-          Height = 13
+          Left = 3
+          Top = 51
+          Width = 95
+          Height = 17
           Hint = ''
           ShowHint = True
           ParentShowHint = False
           Caption = #1056#1072#1079#1084#1077#1088' '#1074#1099#1076#1072#1095#1080':'
+          ParentFont = False
+          Font.Height = -13
           TabOrder = 6
         end
         object edtDataType: TUniFSComboBox
-          Left = 15
-          Top = 28
-          Width = 433
+          Left = 255
+          Top = 23
+          Width = 459
           Hint = ''
           Text = ''
           Items.Strings = (
             #1044#1077#1090#1072#1083#1080' '#1089' '#1085#1072#1080#1073#1086#1083#1100#1096#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084' '#1091#1085#1080#1082#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074#10#10
             #1044#1077#1090#1072#1083#1080' '#1089' '#1085#1072#1080#1073#1086#1083#1100#1096#1080#1084' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086#1084' '#1079#1072#1082#1072#1079#1072#1085#1085#1099#1093' '#1087#1086#1079#1080#1094#1080#1081)
-          Anchors = [akLeft]
           TabOrder = 1
           EmptyText = #1058#1080#1087' '#1076#1072#1085#1085#1099#1093
           AnyMatch = True
@@ -239,9 +245,10 @@ object StatisticsT: TStatisticsT
             '2')
         end
         object edtDataSize: TUniNumberEdit
-          Left = 454
-          Top = 28
-          Width = 121
+          Left = 3
+          Top = 69
+          Width = 120
+          Height = 24
           Hint = ''
           TabOrder = 2
           Value = 100.000000000000000000
@@ -250,8 +257,8 @@ object StatisticsT: TStatisticsT
           DecimalSeparator = ','
         end
         object btnExcelExportButton: TUniButton
-          Left = 692
-          Top = 28
+          Left = 866
+          Top = 23
           Width = 147
           Height = 25
           Hint = ''
@@ -260,12 +267,98 @@ object StatisticsT: TStatisticsT
           TabOrder = 4
           OnClick = btnExcelExportButtonClick
         end
+        object UniLabel5: TUniLabel
+          Left = 3
+          Top = 4
+          Width = 77
+          Height = 17
+          Hint = ''
+          Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072':'
+          ParentFont = False
+          Font.Height = -13
+          TabOrder = 7
+        end
+        object edtBeginDate2: TUniDateTimePicker
+          Left = 3
+          Top = 23
+          Width = 120
+          Hint = ''
+          DateTime = 45253.000000000000000000
+          DateFormat = 'dd/MM/yyyy'
+          TimeFormat = 'HH:mm:ss'
+          TabOrder = 8
+        end
+        object edtEndDate2: TUniDateTimePicker
+          Left = 129
+          Top = 23
+          Width = 120
+          Hint = ''
+          DateTime = 45253.000000000000000000
+          DateFormat = 'dd/MM/yyyy'
+          TimeFormat = 'HH:mm:ss'
+          TabOrder = 9
+        end
+        object UniLabel7: TUniLabel
+          Left = 129
+          Top = 4
+          Width = 70
+          Height = 17
+          Hint = ''
+          Caption = #1044#1072#1090#1072' '#1082#1086#1085#1094#1072':'
+          ParentFont = False
+          Font.Height = -13
+          TabOrder = 10
+        end
+        object cbCancel: TUniComboBox
+          Left = 129
+          Top = 69
+          Width = 120
+          Height = 23
+          Hint = ''
+          ShowHint = True
+          ParentShowHint = False
+          Text = 'cbCancel'
+          Items.Strings = (
+            #1053#1077#1090
+            #1044#1072)
+          ItemIndex = 0
+          TabOrder = 11
+          EmptyText = #1054#1090#1082#1072#1079
+          ClearButton = True
+          IconItems = <>
+        end
+        object UniLabel8: TUniLabel
+          Left = 129
+          Top = 51
+          Width = 37
+          Height = 17
+          Hint = ''
+          ShowHint = True
+          ParentShowHint = False
+          Caption = #1054#1090#1082#1072#1079':'
+          ParentFont = False
+          Font.Height = -13
+          TabOrder = 12
+        end
+        object fCancel: TUniBitBtn
+          Left = 731
+          Top = 23
+          Width = 129
+          Height = 25
+          Hint = ''
+          ShowHint = True
+          ParentShowHint = False
+          Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1092#1080#1083#1100#1090#1088
+          TabOrder = 13
+          ImageIndex = 3
+          OnClick = fCancelClick
+        end
       end
       object GridStatistics: TUniDBGrid
         Left = 0
-        Top = 72
-        Width = 1047
-        Height = 449
+        Top = 107
+        Width = 1316
+        Height = 414
         Hint = ''
         Margins.Bottom = 0
         ShowHint = True
@@ -491,9 +584,40 @@ object StatisticsT: TStatisticsT
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
     SQL.Strings = (
-      '            exec  PartsMostUniqueOrdersList')
+      '       '
+      ' exec PartsMostUniqueOrdersList'
+      '        @RowSize   = :RowSize   '
+      '       ,@OnlyWork  = :OnlyWork'
+      '       ,@DateBegin = :DateBegin'
+      '       ,@DateEnd   = :DateEnd'
+      '       ')
     Left = 618
     Top = 172
+    ParamData = <
+      item
+        Name = 'ROWSIZE'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ONLYWORK'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'DATEBEGIN'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'DATEEND'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
     object qGridStatisticsManufacturer: TStringField
       FieldName = 'Manufacturer'
       Origin = 'Manufacturer'
