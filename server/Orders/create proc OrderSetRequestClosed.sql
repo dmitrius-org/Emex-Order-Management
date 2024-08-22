@@ -1,10 +1,10 @@
-drop proc if exists OrderSetCancellation
+drop proc if exists OrderSetRequestClosed
 /*
-  OrderSetCancellation - установка признака запрошен отказ
+  OrderSetRequestClosed - установка признака обращение закрыто
 
 */
 go
-create proc OrderSetCancellation
+create proc OrderSetRequestClosed
 as
   declare @r          int = 0        
 		 ,@AuditID  numeric(18,0)
@@ -46,7 +46,7 @@ as
 	and m.Type = 3
 
   update t
-     set t.Flag    = isnull(t.Flag, 0) | 128 -- Запрошен отказ, признак проставлен менеджером
+     set t.Flag    = isnull(t.Flag, 0) | 1024 -- Обращение закрыто, признак проставлен менеджером
 	from pAccrualAction p (nolock)
    inner join tOrders t (updlock)
            on t.OrderID = p.ObjectID
@@ -66,11 +66,11 @@ as
        ,p.ObjectID       	         
        ,3        
        ,2 -- acUpdate        
-       ,'Установка признака: Запрошен отказ' 
+       ,'Установка признака: Обращение закрыто' 
   from pAccrualAction p (nolock)
    where p.Spid   = @@spid
 	 and p.Retval = 0
-                
+        
    exec MassAuditInsert
 
    if exists (select 1
@@ -82,8 +82,8 @@ as
  exit_:
  return @r
 go
-grant exec on OrderSetCancellation to public
+grant exec on OrderSetRequestClosed to public
 go
-exec setOV 'OrderSetCancellation', 'P', '20240418', '1'
+exec setOV 'OrderSetRequestClosed', 'P', '20240821', '1'
 go
  

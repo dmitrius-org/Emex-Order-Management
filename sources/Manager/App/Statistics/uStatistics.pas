@@ -1,4 +1,4 @@
-unit uStatistics;
+п»їunit uStatistics;
 
 interface
 
@@ -114,12 +114,12 @@ begin
   ChartCount.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
 
   ChartCount.Data.DefineColumns([
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'Р”РµРЅСЊ'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Р’ СЂР°Р±РѕС‚Рµ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'РћС‚РєР°Р·Р°РЅРѕ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Р’СЃРµРіРѕ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
   ]);
 
@@ -127,12 +127,12 @@ begin
   ChartSum := TcfsGChartProducer.Create;
   ChartSum.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
   ChartSum.Data.DefineColumns([
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'Р”РµРЅСЊ'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Р’ СЂР°Р±РѕС‚Рµ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'РћС‚РєР°Р·Р°РЅРѕ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Р’СЃРµРіРѕ'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
 
   ]);
@@ -160,11 +160,11 @@ begin
     qAverageCountOrders.Next;
   end;
 
-// Г1
+// Р“1
   with ChartCount do
   begin
     LibraryLanguage := UniSession.Language;
-    Options.Title('Количество заказов по дням за период');
+    Options.Title('РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ РїРѕ РґРЅСЏРј Р·Р° РїРµСЂРёРѕРґ');
     Options.IsStacked(True);
 //  ColumnChartCount.Options.Legend('position', 'none');
 //  ChartCount.Options.Annotations('alwaysOutside', True);
@@ -194,19 +194,19 @@ begin
     Options.Series(Series);
 
 
-    Options.hAxis('title', 'Дни');
-    Options.vAxis('title', 'Заказы (Количество)');
-    Options.vAxis('title', 'Заказы (Количество)');
+    Options.hAxis('title', 'Р”РЅРё');
+    Options.vAxis('title', 'Р—Р°РєР°Р·С‹ (РљРѕР»РёС‡РµСЃС‚РІРѕ)');
+    Options.vAxis('title', 'Р—Р°РєР°Р·С‹ (РљРѕР»РёС‡РµСЃС‚РІРѕ)');
   end;
 
-// Г2
+// Р“2
   ChartSum.LibraryLanguage := UniSession.Language;
-  ChartSum.Options.Title('Сумма заказов по дням за период');
+  ChartSum.Options.Title('РЎСѓРјРјР° Р·Р°РєР°Р·РѕРІ РїРѕ РґРЅСЏРј Р·Р° РїРµСЂРёРѕРґ');
   ChartSum.Options.IsStacked(True);
-  ChartSum.Options.hAxis('title', 'Дни');
+  ChartSum.Options.hAxis('title', 'Р”РЅРё');
   ChartSum.Options.hAxis('minValue', 0);
 //  ChartSum.Options.hAxis('format', 'decimal');
-  ChartSum.Options.vAxis('title', 'Заказы (Сумма)');
+  ChartSum.Options.vAxis('title', 'Р—Р°РєР°Р·С‹ (РЎСѓРјРјР°)');
 
   SetLength(Series, 3);
   Series[0] := 'annotations: {    '+
@@ -242,7 +242,7 @@ end;
 
 procedure TStatisticsT.fCancelClick(Sender: TObject);
 begin
-  ShowMask('Ждите, операция выполняется');
+  ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ');
   UniSession.Synchronize;
   edtBeginDate2.Text := '';
   edtEndDate2.Text := '';
@@ -277,7 +277,7 @@ end;
 
 procedure TStatisticsT.FilterClientsCreate;
 begin
-  qClient.Open(); // используется в фильтре Клиент
+  qClient.Open(); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ С„РёР»СЊС‚СЂРµ РљР»РёРµРЅС‚
 
   fClient.Clear;
   qClient.First;
@@ -305,7 +305,7 @@ end;
 procedure TStatisticsT.GridStatisticsRefresh;
 begin
   logger.Info('TStatisticsT.GridStatisticsRefresh');
-  ShowMask('Ждите, операция выполняется');
+  ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ');
   UniSession.Synchronize();
   try
     if edtDataType.Value = '1' then
@@ -385,6 +385,7 @@ end;
 
 procedure TStatisticsT.UniFrameCreate(Sender: TObject);
 begin
+   UniPageControl1.ActivePage := UniTabOrders;
   edtDateBegin.DateTime := IncDay(now(), -7);
   {$IFDEF Debug}
   edtDateBegin.DateTime := IncDay(now(), -10);

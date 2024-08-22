@@ -16,8 +16,6 @@ exec GetStartNode
        @ObjectTypeID = 3-- ид объекта системы для которого используется модель
       ,@StatusID    = @SNode output -- Ид начального состояния, данный ид пишется в tOrders.StatusID
 
---exec OrderArchive
-
 delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
 
 -- 1. По идентификатору OrderDetailSubId
@@ -241,10 +239,10 @@ DEALLOCATE my_cur
        ,o.updDatetime = GetDate()
        ,o.ReplacementMakeLogo     = p.ReplacementMakeLogo
        ,o.ReplacementDetailNumber = p.ReplacementDetailNumber
-       ,o.ReplacementPrice        = case 
-                                      when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
-                                      else o.PricePurchase
-                                    end    
+       --,o.ReplacementPrice        = case 
+       --                               when isnull(p.PriceSale, 0) > 0 and p.PriceSale <> o.PricePurchase then p.PriceSale
+       --                               else o.PricePurchase
+       --                             end    
         /*Если у детали обновляется цена, то прописывать ее не стрелкой внизу, а в поле “Цена закупки Факт” и ставить красную стрелочку перед ней. Но делать это в одну строку. 
 		Таким образом мы увидим какое превышение цены было пропущено в работу менеджером, а какое прислал сам поставщик. Пересчитывать сумму закупки Факт соответственно.*/
        ,o.PricePurchaseF         = case 
@@ -345,6 +343,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240727', '6'
+exec setOV 'EmexOrderStateSync', 'P', '20240814', '7'
 go
  

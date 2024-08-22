@@ -125,6 +125,13 @@
     color: #1E90FF
 }
 
+/* Иконка: Обращение закрыто */
+.grid-order-request-check {
+    overflow: visible;
+    width: 100%;
+    color: hwb(101 3% 34%);
+}
+
 /* таблица пользователи*/
 .grid-users .x-column-header  {
     vertical-align: middle; 

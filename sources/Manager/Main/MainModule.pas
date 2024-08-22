@@ -206,6 +206,9 @@ procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
 begin
   {$IFDEF RELEASE}
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
+
+  //FDConnection.Close;
+  //FDConnection.ConnectionIntf.ConnectionDef.Clear;
   {$ENDIF}
 end;
 

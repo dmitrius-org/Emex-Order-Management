@@ -19,7 +19,7 @@ uses
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
-  uniDateTimePicker;
+  uniDateTimePicker, uniGridExporters, uniMenuButton;
 
 
 
@@ -39,7 +39,6 @@ type
     UpdateSQL: TFDUpdateSQL;
     pFilter: TUniPanel;
     gbFilter: TUniGroupBox;
-    ppExecute: TUniPopupMenu;
     UniImageListAdapter: TUniImageListAdapter;
     UniImageList: TUniImageList;
     UniImageList32: TUniImageList;
@@ -63,6 +62,15 @@ type
     UniLabel7: TUniLabel;
     lblWeightKG: TUniLabel;
     lblVolumeKG: TUniLabel;
+    fCancel: TUniBitBtn;
+    fOk: TUniBitBtn;
+    fShipmentsDate: TUniDateTimePicker;
+    UniLabel8: TUniLabel;
+    edtInvoice: TUniEdit;
+    UniLabel4: TUniLabel;
+    N1: TUniMenuItem;
+    actExportData: TAction;
+    N2: TUniMenuItem;
     QueryShipmentsID: TFMTBCDField;
     QueryShipmentsDate: TSQLTimeStampField;
     QueryReceiptDate: TSQLTimeStampField;
@@ -72,29 +80,22 @@ type
     QueryDetailCount: TIntegerField;
     QueryWeightKG: TCurrencyField;
     QueryVolumeKG: TCurrencyField;
+    QueryWeightKGDiff: TCurrencyField;
     QueryWeightKGF: TCurrencyField;
     QueryVolumeKGF: TCurrencyField;
     QueryVolumeKGDiff: TCurrencyField;
+    QueryAmount: TCurrencyField;
     QuerySupplierWeightKG: TCurrencyField;
     QuerySupplierVolumeKG: TCurrencyField;
     QuerySupplierDiffVolumeWeigh: TCurrencyField;
+    QuerySupplierAmount: TCurrencyField;
     QueryTransporterWeightKG: TCurrencyField;
     QueryTransporterVolumeKG: TCurrencyField;
     QueryTransporterDiffVolumeWeigh: TCurrencyField;
+    QueryTransporterAmount: TCurrencyField;
     QueryWeightKGAmount: TCurrencyField;
     QueryVolumeKGAmount: TCurrencyField;
     QueryupdDatetime: TSQLTimeStampField;
-    QuerySupplierDiffVolumeWeigh2: TCurrencyField;
-    QueryAmount: TCurrencyField;
-    QuerySupplierAmount: TCurrencyField;
-    QueryTransporterAmount: TCurrencyField;
-    fCancel: TUniBitBtn;
-    fOk: TUniBitBtn;
-    fShipmentsDate: TUniDateTimePicker;
-    UniLabel8: TUniLabel;
-    edtInvoice: TUniEdit;
-    UniLabel4: TUniLabel;
-    N1: TUniMenuItem;
     QuerySupplierBrief: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
@@ -112,6 +113,7 @@ type
     procedure actGridSettingSaveExecute(Sender: TObject);
     procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
+    procedure actExportDataExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -154,7 +156,7 @@ implementation
 
 uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
-  Main, ServerModule, uToast, uGridUtils;
+  Main, ServerModule, uToast, uGridUtils, uExportForm;
 
 {$R *.dfm}
 
@@ -172,6 +174,12 @@ procedure TShipmentsT.actDeleteExecute(Sender: TObject);
 begin
   FAction:=TFormAction.acDelete;
   Query.Delete;
+end;
+
+procedure TShipmentsT.actExportDataExecute(Sender: TObject);
+begin
+  ExportForm.Invoice := QueryInvoice.Value;
+  ExportForm.ShowModal;
 end;
 
 procedure TShipmentsT.actFilterClearExecute(Sender: TObject);

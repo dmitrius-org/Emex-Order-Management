@@ -200,7 +200,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
           Title.Font.Height = -13
-          Width = 344
+          Width = 325
           Alignment = taCenter
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False

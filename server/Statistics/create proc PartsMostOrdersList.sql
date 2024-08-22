@@ -11,8 +11,8 @@ create proc PartsMostOrdersList
 as
 
   select @RowSize = isnull(@RowSize, 100)
-        ,@DateBegin=nullif(@DateBegin, '')
-        ,@DateEnd  =nullif(@DateEnd, '')
+        ,@DateBegin=nullif(@DateBegin, '18991230')
+        ,@DateEnd  =nullif(@DateEnd, '18991230')
 
 
   delete pPartsStatistics from pPartsStatistics (rowlock) where Spid = @@SPID

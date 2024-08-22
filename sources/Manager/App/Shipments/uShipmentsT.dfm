@@ -359,6 +359,7 @@ object ShipmentsT: TShipmentsT
         Height = 70
         Hint = ''
         ShowHint = True
+        AlignmentControl = uniAlignmentClient
         Caption = #1060#1080#1083#1100#1090#1088
         Align = alClient
         LayoutConfig.Width = '0'
@@ -661,8 +662,8 @@ object ShipmentsT: TShipmentsT
       '   '
       ' order by s.ShipmentsDate  desc   '
       '   ')
-    Left = 575
-    Top = 255
+    Left = 582
+    Top = 172
     MacroData = <
       item
         Value = Null
@@ -676,8 +677,7 @@ object ShipmentsT: TShipmentsT
       AutoGenerateValue = arAutoInc
       FieldName = 'ShipmentsID'
       Origin = 'ShipmentsID'
-      ProviderFlags = [pfInWhere]
-      ReadOnly = True
+      ProviderFlags = [pfInWhere, pfInKey]
       Precision = 18
       Size = 0
     end
@@ -718,6 +718,11 @@ object ShipmentsT: TShipmentsT
       Origin = 'VolumeKG'
       DisplayFormat = '###,##0.00'
     end
+    object QueryWeightKGDiff: TCurrencyField
+      FieldName = 'WeightKGDiff'
+      Origin = 'WeightKGDiff'
+      DisplayFormat = '###,##0.00'
+    end
     object QueryWeightKGF: TCurrencyField
       FieldName = 'WeightKGF'
       Origin = 'WeightKGF'
@@ -733,11 +738,6 @@ object ShipmentsT: TShipmentsT
       Origin = 'VolumeKGDiff'
       DisplayFormat = '###,##0.00'
     end
-    object QuerySupplierDiffVolumeWeigh: TCurrencyField
-      FieldName = 'WeightKGDiff'
-      Origin = 'WeightKGDiff'
-      DisplayFormat = '###,##0.00'
-    end
     object QueryAmount: TCurrencyField
       FieldName = 'Amount'
       Origin = 'Amount'
@@ -746,14 +746,14 @@ object ShipmentsT: TShipmentsT
     object QuerySupplierWeightKG: TCurrencyField
       FieldName = 'SupplierWeightKG'
       Origin = 'SupplierWeightKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = #39'###,##0.00'
     end
     object QuerySupplierVolumeKG: TCurrencyField
       FieldName = 'SupplierVolumeKG'
       Origin = 'SupplierVolumeKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = #39'###,##0.00'
     end
-    object QuerySupplierDiffVolumeWeigh2: TCurrencyField
+    object QuerySupplierDiffVolumeWeigh: TCurrencyField
       FieldName = 'SupplierDiffVolumeWeigh'
       Origin = 'SupplierDiffVolumeWeigh'
       DisplayFormat = '###,##0.00'
@@ -796,17 +796,17 @@ object ShipmentsT: TShipmentsT
     object QueryupdDatetime: TSQLTimeStampField
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
-      DisplayFormat = '###,##0.00'
     end
     object QuerySupplierBrief: TWideStringField
       FieldName = 'SupplierBrief'
-      Size = 512
+      Origin = 'SupplierBrief'
+      Size = 256
     end
   end
   object DataSource: TDataSource
     DataSet = Query
-    Left = 648
-    Top = 255
+    Left = 660
+    Top = 173
   end
   object actMain: TUniActionList
     Images = UniImageListAdapter
@@ -848,11 +848,21 @@ object ShipmentsT: TShipmentsT
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       OnExecute = actGridSettingDefaultExecute
     end
+    object actExportData: TAction
+      Tag = -1
+      Category = 'Grid'
+      Caption = #1069#1082#1089#1087#1086#1088#1090
+      OnExecute = actExportDataExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
+    ScreenMask.Enabled = True
     Left = 101
     Top = 218
+    object N2: TUniMenuItem
+      Action = actExportData
+    end
     object N6: TUniMenuItem
       Action = actRefreshAll
     end
@@ -899,22 +909,17 @@ object ShipmentsT: TShipmentsT
       '  from vShipments '
       ' where ShipmentsID = :ShipmentsID'
       '')
-    Left = 497
-    Top = 255
-  end
-  object ppExecute: TUniPopupMenu
-    ScreenMask.ShowMessage = False
-    Left = 210
-    Top = 218
+    Left = 520
+    Top = 171
   end
   object UniImageListAdapter: TUniImageListAdapter
     UniImageList = UniImageList
-    Left = 352
-    Top = 253
+    Left = 30
+    Top = 297
   end
   object UniImageList: TUniImageList
-    Left = 349
-    Top = 375
+    Left = 32
+    Top = 421
     Bitmap = {
       494C010109001800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
@@ -1322,8 +1327,8 @@ object ShipmentsT: TShipmentsT
   object UniImageList32: TUniImageList
     Width = 32
     Height = 32
-    Left = 351
-    Top = 313
+    Left = 32
+    Top = 358
     Bitmap = {
       494C010109000C00040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000008000000060000000010020000000000000C0

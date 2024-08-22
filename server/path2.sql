@@ -30,12 +30,16 @@
 --go
 
 
-alter table tPartsStatistics add WorkOrderCount           int            -- процент поставки
-go
+--alter table tPartsStatistics add WorkOrderCount           int            -- процент поставки
+--go
 
 
-alter table tPartsStatistics add WorkOrderUniqueCount           int            -- процент поставки
+--alter table tPartsStatistics add WorkOrderUniqueCount           int            -- процент поставки
 
 
-    ,WorkOrderCount        int        -- Количество заказанных позиций, только в работе 
-    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе
+--    ,WorkOrderCount        int        -- Количество заказанных позиций, только в работе 
+--    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе
+
+
+
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1013, 1013, 'Проставить признак: Обращение закрыто',  'TOrdersT.actRequestClosed', 20, 1

@@ -199,6 +199,8 @@ type
     QueryOrderUniqueCount: TIntegerField;
     QueryReplacementPrice: TCurrencyField;
     QueryPercentSupped: TIntegerField;
+    actRequestClosed: TAction;
+    N9: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -242,6 +244,7 @@ type
     procedure TimerProcessedShowTimer(Sender: TObject);
     procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure actRequestClosedExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -305,6 +308,8 @@ type
     procedure GetMarksInfo();
     /// <summary>OrderSetCancellation - установка признака: Запрошен отказ</summary>
     procedure OrderSetCancellation();
+    /// <summary>OrderSetRequestClosed - установка признака: Обращение закрыто</summary>
+    procedure OrderSetRequestClosed();
   public
     { Public declarations }
     /// <summary>
@@ -342,6 +347,31 @@ begin
   logger.Info('OrderSetCancellation:') ;
 
   Sql.Exec(' exec OrderSetCancellation  ', [], []);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+  var ServerErr:integer;
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+
+    Marks.DataRefresh;
+    ToastOK ('Операция успешно выполнена!', UniSession);
+    //OrdersMessageFCallBack(self, mrOk)
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
+end;
+
+procedure TOrdersT.OrderSetRequestClosed;
+begin
+  logger.Info('OrderSetRequestClosed:') ;
+
+  Sql.Exec(' exec OrderSetRequestClosed  ', [], []);
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
@@ -641,6 +671,21 @@ begin
   GridOpen();
 end;
 
+procedure TOrdersT.actRequestClosedExecute(Sender: TObject);
+begin
+  MessageDlg('Вы действительно хотите проставить признак "Обращение закрыто"? ' , mtConfirmation, mbYesNo,
+
+  procedure(Sender: TComponent; Res: Integer)
+  begin
+    case Res of
+      mrYes : OrderSetRequestClosed;
+      mrNo  : Exit;
+    end;
+  end
+
+  );
+end;
+
 procedure TOrdersT.DoHideMask;
 begin
   HideMask();
@@ -830,8 +875,8 @@ begin
       Query.MacroByName('OrderNum').Value := '';
 
     if fDetailNum.Text <> '' then
-      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like '''   + Trim(fDetailNum.Text) + '''' +
-                                              '   or o.ReplacementDetailNumber like '''   + Trim(fDetailNum.Text) + ''')'
+      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like '''   + Trim(fDetailNum.Text) + '%''' +
+                                              '   or o.ReplacementDetailNumber like '''   + Trim(fDetailNum.Text) + '%'')'
     else
       Query.MacroByName('DetailNum').Value := '';
 
@@ -1052,6 +1097,11 @@ begin
   if (Sender.AsInteger and 512) > 0 then
   begin
     t := t + '<span class="grid-order-balance-scale" data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
+  end;
+
+  if (Sender.AsInteger and 1024) > 0 then
+  begin
+    t := t + '<span class="grid-order-request-check" data-qtip="Обращение закрыто"><i class="fa fa-check"></i></span> ';
   end;
 
   if Query.FieldByName('Fragile').AsBoolean then

@@ -99,7 +99,8 @@ uses
   uGroups2T in 'Core\User\uGroups2T.pas' {Groups2T: TUniForm},
   uClientsType2T in 'App\Clients\uClientsType2T.pas' {ClientType2T: TUniForm},
   uPromptReliabilityEdit in 'App\Clients\uPromptReliabilityEdit.pas' {PromptReliabilityEdit: TUniForm},
-  uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm};
+  uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm},
+  uExportForm in 'App\Shipments\uExportForm.pas' {ExportForm: TUniForm};
 
 {$R *.res}
 

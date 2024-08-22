@@ -25,12 +25,10 @@ object StatisticsT: TStatisticsT
     ActivePage = UniTabSheet1
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1055
     object UniTabOrders: TUniTabSheet
       Hint = ''
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1072#1084
       Layout = 'fit'
-      ExplicitWidth = 1047
       object UniPanel1: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -45,7 +43,6 @@ object StatisticsT: TStatisticsT
         LayoutAttribs.Align = 'top'
         LayoutConfig.Width = '0'
         LayoutConfig.Region = 'north'
-        ExplicitWidth = 1041
         object UniLabel1: TUniLabel
           Left = 29
           Top = 15
@@ -158,7 +155,6 @@ object StatisticsT: TStatisticsT
         Caption = 'UniPanel2'
         Layout = 'fit'
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 1047
         object ChartAverage: TuniGChartsFrame
           Left = 1
           Top = 1
@@ -167,7 +163,6 @@ object StatisticsT: TStatisticsT
           Hint = ''
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 1045
         end
       end
     end
@@ -175,7 +170,6 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
-      ExplicitWidth = 1047
       object UniPanel3: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -192,7 +186,7 @@ object StatisticsT: TStatisticsT
         LayoutConfig.Region = 'north'
         object btnGridStatisticOpen: TUniButton
           Left = 731
-          Top = 54
+          Top = 23
           Width = 129
           Height = 25
           Hint = ''
@@ -342,7 +336,7 @@ object StatisticsT: TStatisticsT
         end
         object fCancel: TUniBitBtn
           Left = 731
-          Top = 23
+          Top = 54
           Width = 129
           Height = 25
           Hint = ''

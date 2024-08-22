@@ -92,9 +92,8 @@ object OrdersT: TOrdersT
           ' toolbar.insert('#13#10'       0, '#13#10'       //{ xtype: '#39'tbseparator'#39' }'#13 +
           #10'       {xtype: '#39'button'#39', text: '#39#39', tooltip : '#39#1054#1087#1080#1089#1072#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1086#1074 +
           ' '#1079#1072#1082#1072#1079#1086#1074#39', handler: function() {'#13#10'          ajaxRequest(sender, ' +
-          '"btnStatusFormShow", {})'#13#10'       }}'#13#10'       '#13#10'     '#13#10'     );'#13#10'  ' +
-          '   toolbar.exportBtn.setIconCls('#39'StatusIcons'#39');// icon...'#13#10'  }  ' +
-          #13#10'}')
+          '"btnStatusFormShow", {})'#13#10'       }}'#13#10'     );'#13#10'     toolbar.expor' +
+          'tBtn.setIconCls('#39'StatusIcons'#39');// icon...'#13#10'  }  '#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
@@ -746,7 +745,7 @@ object OrdersT: TOrdersT
         object fStatus2: TUniCheckComboBox
           Left = 6
           Top = 33
-          Width = 314
+          Width = 310
           Hint = ''
           ShowHint = True
           Text = ''
@@ -833,7 +832,7 @@ object OrdersT: TOrdersT
         object fClient: TUniCheckComboBox
           Left = 6
           Top = 75
-          Width = 212
+          Width = 208
           Hint = ''
           ShowHint = True
           Text = ''
@@ -1697,6 +1696,10 @@ object OrdersT: TOrdersT
       Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': '#1047#1072#1087#1088#1086#1096#1077#1085' '#1086#1090#1082#1072#1079
       OnExecute = actCancellationExecute
     end
+    object actRequestClosed: TAction
+      Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': '#1054#1073#1088#1072#1097#1077#1085#1080#1077' '#1079#1072#1082#1088#1099#1090#1086
+      OnExecute = actRequestClosedExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -1716,6 +1719,9 @@ object OrdersT: TOrdersT
     end
     object N8: TUniMenuItem
       Action = actCancellation
+    end
+    object N9: TUniMenuItem
+      Action = actRequestClosed
     end
     object N14: TUniMenuItem
       Action = actSetComment
