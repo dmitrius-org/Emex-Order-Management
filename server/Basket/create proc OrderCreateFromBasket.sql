@@ -168,9 +168,10 @@ declare @r int = 0
         ,WeightKG
         ,VolumeKG
         ,DestinationLogo
+        ,DestinationName
         ,PercentSupped
        
-       ,Margin
+        ,Margin
         ,Discount
         ,Kurs
         ,ExtraKurs
@@ -214,6 +215,7 @@ declare @r int = 0
         ,b.WeightKG              -- Вес Физический из прайса    
         ,b.VolumeKG              -- Вес Объемный из прайса
         ,b.DestinationLogo
+        ,pd.Name --DestinationName
         ,b.PercentSupped         -- процент поставки
         --
         ,b.Margin  -- Наценка из прайса

@@ -11,8 +11,10 @@ begin
 	,ShipmentsDate                   datetime       not null -- дата отгрузки
 	,ReceiptDate                     datetime       -- ожидаемая дата поступления
 	,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
-	,ShipmentsType                   nvarchar(20)   -- Тип отправки DestinationLogo
+	,DestinationLogo                 nvarchar(20)   -- Тип отправки DestinationLogo
+    ,DestinationName                 nvarchar(120)  -- Тип отправки DestinationLogo
 	,ShipmentsAmount                 money          -- сумма отгрузки в долларах
+    ,ShipmentsAmountR                money          -- сумма отгрузки в рублях
 	,DetailCount                     int            -- количество деталей
 	,WeightKG                        money          -- вес физический (по прайсу)
 	,VolumeKG                        money          -- вес объемный (по прайсу)
@@ -40,7 +42,6 @@ begin
 	,UserID                          numeric(18,0) default dbo.GetUserID()
 	,inDatetime                      datetime      default GetDate()      --
 	,updDatetime                     datetime      default GetDate()      --
-
 	)
 
 	create unique index ao1 on tShipments(ShipmentsID) 

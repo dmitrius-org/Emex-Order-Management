@@ -41,5 +41,3 @@
 --    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе
 
 
-
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1013, 1013, 'Проставить признак: Обращение закрыто',  'TOrdersT.actRequestClosed', 20, 1

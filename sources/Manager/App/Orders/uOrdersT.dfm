@@ -130,6 +130,16 @@ object OrdersT: TOrdersT
       OnColumnResize = GridColumnResize
       Columns = <
         item
+          FieldName = 'Flag'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089#1099' (Flag)'
+          Width = 64
+          Visible = False
+          ReadOnly = True
+          Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1087#1088#1080#1079#1085#1072#1082#1080' '#1093#1072#1088#1072#1082#1090#1077#1088#1080#1079#1091#1102#1097#1080#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1079#1072#1082#1072#1079#1072' (Flag)'
+          Sortable = True
+        end
+        item
           FieldName = 'Status'
           Title.Alignment = taCenter
           Title.Caption = #1057#1090#1072#1090#1091#1089#1099
@@ -150,11 +160,11 @@ object OrdersT: TOrdersT
         item
           FieldName = 'ClientID'
           Title.Alignment = taCenter
-          Title.Caption = 'ClientID'
+          Title.Caption = #1048#1044' '#1050#1083#1080#1077#1085#1090#1072
           Width = 85
           Visible = False
           ReadOnly = True
-          Hint = 'ClientID'
+          Hint = #1048#1044' '#1050#1083#1080#1077#1085#1090#1072
           Sortable = True
         end
         item
@@ -197,7 +207,7 @@ object OrdersT: TOrdersT
         item
           FieldName = 'StatusName'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1090#1072#1090#1091#1089'/'#1057#1086#1089#1090#1086#1103#1085#1080#1077
+          Title.Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
           Width = 173
           ReadOnly = True
           Hint = #1057#1090#1072#1090#1091#1089
@@ -484,7 +494,7 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
-          FieldName = 'DestinationLogo'
+          FieldName = 'DestinationName'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
           Width = 124
@@ -542,15 +552,6 @@ object OrdersT: TOrdersT
           FieldName = 'DaysInWork'
           Title.Caption = #1044#1085#1077#1081' '#1074' '#1088#1072#1073#1086#1090#1077
           Width = 106
-          Sortable = True
-        end
-        item
-          FieldName = 'Flag'
-          Title.Alignment = taCenter
-          Title.Caption = 'Flag'
-          Width = 64
-          Visible = False
-          ReadOnly = True
           Sortable = True
         end
         item
@@ -1239,7 +1240,8 @@ object OrdersT: TOrdersT
       '      ,o.[ReplacementDetailNumber]'
       '      ,o.[ReplacementManufacturer]    '
       '      ,o.ReplacementPrice  '
-      '      ,o.[DestinationLogo] -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      '     -- ,o.[DestinationLogo] -- '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      '      ,o.[DestinationName]'
       '      ,o.[Invoice]'
       '      ,o.[FileDate]'
       '      ,o.[Flag]'
@@ -1314,23 +1316,6 @@ object OrdersT: TOrdersT
         Value = ''
         Name = 'INVOICE'
       end>
-    object QueryUserID: TFMTBCDField
-      FieldName = 'UserID'
-      Origin = 'UserID'
-      ReadOnly = True
-      Precision = 18
-      Size = 0
-    end
-    object QueryinDatetime: TSQLTimeStampField
-      FieldName = 'inDatetime'
-      Origin = 'inDatetime'
-      ReadOnly = True
-    end
-    object QueryupdDatetime: TSQLTimeStampField
-      FieldName = 'updDatetime'
-      Origin = 'updDatetime'
-      ReadOnly = True
-    end
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'OrderID'
@@ -1339,6 +1324,13 @@ object OrdersT: TOrdersT
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Precision = 18
       Size = 0
+    end
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
+    end
+    object QueryStatus: TIntegerField
+      FieldName = 'Status'
+      OnGetText = QueryStatusGetText
     end
     object QueryClientID: TFMTBCDField
       FieldName = 'ClientID'
@@ -1535,9 +1527,6 @@ object OrdersT: TOrdersT
     object QueryStatusID: TFMTBCDField
       FieldName = 'StatusID'
     end
-    object QueryFlag: TIntegerField
-      FieldName = 'Flag'
-    end
     object QueryOverPricing: TCurrencyField
       FieldName = 'OverPricing'
       DisplayFormat = '###,##0.00 %'
@@ -1563,7 +1552,8 @@ object OrdersT: TOrdersT
       Size = 64
     end
     object QueryDestinationLogo: TWideStringField
-      FieldName = 'DestinationLogo'
+      FieldName = 'DestinationName'
+      Size = 30
     end
     object QueryInvoice: TWideStringField
       FieldName = 'Invoice'
@@ -1578,10 +1568,6 @@ object OrdersT: TOrdersT
     object QueryDaysInWork: TIntegerField
       FieldName = 'DaysInWork'
     end
-    object QueryStatus: TIntegerField
-      FieldName = 'Status'
-      OnGetText = QueryStatusGetText
-    end
     object QueryFragile: TBooleanField
       FieldName = 'Fragile'
     end
@@ -1594,6 +1580,23 @@ object OrdersT: TOrdersT
     object QueryPercentSupped: TIntegerField
       FieldName = 'PercentSupped'
       DisplayFormat = '##0 %'
+    end
+    object QueryUserID: TFMTBCDField
+      FieldName = 'UserID'
+      Origin = 'UserID'
+      ReadOnly = True
+      Precision = 18
+      Size = 0
+    end
+    object QueryinDatetime: TSQLTimeStampField
+      FieldName = 'inDatetime'
+      Origin = 'inDatetime'
+      ReadOnly = True
+    end
+    object QueryupdDatetime: TSQLTimeStampField
+      FieldName = 'updDatetime'
+      Origin = 'updDatetime'
+      ReadOnly = True
     end
   end
   object DataSource: TDataSource

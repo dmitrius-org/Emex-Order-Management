@@ -9,8 +9,10 @@ create table pShipments
 ,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
 ,ShipmentsDate                   datetime       -- дата отгрузки
 ,ReceiptDate                     datetime       -- ожидаемая дата поступления
-,ShipmentsType                   nvarchar(20)   -- Тип отправки DestinationLogo
+,DestinationLogo                 nvarchar(20)   -- Тип отправки DestinationLogo
+,DestinationName                 nvarchar(120)  -- Тип отправки DestinationLogo
 ,ShipmentsAmount                 money          -- сумма отгрузки в долларах
+,ShipmentsAmountR                money          -- сумма отгрузки в рублях
 ,DetailCount                     int            -- количество деталей
 ,WeightKG                        money          -- вес физический (по прайсу)
 ,VolumeKG                        money          -- вес объемный (по прайсу)
@@ -45,7 +47,7 @@ create unique index ao1 on pShipments(Spid, Invoice)
 go
 grant select on pShipments to public
 go
-exec setOV 'pShipments', 'U', '20240611', '1'
+exec setOV 'pShipments', 'U', '20240822', '2'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pShipments', @desc = ''

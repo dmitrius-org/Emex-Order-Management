@@ -13,8 +13,10 @@ SELECT s.ShipmentsID
       ,s.ShipmentsDate               -- дата отгрузки
       ,s.ReceiptDate                 -- ожидаемая жата поступления (расчетное поле)
       ,s.Invoice                     -- номер инвойса
-      ,s.ShipmentsType               -- тип отправки
+      ,s.DestinationLogo             -- тип отправки
+      ,s.DestinationName
       ,s.ShipmentsAmount             -- сумма отгрузки в долларах
+      ,s.ShipmentsAmountR
       ,s.DetailCount                 -- количество деталей
       ,s.WeightKG                    -- вес физический (по прайсу)
       ,s.VolumeKG                    -- вес объемный (по прайсу)
@@ -82,7 +84,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240101', '0'
+exec setOV 'vShipments', 'V', '20240823', '1'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

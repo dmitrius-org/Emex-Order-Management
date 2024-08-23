@@ -74,6 +74,7 @@ as
         ,WeightKGAmount     -- Стоимость кг физического веса
         ,VolumeKGAmount   
         ,DestinationLogo
+        ,DestinationName
         ,PercentSupped
         )
   output inserted.OrderID into @ID (ID)
@@ -107,6 +108,7 @@ as
         ,pc.WeightKG   -- Стоимость кг физического веса
         ,pc.VolumeKG 
         ,pc.DestinationLogo
+        ,pc.DestinationName
         ,p.Reliability -- процент поставки
     from pOrders o (nolock)
    inner join tClients c (nolock)
@@ -123,7 +125,8 @@ as
                        pd.DestinationLogo,
                        pd.WeightKG,   -- Стоимость кг физического веса
                        pd.VolumeKG,
-                       pd.Fragile
+                       pd.Fragile,
+                       pd.Name as DestinationName
                   from tProfilesCustomer pc with (nolock index=ao2)
                  inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
                          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID

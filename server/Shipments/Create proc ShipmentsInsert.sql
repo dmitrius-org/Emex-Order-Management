@@ -16,8 +16,10 @@ as
 
   Update s 
      set --p.
-         s.ShipmentsType       = o.DestinationLogo
+         s.DestinationLogo     = o.DestinationLogo
+        ,s.DestinationName     = o.DestinationName
         ,s.ShipmentsAmount     = o.ShipmentsAmount
+        ,s.ShipmentsAmountR    = o.ShipmentsAmountR
         ,s.DetailCount         = o.DetailCount    
         ,s.WeightKG            = o.WeightKG       
         ,s.VolumeKG            = o.VolumeKG       
@@ -29,8 +31,10 @@ as
         ,s.VolumeKGDiff        = o.VolumeKGF - o.VolumeKG    -- указать разницу сумм вес объемный факт минус вес объемный из прайса   
         ,s.SuppliersID         = o.SuppliersID
     from pShipments s with (Updlock index=ao1)
-   cross apply (select Sum(o.AmountPurchaseF)                    as ShipmentsAmount
+   cross apply (select sum(o.AmountPurchaseF)                    as ShipmentsAmount
+                      ,sum(o.Amount)                             as ShipmentsAmountR
                       ,min(o.DestinationLogo)                    as DestinationLogo
+                      ,max(o.DestinationName)                    as DestinationName
                       ,sum(o.Quantity)                           as DetailCount
                       ,sum(isnull(o.WeightKG, 0)  * o.Quantity)  as WeightKG
                       ,sum(isnull(o.VolumeKG, 0)  * o.Quantity)  as VolumeKG
@@ -72,8 +76,10 @@ as
          ShipmentsDate              
         ,ReceiptDate                
         ,Invoice                    
-        ,ShipmentsType              
-        ,ShipmentsAmount            
+        ,DestinationLogo   
+        ,DestinationName
+        ,ShipmentsAmount    
+        ,ShipmentsAmountR
         ,DetailCount                
         ,WeightKG                   
         ,VolumeKG                         
@@ -97,8 +103,10 @@ select
          p.ShipmentsDate              
         ,p.ReceiptDate                
         ,p.Invoice                    
-        ,p.ShipmentsType              
-        ,p.ShipmentsAmount            
+        ,p.DestinationLogo   
+        ,p.DestinationName  
+        ,p.ShipmentsAmount  
+        ,p.ShipmentsAmountR
         ,p.DetailCount                
         ,p.WeightKG                   
         ,p.VolumeKG                          
@@ -165,5 +173,5 @@ return @r
 GO
 grant exec on ShipmentsInsert to public
 go
-exec setOV 'ShipmentsInsert', 'P', '20240101', '0'
+exec setOV 'ShipmentsInsert', 'P', '20240822', '1'
 go

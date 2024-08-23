@@ -183,10 +183,10 @@ object ShipmentsT: TShipmentsT
           Sortable = True
         end
         item
-          FieldName = 'ShipmentsType'
+          FieldName = 'DestinationName'
           Title.Alignment = taCenter
           Title.Caption = #1058#1080#1087' '#1086#1090#1087#1088#1072#1074#1082#1080
-          Width = 124
+          Width = 120
           ReadOnly = True
           Sortable = True
         end
@@ -196,6 +196,13 @@ object ShipmentsT: TShipmentsT
           Title.Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
           Width = 107
           ReadOnly = True
+          Sortable = True
+        end
+        item
+          FieldName = 'ShipmentsAmountR'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1088#1091#1073')'
+          Width = 124
           Sortable = True
         end
         item
@@ -401,7 +408,7 @@ object ShipmentsT: TShipmentsT
         end
         object UniLabel8: TUniLabel
           Left = 154
-          Top = 17
+          Top = 16
           Width = 78
           Height = 13
           Hint = ''
@@ -410,9 +417,9 @@ object ShipmentsT: TShipmentsT
           TabOrder = 4
         end
         object edtInvoice: TUniEdit
-          Left = 20
+          Left = 10
           Top = 35
-          Width = 128
+          Width = 139
           Hint = ''
           ShowHint = True
           Text = ''
@@ -422,7 +429,7 @@ object ShipmentsT: TShipmentsT
           ClearButton = True
         end
         object UniLabel4: TUniLabel
-          Left = 20
+          Left = 10
           Top = 16
           Width = 87
           Height = 13
@@ -602,10 +609,12 @@ object ShipmentsT: TShipmentsT
         '      ,s.ReceiptDate                 -- '#1086#1078#1080#1076#1072#1077#1084#1072#1103' '#1078#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085 +
         #1080#1103' ('#1088#1072#1089#1095#1077#1090#1085#1086#1077' '#1087#1086#1083#1077')'
       '      ,s.Invoice                     -- '#1085#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
-      '      ,s.ShipmentsType               -- '#1090#1080#1087' '#1086#1090#1087#1088#1072#1074#1082#1080
+      '      ,s.DestinationLogo             -- '#1090#1080#1087' '#1086#1090#1087#1088#1072#1074#1082#1080
+      '      ,s.DestinationName'
       
         '      ,s.ShipmentsAmount             -- '#1089#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1074' '#1076#1086#1083#1083#1072#1088#1072 +
         #1093
+      '      ,s.ShipmentsAmountR            -- '#1089#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1074' '#1088#1091#1073#1083#1103#1093
       '      ,s.DetailCount                 -- '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1077#1090#1072#1083#1077#1081
       
         '      ,s.WeightKG                    -- '#1074#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1086' '#1087#1088#1072#1081#1089 +
@@ -686,6 +695,11 @@ object ShipmentsT: TShipmentsT
       Origin = 'ShipmentsDate'
       Required = True
     end
+    object QuerySupplierBrief: TWideStringField
+      FieldName = 'SupplierBrief'
+      Origin = 'SupplierBrief'
+      Size = 256
+    end
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
       Origin = 'ReceiptDate'
@@ -696,13 +710,18 @@ object ShipmentsT: TShipmentsT
       Size = 64
     end
     object QueryShipmentsType: TWideStringField
-      FieldName = 'ShipmentsType'
+      FieldName = 'DestinationName'
       Origin = 'ShipmentsType'
+      Size = 120
     end
     object QueryShipmentsAmount: TCurrencyField
       FieldName = 'ShipmentsAmount'
       Origin = 'ShipmentsAmount'
       DisplayFormat = '###,##0.00 $'
+    end
+    object QueryShipmentsAmountR: TCurrencyField
+      FieldName = 'ShipmentsAmountR'
+      DisplayFormat = '###,##0.00 '#8381
     end
     object QueryDetailCount: TIntegerField
       FieldName = 'DetailCount'
@@ -797,11 +816,6 @@ object ShipmentsT: TShipmentsT
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
     end
-    object QuerySupplierBrief: TWideStringField
-      FieldName = 'SupplierBrief'
-      Origin = 'SupplierBrief'
-      Size = 256
-    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -893,7 +907,7 @@ object ShipmentsT: TShipmentsT
       '      ,@SupplierVolumeKG    = :NEW_SupplierVolumeKG'
       '      ,@TransporterWeightKG = :NEW_TransporterWeightKG'
       '      ,@TransporterVolumeKG = :NEW_TransporterVolumeKG'
-      '      ,@ShipmentsID         = :ShipmentsID')
+      '      ,@ShipmentsID                = :ShipmentsID')
     FetchRowSQL.Strings = (
       'SELECT '
       '       SupplierWeightKG, '

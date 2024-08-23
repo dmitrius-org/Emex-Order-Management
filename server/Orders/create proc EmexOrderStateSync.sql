@@ -37,8 +37,10 @@ delete p
             (select 1
                from tProtocol pr (nolock)
               where pr.ObjectID   = p.OrderID 
-                and pr.NewStateID = 24 --24	Received	Получено
-               )
+                and pr.NewStateID in ( 24 --24	Received	Получено
+                                      ,26 --24  IssuedClient	Выдано клиенту
+                                     )
+            )
 
 Update pMovement
    set pMovement.N = p.N

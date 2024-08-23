@@ -70,7 +70,7 @@ declare @r int = 0
         ,((1 + p.Packing - 1) / p.Packing) * p.Packing -- Quantity
 		,p.Price
 		,p.PriceRub
-		,p.PriceRub
+		,((1 + p.Packing - 1) / p.Packing) * p.Packing  * p.PriceRub -- Amount
         ,p.WeightGr
         ,p.VolumeAdd
         ,p.DestinationLogo

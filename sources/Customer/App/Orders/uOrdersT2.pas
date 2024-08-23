@@ -133,6 +133,7 @@ type
     UniLabel8: TUniLabel;
     UniPanel: TUniPanel;
     btnCancel: TUniBitBtn;
+    QueryDestinationName: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);

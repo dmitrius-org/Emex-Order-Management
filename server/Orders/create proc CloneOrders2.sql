@@ -86,7 +86,11 @@ INSERT INTO [tOrders]
       ,DateDeparture
       ,DaysInWork  
 	  ,DeliveryTerm
+      ,SuppliersID
+      ,Kurs
       ,Fragile
+      ,PercentSupped
+      ,DestinationName
 	  ,ID)	  
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
   INTO  @ID (OrderID, ParentID, StateID, ID)
@@ -160,7 +164,11 @@ select o.ClientID
       ,o.DateDeparture
       ,o.DaysInWork   
 	  ,o.DeliveryTerm
+      ,o.SuppliersID
+      ,o.Kurs
       ,o.Fragile -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
+      ,o.PercentSupped
+      ,o.DestinationName
 	  ,p.ID
   from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join pMovement pp (nolock)

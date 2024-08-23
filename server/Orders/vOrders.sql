@@ -42,7 +42,6 @@ SELECT o.[OrderID]
       ,o.[Reliability]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
-      
 	  /* превышение объема, разница Объемный вес - Физический вес по данным прайс-листа.
 	  Верно считать так:
 
@@ -62,15 +61,12 @@ SELECT o.[OrderID]
 		        when p.[VolumeKGF] - p.[WeightKGF]  >= 0 then p.[VolumeKGF] - p.[WeightKGF]
 			    else 0    
 		      end
-
 	   end OverVolume
-
       ,o.[Margin]
       ,o.[MarginF]
       ,o.[Profit]
       ,o.[Income]
       ,o.[IncomePRC]
-
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
       ,case 
          when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
@@ -84,10 +80,8 @@ SELECT o.[OrderID]
       ,o.DeliveryDateToCustomer        -- Дата поставки клиенту	
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
-
 	  ,o.DateDeparture                 -- Дата вылета 
-	  ,o.DaysInWork                    -- Дней в работе
-                                       
+	  ,o.DaysInWork                    -- Дней в работе                             
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
       ,o.Comment                       -- 
@@ -97,21 +91,17 @@ SELECT o.[OrderID]
 	  ,o.ReplacementPrice              -- Изменение цены
 	  ,o.CustomerPriceLogo             -- Наименование прайса заказа от клиента
 	  ,isnull(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo     -- Направление отгрузки
-      ,pd.Name  as DestinationName     -- Направление отгрузки    
+      ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
       ,o.Invoice                       -- номер инвойса
       ,o.FileDate                      -- Дата файла
-
       ,o.[UserID]
       ,u.[Name]                 as UserName
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,c.SuppliersID
-
       ,ps.OrderUniqueCount      -- количество уникальных заказов
       ,o.PercentSupped          -- процент поставки детали
-
 	  ,isnull(o.Flag, 0)        as Flag
-
       ,p.PriceID                       -- 
       ,p.Quantity               as PriceQuantity -- количество из прайса
       ,cast(Case 
@@ -122,8 +112,6 @@ SELECT o.[OrderID]
       
 	  ,m.Flag&1 /*1 - начальное состояние */ 
                                 as IsStartState
-
-
   FROM vUserAccess ua 
 
  inner join tOrders o (nolock)
@@ -174,7 +162,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240810', '8'
+exec setOV 'vOrders', 'V', '20240822', '9'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

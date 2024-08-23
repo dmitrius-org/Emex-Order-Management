@@ -239,6 +239,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
+          ShowToolTip = True
           FieldName = 'DetailNumber'
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
@@ -251,7 +252,7 @@ object OrdersT2: TOrdersT2
           FieldName = 'DetailName'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080
-          Width = 150
+          Width = 258
           Sortable = True
         end
         item
@@ -327,6 +328,12 @@ object OrdersT2: TOrdersT2
           ReadOnly = True
           Hint = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090
           Sortable = True
+        end
+        item
+          FieldName = 'DestinationName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Width = 150
         end
         item
           FieldName = 'DeliveryPlanDateSupplier'
@@ -773,7 +780,6 @@ object OrdersT2: TOrdersT2
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
-      '      --,o.[DetailID]'
       '      ,o.[Quantity]'
       '      ,o.[Price]'
       '      ,o.[Amount]'
@@ -800,6 +806,7 @@ object OrdersT2: TOrdersT2
       '      ,o.[ReplacementManufacturer]    '
       '      ,o.[ReplacementPrice]  '
       '      ,o.[Reference]'
+      '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
@@ -1026,6 +1033,10 @@ object OrdersT2: TOrdersT2
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
       ReadOnly = True
+    end
+    object QueryDestinationName: TWideStringField
+      FieldName = 'DestinationName'
+      Size = 60
     end
   end
   object DataSource: TDataSource

@@ -66,6 +66,7 @@ begin
 	,OverPricing                     money          -- Превышение Цены
 
 	,DestinationLogo                 nvarchar(20)   -- Направление отгрузки
+    ,DestinationName                 nvarchar(60)   -- Направление отгрузки
 	,PriceID	                     numeric(18, 0) -- Ид детали tPrice.PriceID   
 	--                               
 	,Flag                            int            -- битовые признаки, смотри flags.md     

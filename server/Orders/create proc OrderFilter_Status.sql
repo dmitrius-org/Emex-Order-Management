@@ -12,12 +12,13 @@ SELECT
        n.[NodeID]
       ,n.[Name]
   FROM [tNodes] n (nolock)
- where n.Type = 0 -- состояния
- order by case
-            when n.Brief = 'Preparation' then 0
-            else n.NodeID
-          end
-         ,n.[NodeID]
+ where n.Type   = 0 -- состояния
+   and n.Brief <> 'Preparation'
+ --order by case
+ --           when n.Brief = 'Preparation' then 0
+ --           else n.NodeID
+ --         end
+ --        ,n.[NodeID]
 
  exit_:
  return @r

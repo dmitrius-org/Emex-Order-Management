@@ -60,7 +60,6 @@ SELECT o.[OrderID]
       ,o.DeliveryDateToCustomer        -- Дата поставки клиенту	
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
-
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
       ,o.Comment                
@@ -69,16 +68,15 @@ SELECT o.[OrderID]
 	  ,o.ReplacementDetailNumber       -- номер замены
 	  ,o.ReplacementPrice              -- Изменение цены
 	  ,o.CustomerPriceLogo             -- Наименование прайса заказа от клиента
-
-    --  ,u.Name as UserName
       ,p.Restrictions                  -- ограничение
       ,o.Invoice                       -- номер инвойса
+      ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
 
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,o.OrderNum              Reference
 	  ,o.Flag&1 /*1 - начальное состояние */ 
-                                as IsStartState
+                            as IsStartState
       ,o.Flag
   FROM [tOrders] o (nolock)
  inner join tUser u with (nolock index=ao1)
@@ -86,14 +84,22 @@ SELECT o.[OrderID]
  inner join tNodes s with (nolock index=ao1)
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 
-
- --left join tProfilesCustomer pc with (nolock)
- --        on pc.ClientPriceLogo = o.CustomerPriceLogo
- --left join tProfilesDelivery pd with (nolock)
- --        on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
  
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
+
+ outer apply (
+      select top 1 pd.DestinationLogo, pd.Name
+        from tProfilesCustomer pc with (nolock)
+        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+       where pc.ClientID = c.ClientID
+         and pd.DestinationLogo    = o.DestinationLogo
+       order by case 
+                  when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
+                  else 555
+                end
+     ) as pd
 
   left join tMakes b (nolock)
          on b.Code = o.ReplacementMakeLogo
@@ -104,7 +110,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20240423', '3'
+exec setOV 'vCustomerOrders', 'V', '20240822', '4'
 go
  
 -- Описание таблицы
