@@ -117,7 +117,8 @@ declare @r int = 0
          ) 
   OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum, INSERTED.PriceLogo 
     INTO @PNew(PriceID, Make, DetailNum, PriceLogo)
-  select b.Make 
+  select distinct 
+         b.Make 
         ,b.MakeName
   	    ,b.DetailNum     
   	    ,b.PartNameRus --DetailName

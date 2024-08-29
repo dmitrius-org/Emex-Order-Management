@@ -25,13 +25,13 @@ select o.OrderID
                                                   ,'')))    as DetailNumberDetailName
       ,o.Manufacturer + ' ' + o.DetailNumber ManufacturerDetailNumber
       ,coalesce(p.WeightKGF, o.WeightKG, 0) WeightKGF
-
-   from tOrders o with (nolock)
+      ,o.OrderDetailSubId    as BarCode
+  from tOrders o with (nolock)
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID 
-  where o.Invoice = @Invoice
+ where o.Invoice = @Invoice
  -- and o.OrderID= 133499
-union all
+ union all
 select o.OrderID
       ,m.Name
       ,o.ReplacementDetailNumber
@@ -44,15 +44,15 @@ select o.OrderID
                                                              ,'')))
       ,m.Name + ' ' + o.ReplacementDetailNumber
       ,coalesce(p.WeightKGF, o.WeightKG, 0) WeightKGF
-
-   from tOrders o with (nolock)
+      ,o.OrderDetailSubId    as BarCode
+  from tOrders o with (nolock)
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID 
-  inner join tMakes m (nolock)
-          on m.Code = o.ReplacementMakeLogo
-  where o.Invoice = @Invoice 
+ inner join tMakes m (nolock)
+         on m.Code = o.ReplacementMakeLogo
+ where o.Invoice = @Invoice 
     --and o.OrderID= 133499
-    and isnull(o.ReplacementMakeLogo, '') <> ''
+   and isnull(o.ReplacementMakeLogo, '') <> ''
 
 order by OrderID
 

@@ -92,6 +92,12 @@ object ExportForm: TExportForm
             Title.Caption = #1042#1077#1089' 1 '#1096#1090'.'
             Width = 107
             ReadOnly = True
+          end
+          item
+            FieldName = 'BarCode'
+            Title.Alignment = taCenter
+            Title.Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
+            Width = 196
           end>
       end
     end
@@ -410,6 +416,10 @@ object ExportForm: TExportForm
       FieldName = 'WeightKGF'
       Origin = 'WeightKGF'
       ReadOnly = True
+    end
+    object FDExportNomenclatureBarCode: TWideStringField
+      FieldName = 'BarCode'
+      Size = 32
     end
   end
   object DSNomenklature: TDataSource

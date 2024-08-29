@@ -59,7 +59,7 @@ begin
 	,EmexQuantity                    int            -- Количество	
 	,CustomerSubId                   nvarchar(32)   -- идентификатор запчасти клиента
 	,Reference                       nvarchar(32)   -- Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
-	,OrderDetailSubId                nvarchar(128)  -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
+	,OrderDetailSubId                nvarchar(32)  -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
 	,Warning                         nvarchar(128)  -- Предупреждение
 	,Comment                         nvarchar(512)  -- Комментарий
 	,Invoice                         nvarchar(64)   -- Инвойс, номер отправки

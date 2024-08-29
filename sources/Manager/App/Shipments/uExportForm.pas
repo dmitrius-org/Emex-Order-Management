@@ -70,6 +70,7 @@ type
     actExportImplementation: TAction;
     actRefreschImplementation: TAction;
     qImplementationClientBrief: TWideStringField;
+    FDExportNomenclatureBarCode: TWideStringField;
     procedure GridNomenclatureCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actExportNomenklatureExecute(Sender: TObject);
