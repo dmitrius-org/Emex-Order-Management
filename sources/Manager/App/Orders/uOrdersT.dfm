@@ -413,6 +413,12 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
+          FieldName = 'DeliveryTermSupplier'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+          Width = 100
+        end
+        item
           FieldName = 'DeliveryRestTermSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -438,7 +444,7 @@ object OrdersT: TOrdersT
           Title.Caption = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072
           Width = 100
           ReadOnly = True
-          Hint = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072
+          Hint = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072' (DeliveryDaysReserve)'
           Sortable = True
         end
         item
@@ -447,7 +453,7 @@ object OrdersT: TOrdersT
           Title.Caption = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
           Width = 100
           ReadOnly = True
-          Hint = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
+          Hint = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072' (DeliveryNextDate)'
           Sortable = True
         end
         item
@@ -1221,10 +1227,14 @@ object OrdersT: TOrdersT
         '      ,o.[DeliveryPlanDateSupplier] -- '#1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103 +
         ' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       
+        '      ,o.[DeliveryTermSupplier]     -- '#1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1076#1077#1085#1080#1103' '#1087#1086#1089#1090#1074 +
+        #1097#1080#1082#1091
+      
         '      ,o.[DeliveryRestTermSupplier] -- '#1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077 +
         #1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       '      ,o.[DeliveredDateToSupplier]  -- '#1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       '      ,o.[DeliveryDaysReserve]'
+      '      ,o.[DeliveryDaysReserve2]'
       '      ,o.[DeliveryNextDate]         -- '#1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072' '
       '      ,o.[DeliveryNextDate2]        -- '#1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
       '      ,o.[DeliveryDateToCustomer]'
@@ -1488,6 +1498,9 @@ object OrdersT: TOrdersT
       FieldName = 'DeliveryPlanDateSupplier'
       Origin = 'DeliveryPlanDateSupplier'
     end
+    object QueryDeliveryTermSupplier: TIntegerField
+      FieldName = 'DeliveryTermSupplier'
+    end
     object QueryDeliveryRestTermSupplier: TIntegerField
       FieldName = 'DeliveryRestTermSupplier'
     end
@@ -1498,6 +1511,10 @@ object OrdersT: TOrdersT
     object DeliveryDaysReserve: TIntegerField
       FieldName = 'DeliveryDaysReserve'
       Origin = 'DaysReserveDeparture'
+      OnGetText = DeliveryDaysReserveGetText
+    end
+    object QueryDeliveryDaysReserve2: TIntegerField
+      FieldName = 'DeliveryDaysReserve2'
     end
     object QueryNextDateDeparture: TSQLTimeStampField
       FieldName = 'DeliveryNextDate'

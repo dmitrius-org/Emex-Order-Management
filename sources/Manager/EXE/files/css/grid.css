@@ -163,6 +163,11 @@
     text-align: center;
 }
 
+.grid-users .x-leaf-column-header {
+    height: auto;
+    vertical-align: top;
+}
+
 /* Перенос строки в заголовке таблицы заказов */
 .grid-prices .x-column-header-inner .x-column-header-text {
     white-space: normal;

@@ -13,7 +13,7 @@ select
       ,t.DetailNum        -- 
       ,t.PartNameRus      -- 
       ,t.PriceLogo        -- 
-      ,t.OurDelivery      -- наш срок поставки, показываем клиенту
+      ,t.OurDelivery      -- наш срок поставки, показываем клиенту/срок поствки клиент
 	  ,t.Quantity         -- 
       ,t.PriceRub
       ,t.Amount           -- 
@@ -28,4 +28,4 @@ select
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20240730', '7'
+exec setOV 'vBasket', 'V', '20240906', '9'

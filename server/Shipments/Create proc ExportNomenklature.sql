@@ -25,7 +25,10 @@ select o.OrderID
                                                   ,'')))    as DetailNumberDetailName
       ,o.Manufacturer + ' ' + o.DetailNumber ManufacturerDetailNumber
       ,coalesce(p.WeightKGF, o.WeightKG, 0) WeightKGF
-      ,o.OrderDetailSubId    as BarCode
+      ,case 
+         when isnull(o.ReplacementMakeLogo, '') = '' then o.OrderDetailSubId 
+         else ''
+       end as BarCode
   from tOrders o with (nolock)
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID 

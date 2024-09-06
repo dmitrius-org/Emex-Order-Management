@@ -44,7 +44,7 @@ Update p
                                         else DATEADD(dd, isnull(t.DeliveryTerm, 0), o.OrderDate)
                                       end
       ,p.DeliveryTerm = iif(o.Flag&16>0, isnull(o.DeliveryTerm, 0), isnull(t.DeliveryTerm, 0))
-  from pDeliveryTerm p (nolock)
+  from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
   left join tPrices t (nolock)
@@ -87,15 +87,17 @@ update p
          on o.OrderID = p.OrderID
         and isnull(o.StatusID, 0) not in (8  -- Send
                                          ,12 -- InCancel 
+                                         ,24 -- Received Получено
+                                         ,26 -- IssuedClient Выдано клиенту
      	                                 )
  where p.Spid = @@spid
 
 
 if @IsSave = 1
     update o
-       set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier
-          ,o.DeliveryNextDate         = p.DeliveryNextDate
-		  ,o.DeliveryDaysReserve      = p.DeliveryDaysReserve -- Дней запаса до вылета
+       set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier 
+          ,o.DeliveryNextDate         = p.DeliveryNextDate            -- Ближайшая дата вылета
+		  ,o.DeliveryDaysReserve      = p.DeliveryDaysReserve         -- Дней запаса до вылета
 		  ,o.DeliveryTerm             = iif(o.Flag&16>0, o.DeliveryTerm, p.DeliveryTerm) -- срок доставки
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
@@ -108,6 +110,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalc to public
 go
-exec setOV 'OrdersDeliveryTermCalc', 'P', '20240619', '10'
+exec setOV 'OrdersDeliveryTermCalc', 'P', '20240906', '11'
 go
   

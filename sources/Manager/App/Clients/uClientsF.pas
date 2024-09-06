@@ -173,6 +173,7 @@ type
     N9: TUniMenuItem;
     N10: TUniMenuItem;
     N11: TUniMenuItem;
+    qProfilesCustomerDeliveryTermCustomer: TIntegerField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

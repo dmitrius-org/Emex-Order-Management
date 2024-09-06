@@ -72,11 +72,13 @@ SELECT o.[OrderID]
          when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
          then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
          else 0
-       end  [DeliveryRestTermSupplier] -- Остаток срока до поступления поставщику	
-      ,o.[DeliveredDateToSupplier]     -- Доставлена поставщику
+       end  [DeliveryRestTermSupplier]         -- Остаток срока до поступления поставщику	
+      ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
+      ,o.[DeliveredDateToSupplier]             -- Доставлена поставщику
       ,o.DeliveryDaysReserve           -- Дней запаса до вылета	
+      ,o.DeliveryDaysReserve2          --
       ,o.DeliveryNextDate              -- Ближайшая дата вылета
-      ,o.DeliveryNextDate2             -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate	
+      ,o.DeliveryNextDate2             -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate	
       ,o.DeliveryDateToCustomer        -- Дата поставки клиенту	
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
@@ -162,7 +164,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240822', '9'
+exec setOV 'vOrders', 'V', '20240906', '10'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

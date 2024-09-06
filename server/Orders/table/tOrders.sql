@@ -40,7 +40,10 @@ begin
 	,DeliveryPlanDateSupplier        datetime       -- Плановая дата поступления поставщику	
 	,DeliveryRestTermSupplier        int            -- Остаток срока до поступления поставщику	
 	,DeliveredDateToSupplier         datetime       -- Доставлена поставщику
+  	,DeliveryTerm	                 int            -- Срок доставки поставщику
+
 	,DeliveryDaysReserve             int            -- Дней запаса до вылета	
+    ,DeliveryDaysReserve2            int            -- Дней запаса до вылета, рассчитывается если прошол срок DeliveryNextDate		
 	,DeliveryNextDate                datetime       -- Ближайшая дата вылета	
 	,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate	
 	,DeliveryDateToCustomer          datetime       -- Дата поставки клиенту	
@@ -59,7 +62,7 @@ begin
 	,EmexQuantity                    int            -- Количество	
 	,CustomerSubId                   nvarchar(32)   -- идентификатор запчасти клиента
 	,Reference                       nvarchar(32)   -- Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
-	,OrderDetailSubId                nvarchar(32)  -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
+	,OrderDetailSubId                nvarchar(32)   -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
 	,Warning                         nvarchar(128)  -- Предупреждение
 	,Comment                         nvarchar(512)  -- Комментарий
 	,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
@@ -73,7 +76,7 @@ begin
 	,ParentID                        numeric(18,0)  -- Родительский идентификатор заказа. Проставляется при дроблении заказа.
 	,FileDate                        datetime       -- Дата файла заказа
 	,ClientOrderNum                  int            -- Номер заказа	клиента
-	,DeliveryTerm	                 int            -- Срок доставки
+
   
 	-- блок фин. показателей  
 	,Margin                          money          -- Наценка из прайса	

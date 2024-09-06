@@ -181,7 +181,7 @@ declare @r int = 0
         ,Fragile
 
         ,ClientOrderNum
-        ,DeliveryTerm
+        ,DeliveryTerm -- срок поставки поставщику
 
         ,DetailID
         ,CustomerSubId
@@ -190,6 +190,8 @@ declare @r int = 0
         ,WeightKGAmount
         ,VolumeKGAmount
 
+        ,DeliveryTermToCustomer -- срок поставки клиенту
+        ,DeliveryDateToCustomer -- Дата поставки клиенту	
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
@@ -236,6 +238,8 @@ declare @r int = 0
         ,b.BasketID -- ID
         ,pd.WeightKG
         ,pd.VolumeKG
+        ,b.OurDelivery -- срок поставки клиенту
+        ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту	
     from tMarks m (nolock)
    inner join tBasket b (nolock)
            on b.BasketID = m.ID
@@ -325,6 +329,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240810', '16'
+exec setOV 'OrderCreateFromBasket', 'P', '20240906', '17'
 go
  

@@ -40,4 +40,9 @@
 --    ,WorkOrderCount        int        --  оличество заказанных позиций, только в работе 
 --    ,WorkOrderUniqueCount  int        --  оличество уникальных заказов, только в работе
 
+alter table torders
+    add DeliveryDaysReserve2            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate		
 
+alter table tProfilesCustomer
+    add DeliveryTermCustomer            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate
+    

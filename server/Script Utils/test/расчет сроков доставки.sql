@@ -1,4 +1,4 @@
- 
+ /*
 
 -- расчет сроков дотавки
 delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
@@ -38,8 +38,35 @@ select p.DeliveryNextDate DeliveryNextDateP,
          on o.OrderID = p.OrderID
  where p.spid = @@Spid
 
+ --*/
+ update tOrders
+ set DeliveryNextDate2 = null, DeliveryDaysReserve2 = null
+  from tOrders
+ where OrderID = 136695
+ 
+
+  -- расчет сроков дотавки
+ delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+ insert pDeliveryTerm (Spid, OrderID)
+ Select distinct @@spid, 136695
+  -- from pMovement (nolock)
+  --where Spid = @@SPID
+  
+ exec OrdersDeliveryTermCalcNext @IsSave = 1
 
 
+ select 
+ DeliveryDaysReserve
+,DeliveryNextDate
+,DeliveryDaysReserve2
+,DeliveryNextDate2
+,*
+ from tOrders
+ where OrderID = 136695
+
+
+
+ select * from pDeliveryTerm where spid = @@spid
 
 
 

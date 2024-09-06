@@ -23,6 +23,7 @@ as
     declare @r int = 0
 
     select o.OrderID
+          ,c.Brief ClientBrief
           ,case 
              when isnull(o.ReplacementMakeLogo, '') <> '' 
              then cast(m.Name as nvarchar)
@@ -62,7 +63,7 @@ as
           ,o.Quantity
           ,o.Price  PricePurchase  
           ,o.Amount AmountPurchase
-          ,c.Brief ClientBrief
+          ,SUBSTRING(pr.Comment, CHARINDEX('box:', pr.Comment) + 4, LEN(pr.Comment) - CHARINDEX('box:', pr.Comment) +5) as Box
       from tOrders o with (nolock)
      inner join tClients c (nolock)
              on c.ClientID = o.ClientID     
@@ -70,10 +71,18 @@ as
              on p.PriceID = o.PriceID 
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
+
+    outer apply (select top 1 *
+                   from tProtocol p (nolock)
+                  where p.ObjectID = o.OrderID
+                    and p.NewStateID = 8 -- отправлено
+                  order by p.ProtocolID desc
+                 ) as pr
+
           
      where o.Invoice = @Invoice
 
-     order by c.Brief, o.OrderID
+     order by c.Brief, o.OrderID, Box
 
 exit_:
 

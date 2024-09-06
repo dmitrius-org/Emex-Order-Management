@@ -37,19 +37,20 @@ tBasket - корзина деталей
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
   ,Fragile                 money 
+  ,DeliveryTermToCustomer  int            -- Срок поставки клиенту	
   
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
   ,Packing                 int            -- количество деталей в упаковке
      --
-    ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
-    ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
+  ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
+  ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
 
-    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+  ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
 
-    ,CONSTRAINT PK_tBasket_BasketID PRIMARY KEY CLUSTERED (BasketID)
-	)
-    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tBasket));
+  ,CONSTRAINT PK_tBasket_BasketID PRIMARY KEY CLUSTERED (BasketID)
+)
+  WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tBasket));
 
   grant all on tBasket to public;
   --

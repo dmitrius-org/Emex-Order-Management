@@ -201,6 +201,8 @@ type
     QueryPercentSupped: TIntegerField;
     actRequestClosed: TAction;
     N9: TUniMenuItem;
+    QueryDeliveryTermSupplier: TIntegerField;
+    QueryDeliveryDaysReserve2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -245,6 +247,8 @@ type
     procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure actRequestClosedExecute(Sender: TObject);
+    procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -1004,7 +1008,7 @@ end;
 
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'DetailNumber') and (QueryReplacementDetailNumber.Value <> '') then
+  if (QueryReplacementDetailNumber.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span><span class="x-replacement-detail-number">' + QueryReplacementDetailNumber.Value + '</span>';
   end
@@ -1014,7 +1018,7 @@ end;
 
 procedure TOrdersT.QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'MakeLogo') and (QueryReplacementMakeLogo.Value <> '') then
+  if (QueryReplacementMakeLogo.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-make-logo-arrow">&#10149;</span><span class="x-replacement-make-logo">' + QueryReplacementMakeLogo.Value + '</span>';
   end
@@ -1024,7 +1028,7 @@ end;
 
 procedure TOrdersT.QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'Manufacturer') and (QueryReplacementManufacturer.Value <> '') then
+  if (QueryReplacementManufacturer.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-manufacturer-arrow">&#10149;</span><span class="x-replacement-manufacturer">' + QueryReplacementManufacturer.Value + '</span>';
   end
@@ -1282,6 +1286,18 @@ begin
    Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
 end;
 
+procedure TOrdersT.DeliveryDaysReserveGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if (not QueryDeliveryDaysReserve2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryDaysReserve2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
 procedure TOrdersT.DeselectAll;
 begin
   Grid.JSInterface.JSCall('getSelectionModel().deselectAll', []);
@@ -1419,6 +1435,7 @@ procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
      fOrderDate.DateTime := date();
+     fClient.Text := 'egud@mail.ru';
     // fDetailNum.Text := '32008XJ';
   {$ENDIF}
 end;

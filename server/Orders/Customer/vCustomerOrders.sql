@@ -49,19 +49,18 @@ SELECT o.[OrderID]
          when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
          then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
          else 0
-       end  [DeliveryRestTermSupplier] -- Остаток срока до поступления поставщику	
-      ,o.[DeliveredDateToSupplier]     -- Доставлена поставщику
-      ,case 
-         when o.DeliveryNextDate < cast(getDate() as date)
-         then 0
-         else DATEDIFF(dd, getDate(), o.DeliveryNextDate)
-       end  DeliveryDaysReserve        -- Дней запаса до вылета	
-      ,o.DeliveryNextDate              -- Ближайшая дата вылета
-      ,o.DeliveryDateToCustomer        -- Дата поставки клиенту	
-      ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
-      ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
-	  ,o.OverPricing                   -- превышение
-	  ,o.Warning                       -- предупреждение/замечания
+       end  [DeliveryRestTermSupplier]         -- Остаток срока до поступления поставщику	
+      ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
+      ,o.DeliveredDateToSupplier               -- Доставлена поставщику
+      ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
+      ,o.DeliveryDaysReserve2          --
+      ,o.DeliveryNextDate                      -- Ближайшая дата вылета
+      ,o.DeliveryNextDate2                     -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate
+      ,o.DeliveryDateToCustomer                -- Дата поставки клиенту	
+      ,o.DeliveryTermToCustomer	               -- Срок поставки клиенту	
+      ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
+	  ,o.OverPricing                           -- превышение
+	  ,o.Warning                               -- предупреждение/замечания
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementMakeLogo           -- бренд замены
@@ -110,7 +109,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20240822', '4'
+exec setOV 'vCustomerOrders', 'V', '20240906', '5'
 go
  
 -- Описание таблицы

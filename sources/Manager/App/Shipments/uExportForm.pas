@@ -71,6 +71,7 @@ type
     actRefreschImplementation: TAction;
     qImplementationClientBrief: TWideStringField;
     FDExportNomenclatureBarCode: TWideStringField;
+    qImplementationBox: TWideStringField;
     procedure GridNomenclatureCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actExportNomenklatureExecute(Sender: TObject);
@@ -83,6 +84,8 @@ type
     procedure actRefreschImplementationExecute(Sender: TObject);
     procedure GridImplementationCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
+    procedure GridImplementationKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FInvoice: String;
     procedure SetInvoice(const Value: String);
@@ -161,6 +164,18 @@ procedure TExportForm.GridImplementationCellContextClick(
   Column: TUniDBGridColumn; X, Y: Integer);
 begin
   pmImplementation.Popup(X, Y, GridImplementation);
+end;
+
+procedure TExportForm.GridImplementationKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      (Sender as TUniDBGrid).JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
 end;
 
 procedure TExportForm.GridNomenclatureCellContextClick(Column: TUniDBGridColumn;

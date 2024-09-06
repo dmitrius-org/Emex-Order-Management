@@ -23,6 +23,7 @@ create table pProfilesCustomer
 ,ClientPriceLogo     nvarchar(32)   -- Наименование прайса клиента по которым заказываются детали
                                     -- по данному полю выполняем сопоставление с tOrders.CustomerPriceLogo
 ,UploadDelimiterID   int            -- разделитель 
+,DeliveryTermCustomer    int            -- Срок поставки клиенту	  
 )
 go
 create unique index ao1 on pProfilesCustomer(ID)
@@ -31,7 +32,7 @@ create unique index ao2 on pProfilesCustomer(Spid, ClientID, Brief)
 go
 grant all on pProfilesCustomer to public
 go
-exec setOV 'pProfilesCustomer', 'U', '20240618', '1'
+exec setOV 'pProfilesCustomer', 'U', '20240906', '2'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pProfilesCustomer', @desc = 'Профили управления выгрузкой прайсов'

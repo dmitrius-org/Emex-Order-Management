@@ -96,9 +96,9 @@ object OrdersT2: TOrdersT2
     LayoutConfig.Width = '100'
     object Grid: TUniDBGrid
       Left = 0
-      Top = 100
+      Top = 86
       Width = 1402
-      Height = 439
+      Height = 453
       Hint = ''
       ShowHint = True
       CustomAttribs.Strings = (
@@ -345,7 +345,13 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'DeliveryRestToCustomer'
+          FieldName = 'DeliveryTermSupplier'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+          Width = 100
+        end
+        item
+          FieldName = 'DeliveryRestTermSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
@@ -357,7 +363,7 @@ object OrdersT2: TOrdersT2
           FieldName = 'DeliveredDateToSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-          Width = 100
+          Width = 134
           ReadOnly = True
           Hint = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Sortable = True
@@ -383,28 +389,28 @@ object OrdersT2: TOrdersT2
         item
           FieldName = 'DeliveryDateToCustomer'
           Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
           Width = 100
           ReadOnly = True
-          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
           Sortable = True
         end
         item
           FieldName = 'DeliveryTermToCustomer'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
           Width = 100
           ReadOnly = True
-          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
           Sortable = True
         end
         item
           FieldName = 'DeliveryRestToCustomer'
           Title.Alignment = taCenter
-          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
           Width = 100
           ReadOnly = True
-          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1091
+          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
           Sortable = True
         end
         item
@@ -427,7 +433,7 @@ object OrdersT2: TOrdersT2
       Left = 3
       Top = 3
       Width = 1396
-      Height = 94
+      Height = 80
       Hint = ''
       ShowHint = True
       Align = alTop
@@ -441,7 +447,7 @@ object OrdersT2: TOrdersT2
         Left = 3
         Top = 3
         Width = 1390
-        Height = 88
+        Height = 74
         Hint = ''
         ShowHint = True
         AlignmentControl = uniAlignmentClient
@@ -449,9 +455,10 @@ object OrdersT2: TOrdersT2
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
+        ExplicitHeight = 88
         DesignSize = (
           1390
-          88)
+          74)
         object UniLabel1: TUniLabel
           Left = 17
           Top = 16
@@ -790,10 +797,17 @@ object OrdersT2: TOrdersT2
       '      ,o.[WeightKGF]'
       '      ,o.[VolumeKGF]'
       '      ,o.[DeliveryPlanDateSupplier]'
-      '      ,o.[DeliveryRestTermSupplier]'
+      
+        '      ,o.[DeliveryTermSupplier]     -- '#1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1076#1077#1085#1080#1103' '#1087#1086#1089#1090#1074 +
+        #1097#1080#1082#1091
+      
+        '      ,o.[DeliveryRestTermSupplier] -- '#1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077 +
+        #1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       '      ,o.[DeliveredDateToSupplier]'
       '      ,o.[DeliveryDaysReserve]'
+      '      ,o.[DeliveryDaysReserve2]'
       '      ,o.[DeliveryNextDate]'
+      '      ,o.[DeliveryNextDate2]    '
       '      ,o.[DeliveryDateToCustomer]'
       '      ,o.[DeliveryTermToCustomer]'
       '      ,o.[DeliveryRestToCustomer]'
@@ -959,12 +973,15 @@ object OrdersT2: TOrdersT2
       ReadOnly = True
       DisplayFormat = '###,##0.00'
     end
-    object QueryDeliveryRestTermSupplier: TIntegerField
-      FieldName = 'DeliveryRestTermSupplier'
-    end
     object QueryDeliveryPlanDateSupplier: TSQLTimeStampField
       FieldName = 'DeliveryPlanDateSupplier'
       Origin = 'DeliveryPlanDateSupplier'
+    end
+    object QueryDeliveryTermSupplier: TIntegerField
+      FieldName = 'DeliveryTermSupplier'
+    end
+    object QueryDeliveryRestTermSupplier: TIntegerField
+      FieldName = 'DeliveryRestTermSupplier'
     end
     object QueryDeliveredDateToSupplier: TSQLTimeStampField
       FieldName = 'DeliveredDateToSupplier'
@@ -973,10 +990,18 @@ object OrdersT2: TOrdersT2
     object QueryDeliveryDaysReserve: TIntegerField
       FieldName = 'DeliveryDaysReserve'
       Origin = 'DeliveryDaysReserve'
+      OnGetText = QueryDeliveryDaysReserveGetText
+    end
+    object QueryDeliveryDaysReserve2: TIntegerField
+      FieldName = 'DeliveryDaysReserve2'
     end
     object QueryDeliveryNextDate: TSQLTimeStampField
       FieldName = 'DeliveryNextDate'
       Origin = 'DeliveryNextDate'
+      OnGetText = QueryDeliveryNextDateGetText
+    end
+    object QueryDeliveryNextDate2: TSQLTimeStampField
+      FieldName = 'DeliveryNextDate2'
     end
     object QueryDeliveryDateToCustomer: TSQLTimeStampField
       FieldName = 'DeliveryDateToCustomer'

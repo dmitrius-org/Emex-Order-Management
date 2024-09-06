@@ -35,7 +35,7 @@ declare @r int = 0
         ,PartNameRus
         --,PartNameEng
         ,PriceLogo
-		,OurDelivery
+		,OurDelivery   -- срок поставки клиенту
         ,GuaranteedDay
         ,Quantity
         ,Price
@@ -104,5 +104,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20240810', '10'
+exec setOV 'PartToBasket', 'P', '20240906', '11'
 go

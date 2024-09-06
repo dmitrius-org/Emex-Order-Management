@@ -18,9 +18,9 @@ object BasketF: TBasketF
   ParentBackground = False
   object MainPanel: TUniPanel
     Left = 0
-    Top = 99
+    Top = 80
     Width = 1247
-    Height = 519
+    Height = 538
     Hint = ''
     Align = alClient
     TabOrder = 1
@@ -28,11 +28,13 @@ object BasketF: TBasketF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
+    ExplicitTop = 99
+    ExplicitHeight = 519
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1247
-      Height = 519
+      Height = 538
       Hint = ''
       Margins.Left = 0
       Margins.Top = 0
@@ -128,6 +130,7 @@ object BasketF: TBasketF
           Title.Caption = #1044#1085#1080
           Width = 74
           ReadOnly = True
+          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
         end
@@ -244,7 +247,7 @@ object BasketF: TBasketF
     Left = 0
     Top = 0
     Width = 1247
-    Height = 99
+    Height = 80
     Hint = ''
     Align = alTop
     TabOrder = 0
@@ -257,17 +260,18 @@ object BasketF: TBasketF
       Left = 0
       Top = 0
       Width = 1247
-      Height = 99
+      Height = 80
       Hint = ''
       ParentColor = False
       Align = alClient
       TabOrder = 1
       LayoutAttribs.Columns = 2
+      ExplicitHeight = 99
       object UniPanel1: TUniPanel
         Left = 0
         Top = 0
         Width = 829
-        Height = 99
+        Height = 80
         Hint = ''
         Align = alClient
         TabOrder = 0
@@ -275,6 +279,7 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel1'
         LayoutConfig.Region = 'center'
+        ExplicitHeight = 99
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -304,17 +309,18 @@ object BasketF: TBasketF
           Left = 3
           Top = 3
           Width = 393
-          Height = 93
+          Height = 74
           Hint = ''
           ParentColor = False
           Align = alLeft
           TabOrder = 1
+          ExplicitHeight = 93
           object UniFieldContainer1: TUniFieldContainer
             AlignWithMargins = True
             Left = 3
-            Top = 52
+            Top = 37
             Width = 387
-            Height = 38
+            Height = 34
             Hint = ''
             ParentColor = False
             Align = alClient
@@ -323,6 +329,8 @@ object BasketF: TBasketF
             LayoutAttribs.Align = 'top'
             LayoutAttribs.Pack = 'center'
             LayoutAttribs.Columns = 3
+            ExplicitTop = 16
+            ExplicitHeight = 40
             object edtOrderAmount: TUniLabel
               Left = 22
               Top = 21
@@ -371,25 +379,30 @@ object BasketF: TBasketF
             Left = 3
             Top = 10
             Width = 387
-            Height = 36
+            Height = 21
             Hint = ''
             Margins.Top = 10
             ParentColor = False
             Align = alTop
+            Anchors = [akLeft, akTop, akRight, akBottom]
             TabOrder = 1
             Layout = 'hbox'
             LayoutAttribs.Align = 'top'
             LayoutAttribs.Pack = 'center'
             LayoutAttribs.Columns = 3
             LayoutConfig.Flex = 1
+            DesignSize = (
+              387
+              21)
             object UniLabel9: TUniLabel
               Left = 31
-              Top = 20
+              Top = 3
               Width = 77
               Height = 13
               Hint = ''
               Alignment = taCenter
               Caption = #1057#1091#1084#1084#1072' '#1074' '#1079#1072#1082#1072#1079
+              Anchors = [akLeft, akTop, akBottom]
               ParentFont = False
               Font.Height = -12
               Font.Style = [fsBold]
@@ -397,8 +410,8 @@ object BasketF: TBasketF
               LayoutConfig.Flex = 1
             end
             object UniLabel10: TUniLabel
-              Left = 177
-              Top = 20
+              Left = 182
+              Top = 3
               Width = 18
               Height = 13
               Hint = ''
@@ -412,12 +425,13 @@ object BasketF: TBasketF
             end
             object UniLabel11: TUniLabel
               Left = 311
-              Top = 16
+              Top = 3
               Width = 48
               Height = 13
               Hint = ''
               Alignment = taCenter
               Caption = #1055#1086#1079#1080#1094#1080#1081
+              Anchors = [akLeft, akTop, akBottom]
               ParentFont = False
               Font.Height = -12
               Font.Style = [fsBold]
@@ -431,7 +445,7 @@ object BasketF: TBasketF
         Left = 829
         Top = 0
         Width = 418
-        Height = 99
+        Height = 80
         Hint = ''
         Align = alRight
         TabOrder = 2
@@ -439,15 +453,16 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel2'
         LayoutConfig.Region = 'east'
+        ExplicitHeight = 99
         DesignSize = (
           418
-          99)
+          80)
         object addOrder: TUniButton
           AlignWithMargins = True
           Left = 244
-          Top = 19
+          Top = 8
           Width = 160
-          Height = 63
+          Height = 62
           Hint = ''
           Caption = #1056#1072#1079#1084#1077#1089#1090#1080#1090#1100' '#1079#1072#1082#1072#1079
           Anchors = [akTop, akRight, akBottom]
@@ -458,9 +473,9 @@ object BasketF: TBasketF
         object btnRefresh: TUniButton
           AlignWithMargins = True
           Left = 78
-          Top = 19
+          Top = 8
           Width = 160
-          Height = 63
+          Height = 62
           Action = actRefreshAll
           Anchors = [akTop, akRight, akBottom]
           TabOrder = 1

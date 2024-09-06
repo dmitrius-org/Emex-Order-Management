@@ -630,6 +630,12 @@ object ClientsF: TClientsF
               Hint = #1056#1072#1079#1076#1077#1083#1080#1090#1077#1083#1100' '#1089#1090#1086#1083#1073#1094#1086#1074' (UploadDelimiter)'
               Editor = lkUploadDelimiter
               Sortable = True
+            end
+            item
+              FieldName = 'DeliveryTermCustomer'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1072
+              Width = 100
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
@@ -1819,6 +1825,9 @@ object ClientsF: TClientsF
       FieldName = 'Brief'
       Size = 60
     end
+    object qProfilesCustomerDeliveryTermCustomer: TIntegerField
+      FieldName = 'DeliveryTermCustomer'
+    end
   end
   object dsProfilesCustomer: TDataSource
     DataSet = qProfilesCustomer
@@ -1866,6 +1875,7 @@ object ClientsF: TClientsF
       '           ,[isActive]'
       '           ,[ClientPriceLogo]'
       '           ,[UploadDelimiterID]'
+      '           ,DeliveryTermCustomer'
       '           )   '
       'VALUES (@@Spid, '
       '        0, '
@@ -1879,7 +1889,8 @@ object ClientsF: TClientsF
       '        :NEW_UploadFileName,  '
       '        :NEW_isActive,  '
       '        :NEW_ClientPriceLogo,  '
-      '        :NEW_UploadDelimiterID);'
+      '        :NEW_UploadDelimiterID,'
+      '        :NEW_DeliveryTermCustomer);'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
     ModifySQL.Strings = (
@@ -1919,6 +1930,7 @@ object ClientsF: TClientsF
       '      ,[isActive]            = :NEW_isActive'
       '      ,[ClientPriceLogo]     = :NEW_ClientPriceLogo'
       '      ,[UploadDelimiterID]   = :NEW_UploadDelimiterID'
+      '      ,[DeliveryTermCustomer] = :NEW_DeliveryTermCustomer'
       'where ID=:ID')
     DeleteSQL.Strings = (
       '/*'

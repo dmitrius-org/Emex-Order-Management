@@ -21,5 +21,9 @@ select *
   from tClients 
 
 
+--update tClients
+--set Password='0x0eb2316c9b184a5e4f7476ab43e18ff33a8af6e898f394216c23e38a994e4724f40544fd8af03c85049362f9dc99913f878ae38c441cec5b680f115ab559b250'
+--where ClientID = 57
+
 
 --select * from tUsersAuthorization

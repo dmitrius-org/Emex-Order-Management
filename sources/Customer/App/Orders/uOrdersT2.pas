@@ -134,6 +134,9 @@ type
     UniPanel: TUniPanel;
     btnCancel: TUniBitBtn;
     QueryDestinationName: TWideStringField;
+    QueryDeliveryTermSupplier: TIntegerField;
+    QueryDeliveryNextDate2: TSQLTimeStampField;
+    QueryDeliveryDaysReserve2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -175,6 +178,10 @@ type
     procedure QueryAfterRefresh(DataSet: TDataSet);
     procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest;
       var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
+    procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryDeliveryDaysReserveGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -542,9 +549,34 @@ begin
   logger.Info('QueryBeforeRowRequest: ');
 end;
 
+procedure TOrdersT2.QueryDeliveryDaysReserveGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryDaysReserve2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryDaysReserve2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryDeliveryNextDateGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  // Ближайшая дата вылета
+  if (not QueryDeliveryNextDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryNextDate2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
 procedure TOrdersT2.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'DetailNumber') and (QueryReplacementDetailNumber.Value <> '') then
+  if (QueryReplacementDetailNumber.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span><span class="x-replacement-detail-number">' + QueryReplacementDetailNumber.Value + '</span>';
   end

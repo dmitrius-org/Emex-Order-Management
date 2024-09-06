@@ -203,6 +203,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1088#1091#1073')'
           Width = 124
+          ReadOnly = True
           Sortable = True
         end
         item

@@ -2,7 +2,7 @@ object ExportForm: TExportForm
   Left = 0
   Top = 0
   ClientHeight = 650
-  ClientWidth = 1503
+  ClientWidth = 1606
   Caption = 'ExportForm'
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -14,20 +14,22 @@ object ExportForm: TExportForm
   object UniPageControl1: TUniPageControl
     Left = 0
     Top = 0
-    Width = 1503
+    Width = 1606
     Height = 650
     Hint = ''
     ActivePage = TabNomenclature
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1503
     object TabNomenclature: TUniTabSheet
       Hint = ''
       Caption = #1053#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072
       Layout = 'fit'
+      ExplicitWidth = 1495
       object GridNomenclature: TUniDBGrid
         Left = 0
         Top = 0
-        Width = 1495
+        Width = 1598
         Height = 622
         Hint = ''
         ShowHint = True
@@ -56,6 +58,7 @@ object ExportForm: TExportForm
         Exporter.UseColumnRenderer = True
         Exporter.Exporter = ExportNomenclature
         Exporter.Title = #1053#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072
+        OnKeyDown = GridImplementationKeyDown
         OnCellContextClick = GridNomenclatureCellContextClick
         Columns = <
           item
@@ -104,10 +107,12 @@ object ExportForm: TExportForm
     object tabAdmission: TUniTabSheet
       Hint = ''
       Caption = #1055#1086#1089#1090#1091#1087#1083#1077#1085#1080#1077
+      Layout = 'fit'
+      ExplicitWidth = 1495
       object GridAdmission: TUniDBGrid
         Left = 0
         Top = 0
-        Width = 1495
+        Width = 1598
         Height = 622
         Hint = ''
         ShowHint = True
@@ -136,6 +141,7 @@ object ExportForm: TExportForm
         Exporter.UseColumnRenderer = True
         Exporter.Exporter = ExportAdmission
         Exporter.Title = #1055#1086#1089#1090#1091#1087#1083#1077#1085#1080#1077
+        OnKeyDown = GridImplementationKeyDown
         OnCellContextClick = GridAdmissionCellContextClick
         Columns = <
           item
@@ -206,10 +212,12 @@ object ExportForm: TExportForm
     object tabImplementation: TUniTabSheet
       Hint = ''
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      Layout = 'fit'
+      ExplicitWidth = 1495
       object GridImplementation: TUniDBGrid
         Left = 0
         Top = 0
-        Width = 1495
+        Width = 1598
         Height = 622
         Hint = ''
         ShowHint = True
@@ -238,6 +246,7 @@ object ExportForm: TExportForm
         Exporter.UseColumnRenderer = True
         Exporter.Exporter = ExportImplementation
         Exporter.Title = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+        OnKeyDown = GridImplementationKeyDown
         OnCellContextClick = GridImplementationCellContextClick
         Columns = <
           item
@@ -308,6 +317,12 @@ object ExportForm: TExportForm
             Title.Alignment = taCenter
             Title.Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1088#1091#1073
             Width = 96
+          end
+          item
+            FieldName = 'Box'
+            Title.Alignment = taCenter
+            Title.Caption = #1050#1086#1088#1086#1073#1082#1072
+            Width = 120
           end>
       end
     end
@@ -379,8 +394,8 @@ object ExportForm: TExportForm
     SQL.Strings = (
       '    exec ExportNomenklature'
       '              @Invoice = :Invoice')
-    Left = 346
-    Top = 370
+    Left = 366
+    Top = 506
     ParamData = <
       item
         Name = 'INVOICE'
@@ -532,8 +547,8 @@ object ExportForm: TExportForm
     SQL.Strings = (
       '    exec ExportImplementation'
       '              @Invoice = :Invoice')
-    Left = 348
-    Top = 498
+    Left = 353
+    Top = 472
     ParamData = <
       item
         Name = 'INVOICE'
@@ -593,6 +608,10 @@ object ExportForm: TExportForm
     object qImplementationClientBrief: TWideStringField
       FieldName = 'ClientBrief'
       Size = 256
+    end
+    object qImplementationBox: TWideStringField
+      FieldName = 'Box'
+      Size = 15
     end
   end
   object dsImplementation: TDataSource

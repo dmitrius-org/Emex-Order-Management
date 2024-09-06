@@ -10,22 +10,23 @@ tProfilesCustomer - профили управления выгрузкой
 begin
 	create table tProfilesCustomer
 	(
-	 ProfilesCustomerID  int  identity  -- 
-	,ClientID            numeric(18, 0) -- Клиент   
-	,Brief               varchar(60)    --
-	,ProfilesDeliveryID  int   
-
-	,Margin              money          -- Наценка в процентах (margin, текстовое поле, по умолчанию установить значение "25"
-	,Reliability         money          -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70"
-
-	,UploadFolder        varchar(255)   -- Каталог для сохранения прайс-файлов
-	,UploadPriceName     varchar(255)   -- 
-	,UploadFileName      varchar(255)   -- 
-	,isActive            bit
-
-	,ClientPriceLogo     nvarchar(32)   -- Наименование прайса клиента по которым заказываются детали
-										-- по данному полю вымолняем сопоставление с tOrders.CustomerPriceLogo
-	,UploadDelimiterID   int            -- разделитель 
+	 ProfilesCustomerID      int  identity  -- 
+	,ClientID                numeric(18, 0) -- Клиент   
+	,Brief                   varchar(60)    --
+	,ProfilesDeliveryID      int   
+                             
+	,Margin                  money          -- Наценка в процентах (margin, текстовое поле, по умолчанию установить значение "25"
+	,Reliability             money          -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70"
+                             
+	,UploadFolder            varchar(255)   -- Каталог для сохранения прайс-файлов
+	,UploadPriceName         varchar(255)   -- 
+	,UploadFileName          varchar(255)   -- 
+	,isActive                bit
+                             
+	,ClientPriceLogo         nvarchar(32)   -- Наименование прайса клиента по которым заказываются детали
+						  	  		   	    -- по данному полю вымолняем сопоставление с tOrders.CustomerPriceLogo
+	,UploadDelimiterID       int            -- разделитель 
+    ,DeliveryTermCustomer    int            -- Срок поставки клиенту	    
      --
     ,[ValidFrom]         DATETIME2 GENERATED ALWAYS AS ROW START
     ,[ValidTo]           DATETIME2 GENERATED ALWAYS AS ROW END
@@ -34,7 +35,7 @@ begin
 
     ,CONSTRAINT PK_tProfilesCustomer_ProfilesCustomerID PRIMARY KEY CLUSTERED (ProfilesCustomerID)
 	)
-    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.hProfilesCustomer));
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tProfilesCustomer));
 
 	create unique index ao1 on tProfilesCustomer(ProfilesCustomerID);
 

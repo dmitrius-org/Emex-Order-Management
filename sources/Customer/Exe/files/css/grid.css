@@ -66,6 +66,20 @@
     text-align: left
 }
 
+/* Стрелка ближайшая дата вылета*/
+.grid-order .x-delivery-next-date-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Ближайшая дата вылета*/
+.grid-order .x-delivery-next-date{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
 /* Иконка: Запрос отказа*/
 .grid-order .x-request-cancellation {
     width: 100%;

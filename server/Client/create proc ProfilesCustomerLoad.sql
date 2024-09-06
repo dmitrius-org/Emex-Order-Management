@@ -34,7 +34,8 @@ as
            ,[UploadFileName]
            ,[isActive]
            ,[ClientPriceLogo]
-           ,[UploadDelimiterID])                       
+           ,[UploadDelimiterID]
+           ,[DeliveryTermCustomer])                       
      select @@SPID
            ,[ProfilesCustomerID]
            ,[ClientID]
@@ -48,6 +49,7 @@ as
            ,[isActive]
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]
+           ,[DeliveryTermCustomer]
        from tProfilesCustomer (nolock)
       where ClientID = @ClientID
   end
@@ -75,7 +77,8 @@ as
            ,[UploadFileName]
            ,[isActive]
            ,[ClientPriceLogo]
-           ,[UploadDelimiterID]                         
+           ,[UploadDelimiterID]   
+           ,[DeliveryTermCustomer]
 			)
      select
             [ClientID]
@@ -89,6 +92,7 @@ as
            ,[isActive]
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]  
+           ,[DeliveryTermCustomer]
        from pProfilesCustomer (nolock)
       where Spid = @@Spid 
 	    and isnull(ProfilesCustomerID, 0) = 0
@@ -104,7 +108,8 @@ as
            ,t.[UploadFileName]       = p.[UploadFileName]
            ,t.[isActive]             = p.[isActive]
            ,t.[ClientPriceLogo]      = p.[ClientPriceLogo]
-           ,t.[UploadDelimiterID]    = p.[UploadDelimiterID]       
+           ,t.[UploadDelimiterID]    = p.[UploadDelimiterID] 
+           ,t.[DeliveryTermCustomer] = p.[DeliveryTermCustomer]
        from pProfilesCustomer p (nolock)
       inner join tProfilesCustomer t (updlock)
               on t.ClientID        = @ClientID
@@ -117,5 +122,5 @@ return @r
 go
 grant exec on ProfilesCustomerLoad to public
 go
-exec setOV 'ProfilesCustomerLoad', 'P', '20240618', '2'
+exec setOV 'ProfilesCustomerLoad', 'P', '20240906', '3'
 go

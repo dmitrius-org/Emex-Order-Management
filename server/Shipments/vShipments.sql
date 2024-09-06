@@ -89,4 +89,4 @@ go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
-select  * from vShipments --where OrderID=327
+select  * from vShipments where Invoice = '241002'
