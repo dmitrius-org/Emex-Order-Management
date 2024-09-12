@@ -85,11 +85,11 @@ update p
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-        and isnull(o.StatusID, 0) not in (8  -- Send
-                                         ,12 -- InCancel 
-                                         ,24 -- Received Получено
-                                         ,26 -- IssuedClient Выдано клиенту
-     	                                 )
+        --and isnull(o.StatusID, 0) not in (8  -- Send
+        --                                 ,12 -- InCancel 
+        --                                 ,24 -- Received Получено
+        --                                 ,26 -- IssuedClient Выдано клиенту
+     	  --                               )
  where p.Spid = @@spid
 
 

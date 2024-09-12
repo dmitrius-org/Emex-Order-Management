@@ -36,16 +36,15 @@ Update p
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
 		and coalesce(o.DeliveryNextDate2, o.DeliveryNextDate, getdate()) < GetDate()
-        and isnull(o.StatusID, 0) not in (8  -- Send
-                                         ,12 -- InCancel 
-                                         ,24 -- Received Получено
-                                         ,26 -- IssuedClient Выдано клиенту
-     	                                 )
+        and isnull(o.Invoice, '') = '' --+Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, если у детали статус сменился на “Отгружена” (дополнительно проговорили по телефону, разобрались). Ставим дату которую получаем по API
+        --and isnull(o.StatusID, 0) not in (8  -- Send
+        --                                 ,12 -- InCancel 
+        --                                 ,24 -- Received Получено
+        --                                 ,26 -- IssuedClient Выдано клиенту
+     	  --                               )
   left join tSupplierDeliveryProfiles pd (nolock)
          on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
  where p.Spid = @@Spid
-
-
 
 -- расчет ближайшей дата вылета
 delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
@@ -68,6 +67,7 @@ Update f
         and f.OrderID = p.ID
  where p.Spid = @@Spid
 
+
 update p
        -- Дней запаса до вылета	
    set /*Считаем дни запаса до вылета по формуле: (Ближайшая Дата Вылета) - (Плановая Дата Поступления Поставщику)
@@ -83,6 +83,30 @@ update p
   --inner join tOrders o (updlock)
   --        on o.OrderID=p.OrderID 
   where p.Spid = @@spid
+
+
+
+--Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, если у детали статус сменился на “Отгружена” (дополнительно проговорили по телефону, разобрались). Ставим дату которую получаем по API
+Update s 
+   set s.DeliveryNextDate  = o.OperDate
+      ,s.DeliveryNextDate2 = o.OperDate
+      ,s.DeliveryPlanDateSupplier  = o.DeliveryPlanDateSupplier                   
+  from pDeliveryTerm s with (Updlock index=ao1)
+ cross apply (select top 1 
+                     p.OperDate
+                    ,o.DeliveryPlanDateSupplier   
+                from tOrders o with (nolock index=ao1)
+               inner join tProtocol p with (nolock index=ao2)
+                       on p.ObjectID = o.OrderID 
+               inner join tNodes n  with (nolock index=ao2)
+                       on n.Brief  = 'Send'
+                      and n.NodeID = p.NewStateID
+              where o.OrderID = s.OrderID
+
+              order by p.ProtocolID desc
+             ) o
+where s.Spid = @@SPID
+
 
 if @IsSave = 1
     update o
@@ -100,6 +124,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalcNext to public
 go
-exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20240906', '3'
+exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20240911', '4'
 go
   

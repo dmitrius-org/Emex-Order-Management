@@ -18,7 +18,7 @@ SELECT o.[OrderID]
       ,o.[StatusID]
       ,s.[Name]          as StatusName -- статус/состояние
       ,o.[isCancel]
-	  ,o.[isCancelToClient] -- отказ отправлен клиенту
+	  --,o.[isCancelToClient] -- отказ отправлен клиенту
 	  ,o.[MakeLogo]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
@@ -83,6 +83,8 @@ SELECT o.[OrderID]
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
 	  ,o.DateDeparture                 -- Дата вылета 
+      ,sh.ReceiptDate                  -- Ожидаемая дата поступления
+      ,sh.ReceiptDate2
 	  ,o.DaysInWork                    -- Дней в работе                             
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
@@ -159,12 +161,16 @@ SELECT o.[OrderID]
          on ps.Make      = o.MakeLogo
         and ps.DetailNum = o.DetailNumber
 
+
+  left join tShipments sh (nolock)
+         on sh.Invoice = o.Invoice
+
  where ua.UserID    = dbo.GetUserID()
    and ua.LinkType  = 7
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20240906', '10'
+exec setOV 'vOrders', 'V', '20240911', '11'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

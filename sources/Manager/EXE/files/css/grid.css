@@ -80,27 +80,41 @@
     height:24px !important;
 }
 
-/* Стрелка ближайшая дата вылета*/
+/* Дата поставки клиенту */
+.grid-order .x-date-delivery-to-customer-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Дата поставки клиенту */
+.grid-order .x-date-delivery-to-customer{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Стрелка ближайшая дата вылета */
 .grid-order .x-delivery-next-date-arrow{
     line-height: 0.0; 
     color: #4183C4;
     text-align: left
 }
 
-/* Ближайшая дата вылета*/
+/* Ближайшая дата вылета */
 .grid-order .x-delivery-next-date{
     line-height: 0.0; 
     color: #4183C4;
     text-align: left
 }
 
-/* Иконка: Запрос отказа*/
+/* Иконка: Запрос отказа */
 .grid-order-request-cancellation {
     width: 100%;
     color: #FF033E
 }
 
-/* Иконка: Отказ*/
+/* Иконка: Отказ */
 .grid-order-cancellation {
     width: 100%;
     color: #FF033E
@@ -113,7 +127,6 @@
 
 .grid-order-fragile{
     width: 100%;
-    /* margin: 1% auto; */
     font-size: 16px;
     color: #ff0303
 }
@@ -214,6 +227,32 @@
 }
 
 .grid-suppliers .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+/* Таблица отгрузки */
+/* Перенос строки в заголовке таблицы заказов */
+.grid-shipments .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+/* Ожидаемая дата поставки */
+.grid-shipments .x-receipt-date-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Ожидаемая дата поставки */
+.grid-shipments .x-receipt-date{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+.x-column-header-teh-hint{
     white-space: normal;
     text-align: center;
 }

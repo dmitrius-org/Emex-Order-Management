@@ -36,6 +36,7 @@ create table pShipments
 --,считать доставку исходя из данных перевозчика
 
 ,SuppliersID                     numeric(18,0) -- Поставщик. Аккаунт из которого сделана отгрузка
+,SupplierDelivery                int-- “Поставщики” - “Профили доставки” - “Срок доставки”
 --,UserID                          numeric(18,0) default dbo.GetUserID()
 --,inDatetime                      datetime      default GetDate()      --
 --,updDatetime                     datetime      default GetDate()      --
@@ -47,7 +48,7 @@ create unique index ao1 on pShipments(Spid, Invoice)
 go
 grant select on pShipments to public
 go
-exec setOV 'pShipments', 'U', '20240822', '2'
+exec setOV 'pShipments', 'U', '20240822', '3'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pShipments', @desc = ''

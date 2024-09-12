@@ -10,6 +10,7 @@ create table pSupplierDeliveryProfiles
 ,ProfilesDeliveryID int                    -- Идентификатор 
 ,SuppliersID        numeric(18,0) not null -- Поставщик 
 ,Name               varchar(60)            -- Наименование
+,Brief              nvarchar(10)
 ,WeightKG           float                  -- Вес физический кг 
 ,VolumeKG           float                  -- Вес объемный кг  
 ,PDelivery1         int                    -- Срок поставки до поставщика
@@ -37,5 +38,5 @@ create index ao2 on pSupplierDeliveryProfiles(Spid, SuppliersID, DestinationLogo
 go
 grant all on pSupplierDeliveryProfiles to public
 go
-exec setOV 'pSupplierDeliveryProfiles', 'U', '20240701', '4'
+exec setOV 'pSupplierDeliveryProfiles', 'U', '20240911', '5'
 go

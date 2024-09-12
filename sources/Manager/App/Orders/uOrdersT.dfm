@@ -604,12 +604,21 @@ object OrdersT: TOrdersT
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1085#1080#1082#1072#1083#1100#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074
           Width = 194
+          Sortable = True
         end
         item
           FieldName = 'PercentSupped'
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Width = 100
+          Sortable = True
+        end
+        item
+          FieldName = 'ReceiptDate'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
+          Width = 100
+          Hint = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' (tShipments.ReceiptDate)'
           Sortable = True
         end>
     end
@@ -1263,6 +1272,8 @@ object OrdersT: TOrdersT
       '      ,o.[Fragile]'
       '      ,o.[OrderUniqueCount]'
       '      ,o.[PercentSupped]'
+      '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
+      '      ,o.[ReceiptDate2]'
       '      '
       '  FROM [vOrders] o'
       ' where 1=1'
@@ -1338,6 +1349,10 @@ object OrdersT: TOrdersT
     object QueryFlag: TIntegerField
       FieldName = 'Flag'
     end
+    object QueryisCancel: TBooleanField
+      FieldName = 'isCancel'
+      Origin = 'isCancel'
+    end
     object QueryStatus: TIntegerField
       FieldName = 'Status'
       OnGetText = QueryStatusGetText
@@ -1361,26 +1376,25 @@ object OrdersT: TOrdersT
       Origin = 'OrderDate'
       Required = True
     end
-    object QueryPriceLogo: TWideStringField
-      FieldName = 'PriceLogo'
-      Origin = 'PriceLogo'
-      ReadOnly = True
-      Size = 32
-    end
     object QueryOrderNum: TWideStringField
       FieldName = 'OrderNum'
       Origin = 'OrderNum'
       ReadOnly = True
       Size = 32
     end
+    object QueryPriceLogo: TWideStringField
+      FieldName = 'PriceLogo'
+      Origin = 'PriceLogo'
+      ReadOnly = True
+      Size = 32
+    end
+    object QueryStatusID: TFMTBCDField
+      FieldName = 'StatusID'
+    end
     object QueryStatusName: TWideStringField
       FieldName = 'StatusName'
       Origin = 'StatusName'
-      Size = 512
-    end
-    object QueryisCancel: TBooleanField
-      FieldName = 'isCancel'
-      Origin = 'isCancel'
+      Size = 64
     end
     object QueryMakeLogo: TWideStringField
       FieldName = 'MakeLogo'
@@ -1412,25 +1426,25 @@ object OrdersT: TOrdersT
       FieldName = 'Quantity'
       Origin = 'Quantity'
     end
-    object QueryPrice: TCurrencyField
-      FieldName = 'Price'
-      Origin = 'Price'
-      DisplayFormat = '###,##0.00 '#8381
-    end
     object QueryAmount: TCurrencyField
       FieldName = 'Amount'
       Origin = 'Amount'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object QueryAmountPurchase: TCurrencyField
+      FieldName = 'AmountPurchase'
+      Origin = 'AmountPurchase'
+      DisplayFormat = '###,##0.00 $'
+    end
+    object QueryPrice: TCurrencyField
+      FieldName = 'Price'
+      Origin = 'Price'
       DisplayFormat = '###,##0.00 '#8381
     end
     object QueryPricePurchase: TCurrencyField
       FieldName = 'PricePurchase'
       Origin = 'PricePurchase'
       OnGetText = QueryPricePurchaseGetText
-      DisplayFormat = '###,##0.00 $'
-    end
-    object QueryAmountPurchase: TCurrencyField
-      FieldName = 'AmountPurchase'
-      Origin = 'AmountPurchase'
       DisplayFormat = '###,##0.00 $'
     end
     object QueryPricePurchaseF: TCurrencyField
@@ -1527,6 +1541,7 @@ object OrdersT: TOrdersT
     object QueryDateDeliveryToCustomer: TSQLTimeStampField
       FieldName = 'DeliveryDateToCustomer'
       Origin = 'DeliveryDateToCustomer'
+      OnGetText = QueryDateDeliveryToCustomerGetText
     end
     object QueryTermDeliveryToCustomer: TIntegerField
       FieldName = 'DeliveryTermToCustomer'
@@ -1536,14 +1551,6 @@ object OrdersT: TOrdersT
       FieldName = 'DeliveryRestToCustomer'
       Origin = 'DeliveryRestToCustomer'
     end
-    object QueryUserName: TWideStringField
-      FieldName = 'UserName'
-      Origin = 'UserName'
-      Size = 512
-    end
-    object QueryStatusID: TFMTBCDField
-      FieldName = 'StatusID'
-    end
     object QueryOverPricing: TCurrencyField
       FieldName = 'OverPricing'
       DisplayFormat = '###,##0.00 %'
@@ -1551,6 +1558,9 @@ object OrdersT: TOrdersT
     object QueryWarning: TWideStringField
       FieldName = 'Warning'
       Size = 128
+    end
+    object QueryReplacementPrice: TCurrencyField
+      FieldName = 'ReplacementPrice'
     end
     object QueryReplacementMakeLogo: TWideStringField
       FieldName = 'ReplacementMakeLogo'
@@ -1591,12 +1601,15 @@ object OrdersT: TOrdersT
     object QueryOrderUniqueCount: TIntegerField
       FieldName = 'OrderUniqueCount'
     end
-    object QueryReplacementPrice: TCurrencyField
-      FieldName = 'ReplacementPrice'
-    end
     object QueryPercentSupped: TIntegerField
       FieldName = 'PercentSupped'
       DisplayFormat = '##0 %'
+    end
+    object QueryReceiptDate: TSQLTimeStampField
+      FieldName = 'ReceiptDate'
+    end
+    object QueryReceiptDate2: TSQLTimeStampField
+      FieldName = 'ReceiptDate2'
     end
     object QueryUserID: TFMTBCDField
       FieldName = 'UserID'
@@ -1604,6 +1617,11 @@ object OrdersT: TOrdersT
       ReadOnly = True
       Precision = 18
       Size = 0
+    end
+    object QueryUserName: TWideStringField
+      FieldName = 'UserName'
+      Origin = 'UserName'
+      Size = 512
     end
     object QueryinDatetime: TSQLTimeStampField
       FieldName = 'inDatetime'
@@ -1888,8 +1906,8 @@ object OrdersT: TOrdersT
       '        and ua.LinkType  = 7'
       '        and ua.LinkID    = c.ClientID'
       ' order by c.[Brief]        ')
-    Left = 500
-    Top = 393
+    Left = 498
+    Top = 379
     object qClientClientID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'ClientID'

@@ -25,7 +25,8 @@ as
 			 (
              Spid
             ,ProfilesDeliveryID 
-            ,SuppliersID        
+            ,SuppliersID  
+            ,Brief
             ,Name               
             ,WeightKG           
             ,VolumeKG           
@@ -50,6 +51,7 @@ as
      select @@SPID
            ,ProfilesDeliveryID
            ,SuppliersID
+           ,Brief
            ,Name
            ,WeightKG
            ,VolumeKG
@@ -87,7 +89,8 @@ as
 
 	  insert tSupplierDeliveryProfiles  
 			 (
-             SuppliersID        
+             SuppliersID    
+            ,Brief
             ,Name               
             ,WeightKG           
             ,VolumeKG           
@@ -110,6 +113,7 @@ as
             ,Fragile
 			)
      select @SuppliersID
+           ,Brief
            ,Name
            ,WeightKG
            ,VolumeKG
@@ -135,7 +139,8 @@ as
 	    and isnull(ProfilesDeliveryID, 0) = 0
 
      Update t
-        set t.Name             = p.Name           
+        set t.Name             = p.Name 
+           ,t.Brief            = p.Brief
            ,t.WeightKG         = p.WeightKG       
            ,t.VolumeKG         = p.VolumeKG       
            ,t.PDelivery1       = p.PDelivery1     
@@ -167,5 +172,5 @@ return @r
 go
 grant exec on SupplierDeliveryProfilesLoad to public
 go
-exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240701', '4'
+exec setOV 'SupplierDeliveryProfilesLoad', 'P', '20240911', '5'
 go

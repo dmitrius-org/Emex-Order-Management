@@ -114,7 +114,7 @@ object ShipmentsT: TShipmentsT
           'n the ToolBar, number 10, hide him'#13#10#13#10'}')
       HeaderTitleAlign = taCenter
       DataSource = DataSource
-      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgTabs, dgCancelOnExit, dgDontShowSelected, dgRowNumbers]
+      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgTabs, dgCancelOnExit, dgDontShowSelected, dgRowNumbers]
       WebOptions.PageSize = 500
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
@@ -124,7 +124,7 @@ object ShipmentsT: TShipmentsT
       LoadMask.Color = 13421772
       Images = UniImageList
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-      LayoutConfig.ComponentCls = 'grid-order'
+      LayoutConfig.ComponentCls = 'grid-shipments'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
@@ -151,6 +151,14 @@ object ShipmentsT: TShipmentsT
           Sortable = True
         end
         item
+          FieldName = 'StatusName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Width = 150
+          ReadOnly = True
+          Sortable = True
+        end
+        item
           FieldName = 'SupplierBrief'
           Title.Alignment = taCenter
           Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -162,7 +170,7 @@ object ShipmentsT: TShipmentsT
           FieldName = 'ShipmentsDate'
           Title.Alignment = taCenter
           Title.Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
-          Width = 157
+          Width = 135
           ReadOnly = True
           Sortable = True
         end
@@ -170,7 +178,7 @@ object ShipmentsT: TShipmentsT
           FieldName = 'ReceiptDate'
           Title.Alignment = taCenter
           Title.Caption = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '
-          Width = 171
+          Width = 100
           ReadOnly = True
           Sortable = True
         end
@@ -178,7 +186,7 @@ object ShipmentsT: TShipmentsT
           FieldName = 'Invoice'
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
-          Width = 150
+          Width = 100
           ReadOnly = True
           Sortable = True
         end
@@ -344,6 +352,14 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
           Width = 150
+          Sortable = True
+        end
+        item
+          FieldName = 'TransporterNumber'
+          Title.Alignment = taCenter
+          Title.Caption = #1053#1086#1084#1077#1088' '#1075#1088#1091#1079#1072
+          Width = 118
+          ReadOnly = True
           Sortable = True
         end>
     end
@@ -609,6 +625,7 @@ object ShipmentsT: TShipmentsT
       
         '      ,s.ReceiptDate                 -- '#1086#1078#1080#1076#1072#1077#1084#1072#1103' '#1078#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085 +
         #1080#1103' ('#1088#1072#1089#1095#1077#1090#1085#1086#1077' '#1087#1086#1083#1077')'
+      '      ,s.ReceiptDate2'
       '      ,s.Invoice                     -- '#1085#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
       '      ,s.DestinationLogo             -- '#1090#1080#1087' '#1086#1090#1087#1088#1072#1074#1082#1080
       '      ,s.DestinationName'
@@ -656,12 +673,15 @@ object ShipmentsT: TShipmentsT
         '      ,s.TransporterDiffVolumeWeigh  -- '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099 +
         #1081' '#1080' '#1074#1077#1089' '#1092#1080#1079' '#1092#1072#1082#1090' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
       '      ,s.TransporterAmount '
+      '      ,s.TransporterNumber'
       '      -- '#1089#1095#1080#1090#1072#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1091' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
       '      ,s.WeightKGAmount'
       '      ,s.VolumeKGAmount'
       '      '
       '      ,s.updDatetime'
       '      ,s.SupplierBrief               -- '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+      '      ,s.StatusName'
+      ''
       '   FROM vShipments s '
       '  Where 1=1'
       '  '
@@ -704,6 +724,10 @@ object ShipmentsT: TShipmentsT
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
       Origin = 'ReceiptDate'
+      OnGetText = QueryReceiptDateGetText
+    end
+    object QueryReceiptDate2: TSQLTimeStampField
+      FieldName = 'ReceiptDate2'
     end
     object QueryInvoice: TWideStringField
       FieldName = 'Invoice'
@@ -727,95 +751,104 @@ object ShipmentsT: TShipmentsT
     object QueryDetailCount: TIntegerField
       FieldName = 'DetailCount'
       Origin = 'DetailCount'
+      DisplayFormat = '###,##0.00 '#1096#1090
     end
     object QueryWeightKG: TCurrencyField
       FieldName = 'WeightKG'
       Origin = 'WeightKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryVolumeKG: TCurrencyField
       FieldName = 'VolumeKG'
       Origin = 'VolumeKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryWeightKGDiff: TCurrencyField
       FieldName = 'WeightKGDiff'
       Origin = 'WeightKGDiff'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryWeightKGF: TCurrencyField
       FieldName = 'WeightKGF'
       Origin = 'WeightKGF'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryVolumeKGF: TCurrencyField
       FieldName = 'VolumeKGF'
       Origin = 'VolumeKGF'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryVolumeKGDiff: TCurrencyField
       FieldName = 'VolumeKGDiff'
       Origin = 'VolumeKGDiff'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryAmount: TCurrencyField
       FieldName = 'Amount'
       Origin = 'Amount'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 $'
     end
     object QuerySupplierWeightKG: TCurrencyField
       FieldName = 'SupplierWeightKG'
       Origin = 'SupplierWeightKG'
-      DisplayFormat = #39'###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QuerySupplierVolumeKG: TCurrencyField
       FieldName = 'SupplierVolumeKG'
       Origin = 'SupplierVolumeKG'
-      DisplayFormat = #39'###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QuerySupplierDiffVolumeWeigh: TCurrencyField
       FieldName = 'SupplierDiffVolumeWeigh'
       Origin = 'SupplierDiffVolumeWeigh'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QuerySupplierAmount: TCurrencyField
       FieldName = 'SupplierAmount'
       Origin = 'SupplierAmount'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 $'
     end
     object QueryTransporterWeightKG: TCurrencyField
       FieldName = 'TransporterWeightKG'
       Origin = 'TransporterWeightKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryTransporterVolumeKG: TCurrencyField
       FieldName = 'TransporterVolumeKG'
       Origin = 'TransporterVolumeKG'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryTransporterDiffVolumeWeigh: TCurrencyField
       FieldName = 'TransporterDiffVolumeWeigh'
       Origin = 'TransporterDiffVolumeWeigh'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryTransporterAmount: TCurrencyField
       FieldName = 'TransporterAmount'
       Origin = 'TransporterAmount'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 $'
     end
     object QueryWeightKGAmount: TCurrencyField
       FieldName = 'WeightKGAmount'
       Origin = 'WeightKGAmount'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 $'
     end
     object QueryVolumeKGAmount: TCurrencyField
       FieldName = 'VolumeKGAmount'
       Origin = 'VolumeKGAmount'
-      DisplayFormat = '###,##0.00'
+      DisplayFormat = '###,##0.00 $'
     end
     object QueryupdDatetime: TSQLTimeStampField
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
+    end
+    object QueryTransporterNumber: TWideStringField
+      FieldName = 'TransporterNumber'
+      Size = 64
+    end
+    object QueryStatusName: TWideStringField
+      FieldName = 'StatusName'
+      Size = 64
     end
   end
   object DataSource: TDataSource
@@ -869,12 +902,39 @@ object ShipmentsT: TShipmentsT
       Caption = #1069#1082#1089#1087#1086#1088#1090
       OnExecute = actExportDataExecute
     end
+    object actSetTransporterNumber: TAction
+      Category = 'Action'
+      Caption = #1059#1082#1072#1079#1072#1090#1100' '#1085#1086#1084#1077#1088' '#1075#1088#1091#1079#1072
+      OnExecute = actSetTransporterNumberExecute
+    end
+    object actSetReceiptDate: TAction
+      Category = 'Action'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1089#1090#1072#1074#1082#1080
+      OnExecute = actSetReceiptDateExecute
+    end
+    object actSetReceivedStatus: TAction
+      Category = 'Action'
+      Caption = #1055#1086#1083#1091#1095#1077#1085
+      OnExecute = actSetReceivedStatusExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
     ScreenMask.Enabled = True
     Left = 101
     Top = 218
+    object N3: TUniMenuItem
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
+      object N4: TUniMenuItem
+        Action = actSetTransporterNumber
+      end
+      object N10: TUniMenuItem
+        Action = actSetReceiptDate
+      end
+      object N5: TUniMenuItem
+        Action = actSetReceivedStatus
+      end
+    end
     object N2: TUniMenuItem
       Action = actExportData
     end
@@ -919,7 +979,9 @@ object ShipmentsT: TShipmentsT
       '       TransporterVolumeKG, '
       '       TransporterDiffVolumeWeigh, '
       ''
-      '       updDatetime'
+      '       updDatetime,'
+      ''
+      '       TransporterNumber'
       ''
       '  from vShipments '
       ' where ShipmentsID = :ShipmentsID'

@@ -52,7 +52,7 @@ object SuppliersF: TSuppliersF
     Width = 1018
     Height = 408
     Hint = ''
-    ActivePage = tabCommon
+    ActivePage = tabDelivery
     Align = alClient
     TabOrder = 1
     object tabCommon: TUniTabSheet
@@ -338,11 +338,10 @@ object SuppliersF: TSuppliersF
         Layout = 'fit'
         LayoutConfig.Width = '100'
         object Grid: TUniDBGrid
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 1004
-          Height = 320
+          Left = 0
+          Top = 0
+          Width = 1010
+          Height = 326
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -381,6 +380,7 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = #1057#1090#1072#1090#1091#1089
               Width = 67
+              Sortable = True
               CheckBoxField.AutoPost = True
             end
             item
@@ -390,6 +390,7 @@ object SuppliersF: TSuppliersF
               Width = 82
               Alignment = taCenter
               Editor = UniComboBox1
+              Sortable = True
             end
             item
               FieldName = 'DestinationLogo'
@@ -397,12 +398,21 @@ object SuppliersF: TSuppliersF
               Title.Caption = #1057#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080
               Width = 136
               Hint = #1057#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080' (DestinationLogo)'
+              Sortable = True
             end
             item
               FieldName = 'Name'
               Title.Alignment = taCenter
               Title.Caption = 'Name'
               Width = 157
+              Sortable = True
+            end
+            item
+              FieldName = 'Brief'
+              Title.Alignment = taCenter
+              Title.Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+              Width = 109
+              Sortable = True
             end
             item
               FieldName = 'WeightKG'
@@ -410,6 +420,7 @@ object SuppliersF: TSuppliersF
               Title.Caption = 'WeightKG'
               Width = 101
               Hint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1075'. '#1092#1080#1079#1080#1095#1077#1089#1082#1086#1075#1086' '#1074#1077#1089#1072' '
+              Sortable = True
             end
             item
               FieldName = 'VolumeKG'
@@ -417,6 +428,7 @@ object SuppliersF: TSuppliersF
               Title.Caption = 'VolumeKG'
               Width = 91
               Hint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1087#1077#1088#1077#1074#1086#1079#1082#1080' '#1082#1075'. '#1086#1073#1098#1077#1084#1085#1086#1075#1086' '#1074#1077#1089#1072' '
+              Sortable = True
             end
             item
               FieldName = 'DenVyleta'
@@ -425,6 +437,7 @@ object SuppliersF: TSuppliersF
               Width = 247
               Hint = #1044#1077#1085#1100' '#1074#1099#1083#1077#1090#1072' (DenVyleta)'
               Editor = cbDenVileta
+              Sortable = True
             end
             item
               FieldName = 'Delivery'
@@ -439,30 +452,35 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG_Rate1'
               Width = 149
+              Sortable = True
             end
             item
               FieldName = 'VolumeKG_Rate2'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG_Rate2'
               Width = 146
+              Sortable = True
             end
             item
               FieldName = 'VolumeKG_Rate3'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG_Rate3'
               Width = 148
+              Sortable = True
             end
             item
               FieldName = 'VolumeKG_Rate4'
               Title.Alignment = taCenter
               Title.Caption = 'VolumeKG_Rate4'
               Width = 153
+              Sortable = True
             end
             item
               FieldName = 'Restrictions'
               Title.Alignment = taCenter
               Title.Caption = 'Restrictions'
               Width = 157
+              Sortable = True
               CheckBoxField.AutoPost = True
             end
             item
@@ -470,19 +488,24 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = #1058#1077#1082#1089#1090' '#1087#1086#1076#1089#1082#1072#1079#1082#1080' '#1082' '#1089#1087#1086#1089#1086#1073#1091' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 300
+              Sortable = True
             end
             item
               FieldName = 'isMyDelivery'
+              Title.Alignment = taCenter
               Title.Caption = 'isMyDelivery'
-              Width = 92
+              Width = 107
               Hint = #1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
+              Sortable = True
               CheckBoxField.AutoPost = True
             end
             item
               FieldName = 'isIgnore'
+              Title.Alignment = taCenter
               Title.Caption = 'isIgnore'
               Width = 91
               Hint = #1048#1075#1085#1086#1088#1080#1088#1086#1074#1072#1090#1100' '#1076#1077#1090#1072#1083#1080' '#1073#1077#1079' '#1074#1077#1089#1072
+              Sortable = True
               CheckBoxField.AutoPost = True
             end
             item
@@ -490,6 +513,7 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = #1053#1072#1094#1077#1085#1082#1072' '#1079#1072' '#1089#1090#1088#1072#1093#1086#1074#1082#1091' (Fragile)'
               Width = 168
+              Sortable = True
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
@@ -567,6 +591,7 @@ object SuppliersF: TSuppliersF
       'INSERT INTO pSupplierDeliveryProfiles'
       '        (SuppliersID, '
       '         Name, '
+      '         Brief,'
       '         WeightKG, '
       '         VolumeKG, '
       '         DenVyleta, '
@@ -586,6 +611,7 @@ object SuppliersF: TSuppliersF
       '         Spid)'
       'VALUES (:NEW_SuppliersID, '
       '        :NEW_Name, '
+      '        :NEW_Brief,'
       '        :NEW_WeightKG, '
       '        :NEW_VolumeKG, '
       '        :NEW_DenVyleta, '
@@ -630,6 +656,7 @@ object SuppliersF: TSuppliersF
       'UPDATE pSupplierDeliveryProfiles'
       '   SET '
       '      SuppliersID = :NEW_SuppliersID, '
+      '      Brief            = :NEW_Brief,'
       '      Name          = :NEW_Name, '
       '      WeightKG   = :NEW_WeightKG, '
       '      VolumeKG   = :NEW_VolumeKG, '
@@ -996,7 +1023,9 @@ object SuppliersF: TSuppliersF
       'select ID'
       '      ,ProfilesDeliveryID'
       '      ,SuppliersID'
+      '      ,Brief'
       '      ,Name'
+      '      ,Brief'
       '      ,WeightKG'
       '      ,VolumeKG'
       '      ,PDelivery1'
@@ -1123,6 +1152,10 @@ object SuppliersF: TSuppliersF
     end
     object qDeliveryFragile: TFloatField
       FieldName = 'Fragile'
+    end
+    object qDeliveryBrief: TWideStringField
+      FieldName = 'Brief'
+      Size = 10
     end
   end
   object dsDelivery: TDataSource

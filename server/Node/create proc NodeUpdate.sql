@@ -8,9 +8,9 @@ create proc NodeUpdate
 --,@Brief             nvarchar(64)
 ,@Name              nvarchar(256)
 ,@Comment           nvarchar(512)= null
-,@Flag              int          
+,@Flag              int= null          
 ,@ColorID           nvarchar(32) = null
-,@Type              int
+,@Type              int= null
 as
   declare @r       int = 0
          ,@Brief   nvarchar(64)
@@ -36,9 +36,9 @@ as
      set
          -- Brief   = @Brief 
           Name    = @Name	
-         ,Type    = @Type
+        -- ,Type    = @Type
 	     ,Comment = @Comment
-	     ,Flag    = @Flag
+	    -- ,Flag    = @Flag
 		 ,ColorID = @ColorID
          
   where NodeID = @NodeID
@@ -48,5 +48,5 @@ as
 go
 grant exec on NodeUpdate to public
 go
-exec setOV 'NodeUpdate', 'P', '20240101', '0'
+exec setOV 'NodeUpdate', 'P', '20240911', '1'
 go

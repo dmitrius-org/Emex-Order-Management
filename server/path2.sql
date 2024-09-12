@@ -40,9 +40,36 @@
 --    ,WorkOrderCount        int        --  оличество заказанных позиций, только в работе 
 --    ,WorkOrderUniqueCount  int        --  оличество уникальных заказов, только в работе
 
-alter table torders
-    add DeliveryDaysReserve2            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate		
+--alter table torders  add DeliveryDaysReserve2            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate		
+--go  
 
-alter table tProfilesCustomer
-    add DeliveryTermCustomer            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate
-    
+
+alter table tProfilesCustomer    add DeliveryTermCustomer            int            -- ƒней запаса до вылета, рассчитываетс€ если прошол срок DeliveryNextDate
+go  
+
+
+alter table    tShipments add TransporterNumber nvarchar(64)
+go  
+alter table    tShipments add     StatusID                        int
+go
+alter table    tShipments add  ReceiptDate2                    datetime 
+go
+drop index ao1 on tNodes
+go
+alter table tNodes alter column brief nvarchar(32)
+go
+alter table tNodes alter column name nvarchar(64)
+go
+create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name);
+go
+alter table tNodes alter column EName nvarchar(64)
+go
+
+
+alter table    tSupplierDeliveryProfiles add Brief nvarchar(10)
+go
+exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Brief'                 ,' ороткое обозначение' 
+go
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1014, 1014, '”казать номер груза',  'TShipmentsT.actSetTransporterNumber', 63, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1015, 1015, '»зменить дату доставки',  'TShipmentsT.actSetReceiptDate', 63, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1016, 1016, 'ѕолучен',  'TShipmentsT.actSetReceivedStatus', 63, 1

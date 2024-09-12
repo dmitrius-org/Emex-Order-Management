@@ -25,6 +25,32 @@ uses
 
 type
 
+  tMarks = class
+  private
+    FConnection: TFDConnection;
+    FQuery: TFDQuery;
+    FGrid: TUniDBGrid;
+
+    FMarks: TDictionary <Integer, Integer>;
+
+    procedure DeleteInDB();
+    function GetCount: Integer;
+
+    property Count: Integer read GetCount;
+  public
+    constructor Create(AGrid: TUniDBGrid);
+    destructor Destroy; override;
+
+    /// <summary>
+    ///  Select - сохранение отметок в БД
+    ///</summary>
+    procedure Select();
+    procedure Clear();
+
+
+    procedure DataRefresh();
+  end;
+
   TShipmentsT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
@@ -98,6 +124,16 @@ type
     QueryupdDatetime: TSQLTimeStampField;
     QuerySupplierBrief: TWideStringField;
     QueryShipmentsAmountR: TCurrencyField;
+    QueryTransporterNumber: TWideStringField;
+    QueryStatusName: TWideStringField;
+    actSetTransporterNumber: TAction;
+    actSetReceiptDate: TAction;
+    actSetReceivedStatus: TAction;
+    N3: TUniMenuItem;
+    N4: TUniMenuItem;
+    N5: TUniMenuItem;
+    N10: TUniMenuItem;
+    QueryReceiptDate2: TSQLTimeStampField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -115,6 +151,11 @@ type
     procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
     procedure actExportDataExecute(Sender: TObject);
+    procedure actSetTransporterNumberExecute(Sender: TObject);
+    procedure actSetReceiptDateExecute(Sender: TObject);
+    procedure QueryReceiptDateGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure actSetReceivedStatusExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -125,7 +166,10 @@ type
     FFilterTextPriceLogo: string;
     FFilterTextClient: string;
 
-    ACurrColumn: TUniDBGridColumn;  //текущая колонка
+    ACurrColumn: TUniDBGridColumn;
+    FID: Integer;  //текущая колонка
+
+    Marks: TMarks;                  // отметки
 
     /// <summary>
     /// GridOpen -
@@ -143,8 +187,12 @@ type
     procedure FilterPriceLogoCreate();
     procedure FilterClientsCreate();
 
+    procedure ShipmentsTransporterNumberFCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
+
+
+
     /// <summary>
     ///  GridLayout - сохранение/восстановление настроек грида
     ///  AOperation 0-сохранение
@@ -157,7 +205,8 @@ implementation
 
 uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
-  Main, ServerModule, uToast, uGridUtils, uExportForm;
+  Main, ServerModule, uToast, uGridUtils, uExportForm, uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
+  uShipmentsReceiptStatusF;
 
 {$R *.dfm}
 
@@ -215,6 +264,31 @@ end;
 procedure TShipmentsT.actRefreshAllExecute(Sender: TObject);
 begin
   GridOpen();
+end;
+
+procedure TShipmentsT.actSetReceiptDateExecute(Sender: TObject);
+begin
+  ShipmentsReceiptDateF.FormAction := TFormAction.acUpdate;
+  ShipmentsReceiptDateF.ID:=QueryShipmentsID.AsInteger;
+
+  ShipmentsReceiptDateF.ShowModal(ShipmentsTransporterNumberFCallBack);
+end;
+
+procedure TShipmentsT.actSetReceivedStatusExecute(Sender: TObject);
+begin
+  ShipmentsReceivedStatusF.FormAction := TFormAction.acUpdate;
+  ShipmentsReceivedStatusF.ID:=QueryShipmentsID.AsInteger;
+
+  ShipmentsReceivedStatusF.ShowModal(ShipmentsTransporterNumberFCallBack);
+end;
+
+procedure TShipmentsT.actSetTransporterNumberExecute(Sender: TObject);
+begin
+  ShipmentsTransporterNumberF.FormAction := TFormAction.acUpdate;
+  ShipmentsTransporterNumberF.edtNumS.Caption := QuerySupplierBrief.AsString;
+  ShipmentsTransporterNumberF.ID:=QueryShipmentsID.AsInteger;
+
+  ShipmentsTransporterNumberF.ShowModal(ShipmentsTransporterNumberFCallBack);
 end;
 
 procedure TShipmentsT.DoHideMask;
@@ -346,6 +420,23 @@ begin
 //  actProtocol.Enabled := (actProtocol.Tag=1) and (Query.RecordCount>0);
 //
 //  actGroupDetailNameEdit.Enabled := (actGroupDetailNameEdit.Tag=1) and (Marks.Count>0);
+
+
+  actSetTransporterNumber.Enabled := (actSetTransporterNumber.Tag=1) and (Query.RecordCount>0);
+
+  actSetReceiptDate.Enabled := (actSetReceiptDate.Tag=1) and (Query.RecordCount>0);
+end;
+
+procedure TShipmentsT.QueryReceiptDateGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin // Ожидаемая дата поступления
+  if (not QueryReceiptDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + QueryReceiptDate2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
 end;
 
 procedure TShipmentsT.GridCellClick(Column: TUniDBGridColumn);
@@ -426,6 +517,12 @@ begin
     ToastOK ('Успешно выполнено!', unisession);
 end;
 
+procedure TShipmentsT.ShipmentsTransporterNumberFCallBack(Sender: TComponent;
+  AResult: Integer);
+begin
+
+end;
+
 procedure TShipmentsT.SortColumn(const FieldName: string; Dir: Boolean);
 begin
   if Dir then
@@ -480,6 +577,9 @@ begin
   GridLayout(Self, Grid, tGridLayout.glLoad, False);
 
 
+  // объект для упраления метками
+//  Marks := tMarks.Create(Grid);
+//  Marks.Clear;
 
   //GetMarksInfo;
 
@@ -499,6 +599,104 @@ begin
   end;
 end;
 
+
+{ tMarks }
+
+constructor tMarks.Create(AGrid: TUniDBGrid);
+begin
+    if Assigned(AGrid) then
+    begin
+        FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
+        FQuery := TFDQuery.Create(nil);
+        FQuery.Connection := FConnection;
+        FGrid := AGrid;
+    end;
+    FMarks := TDictionary <integer, integer>.Create();
+end;
+
+procedure tMarks.DataRefresh;
+var Key: Integer;
+    BM : TBookmark;
+begin
+  logger.Info('tMarks.DataRefresh Begin');
+  begin
+      FGrid.DataSource.DataSet.DisableControls;
+      BM := FGrid.DataSource.DataSet.GetBookmark;
+      try
+          for Key in FMarks.Keys  do
+          begin
+              if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+              begin
+                  tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
+                  FGrid.RefreshCurrentRow();
+              end;
+          end;
+      finally
+          FGrid.DataSource.DataSet.GotoBookmark(BM);
+          FGrid.DataSource.DataSet.FreeBookmark(BM);
+          FGrid.DataSource.DataSet.EnableControls;
+      end;
+  end;
+  logger.Info('tMarks.DataRefresh End');
+end;
+
+procedure tMarks.DeleteInDB();
+begin
+    Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
+end;
+
+procedure tMarks.Clear;
+begin
+    DeleteInDB();
+    FMarks.Clear;
+end;
+
+destructor tMarks.Destroy;
+begin
+   FMarks.Free;
+   inherited;
+end;
+
+function tMarks.GetCount: Integer;
+begin
+    Result := FMarks.Count;
+end;
+
+procedure tMarks.Select();
+var i, id:Integer;
+    SqlText: string;
+    BM : TBookmark;
+begin
+  logger.Info('tMarks.Select Begin');
+
+  SqlText:='';
+  Clear;
+
+  if FGrid.SelectedRows.Count>0 then
+  begin
+    BM := FGrid.DataSource.DataSet.GetBookmark;
+    try
+      for I := 0 to FGrid.SelectedRows.Count - 1 do
+      begin
+        FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
+        id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
+        FMarks.Add(id, id);
+        if i = 0 then
+          SqlText:= SqlText + ' Insert into tMarks (Spid, Type, ID) select @@Spid, 3, '
+        else
+          SqlText:= SqlText + ' Union all select @@Spid, 3, ';
+
+        SqlText:= SqlText + id.ToString;
+      end;
+      if SqlText <> '' then Sql.Exec(SqlText ,[], []);
+
+    finally
+      FGrid.DataSource.DataSet.GotoBookmark(BM);
+      FGrid.DataSource.DataSet.FreeBookmark(BM);
+    end;
+  end;
+  logger.Info('tMarks.Select End');
+end;
 
 initialization
   RegisterClass(TShipmentsT);

@@ -100,7 +100,10 @@ uses
   uClientsType2T in 'App\Clients\uClientsType2T.pas' {ClientType2T: TUniForm},
   uPromptReliabilityEdit in 'App\Clients\uPromptReliabilityEdit.pas' {PromptReliabilityEdit: TUniForm},
   uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm},
-  uExportForm in 'App\Shipments\uExportForm.pas' {ExportForm: TUniForm};
+  uExportForm in 'App\Shipments\uExportForm.pas' {ExportForm: TUniForm},
+  uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
+  uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
+  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm};
 
 {$R *.res}
 

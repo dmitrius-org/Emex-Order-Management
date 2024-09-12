@@ -1,4 +1,4 @@
-unit uSuppliersF;
+п»їunit uSuppliersF;
 
 interface
 
@@ -93,6 +93,7 @@ type
     qDeliveryisMyDelivery: TBooleanField;
     qDeliveryisIgnore: TBooleanField;
     qDeliveryFragile: TFloatField;
+    qDeliveryBrief: TWideStringField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -115,7 +116,7 @@ type
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
     procedure DeliveryDataLoad();
@@ -286,7 +287,7 @@ begin
   edtEmexUsername.Text:= UniMainModule.Query.FieldByName('emexUsername').AsString;
   edtEmexPassword.Text:= UniMainModule.Query.FieldByName('emexPassword').AsString;
 
-  // аудит
+  // Р°СѓРґРёС‚
   edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
   edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
@@ -363,37 +364,39 @@ procedure TSuppliersF.UniFormCreate(Sender: TObject);
 begin
   with Grid, Grid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'РЎРѕС…СЂР°РЅРёС‚СЊ', 'cancelBtnText', 'РћС‚РјРµРЅРёС‚СЊ'])
 end;
 
 procedure TSuppliersF.UniFormShow(Sender: TObject);
 begin
   fsAudit.Visible:= FAction <> acInsert;
 
+  pcCommon.ActivePage := tabCommon;
+
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
       edtInDate.Text := '';
       edtUpdDate.Text := '';
     end;
     acUpdate, acReportEdit, acUserAction:
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption   := ' Выполнить';
+    btnOk.Caption   := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;
   end;
 
-  Self.Caption := 'Поставщик: ' + edtBrief.Text;
+  Self.Caption := 'РџРѕСЃС‚Р°РІС‰РёРє: ' + edtBrief.Text;
 
   Sql.Exec('exec SupplierDeliveryProfilesLoad @SuppliersID = :SuppliersID', ['SuppliersID'], [FID]);
 

@@ -203,6 +203,8 @@ type
     N9: TUniMenuItem;
     QueryDeliveryTermSupplier: TIntegerField;
     QueryDeliveryDaysReserve2: TIntegerField;
+    QueryReceiptDate: TSQLTimeStampField;
+    QueryReceiptDate2: TSQLTimeStampField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -249,6 +251,8 @@ type
     procedure actRequestClosedExecute(Sender: TObject);
     procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure QueryDateDeliveryToCustomerGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -1006,6 +1010,18 @@ begin
   actCancellation.Enabled :=  (actCancellation.Tag = 1) and (Marks.Count > 0);
 end;
 
+procedure TOrdersT.QueryDateDeliveryToCustomerGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin // Дата поставки клиенту
+  if (not QueryReceiptDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-date-delivery-to-customer-arrow">&#10149;'+
+            '</span><span class="x-date-delivery-to-customer">' + QueryReceiptDate2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   if (QueryReplacementDetailNumber.Value <> '') then
@@ -1037,9 +1053,8 @@ begin
 end;
 
 procedure TOrdersT.QueryNextDateDepartureGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-begin
-  // Ближайшая дата вылета
-  if (Sender.FieldName = 'DeliveryNextDate') and (not QueryDeliveryNextDate2.IsNull) then
+begin // Ближайшая дата вылета
+  if (not QueryDeliveryNextDate2.IsNull) then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
             '</span><span class="x-delivery-next-date">' + QueryDeliveryNextDate2.AsString + '</span>';

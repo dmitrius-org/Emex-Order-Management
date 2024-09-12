@@ -7,15 +7,15 @@ begin
 	(
 	 NodeID            numeric(18,0)  identity --  
 	,Brief             nvarchar(32)   not null --
-	,Name              nvarchar(256)  not null --
+	,Name              nvarchar(64)   not null --
 	,Comment           nvarchar(512)  null     --
 	,Flag              int            default 0--
 	,ColorID           nvarchar(32)   null     -- 
 	,Type              int -- 0 - состояние 
 						   -- 1 - действие
 	,EID               int --  
-	,EBrief            nvarchar(32)  not null  --
-	,EName             nvarchar(256) not null  --
+	,EBrief            nvarchar(32) --not null  --
+	,EName             nvarchar(64) --not null  --
 	);
 
 	create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name);
@@ -27,6 +27,9 @@ end
 go
 exec setOV 'tNodes', 'U', '20240101', '0'
 go
+
+
+alter table tNodes alter column EName            nvarchar(64) 
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tNodes', @desc = 'Справочник состояний и действий'
 go

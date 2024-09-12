@@ -10,6 +10,7 @@ begin
 	 ShipmentsID                     numeric(18,0)  identity --
 	,ShipmentsDate                   datetime       not null -- дата отгрузки
 	,ReceiptDate                     datetime       -- ожидаемая дата поступления
+    ,ReceiptDate2                    datetime 
 	,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
 	,DestinationLogo                 nvarchar(20)   -- Тип отправки DestinationLogo
     ,DestinationName                 nvarchar(120)  -- Тип отправки DestinationLogo
@@ -36,9 +37,10 @@ begin
 	,TransporterVolumeKG             money          -- добавить редактируемое поле "вес объем по данным перевозчика"
 	,TransporterDiffVolumeWeigh      money          -- указать разницу сумм вес объемный и вес физ факт по данным перевозчика
 	,TransporterAmount               money          -- считать доставку исходя из данных перевозчика
-	--,считать доставку исходя из данных перевозчика
+    ,TransporterNumber               nvarchar(64)   -- Номер груза
 
 
+    ,StatusID                        int
 	,UserID                          numeric(18,0) default dbo.GetUserID()
 	,inDatetime                      datetime      default GetDate()      --
 	,updDatetime                     datetime      default GetDate()      --

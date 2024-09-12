@@ -57,6 +57,7 @@ type
     N3: TUniMenuItem;
     N4: TUniMenuItem;
     QueryTypeDescription: TStringField;
+    UniToolButton5: TUniToolButton;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

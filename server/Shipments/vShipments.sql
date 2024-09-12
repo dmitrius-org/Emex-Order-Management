@@ -12,6 +12,7 @@ as
 SELECT s.ShipmentsID
       ,s.ShipmentsDate               -- дата отгрузки
       ,s.ReceiptDate                 -- ожидаемая жата поступления (расчетное поле)
+      ,s.ReceiptDate2
       ,s.Invoice                     -- номер инвойса
       ,s.DestinationLogo             -- тип отправки
       ,s.DestinationName
@@ -37,11 +38,15 @@ SELECT s.ShipmentsID
       ,s.TransporterVolumeKG         -- добавить редактируемое поле "вес объем по данным перевозчика"
       ,s.TransporterDiffVolumeWeigh  -- указать разницу сумм вес объемный и вес физ факт по данным перевозчика      
       ,s.TransporterAmount 
+      ,s.TransporterNumber
 
+
+      ,s.StatusID
+      ,st.Name      StatusName
       ,s.updDatetime
       -- считать доставку исходя из данных перевозчика
 
-      ,sp.Brief SupplierBrief
+      ,sp.Brief     SupplierBrief
    FROM tShipments s (nolock)
    left join tSuppliers sp (nolock)
           on sp.SuppliersID=s.SuppliersID
@@ -52,9 +57,9 @@ SELECT s.ShipmentsID
  --inner join tUser u with (nolock index=ao1)
  --        on u.UserID = o.UserID
 
- --inner join tNodes s with (nolock index=ao1)
- --        on s.NodeID = o.[StatusID]
- --       and s.Type   = 0 -- состояние/статус
+ left join tNodes st with (nolock index=ao1)
+         on st.NodeID = s.[StatusID]
+        and st.Type   = 0 -- состояние/статус
 
  --inner join tModel m with (nolock)
  --        on m.StateID = s.NodeID
@@ -84,7 +89,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240823', '1'
+exec setOV 'vShipments', 'V', '20240911', '2'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

@@ -327,7 +327,7 @@ DEALLOCATE my_cur
           else ''
         end <> ''
  
- exec ShipmentsInsert
+ exec ShipmentsRefresh
 
 
 
@@ -345,6 +345,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240814', '7'
+exec setOV 'EmexOrderStateSync', 'P', '20240911', '8'
 go
  
