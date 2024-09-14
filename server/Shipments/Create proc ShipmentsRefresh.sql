@@ -1,6 +1,3 @@
-if OBJECT_ID('ShipmentsInsert') is not null
-    drop proc ShipmentsInsert
-go
 if OBJECT_ID('ShipmentsRefresh') is not null
     drop proc ShipmentsRefresh
 /*

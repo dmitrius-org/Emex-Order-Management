@@ -21,12 +21,12 @@ UPDATE tShipments
    SET SupplierWeightKG       = @SupplierWeightKG, 
        SupplierVolumeKG       = @SupplierVolumeKG , 
        
-       SupplierDiffVolumeWeigh= @SupplierVolumeKG - @SupplierWeightKG, 
+       SupplierDiffVolumeWeigh= @SupplierVolumeKG - @SupplierWeightKG 
        
-       TransporterWeightKG = @TransporterWeightKG, 
-       TransporterVolumeKG = @TransporterVolumeKG,
+       --TransporterWeightKG = @TransporterWeightKG, 
+       --TransporterVolumeKG = @TransporterVolumeKG,
 
-       TransporterDiffVolumeWeigh = @TransporterVolumeKG- @TransporterWeightKG
+       --TransporterDiffVolumeWeigh = @TransporterVolumeKG- @TransporterWeightKG
  WHERE ShipmentsID = @ShipmentsID
 
 
@@ -46,5 +46,5 @@ return @r
 GO
 grant exec on ShipmentsUpdate to public
 go
-exec setOV 'ShipmentsUpdate', 'P', '20240101', '0'
+exec setOV 'ShipmentsUpdate', 'P', '20240101', '1'
 go

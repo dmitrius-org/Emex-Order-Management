@@ -134,6 +134,8 @@ type
     N5: TUniMenuItem;
     N10: TUniMenuItem;
     QueryReceiptDate2: TSQLTimeStampField;
+    actSetTransporterData: TAction;
+    N12: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -156,6 +158,7 @@ type
     procedure QueryReceiptDateGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure actSetReceivedStatusExecute(Sender: TObject);
+    procedure actSetTransporterDataExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -206,7 +209,7 @@ implementation
 uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
   Main, ServerModule, uToast, uGridUtils, uExportForm, uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
-  uShipmentsReceiptStatusF;
+  uShipmentsReceiptStatusF, uShipmentsTransporterDataF;
 
 {$R *.dfm}
 
@@ -282,6 +285,14 @@ begin
   ShipmentsReceivedStatusF.ShowModal(ShipmentsTransporterNumberFCallBack);
 end;
 
+procedure TShipmentsT.actSetTransporterDataExecute(Sender: TObject);
+begin
+  ShipmentsTransporterDataF.FormAction := TFormAction.acUpdate;
+  ShipmentsTransporterDataF.ID:=QueryShipmentsID.AsInteger;
+
+  ShipmentsTransporterDataF.ShowModal(ShipmentsTransporterNumberFCallBack);
+end;
+
 procedure TShipmentsT.actSetTransporterNumberExecute(Sender: TObject);
 begin
   ShipmentsTransporterNumberF.FormAction := TFormAction.acUpdate;
@@ -329,47 +340,17 @@ end;
 
 procedure TShipmentsT.FilterClientsCreate;
 begin
-//  qClient.Open(); // используется в фильтре Клиент
-//
-//  fClient.Clear;
-//  qClient.First;
-//  while not qClient.Eof do
-//  begin
-//    fClient.Items.AddObject( qClient.FieldByName('Brief').AsString, Pointer(qClient.FieldByName('ClientID').AsInteger) );
-//    qClient.Next;
-//  end;
-//
-//  fClient.Refresh;
+
 end;
 
 procedure TShipmentsT.FilterPriceLogoCreate;
 begin
-//  qPriceLogo.Open(); // используется в фильтре PriceLogo
-//
-//  fPriceLogo.Clear;
-//  qPriceLogo.First;
-//  while not qPriceLogo.Eof do
-//  begin
-//    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
-//    qPriceLogo.Next;
-//  end;
-//
-//  fPriceLogo.Refresh;
+
 end;
 
 procedure TShipmentsT.FilterStatusCreate;
 begin
-//  qStatus.Open(); // используется в фильтре Статус
-//
-//  fStatus2.Clear;
-//  qStatus.First;
-//  while not qStatus.Eof do
-//  begin
-//    fStatus2.Items.AddObject( qStatus.FieldByName('Name').AsString, Pointer(qStatus.FieldByName('NodeID').AsInteger) );
-//    qStatus.Next;
-//  end;
-//
-//  fStatus2.Refresh;
+
 end;
 
 
@@ -520,7 +501,8 @@ end;
 procedure TShipmentsT.ShipmentsTransporterNumberFCallBack(Sender: TComponent;
   AResult: Integer);
 begin
-
+  Query.RefreshRecord(False) ;
+  Grid.RefreshCurrentRow();
 end;
 
 procedure TShipmentsT.SortColumn(const FieldName: string; Dir: Boolean);

@@ -330,6 +330,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1092#1080#1079'. '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
           Width = 150
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -337,6 +338,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
           Width = 150
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -917,6 +919,10 @@ object ShipmentsT: TShipmentsT
       Caption = #1055#1086#1083#1091#1095#1077#1085
       OnExecute = actSetReceivedStatusExecute
     end
+    object actSetTransporterData: TAction
+      Caption = #1059#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+      OnExecute = actSetTransporterDataExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -933,6 +939,9 @@ object ShipmentsT: TShipmentsT
       end
       object N5: TUniMenuItem
         Action = actSetReceivedStatus
+      end
+      object N12: TUniMenuItem
+        Action = actSetTransporterData
       end
     end
     object N2: TUniMenuItem
@@ -960,14 +969,12 @@ object ShipmentsT: TShipmentsT
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
-    InsertSQL.Strings = (
-      '')
     ModifySQL.Strings = (
       'exec ShipmentsUpdate  '
       '       @SupplierWeightKG    = :NEW_SupplierWeightKG'
       '      ,@SupplierVolumeKG    = :NEW_SupplierVolumeKG'
-      '      ,@TransporterWeightKG = :NEW_TransporterWeightKG'
-      '      ,@TransporterVolumeKG = :NEW_TransporterVolumeKG'
+      '     -- ,@TransporterWeightKG = :NEW_TransporterWeightKG'
+      '     -- ,@TransporterVolumeKG = :NEW_TransporterVolumeKG'
       '      ,@ShipmentsID                = :ShipmentsID')
     FetchRowSQL.Strings = (
       'SELECT '
@@ -978,10 +985,12 @@ object ShipmentsT: TShipmentsT
       '       TransporterWeightKG, '
       '       TransporterVolumeKG, '
       '       TransporterDiffVolumeWeigh, '
+      '       TransporterAmount,'
+      '       TransporterNumber,'
+      '       '
+      'updDatetime,'
       ''
-      '       updDatetime,'
-      ''
-      '       TransporterNumber'
+      '       '
       ''
       '  from vShipments '
       ' where ShipmentsID = :ShipmentsID'

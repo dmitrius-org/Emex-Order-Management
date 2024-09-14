@@ -113,6 +113,7 @@ SELECT o.[OrderID]
               else 0
             end as bit)         as NoAir
       ,p.Fragile -- признак: хрупкий
+      ,o.OrderDetailSubId
       
 	  ,m.Flag&1 /*1 - начальное состояние */ 
                                 as IsStartState

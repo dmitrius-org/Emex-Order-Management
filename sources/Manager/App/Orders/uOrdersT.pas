@@ -883,10 +883,21 @@ begin
       Query.MacroByName('OrderNum').Value := '';
 
     if fDetailNum.Text <> '' then
-      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like '''   + Trim(fDetailNum.Text) + '%''' +
-                                              '   or o.ReplacementDetailNumber like '''   + Trim(fDetailNum.Text) + '%'')'
+      if string(fDetailNum.Text)[1] = '!' then
+      begin
+        Query.MacroByName('DetailNum').Value := ' and o.OrderDetailSubId = :DetailNum';
+        Query.ParamByName('DetailNum').AsString := Trim(fDetailNum.Text);
+      end
+      else
+      begin
+        Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like '''   + Trim(fDetailNum.Text) + '%''' +
+                                                '   or o.ReplacementDetailNumber like '''   + Trim(fDetailNum.Text) + '%'')'
+      end
     else
       Query.MacroByName('DetailNum').Value := '';
+
+    logger.Info(string(fDetailNum.Text)[1]  );
+    logger.Info(Query.MacroByName('DetailNum').Value );
 
     if cbCancel.ItemIndex > -1 then
       Query.MacroByName('isCancel').Value := ' and o.isCancel = ' + cbCancel.ItemIndex.ToString

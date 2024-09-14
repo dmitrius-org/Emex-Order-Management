@@ -30,18 +30,6 @@ Update p
                  and p.OrderDetailSubId<> '' ) o 
 where p.Spid = @@SPID
 
-delete p
-  from pMovement p (rowlock) 
- where p.Spid = @@SPID
-   and exists 
-            (select 1
-               from tProtocol pr (nolock)
-              where pr.ObjectID   = p.OrderID 
-                and pr.NewStateID in ( 24 --24	Received	Получено
-                                      ,26 --24  IssuedClient	Выдано клиенту
-                                     )
-            )
-
 Update pMovement
    set pMovement.N = p.N
   from (Select ID,
@@ -166,6 +154,7 @@ DEALLOCATE my_cur
  -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
  exec MovementArchive
 
+
  -- чистим ошибочные заказа после разбиения, иногда такое бывает
  delete o
    from pMovement p (nolock) 
@@ -190,8 +179,19 @@ DEALLOCATE my_cur
               ) o   
  where p.Spid = @@SPID
    and p.Flag&8>0
+ --*/
 
---*/
+
+ -- 
+ --delete p
+ --  from pMovement p (rowlock) 
+ -- inner join tOrders o (nolock)
+ --         on o.OrderID = p.OrderID
+ -- inner join tNodes n (nolock)
+ --         on n.NodeID = o.StatusID
+ --        and n.Flag&2=0
+ -- where p.Spid = @@SPID
+
 
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
@@ -260,7 +260,7 @@ DEALLOCATE my_cur
        ,o.DeliveredDateToSupplier = case -- Доставлена поставщику
                                       when n.Brief  in ('ReceivedOnStock' /*Получено на склад*/
 									                   ,'ReadyToSend'     /*Готово к выдаче*/)
-									    then p.DocumentDate
+									  then p.DocumentDate
                                       else o.DeliveredDateToSupplier
                                     end
        ,o.Quantity                = p.Quantity	       	   					          
