@@ -72,6 +72,8 @@ type
     qImplementationClientBrief: TWideStringField;
     FDExportNomenclatureBarCode: TWideStringField;
     qImplementationBox: TWideStringField;
+    qImplementationreference: TWideStringField;
+    FDExportAdmissionreference: TWideStringField;
     procedure GridNomenclatureCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actExportNomenklatureExecute(Sender: TObject);

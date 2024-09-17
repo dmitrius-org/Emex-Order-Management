@@ -17,8 +17,6 @@ object GrantF: TGrantF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 404
-    ExplicitWidth = 736
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 729
@@ -30,7 +28,6 @@ object GrantF: TGrantF
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 647
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -43,7 +40,6 @@ object GrantF: TGrantF
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 560
     end
   end
   object UniPageControl1: TUniPageControl
@@ -52,17 +48,12 @@ object GrantF: TGrantF
     Width = 818
     Height = 564
     Hint = ''
-    ActivePage = tsInterface
+    ActivePage = tsObjects
     Align = alClient
     TabOrder = 1
-    ExplicitTop = -2
     object tsInterface: TUniTabSheet
       Hint = ''
       Caption = #1055#1088#1072#1074#1072' '#1085#1072' '#1080#1085#1090#1077#1088#1092#1077#1081#1089
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 289
-      ExplicitHeight = 193
       object ToolBar: TUniToolBar
         Left = 0
         Top = 0
@@ -75,7 +66,6 @@ object GrantF: TGrantF
         TabOrder = 0
         ParentColor = False
         Color = clBtnFace
-        ExplicitWidth = 818
         object UniToolButton1: TUniToolButton
           AlignWithMargins = True
           Left = 1
@@ -127,11 +117,8 @@ object GrantF: TGrantF
     end
     object tsObjects: TUniTabSheet
       Hint = ''
+      ParentAlignmentControl = False
       Caption = #1054#1073#1098#1077#1082#1090#1099' '#1089#1080#1089#1090#1077#1084#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 818
-      ExplicitHeight = 564
       object UniPanel1: TUniPanel
         Left = 0
         Top = 0
@@ -142,6 +129,8 @@ object GrantF: TGrantF
         TabOrder = 0
         ShowCaption = False
         Caption = 'UniPanel1'
+        ExplicitLeft = 3
+        ExplicitTop = 95
         object cbObjectType: TUniComboBox
           Left = 121
           Top = 14
@@ -158,7 +147,7 @@ object GrantF: TGrantF
         object UniLabel1: TUniLabel
           Left = 16
           Top = 16
-          Width = 70
+          Width = 69
           Height = 13
           Hint = ''
           Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090#1072':'

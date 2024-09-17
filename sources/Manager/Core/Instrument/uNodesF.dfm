@@ -18,8 +18,6 @@ object NodesF: TNodesF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 245
-    ExplicitWidth = 619
     DesignSize = (
       604
       44)
@@ -33,7 +31,6 @@ object NodesF: TNodesF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 503
     end
     object btnCancel: TUniBitBtn
       Left = 400
@@ -45,7 +42,6 @@ object NodesF: TNodesF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 416
     end
   end
   object fsCommon: TUniFieldSet
@@ -58,20 +54,18 @@ object NodesF: TNodesF
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 619
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
       Top = 15
-      Width = 604
-      Height = 167
+      Width = 600
+      Height = 181
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 615
       DesignSize = (
         600
-        167)
+        181)
       object edtBrief: TUniEdit
         Left = 150
         Top = 70
@@ -81,7 +75,6 @@ object NodesF: TNodesF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         ClearButton = True
-        ExplicitWidth = 433
       end
       object edtName: TUniEdit
         Left = 150
@@ -92,7 +85,6 @@ object NodesF: TNodesF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 433
       end
       object edtComment: TUniEdit
         Left = 150
@@ -103,7 +95,6 @@ object NodesF: TNodesF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 3
         ClearButton = True
-        ExplicitWidth = 433
       end
       object lblBruef: TUniLabel
         Left = 31
@@ -144,6 +135,24 @@ object NodesF: TNodesF
         Caption = #1058#1080#1087
         TabOrder = 7
         Columns = 2
+      end
+      object edtN: TUniNumberEdit
+        Left = 150
+        Top = 154
+        Width = 122
+        Hint = ''
+        TabOrder = 8
+        BlankValue = 0
+        DecimalSeparator = ','
+      end
+      object UniLabel3: TUniLabel
+        Left = 31
+        Top = 157
+        Width = 109
+        Height = 13
+        Hint = ''
+        Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#1085#1086#1084#1077#1088':'
+        TabOrder = 9
       end
     end
   end

@@ -15,6 +15,10 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
+      'Database=testDB'
+      'User_Name=sa'
+      'Server=WIN-26BJ6Q2GFSI\BOOSTER'
+      'Password=CE192a12!@'
       'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False

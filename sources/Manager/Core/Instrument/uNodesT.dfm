@@ -138,7 +138,6 @@ object NodesT: TNodesT
         Action = actView
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 202
       end
       object UniToolButton4: TUniToolButton
         Left = 330
@@ -147,7 +146,6 @@ object NodesT: TNodesT
         Action = actDelete
         ImageIndex = 0
         TabOrder = 4
-        ExplicitLeft = 294
       end
       object UniToolButton5: TUniToolButton
         Left = 440
@@ -156,7 +154,6 @@ object NodesT: TNodesT
         Action = actRefreshAll
         ImageIndex = 4
         TabOrder = 5
-        ExplicitLeft = 386
       end
     end
   end
@@ -212,6 +209,7 @@ object NodesT: TNodesT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      LayoutConfig.ComponentCls = 'grid-status'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
@@ -220,9 +218,20 @@ object NodesT: TNodesT
       TabOrder = 1
       ParentColor = False
       Color = clBtnFace
+      DragDrop.Enabled = True
+      DragDrop.EnableDrag = True
+      DragDrop.EnableDrop = True
+      DragDrop.PromptText = '%d '#1079#1072#1087#1080#1089#1100' '#1073#1091#1076#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1072'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      DragDrop.Mode = dmCopy
+      OnAjaxEvent = GridAjaxEvent
+      OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnClearFilters = GridClearFilters
+      OnEndDrag = GridEndDrag
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
+      OnColumnResize = GridColumnResize
+      OnDropRowsEvent = GridDropRowsEvent
       OnColumnFilter = GridColumnFilter
       Columns = <
         item
@@ -230,7 +239,9 @@ object NodesT: TNodesT
           Title.Alignment = taCenter
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
           Width = 125
+          Visible = False
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'Flag'
@@ -239,29 +250,37 @@ object NodesT: TNodesT
           Width = 78
           Visible = False
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'Brief'
           Title.Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077
           Width = 200
+          ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'Name'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
           Width = 325
+          ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'TypeDescription'
           Title.Caption = #1058#1080#1087
           Width = 115
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'Comment'
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
           Width = 508
+          ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'ColorID'
@@ -269,6 +288,7 @@ object NodesT: TNodesT
           Width = 196
           Visible = False
           ReadOnly = True
+          Sortable = True
         end
         item
           AllowHTML = False
@@ -277,6 +297,16 @@ object NodesT: TNodesT
           Title.Caption = #1062#1074#1077#1090
           Width = 148
           Visible = False
+          ReadOnly = True
+          Sortable = True
+        end
+        item
+          FieldName = 'N'
+          Title.Alignment = taCenter
+          Title.Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#1085#1086#1084#1077#1088
+          Width = 80
+          Hint = #1053#1086#1084#1077#1088' '#1076#1083#1103' '#1089#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1074#1099#1074#1086#1076#1072
+          Sortable = True
         end>
     end
   end
@@ -286,9 +316,6 @@ object NodesT: TNodesT
     FormatOptions.AssignedValues = [fvDefaultParamDataType]
     FormatOptions.DefaultParamDataType = ftString
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
     UpdateOptions.UpdateChangedFields = False
     UpdateOptions.LockWait = True
     UpdateOptions.RefreshMode = rmAll
@@ -297,14 +324,20 @@ object NodesT: TNodesT
     UpdateOptions.CheckRequired = False
     UpdateOptions.UpdateTableName = 'tNodes'
     UpdateOptions.KeyFields = 'NodeID'
+    UpdateObject = UpdateSQL
     SQL.Strings = (
       'SELECT n.*'
-      '  FROM vNodes n')
-    Left = 685
-    Top = 121
+      '  FROM vNodes as n'
+      ' where 1=1'
+      ' '
+      ' order by n.Type, n.N')
+    Left = 684
+    Top = 120
     object QueryNodeID: TFMTBCDField
       FieldName = 'NodeID'
       Origin = 'NodeID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      ReadOnly = True
       Required = True
       Precision = 18
       Size = 0
@@ -312,33 +345,39 @@ object NodesT: TNodesT
     object QueryFlag: TIntegerField
       FieldName = 'Flag'
       Origin = 'Flag'
+      ReadOnly = True
     end
     object QueryBrief: TWideStringField
       FieldName = 'Brief'
       Origin = 'Brief'
+      ReadOnly = True
       Required = True
       Size = 128
     end
     object QueryName: TWideStringField
       FieldName = 'Name'
       Origin = 'Name'
+      ReadOnly = True
       Required = True
       Size = 128
     end
     object QueryDescription: TWideStringField
       FieldName = 'Comment'
       Origin = 'Description'
+      ReadOnly = True
       Size = 512
     end
     object QueryColorID: TWideStringField
       FieldName = 'ColorID'
       Origin = 'ColorID'
+      ReadOnly = True
       Visible = False
       Size = 32
     end
     object QueryColor: TWideStringField
       FieldName = 'Color'
       Origin = 'Color'
+      ReadOnly = True
       Visible = False
       Size = 60
     end
@@ -348,6 +387,14 @@ object NodesT: TNodesT
       ReadOnly = True
       Required = True
       Size = 9
+    end
+    object QueryN: TIntegerField
+      FieldName = 'N'
+    end
+    object QueryType: TIntegerField
+      FieldName = 'Type'
+      Origin = 'Type'
+      ReadOnly = True
     end
   end
   object DataSource: TDataSource
@@ -1752,5 +1799,23 @@ object NodesT: TNodesT
       0000C002000080010000C0020000800100004005000180010000C00F00078003
       00004017000F80070000C02F803FFFFF00000000000000000000000000000000
       000000000000}
+  end
+  object UpdateSQL: TFDUpdateSQL
+    Connection = UniMainModule.FDConnection
+    ConnectionName = 'Connection'
+    InsertSQL.Strings = (
+      'select 0')
+    ModifySQL.Strings = (
+      'UPDATE tNodes'
+      '   SET N = :NEW_N'
+      ' WHERE NodeID = :OLD_NodeID')
+    DeleteSQL.Strings = (
+      'select 0')
+    FetchRowSQL.Strings = (
+      'select * '
+      '  from tNodes   (nolock)'
+      'WHERE NodeID = :OLD_NodeID')
+    Left = 532
+    Top = 120
   end
 end

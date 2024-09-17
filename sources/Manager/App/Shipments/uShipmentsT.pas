@@ -136,6 +136,9 @@ type
     QueryReceiptDate2: TSQLTimeStampField;
     actSetTransporterData: TAction;
     N12: TUniMenuItem;
+    actProtocol: TAction;
+    N13: TUniMenuItem;
+    N14: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -159,6 +162,12 @@ type
       DisplayText: Boolean);
     procedure actSetReceivedStatusExecute(Sender: TObject);
     procedure actSetTransporterDataExecute(Sender: TObject);
+    procedure actProtocolExecute(Sender: TObject);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+      NewIndex: Integer);
 
   private
     { Private declarations }
@@ -209,7 +218,7 @@ implementation
 uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
   Main, ServerModule, uToast, uGridUtils, uExportForm, uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
-  uShipmentsReceiptStatusF, uShipmentsTransporterDataF;
+  uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T;
 
 {$R *.dfm}
 
@@ -263,6 +272,12 @@ begin
   GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
+
+procedure TShipmentsT.actProtocolExecute(Sender: TObject);
+begin
+  ShipmentsProtocol_T.ID:= Integer(QueryShipmentsID.Value);
+  ShipmentsProtocol_T.ShowModal;
+end;
 
 procedure TShipmentsT.actRefreshAllExecute(Sender: TObject);
 begin
@@ -420,6 +435,13 @@ begin // Ожидаемая дата поступления
     Text := Sender.AsString;
 end;
 
+procedure TShipmentsT.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if Params.Count > 0 then
+    GridExt.GridLayoutSave(self, Grid, Params, EventName);
+end;
+
 procedure TShipmentsT.GridCellClick(Column: TUniDBGridColumn);
 begin
 //  ACurrColumn := Column;
@@ -501,8 +523,12 @@ end;
 procedure TShipmentsT.ShipmentsTransporterNumberFCallBack(Sender: TComponent;
   AResult: Integer);
 begin
+  if AResult <> mrOK then Exit;
+
   Query.RefreshRecord(False) ;
   Grid.RefreshCurrentRow();
+
+  ToastOK ('Успешно выполнено!', unisession);
 end;
 
 procedure TShipmentsT.SortColumn(const FieldName: string; Dir: Boolean);
@@ -511,6 +537,18 @@ begin
     Query.IndexName := FieldName+'_index_asc'
   else
     Query.IndexName := FieldName+'_index_des';
+end;
+
+procedure TShipmentsT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+  NewIndex: Integer);
+begin
+  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TShipmentsT.GridColumnResize(Sender: TUniBaseDBGridColumn;
+  NewSize: Integer);
+begin
+  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TShipmentsT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -534,30 +572,13 @@ begin
 
   fShipmentsDate.Text := '';
 
-//  Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
-
-//  fOrderDate.Text := '';
-//
-//  FilterStatusCreate;
-//  FilterPriceLogoCreate();
-//  FilterClientsCreate();
-
- // qPriceLogo.Open();
- // qClient.Open();
-
-  GridOpen;
-
   // индексы для сортировки
-  //with Query do
-  GridExt.SortColumnCreate(Grid);;
-
-
-//  {$IFDEF Release}
-//  {$ENDIF}
+  GridExt.SortColumnCreate(Grid);
 
   // восстановление настроек грида для пользователя
-  GridLayout(Self, Grid, tGridLayout.glLoad, False);
+  GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
 
+  GridOpen;
 
   // объект для упраления метками
 //  Marks := tMarks.Create(Grid);

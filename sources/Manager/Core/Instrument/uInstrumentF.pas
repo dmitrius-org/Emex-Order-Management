@@ -322,13 +322,13 @@ begin
           if edtBrief.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!';
+            RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
             Exit();
           end
           else if edtName.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Наименование] обязательна к заполнению!';
+            RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
             Exit();
           end
         end;
@@ -337,19 +337,19 @@ begin
           if edtBrief.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!';
+            RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
             Exit();
           end
           else if edtName.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Наименование] обязательна к заполнению!';
+            RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
             Exit();
           end
           else if lkpObject.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [' + lkpObject.FieldLabel + '] обязателен к заполнению!';
+            RetVal.Message := 'Поле [' + lkpObject.FieldLabel + '] обязателено к заполнению!';
             Exit();
           end;
         end;
@@ -358,7 +358,7 @@ begin
           if lkpState.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Состояние] обязательна к заполнению!';
+            RetVal.Message := 'Поле [Состояние] обязательно к заполнению!';
             Exit();
           end
 

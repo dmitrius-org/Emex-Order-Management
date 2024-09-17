@@ -150,7 +150,7 @@ class Sql:
     # Функция load_makes загрузка данных с использованием pandas DataFrame
     @timing_decorator
     def load_makes(self, data, table, batchsize=500):
-        logger.info('Начало загрузки данных в базу SQL');
+        logger.info('Начало загрузки данных в базу SQL')
         cursor = self.cnxn.cursor()      # создаем курсор
         cursor.fast_executemany = True   # активируем быстрое выполнение
 
@@ -191,7 +191,7 @@ class Sql:
     # Функция load_description наименований деталей с использованием pandas DataFrame
     @timing_decorator
     def load_description(self, data, table, batchsize=500):
-        logger.info('Начало загрузки данных в базу SQL');
+        logger.info('Начало загрузки данных в базу SQL')
         cursor = self.cnxn.cursor()      # создаем курсор
         cursor.fast_executemany = True   # активируем быстрое выполнение
 
@@ -228,3 +228,45 @@ class Sql:
 
         logger.info('Успешно загрузили данные в базу SQL')
         return True    
+
+    # Функция load_shipments загрузка данных по статусам доставки транспортной компании с использованием pandas DataFrame
+    @timing_decorator
+    def load_shipments(self, data, table, batchsize=500):
+        logger.info('Начало загрузки данных в базу SQL')
+        cursor = self.cnxn.cursor()      # создаем курсор
+        cursor.fast_executemany = True   # активируем быстрое выполнение
+
+        # Создаем таблицу для временных данных       
+        query = """
+         CREATE TABLE [{0}] (       
+             Date                    datetime     
+            ,Number                  nvarchar(64) 
+            ,Name                    nvarchar(64) 
+            ,Brief                   nvarchar(20) 
+         )
+         
+         create index ao1 on  [{0}] (Brief, Name)
+        """.format(table)
+
+        #self.drop(table)
+        self.dropTmp(table)
+        cursor.execute(query)  # запуск создания таблицы
+
+        query = " INSERT INTO [" + table + "] ([Date], [Number], [Name], [Brief]) VALUES (?, ?, ?, ?) "
+
+        # вставляем данные в целевую таблицу
+        for i in range(0, len(data), batchsize):
+            if i+batchsize > len(data):
+                batch = data[i: len(data)].values.tolist()
+            else:
+                batch = data[i: i+batchsize].values.tolist()
+
+            # запускаем вставку батча           
+            cursor.executemany(query, batch)
+
+            #self.cnxn.commit()
+
+        self.manual("exec ShipmentsStatusLoad")
+
+        logger.info('Успешно загрузили данные в базу SQL')
+        return True

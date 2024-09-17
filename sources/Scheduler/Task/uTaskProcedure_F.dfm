@@ -22,8 +22,6 @@ object TaskProcedure_F: TTaskProcedure_F
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 182
-    ExplicitWidth = 665
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 581
@@ -36,7 +34,6 @@ object TaskProcedure_F: TTaskProcedure_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 577
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -49,7 +46,6 @@ object TaskProcedure_F: TTaskProcedure_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 490
     end
   end
   object edtLinkID: TUniDBLookupComboBox
@@ -65,7 +61,6 @@ object TaskProcedure_F: TTaskProcedure_F
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     Color = clWindow
-    ExplicitWidth = 530
   end
   object edtIsActive: TUniCheckBox
     Left = 103
@@ -81,14 +76,13 @@ object TaskProcedure_F: TTaskProcedure_F
   end
   object edtComment: TUniEdit
     Left = 103
-    Top = 67
+    Top = 64
     Width = 546
     Hint = ''
     Text = ''
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
     ClearButton = True
-    ExplicitWidth = 542
   end
   object UniLabel1: TUniLabel
     Left = 8
@@ -117,7 +111,6 @@ object TaskProcedure_F: TTaskProcedure_F
     TabOrder = 6
     DecimalPrecision = 0
     DecimalSeparator = ','
-    ExplicitLeft = 524
   end
   object UniLabel3: TUniLabel
     Left = 459
@@ -128,7 +121,6 @@ object TaskProcedure_F: TTaskProcedure_F
     Caption = #1053#1086#1084#1077#1088':'
     Anchors = [akTop, akRight]
     TabOrder = 7
-    ExplicitLeft = 455
   end
   object DataSource: TDataSource
     DataSet = FDQuery

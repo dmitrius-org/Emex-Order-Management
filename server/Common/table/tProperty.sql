@@ -1,12 +1,13 @@
 if OBJECT_ID('tProperty') is null
 /* **********************************************************
-tProperty - 
+drop table tProperty - 
 ********************************************************** */
 begin
 	create table tProperty
 	(
-	 PropertyID       numeric(18, 0)  --
-	,ObjectTypeID     numeric(18, 0) 
+	 
+	 ObjectTypeID     numeric(18, 0) 
+    ,PropertyID       numeric(18, 0)  --
 	,Brief            nvarchar(128)   -- 
 	,Name             nvarchar(512)
 
@@ -14,7 +15,7 @@ begin
 	                           -- 2 - Используется при откате действия
 	);
 
-	create unique index ao1 on tProperty(PropertyID);
+	create unique index ao1 on tProperty(ObjectTypeID, PropertyID);
 
 	create unique index ao2 on tProperty(ObjectTypeID, Brief);
 
@@ -29,16 +30,18 @@ exec dbo.sys_setTableDescription 'tProperty', 'PropertyID'                 ,'И�
 go
 
 delete from tProperty
+
+--Процедуры автоматических заданий
 insert tProperty (PropertyID, ObjectTypeID, Brief, Name)       select 1, 101, 'EmexOrderStateSync', 'Синхронизация статусов заказов' 
 
+--Процедуры для модели состояния
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 102, 1, 'EmexCreateOrder', 'Создание заказа' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 3, 102, 1, 'EmexOrderStateSync', 'Синхронизация статусов заказов' 
-
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 4, 102, 1, 'EmexCreateOrderCheck', 'Проверка наличия заказа в Emex по данным корзины' 
-
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 5, 102, 1, 'InsertPartToBasketByPartFromMark', 'Добавление заказов в корзину' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 6, 102, 2, 'InsertPartToBasketByPartRollBack', 'Удаление деталей из корзины при откате' 
 
---insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 7, 102, 1, 'EmexCreateOrderBasketCheck', 'Проверка корзины. (Проверка наличия отказанных деталей, в случае наличия таких деталь автоматически удаляется из корзины emex)' 
-
-select * from tProperty
+-- типы платежей
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 1, 12, 0, 'Карта', 'Карта' 
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 12, 0, 'Наличные', 'Наличные' 
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 3, 12, 0, 'Взаимозачет', 'Взаимозачет' 

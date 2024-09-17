@@ -137,10 +137,13 @@ object ShipmentsT: TShipmentsT
       DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
+      OnAjaxEvent = GridAjaxEvent
       OnSelectionChange = GridSelectionChange
       OnCellClick = GridCellClick
       OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnCellContextClick = GridCellContextClick
+      OnColumnResize = GridColumnResize
       Columns = <
         item
           FieldName = 'ShipmentsID'
@@ -902,6 +905,7 @@ object ShipmentsT: TShipmentsT
       Tag = -1
       Category = 'Grid'
       Caption = #1069#1082#1089#1087#1086#1088#1090
+      ImageIndex = 8
       OnExecute = actExportDataExecute
     end
     object actSetTransporterNumber: TAction
@@ -923,12 +927,18 @@ object ShipmentsT: TShipmentsT
       Caption = #1059#1082#1072#1079#1072#1090#1100' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
       OnExecute = actSetTransporterDataExecute
     end
+    object actProtocol: TAction
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
+      ImageIndex = 4
+      OnExecute = actProtocolExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
     ScreenMask.Enabled = True
     Left = 101
-    Top = 218
+    Top = 217
     object N3: TUniMenuItem
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
       object N4: TUniMenuItem
@@ -949,6 +959,12 @@ object ShipmentsT: TShipmentsT
     end
     object N6: TUniMenuItem
       Action = actRefreshAll
+    end
+    object N14: TUniMenuItem
+      Caption = '-'
+    end
+    object N13: TUniMenuItem
+      Action = actProtocol
     end
     object N1: TUniMenuItem
       Caption = '-'
@@ -988,7 +1004,7 @@ object ShipmentsT: TShipmentsT
       '       TransporterAmount,'
       '       TransporterNumber,'
       '       '
-      'updDatetime,'
+      'updDatetime'
       ''
       '       '
       ''

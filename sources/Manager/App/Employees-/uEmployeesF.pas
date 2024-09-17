@@ -245,7 +245,7 @@ begin
       if edtBrief.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
         edtBrief.SetFocus;
         Exit();
       end;

@@ -57,7 +57,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actAdd
         ImageIndex = 1
-        TabOrder = 1
+        TabOrder = 2
       end
       object UniToolButton2: TUniToolButton
         AlignWithMargins = True
@@ -67,7 +67,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actEdit
         ImageIndex = 3
-        TabOrder = 2
+        TabOrder = 3
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
@@ -77,7 +77,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actView
         ImageIndex = 2
-        TabOrder = 3
+        TabOrder = 4
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
@@ -87,7 +87,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actDelete
         ImageIndex = 0
-        TabOrder = 4
+        TabOrder = 5
       end
       object UniToolButton6: TUniToolButton
         AlignWithMargins = True
@@ -102,7 +102,7 @@ object UsersT: TUsersT
         ShowHint = True
         Style = tbsSeparator
         Caption = 'UniToolButton6'
-        TabOrder = 6
+        TabOrder = 1
       end
       object UniToolButton7: TUniToolButton
         AlignWithMargins = True
@@ -112,7 +112,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actGroup
         ImageIndex = 5
-        TabOrder = 7
+        TabOrder = 6
       end
       object UniToolButton5: TUniToolButton
         AlignWithMargins = True
@@ -122,7 +122,7 @@ object UsersT: TUsersT
         ShowHint = True
         Action = actGrant
         ImageIndex = 4
-        TabOrder = 5
+        TabOrder = 7
       end
     end
   end
@@ -134,7 +134,7 @@ object UsersT: TUsersT
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = ''
     AlignmentControl = uniAlignmentClient
@@ -302,7 +302,7 @@ object UsersT: TUsersT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 2
+      TabOrder = 3
       EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
     end
     object fBrief: TUniEdit
@@ -312,7 +312,7 @@ object UsersT: TUsersT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 3
+      TabOrder = 2
       EmptyText = #1051#1086#1075#1080#1085'...'
     end
     object fisAdmin: TUniCheckBox

@@ -11,12 +11,12 @@ type
   TLookupF = class(TUniForm)
   private
     FFromName: String;
-    FID: Integer;
+    FID: TStringList;
     procedure SetFromName(const Value: String);
     { Private declarations }
   public
     { Public declarations }
-    property ID: Integer read FID write FID;
+    property ID: TStringList read FID write FID;
     property FromName: String read FFromName write SetFromName;
   end;
 
@@ -35,8 +35,14 @@ var
 begin
   FFromName := Value;
 
+  if not Assigned(FID) then
+    FID := TStringList.Create
+  else
+    FID.Clear;
+
   FrC := TUniFrameClass(FindClass(FFromName));
   Fr := FrC.Create(Self);
+
   TMultiProp.Objects([Fr])['FormAction']:=6;
 
   Fr.Align := alClient;

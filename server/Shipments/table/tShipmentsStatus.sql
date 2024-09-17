@@ -12,14 +12,13 @@ begin
 	,Date                    datetime        
 	,Number                  nvarchar(64)   -- Номер груза
 	,Name                    nvarchar(128)  -- Наименование статуса
-	,Brief                   nvarchar(10)   -- уникальный код статуса
-
+	,ID                      int   -- уникальный код статуса
 	,inDatetime              datetime2  default SYSDATETIME()     --
 	)
 
 	create unique index ao1 on tShipmentsStatus(ShipmentStatusID) 
 
-	create index ao2 on tShipmentsStatus(Brief, Number)
+	create index ao2 on tShipmentsStatus(Number, ID)
 
 	grant select on tShipmentsStatus to public
 end

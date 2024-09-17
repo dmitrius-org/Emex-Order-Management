@@ -896,9 +896,6 @@ begin
     else
       Query.MacroByName('DetailNum').Value := '';
 
-    logger.Info(string(fDetailNum.Text)[1]  );
-    logger.Info(Query.MacroByName('DetailNum').Value );
-
     if cbCancel.ItemIndex > -1 then
       Query.MacroByName('isCancel').Value := ' and o.isCancel = ' + cbCancel.ItemIndex.ToString
     else

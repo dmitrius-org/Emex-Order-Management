@@ -12,7 +12,7 @@ uses
 
 
   , uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
-  ;
+  , uBalanceTotalT;
 
 type
   TMainForm = class(TUniForm)
@@ -50,6 +50,7 @@ type
     UniContainerPanel2: TUniContainerPanel;
     LogoLabel: TUniLabel;
     btnExit: TUniSpeedButton;
+    tsBalance: TUniTabSheet;
     procedure UniFormShow(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
@@ -65,6 +66,10 @@ type
     procedure MainMenuClick(Sender: TObject);
     procedure btnBasketClick(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
+    procedure tsBalanceBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
+    procedure tsBalanceBeforeActivate(Sender: TObject;
+      var AllowActivate: Boolean);
 
   private
     { Private declarations }
@@ -76,6 +81,7 @@ type
     FSearchF :TSearchF;
     FBasketF :TBasketF;
     FOrdersT2:TOrdersT2;
+    FBalance:TBalanceTotalT;
     ///<summary>
     ///  FormJSNames - список форм
     ///</summary>
@@ -156,6 +162,8 @@ begin
   else
   if Nd.Text = 'Заказы' then pcMain.ActivePageIndex := 2
   else
+  if Nd.Text = 'Баланс и Отгрузки' then pcMain.ActivePageIndex := 3
+  else
     // под 999 меню профиль
   if (Nd.Tag = -999) and (Nd.Action <> nil)  then
   begin
@@ -207,6 +215,24 @@ begin
 
   logger.Info('set _MicroWidth:' + MainMenu.Micro.ToString());
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
+end;
+
+procedure TMainForm.tsBalanceBeforeActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  FBalance.GridRefresh;
+end;
+
+procedure TMainForm.tsBalanceBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  Logger.Info('TMainForm.tsBalanceBeforeFirstActivate');
+  if not Assigned(FBalance) then
+  begin
+    FBalance :=  TBalanceTotalT.Create(Self);
+    FBalance.Align := alClient;
+    FBalance.Parent := tsBalance;
+  end;
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
@@ -284,6 +310,8 @@ begin
   SetMainMenuMicroName;
 
   ProfileMenuAdd;
+
+  pcMain.ActivePageIndex := 0;
 end;
 
 initialization

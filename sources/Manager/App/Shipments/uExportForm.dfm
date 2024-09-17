@@ -17,15 +17,14 @@ object ExportForm: TExportForm
     Width = 1606
     Height = 650
     Hint = ''
-    ActivePage = TabNomenclature
+    ActivePage = tabImplementation
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1503
+    ExplicitLeft = 1
     object TabNomenclature: TUniTabSheet
       Hint = ''
       Caption = #1053#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072
       Layout = 'fit'
-      ExplicitWidth = 1495
       object GridNomenclature: TUniDBGrid
         Left = 0
         Top = 0
@@ -108,7 +107,6 @@ object ExportForm: TExportForm
       Hint = ''
       Caption = #1055#1086#1089#1090#1091#1087#1083#1077#1085#1080#1077
       Layout = 'fit'
-      ExplicitWidth = 1495
       object GridAdmission: TUniDBGrid
         Left = 0
         Top = 0
@@ -206,6 +204,11 @@ object ExportForm: TExportForm
             Title.Alignment = taCenter
             Title.Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1060#1072#1082#1090
             Width = 139
+          end
+          item
+            FieldName = 'reference'
+            Title.Caption = 'reference'
+            Width = 130
           end>
       end
     end
@@ -213,7 +216,6 @@ object ExportForm: TExportForm
       Hint = ''
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
       Layout = 'fit'
-      ExplicitWidth = 1495
       object GridImplementation: TUniDBGrid
         Left = 0
         Top = 0
@@ -323,6 +325,11 @@ object ExportForm: TExportForm
             Title.Alignment = taCenter
             Title.Caption = #1050#1086#1088#1086#1073#1082#1072
             Width = 120
+          end
+          item
+            FieldName = 'reference'
+            Title.Caption = 'reference'
+            Width = 130
           end>
       end
     end
@@ -506,6 +513,10 @@ object ExportForm: TExportForm
       ReadOnly = True
       Size = 128
     end
+    object FDExportAdmissionreference: TWideStringField
+      FieldName = 'reference'
+      Size = 64
+    end
   end
   object dsAdmission: TDataSource
     DataSet = FDExportAdmission
@@ -612,6 +623,10 @@ object ExportForm: TExportForm
     object qImplementationBox: TWideStringField
       FieldName = 'Box'
       Size = 15
+    end
+    object qImplementationreference: TWideStringField
+      FieldName = 'reference'
+      Size = 64
     end
   end
   object dsImplementation: TDataSource

@@ -38,7 +38,7 @@ object ClientsT: TClientsT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 2
+      TabOrder = 3
       EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
     end
     object fBrief: TUniEdit
@@ -48,7 +48,7 @@ object ClientsT: TClientsT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 3
+      TabOrder = 2
       EmptyText = #1051#1086#1075#1080#1085'...'
     end
     object fisAdmin: TUniCheckBox
@@ -80,7 +80,7 @@ object ClientsT: TClientsT
     Hint = ''
     ShowHint = True
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
     Color = clBtnShadow
@@ -169,7 +169,7 @@ object ClientsT: TClientsT
         ShowHint = True
         Action = actClientType
         ImageIndex = 7
-        TabOrder = 9
+        TabOrder = 6
       end
       object UniToolButton8: TUniToolButton
         AlignWithMargins = True
@@ -182,7 +182,7 @@ object ClientsT: TClientsT
         ShowHint = True
         Style = tbsSeparator
         Caption = 'UniToolButton8'
-        TabOrder = 8
+        TabOrder = 7
       end
       object UniToolButton6: TUniToolButton
         AlignWithMargins = True
@@ -192,7 +192,7 @@ object ClientsT: TClientsT
         ShowHint = True
         Action = actBalance
         ImageIndex = 4
-        TabOrder = 6
+        TabOrder = 8
       end
       object UniToolButton7: TUniToolButton
         AlignWithMargins = True
@@ -202,7 +202,7 @@ object ClientsT: TClientsT
         ShowHint = True
         Action = actBalanceAdd
         ImageIndex = 5
-        TabOrder = 7
+        TabOrder = 9
       end
     end
   end
@@ -214,7 +214,7 @@ object ClientsT: TClientsT
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -263,7 +263,7 @@ object ClientsT: TClientsT
       BorderStyle = ubsNone
       Align = alClient
       Anchors = []
-      TabOrder = 1
+      TabOrder = 0
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown

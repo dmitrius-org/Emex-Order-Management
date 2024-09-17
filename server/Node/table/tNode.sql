@@ -16,7 +16,17 @@ begin
 	,EID               int --  
 	,EBrief            nvarchar(32) --not null  --
 	,EName             nvarchar(64) --not null  --
-	);
+
+	,SID               int --  
+	,SBrief            nvarchar(32) --not null  --
+	,SName             nvarchar(64) --not null  --
+
+    ,SearchID          int -- 
+    ,SearchBrief       nvarchar(32) --not null  --
+    ,SearchName        nvarchar(64) --not null  --
+
+    ,N                 int -- используется для указания порядка вывода строки 
+    );
 
 	create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name);
 

@@ -4,13 +4,14 @@ drop proc if exists NodeInsert
 */
 go
 create proc NodeInsert
- @NodeID            numeric(18,0) out
-,@Brief             nvarchar(64)
-,@Name              nvarchar(256)
-,@Comment           nvarchar(512)= null
-,@Flag              int          
-,@ColorID           nvarchar(32) = null
-,@Type              int
+               @NodeID     numeric(18,0) out
+              ,@Brief      nvarchar(64)
+              ,@Name       nvarchar(256)
+              ,@Comment    nvarchar(512)= null
+              ,@Flag       int          
+              ,@ColorID    nvarchar(32) = null
+              ,@Type       int
+              ,@N          int
 as
   declare @r int = 0
 
@@ -35,6 +36,7 @@ as
 	     ,Comment
 	     ,Flag
 		 ,ColorID
+         ,N
          )
   OUTPUT INSERTED.NodeID INTO @ID
   select @Brief     
@@ -43,7 +45,7 @@ as
 		,@Comment
 		,@Flag
 		,@ColorID
-
+        ,@N 
 
    Select @NodeID = ID from @ID
 
@@ -52,5 +54,5 @@ as
 go
 grant exec on NodeInsert to public
 go
-exec setOV 'NodeInsert', 'P', '20240101', '0'
+exec setOV 'NodeInsert', 'P', '20240915', '1'
 go

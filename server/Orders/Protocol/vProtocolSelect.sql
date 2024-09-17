@@ -52,6 +52,7 @@ SELECT p.[AuditID]          ProtocolID
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 5 -- acCancel
+   and p.ObjectTypeID = 3
 
  union all
 /*Изменения*/
@@ -77,6 +78,7 @@ SELECT p.[AuditID]     ProtocolID
  where p.ActionID in ( 2 -- acUpdate
                       ,28--	acCancelRequest
                      )
+   and p.ObjectTypeID = 3
  union all
 /*Откат действия */
 SELECT p.[AuditID]     ProtocolID
@@ -96,10 +98,10 @@ SELECT p.[AuditID]     ProtocolID
  inner join tUser u with (nolock index=ao1)
          on u.UserID = p.UserID
  where p.ActionID = 27	--acRollback	Откат действия   
-
+   and p.ObjectTypeID = 3
  
 go
 grant all on vProtocolSelect to public
 go
-exec setOV 'vProtocolSelect', 'V', '20240708', '3'
+exec setOV 'vProtocolSelect', 'V', '20240916', '4'
 go

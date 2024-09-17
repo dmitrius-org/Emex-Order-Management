@@ -175,7 +175,7 @@ begin
 
       Sql.Open(UniMainModule.Query,
                ['GroupID','UserID'],
-               [QueryGroupID.AsInteger, f.ID]);
+               [QueryGroupID.AsInteger,  f.ID.Strings[0].ToInteger ]);
 
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
     end

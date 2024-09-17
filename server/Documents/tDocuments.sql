@@ -1,5 +1,9 @@
 if OBJECT_ID('tDocuments') is null
+/*
+  ALTER TABLE tDocuments SET ( SYSTEM_VERSIONING = OFF )
   --drop table tDocuments
+  DROP TABLE History.tDocuments
+*/
 /* **********************************************************
 tDocuments - 
 ********************************************************** */
@@ -12,16 +16,23 @@ begin
 	,Date                datetime
 	,Amount              money
 	,Comment	         nvarchar(512)  null  -- 
-	,Type         int            --     1 - дебит
-								 --    -1 - кредит   
+    ,PayType             int            --     Тип оплаты
+	,Type                int            --     1 - дебит
+								        --    -1 - кредит   
 	--
 	,Flag                int
 	,UserID              numeric(18,0) default dbo.GetUserID()
 	,inDatetime          datetime      default GetDate()
 	,updDatetime         datetime      default GetDate()
-	);
 
-	create unique index ao1 on tDocuments(DocumentID);
+    ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
+    ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
+
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tDocuments_DocumentID PRIMARY KEY CLUSTERED (DocumentID)
+	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tDocuments));
 
 	create index ao2 on tDocuments(ClientID);
 

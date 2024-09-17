@@ -58,6 +58,9 @@ type
     N4: TUniMenuItem;
     QueryTypeDescription: TStringField;
     UniToolButton5: TUniToolButton;
+    UpdateSQL: TFDUpdateSQL;
+    QueryN: TIntegerField;
+    QueryType: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -71,9 +74,23 @@ type
     procedure actInsertExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure actViewExecute(Sender: TObject);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+      NewIndex: Integer);
+    procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
+    procedure GridDropRowsEvent(SrcGrid, DstGrid: TUniDBGrid;
+      Rows: TUniBookmarkList; Params: TUniDragDropParams; var Handled: Boolean);
+    procedure GridEndDrag(Sender: TUniControl; Left, Top: Integer);
   private
     { Private declarations }
-   // FAction: tFormaction;
+    procedure SortColumn(const FieldName: string; Dir: Boolean);
+
+    procedure RecalculateRowNumbers();
+
+    procedure GridRefresh();
+
   public
     { Public declarations }
     /// <summary>
@@ -88,7 +105,7 @@ end;
 implementation
 
 uses
-  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar;
+  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar, uGridUtils, uLogger;
 
 {$R *.dfm}
 
@@ -126,6 +143,13 @@ begin
   NodesF.ShowModal(EditFCallBack);
 end;
 
+procedure TNodesT.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if Params.Count > 0 then
+  GridExt.GridLayoutSave(self, Grid, Params, EventName);
+end;
+
 procedure TNodesT.GridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
@@ -158,6 +182,23 @@ begin
   end;
 end;
 
+procedure TNodesT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+  NewIndex: Integer);
+begin
+  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TNodesT.GridColumnResize(Sender: TUniBaseDBGridColumn;
+  NewSize: Integer);
+begin
+  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TNodesT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+begin
+  SortColumn(Column.FieldName, Direction);
+end;
+
 procedure TNodesT.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
   Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
@@ -171,6 +212,94 @@ begin
 end;
 
 
+procedure TNodesT.GridDropRowsEvent(SrcGrid, DstGrid: TUniDBGrid;
+  Rows: TUniBookmarkList; Params: TUniDragDropParams; var Handled: Boolean);
+
+var
+  SourceRowNumber, TargetRowNumber: Integer;
+  Bookmark: TBookmark;
+  i: Integer;
+begin
+  Logger.Info('GridDropRowsEvent');
+  Logger.Info('GridDropRowsEvent ' + Params.OverIndex.ToString);
+
+  Handled := true; // ”казываем, что событие обработано
+  //Params.Effect := deCopy:
+
+  // ѕроходим по всем перетаскиваемым строкам
+  for i := 0 to Rows.Count - 1 do
+  begin
+    // ”станавливаем текущий Bookmark дл€ строки, которую нужно переместить
+    Bookmark := Rows[i];
+
+    // ѕереходим к строке по еЄ закладке (Bookmark)
+    SrcGrid.DataSource.DataSet.GotoBookmark(Bookmark);
+
+    // ѕолучаем пор€дковый номер перемещаемой строки
+    SourceRowNumber := SrcGrid.DataSource.DataSet.FieldByName('N').AsInteger;
+
+    // ѕереходим к строке перед которой происходит вставка
+    DstGrid.DataSource.DataSet.RecNo := Params.OverIndex;
+
+    // ѕолучаем пор€дковый номер строки, перед которой вставл€ем
+    TargetRowNumber := DstGrid.DataSource.DataSet.FieldByName('N').AsInteger;
+
+    // ¬озвращаемс€ к перемещаемой строке по еЄ Bookmark
+    SrcGrid.DataSource.DataSet.GotoBookmark(Bookmark);
+
+    // ѕрисваиваем перемещаемой строке новый пор€дковый номер
+    SrcGrid.DataSource.DataSet.Edit;
+    SrcGrid.DataSource.DataSet.FieldByName('N').AsInteger := TargetRowNumber+1;
+    SrcGrid.DataSource.DataSet.Post;
+  end;
+
+  // ќбновл€ем пор€дковые номера всех строк после перемещени€, если нужно
+  RecalculateRowNumbers();
+
+  GridRefresh;
+end;
+
+procedure TNodesT.GridEndDrag(Sender: TUniControl; Left, Top: Integer);
+begin
+  Logger.Info('GridEndDrag');
+end;
+
+procedure TNodesT.GridRefresh;
+begin
+  Query.Close;
+  Query.Open;
+end;
+
+procedure TNodesT.RecalculateRowNumbers();
+var
+  i: Integer;
+begin
+  // ѕереиндексаци€ строк в гриде после завершени€ перетаскивани€
+//  Grid.DataSource.DataSet.DisableControls;
+//  try
+//    Grid.DataSource.DataSet.First;
+//    i := 1;
+//    while not Grid.DataSource.DataSet.Eof do
+//    begin
+//      Grid.DataSource.DataSet.Edit;
+//      Grid.DataSource.DataSet.FieldByName('RowNumber').AsInteger := i;
+//      Grid.DataSource.DataSet.Post;
+//      Inc(i);
+//      Grid.DataSource.DataSet.Next;
+//    end;
+//  finally
+//    Grid.DataSource.DataSet.EnableControls;
+//  end;
+end;
+
+procedure TNodesT.SortColumn(const FieldName: string; Dir: Boolean);
+begin
+  if Dir then
+    Query.IndexName := FieldName+'_index_asc'
+  else
+    Query.IndexName := FieldName+'_index_des';
+end;
+
 procedure TNodesT.UniFrameCreate(Sender: TObject);
 begin
   {$IFDEF Debug}
@@ -178,9 +307,13 @@ begin
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
 
-  Grid.ReadOnly := true; //not actEdit.Enabled;
+  GridExt.SortColumnCreate(Grid);
 
-  Query.Close; Query.Open;
+  // восстановление настроек грида дл€ пользовател€
+  GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
+
+
+  GridRefresh
 end;
 
 procedure TNodesT.EditFCallBack(Sender: TComponent; AResult: Integer);
@@ -189,50 +322,10 @@ begin
 
   if NodesF.FormAction = acInsert then
   begin
-//    UniMainModule.Query.SQL.Text := ' select u.UserID '+
-//                                    '       ,u.Brief        '+
-//                                    '       ,u.Name         '+
-//                                    '       ,u.isAdmin      '+
-//                                    '       ,u.isBlock      '+
-//                                    '       ,u.DateBlock    '+
-//                                    '       ,u.inDatetime   '+
-//                                    '       ,u.updDatetime  '+
-//                                    '   from tUser u (nolock)   '+
-//                                    '  where u.UserID = :UserID '+
-//                                    ' ';
-//    UniMainModule.Query.ParamByName('UserID').Value := QueryUserID.AsInteger;
-//    UniMainModule.Query.Open;
-//
-//    Query.Insert ;
-//    GridUsers.DataSource.DataSet.Insert;
-//    Query.FieldValues['UserID']   := UniMainModule.Query.FieldValues['UserID'];
-//    Query.FieldValues['Brief']   := UniMainModule.Query.FieldValues['Brief'];
-//    Query.FieldValues['Name']    := UniMainModule.Query.FieldValues['Name'];
-//    Query.FieldValues['isBlock'] := UniMainModule.Query.FieldValues['isBlock'];
-//    Query.FieldValues['isAdmin']     := UniMainModule.Query.FieldValues['isAdmin'];
-//    Query.FieldValues['DateBlock']   := UniMainModule.Query.FieldValues['DateBlock'];
-//    Query.FieldValues['inDatetime'] := UniMainModule.Query.FieldValues['inDatetime'];
-//    Query.FieldValues['updDatetime'] := UniMainModule.Query.FieldValues['updDatetime'];
-   //  GridUsers.DataSource.DataSet.Post;
     Query.Refresh();
   end;
   if NodesF.FormAction = acUpdate then
   begin
-//    UniMainModule.Query.SQL.Text := ' select u.*  '+
-//                                    '   from vUsers u   '+
-//                                    '  where u.UserID = :UserID '+
-//                                    ' ';
-//    UniMainModule.Query.ParamByName('UserID').Value := QueryUserID.AsInteger;
-//    UniMainModule.Query.Open;
-//
-//    Query.Edit ;
-//    Query.FieldValues['Brief']   := UniMainModule.Query.FieldValues['Brief'];
-//    Query.FieldValues['Name']    := UniMainModule.Query.FieldValues['Name'];
-//    Query.FieldValues['isBlock'] := UniMainModule.Query.FieldValues['isBlock'];
-//    //Query.FieldValues['isAdmin']     := UniMainModule.Query.FieldValues['isAdmin'];
-//    Query.FieldValues['DateBlock']   := UniMainModule.Query.FieldValues['DateBlock'];
-//    Query.FieldValues['updDatetime'] := UniMainModule.Query.FieldValues['updDatetime'];
-//    Query.Post;
     Query.Refresh();
   end;
   if NodesF.FormAction = acDelete then

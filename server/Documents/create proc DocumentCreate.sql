@@ -1,5 +1,4 @@
-if OBJECT_ID('DocumentCreate') is not null
-    drop proc DocumentCreate
+DROP PROCEDURE IF EXISTS DocumentCreate
 /*
   DocumentCreate - 
 
@@ -16,6 +15,7 @@ create proc DocumentCreate
              ,@Comment           nvarchar(512)  -- Комментарий
              ,@Number            nvarchar(255) = null  --
              ,@Type              int 
+             ,@PayType           int = null
 as
   set nocount on
 
@@ -40,7 +40,8 @@ as
           ,ClientID              
           ,Comment	
           ,Type
-          ,Flag              
+          ,Flag
+          ,PayType
           )
     OUTPUT INSERTED.DocumentID INTO @ID
     select null	     
@@ -50,6 +51,7 @@ as
           ,@Comment
           ,@Type
           ,1
+          ,@PayType
 
 
     if not exists (Select 1
@@ -85,5 +87,5 @@ return @r
 go
 grant exec on DocumentCreate to public
 go
-exec setOV 'DocumentCreate', 'P', '20240101', '0'
+exec setOV 'DocumentCreate', 'P', '20240917', '1'
 go

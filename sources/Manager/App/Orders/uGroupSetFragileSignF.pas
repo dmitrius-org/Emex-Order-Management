@@ -122,7 +122,7 @@ begin
 //      if edtBrief.IsBlank then
 //      begin
 //        RetVal.Code := 1;
-//        RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!'; Exit();
+//        RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!'; Exit();
 //      end
 //    end;
 //  end;

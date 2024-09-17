@@ -11,6 +11,6 @@
    from tOrders 
   where  Invoice is not null
 
- exec ShipmentsInsert
+ exec ShipmentsRefresh
 
  -- select * from tShipments

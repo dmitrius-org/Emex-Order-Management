@@ -57,33 +57,6 @@ object MainForm: TMainForm
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Region = 'west'
         LayoutConfig.DockWhenAligned = False
-        object MainMenu: TUniTreeMenu
-          AlignWithMargins = True
-          Left = 0
-          Top = 41
-          Width = 300
-          Height = 368
-          Hint = ''
-          Margins.Left = 0
-          Margins.Top = 0
-          Margins.Right = 0
-          Margins.Bottom = 0
-          ParentRTL = False
-          ShowHint = True
-          ParentShowHint = False
-          BodyRTL = False
-          Align = alClient
-          Items.NodeData = {
-            07010000000A5400580054007200650065004E006F0064006500270000000F00
-            00000F0000000F000000FFFFFFFF0F000000000000000000000000010420002E
-            002E002E00}
-          Items.FontData = {
-            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
-            53696D53756E}
-          Images = MainMenuImage
-          MicroWidth = 50
-          OnClick = MainMenuClick
-        end
         object LogoPanel: TUniContainerPanel
           Left = 0
           Top = 0
@@ -3660,6 +3633,33 @@ object MainForm: TMainForm
             LayoutConfig.IgnorePosition = False
             TabOrder = 3
           end
+        end
+        object MainMenu: TUniTreeMenu
+          AlignWithMargins = True
+          Left = 0
+          Top = 41
+          Width = 300
+          Height = 368
+          Hint = ''
+          Margins.Left = 0
+          Margins.Top = 0
+          Margins.Right = 0
+          Margins.Bottom = 0
+          ParentRTL = False
+          ShowHint = True
+          ParentShowHint = False
+          BodyRTL = False
+          Align = alClient
+          Items.NodeData = {
+            07010000000A5400580054007200650065004E006F0064006500270000000F00
+            00000F0000000F000000FFFFFFFF0F000000000000000000000000010420002E
+            002E002E00}
+          Items.FontData = {
+            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
+            53696D53756E}
+          Images = MainMenuImage
+          MicroWidth = 50
+          OnClick = MainMenuClick
         end
       end
       object MainMenuPanelDetail: TUniPanel

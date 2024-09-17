@@ -1,4 +1,4 @@
-if exists drop proc BalanceAdd
+DROP PROCEDURE IF EXISTS BalanceAdd
 /*
   BalanceAdd - 
 */
@@ -9,8 +9,9 @@ create proc BalanceAdd
              ,@Amount   money
              ,@Comment  nvarchar(512) -- Комментарий
              ,@Number   nvarchar(255) = null
+             ,@PayType  int
 as
-  set nocount on
+  set nocount on;
 
   declare @r          int = 0
          ,@UserID     numeric(18, 0)
@@ -29,6 +30,7 @@ as
                ,@Comment    = @Comment
                ,@Number     = @Number
                ,@Type       = 1
+               ,@PayType    = @PayType
 
   END TRY
   BEGIN CATCH
@@ -43,5 +45,5 @@ return @r
 go
 grant exec on BalanceAdd to public
 go
-exec setOV 'BalanceAdd', 'P', '20240309', '1'
+exec setOV 'BalanceAdd', 'P', '20240917', '2'
 go

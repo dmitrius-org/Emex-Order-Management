@@ -3,7 +3,7 @@ object DashBoardItem: TDashBoardItem
   Left = 0
   Top = 0
   Width = 270
-  Height = 131
+  Height = 223
   LayoutConfig.Margin = '5'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -12,28 +12,30 @@ object DashBoardItem: TDashBoardItem
     Left = 0
     Top = 0
     Width = 270
-    Height = 131
+    Height = 223
     Hint = ''
     ParentColor = False
     Align = alClient
     TabOrder = 0
     LayoutConfig.ComponentCls = 'panel'
+    ExplicitHeight = 131
     object UniContainerPanel2: TUniContainerPanel
       Left = 0
       Top = 0
       Width = 270
-      Height = 91
+      Height = 183
       Hint = ''
       ParentColor = False
       Align = alClient
       TabOrder = 1
       LayoutConfig.ComponentCls = 'panel-heading'
+      ExplicitHeight = 91
       object UniImage1: TUniImage
         AlignWithMargins = True
         Left = 5
         Top = 5
         Width = 74
-        Height = 81
+        Height = 173
         Hint = ''
         Margins.Left = 5
         Margins.Top = 5
@@ -41,13 +43,14 @@ object DashBoardItem: TDashBoardItem
         Margins.Bottom = 5
         Align = alLeft
         Transparent = True
+        ExplicitHeight = 81
       end
       object UniContainerPanel5: TUniContainerPanel
         AlignWithMargins = True
         Left = 87
         Top = 3
         Width = 180
-        Height = 85
+        Height = 177
         Hint = ''
         ShowHint = True
         ParentShowHint = False
@@ -57,6 +60,7 @@ object DashBoardItem: TDashBoardItem
         Layout = 'vbox'
         LayoutAttribs.Align = 'right'
         LayoutAttribs.Pack = 'center'
+        ExplicitHeight = 85
         object lblName: TUniLabel
           AlignWithMargins = True
           Left = 149
@@ -81,7 +85,7 @@ object DashBoardItem: TDashBoardItem
           Left = -32
           Top = 3
           Width = 175
-          Height = 79
+          Height = 171
           Hint = ''
           ShowHint = True
           Alignment = taRightJustify
@@ -93,12 +97,13 @@ object DashBoardItem: TDashBoardItem
           Color = clBtnFace
           TabOrder = 2
           LayoutConfig.Padding = '5'
+          ExplicitHeight = 79
         end
       end
     end
     object UniContainerPanel3: TUniContainerPanel
       Left = 0
-      Top = 91
+      Top = 183
       Width = 270
       Height = 40
       Hint = ''
@@ -106,6 +111,7 @@ object DashBoardItem: TDashBoardItem
       Align = alBottom
       TabOrder = 2
       LayoutConfig.ComponentCls = 'panel-footer'
+      ExplicitTop = 91
       object UniContainerPanel4: TUniContainerPanel
         Left = 0
         Top = 0

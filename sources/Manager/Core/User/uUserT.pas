@@ -141,8 +141,28 @@ begin
 end;
 
 procedure TUsersT.actLookupExecute(Sender: TObject);
+var BM : TBookmark;
+    i, id:Integer;
 begin
- (Self.Parent as TLookupF).ID := QueryUserID.AsInteger;
+  if GridUsers.SelectedRows.Count>0 then
+  begin
+    // BM := FGrid.DataSource.DataSet.GetBookmark;
+     try
+        for I := 0 to GridUsers.SelectedRows.Count - 1 do
+        begin
+          GridUsers.DataSource.DataSet.Bookmark := GridUsers.SelectedRows[I];
+          (Self.Parent as TLookupF).ID.Add(GridUsers.DataSource.DataSet.FieldByName('UserID').AsString);
+        end;
+     finally
+     //  FGrid.DataSource.DataSet.GotoBookmark(BM);
+     //  FGrid.DataSource.DataSet.FreeBookmark(BM);
+     end;
+  end
+  else
+  begin
+    (Self.Parent as TLookupF).ID.Add(QueryUserID.AsString);
+  end;
+
  (Self.Parent as TLookupF).ModalResult := mrOk;
 end;
 

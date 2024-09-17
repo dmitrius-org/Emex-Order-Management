@@ -79,7 +79,7 @@ uses
   uTask_T in '..\Scheduler\Task\uTask_T.pas' {Task_T: TUniFrame},
   uTaskUtils in '..\Scheduler\Task\uTaskUtils.pas',
   uClientsTypeT in 'App\Clients\uClientsTypeT.pas' {ClientsTypeT: TUniFrame},
-  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
+  uShipmentsProtocol_T in 'App\Shipments\uShipmentsProtocol_T.pas' {ShipmentsProtocol_T: TUniForm},
   uTaskBat_F in '..\Scheduler\Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},
   uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
   uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
@@ -104,7 +104,9 @@ uses
   uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
-  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm};
+  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
+  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
+  uBalanceTotalT in 'App\Clients\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
 
 {$R *.res}
 

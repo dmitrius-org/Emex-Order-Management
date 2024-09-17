@@ -88,7 +88,7 @@ object BalanceAddF: TBalanceAddF
         object edtAmount: TUniNumberEdit
           Left = 128
           Top = 32
-          Width = 121
+          Width = 145
           Hint = ''
           TabOrder = 2
           DecimalSeparator = ','
@@ -112,14 +112,34 @@ object BalanceAddF: TBalanceAddF
         end
         object edtDate: TUniDateTimePicker
           Left = 129
-          Top = 64
-          Width = 120
+          Top = 60
+          Width = 144
           Hint = ''
           DateTime = 45311.000000000000000000
           DateFormat = 'dd.MM.yyyy'
           TimeFormat = 'HH:mm:ss'
           ReadOnly = True
           TabOrder = 4
+        end
+        object cbPayType: TUniFSComboBox
+          Left = 128
+          Top = 88
+          Width = 145
+          Hint = ''
+          Text = ''
+          TabOrder = 7
+          AnyMatch = True
+          IconItems = <>
+          Value = '-1'
+        end
+        object UniLabel5: TUniLabel
+          Left = 26
+          Top = 91
+          Width = 70
+          Height = 13
+          Hint = ''
+          Caption = #1058#1080#1087' '#1087#1083#1072#1090#1077#1078#1072':'
+          TabOrder = 8
         end
       end
     end

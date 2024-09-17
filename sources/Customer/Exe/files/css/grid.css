@@ -289,3 +289,11 @@
     color: hsl(36, 91%, 50%);
     cursor: pointer;
 }
+
+
+/* таблица Баланс и Отгрузки */
+/* Перенос строки в заголовке таблицы Баланс и Отгрузки */
+.grid-balance-totall .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}

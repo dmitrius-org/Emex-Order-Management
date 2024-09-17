@@ -181,18 +181,6 @@ DEALLOCATE my_cur
    and p.Flag&8>0
  --*/
 
-
- -- 
- --delete p
- --  from pMovement p (rowlock) 
- -- inner join tOrders o (nolock)
- --         on o.OrderID = p.OrderID
- -- inner join tNodes n (nolock)
- --         on n.NodeID = o.StatusID
- --        and n.Flag&2=0
- -- where p.Spid = @@SPID
-
-
  insert pAccrualAction 
        (Spid,   ObjectID,  StateID, ord)
  select @@Spid, p.OrderID, o.StatusID, 0
@@ -200,6 +188,23 @@ DEALLOCATE my_cur
   inner join tOrders o (nolock) 
           on o.OrderID = p.OrderID
   where p.Spid = @@SPID
+
+
+ Update pAccrualAction
+    set Retval     = 1 
+       ,Message   = 'Не синхранизируем'
+   from pAccrualAction p (updlock)
+  inner join pMovement m (nolock)
+          on m.spid    = @@spid
+         and m.OrderID = p.ObjectID
+  inner join tOrders o (nolock)
+          on o.OrderID = m.OrderID
+  inner join tNodes n (nolock)
+          on n.NodeID = o.StatusID
+         and n.Flag&2=0
+  where p.Spid = @@Spid
+    and isnull(p.Retval, 0) = 0
+
 
  ---- для добавления протокола
  Update pAccrualAction
@@ -220,6 +225,8 @@ DEALLOCATE my_cur
   inner join tNodes n (nolock)  
           on n.Brief = 'AutomaticSynchronization'
   where p.Spid = @@Spid
+    and isnull(p.Retval, 0) = 0
+
 
  Update o
     set o.StatusID = n.NodeID

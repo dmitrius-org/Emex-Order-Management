@@ -21,7 +21,9 @@ select t.TaskID
       ,t.Flag       
   from tTaskActions t (nolock)
   left join tProperty p (nolock)
-         on p.PropertyID = t.LinkID
+         on p.ObjectTypeID = 101
+        and p.PropertyID   = t.LinkID
+
  where t.isActive = 1
 
 go

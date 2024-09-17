@@ -111,6 +111,7 @@ end;
 procedure TGrantClientT.acInsertExecute(Sender: TObject);
 var f: TLookupF;
     sqltext: string;
+    I: Integer;
 begin
   f := TLookupF.Create(UniApplication);
   try
@@ -147,12 +148,15 @@ begin
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := sqltext;
 
-      Sql.Open(UniMainModule.Query,
-               ['ObjectType','ObjectID', 'ClientID'],
-               [FObjectType, FID, f.ID]);
+      for I := 0 to f.ID.Count - 1 do
+      begin
+        Sql.Open(UniMainModule.Query,
+                 ['ObjectType','ObjectID', 'ClientID'],
+                 [FObjectType, FID, f.ID.Strings[I].ToInteger]);
 
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+        //RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      end;
     end
     else
       Exit;
@@ -175,6 +179,7 @@ end;
 procedure TGrantClientT.actEditExecute(Sender: TObject);
 var f: TLookupF;
     sqltext: string;
+    I: Integer;
 begin
   f := TLookupF.Create(UniApplication);
   try
@@ -215,11 +220,15 @@ begin
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := sqltext;
 
-      Sql.Open(UniMainModule.Query,
-               ['ObjectType','ObjectID', 'ClientID'],
-               [FObjectType, FID, f.ID]);
+      for I := 0 to f.ID.Count - 1 do
+      begin
+        Sql.Open(UniMainModule.Query,
+                 ['ObjectType','ObjectID', 'ClientID'],
+                 [FObjectType, FID, f.ID.Strings[I].ToInteger]);
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+
+        //RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      end;
     end
     else
       Exit;

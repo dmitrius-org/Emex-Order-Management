@@ -168,7 +168,7 @@ begin
       if edtName.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
         Exit();
       end;
     end;

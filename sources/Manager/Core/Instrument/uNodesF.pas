@@ -23,6 +23,8 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     edtType: TUniRadioGroup;
+    edtN: TUniNumberEdit;
+    UniLabel3: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -91,18 +93,19 @@ begin
                 '            ,@Flag     = :Flag      '+
                 '            ,@ColorID  = :ColorID   '+
                 '            ,@Type     = :Type      '+
-                '                                    '+
+                '            ,@N        = :N         '+
                 ' select @r as retcode, @NodeID as NodeID      '+
                 ' ';
 
       Sql.Open(sqltext,
-               ['Brief','Name','Comment','Flag', 'ColorID', 'Type'],
+               ['Brief','Name','Comment','Flag', 'ColorID', 'Type', 'N'],
                [edtBrief.Text,
                 edtName.Text,
                 edtComment.Text,
                 0,
                 '',
-                edtType.ItemIndex]);
+                edtType.ItemIndex,
+                edtN.Value]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
@@ -111,28 +114,30 @@ begin
     end;
     acUpdate:
     begin
-      sqltext :=' declare @R      int                '+
-                '                                    '+
-                ' exec @r = NodeUpdate               '+
-                '             @NodeID   = :NodeID    '+
-               // '            ,@Brief    = :Brief     '+
-                '            ,@Name     = :Name      '+
-                '            ,@Comment  = :Comment   '+
-                '            ,@Flag     = :Flag      '+
-                '            ,@ColorID  = :ColorID   '+
-                '            ,@Type     = :Type      '+
-                '                                    '+
-                ' select @r as retcode               '+
-                ' ';
+      sqltext :='''
+                 declare @R      int
+
+                 exec @r = NodeUpdate
+                             @NodeID   = :NodeID
+                            ,@Name     = :Name
+                            ,@Comment  = :Comment
+                            ,@Flag     = :Flag
+                            ,@ColorID  = :ColorID
+                            ,@Type     = :Type
+                            ,@N        = :N
+
+                 select @r as retcode
+                ''';
 
       Sql.Open(sqltext,
-               ['NodeID','Name','Comment','Flag', 'ColorID', 'Type'],
+               ['NodeID','Name','Comment','Flag', 'ColorID', 'Type', 'N'],
                [FID,
                 edtName.Text,
                 edtComment.Text,
                 0,
                 '',
-                edtType.ItemIndex]);
+                edtType.ItemIndex,
+                edtN.Value]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
     end;
@@ -175,7 +180,7 @@ begin
       if edtBrief.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Сокращение] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
 
         logger.Info(RetVal.Message);
         Exit();
@@ -183,13 +188,13 @@ begin
       else if edtName.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
         Exit();
       end
       else if edtType.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Тип] обязателен к заполнению!';
+        RetVal.Message := 'Поле [Тип] обязателено к заполнению!';
         Exit();
       end;
     end;
@@ -207,10 +212,11 @@ begin
   UniMainModule.Query.Open;
 
 
-  edtBrief.Text:= UniMainModule.Query.FieldByName('Brief').AsString;
-  edtName.Text:= UniMainModule.Query.FieldByName('Name').AsString;
-  edtComment.Text:= UniMainModule.Query.FieldByName('Comment').AsString;
-  edtType.ItemIndex:= UniMainModule.Query.FieldByName('Type').AsInteger;
+  edtBrief.Text     := UniMainModule.Query.FieldByName('Brief').AsString;
+  edtName.Text      := UniMainModule.Query.FieldByName('Name').AsString;
+  edtComment.Text   := UniMainModule.Query.FieldByName('Comment').AsString;
+  edtType.ItemIndex := UniMainModule.Query.FieldByName('Type').AsInteger;
+  edtN.Value        := UniMainModule.Query.FieldByName('N').AsInteger;
 end;
 
 procedure TNodesF.SetAction(const Value: TFormAction);

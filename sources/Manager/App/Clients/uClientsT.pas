@@ -144,9 +144,29 @@ begin
 end;
 
 procedure TClientsT.actLookupExecute(Sender: TObject);
+var BM : TBookmark;
+    i, id:Integer;
 begin
- (Self.Parent as TLookupF).ID := QueryClientID.AsInteger;
- (Self.Parent as TLookupF).ModalResult := mrOk;
+  if Grid.SelectedRows.Count>0 then
+  begin
+    // BM := FGrid.DataSource.DataSet.GetBookmark;
+     try
+        for I := 0 to Grid.SelectedRows.Count - 1 do
+        begin
+          Grid.DataSource.DataSet.Bookmark := Grid.SelectedRows[I];
+          (Self.Parent as TLookupF).ID.Add(Grid.DataSource.DataSet.FieldByName('ClientID').AsString);
+        end;
+     finally
+     //  FGrid.DataSource.DataSet.GotoBookmark(BM);
+     //  FGrid.DataSource.DataSet.FreeBookmark(BM);
+     end;
+  end
+  else
+  begin
+    (Self.Parent as TLookupF).ID.Add(QueryClientID.AsString);
+  end;
+
+  (Self.Parent as TLookupF).ModalResult := mrOk;
 end;
 
 procedure TClientsT.actRefreshAllExecute(Sender: TObject);
@@ -190,6 +210,25 @@ begin
   FAction := Value;
 
   actLookup.Visible :=(TFormAction(FAction) = acLookup) and (Query.RecordCount >0);
+
+  if TFormAction(FAction) = acLookup then
+  begin
+    Grid.Options := Grid.Options + [dgRowSelect, dgCheckSelect, dgMultiSelect];
+
+    Grid.JSInterface.JSAddListener('beforerender',
+      '''
+        function beforerender(sender, eOpts)
+        {
+            var me=sender.checkboxModel;
+            if (me) {
+                me.showHeaderCheckbox=true;
+            }
+        }
+      ''');
+
+  end;
+
+
 end;
 
 procedure TClientsT.UniFrameCreate(Sender: TObject);
@@ -198,6 +237,8 @@ begin
   Grant.GrantTemplateCreate(self);
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
+
+
   Grid.ReadOnly := not actEdit.Enabled;
 
   Query.Close;

@@ -1,5 +1,3 @@
-drop view if exists vStatus
-go
 drop view if exists vNodes
 go
 /* **********************************************************						
@@ -26,7 +24,8 @@ SELECT n.[NodeID]
 		 else ''
        end TypeDescription
       ,sc.StatusColorID as ColorID
-      ,sc.[Name]        as Color      
+      ,sc.[Name]        as Color 
+      ,n.N
   FROM [tNodes] n (nolock)
   left join [tStatusColor] sc with (nolock index=ao1)
          on sc.[StatusColorID] = n.ColorID
@@ -36,6 +35,6 @@ SELECT n.[NodeID]
 go
 grant all on vNodes to public
 go
-exec setOV 'vNodes', 'V', '20240306', '1'
+exec setOV 'vNodes', 'V', '20240915', '2'
 go
  

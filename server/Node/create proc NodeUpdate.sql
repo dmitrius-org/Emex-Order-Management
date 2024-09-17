@@ -4,13 +4,14 @@ drop proc if exists NodeUpdate
 */
 go
 create proc NodeUpdate
- @NodeID            numeric(18,0) 
---,@Brief             nvarchar(64)
-,@Name              nvarchar(256)
-,@Comment           nvarchar(512)= null
-,@Flag              int= null          
-,@ColorID           nvarchar(32) = null
-,@Type              int= null
+             @NodeID            numeric(18,0) 
+            --,@Brief             nvarchar(64)
+            ,@Name              nvarchar(256)
+            ,@Comment           nvarchar(512)= null
+            ,@Flag              int= null          
+            ,@ColorID           nvarchar(32) = null
+            ,@Type              int= null
+            ,@N                 int= null
 as
   declare @r       int = 0
          ,@Brief   nvarchar(64)
@@ -40,6 +41,7 @@ as
 	     ,Comment = @Comment
 	    -- ,Flag    = @Flag
 		 ,ColorID = @ColorID
+         ,N       = @N 
          
   where NodeID = @NodeID
 
@@ -48,5 +50,5 @@ as
 go
 grant exec on NodeUpdate to public
 go
-exec setOV 'NodeUpdate', 'P', '20240911', '1'
+exec setOV 'NodeUpdate', 'P', '20240911', '2'
 go

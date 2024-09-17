@@ -256,3 +256,12 @@
     white-space: normal;
     text-align: center;
 }
+
+/* таблица cnстатусы */
+/* Перенос строки в заголовке таблицы статусов */
+.grid-status .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+

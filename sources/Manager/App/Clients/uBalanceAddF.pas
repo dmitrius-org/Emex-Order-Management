@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, uniWidgets, uniDBComboBox,
-  uniDBLookupComboBox, Vcl.Menus, uniMemo;
+  uniDBLookupComboBox, Vcl.Menus, uniMemo, UniFSCombobox;
 
 type
   TBalanceAddF = class(TUniForm)
@@ -55,6 +55,8 @@ type
     edtComment: TUniMemo;
     lblDate: TUniLabel;
     edtDate: TUniDateTimePicker;
+    cbPayType: TUniFSComboBox;
+    UniLabel5: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -113,25 +115,28 @@ begin
   case FAction of
     acInsert:
     begin
-      sqltext :=' declare @R           int                 '+
-                '                                          '+
-                ' exec @r = BalanceAdd                     '+
-                '             @ClientID   = :ClientID      '+
-                '            ,@Amount     = :Amount        '+
-                '            ,@Date       = :Date          '+
-                '            ,@Comment    = :Comment       '+
-                '            ,@Number     = :Number        '+
-                '            '+
-                '                                          '+
-                ' select @r as retcode      ';
+      sqltext :='''
+                 declare @R           int
+
+                 exec @r = BalanceAdd
+                             @ClientID   = :ClientID
+                            ,@Amount     = :Amount
+                            ,@Date       = :Date
+                            ,@Comment    = :Comment
+                            ,@Number     = :Number
+                            ,@PayType    = :PayType
+
+                 select @r as retcode
+      ''';
 
       Sql.Open(sqltext,
-               ['ClientID','Amount','Date','Comment','Number'],
+               ['ClientID','Amount','Date','Comment','Number', 'PayType'],
                [FClientID
                ,edtAmount.value
                ,edtDate.DateTime
                ,edtComment.Text
                ,''
+               ,cbPayType.Value
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -195,7 +200,7 @@ begin
       if (edtAmount.IsBlank) or (edtAmount.value = 0) then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Сумма] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Сумма] обязательно к заполнению!';
         edtAmount.SetFocus;
         Exit();
       end;
@@ -203,10 +208,20 @@ begin
       if edtDate.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Дата] обязательна к заполнению!';
+        RetVal.Message := 'Поле [Дата] обязательно к заполнению!';
         edtDate.SetFocus;
         Exit();
       end;
+
+      if cbPayType.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Тип платежа] обязательно к заполнению!';
+        cbPayType.SetFocus;
+        Exit();
+      end;
+
+
     end;
   end;
 end;
@@ -236,6 +251,9 @@ end;
 
 procedure TBalanceAddF.UniFormShow(Sender: TObject);
 begin
+
+  ComboBoxFill(cbPayType, 'select PropertyID as ID, Name from tProperty (nolock) where ObjectTypeID = 12');
+
   tabAudit.Visible:= FAction <> acInsert;
 
   UniMainModule.Query.Close;

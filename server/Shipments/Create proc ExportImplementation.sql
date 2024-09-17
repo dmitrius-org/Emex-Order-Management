@@ -60,6 +60,7 @@ as
              else null
            end RManufacturerDetailNumber
           ,o.CustomerSubId
+          ,o.reference
           ,o.Quantity
           ,o.Price  PricePurchase  
           ,o.Amount AmountPurchase

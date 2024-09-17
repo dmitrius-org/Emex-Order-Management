@@ -42,7 +42,9 @@ object GrantClientT: TGrantClientT
     Columns = <
       item
         FieldName = 'ClientBrief'
+        Title.Alignment = taCenter
         Title.Caption = #1050#1083#1080#1077#1085#1090
+        Title.Font.Height = -13
         Width = 586
       end>
   end
@@ -62,9 +64,6 @@ object GrantClientT: TGrantClientT
     TabOrder = 1
     ParentColor = False
     Color = clBtnFace
-    ExplicitLeft = 3
-    ExplicitTop = 3
-    ExplicitWidth = 881
     object UniToolButton1: TUniToolButton
       AlignWithMargins = True
       Left = 3
