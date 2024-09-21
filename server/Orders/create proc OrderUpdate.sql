@@ -18,7 +18,7 @@ create proc OrderUpdate
               ,@TargetStateID           numeric(18,0) = null
 
               ,@Price                   nvarchar(64)  = null -- Прайс
-              ,@MakeLogo                nvarchar(20)  = null
+              ,@MakeLogo                nvarchar(20)  = null -- посмотреть что сюда приходит !!!
               ,@ReplacementPrice        float         = null -- новая цена              
               
 as

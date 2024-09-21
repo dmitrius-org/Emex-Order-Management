@@ -76,7 +76,6 @@ type
     procedure QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
-    procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
     procedure edtSearchClick(Sender: TObject);
     procedure lblAnalogClick(Sender: TObject);
     procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
@@ -426,8 +425,6 @@ begin
   FDestinationStr := FDestinationStr + '</div>' + '</form>';
 
   FDestinationStr := StringReplace(FDestinationStr, FDestinationLogo + '"',  FDestinationLogo + '" checked', []);
-
-  logger.Info('TSearchF.DestinationLogo end');
 end;
 
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -546,11 +543,6 @@ begin
   SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
 end;
 
-procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
-begin
-   logger.Info('TSearchF.SearchGridAfterLoad');
-end;
-
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -598,17 +590,13 @@ begin
     GridRefresh();
   end;
 
-
   if (EventName = 'VKGPanelLeft') then
   begin
     logger.Info(Params.Values['VKGPanelLeft']);
 
     VKGPanel.Left :=  Params.Values['VKGPanelLeft'].ToInteger;
     VKGPanel.Visible := True;
-   // VolumeCalcShow
-   // logger.Info(Params.ToString);
   end;
-
 end;
 
 
@@ -670,7 +658,6 @@ begin
   begin
     qSearchHistory.Close;
     qSearchHistory.ParamByName('ClientID').Value := UniMainModule.AUserID;
-    //qSearchHistory.ParamByName('DetailNum').Value :=FDetailNum;
     qSearchHistory.Open();
   end;
 

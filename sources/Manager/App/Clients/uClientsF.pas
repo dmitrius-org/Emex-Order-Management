@@ -174,6 +174,9 @@ type
     N10: TUniMenuItem;
     N11: TUniMenuItem;
     qProfilesCustomerDeliveryTermCustomer: TIntegerField;
+    tabShipments: TUniTabSheet;
+    cbStatusRequiringPayment: TUniCheckComboBox;
+    UniLabel10: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -388,24 +391,27 @@ begin
     end;
     acUpdate:
     begin
-      sqltext :=' declare @R      int                        '+
-                '                                            '+
-                ' exec @r = ClientUpdate                     '+
-                '             @ClientID      = :ClientID     '+
-                '            ,@Brief         = :Brief        '+
-                '            ,@Name          = :Name         '+
-                '            ,@IsActive      = :IsActive     '+
-                '            ,@SuppliersID   = :SuppliersID '+
-                '            ,@Taxes         = :Taxes        '+
-                '            ,@ResponseType  = :ResponseType '+
-                '            ,@NotificationMethod  = :NotificationMethod '+
-                '            ,@NotificationAddress = :NotificationAddress'+
-                '            ,@ClientTypeID	       = :ClientTypeID	     '+
-                ''+
-                ' select @r as retcode      ';
+      sqltext :='''
+                  declare @R      int
+
+                  exec @r = ClientUpdate
+                             @ClientID      = :ClientID
+                            ,@Brief         = :Brief
+                            ,@Name          = :Name
+                            ,@IsActive      = :IsActive
+                            ,@SuppliersID   = :SuppliersID
+                            ,@Taxes         = :Taxes
+                            ,@ResponseType  = :ResponseType
+                            ,@NotificationMethod  = :NotificationMethod
+                            ,@NotificationAddress = :NotificationAddress
+                            ,@ClientTypeID	      = :ClientTypeID
+                            ,@StatusRequiringPayment=:StatusRequiringPayment
+
+                 select @r as retcode
+                ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'],
+               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'StatusRequiringPayment'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -415,7 +421,8 @@ begin
                cbResponseType.ItemIndex,
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
-               cbClientType.value
+               cbClientType.value,
+               cbStatusRequiringPayment.Text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -493,6 +500,7 @@ begin
   cbResponseType.ItemIndex       := UniMainModule.Query.FieldByName('ResponseType').AsInteger;
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
+  cbStatusRequiringPayment.Text  := UniMainModule.Query.FieldByName('StatusRequiringPayment').AsString;
 
   //
   cbClientType.Value :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
@@ -638,6 +646,8 @@ begin
   pcCommon.ActivePage := tabHome;
 
   ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
+
+  ComboBoxFill(cbStatusRequiringPayment,   ' select distinct SearchBrief as name, SearchID from tNodes (nolock) where Type = 0 and SearchID <> 8 order by SearchID ');
 
   case FAction of
     acInsert, acReportCreate:

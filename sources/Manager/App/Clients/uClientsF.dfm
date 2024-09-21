@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabPriceProfiles
+    ActivePage = tabShipments
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -100,7 +100,7 @@ object ClientsF: TClientsF
         end
         object UniLabel5: TUniLabel
           Left = 25
-          Top = 65
+          Top = 61
           Width = 68
           Height = 13
           Hint = ''
@@ -210,9 +210,10 @@ object ClientsF: TClientsF
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074
       LayoutConfig.Width = '100'
       object ToolBar: TUniToolBar
-        Left = 0
-        Top = 0
-        Width = 1177
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1171
         Height = 48
         Hint = ''
         ShowHint = True
@@ -227,6 +228,9 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 1177
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -257,9 +261,9 @@ object ClientsF: TClientsF
       end
       object UniPanel1: TUniPanel
         Left = 0
-        Top = 48
+        Top = 54
         Width = 1177
-        Height = 410
+        Height = 404
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -267,11 +271,13 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitTop = 48
+        ExplicitHeight = 410
         object Grid: TUniDBGrid
           Left = 1
           Top = 1
           Width = 1175
-          Height = 408
+          Height = 402
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -435,9 +441,10 @@ object ClientsF: TClientsF
       LayoutConfig.Width = '100'
       OnBeforeActivate = tabPriceProfilesBeforeActivate
       object UniToolBar2: TUniToolBar
-        Left = 0
-        Top = 0
-        Width = 1177
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1171
         Height = 48
         Hint = ''
         ShowHint = True
@@ -452,6 +459,9 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 1177
         object UniToolButton7: TUniToolButton
           Left = 0
           Top = 0
@@ -490,9 +500,9 @@ object ClientsF: TClientsF
       end
       object UniPanel3: TUniPanel
         Left = 0
-        Top = 48
+        Top = 54
         Width = 1177
-        Height = 410
+        Height = 404
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -500,11 +510,13 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitTop = 48
+        ExplicitHeight = 410
         object ProfilesCustomerGrid: TUniDBGrid
           Left = 1
           Top = 1
           Width = 1175
-          Height = 408
+          Height = 402
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -806,9 +818,9 @@ object ClientsF: TClientsF
       LayoutConfig.Width = '100'
       object UniPanel2: TUniPanel
         Left = 0
-        Top = 48
+        Top = 54
         Width = 1177
-        Height = 410
+        Height = 404
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -816,6 +828,8 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitTop = 48
+        ExplicitHeight = 410
         object UniHiddenPanel1: TUniHiddenPanel
           Left = 25
           Top = 191
@@ -842,7 +856,7 @@ object ClientsF: TClientsF
           Left = 1
           Top = 1
           Width = 1175
-          Height = 408
+          Height = 402
           Hint = #1057#1074#1103#1079#1072#1085#1085#1099#1077' '#1082#1083#1080#1077#1085#1090#1099
           ShowHint = True
           ParentShowHint = False
@@ -921,9 +935,10 @@ object ClientsF: TClientsF
         end
       end
       object UniToolBar1: TUniToolBar
-        Left = 0
-        Top = 0
-        Width = 1177
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1171
         Height = 48
         Hint = ''
         ShowHint = True
@@ -938,6 +953,9 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 1177
         object UniToolButton3: TUniToolButton
           Left = 0
           Top = 0
@@ -965,6 +983,32 @@ object ClientsF: TClientsF
           IconAlign = iaLeft
           TabOrder = 3
         end
+      end
+    end
+    object tabShipments: TUniTabSheet
+      Hint = ''
+      Caption = #1054#1090#1075#1088#1091#1079#1082#1080' - '#1073#1072#1083#1072#1085#1089
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1185
+      ExplicitHeight = 486
+      object cbStatusRequiringPayment: TUniCheckComboBox
+        Left = 242
+        Top = 28
+        Width = 911
+        Hint = ''
+        Text = ''
+        TabOrder = 0
+        IconItems = <>
+      end
+      object UniLabel10: TUniLabel
+        Left = 33
+        Top = 32
+        Width = 176
+        Height = 13
+        Hint = ''
+        Caption = #1057#1090#1072#1090#1091#1089#1099' '#1090#1088#1077#1073#1091#1102#1097#1080#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099':'
+        TabOrder = 1
       end
     end
   end

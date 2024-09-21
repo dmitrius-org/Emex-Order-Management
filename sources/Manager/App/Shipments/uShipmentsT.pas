@@ -139,6 +139,8 @@ type
     actProtocol: TAction;
     N13: TUniMenuItem;
     N14: TUniMenuItem;
+    fSupplier: TUniCheckComboBox;
+    UniLabel3: TUniLabel;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -168,6 +170,8 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
       NewIndex: Integer);
+    procedure fSupplierSelect(Sender: TObject);
+    procedure UniFrameReady(Sender: TObject);
 
   private
     { Private declarations }
@@ -176,7 +180,7 @@ type
 
     FFilterTextStatus: string;
     FFilterTextPriceLogo: string;
-    FFilterTextClient: string;
+    FFilterTextSupplier: string;
 
     ACurrColumn: TUniDBGridColumn;
     FID: Integer;  //текущая колонка
@@ -197,7 +201,7 @@ type
 
     procedure FilterStatusCreate();
     procedure FilterPriceLogoCreate();
-    procedure FilterClientsCreate();
+    procedure FilterSupplierCreate();
 
     procedure ShipmentsTransporterNumberFCallBack(Sender: TComponent; AResult:Integer);
   public
@@ -248,6 +252,7 @@ procedure TShipmentsT.actFilterClearExecute(Sender: TObject);
 begin
   edtInvoice.Clear;
   fShipmentsDate.Text := '';
+  fSupplier.Clear;
   GridOpen();
 end;
 
@@ -335,7 +340,7 @@ var
   i: Integer;
 begin
   s:= '';
-  FFilterTextClient := '';
+  FFilterTextSupplier := '';
 
   for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
   begin
@@ -348,14 +353,24 @@ begin
   if (s<> '') and  (s[length(s)]=',') then
     delete(s,length(s),1);
 
-  FFilterTextClient := s;
+  FFilterTextSupplier := s;
   GridOpen;
-  logger.Info('FFilterTextClient: ' + FFilterTextClient);
+  logger.Info('FFilterTextSupplier: ' + FFilterTextSupplier);
 end;
 
-procedure TShipmentsT.FilterClientsCreate;
+procedure TShipmentsT.FilterSupplierCreate;
 begin
+  sql.Open('select SuppliersID, Brief from tSuppliers (nolock) where SuppliersID<>8', [],[]);
 
+  fSupplier.Clear;
+  sql.q.First;
+  while not sql.q.Eof do
+  begin
+    fSupplier.Items.AddObject( sql.q.FieldByName('Brief').AsString, Pointer(sql.q.FieldByName('SuppliersID').AsInteger) );
+    sql.q.Next;
+  end;
+
+  fSupplier.Refresh;
 end;
 
 procedure TShipmentsT.FilterPriceLogoCreate;
@@ -369,8 +384,32 @@ begin
 end;
 
 
+procedure TShipmentsT.fSupplierSelect(Sender: TObject);
+var
+  s: String;
+  i: Integer;
+begin
+  s:= '';
+  FFilterTextSupplier := '';
+
+  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
+  begin
+    if (Sender as TUniCheckComboBox).Selected[i] = True then
+    begin
+      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
+    end;
+  end;
+
+  if (s<> '') and  (s[length(s)]=',') then
+    delete(s,length(s),1);
+
+  FFilterTextSupplier := s;
+
+  logger.Info('FFilterTextSupplier: ' + FFilterTextSupplier);
+end;
+
 procedure TShipmentsT.GridOpen;
-var FClient:string;
+var FSupplier:string;
     FStatus :string;
     FPriceLogo :string;
 begin
@@ -383,6 +422,13 @@ begin
       Query.MacroByName('Invoice').Value := ' and Invoice like ''%'   + edtInvoice.Text + '%'''
     else
       Query.MacroByName('Invoice').Value := '';
+
+    // поставщик
+    if FFilterTextSupplier <> '' then FSupplier := ' and SuppliersID in (' + FFilterTextSupplier + ')'
+    else
+      FSupplier := '';
+
+    Query.MacroByName('Supplier').Value    := FSupplier;
 
     if (fShipmentsDate.Text <> '') and (fShipmentsDate.Text <> '30.12.1899') then
       Query.MacroByName('ShipmentsDate').Value := ' and cast(ShipmentsDate as date) = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
@@ -589,6 +635,11 @@ begin
   logger.Info('TShipmentsT.UniFrameCreate End');
 end;
 
+
+procedure TShipmentsT.UniFrameReady(Sender: TObject);
+begin
+  FilterSupplierCreate();
+end;
 
 procedure TShipmentsT.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin

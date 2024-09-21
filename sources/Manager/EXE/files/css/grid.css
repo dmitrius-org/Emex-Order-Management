@@ -257,11 +257,15 @@
     text-align: center;
 }
 
-/* таблица cnстатусы */
+/* таблица статусы */
 /* Перенос строки в заголовке таблицы статусов */
 .grid-status .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
 }
 
-
+/* таблица клиенты */
+.grid-clients .x-leaf-column-header {
+    height: auto;
+    vertical-align: top;
+}

@@ -171,7 +171,7 @@ object ClientsT: TClientsT
         ImageIndex = 7
         TabOrder = 6
       end
-      object UniToolButton8: TUniToolButton
+      object tbSeparator: TUniToolButton
         AlignWithMargins = True
         Left = 690
         Top = 3
@@ -181,7 +181,7 @@ object ClientsT: TClientsT
         Margins.Right = 0
         ShowHint = True
         Style = tbsSeparator
-        Caption = 'UniToolButton8'
+        Caption = 'tbSeparator'
         TabOrder = 7
       end
       object UniToolButton6: TUniToolButton
@@ -259,6 +259,7 @@ object ClientsT: TClientsT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      LayoutConfig.ComponentCls = 'grid-clients'
       LayoutConfig.Flex = 1
       BorderStyle = ubsNone
       Align = alClient
@@ -267,10 +268,14 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown
+      OnClearFilters = GridClearFilters
       OnCellContextClick = GridCellContextClick
+      OnColumnFilter = GridColumnFilter
       Columns = <
         item
           FieldName = 'ClientID'
+          Filtering.Enabled = True
+          Filtering.Editor = flClientID
           Title.Alignment = taCenter
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
           Width = 125
@@ -289,6 +294,8 @@ object ClientsT: TClientsT
         end
         item
           FieldName = 'Brief'
+          Filtering.Enabled = True
+          Filtering.Editor = flClientBrief
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
           Width = 603
@@ -323,6 +330,25 @@ object ClientsT: TClientsT
       Hint = ''
       Visible = True
       ShowHint = True
+      object flClientBrief: TUniEdit
+        Left = 26
+        Top = 76
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        Text = ''
+        TabOrder = 1
+        EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
+      end
+      object flClientID: TUniNumberEdit
+        Left = 27
+        Top = 36
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        TabOrder = 2
+        DecimalSeparator = ','
+      end
     end
   end
   object Query: TFDQuery
@@ -343,10 +369,26 @@ object ClientsT: TClientsT
       'select * '
       '  from vClients c'
       ' where 1=1'
+      ' '
+      '   and c.ClientID  = isnull(nullif(:ClientID, -1), c.ClientID)'
+      '   and c.Brief   like isnull(:Brief, c.Brief)'
       ''
       ' Order by c.ClientID    ')
     Left = 611
     Top = 180
+    ParamData = <
+      item
+        Name = 'CLIENTID'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'BRIEF'
+        DataType = ftWideString
+        ParamType = ptInput
+        Value = Null
+      end>
     object QueryClientID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'ClientID'

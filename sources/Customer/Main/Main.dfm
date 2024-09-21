@@ -93,7 +93,6 @@ object MainForm: TMainForm
             Hint = ''
             ImageIndex = 9
             Caption = #1041#1072#1083#1072#1085#1089' '#1080' '#1054#1090#1075#1088#1091#1079#1082#1080
-            OnBeforeActivate = tsBalanceBeforeActivate
             OnBeforeFirstActivate = tsBalanceBeforeFirstActivate
             ExplicitLeft = 0
             ExplicitTop = 0

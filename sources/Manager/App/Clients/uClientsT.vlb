@@ -152,12 +152,12 @@ Visible=True
 [UniToolButton6]
 Coordinates=10,232,103,36
 
-[UniToolButton8]
-Coordinates=549,10,103,36
-
 [UniToolButton7]
 Coordinates=436,10,103,36
 
 []
 Coordinates=654,527,91,36
+
+[tbSeparator]
+Coordinates=549,10,103,36
 

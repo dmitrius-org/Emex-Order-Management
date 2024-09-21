@@ -55,7 +55,8 @@ uses
   uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm},
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   uGridUtils in '..\Common\Common\uGridUtils.pas',
-  uBalanceTotalT in 'App\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
+  uBalanceTotalT in 'App\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
+  uniGUI.Loading in '..\Common\Common\uniGUI.Loading.pas';
 
 {$R *.res}
 

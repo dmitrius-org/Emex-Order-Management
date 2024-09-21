@@ -9,9 +9,15 @@ create proc BalanceTotalCalc
 as
   set nocount on
   declare @r int
+         ,@StatusRequiringPayment varchar(256)
 
   select @R         = 0
         ,@ClientID  = 39
+
+  select @StatusRequiringPayment = c.StatusRequiringPayment  
+    from tClients c (nolock)
+   where c.ClientID = @ClientID
+
 
   delete pBalanceTotal
     from pBalanceTotal with (rowlock index=ao2)
@@ -35,6 +41,23 @@ as
      set OperDate = cast(getdate() as date)
    where Spid     = @@Spid
 
+
+
+  if not exists (select 1 
+                   from STRING_SPLIT(@StatusRequiringPayment, ';')
+                )
+      Update pBalanceTotal
+         set IsCalc    = 1
+       where Spid     = @@Spid
+  else
+      Update p
+         set p.IsCalc    = 1
+        from pBalanceTotal p (updlock)
+       inner join STRING_SPLIT(@StatusRequiringPayment, ';') AS s
+               on s.value = p.StatusID
+       where p.Spid     = @@Spid
+    
+
   Update pBalanceTotal
      set OrderSum = isnull(( Select sum(o.Amount) 
                                 from tNodes n (nolock)
@@ -46,8 +69,6 @@ as
    where Spid     = @@Spid
      and StatusID = 0
 
-
-
   Update p
      set p.OrderSum = isnull(( Select sum(o.Amount) 
                                 from tNodes n (nolock)
@@ -56,7 +77,7 @@ as
                                       and o.StatusID = n.NodeID
                                where n.SearchID = p.StatusID
                               ), 0)
-   from pBalanceTotal p 
+   from pBalanceTotal p (updlock)
   where p.Spid     = @@Spid
     and p.StatusID > 0
 
@@ -75,8 +96,14 @@ as
                        isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0))  * -1
     from pBalanceTotal t (updlock)
    where t.Spid     = @@Spid
+     and (t.isCalc  = 1)
 
-
+  Update t
+     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
+                       isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0))  * -1
+    from pBalanceTotal t (updlock)
+   where t.Spid     = @@Spid
+     and t.StatusID = 0
 exit_:
 return @r
 go

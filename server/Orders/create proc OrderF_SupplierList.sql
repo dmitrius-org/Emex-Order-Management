@@ -10,7 +10,7 @@ as
   declare @r int = 0
 
 Select 
-       o.PriceLogo  + o.MakeLogo  as ID,
+       o.PriceLogo  + '.' +  o.MakeLogo  as ID,
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, isnull(o.PricePurchaseF, o.PricePurchase)) + ' | ' + 
@@ -29,7 +29,7 @@ Select
                    )
  Union all
 select 
-       p.PriceLogo  + p.Make  as ID,
+       p.PriceLogo + '.' + p.Make  as ID,
        s.Brief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
@@ -57,6 +57,6 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20240728', '3'
+exec setOV 'OrderF_SupplierList', 'P', '20240918', '4'
 go
  

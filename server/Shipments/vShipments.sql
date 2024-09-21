@@ -47,9 +47,10 @@ SELECT s.ShipmentsID
       -- считать доставку исходя из данных перевозчика
 
       ,sp.Brief     SupplierBrief
-   FROM tShipments s (nolock)
-   left join tSuppliers sp (nolock)
-          on sp.SuppliersID=s.SuppliersID
+      ,s.SuppliersID
+  FROM tShipments s (nolock)
+  left join tSuppliers sp (nolock)
+         on sp.SuppliersID=s.SuppliersID
 
  --inner join tOrders o (nolock)
  --        on o.ClientID = ua.LinkID 
@@ -58,8 +59,8 @@ SELECT s.ShipmentsID
  --        on u.UserID = o.UserID
 
  left join tNodes st with (nolock index=ao1)
-         on st.NodeID = s.[StatusID]
-        and st.Type   = 0 -- состояние/статус
+        on st.NodeID = s.[StatusID]
+       and st.Type   = 0 -- состояние/статус
 
  --inner join tModel m with (nolock)
  --        on m.StateID = s.NodeID
@@ -89,7 +90,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240911', '2'
+exec setOV 'vShipments', 'V', '20240911', '3'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

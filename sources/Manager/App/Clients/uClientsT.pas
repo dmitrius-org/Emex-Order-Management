@@ -67,10 +67,12 @@ type
     UniToolButton5: TUniToolButton;
     UniToolButton6: TUniToolButton;
     UniToolButton7: TUniToolButton;
-    UniToolButton8: TUniToolButton;
+    tbSeparator: TUniToolButton;
     QuerySupplier: TWideStringField;
     UniToolButton9: TUniToolButton;
     actClientType: TAction;
+    flClientBrief: TUniEdit;
+    flClientID: TUniNumberEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -85,6 +87,9 @@ type
     procedure actBalanceAddExecute(Sender: TObject);
     procedure actBalanceExecute(Sender: TObject);
     procedure actClientTypeExecute(Sender: TObject);
+    procedure GridClearFilters(Sender: TObject);
+    procedure GridColumnFilter(Sender: TUniDBGrid;
+      const Column: TUniDBGridColumn; const Value: Variant);
   private
     { Private declarations }
     FAction: Integer;
@@ -101,7 +106,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T;
+  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T, uLogger;
 
 {$R *.dfm}
 
@@ -186,6 +191,32 @@ procedure TClientsT.GridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
   PopupMenu.Popup(X, Y, Grid)
+end;
+
+procedure TClientsT.GridClearFilters(Sender: TObject);  var i: Integer;
+begin
+  if Query.Active then
+  begin
+    for I := 0 to Query.Params.Count-1 do
+      Query.Params[I].Value:=null;
+
+    Query.Refresh;
+  end;
+end;
+
+procedure TClientsT.GridColumnFilter(Sender: TUniDBGrid;
+  const Column: TUniDBGridColumn; const Value: Variant);
+begin
+  if Query.Active then
+  begin
+   // logger.Info(VarToStr(Column.Field.DataType.ftFMTBcd));
+    if (Column.Field.DataType in [TFieldType.ftBoolean, TFieldType.ftFMTBcd]) then  // boolean
+      Query.Params.ParamValues[Column.FieldName]:=Value
+    else
+      Query.Params.ParamValues[Column.FieldName]:='%'+Value+'%';
+
+    Query.Refresh();
+  end;
 end;
 
 procedure TClientsT.GridKeyDown(Sender: TObject; var Key: Word;

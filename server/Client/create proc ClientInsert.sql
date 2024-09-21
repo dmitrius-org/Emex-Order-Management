@@ -5,16 +5,17 @@ if OBJECT_ID('ClientInsert') is not null
 */
 go
 create proc ClientInsert
-              @ClientID             numeric(18,0) output --  
-             ,@Brief                nvarchar(512)  --
-             ,@Name	                nvarchar(1024)  -- 
-			 ,@SuppliersID          numeric(18,0)=null--поставщик
-			 ,@IsActive             bit
-			 ,@Taxes                money        -- налоги
-             ,@ResponseType         int          -- Тип ответа
-             ,@NotificationMethod   int          -- Способ оповещения
-             ,@NotificationAddress  nvarchar(256)-- Адрес оповещения
-             ,@ClientTypeID	        int         =null -- Тип клиента
+              @ClientID               numeric(18,0) output --  
+             ,@Brief                  nvarchar(512)  --
+             ,@Name	                  nvarchar(1024)  -- 
+			 ,@SuppliersID            numeric(18,0)=null--поставщик
+			 ,@IsActive               bit
+			 ,@Taxes                  money        -- налоги
+             ,@ResponseType           int          -- Тип ответа
+             ,@NotificationMethod     int          -- Способ оповещения
+             ,@NotificationAddress    nvarchar(256)-- Адрес оповещения
+             ,@ClientTypeID	          int          = null -- Тип клиента
+             ,@StatusRequiringPayment varchar(256) = null
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -49,6 +50,7 @@ as
               ,NotificationMethod
               ,NotificationAddress
               ,ClientTypeID	
+              ,StatusRequiringPayment
               --,Margin       
               --,Reliability  
               --,Discount     
@@ -65,6 +67,7 @@ as
               ,@NotificationMethod
               ,@NotificationAddress
               ,@ClientTypeID
+              ,@StatusRequiringPayment
               --,nullif(@Margin       , -1)
               --,nullif(@Reliability  , -1)
               --,nullif(@Discount     , -1)
@@ -110,6 +113,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20240101', '0'
+exec setOV 'ClientInsert', 'P', '20240918', '1'
 go
 

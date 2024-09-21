@@ -21,8 +21,6 @@ object ConfluenceT: TConfluenceT
     ShowCaption = False
     Caption = 'UniPanel1'
     Layout = 'border'
-    ExplicitWidth = 992
-    ExplicitHeight = 525
     object MenuPanel: TUniContainerPanel
       Left = 1
       Top = 1
@@ -37,7 +35,6 @@ object ConfluenceT: TConfluenceT
       Layout = 'fit'
       LayoutConfig.Split = True
       LayoutConfig.Region = 'west'
-      ExplicitHeight = 523
       object TreeMenu: TUniTreeView
         Left = 0
         Top = 0
@@ -47,9 +44,10 @@ object ConfluenceT: TConfluenceT
         ShowHint = True
         ParentShowHint = False
         Items.NodeData = {
-          03020000002A0000000000000000000000FFFFFFFFFFFFFFFF00000000000000
-          00000000000106770065007200650077007200240000000000000000000000FF
-          FFFFFFFFFFFFFF0000000000000000000000000103770065007200}
+          07020000000A5400580054007200650065004E006F00640065002B0000000000
+          000000000000FFFFFFFFFFFFFFFF000000000000000000000000000106770065
+          0072006500770072000000250000000000000000000000FFFFFFFFFFFFFFFF00
+          0000000000000000000000000103770065007200}
         Items.FontData = {0102000000FFFFFFFF00000000FFFFFFFF00000000}
         Align = alClient
         TabOrder = 1
@@ -74,7 +72,6 @@ object ConfluenceT: TConfluenceT
           end>
         OnClick = TreeMenuClick
         OnCellContextClick = TreeMenuCellContextClick
-        ExplicitHeight = 523
       end
     end
     object ContentPanel: TUniContainerPanel
@@ -90,8 +87,6 @@ object ConfluenceT: TConfluenceT
       TabOrder = 2
       Layout = 'fit'
       LayoutConfig.Region = 'center'
-      ExplicitWidth = 690
-      ExplicitHeight = 523
       object UniPanel2: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -113,8 +108,6 @@ object ConfluenceT: TConfluenceT
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Flex = 1
         LayoutConfig.Width = '100'
-        ExplicitWidth = 684
-        ExplicitHeight = 520
         object ArticleToolBar: TUniPanel
           AlignWithMargins = True
           Left = 3
@@ -131,7 +124,6 @@ object ConfluenceT: TConfluenceT
           AlignmentControl = uniAlignmentClient
           ParentAlignmentControl = False
           LayoutConfig.Region = 'north'
-          ExplicitWidth = 678
           object lblArticle: TUniLabel
             Left = 16
             Top = 8
@@ -160,7 +152,6 @@ object ConfluenceT: TConfluenceT
             Caption = ''
             AlignmentControl = uniAlignmentClient
             ParentAlignmentControl = False
-            ExplicitLeft = 282
             DesignSize = (
               393
               43)
@@ -211,8 +202,6 @@ object ConfluenceT: TConfluenceT
           TabOrder = 2
           Layout = 'fit'
           LayoutConfig.Region = 'center'
-          ExplicitWidth = 684
-          ExplicitHeight = 465
           object edt1: TUniHTMLFrame
             AlignWithMargins = True
             Left = 3
@@ -223,8 +212,6 @@ object ConfluenceT: TConfluenceT
             ShowHint = True
             Align = alClient
             OnAjaxEvent = edt1AjaxEvent
-            ExplicitWidth = 678
-            ExplicitHeight = 459
           end
         end
       end

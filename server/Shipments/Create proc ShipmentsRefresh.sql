@@ -178,6 +178,7 @@ select
         ,t.WeightKGAmount    = p.WeightKGAmount          
         ,t.VolumeKGAmount	 = p.VolumeKGAmount  
         ,t.Amount            = p.Amount
+        ,t.DestinationName   = p.DestinationName
     from pShipments p with (nolock index=ao1)
    inner join tShipments t with (Updlock index=ao2)
            on t.Invoice = p.Invoice

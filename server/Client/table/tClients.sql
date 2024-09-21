@@ -17,7 +17,7 @@ begin
 	,Password             nvarchar(256)  null     -- 
 
 	,IsActive             bit
-	,IsConfirmed          bit          -- Признак что регистрация подьверждена
+	,IsConfirmed          bit          -- Признак что регистрация подтверждена
 	,IsConfirmedDate      datetime	   -- Дата подтверждения регистрации
 	,Taxes                money        -- Комиссия и налоги
 	,ResponseType         int          -- Тип ответа
@@ -26,6 +26,10 @@ begin
 	,SuppliersID          numeric(18,0)-- Поставщик
     --
 	,ClientTypeID         int          -- Тип клиента
+
+    ,StatusRequiringPayment varchar(256)-- Статусы требующие предоплаты
+
+
 	--
 	,UserID               numeric(18,0) default dbo.GetUserID()
 	,inDatetime           datetime      default GetDate()      --

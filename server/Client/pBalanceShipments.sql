@@ -1,10 +1,10 @@
-if OBJECT_ID('pBalanceTotal') is not null
-  drop table pBalanceTotal
+if OBJECT_ID('pBalanceShipments') is not null
+  drop table pBalanceShipments
 go
 /* **********************************************************
-pBalanceTotal -
+pBalanceShipments -
 ********************************************************** */
-create table pBalanceTotal
+create table pBalanceShipments
 (
  ID                  numeric(18, 0) identity  -- 
 ,Spid                int            -- 
@@ -13,21 +13,23 @@ create table pBalanceTotal
 ,StatusName          varchar(255)   -- 
 ,OrderType           varchar(255)   -- 
 ,OrderSum            money          --
+,Invoice             varchar(64)
 ,PayType             varchar(255)   -- 
 ,PaySum              money          --
 ,BalanceType         varchar(255)   -- 
 ,BalanceSum          money          --
 ,OperDate            datetime       --
+,OperDateS           datetime       --
 ,IsCalc              bit            --
 )
 go
-create unique index ao1 on pBalanceTotal(ID)
+create unique index ao1 on pBalanceShipments(ID)
 go
-create index ao2 on pBalanceTotal(Spid, ClientID)
+create index ao2 on pBalanceShipments(Spid, ClientID)
 go
-grant all on pBalanceTotal to public
+grant all on pBalanceShipments to public
 go
-exec setOV 'pBalanceTotal', 'U', '20240906', '0'
+exec setOV 'pBalanceShipments', 'U', '20240918', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'pBalanceTotal', @desc = ''
+exec dbo.sys_setTableDescription @table = 'pBalanceShipments', @desc = ''

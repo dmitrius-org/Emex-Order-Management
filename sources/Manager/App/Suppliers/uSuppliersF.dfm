@@ -183,7 +183,7 @@ object SuppliersF: TSuppliersF
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 224
+        Width = 240
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
@@ -280,10 +280,12 @@ object SuppliersF: TSuppliersF
       object ToolBar: TUniToolBar
         AlignWithMargins = True
         Left = 3
-        Top = 3
+        Top = 0
         Width = 1004
         Height = 48
         Hint = ''
+        Margins.Top = 0
+        Margins.Bottom = 0
         ShowHint = True
         ParentShowHint = False
         ButtonHeight = 40
@@ -296,6 +298,7 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitTop = 3
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -326,9 +329,9 @@ object SuppliersF: TSuppliersF
       end
       object UniPanel1: TUniPanel
         Left = 0
-        Top = 54
+        Top = 48
         Width = 1010
-        Height = 326
+        Height = 332
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -337,11 +340,13 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitTop = 54
+        ExplicitHeight = 326
         object Grid: TUniDBGrid
           Left = 0
           Top = 0
           Width = 1010
-          Height = 326
+          Height = 332
           Hint = ''
           ShowHint = True
           ParentShowHint = False

@@ -6,6 +6,7 @@ Coordinates=111,170,96,36
 
 [btnArticleEdit]
 Coordinates=10,170,91,36
+Visible=True
 
 [N4]
 Coordinates=354,56,40,36
@@ -87,5 +88,11 @@ Coordinates=301,170,78,36
 Visible=True
 
 []
-Coordinates=354,111,85,36
+Coordinates=363,111,91,36
+
+[actSave]
+Coordinates=355,1,61,36
+
+[UniMainModule.MemTable]
+Coordinates=0,0,168,80
 

@@ -14,7 +14,8 @@ create proc ClientUpdate
              ,@ResponseType         int          -- Тип ответа
              ,@NotificationMethod   int          -- Способ оповещения
              ,@NotificationAddress  nvarchar(256)-- Адрес оповещения
-             ,@ClientTypeID	        int         =null
+             ,@ClientTypeID	        int            = null
+             ,@StatusRequiringPayment varchar(256) = null
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -22,6 +23,7 @@ create proc ClientUpdate
 
 as
   declare @r int = 0
+  --declare   
 
   if exists (select 1 
                from tClients (nolock)
@@ -34,7 +36,19 @@ as
 
   BEGIN TRY 
       delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
-      Begin tran
+      Begin tran 
+
+      SELECT @StatusRequiringPayment = STRING_AGG(n.SearchID, ';') WITHIN GROUP (ORDER BY n.SearchID ASC) 
+        FROM ( 
+              SELECT DISTINCT n.SearchID 
+                FROM STRING_SPLIT(@StatusRequiringPayment, ';') AS p
+               INNER JOIN tNodes n WITH (NOLOCK)
+                  ON n.Type = 0 
+                 AND n.SearchBrief = RTRIM(LTRIM(p.value))  -- Убираем возможные пробелы
+                 AND n.SearchID <> 8
+             ) AS n;
+
+     
 
 	    Update tClients
 		   set Brief               = @Brief
@@ -47,6 +61,10 @@ as
               ,NotificationMethod  = @NotificationMethod
               ,NotificationAddress = @NotificationAddress
               ,ClientTypeID        = @ClientTypeID
+              ,StatusRequiringPayment =  @StatusRequiringPayment
+
+
+                                          --  select distinct SearchID, SearchBrief from tNodes (nolock) where Type = 0 and SearchID <> 8 order by SearchID
              -- ,Margin              = nullif(@Margin      , -1) 
              -- ,Reliability         = nullif(@Reliability , -1) 
              -- ,Discount            = nullif(@Discount    , -1) 
@@ -90,5 +108,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20240101', '0'
+exec setOV 'ClientUpdate', 'P', '20240918', '1'
 go

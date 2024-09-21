@@ -5,6 +5,7 @@ object ShipmentsT: TShipmentsT
   Height = 596
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
+  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
@@ -394,7 +395,7 @@ object ShipmentsT: TShipmentsT
         LayoutConfig.Width = '0'
         TabOrder = 1
         object fCancel: TUniBitBtn
-          Left = 308
+          Left = 504
           Top = 35
           Width = 128
           Height = 24
@@ -404,7 +405,7 @@ object ShipmentsT: TShipmentsT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 442
+          Left = 638
           Top = 35
           Width = 137
           Height = 24
@@ -459,6 +460,58 @@ object ShipmentsT: TShipmentsT
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
           TabOrder = 6
+        end
+        object fSupplier: TUniCheckComboBox
+          Left = 290
+          Top = 35
+          Width = 208
+          Hint = ''
+          ShowHint = True
+          Text = ''
+          TabOrder = 7
+          ClientEvents.UniEvents.Strings = (
+            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
+            
+              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
+              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
+              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
+              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
+              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
+              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
+              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
+              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
+          EmptyText = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          CheckChangeDelay = 100
+          ClearButton = True
+          Triggers = <
+            item
+              ImageIndex = 3
+              ButtonId = 0
+              HandleClicks = True
+              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
+            end
+            item
+              ImageIndex = 2
+              ButtonId = 1
+              HandleClicks = True
+              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
+            end>
+          Images = UniImageList
+          HideTrigger = True
+          HideDefaultTrigger = False
+          SelectOnFocus = True
+          IconItems = <>
+          OnSelect = fSupplierSelect
+        end
+        object UniLabel3: TUniLabel
+          Left = 290
+          Top = 16
+          Width = 62
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+          TabOrder = 8
         end
       end
     end
@@ -695,6 +748,8 @@ object ShipmentsT: TShipmentsT
       '   !Invoice'
       '   '
       '   '
+      '   !Supplier'
+      '   '
       ' order by s.ShipmentsDate  desc   '
       '   ')
     Left = 582
@@ -707,6 +762,10 @@ object ShipmentsT: TShipmentsT
       item
         Value = Null
         Name = 'INVOICE'
+      end
+      item
+        Value = Null
+        Name = 'SUPPLIER'
       end>
     object QueryShipmentsID: TFMTBCDField
       AutoGenerateValue = arAutoInc

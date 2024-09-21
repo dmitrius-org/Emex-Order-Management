@@ -2,7 +2,8 @@ object BalanceTotalT: TBalanceTotalT
   Left = 0
   Top = 0
   Width = 1354
-  Height = 480
+  Height = 581
+  OnCreate = UniFrameCreate
   Layout = 'fit'
   ParentAlignmentControl = False
   AlignmentControl = uniAlignmentClient
@@ -11,7 +12,7 @@ object BalanceTotalT: TBalanceTotalT
     Left = 0
     Top = 0
     Width = 1354
-    Height = 480
+    Height = 581
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -27,10 +28,11 @@ object BalanceTotalT: TBalanceTotalT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
     object Grid: TUniDBGrid
-      Left = 0
-      Top = 0
-      Width = 1354
-      Height = 480
+      AlignWithMargins = True
+      Left = 3
+      Top = 83
+      Width = 1348
+      Height = 275
       Hint = ''
       ShowHint = True
       CustomAttribs.Strings = (
@@ -73,18 +75,26 @@ object BalanceTotalT: TBalanceTotalT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-      LayoutConfig.ComponentCls = 'grid-balance-totall'
+      LayoutConfig.Cls = 'grid-balance-totall'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
       BorderStyle = ubsNone
       TrackOver = False
-      Align = alClient
-      Anchors = []
-      TabOrder = 1
+      Align = alTop
+      TabOrder = 2
       ParentColor = False
       Color = clBtnFace
       DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
+      ToolButtons = <
+        item
+          Action = actRefreshAll
+          ButtonId = 0
+          IconCls = 'refresh'
+          ImageIndex = 0
+          Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+          ToolType = 'refresh'
+        end>
       OnKeyDown = GridKeyDown
       Columns = <
         item
@@ -131,7 +141,7 @@ object BalanceTotalT: TBalanceTotalT
           Title.Alignment = taCenter
           Title.Caption = ' '#1044#1072#1090#1072' '#1087#1088#1080#1073#1099#1090#1080#1103
           Title.Font.Height = -13
-          Width = 100
+          Width = 120
           GroupHeader = #1047#1072#1082#1072#1079#1099
           Menu.MenuEnabled = False
         end
@@ -181,11 +191,197 @@ object BalanceTotalT: TBalanceTotalT
           Menu.MenuEnabled = False
         end>
     end
+    object ShipmentsGrid: TUniDBGrid
+      AlignWithMargins = True
+      Left = 3
+      Top = 369
+      Width = 1348
+      Height = 209
+      Hint = ''
+      ShowHint = True
+      CustomAttribs.Strings = (
+        'testAttr')
+      BodyRTL = False
+      ClientEvents.ExtEvents.Strings = (
+        
+          'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
+          '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
+          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=false;'#13#10' ' +
+          '   }'#13#10'}')
+      ClientEvents.UniEvents.Strings = (
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
+          'copyToClipboard = str => {'#13#10'        const el = document.createEl' +
+          'ement('#39'textarea'#39');'#13#10'        el.value = document.activeElement.in' +
+          'nerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.sel' +
+          'ect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        document.' +
+          'body.removeChild(el);'#13#10'    };'#13#10'}'
+        
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'//  config.displayInfo=true;'#13#10'}'
+        
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  //var toolbar=sen' +
+          'der.getDockedItems()[1]; //Remove the ToolBar fixed in the botto' +
+          'm'#13#10'  //toolbar.items.getAt(9).hide(); //Remove the Refresh butto' +
+          'n in the ToolBar, number 10, hide him'#13#10'  //toolbar.items.getAt(1' +
+          '0).hide(); //Remove the Refresh button in the ToolBar, number 10' +
+          ', hide him'#13#10'}')
+      TitleFont.Height = -13
+      DataSource = dsShipments
+      Options = [dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
+      WebOptions.Paged = False
+      WebOptions.PageSize = 150
+      WebOptions.CustomizableCells = False
+      WebOptions.AppendPosition = tpCurrentRow
+      WebOptions.FetchAll = True
+      LoadMask.WaitData = True
+      LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
+      LoadMask.Color = 13421772
+      EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      LayoutConfig.ComponentCls = 'grid-balance-totall-detail'
+      LayoutConfig.Height = '100'
+      LayoutConfig.Width = '100'
+      BorderStyle = ubsNone
+      TrackOver = False
+      Align = alClient
+      Anchors = []
+      TabOrder = 3
+      ParentColor = False
+      Color = clBtnFace
+      DragDrop.PromptDrop = False
+      RowWidget.DestroyOnCollapse = False
+      OnKeyDown = GridKeyDown
+      Columns = <
+        item
+          FieldName = 'OperDate'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1072#1090#1072
+          Title.Font.Height = -13
+          Width = 100
+          Menu.MenuEnabled = False
+        end
+        item
+          Title.Caption = ' '
+          Title.Font.Height = -13
+          Width = 43
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'StatusName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Title.Font.Height = -13
+          Width = 200
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'OrderType'
+          Title.Alignment = taCenter
+          Title.Caption = #1058#1080#1087
+          Title.Font.Height = -13
+          Width = 150
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'Invoice'
+          Title.Alignment = taCenter
+          Title.Caption = #1053#1086#1084#1077#1088' '#1075#1088#1091#1079#1072
+          Title.Font.Height = -13
+          Width = 100
+          Menu.MenuEnabled = False
+        end
+        item
+          Title.Alignment = taCenter
+          Title.Caption = ' '#1044#1072#1090#1072' '#1087#1088#1080#1073#1099#1090#1080#1103
+          Title.Font.Height = -13
+          Width = 120
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'OrderSum'
+          Title.Alignment = taCenter
+          Title.Caption = ' '#1057#1091#1084#1084#1072
+          Title.Font.Height = -13
+          Width = 130
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'PayType'
+          Title.Alignment = taCenter
+          Title.Caption = #1058#1080#1087
+          Title.Font.Height = -13
+          Width = 150
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'PaySum'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1091#1084#1084#1072
+          Title.Font.Height = -13
+          Width = 130
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'BalanceType'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Title.Font.Height = -13
+          Width = 150
+          Menu.MenuEnabled = False
+        end
+        item
+          FieldName = 'BalanceSum'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1091#1084#1084#1072' '
+          Title.Font.Height = -13
+          Width = 130
+          Menu.MenuEnabled = False
+        end>
+    end
+    object UniPanel1: TUniPanel
+      Left = 0
+      Top = 361
+      Width = 1354
+      Height = 5
+      Hint = ''
+      ShowHint = True
+      Align = alTop
+      TabOrder = 4
+      Caption = ''
+      Color = clSilver
+      ExplicitTop = 281
+    end
+    object UniPanel2: TUniPanel
+      Left = 0
+      Top = 0
+      Width = 1354
+      Height = 80
+      Hint = ''
+      ShowHint = True
+      Align = alTop
+      TabOrder = 0
+      Caption = 'UniPanel2'
+      object btnExcelExportButton2: TUniButton
+        Left = 1
+        Top = 1
+        Width = 1352
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        Caption = 'btnExcelExportButton2'
+        Align = alTop
+        TabOrder = 0
+        OnClick = btnExcelExportButton2Click
+        ExplicitLeft = 26
+        ExplicitTop = 0
+        ExplicitWidth = 1354
+      end
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
-    Left = 648
-    Top = 253
+    Left = 655
+    Top = 162
   end
   object Query: TFDQuery
     AutoCalcFields = False
@@ -211,8 +407,8 @@ object BalanceTotalT: TBalanceTotalT
       ''
       'select * '
       '  from vBalanceTotal')
-    Left = 577
-    Top = 255
+    Left = 592
+    Top = 162
     ParamData = <
       item
         Name = 'CLIENTID'
@@ -280,5 +476,269 @@ object BalanceTotalT: TBalanceTotalT
     object QueryIsCalc: TBooleanField
       FieldName = 'IsCalc'
     end
+  end
+  object qShipments: TFDQuery
+    AutoCalcFields = False
+    Connection = UniMainModule.FDConnection
+    FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
+    FetchOptions.Items = []
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.EnableDelete = False
+    UpdateOptions.EnableInsert = False
+    UpdateOptions.EnableUpdate = False
+    UpdateOptions.UpdateChangedFields = False
+    UpdateOptions.LockWait = True
+    UpdateOptions.RefreshMode = rmManual
+    UpdateOptions.CountUpdatedRecords = False
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.CheckReadOnly = False
+    UpdateOptions.CheckUpdatable = False
+    UpdateOptions.AutoCommitUpdates = True
+    SQL.Strings = (
+      'exec BalanceShipmentsCalc @ClientID = :ClientID'
+      ''
+      ''
+      'select * '
+      '  from vBalanceShipments'
+      ' order by OperDateS desc')
+    Left = 710
+    Top = 366
+    ParamData = <
+      item
+        Name = 'CLIENTID'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    object FMTBCDField1: TFMTBCDField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInWhere]
+      Precision = 18
+      Size = 0
+    end
+    object IntegerField1: TIntegerField
+      FieldName = 'Spid'
+      Origin = 'Spid'
+    end
+    object FMTBCDField2: TFMTBCDField
+      FieldName = 'ClientID'
+      Origin = 'ClientID'
+      Precision = 18
+      Size = 0
+    end
+    object StringField1: TStringField
+      FieldName = 'StatusName'
+      Origin = 'StatusName'
+      Size = 255
+    end
+    object CurrencyField1: TCurrencyField
+      FieldName = 'OrderSum'
+      Origin = 'OrderSum'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object CurrencyField2: TCurrencyField
+      FieldName = 'PaySum'
+      Origin = 'PaySum'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object CurrencyField3: TCurrencyField
+      FieldName = 'BalanceSum'
+      Origin = 'BalanceSum'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object SQLTimeStampField1: TSQLTimeStampField
+      FieldName = 'OperDate'
+      Origin = 'OperDate'
+    end
+    object StringField2: TStringField
+      FieldName = 'OrderType'
+      Origin = 'OrderType'
+      Size = 255
+    end
+    object StringField3: TStringField
+      FieldName = 'PayType'
+      Origin = 'PayType'
+      Size = 255
+    end
+    object StringField4: TStringField
+      FieldName = 'BalanceType'
+      Origin = 'BalanceType'
+      Size = 255
+    end
+    object BooleanField1: TBooleanField
+      FieldName = 'IsCalc'
+    end
+    object qShipmentsInvoice: TStringField
+      FieldName = 'Invoice'
+      Size = 64
+    end
+  end
+  object dsShipments: TDataSource
+    DataSet = qShipments
+    Left = 796
+    Top = 364
+  end
+  object actMain: TUniActionList
+    Images = UniImageListAdapter
+    Left = 474
+    Top = 201
+    object actRefreshAll: TAction
+      Category = 'Action'
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 0
+      OnExecute = actRefreshAllExecute
+    end
+  end
+  object UniImageList: TUniImageList
+    Left = 352
+    Top = 375
+    Bitmap = {
+      494C010101001800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      0000000000003600000028000000400000001000000001002000000000000010
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00001C1C1C1D6E6D6C70A79E94B7BB9774EABB9774EAA79E94B76E6D6C701C1C
+      1C1D000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000003838
+      3839A49C93B0B88248FFB88248FFB88248FFB88248FFB88248FFB88248FF4E4E
+      4E4F000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000001C1C1C1DA49C
+      93B0B88248FFADA194BF656464661E1E1E1F1E1E1E1F65646466555454560000
+      00004C4C4C4D0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000006E6D6C70B882
+      48FFADA194BF2D2D2D2E00000000000000000000000000000000000000004C4C
+      4C4DB88248FF4C4C4C4D00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000A79E94B7B882
+      48FF6564646600000000000000000000000000000000000000004C4C4C4DB882
+      48FFB88248FFB88248FF4C4C4C4D000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000B88248FFB88248FFB88248FFB882
+      48FFB88248FFB88248FFB88248FF00000000030303044C4C4C4DB88248FFB882
+      48FFB88248FFB88248FFB88248FF4C4C4C4D0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000004C4C4C4DB88248FFB88248FFB882
+      48FFB88248FFB88248FF4C4C4C4D0000000000000000B88248FFB88248FFB882
+      48FFB88248FFB88248FFB88248FFB88248FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000004C4C4C4DB88248FFB882
+      48FFB88248FF4C4C4C4D00000000000000000000000000000000000000006564
+      6466B88248FFA79E94B700000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000005A59595BB882
+      48FF4C4C4C4D00000000000000000000000000000000000000002D2D2D2EADA1
+      94BFB88248FF6E6D6C7000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000000F0F0F104C4C
+      4C4D0101000175737277656464661E1E1E1F1E1E1E1F65646466ADA194BFB882
+      48FFA49C93B01C1C1C1D00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000101
+      00016C6B6A6EB88248FFB88248FFB88248FFB88248FFB88248FFB88248FFA49C
+      93B0383838390000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00001C1C1C1D6E6D6C70A79E94B7BB9774EABB9774EAA79E94B76E6D6C701C1C
+      1C1D000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000424D3E000000000000003E000000
+      2800000040000000100000000100010000000000800000000000000000000000
+      000000000000000000000000FFFFFF00FFFF000000000000FFFF000000000000
+      F00F000000000000E00F000000000000C017000000000000C3E3000000000000
+      C7C10000000000000100000000000000018000000000000083E3000000000000
+      C7C3000000000000C003000000000000E007000000000000F00F000000000000
+      FFFF000000000000FFFF00000000000000000000000000000000000000000000
+      000000000000}
+  end
+  object UniImageListAdapter: TUniImageListAdapter
+    UniImageList = UniImageList
+    Left = 480
+    Top = 334
   end
 end

@@ -17,6 +17,7 @@ uses
 
   procedure ComboBoxFill(AComboBox: TUniComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string); overload;
+  procedure ComboBoxFill(AComboBox: TUniCheckComboBox; ASQL: string); overload;
 
 
 implementation
@@ -62,11 +63,11 @@ begin
     AComboBox.Clear;
     AComboBox.Items.BeginUpdate;
     First;
-       while not Eof do
-         begin
-           AComboBox.Items.Add(FieldByName('Name').AsString);
-           Next;
-         end;
+    while not Eof do
+      begin
+        AComboBox.Items.Add(FieldByName('Name').AsString);
+        Next;
+      end;
     AComboBox.Items.EndUpdate;
     EnableControls;
   end;
@@ -82,12 +83,32 @@ begin
     AComboBox.ClearAll;
     AComboBox.Items.BeginUpdate;
     First;
-       while not Eof do
-         begin
-           AComboBox.ValueList.Add(FieldByName('ID').AsString);
-           AComboBox.Items.Add(FieldByName('Name').AsString);
-           Next;
-         end;
+    while not Eof do
+      begin
+        AComboBox.ValueList.Add(FieldByName('ID').AsString);
+        AComboBox.Items.Add(FieldByName('Name').AsString);
+        Next;
+      end;
+    AComboBox.Items.EndUpdate;
+    EnableControls;
+  end;
+end;
+
+procedure ComboBoxFill(AComboBox: TUniCheckComboBox; ASQL: string);
+begin
+  Sql.Q.Close;
+  Sql.Open(ASQL, [], []);
+  with Sql.Q do
+  begin
+    DisableControls;
+    AComboBox.Clear;
+    AComboBox.Items.BeginUpdate;
+    First;
+    while not Eof do
+      begin
+        AComboBox.Items.Add(FieldByName('Name').AsString);
+        Next;
+      end;
     AComboBox.Items.EndUpdate;
     EnableControls;
   end;

@@ -113,7 +113,7 @@ as
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
-   -- - - -
+    - - -
    outer apply (select top 1 
                        pc.UploadPriceName,
                        pc.ProfilesDeliveryID,

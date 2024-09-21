@@ -11,10 +11,16 @@ object UniServerModule: TUniServerModule
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (
     ''
+    'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+    ''
+    ''
+    ''
     'files/css/main_menu.css'
     'files/css/grid.css'
     'files/css/custom.css '
-    '')
+    ''
+    ''
+    'files/js/functions.js')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'

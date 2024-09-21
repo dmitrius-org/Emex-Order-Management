@@ -52,7 +52,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UniGUIVars, uIdSSLOpenSSLHeaders, uSqlUtils;
+  UniGUIVars, uIdSSLOpenSSLHeaders, uSqlUtils, uniGUI.Loading;
 
 function UniServerModule: TUniServerModule;
 begin
@@ -119,6 +119,9 @@ procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
 
+    // Teste com numeros de 01 a 12
+  TLoading.Render('12');
+
   {$IFDEF UNIGUI_VCL}
   ExploreWeb('http://127.0.0.1:8079');
   {$ENDIF}
@@ -141,7 +144,8 @@ begin
 
   {$IFDEF DEBUG}
       Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
-              '. ад: '+FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
+               '. ад: '+
+               FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
   {$ELSE}
       Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
   {$ENDIF}

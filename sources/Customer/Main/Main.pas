@@ -68,8 +68,6 @@ type
     procedure UniFormDestroy(Sender: TObject);
     procedure tsBalanceBeforeFirstActivate(Sender: TObject;
       var AllowActivate: Boolean);
-    procedure tsBalanceBeforeActivate(Sender: TObject;
-      var AllowActivate: Boolean);
 
   private
     { Private declarations }
@@ -217,12 +215,6 @@ begin
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
 end;
 
-procedure TMainForm.tsBalanceBeforeActivate(Sender: TObject;
-  var AllowActivate: Boolean);
-begin
-  FBalance.GridRefresh;
-end;
-
 procedure TMainForm.tsBalanceBeforeFirstActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
@@ -233,6 +225,9 @@ begin
     FBalance.Align := alClient;
     FBalance.Parent := tsBalance;
   end;
+
+  FBalance.GridRefresh;
+  FBalance.ShipmentsGridRefresh;
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;

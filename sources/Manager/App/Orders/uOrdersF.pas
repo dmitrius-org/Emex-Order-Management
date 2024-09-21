@@ -279,8 +279,12 @@ end;
 
 procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
 begin
-  FMakeLogo          := cbPrice.Value.Substring(4);
-  FPriceLogo         := cbPrice.Value.Substring(0, 4);
+  FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
+  FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
+
+  logger.Info('cbPrice.Value: ' + cbPrice.Value);
+  logger.Info('FMakeLogo:  ' + FMakeLogo);
+  logger.Info('FPriceLogo: ' + FPriceLogo);
 
   PriceCalc();
   getPartRatingFromDB2;
@@ -464,8 +468,6 @@ begin
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
-
-
          from vOrders v
         where v.OrderID = :OrderID
   ''';
@@ -496,7 +498,7 @@ begin
   edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
-  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
+  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
@@ -537,11 +539,9 @@ begin
 
   SetEditDataStyle();
 
-  Self.Caption:=
-                UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
+  Self.Caption:=UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
                 UniMainModule.Query.FieldByName('DetailName').AsString;
-
 
   js :=
   '''
@@ -619,7 +619,7 @@ begin
    '''
     select distinct top 50
            Name_RUS
-      from tPartDescription  (nolock)
+      from tPartDescription (nolock)
      where Name_RUS LIKE '' + :Number + '%'
    ''',
    ['Number'], [QueryString]);
@@ -740,6 +740,7 @@ begin
   end;
 
   Price:=cbPrice.Value;
+
   ComboBoxFill(cbPrice,
   '''
     -- список поставщиков

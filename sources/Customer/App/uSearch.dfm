@@ -170,7 +170,6 @@ object SearchF: TSearchF
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
       OnDrawColumnCell = SearchGridDrawColumnCell
-      OnAfterLoad = SearchGridAfterLoad
       Columns = <
         item
           FieldName = 'MakeName'

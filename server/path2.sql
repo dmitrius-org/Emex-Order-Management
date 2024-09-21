@@ -70,7 +70,8 @@ alter table tNodes add SearchBrief            nvarchar(32)
 
 alter table tNodes add SearchName             nvarchar(64)
 
-
-
 select * from tNodes
+
+alter table tClients add StatusRequiringPayment varchar(256)
+
 
