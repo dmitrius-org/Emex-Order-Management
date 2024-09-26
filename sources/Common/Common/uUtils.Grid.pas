@@ -1,4 +1,4 @@
-﻿unit uGridUtils;
+﻿unit uUtils.Grid;
 
 interface
 
@@ -37,7 +37,7 @@ Type
 implementation
 
 uses
-  uniGUIAbstractClasses, uMainVar, uToast;
+  uniGUIAbstractClasses, uMainVar;
 
 class procedure GridExt.GridLayout(AForm: TObject; AGrid: TUniDBGrid;  AOperation: tGridLayout);
 var

@@ -58,7 +58,7 @@ Type
 implementation
 
 uses
-  uLogger, uVarUtils;
+  uLogger, uUtils.Varriant;
 
 
 { TSql }

@@ -252,7 +252,8 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uGridUtils, uPromptMarginEdit, uPromptReliabilityEdit;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uUtils.Grid,
+  uPromptMarginEdit, uPromptReliabilityEdit;
 
 function ClientsF: TClientsF;
 begin

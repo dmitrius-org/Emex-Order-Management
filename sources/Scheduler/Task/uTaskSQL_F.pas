@@ -59,7 +59,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uVarUtils;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uUtils.Varriant;
 
 function TaskSQL_F: TTaskSQL_F;
 begin

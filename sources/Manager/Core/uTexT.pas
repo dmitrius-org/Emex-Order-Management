@@ -38,7 +38,7 @@ type
 implementation
 
 uses
-  uMainVar, uEmexUtils, MainModule, uVarUtils, uEmexService;
+  uMainVar, uEmexUtils, MainModule, uUtils.Varriant, uEmexService;
 
 {$R *.dfm}
 

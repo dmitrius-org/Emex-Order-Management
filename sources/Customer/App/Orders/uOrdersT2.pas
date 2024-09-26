@@ -233,7 +233,7 @@ implementation
 
 uses
   MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main,
-  ServerModule, uOrdersMessageF, uError_T, uGridUtils;
+  ServerModule, uOrdersMessageF, uError_T, uUtils.Grid;
 
   var screenmask: Boolean;
   var Marks: TMarks;

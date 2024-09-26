@@ -64,13 +64,11 @@ object Task_F: TTask_F
     object MainSheet: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 885
-      ExplicitHeight = 416
       object tabCommon: TUniFieldContainer
         Left = 0
         Top = 0
         Width = 889
-        Height = 417
+        Height = 415
         Hint = ''
         ParentColor = False
         Align = alClient
@@ -298,8 +296,6 @@ object Task_F: TTask_F
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Caption = #1044#1077#1081#1089#1090#1074#1080#1103
-      ExplicitWidth = 885
-      ExplicitHeight = 416
       object UniPanel3: TUniPanel
         Left = 0
         Top = 54
@@ -449,8 +445,6 @@ object Task_F: TTask_F
     object AuditSheet: TUniTabSheet
       Hint = ''
       Caption = #1040#1091#1076#1080#1090
-      ExplicitWidth = 885
-      ExplicitHeight = 416
       object UniContainerPanel1: TUniContainerPanel
         Left = 0
         Top = 350

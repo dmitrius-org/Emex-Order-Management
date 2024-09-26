@@ -349,7 +349,6 @@ object BalanceTotalT: TBalanceTotalT
       TabOrder = 4
       Caption = ''
       Color = clSilver
-      ExplicitTop = 281
     end
     object UniPanel2: TUniPanel
       Left = 0
@@ -372,9 +371,6 @@ object BalanceTotalT: TBalanceTotalT
         Align = alTop
         TabOrder = 0
         OnClick = btnExcelExportButton2Click
-        ExplicitLeft = 26
-        ExplicitTop = 0
-        ExplicitWidth = 1354
       end
     end
   end
@@ -502,8 +498,8 @@ object BalanceTotalT: TBalanceTotalT
       'select * '
       '  from vBalanceShipments'
       ' order by OperDateS desc')
-    Left = 710
-    Top = 366
+    Left = 708
+    Top = 396
     ParamData = <
       item
         Name = 'CLIENTID'
@@ -578,13 +574,13 @@ object BalanceTotalT: TBalanceTotalT
   end
   object dsShipments: TDataSource
     DataSet = qShipments
-    Left = 796
-    Top = 364
+    Left = 802
+    Top = 397
   end
   object actMain: TUniActionList
     Images = UniImageListAdapter
-    Left = 474
-    Top = 201
+    Left = 472
+    Top = 162
     object actRefreshAll: TAction
       Category = 'Action'
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -594,8 +590,8 @@ object BalanceTotalT: TBalanceTotalT
     end
   end
   object UniImageList: TUniImageList
-    Left = 352
-    Top = 375
+    Left = 360
+    Top = 396
     Bitmap = {
       494C010101001800040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -738,7 +734,7 @@ object BalanceTotalT: TBalanceTotalT
   end
   object UniImageListAdapter: TUniImageListAdapter
     UniImageList = UniImageList
-    Left = 480
-    Top = 334
+    Left = 483
+    Top = 395
   end
 end

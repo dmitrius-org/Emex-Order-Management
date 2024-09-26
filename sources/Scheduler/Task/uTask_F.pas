@@ -130,7 +130,8 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uLogger, uSqlUtils, uVarUtils, uMainVar, uTaskProcedure_F, uTaskSQL_F, uTaskBat_F;
+  MainModule, uniGUIApplication, uLogger, uSqlUtils, uUtils.Varriant, uMainVar,
+  uTaskProcedure_F, uTaskSQL_F, uTaskBat_F;
 
 function Task_F: TTask_F;
 begin

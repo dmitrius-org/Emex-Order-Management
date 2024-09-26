@@ -105,7 +105,7 @@ end;
 implementation
 
 uses
-  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar, uGridUtils, uLogger;
+  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar, uUtils.Grid, uLogger;
 
 {$R *.dfm}
 

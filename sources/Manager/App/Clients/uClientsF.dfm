@@ -988,10 +988,6 @@ object ClientsF: TClientsF
     object tabShipments: TUniTabSheet
       Hint = ''
       Caption = #1054#1090#1075#1088#1091#1079#1082#1080' - '#1073#1072#1083#1072#1085#1089
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1185
-      ExplicitHeight = 486
       object cbStatusRequiringPayment: TUniCheckComboBox
         Left = 242
         Top = 28

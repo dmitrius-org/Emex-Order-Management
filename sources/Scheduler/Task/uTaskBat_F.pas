@@ -60,7 +60,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uVarUtils;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uUtils.Varriant;
 
 function TaskBAT_F: TTaskBAT_F;
 begin

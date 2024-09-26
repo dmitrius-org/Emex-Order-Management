@@ -116,7 +116,7 @@ end;
 implementation
 
 uses
-  uLogger, uError_T, uVarUtils;
+  uLogger, uError_T, uUtils.Varriant;
 
 { TProcExec }
 

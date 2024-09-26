@@ -159,7 +159,7 @@ type
 implementation
 
 uses
-  uEmexUtils, MainModule, uMainVar, uLogger, uToast, uGridUtils;
+  uEmexUtils, MainModule, uMainVar, uLogger, uToast, uUtils.Grid;
 
 {$R *.dfm}
 

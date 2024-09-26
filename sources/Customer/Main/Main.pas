@@ -102,7 +102,8 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uVarUtils, uAuditUtils, uCommonType;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uUtils.Varriant,
+  uAuditUtils, uCommonType;
 
 function MainForm: TMainForm;
 begin

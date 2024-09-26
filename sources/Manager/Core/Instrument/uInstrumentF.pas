@@ -101,7 +101,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uLogger, uVarUtils, uMainVar;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uLogger, uUtils.Varriant, uMainVar;
 
 function UnstrumentF: TUnstrumentF;
 begin

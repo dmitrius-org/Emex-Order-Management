@@ -88,7 +88,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uGridUtils;
+  MainModule, uGrantUtils, uMainVar, uUtils.Grid;
 
 {$R *.dfm}
 

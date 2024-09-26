@@ -152,7 +152,9 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 implementation
 
 uses
-  uLogger, uOrdersT;
+  uLogger
+ // ,         uOrdersT
+  ;
 
 
 { TEmex }

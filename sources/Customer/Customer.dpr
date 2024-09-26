@@ -31,7 +31,7 @@ uses
   uLogger in '..\Common\logger\uLogger.pas',
   uLoggerF in '..\Common\logger\uLoggerF.pas' {LoggerF: TUniForm},
   uUtils in '..\Common\logger\uUtils.pas',
-  uVarUtils in '..\Common\Common\uVarUtils.pas',
+  uUtils.Varriant in '..\Common\Common\uUtils.Varriant.pas',
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
   ServerModule in 'Main\ServerModule.pas' {UniServerModule: TUniGUIServerModule},
   MainModule in 'Main\MainModule.pas' {UniMainModule: TUniGUIMainModule},
@@ -54,9 +54,9 @@ uses
   uApp in '..\Common\Common\uApp.pas',
   uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm},
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
-  uGridUtils in '..\Common\Common\uGridUtils.pas',
+  uUtils.Grid in '..\Common\Common\uUtils.Grid.pas',
   uBalanceTotalT in 'App\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
-  uniGUI.Loading in '..\Common\Common\uniGUI.Loading.pas';
+  uniGUI.Loading in '..\Common\Loading\uniGUI.Loading.pas';
 
 {$R *.res}
 
