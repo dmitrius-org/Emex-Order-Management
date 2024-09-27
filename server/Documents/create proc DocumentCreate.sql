@@ -3,8 +3,8 @@ DROP PROCEDURE IF EXISTS DocumentCreate
   DocumentCreate - 
 
   Type                     int  
-                              1 - дебит
-                             -1 - кредит    
+                              1 - РґРµР±РёС‚
+                             -1 - РєСЂРµРґРёС‚    
 */
 go
 create proc DocumentCreate
@@ -12,7 +12,7 @@ create proc DocumentCreate
              ,@ClientID          numeric(18, 0)   --      
              ,@Date              datetime
              ,@Amount            money
-             ,@Comment           nvarchar(512)  -- Комментарий
+             ,@Comment           nvarchar(512)  -- РљРѕРјРјРµРЅС‚Р°СЂРёР№
              ,@Number            nvarchar(255) = null  --
              ,@Type              int 
              ,@PayType           int = null
@@ -87,5 +87,5 @@ return @r
 go
 grant exec on DocumentCreate to public
 go
-exec setOV 'DocumentCreate', 'P', '20240917', '1'
+exec setOV 'DocumentCreate', 'P', '20240917', '2'
 go

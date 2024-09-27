@@ -73,5 +73,8 @@ alter table tNodes add SearchName             nvarchar(64)
 select * from tNodes
 
 alter table tClients add StatusRequiringPayment varchar(256)
+alter table tDocuments add PayType int 
+
+
 
 

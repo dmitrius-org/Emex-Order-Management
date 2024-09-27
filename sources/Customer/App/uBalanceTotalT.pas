@@ -51,12 +51,10 @@ type
     actRefreshAll: TAction;
     UniImageList: TUniImageList;
     UniImageListAdapter: TUniImageListAdapter;
-    UniPanel2: TUniPanel;
-    btnExcelExportButton2: TUniButton;
+    actShippmentReportPrint: TAction;
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actRefreshAllExecute(Sender: TObject);
-    procedure btnExcelExportButton2Click(Sender: TObject);
-    procedure UniFrameCreate(Sender: TObject);
+    procedure actShippmentReportPrintExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -82,6 +80,11 @@ begin
   ShipmentsGridRefresh;
 end;
 
+
+procedure TBalanceTotalT.actShippmentReportPrintExecute(Sender: TObject);
+begin
+ //
+end;
 
 procedure TBalanceTotalT.GridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -111,18 +114,6 @@ begin
   qShipments.Open;
 end;
 
-
-procedure TBalanceTotalT.btnExcelExportButton2Click(Sender: TObject);
-var p: string;
-begin
-  p:=  UniServerModule.UrlPath+'/files/Balance2.xlsx';
-  UniSession.AddJS('exportToTemplate(' + Grid.JSName + ', ' + ShipmentsGrid.JSName + ', "' + p  + '");');
-end;
-
-procedure TBalanceTotalT.UniFrameCreate(Sender: TObject);  var js : string;
-begin
-
-end;
 
 initialization
   RegisterClass(TBalanceTotalT);

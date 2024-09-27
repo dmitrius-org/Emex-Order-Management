@@ -109,6 +109,6 @@ return @r
 go
 grant exec on BalanceTotalCalc to public
 go
-exec setOV 'BalanceTotalCalc', 'P', '20240917', '1'
+exec setOV 'BalanceTotalCalc', 'P', '20240917', '2'
 go
 
