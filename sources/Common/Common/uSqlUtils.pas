@@ -17,6 +17,7 @@ Type
     var FQuery: TFDQuery;
     function GetConnection: TFDConnection;
     procedure SetConnection(const Value: TFDConnection);
+    function GetCount: integer;
     var FConnection: TFDConnection;
 //    var FSql: TSql;
 
@@ -52,6 +53,9 @@ Type
     function GetSetting(ASetting: String; ADefValue: Double): Double; overload;
     function GetSetting(ASetting: String; ADefValue: Boolean): Boolean; overload;
     function GetSetting(ASetting: String; ADefValue: Integer): Integer; overload;
+
+
+    property Count: integer read GetCount;
   end;
 
 
@@ -169,6 +173,11 @@ end;
 function TSql.GetConnection: TFDConnection;
 begin
   Result:= FConnection;
+end;
+
+function TSql.GetCount: integer;
+begin
+  result:= q.RecordCount;
 end;
 
 procedure TSql.SetConnection(const Value: TFDConnection);

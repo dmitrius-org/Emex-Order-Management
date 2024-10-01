@@ -15,7 +15,8 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
-      'DriverID=MSSQL')
+      'DriverID=MSSQL'
+      'MonitorBy=Remote')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
     AfterDisconnect = FDConnectionAfterDisconnect
@@ -31,7 +32,7 @@ object UniMainModule: TUniMainModule
     Top = 75
   end
   object FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink
-    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut]
+    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
     FileAppend = True
     FileColumns = [tiRefNo, tiTime, tiThreadID, tiClassName, tiObjID, tiMsgText]
     ShowTraces = False
@@ -42,5 +43,11 @@ object UniMainModule: TUniMainModule
     Connection = FDConnection
     Left = 43
     Top = 139
+  end
+  object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
+    EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
+    Tracing = True
+    Left = 428
+    Top = 15
   end
 end

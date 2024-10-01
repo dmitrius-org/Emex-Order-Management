@@ -57,6 +57,8 @@ type
     edtDate: TUniDateTimePicker;
     cbPayType: TUniFSComboBox;
     UniLabel5: TUniLabel;
+    cbClient: TUniFSComboBox;
+    UniLabel6: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -131,7 +133,7 @@ begin
 
       Sql.Open(sqltext,
                ['ClientID','Amount','Date','Comment','Number', 'PayType'],
-               [FClientID
+               [cbClient.Value
                ,edtAmount.value
                ,edtDate.DateTime
                ,edtComment.Text
@@ -197,6 +199,15 @@ begin
   case FAction of
     acInsert, acReportCreate, acUpdate, acReportEdit:
     begin
+
+      if cbClient.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Клиент] обязательно к заполнению!';
+        cbClient.SetFocus;
+        Exit();
+      end;
+
       if (edtAmount.IsBlank) or (edtAmount.value = 0) then
       begin
         RetVal.Code := 1;
@@ -253,6 +264,7 @@ procedure TBalanceAddF.UniFormShow(Sender: TObject);
 begin
 
   ComboBoxFill(cbPayType, 'select PropertyID as ID, Name from tProperty (nolock) where ObjectTypeID = 12');
+  ComboBoxFill(cbClient, 'select ClientID as ID, Brief as Name from tClients (nolock)');
 
   tabAudit.Visible:= FAction <> acInsert;
 
@@ -261,13 +273,14 @@ begin
                                   '   from tClients (nolock) '+
                                   '  where ClientID = :ClientID '+
                                   ' ';
-  UniMainModule.Query.ParamByName('ClientID').Value := FID;
+  UniMainModule.Query.ParamByName('ClientID').Value := FClientID;
   UniMainModule.Query.Open;
 
   case FAction of
     acInsert, acReportCreate:
     begin
       Self.Caption := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
+      cbClient.Value := FClientID.ToString;
       btnOk.Caption := ' Пополнить';
       edtInDate.Text := '';
       edtUpdDate.Text := '';

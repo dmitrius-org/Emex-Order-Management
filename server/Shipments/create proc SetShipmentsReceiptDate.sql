@@ -11,34 +11,37 @@ as
 
   declare @r        int = 0
 		 ,@AuditID  numeric(18,0)
+         ,@Comment  nvarchar(256)
 
-  update t
-     set t.ReceiptDate2	   = @ReceiptDate
-	from tShipments t (updlock)
-   where t.ShipmentsID  = @ShipmentsID
-    
-     and isnull(t.ReceiptDate, '') <> ''
-     
-     and isnull(t.ReceiptDate2, '') <> @ReceiptDate
+  if not exists (select 1 
+                   from tShipments t (nolock)
+                  where t.ShipmentsID = @ShipmentsID 
+                    and isnull(t.ReceiptDate, '') <> '')
+  begin
+      set @Comment = 'Изменение tShipments.ReceiptDate '
+      update t
+         set t.ReceiptDate = @ReceiptDate
+	    from tShipments t (updlock)
+       where t.ShipmentsID = @ShipmentsID        
+  end
+  else 
+  begin
+      set @Comment = 'Изменение tShipments.ReceiptDate2 '
+      update t
+         set t.ReceiptDate2 = @ReceiptDate
+	    from tShipments t (updlock)
+       where t.ShipmentsID = @ShipmentsID
+         and isnull(t.ReceiptDate, '') <> @ReceiptDate
+  end
 
   if @@ROWCOUNT > 0
   begin
-  
-   -- update s
-   --    set s.ReceiptDate2	   = @ReceiptDate
-	  --from tShipments t (nolock)
-   --  inner join tOrders s (updlock)
-   --          on s.Invoice = t.Invoice
-   --  where t.ShipmentsID  = @ShipmentsID
-
     exec AuditInsert
          @AuditID      = @AuditID out
         ,@ObjectID     = @ShipmentsID
         ,@ObjectTypeID = 10
         ,@ActionID     = 2
-        ,@Comment      = 'Изменение tShipments.ReceiptDate '
-        --  ,@UserID       = ''
-        --  ,@HostInfoID   = ''
+        ,@Comment      = @Comment
   end
 
  exit_:
@@ -46,6 +49,6 @@ as
 go
 grant exec on SetShipmentsReceiptDate to public
 go
-exec setOV 'SetShipmentsReceiptDate', 'P', '20240101', '0'
+exec setOV 'SetShipmentsReceiptDate', 'P', '20240101', '1'
 go
  

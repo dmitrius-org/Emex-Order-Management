@@ -22,7 +22,8 @@ create table pShipments
 ,VolumeKGDiff                    money          -- указать разницу сумм вес объемный факт минус вес объемный из прайса
 ,WeightKGAmount                  money          -- выводить ставки за физ кг и объем кг исходя из типа доставки
 ,VolumeKGAmount	                 money          -- 
-,Amount                          money          -- выводить расчетную стоимость доставки исходя из них 
+,Amount                          money          -- Расчетная стоимость доставки по весам из прайса
+,AmountF                         money          -- Фактическая стоимость доставки (по весам факт)
 
 ,SupplierWeightKG                money          -- добавить редактируемое поле "вес физ инвойса по данным поставщика"
 ,SupplierVolumeKG                money          -- добавить редактируемое поле "вес объем инвойса по данным поставщика"
@@ -48,7 +49,7 @@ create unique index ao1 on pShipments(Spid, Invoice)
 go
 grant select on pShipments to public
 go
-exec setOV 'pShipments', 'U', '20240822', '3'
+exec setOV 'pShipments', 'U', '20240822', '4'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pShipments', @desc = ''

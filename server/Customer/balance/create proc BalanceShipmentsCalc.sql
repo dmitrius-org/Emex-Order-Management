@@ -11,7 +11,10 @@ as
   declare @r int
 
   select @R         = 0
-        ,@ClientID  = 39
+
+  -- test !!!
+  if @ClientID in (57)
+    select @ClientID= 39
 
   delete pBalanceShipments
     from pBalanceShipments with (rowlock index=ao2)
@@ -50,11 +53,18 @@ as
                    and pr.NewStateID = o.StatusID
                ) as pr
 
-   where n.SearchID in ( 5 -- 'Готовим к выдаче' 
+   where n.SearchID in ( 
+                        
+                         4 --На пути в РФ
+                        ,5 -- 'Готовим к выдаче' 
+                        ,6 -- Задержан
                         ,7 -- 'Выдано клиенту'
                          )
 
   group by pr.OperDate, n.SearchID, n.SearchBrief, o.Invoice
+
+  --select * from tNodes
+
 
  -- order by max(pr.OperDates)
 --
@@ -123,6 +133,6 @@ return @r
 go
 grant exec on BalanceShipmentsCalc to public
 go
-exec setOV 'BalanceShipmentsCalc', 'P', '20240917', '0'
+exec setOV 'BalanceShipmentsCalc', 'P', '20240917', '1'
 go
 

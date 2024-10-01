@@ -12,7 +12,10 @@ as
          ,@StatusRequiringPayment varchar(256)
 
   select @R         = 0
-        ,@ClientID  = 39
+ 
+  -- test !!!
+  if @ClientID in (57)
+    select @ClientID= 39
 
   select @StatusRequiringPayment = c.StatusRequiringPayment  
     from tClients c (nolock)

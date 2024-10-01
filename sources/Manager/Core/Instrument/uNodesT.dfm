@@ -185,7 +185,15 @@ object NodesT: TNodesT
       ShowHint = True
       BodyRTL = False
       ClientEvents.ExtEvents.Strings = (
-        'added=function added(sender, container, pos, eOpts)'#13#10'{'#13#10#13#10'}')
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
+          't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
+          '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +

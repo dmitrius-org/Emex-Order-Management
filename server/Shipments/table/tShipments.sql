@@ -25,7 +25,9 @@ begin
 	,VolumeKGDiff                    money          -- разница сумм вес объемный факт минус вес объемный из прайса
 	,WeightKGAmount                  money          -- выводить ставки за физ кг и объем кг исходя из типа доставки
 	,VolumeKGAmount	                 money          
-	,Amount                          money          -- выводить расчетную стоимость доставки исходя из них 
+	,Amount                          money          -- Расчетная стоимость доставки по весам из прайса
+    ,AmountF                         money          -- Фактическая стоимость доставки (по весам факт)
+    
 
 	,SuppliersID                     numeric(18,0)  -- Поставщик. Аккаунт из которого сделана отгрузка
 	,SupplierWeightKG                money          -- добавить редактируемое поле "вес физ инвойса по данным поставщика"
@@ -38,6 +40,8 @@ begin
 	,TransporterDiffVolumeWeigh      money          -- указать разницу сумм вес объемный и вес физ факт по данным перевозчика
 	,TransporterAmount               money          -- считать доставку исходя из данных перевозчика
     ,TransporterNumber               nvarchar(64)   -- Номер груза
+
+    ,DeliverySumF                    money          -- Сумма доставки факт
 
 
     ,StatusID                        int

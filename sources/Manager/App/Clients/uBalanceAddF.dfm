@@ -69,7 +69,7 @@ object BalanceAddF: TBalanceAddF
         TabOrder = 0
         object lblName: TUniLabel
           Left = 26
-          Top = 32
+          Top = 50
           Width = 37
           Height = 13
           Hint = ''
@@ -87,8 +87,8 @@ object BalanceAddF: TBalanceAddF
         end
         object edtAmount: TUniNumberEdit
           Left = 128
-          Top = 32
-          Width = 145
+          Top = 50
+          Width = 169
           Hint = ''
           TabOrder = 2
           DecimalSeparator = ','
@@ -103,7 +103,7 @@ object BalanceAddF: TBalanceAddF
         end
         object lblDate: TUniLabel
           Left = 26
-          Top = 64
+          Top = 82
           Width = 28
           Height = 13
           Hint = ''
@@ -112,34 +112,60 @@ object BalanceAddF: TBalanceAddF
         end
         object edtDate: TUniDateTimePicker
           Left = 129
-          Top = 60
-          Width = 144
+          Top = 78
+          Width = 168
           Hint = ''
           DateTime = 45311.000000000000000000
           DateFormat = 'dd.MM.yyyy'
           TimeFormat = 'HH:mm:ss'
-          ReadOnly = True
           TabOrder = 4
+          ClearButton = True
         end
         object cbPayType: TUniFSComboBox
           Left = 128
-          Top = 88
-          Width = 145
+          Top = 106
+          Width = 169
+          Height = 23
           Hint = ''
           Text = ''
           TabOrder = 7
           AnyMatch = True
+          ClearButton = True
           IconItems = <>
           Value = '-1'
         end
         object UniLabel5: TUniLabel
           Left = 26
-          Top = 91
+          Top = 109
           Width = 70
           Height = 13
           Hint = ''
           Caption = #1058#1080#1087' '#1087#1083#1072#1090#1077#1078#1072':'
           TabOrder = 8
+        end
+        object cbClient: TUniFSComboBox
+          Left = 128
+          Top = 20
+          Width = 437
+          Height = 23
+          Hint = ''
+          Text = ''
+          ParentFont = False
+          Font.Height = -12
+          TabOrder = 9
+          AnyMatch = True
+          ClearButton = True
+          IconItems = <>
+          Value = '-1'
+        end
+        object UniLabel6: TUniLabel
+          Left = 26
+          Top = 23
+          Width = 40
+          Height = 13
+          Hint = ''
+          Caption = #1050#1083#1080#1077#1085#1090':'
+          TabOrder = 10
         end
       end
     end

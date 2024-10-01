@@ -15,6 +15,15 @@ as
   declare @ID as table (ID          numeric(18, 0), 
                         ShipmentsID numeric(18, 0))
 
+  Update p 
+     set p.Retval = 1
+        ,p.Message = 'Не все обязательные параметры заполнены'
+	from pAccrualAction p (updlock)
+   where p.Spid     = @@spid
+     and isnull(p.retval, 0) = 0
+     and ( p.NewStateID is null
+        or p.ActionID is null)
+
   insert into tShipmentsProtocol with (rowlock)
         (ShipmentsID    
         ,StateID 
@@ -36,17 +45,8 @@ as
 		,dbo.GetUserID()
     from pAccrualAction p (nolock)
    where p.Spid              = @@spid
-     and isnull(p.retval, 0) = 0
-
-
-  Update p 
-     set p.Retval = 1
-        ,p.Message = 'Не все обязательные параметры заполнены'
-	from pAccrualAction p (updlock)
-   where p.Spid     = @@spid
-     and isnull(p.retval, 0) = 0
-     and ( p.NewStateID is null
-        or p.ActionID is null)
+     and isnull(p.retval, 0) = 0     
+   order by p.ord
 
   -- изменение состояния заказа
   Update s 
@@ -65,6 +65,6 @@ as
 go
 grant exec on ShipmentsProtocolAdd to public;
 go
-exec setOV 'ShipmentsProtocolAdd', 'P', '20240916', '0';
+exec setOV 'ShipmentsProtocolAdd', 'P', '20240916', '1';
 go
  

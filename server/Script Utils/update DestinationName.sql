@@ -1,3 +1,4 @@
+/*
 update o
 set o.DestinationName = pc.DestinationName
    from tOrders o
@@ -33,10 +34,4 @@ where pc.DestinationLogo is not null
 and o.DestinationName is null
 
 
---   select * 
-   
-   
-   
---   from tOrders o (nolock)
-
---where o.DestinationName is null
+*/

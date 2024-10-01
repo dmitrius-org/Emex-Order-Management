@@ -450,8 +450,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Shipments\uShipmentsTransporterNumberF.pas">
-            <Form>ShipmentsTransporterNumberF</Form>
+        <DCCReference Include="App\Shipments\uShipmentsEditF.pas">
+            <Form>ShipmentsEditF</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
@@ -479,6 +479,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>BalanceTotalT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Shipments\uShipmentsTransporterNumberF.pas">
+            <Form>ShipmentsTransporterNumberF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">

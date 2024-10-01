@@ -64,17 +64,20 @@
 
 --alter table tNodes add N int
 
-alter table tNodes add SearchID               int
+--alter table tNodes add SearchID               int
 
-alter table tNodes add SearchBrief            nvarchar(32)
+--alter table tNodes add SearchBrief            nvarchar(32)
 
-alter table tNodes add SearchName             nvarchar(64)
+--alter table tNodes add SearchName             nvarchar(64)
 
-select * from tNodes
+--select * from tNodes
 
-alter table tClients add StatusRequiringPayment varchar(256)
-alter table tDocuments add PayType int 
+--alter table tClients add StatusRequiringPayment varchar(256)
+--alter table tDocuments add PayType int 
 
 
+alter table tShipments add DeliverySumF money 
+
+alter table tShipments add AmountF money 
 
 

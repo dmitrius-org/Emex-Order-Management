@@ -47,11 +47,16 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        p.PercentSupped,   -- процент поставки (Статистика)
 	   p.Price,           -- цена детали у emex
        p.PriceRub,        -- цена детали, показаваемая на сайте
-       p.Available,       -- наличие детали на складе
+       --p.Available,       -- наличие детали на складе
        case 
-         when p.Available = -1 then 'под заказ'
-         else cast(p.Available as nvarchar)
-       end as AvailableStr,-- наличие детали на складе
+         when isnumeric(p.Available) = 1 
+         then cast(p.Available as int)
+         else null
+       end  Available,
+       --case 
+       --  when p.Available = -1 then 'под заказ'
+       --  else cast(p.Available as nvarchar)
+       --end as AvailableStr,-- наличие детали на складе
        p.PriceLogo,
        p.DestinationLogo,
        p.Packing
@@ -69,5 +74,5 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20240730', '9'
+exec setOV 'vFindByNumber', 'V', '20240730', '10'
 go

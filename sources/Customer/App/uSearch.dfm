@@ -233,7 +233,7 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
-          FieldName = 'OurDeliverySTR'
+          FieldName = 'OurDelivery'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
           Title.Font.Height = -13
@@ -279,8 +279,7 @@ object SearchF: TSearchF
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1083#1080#1095#1080#1077
           Title.Font.Height = -13
-          Width = 76
-          Alignment = taRightJustify
+          Width = 100
           ReadOnly = True
           Sortable = True
           Menu.MenuEnabled = False
@@ -584,7 +583,7 @@ object SearchF: TSearchF
       'order by N  '
       ''
       '')
-    Left = 575
+    Left = 576
     Top = 255
     ParamData = <
       item
@@ -648,13 +647,6 @@ object SearchF: TSearchF
       Origin = 'PriceRub'
       ReadOnly = True
     end
-    object QueryAvailable: TWideStringField
-      FieldName = 'Available'
-      Origin = 'Available'
-      ReadOnly = True
-      OnGetText = QueryAvailableGetText
-      Size = 128
-    end
     object QueryWeight: TCurrencyField
       FieldName = 'Weight'
       DisplayFormat = '###,##0.000'
@@ -663,6 +655,12 @@ object SearchF: TSearchF
       FieldName = 'VolumeAdd'
       DisplayFormat = '###,##0.00'
       MaxValue = 1000.000000000000000000
+    end
+    object QueryOurDelivery: TIntegerField
+      FieldName = 'OurDelivery'
+      Origin = 'OurDelivery'
+      ReadOnly = True
+      OnGetText = QueryOurDeliveryGetText
     end
     object QueryOurDeliverySTR: TWideStringField
       FieldName = 'OurDeliverySTR'
@@ -676,6 +674,10 @@ object SearchF: TSearchF
     object QueryPacking: TIntegerField
       FieldName = 'Packing'
       ReadOnly = True
+    end
+    object QueryAvailable: TIntegerField
+      FieldName = 'Available'
+      OnGetText = QueryAvailableGetText
     end
   end
   object qSearchHistory: TFDQuery

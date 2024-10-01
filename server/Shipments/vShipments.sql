@@ -25,10 +25,10 @@ SELECT s.ShipmentsID
       ,s.VolumeKGF                   -- указать сумму вес объемный факт
       ,s.WeightKGDiff                -- 
       ,s.VolumeKGDiff                --
-      ,s.WeightKGAmount              --выводить ставки за физ кг и объем кг исходя из типа доставки
+      ,s.WeightKGAmount              -- выводить ставки за физ кг и объем кг исходя из типа доставки
       ,s.VolumeKGAmount
-      ,s.Amount                      -- выводить расчетную стоимость доставки исходя из них 
-                                     -- выводить расчетную стоимость доставки исходя из них
+      ,s.Amount                      -- Расчетная стоимость доставки по весам из прайса
+      ,s.AmountF                     -- Фактическая стоимость доставки (по весам факт)
       ,s.SupplierWeightKG            -- добавить редактируемое поле "вес физ инвойса по данным поставщика"
       ,s.SupplierVolumeKG            -- добавить редактируемое поле "вес объем инвойса по данным поставщика"
       ,s.SupplierDiffVolumeWeigh     -- указать разницу сумм вес объемный и вес физ факт по данным поставщика
@@ -48,6 +48,7 @@ SELECT s.ShipmentsID
 
       ,sp.Brief     SupplierBrief
       ,s.SuppliersID
+      ,s.DeliverySumF
   FROM tShipments s (nolock)
   left join tSuppliers sp (nolock)
          on sp.SuppliersID=s.SuppliersID
@@ -90,7 +91,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240911', '3'
+exec setOV 'vShipments', 'V', '20240927', '4'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

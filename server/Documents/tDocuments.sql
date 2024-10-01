@@ -1,7 +1,7 @@
 if OBJECT_ID('tDocuments') is null
 /*
   ALTER TABLE tDocuments SET ( SYSTEM_VERSIONING = OFF )
-  --drop table tDocuments
+  drop table tDocuments
   DROP TABLE History.tDocuments
 */
 /* **********************************************************

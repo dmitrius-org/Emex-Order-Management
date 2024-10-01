@@ -22,6 +22,7 @@ type
     FDConnection: TFDConnection;
     Query: TFDQuery;
     FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink;
+    FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);

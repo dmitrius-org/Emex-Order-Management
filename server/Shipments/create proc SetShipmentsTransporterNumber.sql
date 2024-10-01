@@ -11,6 +11,17 @@ as
   declare @r       int = 0
 		 ,@AuditID  numeric(18,0)
 
+
+  if ISNUMERIC(@TransporterNumber) = 1
+  begin
+    select @TransporterNumber = s.SupplierBrief + ltrim(rtrim(@TransporterNumber)) + sd.Brief
+      from vShipments s (nolock)
+     inner join tSupplierDeliveryProfiles as sd (nolock)
+             on sd.SuppliersID     = s.SuppliersID
+            and sd.DestinationLogo = s.DestinationLogo
+     where s.ShipmentsID = @ShipmentsID
+  end
+
   update t
      set t.TransporterNumber	   = nullif(@TransporterNumber, '')
 	from tShipments t (updlock)
@@ -22,14 +33,12 @@ as
         ,@ObjectTypeID = 10
         ,@ActionID     = 2
         ,@Comment      = 'Изменение tShipments.TransporterNumber '
-      --  ,@UserID       = ''
-      --  ,@HostInfoID   = ''
 
  exit_:
  return @r
 go
 grant exec on SetShipmentsTransporterNumber to public
 go
-exec setOV 'SetShipmentsTransporterNumber', 'P', '20240101', '0'
+exec setOV 'SetShipmentsTransporterNumber', 'P', '20240101', '1'
 go
  

@@ -95,7 +95,16 @@ object ShipmentsT: TShipmentsT
       ShowHint = True
       BodyRTL = False
       ClientEvents.ExtEvents.Strings = (
-        'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10#13#10'}')
+        'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10#13#10'}'
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
+          't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
+          '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -295,8 +304,21 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'Amount'
           Title.Alignment = taCenter
-          Title.Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Title.Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1074#1077#1089#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+          Width = 283
+        end
+        item
+          FieldName = 'AmountF'
+          Title.Alignment = taCenter
+          Title.Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1087#1086' '#1074#1077#1089#1072#1084' '#1092#1072#1082#1090')'
+          Width = 277
+        end
+        item
+          FieldName = 'DeliverySumF'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1092#1072#1082#1090
           Width = 150
+          ReadOnly = True
           Hint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1093' '#1076#1072#1085#1085#1099#1093
           Sortable = True
         end
@@ -305,6 +327,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1092#1080#1079'. '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
           Width = 150
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -312,6 +335,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
           Width = 150
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -707,9 +731,11 @@ object ShipmentsT: TShipmentsT
         '      ,s.VolumeKGDiff                -- '#1091#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1085#1080#1094#1091' '#1089#1091#1084#1084' '#1074#1077#1089 +
         ' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090' '#1084#1080#1085#1091#1089' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '
       
-        '      ,s.Amount                      -- '#1074#1099#1074#1086#1076#1080#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1091#1102' '#1089#1090#1086#1080#1084 +
-        #1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1085#1080#1093' '
-      '      --'#1074#1099#1074#1086#1076#1080#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1091#1102' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1085#1080#1093
+        '      ,s.Amount                      -- '#1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090 +
+        #1072#1074#1082#1080' '#1087#1086' '#1074#1077#1089#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+      
+        '      ,s.AmountF                     -- '#1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086 +
+        #1089#1090#1072#1074#1082#1080' ('#1087#1086' '#1074#1077#1089#1072#1084' '#1092#1072#1082#1090')'
       
         '      ,s.SupplierWeightKG            -- "'#1074#1077#1089' '#1092#1080#1079' '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085 +
         #1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"'
@@ -739,6 +765,7 @@ object ShipmentsT: TShipmentsT
       '      ,s.updDatetime'
       '      ,s.SupplierBrief               -- '#1087#1086#1089#1090#1072#1074#1097#1080#1082
       '      ,s.StatusName'
+      '      ,s.DeliverySumF'
       ''
       '   FROM vShipments s '
       '  Where 1=1'
@@ -852,6 +879,10 @@ object ShipmentsT: TShipmentsT
       Origin = 'Amount'
       DisplayFormat = '###,##0.00 $'
     end
+    object QueryAmountF: TCurrencyField
+      FieldName = 'AmountF'
+      DisplayFormat = '###,##0.00 $'
+    end
     object QuerySupplierWeightKG: TCurrencyField
       FieldName = 'SupplierWeightKG'
       Origin = 'SupplierWeightKG'
@@ -913,6 +944,10 @@ object ShipmentsT: TShipmentsT
     object QueryStatusName: TWideStringField
       FieldName = 'StatusName'
       Size = 64
+    end
+    object QueryDeliverySumF: TCurrencyField
+      FieldName = 'DeliverySumF'
+      DisplayFormat = '###,##0.00 $'
     end
   end
   object DataSource: TDataSource
@@ -992,22 +1027,32 @@ object ShipmentsT: TShipmentsT
       ImageIndex = 4
       OnExecute = actProtocolExecute
     end
+    object actDataEdit: TAction
+      Caption = #1059#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+      OnExecute = actDataEditExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
     ScreenMask.Enabled = True
     Left = 101
     Top = 217
+    object N16: TUniMenuItem
+      Action = actDataEdit
+    end
     object N3: TUniMenuItem
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
+      object N5: TUniMenuItem
+        Action = actSetReceivedStatus
+      end
+      object N15: TUniMenuItem
+        Caption = '-'
+      end
       object N4: TUniMenuItem
         Action = actSetTransporterNumber
       end
       object N10: TUniMenuItem
         Action = actSetReceiptDate
-      end
-      object N5: TUniMenuItem
-        Action = actSetReceivedStatus
       end
       object N12: TUniMenuItem
         Action = actSetTransporterData
@@ -1015,9 +1060,6 @@ object ShipmentsT: TShipmentsT
     end
     object N2: TUniMenuItem
       Action = actExportData
-    end
-    object N6: TUniMenuItem
-      Action = actRefreshAll
     end
     object N14: TUniMenuItem
       Caption = '-'
@@ -1027,6 +1069,9 @@ object ShipmentsT: TShipmentsT
     end
     object N1: TUniMenuItem
       Caption = '-'
+    end
+    object N6: TUniMenuItem
+      Action = actRefreshAll
     end
     object N7: TUniMenuItem
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080
@@ -1044,28 +1089,25 @@ object ShipmentsT: TShipmentsT
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
-    ModifySQL.Strings = (
-      'exec ShipmentsUpdate  '
-      '       @SupplierWeightKG    = :NEW_SupplierWeightKG'
-      '      ,@SupplierVolumeKG    = :NEW_SupplierVolumeKG'
-      '     -- ,@TransporterWeightKG = :NEW_TransporterWeightKG'
-      '     -- ,@TransporterVolumeKG = :NEW_TransporterVolumeKG'
-      '      ,@ShipmentsID                = :ShipmentsID')
     FetchRowSQL.Strings = (
       'SELECT '
       '       SupplierWeightKG, '
       '       SupplierVolumeKG,  '
-      '       SupplierDiffVolumeWeigh,     '
+      '       SupplierDiffVolumeWeigh, '
+      '       SupplierAmount,'
       '       '
       '       TransporterWeightKG, '
       '       TransporterVolumeKG, '
       '       TransporterDiffVolumeWeigh, '
       '       TransporterAmount,'
       '       TransporterNumber,'
-      '       '
-      'updDatetime'
       ''
+      '       ReceiptDate,'
+      '       ReceiptDate2,'
+      '      '
+      '       DeliverySumF,'
       '       '
+      '       updDatetime'
       ''
       '  from vShipments '
       ' where ShipmentsID = :ShipmentsID'

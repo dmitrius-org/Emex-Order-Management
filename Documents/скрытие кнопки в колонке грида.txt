@@ -1,0 +1,26 @@
+function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
+{
+    // скрытие кнопки Обновить цену
+    var widgetColIndx=9;
+    columns[widgetColIndx].onWidgetAttach = function(column, widget, record) {
+        widget.setHidden(record.get(widgetColIndx) == 0);
+    };
+}
+
+
+function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
+{
+    console.log(sender); 
+    //console.log(store);
+    console.log(columns); 
+    
+    //console.log(eOpts); 
+    
+    dataColIndx = 4;   // инвойс
+    actionColIndx = 7;
+    actionItemsIndx = 0;
+    
+    columns[actionColIndx].items[actionItemsIndx].isActionDisabled = function (grid, rowIndex, colIndex, items, record) {  
+        return (record.data[dataColIndx] == "");
+    };
+}

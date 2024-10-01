@@ -63,7 +63,7 @@ as
 
   Update s 
      set s.ShipmentsDate = o.OperDate
-        ,s.ReceiptDate   = cast((dateadd(dd, isnull(s.SupplierDelivery, 0), o.OperDate)) as date)
+        ,s.ReceiptDate   = cast((dateadd(dd, isnull(s.SupplierDelivery, 0), o.OperDate)) as date) -- дата отгрузки + срок доставки с профиля доставки
                              
     from pShipments s with (Updlock index=ao1)
    cross apply (select Max(p.OperDate)  OperDate
@@ -76,19 +76,7 @@ as
                  where o.Invoice = s.Invoice
                 ) o
    where s.Spid = @@SPID
-     and isnull(s.ShipmentsDate, '') = ''
-
-
-  --   select * from tSupplierDeliveryProfiles
-
-  --Update s 
-  --   set s.ReceiptDate = o.OperDate
-  --  from pShipments s with (Updlock index=ao1)
-
-  -- where s.Spid = @@SPID
-  --   and isnull(s.ShipmentsDate, '') = ''
-
-     
+     and isnull(s.ShipmentsDate, '') = ''  
 
 
   insert tShipments (       
@@ -156,8 +144,8 @@ select
 
 
   Update p
-     set p.Amount  = p.WeightKGF * p.WeightKGAmount + (iif(p.VolumeKGF > p.WeightKGF, (p.VolumeKGF-p.WeightKGF) * p.VolumeKGAmount, 0))  
-     
+     set p.Amount   = p.WeightKG  * p.WeightKGAmount + (iif(p.VolumeKG - p.WeightKG > 0, p.VolumeKG-p.WeightKG, 0) * p.VolumeKGAmount)  
+        ,p.AmountF  = p.WeightKGF * p.WeightKGAmount + (iif(p.VolumeKGF - p.WeightKGF > 0, VolumeKGF - p.WeightKGF, 0) * p.VolumeKGAmount)  
     from pShipments p with (Updlock index=ao1)
    --inner join tShipments t (updlock)
    --        on t.Invoice = p.Invoice
@@ -165,7 +153,7 @@ select
 
   Update t
      set           
-         t.ReceiptDate       = p.ReceiptDate       --Ожидаемая дата поступления                                  
+         t.ReceiptDate       = isnull(p.ReceiptDate, t.ReceiptDate) -- Ожидаемая дата поступления                                  
         ,t.ShipmentsAmount   = p.ShipmentsAmount   
         ,t.ShipmentsAmountR  = p.ShipmentsAmountR  
         ,t.DetailCount       = p.DetailCount           
@@ -178,6 +166,7 @@ select
         ,t.WeightKGAmount    = p.WeightKGAmount          
         ,t.VolumeKGAmount	 = p.VolumeKGAmount  
         ,t.Amount            = p.Amount
+        ,t.AmountF           = p.AmountF
         ,t.DestinationName   = p.DestinationName
     from pShipments p with (nolock index=ao1)
    inner join tShipments t with (Updlock index=ao2)
@@ -195,5 +184,5 @@ return @r
 GO
 grant exec on ShipmentsRefresh to public
 go
-exec setOV 'ShipmentsRefresh', 'P', '20240911', '1'
+exec setOV 'ShipmentsRefresh', 'P', '20240927', '3'
 go

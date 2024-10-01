@@ -141,6 +141,11 @@ type
     N14: TUniMenuItem;
     fSupplier: TUniCheckComboBox;
     UniLabel3: TUniLabel;
+    N15: TUniMenuItem;
+    actDataEdit: TAction;
+    N16: TUniMenuItem;
+    QueryDeliverySumF: TCurrencyField;
+    QueryAmountF: TCurrencyField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -172,6 +177,7 @@ type
       NewIndex: Integer);
     procedure fSupplierSelect(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
+    procedure actDataEditExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -223,7 +229,7 @@ uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
   Main, ServerModule, uToast, uUtils.Grid, uExportForm,
   uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
-  uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T;
+  uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T, uShipmentsEditF;
 
 {$R *.dfm}
 
@@ -235,6 +241,13 @@ begin
   end;
 
   Result := FAccrual;
+end;
+
+procedure TShipmentsT.actDataEditExecute(Sender: TObject);
+begin
+  ShipmentsEditF.ID:= Integer(QueryShipmentsID.Value);
+  ShipmentsEditF.FormAction := acUpdate;
+  ShipmentsEditF.ShowModal(ShipmentsTransporterNumberFCallBack);
 end;
 
 procedure TShipmentsT.actDeleteExecute(Sender: TObject);
@@ -485,8 +498,15 @@ end;
 procedure TShipmentsT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
+  logger.Info(EventName);
+
+
   if Params.Count > 0 then
+  begin
+    if (EventName = 'columnhide')     then
+    logger.Info(Params['column'].Value);
     GridExt.GridLayoutSave(self, Grid, Params, EventName);
+  end;
 end;
 
 procedure TShipmentsT.GridCellClick(Column: TUniDBGridColumn);
@@ -652,6 +672,15 @@ begin
       Grid.JSInterface.JSCall('copyToClipboard', []);
     end;
   end;
+
+  if (KEY = 117) then   // F6
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      actProtocolExecute(Sender);
+    end;
+  end;
+
 end;
 
 

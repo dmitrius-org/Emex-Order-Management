@@ -21,6 +21,7 @@ set nocount on;
                        else 0
                      end  
        ,OperDate  = isnull(p.OperDate, ss.Date)
+       ,ord       = n.SID
    from pAccrualAction p (updlock)
   inner join tShipments s (nolock)
           on s.ShipmentsID = p.ObjectID
@@ -28,7 +29,7 @@ set nocount on;
   cross apply (select top 1 *
                  from tShipmentsStatus ss (nolock)
                 where ss.Number = s.TransporterNumber
-                order by ss.Date 
+                order by ss.ID desc
               ) as ss
 
   inner join tNodes n (nolock)
@@ -39,6 +40,10 @@ set nocount on;
 
   where p.Spid = @@Spid
     and isnull(p.Retval, 0) = 0
+    and not exists (select 1
+                      from tShipmentsProtocol sp (nolock)
+                     where sp.ShipmentsID = p.ObjectID
+                       and sp.NewStateID  = n.NodeID)
 
  exec ShipmentsProtocolAdd
 
@@ -47,6 +52,6 @@ set nocount on;
 go
 grant exec on ShipmentsStatusSync to public
 go
-exec setOV 'ShipmentsStatusSync', 'P', '20240916', '0'
+exec setOV 'ShipmentsStatusSync', 'P', '20240916', '1'
 go
  

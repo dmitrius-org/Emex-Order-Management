@@ -28,7 +28,6 @@ type
     QueryDeliveryType: TIntegerField;
     QueryPercentSupped: TIntegerField;
     QueryPrice: TCurrencyField;
-    QueryAvailable: TWideStringField;
     UniHiddenPanel1: TUniHiddenPanel;
     btnAddBasket: TUniButtonWidget;
     QueryID: TFMTBCDField;
@@ -59,6 +58,8 @@ type
     edtVolumeAdd: TUniNumberEdit;
     edtVKG: TUniNumberEdit;
     VolumeSave: TUniButton;
+    QueryOurDelivery: TIntegerField;
+    QueryAvailable: TIntegerField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -79,10 +80,13 @@ type
     procedure edtSearchClick(Sender: TObject);
     procedure lblAnalogClick(Sender: TObject);
     procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
-    procedure QueryAvailableGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryPercentSuppedGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure edtLChange(Sender: TObject);
     procedure VolumeSaveClick(Sender: TObject);
+    procedure QueryOurDeliveryGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryAvailableGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
 
 
   private
@@ -393,7 +397,7 @@ begin
     Text := '<span class="">под заказ</span>';
   end
   else
-    Text := '<span>' + Sender.AsString + ' </span>';
+    Text := '<span>' + Sender.AsString + '</span>';
 end;
 
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
@@ -443,6 +447,12 @@ begin
   end
   else
     Text := '<span>' + Sender.AsString + ' </span>';
+end;
+
+procedure TSearchF.QueryOurDeliveryGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  Text := '<span>' + Query.FieldByName('OurDeliverySTR').AsString + ' </span>';
 end;
 
 procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string;
@@ -539,7 +549,7 @@ begin
   SearchGrid.Columns.ColumnFromFieldName('Weight').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вес', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoWeight'), []);
   SearchGrid.Columns.ColumnFromFieldName('VolumeAdd').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Объем', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoVolume'), []);
   SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
-  SearchGrid.Columns.ColumnFromFieldName('OurDeliverySTR').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
+  SearchGrid.Columns.ColumnFromFieldName('OurDelivery').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
   SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
 end;
 

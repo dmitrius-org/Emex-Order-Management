@@ -16,14 +16,14 @@ as
   update t
      set t.TransporterWeightKG = @Weight
         ,t.TransporterVolumeKG = @Volume
-        ,t.TransporterDiffVolumeWeigh = @Weight- @Volume
+        ,t.TransporterDiffVolumeWeigh = @Volume-@Weight
 	from tShipments t (updlock)
    where t.ShipmentsID  = @ShipmentsID
 
   if @@ROWCOUNT > 0
   begin
     Update t
-       set t.TransporterAmount  = t.TransporterVolumeKG * t.WeightKGAmount + (iif(t.TransporterVolumeKG > t.TransporterWeightKG, (t.TransporterVolumeKG-t.TransporterWeightKG) * t.VolumeKGAmount, 0))  
+       set t.TransporterAmount  = t.TransporterWeightKG * t.WeightKGAmount + (iif(t.TransporterVolumeKG - t.TransporterWeightKG > 0, t.TransporterVolumeKG-t.TransporterWeightKG, 0) * t.VolumeKGAmount)  
       from tShipments t (updlock)
      where t.ShipmentsID = @ShipmentsID
 
@@ -42,6 +42,6 @@ as
 go
 grant exec on SetShipmentsTransporterData to public
 go
-exec setOV 'SetShipmentsTransporterData', 'P', '20240101', '0'
+exec setOV 'SetShipmentsTransporterData', 'P', '20240101', '2'
 go
  

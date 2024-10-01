@@ -74,6 +74,7 @@ object BalanceTotalT: TBalanceTotalT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EnableColumnHide = False
       LayoutConfig.Cls = 'grid-balance-totall'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
@@ -210,25 +211,34 @@ object BalanceTotalT: TBalanceTotalT
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
           'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=false;'#13#10' ' +
-          '   }'#13#10'}')
+          '   }'#13#10'}'
+        
+          'reconfigure=function reconfigure(sender, store, columns, oldStor' +
+          'e, oldColumns, eOpts)'#13#10'{'#13#10'    //dataColIndx = sender.headerCt.fi' +
+          'ndColumnIndex('#39'Invoice'#39');'#13#10'    dataColIndx = 4;   '#13#10'    actionCo' +
+          'lIndx = 7;'#13#10'    actionItemsIndx = 0;'#13#10'             '#13#10'    columns' +
+          '[actionColIndx].items[actionItemsIndx].getClass = function (v, m' +
+          'etadata, record) {'#13#10'        if (record.data[dataColIndx] == "") ' +
+          '{'#13#10'            return '#39'x-hidden'#39#13#10'        } else {'#13#10'            ' +
+          'return '#39#39';    //x-uni-action-cls'#13#10'        }'#13#10'    };  '#13#10'}')
       ClientEvents.UniEvents.Strings = (
-        
-          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
-          'copyToClipboard = str => {'#13#10'        const el = document.createEl' +
-          'ement('#39'textarea'#39');'#13#10'        el.value = document.activeElement.in' +
-          'nerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.sel' +
-          'ect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        document.' +
-          'body.removeChild(el);'#13#10'    };'#13#10'}'
-        
-          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'//  config.displayInfo=true;'#13#10'}'
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  //var toolbar=sen' +
           'der.getDockedItems()[1]; //Remove the ToolBar fixed in the botto' +
           'm'#13#10'  //toolbar.items.getAt(9).hide(); //Remove the Refresh butto' +
           'n in the ToolBar, number 10, hide him'#13#10'  //toolbar.items.getAt(1' +
           '0).hide(); //Remove the Refresh button in the ToolBar, number 10' +
-          ', hide him'#13#10'}')
+          ', hide him'#13#10'}'
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+          'ent('#39'textarea'#39');'#13#10'        el.value = document.activeElement.inne' +
+          'rText;'#13#10'        document.body.appendChild(el);'#13#10'        el.selec' +
+          't();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        document.bo' +
+          'dy.removeChild(el);'#13#10'    };'#13#10'}'
+        
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'//  config.displayInfo=true;'#13#10'}')
       TitleFont.Height = -13
       DataSource = dsShipments
       Options = [dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
@@ -241,6 +251,7 @@ object BalanceTotalT: TBalanceTotalT
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-balance-totall-detail'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
@@ -254,6 +265,7 @@ object BalanceTotalT: TBalanceTotalT
       DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
+      OnColumnActionClick = ShipmentsGridColumnActionClick
       Columns = <
         item
           FieldName = 'OperDate'
@@ -314,7 +326,6 @@ object BalanceTotalT: TBalanceTotalT
             item
               Action = actShippmentReportPrint
               ButtonId = 0
-              UI = 'action'
               Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1075#1088#1091#1079#1091
               ImageIndex = 1
             end>
@@ -365,7 +376,6 @@ object BalanceTotalT: TBalanceTotalT
       TabOrder = 3
       Caption = ''
       Color = clSilver
-      ExplicitTop = 361
     end
   end
   object DataSource: TDataSource

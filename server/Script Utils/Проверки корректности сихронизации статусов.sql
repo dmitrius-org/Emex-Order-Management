@@ -35,10 +35,17 @@ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurcha
 
 
 -- не проставлен признак отказан и статус нет в наличи
-select *
-  from tOrders
- where StatusID = 9	--NotAvailable
-   and isCancel = 0
+select 'не проставлен признак отказан и статус нет в наличи', StatusID, p.NewStateID, *
+  from tOrders o
+ cross apply (select  * 
+                from tProtocol p
+               where p.ObjectID = o.OrderID
+            --   order by p.ProtocolID desc
+               ) as p
+ where o.StatusID = 9	--NotAvailable
+   and o.isCancel = 0
+
+order by o.OrderID
 
 /* -- исправление
 update tOrders
@@ -61,6 +68,8 @@ select *
                    ,8	--Send
                     )
    and isCancel = 1
+
+  -- select * from tNodes
 
 /* -- исправление
 update tOrders
@@ -152,7 +161,7 @@ delete p
 
 
 --
-select 'Разное количество', m.Quantity QuantityM , o.Quantity QuantityQ, o.EmexQuantity, c.Brief, *
+select 'Разное количество', m.Quantity QuantityM , o.Quantity QuantityQ, o.EmexQuantity, c.Brief, o.OrderDetailSubId, *
   from tMovement m (nolock)
   inner join tOrders o (nolock)
           on o.OrderID = m.OrderID

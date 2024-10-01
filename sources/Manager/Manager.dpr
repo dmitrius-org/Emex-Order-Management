@@ -101,12 +101,13 @@ uses
   uPromptReliabilityEdit in 'App\Clients\uPromptReliabilityEdit.pas' {PromptReliabilityEdit: TUniForm},
   uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm},
   uExportForm in 'App\Shipments\uExportForm.pas' {ExportForm: TUniForm},
-  uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
+  uShipmentsEditF in 'App\Shipments\uShipmentsEditF.pas' {ShipmentsEditF: TUniForm},
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
-  uBalanceTotalT in 'App\Clients\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
+  uBalanceTotalT in 'App\Clients\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
+  uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm};
 
 {$R *.res}
 

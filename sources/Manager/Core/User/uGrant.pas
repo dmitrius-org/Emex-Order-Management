@@ -152,12 +152,16 @@ end;
 
 procedure TGrantF.UniFormShow(Sender: TObject);
 begin
+  UniPageControl1.ActivePage := tsInterface;
+
   Query.Close;
   Query.ParamByName('ObjectID').Value := FID;
   Query.ParamByName('ObjectType').Value := FObjectType;
   Query.Open();
 
   ComboBoxFill(cbObjectType,   ' select Brief as name From tObjectType (nolock) where flag&4=4 order by ObjectTypeID ');
+
+
 end;
 
 end.

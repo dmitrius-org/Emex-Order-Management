@@ -120,7 +120,8 @@ procedure TClientsT.actBalanceAddExecute(Sender: TObject);
 begin
   BalanceAddF.FormAction := TFormAction.acInsert;
   BalanceAddF.ClientID:=QueryClientID.AsInteger;
- // BalanceAddF.ShowModal(UserFCallBack);
+
+  BalanceAddF.ShowModal();
 end;
 
 procedure TClientsT.actBalanceExecute(Sender: TObject);

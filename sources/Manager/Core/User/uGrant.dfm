@@ -48,7 +48,7 @@ object GrantF: TGrantF
     Width = 818
     Height = 564
     Hint = ''
-    ActivePage = tsObjects
+    ActivePage = tsInterface
     Align = alClient
     TabOrder = 1
     object tsInterface: TUniTabSheet
@@ -129,8 +129,6 @@ object GrantF: TGrantF
         TabOrder = 0
         ShowCaption = False
         Caption = 'UniPanel1'
-        ExplicitLeft = 3
-        ExplicitTop = 95
         object cbObjectType: TUniComboBox
           Left = 121
           Top = 14
