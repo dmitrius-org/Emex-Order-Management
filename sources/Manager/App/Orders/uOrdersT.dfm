@@ -1607,6 +1607,7 @@ object OrdersT: TOrdersT
     end
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
+      OnGetText = QueryReceiptDateGetText
     end
     object QueryReceiptDate2: TSQLTimeStampField
       FieldName = 'ReceiptDate2'

@@ -15,14 +15,14 @@
 .grid-order .x-replacement-detail-number-arrow{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
 }
 
 /* Номер детали замены*/
 .grid-order .x-replacement-detail-number{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
 }
 
 /* Стрелка бренд замены*/
@@ -94,6 +94,20 @@
     /* margin: 1% auto; */
     /* font-size: 16px; */
     color: #FF033E
+}
+
+/* Ожидаемая дата поставки */
+.grid-order .x-receipt-date-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Ожидаемая дата поставки */
+.grid-order .x-receipt-date{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
 }
 
 /* Иконка: сообщение по заказу*/

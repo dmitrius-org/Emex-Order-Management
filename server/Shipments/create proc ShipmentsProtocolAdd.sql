@@ -13,12 +13,13 @@ as
   declare @r          int = 0
 
   declare @ID as table (ID          numeric(18, 0), 
-                        ShipmentsID numeric(18, 0))
+                        ShipmentsID numeric(18, 0),
+                        OperDate    datetime)
 
   Update p 
      set p.Retval = 1
         ,p.Message = 'Не все обязательные параметры заполнены'
-	from pAccrualAction p (updlock)
+	from pShipmentsProtocol p (updlock)
    where p.Spid     = @@spid
      and isnull(p.retval, 0) = 0
      and ( p.NewStateID is null
@@ -34,8 +35,8 @@ as
         ,Flag
         ,UserID      
         )
-  OUTPUT INSERTED.ShipmentsProtocolID, INSERTED.ShipmentsID INTO @ID
-  Select p.ObjectID
+  OUTPUT INSERTED.ShipmentsProtocolID, INSERTED.ShipmentsID, inserted.OperDate INTO @ID
+  Select p.ShipmentsID
         ,p.StateID
 		,p.NewStateID
 		,p.ActionID		
@@ -43,28 +44,54 @@ as
 		,isnull(p.Message, '')
         ,p.Flag
 		,dbo.GetUserID()
-    from pAccrualAction p (nolock)
+    from pShipmentsProtocol p (nolock)
    where p.Spid              = @@spid
      and isnull(p.retval, 0) = 0     
    order by p.ord
 
-  -- изменение состояния заказа
+  -- изменение состояния отгрузки
   Update s 
      set s.StatusID = p.NewStateID
         ,s.updDatetime = GetDate()
 	from @ID id
-   inner join pAccrualAction p (nolock)
+   inner join pShipmentsProtocol p (nolock)
 	       on p.Spid     = @@spid
-	      and p.ObjectID = id.ShipmentsID
-		  and isnull(p.retval, 0) = 0
+	      and p.ShipmentsID = id.ShipmentsID
   inner join tShipments s (updlock)
-          on s.ShipmentsID = p.ObjectID
+          on s.ShipmentsID = p.ShipmentsID
+
+
+  -- !!! ---------------------------------------------------------------------
+  -- обновление статусов связанных заказов  
+  delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
+  insert pAccrualAction 
+        (Spid, ObjectID, NewStateID, ActionID, OperDate, Message, sgn)
+  select @@Spid, 
+         o.OrderID, 
+         s.StatusID,--NewStateID
+         n2.NodeID, --ActionID
+         id.OperDate,
+         'Автоматическия синхронизация стаусов из Отгрузки',
+         10
+    from @ID id
+   inner join tShipments s (updlock)
+          on s.ShipmentsID = id.ShipmentsID
+   inner join tOrders o with (nolock index=ao3)
+           on o.Invoice = s.Invoice
+          and o.StatusID <> 26 -- IssuedClient
+          and o.StatusID <> s.StatusID
+
+   inner join tNodes n2 (nolock)  
+           on n2.Brief = 'AutomaticSynchronization'
+   
+   exec ProtocolAdd
+  -- !!! ---------------------------------------------------------------------
 
  exit_:
  return @r
 go
 grant exec on ShipmentsProtocolAdd to public;
 go
-exec setOV 'ShipmentsProtocolAdd', 'P', '20240916', '1';
+exec setOV 'ShipmentsProtocolAdd', 'P', '20241002', '1';
 go
  

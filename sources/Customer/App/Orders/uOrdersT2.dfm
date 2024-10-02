@@ -155,8 +155,10 @@ object OrdersT2: TOrdersT2
       OnSelectionChange = GridSelectionChange
       OnCellClick = GridCellClick
       OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
+      OnColumnResize = GridColumnResize
       Columns = <
         item
           ShowToolTipAlways = False
@@ -164,6 +166,7 @@ object OrdersT2: TOrdersT2
           Title.Caption = ' '
           Width = 64
           Alignment = taLeftJustify
+          ReadOnly = True
         end
         item
           ShowToolTip = True
@@ -190,7 +193,7 @@ object OrdersT2: TOrdersT2
           FieldName = 'OrderDate'
           Title.Alignment = taCenter
           Title.Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
-          Width = 97
+          Width = 100
           ReadOnly = True
           Hint = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
           Sortable = True
@@ -201,7 +204,7 @@ object OrdersT2: TOrdersT2
           Title.Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           Width = 120
           ReadOnly = True
-          Hint = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072' (OrderNum)'
+          Hint = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           Sortable = True
         end
         item
@@ -210,6 +213,7 @@ object OrdersT2: TOrdersT2
           Title.Caption = 'Reference'
           Width = 120
           Visible = False
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -227,6 +231,7 @@ object OrdersT2: TOrdersT2
           Title.Caption = #1041#1088#1077#1085#1076
           Width = 65
           Visible = False
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -239,13 +244,12 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          ShowToolTip = True
           FieldName = 'DetailNumber'
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           Width = 135
           ReadOnly = True
-          Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080' (DetailNumber)'
+          Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           Sortable = True
         end
         item
@@ -253,6 +257,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080
           Width = 258
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -334,6 +339,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
           Width = 150
+          ReadOnly = True
         end
         item
           FieldName = 'DeliveryPlanDateSupplier'
@@ -349,6 +355,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
+          ReadOnly = True
         end
         item
           FieldName = 'DeliveryRestTermSupplier'
@@ -414,10 +421,20 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
+          FieldName = 'ReceiptDate'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
+          Width = 100
+          ReadOnly = True
+          Hint = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
+          Sortable = True
+        end
+        item
           FieldName = 'Warning'
           Title.Alignment = taCenter
           Title.Caption = #1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077
           Width = 188
+          ReadOnly = True
           Sortable = True
         end
         item
@@ -425,6 +442,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
           Width = 300
+          ReadOnly = True
           Sortable = True
         end>
     end
@@ -455,7 +473,6 @@ object OrdersT2: TOrdersT2
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        ExplicitHeight = 88
         DesignSize = (
           1390
           74)
@@ -756,12 +773,7 @@ object OrdersT2: TOrdersT2
     LayoutConfig.Width = '100'
   end
   object Query: TFDQuery
-    AfterRefresh = QueryAfterRefresh
     OnUpdateRecord = QueryUpdateRecord
-    BeforeGetRecords = QueryBeforeGetRecords
-    AfterGetRecord = QueryAfterGetRecord
-    BeforeRowRequest = QueryBeforeRowRequest
-    AfterRowRequest = QueryAfterRowRequest
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
@@ -822,6 +834,8 @@ object OrdersT2: TOrdersT2
       '      ,o.[Reference]'
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
+      '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
+      '      ,o.[ReceiptDate2]      '
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
       ' '
@@ -882,6 +896,7 @@ object OrdersT2: TOrdersT2
       end>
     object QueryFlag: TIntegerField
       FieldName = 'Flag'
+      ReadOnly = True
       OnGetText = QueryFlagGetText
     end
     object QueryOrderID: TFMTBCDField
@@ -890,12 +905,14 @@ object OrdersT2: TOrdersT2
       KeyFields = 'OrderID'
       Origin = 'OrderID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      ReadOnly = True
       Precision = 18
       Size = 0
     end
     object QueryOrderDate: TSQLTimeStampField
       FieldName = 'OrderDate'
       Origin = 'OrderDate'
+      ReadOnly = True
       Required = True
     end
     object QueryPriceLogo: TWideStringField
@@ -906,59 +923,71 @@ object OrdersT2: TOrdersT2
     end
     object QueryStatusID: TFMTBCDField
       FieldName = 'StatusID'
+      ReadOnly = True
     end
     object QueryStatusName: TWideStringField
       FieldName = 'StatusName'
       Origin = 'StatusName'
+      ReadOnly = True
       Size = 512
     end
     object QueryisCancel: TBooleanField
       FieldName = 'isCancel'
       Origin = 'isCancel'
+      ReadOnly = True
     end
     object QueryMakeLogo: TWideStringField
       FieldName = 'MakeLogo'
+      ReadOnly = True
       OnGetText = QueryMakeLogoGetText
-      Size = 128
+      Size = 32
     end
     object QueryManufacturer: TWideStringField
       FieldName = 'Manufacturer'
       Origin = 'Manufacturer'
+      ReadOnly = True
       OnGetText = QueryManufacturerGetText
-      Size = 256
+      Size = 32
     end
     object QueryDetailNumber: TWideStringField
       FieldName = 'DetailNumber'
       Origin = 'DetailNumber'
+      ReadOnly = True
       OnGetText = QueryDetailNumberGetText
-      Size = 30
+      Size = 32
     end
     object QueryDetailName: TWideStringField
       FieldName = 'DetailName'
+      ReadOnly = True
       Size = 512
     end
     object QueryQuantity: TIntegerField
       FieldName = 'Quantity'
       Origin = 'Quantity'
+      ReadOnly = True
     end
     object QueryPrice: TCurrencyField
       FieldName = 'Price'
       Origin = 'Price'
+      ReadOnly = True
       DisplayFormat = '###,##0.00 '#8381
     end
     object QueryAmount: TCurrencyField
       FieldName = 'Amount'
       Origin = 'Amount'
+      ReadOnly = True
       DisplayFormat = '###,##0.00 '#8381
     end
     object QueryWeightKG: TCurrencyField
       FieldName = 'WeightKG'
       Origin = 'WeightKG'
+      ReadOnly = True
       DisplayFormat = '###,##0.00 '#1082#1075
     end
     object QueryVolumeKG: TCurrencyField
       FieldName = 'VolumeKG'
       Origin = 'VolumeKG'
+      ReadOnly = True
       DisplayFormat = '###,##0.00'
     end
     object QueryWeightKGF: TCurrencyField
@@ -976,78 +1005,112 @@ object OrdersT2: TOrdersT2
     object QueryDeliveryPlanDateSupplier: TSQLTimeStampField
       FieldName = 'DeliveryPlanDateSupplier'
       Origin = 'DeliveryPlanDateSupplier'
+      ReadOnly = True
     end
     object QueryDeliveryTermSupplier: TIntegerField
       FieldName = 'DeliveryTermSupplier'
+      ReadOnly = True
     end
     object QueryDeliveryRestTermSupplier: TIntegerField
       FieldName = 'DeliveryRestTermSupplier'
+      ReadOnly = True
     end
     object QueryDeliveredDateToSupplier: TSQLTimeStampField
       FieldName = 'DeliveredDateToSupplier'
       Origin = 'DeliveredDateToSupplier'
+      ReadOnly = True
     end
     object QueryDeliveryDaysReserve: TIntegerField
       FieldName = 'DeliveryDaysReserve'
       Origin = 'DeliveryDaysReserve'
+      ReadOnly = True
       OnGetText = QueryDeliveryDaysReserveGetText
     end
     object QueryDeliveryDaysReserve2: TIntegerField
       FieldName = 'DeliveryDaysReserve2'
+      ReadOnly = True
     end
     object QueryDeliveryNextDate: TSQLTimeStampField
       FieldName = 'DeliveryNextDate'
       Origin = 'DeliveryNextDate'
+      ReadOnly = True
       OnGetText = QueryDeliveryNextDateGetText
     end
     object QueryDeliveryNextDate2: TSQLTimeStampField
       FieldName = 'DeliveryNextDate2'
+      ReadOnly = True
     end
     object QueryDeliveryDateToCustomer: TSQLTimeStampField
       FieldName = 'DeliveryDateToCustomer'
       Origin = 'DeliveryDateToCustomer'
+      ReadOnly = True
     end
     object QueryDeliveryTermToCustomer: TIntegerField
       FieldName = 'DeliveryTermToCustomer'
       Origin = 'DeliveryTermToCustomer'
+      ReadOnly = True
     end
     object QueryDeliveryRestToCustomer: TIntegerField
       FieldName = 'DeliveryRestToCustomer'
+      ReadOnly = True
     end
     object QueryReplacementMakeLogo: TWideStringField
       FieldName = 'ReplacementMakeLogo'
+      ReadOnly = True
       Size = 32
     end
     object QueryReplacementDetailNumber: TWideStringField
       FieldName = 'ReplacementDetailNumber'
+      ReadOnly = True
       Size = 32
     end
     object QueryReplacementManufacturer: TWideStringField
       FieldName = 'ReplacementManufacturer'
+      ReadOnly = True
       Size = 32
     end
     object QueryReplacementPrice: TCurrencyField
       FieldName = 'ReplacementPrice'
+      ReadOnly = True
     end
     object QueryCustomerPriceLogo: TWideStringField
       FieldName = 'CustomerPriceLogo'
+      ReadOnly = True
       Size = 64
     end
     object QueryReference: TWideStringField
       FieldName = 'Reference'
+      ReadOnly = True
       Size = 64
     end
     object QueryWarning: TWideStringField
       FieldName = 'Warning'
+      ReadOnly = True
       Size = 128
     end
     object QueryComment: TWideStringField
       FieldName = 'Comment'
+      ReadOnly = True
       Size = 512
     end
     object QueryOrderNum: TWideStringField
       FieldName = 'OrderNum'
+      ReadOnly = True
       Size = 128
+    end
+    object QueryDestinationName: TWideStringField
+      FieldName = 'DestinationName'
+      ReadOnly = True
+      Size = 60
+    end
+    object QueryReceiptDate: TSQLTimeStampField
+      FieldName = 'ReceiptDate'
+      ReadOnly = True
+      OnGetText = QueryReceiptDateGetText
+    end
+    object QueryReceiptDate2: TSQLTimeStampField
+      FieldName = 'ReceiptDate2'
+      ReadOnly = True
     end
     object QueryinDatetime: TSQLTimeStampField
       FieldName = 'inDatetime'
@@ -1058,10 +1121,6 @@ object OrdersT2: TOrdersT2
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
       ReadOnly = True
-    end
-    object QueryDestinationName: TWideStringField
-      FieldName = 'DestinationName'
-      Size = 60
     end
   end
   object DataSource: TDataSource

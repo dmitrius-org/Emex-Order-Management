@@ -59,6 +59,6 @@ as
 go
 grant exec on SetShipmentsReceiptStatus to public
 go
-exec setOV 'SetShipmentsReceiptStatus', 'P', '20240101', '0'
+exec setOV 'SetShipmentsReceiptStatus', 'P', '20240101', '2'
 go
  

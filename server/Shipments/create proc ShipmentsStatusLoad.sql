@@ -27,17 +27,17 @@ select p.Date
                       and t.ID    = p.ID
                   )
 
- delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
- insert pAccrualAction 
-       (Spid,   ObjectID,  StateID, Message, ord)
- select @@Spid, s.ShipmentsID, s.StatusID, 'Синхранизация статусов с транспортной компанией', 0
+ delete pShipmentsProtocol from pShipmentsProtocol (rowlock) where spid = @@Spid
+ insert pShipmentsProtocol 
+       (Spid, ShipmentsID, StateID, Message, ord)
+ select @@Spid, s.ShipmentsID, s.StatusID, 'РЎРёРЅС…СЂР°РЅРёР·Р°С†РёСЏ СЃС‚Р°С‚СѓСЃРѕРІ СЃ С‚СЂР°РЅСЃРїРѕСЂС‚РЅРѕР№ РєРѕРјРїР°РЅРёРµР№', 0
    from tShipments s (updlock)
-  where isnull(s.StatusID, 0) <> 24 --	Received	Готовим к выдаче в РФ
+  where isnull(s.StatusID, 0) <> 24 --	Received	Р“РѕС‚РѕРІРёРј Рє РІС‹РґР°С‡Рµ РІ Р Р¤
 
  exec ShipmentsStatusSync
 
 go
 grant execute on ShipmentsStatusLoad to public
 go
-exec setOV 'ShipmentsStatusLoad', 'P', '20240916', '0'
+exec setOV 'ShipmentsStatusLoad', 'P', '20240916', '2'
 go

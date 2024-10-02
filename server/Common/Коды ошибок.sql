@@ -93,6 +93,7 @@ insert tRetCode (RetCode, Message) select 535, 'Нет позиций для з�
 insert tRetCode (RetCode, Message) select 536, 'В корзине emex имеются отказанные детали!'
 insert tRetCode (RetCode, Message) select 537, 'Ошибка удаления из корзины emex!'
 insert tRetCode (RetCode, Message) select 538, 'Ошибка выполнения действия, по позиции выгружен отказ!'
+insert tRetCode (RetCode, Message) select 539, 'Объект уже находится в текущем статусе!'
 --
 
 

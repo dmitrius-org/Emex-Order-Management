@@ -16,7 +16,7 @@ create table pAccrualAction
 ,Message	       nvarchar(1024) 
 ,Flag              int
 ,ord               int            default 1
-,sgn               int            -- признак для понимания где сделали insert - 9
+,sgn               int            -- признак для понимания где сделали insert - 10
 )
 go
 create index ao1 on pAccrualAction(Spid, ObjectID, ActionID)

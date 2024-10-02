@@ -14,6 +14,26 @@ as
 
   declare @ID as table (ID       numeric(18, 0), 
                         ObjectID numeric(18, 0))
+  
+  Update p 
+     set p.StateID = o.StatusID -- текущий статус
+	from pAccrualAction p (updlock)
+   inner join tOrders o (nolock)
+	       on o.OrderID = p.ObjectID
+  where p.Spid     = @@spid
+    and p.retval = 0
+    and isnull(p.StateID, 0) = 0
+
+
+  Update p 
+     set p.Retval = 539
+        ,p.Message= 'Объект уже находится в текущем статусе!'
+	from pAccrualAction p (updlock)
+   inner join tOrders o (nolock)
+	       on o.OrderID = p.ObjectID
+          and o.StatusID = p.NewStateID 
+  where p.Spid   = @@spid
+    and p.retval = 0
 
   insert into tProtocol with (rowlock)
         (ObjectID    
@@ -72,6 +92,7 @@ as
            on act.NodeID = p.ActionID
 
 
+
   --! расчет статистики по заказам
   declare @Orders as ID
   insert @Orders (ID) select ObjectID from @ID
@@ -83,6 +104,6 @@ as
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20240814', '2';
+exec setOV 'ProtocolAdd', 'P', '20241002', '3';
 go
  

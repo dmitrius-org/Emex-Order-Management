@@ -1,4 +1,4 @@
-/*  */
+
 /* twInstrument - дерево на форме инструменты */
 .twInstrument .x-tree-icon {
     width: 24px;
@@ -13,34 +13,6 @@
 .twInstrument .x-tree-node-text {
      line-height: 24px;
 }
-
-/* Кнопка отменить действие на форме заказа */
- /* .btn-order-action-undo{
-  background-color: #ebbdae;
-}
-
-.btn-order-action-undo:hover {
-  background-color: #E9967A;
-}
-
-.btn-order-action-undo.x-pressing {
-  background-color: #eebeaf;
-}  */
-
-
-/* Кнопка выполнить действие на форме заказа */
-/* .btn-order-action-execute {
-  background-color: hwb(139 71% 7%);
-}
-
-.btn-order-action-execute:hover {
-  background-color: #8bee98;
-}
-
-.btn-order-action-execute.x-pressing {
-  background-color: hwb(140 69% 9%);
-}  */
-
 
 fieldset, label { margin: 0; padding: 0; }
 body{ margin: 0px; }
@@ -114,42 +86,6 @@ h1 { font-size: 1.5em; margin: 0px; }
 /***** CSS Magic to Highlight Stars on Hover *****/
  .rating2 > input:checked ~ label { color: #FFD700;  } 
 
-
-/* .uni-popup {
-  position: absolute;
-  display: none;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.uni-popup a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.uni-popup a:hover {
-  background-color: #ddd;
-}
-
-.uni-popup.show {
-  display: block;
-} */
-
-/* .editor-container {
-  margin: 0 auto;
-  padding: 0 15px;
-  max-width: 1470px;
-}
-
-.editor-editor { 
-  margin-top: 50px;
-  width: 100%;
-
-} */
 
 /* Инструкции  */
 .lblArticle {

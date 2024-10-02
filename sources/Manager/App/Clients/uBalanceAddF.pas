@@ -92,7 +92,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger, uUtils.Controll;
 
 function BalanceAddF: TBalanceAddF;
 begin
@@ -144,40 +144,53 @@ begin
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
     end;
-//    acUpdate:
-//    begin
-//      sqltext :=' declare @R      int                      '+
-//                '                                          '+
-//                ' exec @r = EmployeeUpdate                 '+
-//                '             @EmployeeID   = :EmployeeID  '+
-//                '            ,@Brief        = :Brief       '+
-//                '            ,@Name         = :Name        '+
-//                '                                          '+
-//                ' select @r as retcode      ';
-//
-//      Sql.Open(sqltext,
-//               ['Brief','Name', 'EmployeeID'],
-//               [edtBrief.Text,
-//               '',
-//               FID
-//               ]);
-//
-//      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-//    end;
-//    acDelete:
-//    begin
-//      sqltext :=  ' declare @R      int                 '+
-//                  '                                     '+
-//                  ' exec @r = EmployeeDelete            '+
-//                  '         @EmployeeID = :EmployeeID   '+
-//                  '                                     '+
-//                  ' select @r as retcode                '+
-//                  ' ';
-//
-//      Sql.Open(sqltext, ['EmployeeID'], [FID]);
-//
-//      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-//    end;
+    acUpdate:
+    begin
+      sqltext :='''
+                 declare @R           int
+
+                 exec @r = DocumentEdit
+                             @ClientID   = :ClientID
+                            ,@Amount     = :Amount
+                            ,@Date       = :Date
+                            ,@Comment    = :Comment
+                            ,@Number     = :Number
+                            ,@PayType    = :PayType
+                            ,@DocumentID = :DocumentID
+
+                 select @r as retcode
+      ''';
+
+      Sql.Open(sqltext,
+               ['DocumentID', 'ClientID','Amount','Date','Comment','Number', 'PayType'],
+               [FID
+               ,cbClient.Value
+               ,edtAmount.value
+               ,edtDate.DateTime
+               ,edtComment.Text
+               ,''
+               ,cbPayType.Value
+               ]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
+    acDelete:
+    begin
+      sqltext :='''
+                 declare @R           int
+
+                 exec @r = DocumentDelete
+                            @DocumentID = :DocumentID
+
+                 select @r as retcode
+      ''';
+
+      Sql.Open(sqltext,
+               ['DocumentID'],
+               [FID]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
   end;
 
   if RetVal.Code = 0 then
@@ -216,7 +229,7 @@ begin
         Exit();
       end;
 
-      if edtDate.IsBlank then
+      if (edtDate.IsBlank) or (edtDate.Text = '') then
       begin
         RetVal.Code := 1;
         RetVal.Message := 'Поле [Дата] обязательно к заполнению!';
@@ -232,27 +245,30 @@ begin
         Exit();
       end;
 
-
     end;
   end;
 end;
 
 procedure TBalanceAddF.DataLoad;
 begin
-//  UniMainModule.Query.Close;
-//  UniMainModule.Query.SQL.Text := ' select *  '+
-//                                  '   from tClients (nolock) '+
-//                                  '  where ClientID = :ClientID '+
-//                                  ' ';
-//  UniMainModule.Query.ParamByName('ClientID').Value := FID;
-//  UniMainModule.Query.Open;
+  UniMainModule.Query.Close;
+  UniMainModule.Query.SQL.Text := '''
+    select *
+      from tDocuments with (nolock index=PK_tDocuments_DocumentID)
+     where DocumentID = :DocumentID
+  ''';
+  UniMainModule.Query.ParamByName('DocumentID').Value := FID;
+  UniMainModule.Query.Open;
 
-  // аудит
-  //edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
-  //edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
- // edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
+  cbClient.Value  := UniMainModule.Query.FieldValues['ClientID'];
+  edtAmount.Value := UniMainModule.Query.FieldValues['Amount'];
+  edtDate.DateTime:= UniMainModule.Query.FieldValues['Date'];
+  cbPayType.Value := UniMainModule.Query.FieldValues['PayType'];
+  edtComment.Text := UniMainModule.Query.FieldValues['Comment'];
 
-  //edtBrief.Text:= UniMainModule.Query.FieldValues['Brief'];
+  edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
+  edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
+  edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
 end;
 
 procedure TBalanceAddF.SetAction(const Value: TFormAction);
@@ -264,25 +280,26 @@ procedure TBalanceAddF.UniFormShow(Sender: TObject);
 begin
 
   ComboBoxFill(cbPayType, 'select PropertyID as ID, Name from tProperty (nolock) where ObjectTypeID = 12');
-  ComboBoxFill(cbClient, 'select ClientID as ID, Brief as Name from tClients (nolock)');
+  ComboBoxFill(cbClient,  'select ClientID as ID, Brief as Name from tClients (nolock)');
 
   tabAudit.Visible:= FAction <> acInsert;
 
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select *  '+
-                                  '   from tClients (nolock) '+
-                                  '  where ClientID = :ClientID '+
-                                  ' ';
+  UniMainModule.Query.SQL.Text := '''
+    select *
+      from tClients with (nolock index=PK_tClients_ClientID)
+     where ClientID = :ClientID
+  ''';
   UniMainModule.Query.ParamByName('ClientID').Value := FClientID;
   UniMainModule.Query.Open;
 
   case FAction of
     acInsert, acReportCreate:
     begin
-      Self.Caption := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
-      cbClient.Value := FClientID.ToString;
-      btnOk.Caption := ' Пополнить';
-      edtInDate.Text := '';
+      Self.Caption    := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
+      cbClient.Value  := FClientID.ToString;
+      btnOk.Caption   := ' Пополнить';
+      edtInDate.Text  := '';
       edtUpdDate.Text := '';
 
       edtDate.DateTime:=now();
@@ -290,25 +307,27 @@ begin
     acUpdate, acReportEdit, acUserAction:
       btnOk.Caption := ' Сохранить';
     acDelete:
+    begin
       btnOk.Caption := ' Удалить';
+    end;
     acShow:
       btnOk.Caption := ' Закрыть';
   else
     btnOk.Caption   := ' Выполнить';
   end;
 
-  // начитываем данные с базы
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
-      Self.Caption := 'Пополнение баланса по клиенту: ' + UniMainModule.Query.FieldbyName('Brief').asString;
       DataLoad;
+
+      Disabled(cbClient);
+
+      Self.Caption := 'Пополнение баланса по клиенту: ' + cbClient.Text;
     end
   else
     //
   end;
-
-
 
 end;
 

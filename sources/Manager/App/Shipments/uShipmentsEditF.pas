@@ -178,6 +178,7 @@ begin
   Sql.Open
   ('''
     select s.*
+          ,isnull(s.ReceiptDate2, s.ReceiptDate) DateReceipt
       from vShipments s (nolock)
      inner join tSupplierDeliveryProfiles as sd (nolock)
              on sd.SuppliersID     = s.SuppliersID
@@ -188,7 +189,7 @@ begin
   if Sql.q.RecordCount > 0 then
   begin
     ShipmentsDate.DateTime := Sql.q.FieldByName('ShipmentsDate').AsDateTime;
-    ReceiptDate.DateTime := Sql.q.FieldByName('ReceiptDate').AsDateTime;
+    ReceiptDate.DateTime := Sql.q.FieldByName('DateReceipt').AsDateTime;
     Invoice.Text := Sql.q.FieldByName('Invoice').AsString;
     Suppliers.Text := Sql.q.FieldByName('SupplierBrief').AsString;
     TransporterNumber.Text := Sql.q.FieldByName('TransporterNumber').AsString;
@@ -220,7 +221,7 @@ begin
 
   UniFormattedNumberEdit6.Clear;
 
-  self.caption := 'Данные по отгрузке ' + Sql.q.FieldByName('Invoice').AsString;
+  self.caption := 'Данные по отгрузке: ' + Sql.q.FieldByName('Invoice').AsString;
 end;
 
 end.

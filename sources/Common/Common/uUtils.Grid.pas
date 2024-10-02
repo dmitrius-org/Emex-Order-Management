@@ -18,8 +18,6 @@ Type
     ///</summary>
     class procedure SortColumnCreate(AGrid: TUniDBGrid) ;
 
-
-
     /// <summary>
     ///  GridLayout - сохранение/восстановление настроек грида
     ///  AOperation 0-сохранение

@@ -12,9 +12,9 @@ object BalanceT: TBalanceT
   TextHeight = 15
   object Grid: TUniDBGrid
     Left = 0
-    Top = 128
+    Top = 99
     Width = 1098
-    Height = 399
+    Height = 428
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -127,52 +127,67 @@ object BalanceT: TBalanceT
     Left = 0
     Top = 0
     Width = 1098
-    Height = 128
+    Height = 99
     Hint = ''
     ShowHint = True
     ParentShowHint = False
     Align = alTop
+    ParentFont = False
+    Font.Height = -13
     TabOrder = 0
     ShowCaption = False
     Caption = 'UniPanel1'
+    DesignSize = (
+      1098
+      99)
     object UniButton1: TUniButton
-      Left = 265
-      Top = 89
+      Left = 305
+      Top = 61
       Width = 75
-      Height = 25
+      Height = 28
       Hint = ''
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      Anchors = [akLeft, akRight, akBottom]
       TabOrder = 2
       OnClick = UniButton1Click
+      ExplicitTop = 57
     end
     object edtDateEnd: TUniDateTimePicker
-      Left = 139
-      Top = 90
-      Width = 120
+      Left = 159
+      Top = 61
+      Width = 140
+      Height = 25
       Hint = ''
       ShowHint = True
       DateTime = 45253.000000000000000000
       DateFormat = 'dd/MM/yyyy'
       TimeFormat = 'HH:mm:ss'
+      Anchors = [akLeft, akRight, akBottom]
       TabOrder = 4
+      ClearButton = True
+      ExplicitTop = 57
     end
     object edtDateBegin: TUniDateTimePicker
       Left = 13
-      Top = 90
-      Width = 120
+      Top = 61
+      Width = 140
+      Height = 25
       Hint = ''
       ShowHint = True
       DateTime = 45253.000000000000000000
       DateFormat = 'dd/MM/yyyy'
       TimeFormat = 'HH:mm:ss'
+      Anchors = [akLeft, akRight, akBottom]
       TabOrder = 3
+      ClearButton = True
+      ExplicitTop = 57
     end
     object UniPanel2: TUniPanel
       Left = 822
       Top = 1
       Width = 275
-      Height = 126
+      Height = 97
       Hint = ''
       ShowHint = True
       Align = alRight
@@ -180,19 +195,20 @@ object BalanceT: TBalanceT
       BorderStyle = ubsNone
       ShowCaption = False
       Caption = 'UniPanel2'
+      ExplicitHeight = 126
       DesignSize = (
         275
-        126)
+        97)
       object edtBalance: TUniFormattedNumberEdit
         Left = 135
-        Top = 19
+        Top = 7
         Width = 129
         Hint = ''
         ShowHint = True
         BorderStyle = ubsNone
         Alignment = taCenter
         ParentFont = False
-        Font.Height = -12
+        Font.Height = -13
         Anchors = [akTop, akRight]
         TabOrder = 2
         Color = clBtnFace
@@ -201,7 +217,7 @@ object BalanceT: TBalanceT
       end
       object UniLabel1: TUniLabel
         Left = 51
-        Top = 19
+        Top = 7
         Width = 48
         Height = 17
         Hint = #1057#1088#1077#1076#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1077#1089#1103' '#1085#1072' '#1073#1072#1083#1072#1085#1089#1077
@@ -215,16 +231,48 @@ object BalanceT: TBalanceT
       end
       object btnBalanceAdd: TUniButton
         Left = 135
-        Top = 88
+        Top = 59
         Width = 129
-        Height = 25
-        Hint = ''
+        Height = 28
         ShowHint = True
-        Caption = #1055#1086#1087#1086#1083#1085#1080#1090#1100' '#1073#1072#1083#1072#1085#1089
-        Anchors = [akTop, akRight]
+        Action = actInsert
+        Anchors = [akLeft, akRight, akBottom]
         TabOrder = 3
-        OnClick = btnBalanceAddClick
+        ExplicitTop = 88
       end
+    end
+    object cbClient: TUniFSComboBox
+      Left = 13
+      Top = 31
+      Width = 367
+      Height = 26
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      Anchors = [akLeft, akRight, akBottom]
+      ParentFont = False
+      Font.Height = -12
+      TabOrder = 5
+      AnyMatch = True
+      ClearButton = True
+      IconItems = <>
+      OnChangeValue = cbClientChangeValue
+      Value = '-1'
+      ExplicitTop = 27
+    end
+    object UniLabel6: TUniLabel
+      Left = 13
+      Top = 8
+      Width = 44
+      Height = 17
+      Hint = ''
+      ShowHint = True
+      Caption = #1050#1083#1080#1077#1085#1090':'
+      Anchors = [akLeft, akRight, akBottom]
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 6
+      ExplicitTop = 14
     end
   end
   object DataSource: TDataSource
@@ -239,7 +287,6 @@ object BalanceT: TBalanceT
     FormatOptions.AssignedValues = [fvDefaultParamDataType]
     FormatOptions.DefaultParamDataType = ftString
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
     UpdateOptions.EnableInsert = False
     UpdateOptions.EnableUpdate = False
     UpdateOptions.UpdateChangedFields = False
@@ -250,6 +297,7 @@ object BalanceT: TBalanceT
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     UpdateOptions.UpdateTableName = 'tNodes'
+    UpdateObject = UpdateSQL
     SQL.Strings = (
       ' declare @Rest money'
       ' '
@@ -331,12 +379,54 @@ object BalanceT: TBalanceT
       Hint = #1055#1086#1083#1085#1086#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1090#1072#1073#1083#1080#1094#1099
       OnExecute = actRefreshAllExecute
     end
+    object actEdit: TAction
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      OnExecute = actEditExecute
+    end
+    object actDelete: TAction
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnExecute = actDeleteExecute
+    end
+    object actInsert: TAction
+      Caption = #1055#1086#1087#1086#1083#1085#1080#1090#1100' '#1073#1072#1083#1072#1085#1089
+      OnExecute = actInsertExecute
+    end
   end
   object ppMain: TUniPopupMenu
     Left = 101
     Top = 218
+    object N1: TUniMenuItem
+      Action = actInsert
+    end
+    object N2: TUniMenuItem
+      Action = actEdit
+    end
+    object N3: TUniMenuItem
+      Action = actDelete
+    end
+    object N4: TUniMenuItem
+      Caption = '-'
+    end
     object N6: TUniMenuItem
       Action = actRefreshAll
     end
+  end
+  object UpdateSQL: TFDUpdateSQL
+    Connection = UniMainModule.FDConnection
+    ConnectionName = 'Connection'
+    InsertSQL.Strings = (
+      'select 1')
+    ModifySQL.Strings = (
+      'select 1')
+    DeleteSQL.Strings = (
+      'select 1')
+    FetchRowSQL.Strings = (
+      ' select *'
+      
+        '   from tDocuments with (nolock index=PK_tDocuments_DocumentID) ' +
+        ' '
+      '  WHERE DocumentID = :DocumentID')
+    Left = 711
+    Top = 242
   end
 end

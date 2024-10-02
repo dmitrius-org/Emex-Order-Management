@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
-  System.ImageList, Vcl.ImgList;
+  System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, UniFSCombobox;
 
 type
   TBalanceT = class(TUniForm)
@@ -38,13 +38,26 @@ type
     edtBalance: TUniFormattedNumberEdit;
     UniLabel1: TUniLabel;
     btnBalanceAdd: TUniButton;
+    cbClient: TUniFSComboBox;
+    UniLabel6: TUniLabel;
+    actEdit: TAction;
+    actDelete: TAction;
+    actInsert: TAction;
+    N1: TUniMenuItem;
+    N2: TUniMenuItem;
+    N3: TUniMenuItem;
+    N4: TUniMenuItem;
+    UpdateSQL: TFDUpdateSQL;
 
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure UniFormShow(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniButton1Click(Sender: TObject);
-    procedure btnBalanceAddClick(Sender: TObject);
+    procedure cbClientChangeValue(Sender: TObject);
+    procedure actInsertExecute(Sender: TObject);
+    procedure actEditExecute(Sender: TObject);
+    procedure actDeleteExecute(Sender: TObject);
   private
     FID: integer;
     procedure SetID(const Value: integer);
@@ -52,6 +65,8 @@ type
     procedure DataRefresh();
 
     procedure BalanceAddCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure BalanceEditCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
 
@@ -72,6 +87,27 @@ begin
   Result := TBalanceT(UniMainModule.GetFormInstance(TBalanceT));
 end;
 
+procedure TBalanceT.actDeleteExecute(Sender: TObject);
+begin
+  BalanceAddF.FormAction := TFormAction.acDelete;
+  BalanceAddF.ID := QueryDocumentID.AsInteger;
+  BalanceAddF.ShowModal(BalanceEditCallBack);
+end;
+
+procedure TBalanceT.actEditExecute(Sender: TObject);
+begin
+  BalanceAddF.FormAction := TFormAction.acUpdate;
+  BalanceAddF.ID := QueryDocumentID.AsInteger;
+  BalanceAddF.ShowModal(BalanceEditCallBack);
+end;
+
+procedure TBalanceT.actInsertExecute(Sender: TObject);
+begin
+  BalanceAddF.FormAction := TFormAction.acInsert;
+  BalanceAddF.ClientID   := cbClient.Value.ToInteger;
+  BalanceAddF.ShowModal(BalanceAddCallBack);
+end;
+
 procedure TBalanceT.actRefreshAllExecute(Sender: TObject);
 begin
   DataRefresh;
@@ -87,17 +123,34 @@ begin
   end;
 end;
 
-procedure TBalanceT.btnBalanceAddClick(Sender: TObject);
+procedure TBalanceT.BalanceEditCallBack(Sender: TComponent; AResult: Integer);
 begin
-  BalanceAddF.FormAction := TFormAction.acInsert;
-  BalanceAddF.ClientID   := FID;
-  BalanceAddF.ShowModal(BalanceAddCallBack);
+  if AResult <> mrOK then Exit;
+
+  if BalanceAddF.FormAction = acUpdate then
+  begin
+    Query.RefreshRecord(False);
+    Grid.RefreshCurrentRow();
+    Exit;
+  end;
+
+  if BalanceAddF.FormAction = acDelete then
+  begin
+    Query.Delete;
+    Grid.RefreshCurrentRow();
+    Exit;
+  end;
+end;
+
+procedure TBalanceT.cbClientChangeValue(Sender: TObject);
+begin
+  DataRefresh
 end;
 
 procedure TBalanceT.DataRefresh;
 begin
   Query.Close;
-  Query.ParamByName('ClientID').AsInteger := FID;
+  Query.ParamByName('ClientID').AsInteger := cbClient.Value.ToInteger;
   Query.ParamByName('BDate').AsDate := edtDateBegin.DateTime;
   Query.ParamByName('EDate').AsDate := edtDateEnd.DateTime;
   Query.Open;
@@ -135,13 +188,9 @@ end;
 
 procedure TBalanceT.UniFormShow(Sender: TObject);
 begin
-//  sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
-//
-//  Self.Caption:= 'Протокол по [' +
-//      sql.Q.FieldByName('OrderID').AsString + '] ' +
-//      sql.Q.FieldByName('Manufacturer').AsString + ' ' +
-//      sql.Q.FieldByName('DetailNumber').AsString;
-//  sql.Q.Close;
+  ComboBoxFill(cbClient, 'select ClientID as ID, Brief as Name from tClients (nolock)');
+  cbClient.Value := FID.ToString;
+
   edtDateBegin.DateTime := Now();
   edtDateEnd.DateTime   := Now();
 

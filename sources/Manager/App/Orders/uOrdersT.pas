@@ -253,6 +253,8 @@ type
       DisplayText: Boolean);
     procedure QueryDateDeliveryToCustomerGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
+    procedure QueryReceiptDateGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -1095,6 +1097,18 @@ begin
   begin
     Text := '<span>' +FormatFloat('###,##0.00 $', Sender.AsFloat) +  '</span><br><span class="x-replacement-price">&#10149;'+
             '</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT.QueryReceiptDateGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin // Ожидаемая дата поступления
+  if (not QueryReceiptDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + QueryReceiptDate2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;

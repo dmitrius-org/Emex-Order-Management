@@ -137,51 +137,39 @@ type
     QueryDeliveryTermSupplier: TIntegerField;
     QueryDeliveryNextDate2: TSQLTimeStampField;
     QueryDeliveryDaysReserve2: TIntegerField;
+    QueryReceiptDate: TSQLTimeStampField;
+    QueryReceiptDate2: TSQLTimeStampField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure GridSelectionChange(Sender: TObject);
-
     procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridCellClick(Column: TUniDBGridColumn);
-    procedure QueryDetailNumberGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryMakeLogoGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryManufacturerGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actProtocolExecute(Sender: TObject);
     procedure ppMainPopup(Sender: TObject);
     procedure actFilterExecute(Sender: TObject);
     procedure actFilterClearExecute(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure actGridSettingLoadExecute(Sender: TObject);
-    procedure actGridSettingSaveExecute(Sender: TObject);
-    procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure fStatus2Select(Sender: TObject);
     procedure fPriceLogoSelect(Sender: TObject);
     procedure cbCancelSelect(Sender: TObject);
-    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
-    procedure QueryFlagGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryBeforeRowRequest(DataSet: TFDDataSet);
-    procedure QueryBeforeGetRecords(DataSet: TFDDataSet);
-    procedure QueryAfterRowRequest(DataSet: TFDDataSet);
-    procedure QueryAfterGetRecord(DataSet: TFDDataSet);
-    procedure QueryAfterRefresh(DataSet: TDataSet);
-    procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest;
-      var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
-    procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryDeliveryDaysReserveGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest; var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
+    procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryReceiptDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
+    procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -195,7 +183,6 @@ type
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
-//    procedure OrderFCallBack(Sender: TComponent; AResult:Integer);
     procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
 
     procedure CancelRequest();
@@ -211,7 +198,6 @@ type
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
     procedure FilterStatusCreate();
-//    procedure FilterPriceLogoCreate();
 
   public
     { Public declarations }
@@ -220,13 +206,6 @@ type
     /// GridRefresh -
     /// </summary>
     procedure GridRefresh;
-
-    /// <summary>
-    ///  GridLayout - сохранение/восстановление настроек грида
-    ///  AOperation 0-сохранение
-    ///             1-восстановление
-    ///</summary>
-    procedure GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
   end;
 
 implementation
@@ -301,21 +280,6 @@ begin
   GridRefresh();
 end;
 
-procedure TOrdersT2.actGridSettingDefaultExecute(Sender: TObject);
-begin
- // Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
- // GridLayout(Self, Grid, tGridLayout.glLoad);
-end;
-
-procedure TOrdersT2.actGridSettingLoadExecute(Sender: TObject);
-begin
-  GridLayout(Self, Grid, tGridLayout.glLoad);
-end;
-
-procedure TOrdersT2.actGridSettingSaveExecute(Sender: TObject);
-begin
-  GridLayout(Self, Grid, tGridLayout.glSave);
-end;
 
 procedure TOrdersT2.actProtocolExecute(Sender: TObject);
 begin
@@ -524,31 +488,6 @@ begin
                           ((Query.FieldByName('Flag').AsInteger and 32) = 32);
 end;
 
-procedure TOrdersT2.QueryAfterGetRecord(DataSet: TFDDataSet);
-begin
-  logger.Info('QueryAfterGetRecord: ');
-end;
-
-procedure TOrdersT2.QueryAfterRefresh(DataSet: TDataSet);
-begin
-  logger.Info('QueryAfterRefresh: ');
-end;
-
-procedure TOrdersT2.QueryAfterRowRequest(DataSet: TFDDataSet);
-begin
-  logger.Info('QueryAfterRowRequest: ');
-end;
-
-procedure TOrdersT2.QueryBeforeGetRecords(DataSet: TFDDataSet);
-begin
-  logger.Info('QueryBeforeGetRecords: ');
-end;
-
-procedure TOrdersT2.QueryBeforeRowRequest(DataSet: TFDDataSet);
-begin
-  logger.Info('QueryBeforeRowRequest: ');
-end;
-
 procedure TOrdersT2.QueryDeliveryDaysReserveGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
@@ -578,7 +517,7 @@ procedure TOrdersT2.QueryDetailNumberGetText(Sender: TField; var Text: string; D
 begin
   if (QueryReplacementDetailNumber.Value <> '') then
   begin
-    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span><span class="x-replacement-detail-number">' + QueryReplacementDetailNumber.Value + '</span>';
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span> <span class="x-replacement-detail-number">' + QueryReplacementDetailNumber.Value + '</span>';
   end
   else
     Text := Sender.AsString;
@@ -622,7 +561,7 @@ end;
 
 procedure TOrdersT2.QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
-  if (Sender.FieldName = 'Manufacturer') and (QueryReplacementManufacturer.Value <> '') then
+  if (QueryReplacementManufacturer.Value <> '') then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-manufacturer-arrow">&#10149;</span><span class="x-replacement-manufacturer">' + QueryReplacementManufacturer.Value + '</span>';
   end
@@ -637,6 +576,19 @@ begin
   begin
     Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
     '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryReceiptDateGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  // Ожидаемая дата поступления
+  if (not QueryReceiptDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + QueryReceiptDate2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;
@@ -686,10 +638,6 @@ begin
   end;
 end;
 
-procedure TOrdersT2.GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
-begin
-
-end;
 
 procedure TOrdersT2.StateActionMenuCreate;
 begin
@@ -707,6 +655,18 @@ begin
     Query.IndexName := FieldName+'_index_asc'
   else
     Query.IndexName := FieldName+'_index_des';
+end;
+
+procedure TOrdersT2.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+  NewIndex: Integer);
+begin
+  //GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TOrdersT2.GridColumnResize(Sender: TUniBaseDBGridColumn;
+  NewSize: Integer);
+begin
+  //GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TOrdersT2.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -758,7 +718,7 @@ begin
   end;
 
   // восстановление настроек грида для пользователя
-  GridLayout(Self, Grid, tGridLayout.glLoad, False);
+  //GridLayout(Self, Grid, tGridLayout.glLoad, False);
 
  // actExecuteActionEnabled.Enabled  := Grid.SelectedRows.Count > 0;
  // actExecuteActionRollback.Enabled := Grid.SelectedRows.Count > 0;

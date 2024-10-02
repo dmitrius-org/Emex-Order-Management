@@ -108,6 +108,20 @@
     text-align: left
 }
 
+/* Ожидаемая дата поставки */
+.grid-order .x-receipt-date-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Ожидаемая дата поставки */
+.grid-order .x-receipt-date{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
 /* Иконка: Запрос отказа */
 .grid-order-request-cancellation {
     width: 100%;

@@ -184,25 +184,27 @@ begin
         logger.Info(id.ToString );
 
         if Query.FieldByName('Flag').AsInteger and 16 = 0 then
-        if FileExists(fn) then
         begin
+          if FileExists(fn) then
+          begin
 
-          Fp :=  ExtractFilePath(fn) + 'Archive\';
+            Fp :=  ExtractFilePath(fn) + 'Archive\';
 
-          if not DirectoryExists(Fp) then ForceDirectories(Fp);
+            if not DirectoryExists(Fp) then ForceDirectories(Fp);
 
-          AFnabled:= MoveFile(PChar(fn), PChar(Fp + ExtractFileName(fn)));
+            AFnabled:= MoveFile(PChar(fn), PChar(Fp + ExtractFileName(fn)));
 
-          if not AFnabled then
-            ToastERR('Ошибка обработки файла: ' + fn, unisession)
-          else
-            Sql.Exec('Update tOrderRefusals set Flag = isnull(Flag, 0)|16 where OrderRefusalsID=:OrderRefusalsID',
-                    ['OrderRefusalsID'], [id]);
+            if not AFnabled then
+              ToastERR('Ошибка обработки файла: ' + fn, unisession)
+          end;
 
+          //проставляем список в архиве
+          Sql.Exec('Update tOrderRefusals set Flag = isnull(Flag, 0)|16 where OrderRefusalsID=:OrderRefusalsID',
+                  ['OrderRefusalsID'], [id]);
         end;
       end;
 
-      ToastOK('Операция выполнена успешно!', unisession);
+      //ToastOK('Операция выполнена успешно!', unisession);
       //GridRefresh;
 
     finally

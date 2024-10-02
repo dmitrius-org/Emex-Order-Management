@@ -2,7 +2,7 @@ object ShipmentsEditF: TShipmentsEditF
   Left = 0
   Top = 0
   ClientHeight = 299
-  ClientWidth = 693
+  ClientWidth = 716
   Caption = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
   BorderStyle = bsDialog
   OldCreateOrder = False
@@ -13,17 +13,18 @@ object ShipmentsEditF: TShipmentsEditF
     AlignWithMargins = True
     Left = 3
     Top = 252
-    Width = 687
+    Width = 710
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
+    ExplicitWidth = 687
     DesignSize = (
-      687
+      710
       44)
     object btnOk: TUniBitBtn
-      Left = 576
+      Left = 599
       Top = 9
       Width = 85
       Height = 25
@@ -32,9 +33,10 @@ object ShipmentsEditF: TShipmentsEditF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
+      ExplicitLeft = 576
     end
     object btnCancel: TUniBitBtn
-      Left = 488
+      Left = 511
       Top = 9
       Width = 81
       Height = 25
@@ -43,12 +45,13 @@ object ShipmentsEditF: TShipmentsEditF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
+      ExplicitLeft = 488
     end
   end
   object UniLabel1: TUniLabel
     Left = 146
     Top = 21
-    Width = 100
+    Width = 125
     Height = 13
     Hint = ''
     Alignment = taCenter
@@ -115,20 +118,19 @@ object ShipmentsEditF: TShipmentsEditF
   object ShipmentsDate: TUniDateTimePicker
     Left = 146
     Top = 59
-    Width = 100
+    Width = 125
     Hint = ''
-    Enabled = False
     DateTime = 45562.000000000000000000
     DateFormat = 'dd/MM/yyyy'
     TimeFormat = 'HH:mm:ss'
     ReadOnly = True
     TabOrder = 8
-    Color = clBtnFace
+    Color = cl3DLight
   end
   object ReceiptDate: TUniDateTimePicker
     Left = 146
     Top = 87
-    Width = 100
+    Width = 125
     Hint = ''
     DateTime = 45562.000000000000000000
     DateFormat = 'dd/MM/yyyy'
@@ -138,31 +140,29 @@ object ShipmentsEditF: TShipmentsEditF
   object Invoice: TUniEdit
     Left = 146
     Top = 115
-    Width = 100
+    Width = 125
     Hint = ''
-    Enabled = False
     Text = ''
     TabOrder = 10
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     ReadOnlyMode = urmNotEditable
   end
   object Suppliers: TUniEdit
     Left = 146
     Top = 143
-    Width = 100
+    Width = 125
     Hint = ''
-    Enabled = False
     Text = ''
     TabOrder = 11
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     ReadOnlyMode = urmNotEditable
   end
   object TransporterNumber: TUniEdit
     Left = 146
     Top = 171
-    Width = 100
+    Width = 125
     Hint = ''
     Text = ''
     TabOrder = 12
@@ -170,17 +170,16 @@ object ShipmentsEditF: TShipmentsEditF
   object DestinationName: TUniEdit
     Left = 146
     Top = 199
-    Width = 100
+    Width = 125
     Hint = ''
-    Enabled = False
     Text = ''
     TabOrder = 13
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     ReadOnlyMode = urmNotEditable
   end
   object UniLabel8: TUniLabel
-    Left = 268
+    Left = 291
     Top = 61
     Width = 67
     Height = 13
@@ -189,7 +188,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 14
   end
   object UniLabel9: TUniLabel
-    Left = 267
+    Left = 290
     Top = 89
     Width = 36
     Height = 13
@@ -198,7 +197,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 15
   end
   object UniLabel10: TUniLabel
-    Left = 267
+    Left = 290
     Top = 117
     Width = 27
     Height = 13
@@ -207,7 +206,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 16
   end
   object UniLabel11: TUniLabel
-    Left = 267
+    Left = 290
     Top = 145
     Width = 62
     Height = 13
@@ -216,7 +215,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 17
   end
   object UniLabel12: TUniLabel
-    Left = 267
+    Left = 290
     Top = 173
     Width = 68
     Height = 13
@@ -225,7 +224,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 18
   end
   object UniLabel13: TUniLabel
-    Left = 267
+    Left = 290
     Top = 201
     Width = 192
     Height = 13
@@ -234,56 +233,53 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 19
   end
   object WeightKGAmount: TUniFormattedNumberEdit
-    Left = 352
+    Left = 375
     Top = 59
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     FormattedInput.CurrencySignSpace = crsAvailable
     TabOrder = 20
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object WeightKG: TUniFormattedNumberEdit
-    Left = 352
+    Left = 375
     Top = 87
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = #1082#1075
     TabOrder = 21
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object WeightKGF: TUniFormattedNumberEdit
-    Left = 352
+    Left = 375
     Top = 115
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = #1082#1075
     TabOrder = 22
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object SupplierWeightKG: TUniFormattedNumberEdit
-    Left = 352
+    Left = 375
     Top = 143
     Width = 100
     Hint = ''
@@ -296,7 +292,7 @@ object ShipmentsEditF: TShipmentsEditF
     ThousandSeparator = #160
   end
   object TransporterWeightKG: TUniFormattedNumberEdit
-    Left = 352
+    Left = 375
     Top = 171
     Width = 100
     Hint = ''
@@ -309,86 +305,81 @@ object ShipmentsEditF: TShipmentsEditF
     ThousandSeparator = #160
   end
   object UniFormattedNumberEdit6: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 59
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 25
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object Amount: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 87
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 26
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object AmountF: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 115
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 27
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object SupplierAmount: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 143
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 28
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object TransporterAmount: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 171
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 29
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object DeliverySumF: TUniFormattedNumberEdit
-    Left = 564
+    Left = 587
     Top = 199
     Width = 100
     Hint = ''
@@ -401,7 +392,7 @@ object ShipmentsEditF: TShipmentsEditF
     ThousandSeparator = #160
   end
   object UniLabel14: TUniLabel
-    Left = 352
+    Left = 375
     Top = 21
     Width = 100
     Height = 13
@@ -414,7 +405,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 31
   end
   object UniLabel15: TUniLabel
-    Left = 458
+    Left = 481
     Top = 21
     Width = 100
     Height = 13
@@ -427,7 +418,7 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 32
   end
   object UniLabel16: TUniLabel
-    Left = 564
+    Left = 587
     Top = 21
     Width = 100
     Height = 13
@@ -440,55 +431,52 @@ object ShipmentsEditF: TShipmentsEditF
     TabOrder = 33
   end
   object VolumeKGAmount: TUniFormattedNumberEdit
-    Left = 458
+    Left = 481
     Top = 59
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = '$'
     TabOrder = 34
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object VolumeKG: TUniFormattedNumberEdit
-    Left = 458
+    Left = 481
     Top = 87
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = #1082#1075
     TabOrder = 35
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object VolumeKGF: TUniFormattedNumberEdit
-    Left = 458
+    Left = 481
     Top = 115
     Width = 100
     Hint = ''
-    Enabled = False
     FormattedInput.ShowCurrencySign = True
     FormattedInput.CurrencySignPos = cpsRight
     FormattedInput.DefaultCurrencySign = False
     FormattedInput.CurrencySign = #1082#1075
     TabOrder = 36
-    Color = clBtnFace
+    Color = cl3DLight
     ReadOnly = True
     DecimalSeparator = ','
     ThousandSeparator = #160
   end
   object SupplierVolumeKG: TUniFormattedNumberEdit
-    Left = 458
+    Left = 481
     Top = 143
     Width = 100
     Hint = ''
@@ -501,7 +489,7 @@ object ShipmentsEditF: TShipmentsEditF
     ThousandSeparator = #160
   end
   object TransporterVolumeKG: TUniFormattedNumberEdit
-    Left = 458
+    Left = 481
     Top = 171
     Width = 100
     Hint = ''

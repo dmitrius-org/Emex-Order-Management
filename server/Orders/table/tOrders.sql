@@ -101,6 +101,8 @@ begin
 	create unique index ao1 on tOrders(OrderID);
 
 	create index ao2 on tOrders(ClientID, OrderNum);
+
+    create index ao3 on tOrders(Invoice);
 end
 go
 grant select on tOrders to public

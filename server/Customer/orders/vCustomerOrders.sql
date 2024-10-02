@@ -16,7 +16,6 @@ SELECT o.[OrderID]
       ,o.[StatusID]
       ,s.[Name]          as StatusName -- статус/состояние
       ,o.[isCancel]
-	  --,o.[isCancelToClient] -- отказ отправлен клиенту
 	  ,o.[MakeLogo]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
@@ -27,7 +26,6 @@ SELECT o.[OrderID]
                 end  
                ,o.[DetailNumber]  
                ,'')))    as DetailName
-      --,o.[DetailID]
       ,o.[Quantity]
       ,o.[Price]
       ,o.[Amount]
@@ -70,12 +68,12 @@ SELECT o.[OrderID]
       ,p.Restrictions                  -- ограничение
       ,o.Invoice                       -- номер инвойса
       ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
+      ,sh.ReceiptDate                  -- Ожидаемая дата поступления
+      ,sh.ReceiptDate2
+      ,o.OrderNum              Reference
 
       ,o.[inDatetime]
       ,o.[updDatetime]
-      ,o.OrderNum              Reference
-	  ,o.Flag&1 /*1 - начальное состояние */ 
-                            as IsStartState
       ,o.Flag
   FROM [tOrders] o (nolock)
  inner join tUser u with (nolock index=ao1)
@@ -104,12 +102,15 @@ SELECT o.[OrderID]
          on b.Code = o.ReplacementMakeLogo
 
   left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID		 
+         on p.PriceID = o.PriceID	
+         
+  left join tShipments sh (nolock)
+         on sh.Invoice = o.Invoice
   
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20240906', '5'
+exec setOV 'vCustomerOrders', 'V', '20241002', '6'
 go
  
 -- Описание таблицы
