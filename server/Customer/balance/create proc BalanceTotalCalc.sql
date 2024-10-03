@@ -12,7 +12,7 @@ as
          ,@StatusRequiringPayment varchar(256)
 
   select @R         = 0
- 
+
   -- test !!!
   if @ClientID in (57)
     select @ClientID= 39

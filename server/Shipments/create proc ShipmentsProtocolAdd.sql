@@ -64,7 +64,7 @@ as
   -- !!! ---------------------------------------------------------------------
   -- обновление статусов связанных заказов  
   delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
-  insert pAccrualAction 
+  insert pAccrualAction with (rowlock)
         (Spid, ObjectID, NewStateID, ActionID, OperDate, Message, sgn)
   select @@Spid, 
          o.OrderID, 
@@ -74,7 +74,7 @@ as
          'Автоматическия синхронизация стаусов из Отгрузки',
          10
     from @ID id
-   inner join tShipments s (updlock)
+   inner join tShipments s (nolock)
           on s.ShipmentsID = id.ShipmentsID
    inner join tOrders o with (nolock index=ao3)
            on o.Invoice = s.Invoice

@@ -75,3 +75,38 @@ delete pp
  --commit tran
 
  --**/
+
+
+ 
+select *
+from tOrders o
+cross apply (select top 1 * 
+               from tProtocol p
+              where p.ObjectID = o.OrderID
+              order by p.ProtocolID desc
+              ) as p
+where o.StatusID <> p.NewStateID
+--  and  o.updDatetime > '2024-10-03'
+order by o.StatusID
+
+
+
+Update o
+set StatusID = p.NewStateID
+from tOrders o
+cross apply (select top 1 * 
+               from tProtocol p
+              where p.ObjectID = o.OrderID
+              order by p.ProtocolID desc
+              ) as p
+where o.StatusID <> p.NewStateID
+  and  o.updDatetime > '2024-10-03'
+order by o.StatusID
+
+
+select * from tUser
+1
+select * 
+update tProtocol 
+set UserID = 1
+              where UserID is null

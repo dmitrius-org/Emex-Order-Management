@@ -190,9 +190,9 @@ DEALLOCATE my_cur
   where p.Spid = @@SPID
 
 
- Update pAccrualAction
-    set Retval     = 1 
-       ,Message   = 'Не синхранизируем'
+ Update p
+    set p.Retval     = 1 
+       ,p.Message   = 'Не синхранизируем'
    from pAccrualAction p (updlock)
   inner join pMovement m (nolock)
           on m.spid    = @@spid
@@ -227,6 +227,8 @@ DEALLOCATE my_cur
   where p.Spid = @@Spid
     and isnull(p.Retval, 0) = 0
 
+
+ exec ProtocolAdd
 
  Update o
     set o.StatusID = n.NodeID
@@ -285,10 +287,6 @@ DEALLOCATE my_cur
    left join tNodes n (nolock)
           on n.EID = p.StatusId
  where p.Spid = @@SPID
-
- exec ProtocolAdd
-
-
 
  -- пересчитываем суммы
  update o 

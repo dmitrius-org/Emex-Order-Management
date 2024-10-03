@@ -132,16 +132,19 @@ var
   ExcelFile: TExcelFile;
   Row, Col: Integer;
   MemoryStream: TMemoryStream;
-  //DataSet: TDataSet;
+
+  excelTemplate: string;
 begin
   // Инициализируем TExcelFile и загружаем шаблон
   ExcelFile := TXlsFile.Create;
   MemoryStream := TMemoryStream.Create;
 
   try
-    ExcelFile.Open('./files/ClientsShipments.xlsx');  // Загружаем шаблон Excel
 
-    //DataSet := DataSource.DataSet;
+    excelTemplate := Sql.GetSetting('TemplateClientsShipments');
+
+    ExcelFile.Open(excelTemplate);  // Загружаем шаблон Excel
+
     FQuery.First;
     Row := 3;  // Начинаем с 2-й строки, так как 1-я — заголовки
 

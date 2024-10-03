@@ -12,6 +12,7 @@ Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'Orders', '�
 go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'Orders'
+
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrdersGridRowCount', 'Количество строк на странице таблицы заказов', '', '500', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'TemplateOrderRefusals', 'Шаблон Excel для экспорта отказов', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'UploadingRefusalsCatalog', 'Папка для сохранения файлов отказов', '', '', 0
@@ -23,7 +24,6 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 go
 declare @PID numeric(18, 0)
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  0, 'SettingsClientApp', 'Настройки для клиентского приложения', 2
-
 select @PID = InstrumentID from tInstrument where brief = 'SettingsClientApp'
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  @PID, 'ClientAppCommon', 'Общие настройки', 4--, 'TSettingsT'
 
@@ -31,6 +31,8 @@ Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  @PID, 'ClientAp
 go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'ClientAppCommon'
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'TemplateClientsShipments', 'Шаблон Excel для выгрузки информации по отгрузке', '', '', 0
+
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DefaultSuppliers', 'Поставщик по умолчанию', 'Значение данного параметра проставляется в карточку клиента при регистрации на сайте', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SearchSuppliers',  'Поставщик для поиска деталей', 'Используется для определения личного кабинета через который выполняется поиск деталей. Если значение не проставлено, то поставщика определяем через клиента', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'PercentSupped',    'Фильтр по вероятности поставки для отображения результата поиска', '', '', 0

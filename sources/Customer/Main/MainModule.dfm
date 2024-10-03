@@ -15,8 +15,7 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
-      'DriverID=MSSQL'
-      'MonitorBy=Remote')
+      'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
     AfterDisconnect = FDConnectionAfterDisconnect
