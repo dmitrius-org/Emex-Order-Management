@@ -21,6 +21,9 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrderAutoSetStatus', 'Автоматический перевод в Проверено при загрузке заказа', '', '1', 0
 
 
+
+
+-- Настройки для клиентского приложения
 go
 declare @PID numeric(18, 0)
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  0, 'SettingsClientApp', 'Настройки для клиентского приложения', 2
@@ -48,6 +51,8 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DeliveryInfoCharter',         'Справка для способа доставки Charter <i class="fa fa-car"></i>',    '', 'Стандартная доставка: Непрямая авиадоставка с пересадкой и перегрузкой в грузовой транспорт. Этим способом выгодно доставлять 90% деталей, но для доставки деталей с большим объемным весом лучше выбрать Контейнерную доставку.', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'DeliveryInfoContainer',       'Справка для способа доставки Container <i class="fa fa-ship"></i>', '', 'Контейнерная доставка: Самый дешевый способ доставки грузов, он же и самый долгий. Этот способ подходит для доставки тяжелых или крупных деталей с большим объемом. Также можно доставлять любой опасный груз: масла, подушки безопасности с пиропатронами и так далее', 0
 
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'RedirectOnExit','Адрес для редиректа при выходе из приложения', '', 'www.booster.ae', 0
+--
 go
 declare @PID numeric(18, 0)
 select @PID = InstrumentID from tInstrument where brief = 'SettingsClientApp'
@@ -63,18 +68,17 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_Username', 'Username', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_Password', 'Password', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_RegistrationLink', 'Registration link', 'Заголовок адреса для валидации регистрации', '', 0
-
-
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_FromName', 'Имя отправителя', 'Имя отправителя', 'Boster.ae', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_FromAlias','Почта отправителя', 'Почта отправителя', 'noreply@booster.ae', 0
 go
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'AppProfiles', 'Профили программы', 4--, 'TSettingsT'
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'AppProfiles'
---insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesLogo', 'Логотип программы', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesName', 'Наименование программы', '', 'Booster LLC', 0
 /*
 delete
   from tSettings 
- where brief in ('PercentSupped')
+ where brief in ('SMTP_FromName')
 */
 
 

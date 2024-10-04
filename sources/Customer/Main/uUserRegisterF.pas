@@ -50,15 +50,21 @@ begin
   if UniMainModule.dbConnect then
   begin
 
-    sql.Open(' declare @R int, @ClientID numeric(18,0) '+
-             '        ,@Hash nvarchar(512) ' +
-             ' exec @R=  CustomerRegistrationRequest '+
-             '          @ClientID = @ClientID out  '+
-             '         ,@Hash     = @Hash     out  '+
-             '         ,@Email    = :Email         '+
-             '         ,@Password = :Password      '+
-             ''+
-             ' Select @R as R, @ClientID as ClientID, @Hash as Hash' ,
+    sql.Open('''
+
+               declare @R int
+                      ,@ClientID numeric(18,0)
+                      ,@Hash nvarchar(512)
+
+                exec @R=CustomerRegistrationRequest
+                         @ClientID = @ClientID out
+                        ,@Hash     = @Hash     out
+                        ,@Email    = :Email
+                        ,@Password = :Password
+
+                Select @R as R, @ClientID as ClientID, @Hash as Hash
+
+             ''' ,
              ['Email', 'Password'],
              [edtEmail.Text, edtPassword.text]);
 
@@ -72,13 +78,16 @@ begin
         var Host: string;
         var Port: Integer;
         var RegLink: string;
+        var FromName: string;
+        var FromAlias: string;
 
         Username := Sql.GetSetting('SMTP_Username');
         Password := Sql.GetSetting('SMTP_Password');
         Host     := Sql.GetSetting('SMTP_Host');
         Port     := Sql.GetSetting('SMTP_Port', 0);
         RegLink  := Sql.GetSetting('SMTP_RegistrationLink');
-
+        FromName := Sql.GetSetting('SMTP_FromName');
+        FromAlias:= Sql.GetSetting('SMTP_FromAlias');
 
         var htmlBody: string;
          RegLink := GetSpecialPath(RegLink, '/');
@@ -89,11 +98,13 @@ begin
           '<title>Подтвердите Email (search.booster.ae)</title>'+
           '</head> '+
           '<body>  '+
-          '<p>Для завершения регистрации перейдите по ссылке: <a href="' +RegLink + 'confirmed?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
+          '<p>Для завершения регистрации перейдите по ссылке: <a href="' +
+            RegLink + 'confirmed?tokken=' +
+            sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
           '</body> '+
           '</html> ';
 
-        Gmail := TcfsGmail.Create(Username, Password, 'Booster.ae', Host, Port);
+        Gmail := TcfsGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
         try
             try
               Gmail.Connect;

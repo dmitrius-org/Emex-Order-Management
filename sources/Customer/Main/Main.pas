@@ -10,9 +10,8 @@ uses
   uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
 
-
-  , uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
-  , uBalanceTotalT;
+  ,uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
+  ,uBalanceTotalT;
 
 type
   TMainForm = class(TUniForm)
@@ -59,18 +58,13 @@ type
     procedure tsBBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure UniFormCreate(Sender: TObject);
     procedure tsOBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
-    procedure tsBBeforeFirstActivate(Sender: TObject;
-      var AllowActivate: Boolean);
-    procedure tsOBeforeFirstActivate(Sender: TObject;
-      var AllowActivate: Boolean);
+    procedure tsBBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure tsOBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure MainMenuClick(Sender: TObject);
     procedure btnBasketClick(Sender: TObject);
-    procedure UniFormDestroy(Sender: TObject);
-    procedure tsBalanceBeforeFirstActivate(Sender: TObject;
-      var AllowActivate: Boolean);
+    procedure tsBalanceBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
 
   private
-    { Private declarations }
     ///<summary>
     ///  Profile - профиль
     ///</summary>
@@ -91,7 +85,7 @@ type
 
     procedure ProfileMenuAdd();
   public
-    { Public declarations }
+
   end;
 
 function MainForm: TMainForm;
@@ -117,19 +111,23 @@ begin
 end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
-begin
+begin  // выход из программы
   UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
   UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',      Date-1);
 
-//  Audit.Add(TObjectType.otSearchAppUser, UniMainModule.AUserID, TFormAction.acExit, 'Выход из системы');
-  UniApplication.Restart();
+
+
+  var UrlRedirect: string;
+  UrlRedirect := Sql.GetSetting('RedirectOnExit');
+
+  if UrlRedirect <> '' then
+    UniSession.UrlRedirect(UrlRedirect);
 end;
 
 procedure TMainForm.actinfoExecute(Sender: TObject);
 begin
   Info.ShowModal();
 end;
-
 
 procedure TMainForm.btnBasketClick(Sender: TObject);
 begin
@@ -163,12 +161,29 @@ begin
   else
   if Nd.Text = 'Баланс и Отгрузки' then pcMain.ActivePageIndex := 3
   else
-    // под 999 меню профиль
+  // под 999 меню профиль
   if (Nd.Tag = -999) and (Nd.Action <> nil)  then
   begin
     Nd.Action.Execute;
     Exit();
-  end;
+  end
+  else
+  if Assigned(Nd) and not Nd.IsLeaf  then
+  begin
+    if Nd.HasChildren then
+    begin
+      if Nd.Expanded then
+      begin
+        Nd.Collapse(False);
+        Nd.Expanded := False;
+      end
+      else
+      begin
+        Nd.Expand(False);
+        Nd.Expanded := True;
+      end;
+    end
+  end;// if Assigned(N) then
 end;
 
 procedure TMainForm.ProfileMenuAdd;
@@ -212,14 +227,12 @@ begin
     MainMenuPanel.Width := 300;
   end;
 
-  logger.Info('set _MicroWidth:' + MainMenu.Micro.ToString());
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
 end;
 
 procedure TMainForm.tsBalanceBeforeFirstActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
-  Logger.Info('TMainForm.tsBalanceBeforeFirstActivate');
   if not Assigned(FBalance) then
   begin
     FBalance :=  TBalanceTotalT.Create(Self);
@@ -234,14 +247,12 @@ end;
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
-  Logger.Info('TMainForm.tsBBeforeActivate');
   FBasketF.GridRefresh;
 end;
 
 procedure TMainForm.tsBBeforeFirstActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
-  Logger.Info('TMainForm.tsBBeforeFirstActivate');
   if not Assigned(FBasketF) then
   begin
     FBasketF :=  TBasketF.Create(Self);
@@ -269,9 +280,8 @@ end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
-//  lblVersion.Caption := GetAppVersionStr();
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
-   UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select case when Brief <> email then Brief + '' (''+ email + '')'' else Brief  end from tClients (nolock) where ClientID=' + UniMainModule.AUserID.ToString );
+  UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select case when Brief <> email then Brief + '' (''+ email + '')'' else Brief  end from tClients (nolock) where ClientID=' + UniMainModule.AUserID.ToString );
 
   if not Assigned(FSearchF) then
   begin
@@ -279,11 +289,6 @@ begin
     FSearchF.Align := alClient;
     FSearchF.Parent := tbS;
   end;
-end;
-
-procedure TMainForm.UniFormDestroy(Sender: TObject);
-begin
-  //Audit.Add(TObjectType.otSearchAppUser, UniMainModule.AUserID, TFormAction.acExit, 'Выход из системы');
 end;
 
 procedure TMainForm.UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -297,8 +302,6 @@ end;
 
 procedure TMainForm.UniFormShow(Sender: TObject);
 begin
-  //btnProfile.Caption := UniMainModule.AUserName;
-
   logger.Info('get _MicroWidth:' + UniApplication.Cookies.Values['_MicroWidth']);
 
   MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);

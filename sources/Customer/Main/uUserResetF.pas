@@ -71,12 +71,16 @@ begin
         var Host: string;
         var Port: Integer;
         var RegLink: string;
+        var FromName: string;
+        var FromAlias: string;
 
         Username := Sql.GetSetting('SMTP_Username');
         Password := Sql.GetSetting('SMTP_Password');
         Host     := Sql.GetSetting('SMTP_Host');
         Port     := Sql.GetSetting('SMTP_Port', 0);
         RegLink  := Sql.GetSetting('SMTP_RegistrationLink');
+        FromName := Sql.GetSetting('SMTP_FromName');
+        FromAlias:= Sql.GetSetting('SMTP_FromAlias');
 
         var htmlBody: string;
         RegLink := GetSpecialPath(RegLink, '/');
@@ -91,7 +95,7 @@ begin
           '</body> '+
           '</html> ';
 
-        Gmail := TcfsGmail.Create(Username, Password, 'Booster.ae', Host, Port);
+        Gmail := TcfsGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
         try
             try
               Gmail.Connect;

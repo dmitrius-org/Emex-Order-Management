@@ -1,4 +1,4 @@
-unit uEmail.gmail;
+﻿unit uEmail.gmail;
 
 interface
 
@@ -10,20 +10,28 @@ type
   TcfsGmail = class
   private
     FFromName: string;
+    FFromAlias: string;
+
     FIdSSLIOHandlerSocket: TIdSSLIOHandlerSocketOpenSSL;
     FIdSMTP: TIdSMTP;
   public
-    constructor Create(const UserName, Password, FromName, Host: string; Port: Word);
+    /// <summary>
+    /// Create
+    /// </summary>
+    /// <param name="FromAlias">Почта отправителя</param>
+    constructor Create(const UserName, Password, FromName, FromAlias, Host: string; Port: Word);
     destructor Destroy; override;
     procedure Connect;
+
     procedure Send(ToAddresses: array of string; const Subject, PlainBody: string; const HTMLBody: string = ''; const AttachmentFile: string = '');
  end;
 
 implementation
 
-constructor TcfsGmail.Create(const UserName, Password, FromName, Host: string; Port: Word);
+constructor TcfsGmail.Create(const UserName, Password, FromName, FromAlias, Host: string; Port: Word);
 begin
   FFromName := FromName;
+  FFromAlias:= FromAlias;
 
   FIdSSLIOHandlerSocket := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
 
@@ -33,7 +41,7 @@ begin
 
   FIdSMTP := TIdSMTP.Create(nil);
   FIdSMTP.IOHandler := FIdSSLIOHandlerSocket;
-  FIdSMTP.UseTLS := utUseImplicitTLS; //utUseImplicitTLS      utUseExplicitTLS
+  FIdSMTP.UseTLS := utUseImplicitTLS;
   FIdSMTP.AuthType := satDefault;
 
   FIdSMTP.Host := Host;
@@ -80,6 +88,7 @@ begin
   try
     IdMessage.From.Address := FIdSMTP.Username;
     IdMessage.From.Name := FFromName;
+    IdMessage.From.User := FFromAlias;
 
     for Address in ToAddresses do
     begin

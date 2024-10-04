@@ -9,17 +9,31 @@ object UniMainModule: TUniMainModule
   MonitoredKeys.Keys = <>
   EnableSynchronousOperations = True
   ExtLocale = 'ru'
+  ServerMessages.InvalidSessionTemplate.Strings = (
+    '<html>'
+    '<body bgcolor="#dfe8f6">'
+    
+      '<p style="text-align:center;color:#A05050"><a href="[###url###]"' +
+      '>Restart application</a></p>'
+    '</body>'
+    '</html>')
+  ServerMessages.TerminateTemplate.Strings = (
+    '<html>'
+    '<body bgcolor="#dfe8f6">'
+    
+      '<p style="text-align:center;color:#A05050"><a href="[###url###]"' +
+      '>Restart application</a></p>'
+    '</body>'
+    '</html>')
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
-  Height = 351
-  Width = 1020
+  Height = 274
+  Width = 696
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
       'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
-    AfterDisconnect = FDConnectionAfterDisconnect
-    BeforeDisconnect = FDConnectionBeforeDisconnect
     Left = 41
     Top = 13
   end

@@ -12,7 +12,6 @@ object MainForm: TMainForm
   Font.Color = clSilver
   Layout = 'fit'
   OnCreate = UniFormCreate
-  OnDestroy = UniFormDestroy
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     Left = 0
@@ -167,6 +166,7 @@ object MainForm: TMainForm
             FFFF00000000}
           Images = MainMenuImage
           MicroWidth = 50
+          SelectOnExpander = True
           OnClick = MainMenuClick
         end
         object LogoPanel: TUniContainerPanel

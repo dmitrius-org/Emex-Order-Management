@@ -26,8 +26,6 @@ type
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
-    procedure FDConnectionAfterDisconnect(Sender: TObject);
-    procedure FDConnectionBeforeDisconnect(Sender: TObject);
   private
     { Private declarations }
 
@@ -163,20 +161,9 @@ begin
   begin
     Result := false;
 
-    if not IsSaveSession then
-        raise Exception.Create(RetVal.Message);
+    if not IsSaveSession then raise Exception.Create(RetVal.Message);
   end;
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'end');
-end;
-
-procedure TUniMainModule.FDConnectionAfterDisconnect(Sender: TObject);
-begin
-  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionAfterDisconnect', 'begin');
-end;
-
-procedure TUniMainModule.FDConnectionBeforeDisconnect(Sender: TObject);
-begin
-  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionBeforeDisconnect', 'begin');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
@@ -209,9 +196,10 @@ begin
   {$ENDIF}
 end;
 
-procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
+procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject); // Отрабатывает с некоторой задержкой
 var FAudit : TAudit;
 begin
+
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'begin');
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', FDConnection.Connected.ToString());
 

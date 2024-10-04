@@ -22,20 +22,19 @@ object LoginEditF: TLoginEditF
     Caption = #1058#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100':'
     Anchors = []
     TabOrder = 0
-    ExplicitLeft = 40
   end
   object edtPas: TUniEdit
     Left = 165
     Top = 31
     Width = 225
     Hint = ''
+    PasswordChar = '*'
     CharEOL = '*'
     Text = ''
     Anchors = []
     TabOrder = 1
     EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 163
   end
   object UniPanel: TUniPanel
     Left = 0
@@ -46,8 +45,6 @@ object LoginEditF: TLoginEditF
     Align = alBottom
     TabOrder = 2
     Caption = ''
-    ExplicitTop = 159
-    ExplicitWidth = 451
     DesignSize = (
       455
       40)
@@ -61,7 +58,6 @@ object LoginEditF: TLoginEditF
       Anchors = []
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 278
     end
     object btnCancel: TUniButton
       Left = 167
@@ -74,7 +70,6 @@ object LoginEditF: TLoginEditF
       Anchors = []
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 165
     end
   end
   object UniLabel1: TUniLabel
@@ -86,21 +81,19 @@ object LoginEditF: TLoginEditF
     Caption = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100':'
     Anchors = []
     TabOrder = 3
-    ExplicitLeft = 44
   end
   object edtNewPas2: TUniEdit
     Left = 165
     Top = 103
     Width = 225
     Hint = ''
+    PasswordChar = '*'
     CharEOL = '*'
     Text = ''
     Anchors = []
     TabOrder = 4
     EmptyText = #1055#1086#1074#1090#1086#1088#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 163
-    ExplicitTop = 102
   end
   object UniLabel3: TUniLabel
     Left = 45
@@ -111,20 +104,18 @@ object LoginEditF: TLoginEditF
     Caption = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100':'
     Anchors = []
     TabOrder = 5
-    ExplicitLeft = 44
-    ExplicitTop = 103
   end
   object edtNewPas: TUniEdit
     Left = 165
     Top = 73
     Width = 225
     Hint = ''
+    PasswordChar = '*'
     CharEOL = '*'
     Text = ''
     Anchors = []
     TabOrder = 6
     EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
     ClearButton = True
-    ExplicitLeft = 163
   end
 end

@@ -11,7 +11,7 @@ uses
   FireDAC.Phys.MSSQLDef, FireDAC.Phys.ODBCBase, FireDAC.Phys.MSSQL,
   FireDAC.Comp.Client, FireDAC.VCLUI.Wait, FireDAC.Comp.UI,
   FireDAC.ConsoleUI.Wait, FireDAC.VCLUI.Error, FireDAC.Stan.Pool,
-  FireDAC.Stan.Async, Data.DB, uniThreadTimer
+  FireDAC.Stan.Async, Data.DB
 
   ,Windows, Messages, Winapi.ShellAPI, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet

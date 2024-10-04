@@ -26,7 +26,7 @@ object UniServerModule: TUniServerModule
   SSL.SSLOptions.Mode = sslmClient
   SSL.SSLOptions.VerifyMode = []
   SSL.SSLOptions.VerifyDepth = 0
-  Options = [soAutoPlatformSwitch, soWipeShadowSessions, soDontCompressDownloads, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
+  Options = [soAutoPlatformSwitch, soRestartSessionOnTimeout, soWipeShadowSessions, soDontCompressDownloads, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
   ServerLogger.Options = [logIndyExceptions, logSessionExceptions, logIndySSLExceptions, logIndySSLCryptoExceptions]
   ConnectionFailureRecovery.DetailedLog = True
   ConnectionFailureRecovery.FullSequenceLog = True
@@ -34,7 +34,7 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.RetryMessage = 'Retrying...'
   OnBeforeInit = UniGUIServerModuleBeforeInit
   Height = 261
-  Width = 906
+  Width = 682
   object FDManager: TFDManager
     DriverDefFileAutoLoad = False
     ConnectionDefFileAutoLoad = False
