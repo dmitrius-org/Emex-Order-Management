@@ -285,11 +285,11 @@ DEALLOCATE my_cur
                        else 0
                      end
        ,o.Warning  = case
-                       when n.Brief  = 'Sent' then p.Comment
+                       when p.StatusId  = 5 /*Sent*/  then p.Comment
                        else o.Warning
                      end
        ,o.Flag     = case
-                       when n.Brief  = 'Sent' then ((o.Flag & ~1) & ~2)
+                       when p.StatusId  = 5 /*Sent*/ then ((o.Flag & ~1) & ~2)
                        else o.Flag 
                      end
        ,o.updDatetime = GetDate()
@@ -319,7 +319,7 @@ DEALLOCATE my_cur
                                     end
        ,o.Quantity                = p.Quantity	       	   					          
 	   ,o.DateDeparture           = case --Добавить дату вылета (дата когда статус сменился на Отгружено)
-                                      when n.Brief  = 'Sent' then p.DocumentDate
+                                      when p.StatusId  = 5 /*Sent*/  then p.DocumentDate
                                       else o.DateDeparture
                                     end 
    from pMovement p (nolock)
