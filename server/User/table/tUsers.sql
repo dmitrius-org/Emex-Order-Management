@@ -11,6 +11,7 @@ begin
 	,isBlock           bit            default 0  --
 	,DateBlock         datetime       null
 	,Login             nvarchar(512) 
+    ,Email             nvarchar(64)  
 	--
 	,inDatetime        datetime default GetDate()      --
 	,updDatetime       datetime default GetDate()      --

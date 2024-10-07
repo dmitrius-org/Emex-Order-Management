@@ -1,7 +1,7 @@
 object UserF: TUserF
   Left = 0
   Top = 0
-  ClientHeight = 350
+  ClientHeight = 351
   ClientWidth = 602
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   OnShow = UniFormShow
@@ -14,35 +14,38 @@ object UserF: TUserF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 313
+    Top = 314
     Width = 596
     Height = 34
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 312
-    ExplicitWidth = 592
+    DesignSize = (
+      596
+      34)
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 506
+      Left = 476
       Top = 4
       Width = 85
       Height = 26
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      Anchors = [akTop, akRight, akBottom]
       TabOrder = 1
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 416
+      Left = 392
       Top = 4
       Width = 81
       Height = 26
       Hint = ''
       Margins.Right = 5
       Caption = #1054#1090#1084#1077#1085#1072
+      Anchors = [akTop, akRight, akBottom]
       TabOrder = 2
       OnClick = btnCancelClick
     end
@@ -52,27 +55,26 @@ object UserF: TUserF
     Left = 3
     Top = 3
     Width = 596
-    Height = 198
+    Height = 219
     Hint = ''
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     Align = alTop
     TabOrder = 1
+    Font.Color = clBlack
     Font.Height = -12
     ParentFont = False
-    ExplicitWidth = 592
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
       Top = 15
       Width = 592
-      Height = 170
+      Height = 198
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 588
       DesignSize = (
         592
-        170)
+        198)
       object edtBrief: TUniEdit
         Left = 144
         Top = 16
@@ -84,7 +86,6 @@ object UserF: TUserF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         ClearButton = True
-        ExplicitWidth = 412
       end
       object edtName: TUniEdit
         Left = 144
@@ -97,10 +98,9 @@ object UserF: TUserF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         ClearButton = True
-        ExplicitWidth = 412
       end
       object cbIsActive: TUniCheckBox
-        Left = 140
+        Left = 144
         Top = 104
         Width = 138
         Height = 17
@@ -112,7 +112,7 @@ object UserF: TUserF
         ReadOnly = True
       end
       object cbIsBlock: TUniCheckBox
-        Left = 140
+        Left = 144
         Top = 132
         Width = 138
         Height = 17
@@ -123,7 +123,7 @@ object UserF: TUserF
         TabOrder = 4
       end
       object edtDataBlock: TUniDateTimePicker
-        Left = 414
+        Left = 415
         Top = 129
         Width = 145
         Hint = ''
@@ -131,6 +131,7 @@ object UserF: TUserF
         DateFormat = 'dd.MM.yyyy'
         TimeFormat = 'HH:mm:ss'
         ReadOnly = True
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 5
         ParentFont = False
         Font.Height = -12
@@ -194,12 +195,38 @@ object UserF: TUserF
         Font.Height = -12
         TabOrder = 10
       end
+      object Email: TUniEdit
+        Left = 144
+        Top = 157
+        Width = 416
+        Hint = ''
+        Text = ''
+        ParentFont = False
+        Font.Color = clBlack
+        Font.Height = -12
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 11
+        ClearButton = True
+        InputType = 'email'
+      end
+      object UniLabel5: TUniLabel
+        Left = 25
+        Top = 157
+        Width = 36
+        Height = 13
+        Hint = ''
+        Caption = #1055#1086#1095#1090#1072':'
+        ParentFont = False
+        Font.Color = clBlack
+        Font.Height = -12
+        TabOrder = 12
+      end
     end
   end
   object fsAudit: TUniFieldSet
     AlignWithMargins = True
     Left = 3
-    Top = 227
+    Top = 228
     Width = 596
     Height = 80
     Hint = ''
@@ -208,8 +235,6 @@ object UserF: TUserF
     Align = alBottom
     LayoutConfig.Region = 'south'
     TabOrder = 2
-    ExplicitTop = 226
-    ExplicitWidth = 592
     object UniFieldContainer2: TUniFieldContainer
       Left = 2
       Top = 15
@@ -219,7 +244,9 @@ object UserF: TUserF
       ParentColor = False
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 588
+      DesignSize = (
+        592
+        63)
       object edtID: TUniEdit
         Left = 141
         Top = 7
@@ -250,6 +277,7 @@ object UserF: TUserF
         DateFormat = 'dd.MM.yyyy'
         TimeFormat = 'HH:mm:ss'
         ReadOnly = True
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 3
         DateMode = dtmDateTime
       end

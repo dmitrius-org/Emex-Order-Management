@@ -14,6 +14,7 @@ create proc UserUpdate
              ,@Name	           nvarchar(512)  -- 
              ,@isBlock	       bit      =null
              ,@DateBlock       datetime =null
+             ,@Email	       nvarchar(64) =null
 as
   declare @r int = 0
   
@@ -76,9 +77,19 @@ as
                             then null
                             else @DateBlock
                            end
+
+            ,u.Email     = @Email
             ,u.updDatetime = getdate()
         from tUser u (updlock)
        where u.UserID = @UserID
+
+      declare @AuditID numeric(18, 0)
+      exec AuditInsert
+             @AuditID      = @AuditID out
+            ,@ObjectID     = @UserID
+            ,@ObjectTypeID = 2
+            ,@ActionID     = 2
+            ,@Comment      = 'Изменение пользователя'
 
     commit tran
   END TRY  
@@ -97,5 +108,5 @@ as
 go
 grant exec on UserUpdate to public
 go
-exec setOV 'UserUpdate', 'P', '20240101', '0'
+exec setOV 'UserUpdate', 'P', '20241007', '1'
 go

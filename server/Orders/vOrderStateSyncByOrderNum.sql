@@ -20,7 +20,7 @@ Select o.ClientID,
  inner join tNodes n (nolock) 
          on n.NodeID = o.StatusID
         and n.Flag&2>0 
- where isnull(o.EmexOrderID, 0)  > 0
+ where isnull(o.EmexOrderID, 0)  = 538
    and isnull(o.isCancel, 0)     = 0 
 
 go

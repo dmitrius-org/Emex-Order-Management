@@ -36,9 +36,9 @@ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurcha
 
 -- не проставлен признак отказан и статус нет в наличи
 select 'не проставлен признак отказан и статус нет в наличи', StatusID, p.NewStateID, *
-  from tOrders o
+  from tOrders o  (nolock)
  cross apply (select  * 
-                from tProtocol p
+                from tProtocol p  (nolock)
                where p.ObjectID = o.OrderID
             --   order by p.ProtocolID desc
                ) as p
@@ -57,7 +57,7 @@ update tOrders
 
 -- проставлен признак отказан ...
 select *
-  from tOrders
+  from tOrders  (nolock)
  where StatusID in (1	--New
                    ,2	--InChecked
                    ,3	--InBasket
@@ -118,7 +118,7 @@ select 'Заказы, которые не удалось разбить на ч�
 
 -- заказы, которых нет в emex
 Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference,  n.Brief, n.Name, *
-  from tOrders p
+  from tOrders p  (nolock)
  inner join tClients c (nolock)
          on c.ClientID = p.ClientID 
  inner join tNodes n (nolock)

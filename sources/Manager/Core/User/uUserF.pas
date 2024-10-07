@@ -34,6 +34,8 @@ type
     UniLabel3: TUniLabel;
     edtPass: TUniEdit;
     lblPass: TUniLabel;
+    Email: TUniEdit;
+    UniLabel5: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -90,49 +92,64 @@ begin
   case FAction of
     acInsert:
     begin
-      sqltext :=' declare @R      int                '+
-                '        ,@UserID numeric(18, 0)     '+
-                ' exec @r = UserInsert               '+
-                '             @UserID   = @UserID out'+
-                '            ,@Brief    = :Brief     '+
-                '            ,@Name     = :Name      '+
-                '            ,@isBlock  = :isBlock   '+
-                '            ,@DateBlock= :DateBlock '+
-                '            ,@Password = :Password  '+
-                '                                    '+
-                ' select @r as retcode      '+
-                ' ';
+      sqltext :='''
+                 declare @R      int
+                        ,@UserID numeric(18, 0)
+
+                 exec @r = UserInsert
+                             @UserID   = @UserID out
+                            ,@Brief    = :Brief
+                            ,@Name     = :Name
+                            ,@isBlock  = :isBlock
+                            ,@DateBlock= :DateBlock
+                            ,@Password = :Password
+                            ,@Email    = :Email
+
+                 select @r as retcode
+                ''';
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := sqltext;
 
       Sql.Open(UniMainModule.Query,
-               ['Brief','Name','isBlock','DateBlock', 'Password'],
-               [edtBrief.Text, edtName.Text, cbisBlock.Checked,  edtDataBlock.DateTime, edtPass.Text]);
+               ['Brief','Name','isBlock','DateBlock', 'Password', 'Email'],
+               [edtBrief.Text,
+                edtName.Text,
+                cbisBlock.Checked,
+                edtDataBlock.DateTime,
+                edtPass.Text,
+                Email.Text]);
 
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
 
     end;
     acUpdate:
     begin
-      UniMainModule.Query.Close;
-      UniMainModule.Query.SQL.Text := ' declare @R      int                '+
-                                      '         '+
-                                      ' exec @r = UserUpdate               '+
-                                      '             @UserID   = :UserID    '+
-                                      '            ,@Brief    = :Brief     '+
-                                      '            ,@Name     = :Name      '+
-                                      '            ,@isBlock  = :isBlock   '+
-                                      '            ,@DateBlock= :DateBlock '+
-                                      '                                    '+
-                                      ' select @r as retcode               '+
-                                      ' ';
+      sqltext :='''
+                 declare @R      int
 
-      UniMainModule.Query.ParamByName('UserID').Value := FID;
-      UniMainModule.Query.ParamByName('Brief').Value := edtBrief.Text;
-      UniMainModule.Query.ParamByName('Name').Value := edtName.Text;
-      UniMainModule.Query.ParamByName('isBlock').Value := cbisBlock.Checked;
-      UniMainModule.Query.ParamByName('DateBlock').Value := edtDataBlock.DateTime;
-      UniMainModule.Query.Open;
+                 exec @r = UserUpdate
+                             @UserID   = :UserID
+                            ,@Brief    = :Brief
+                            ,@Name     = :Name
+                            ,@isBlock  = :isBlock
+                            ,@DateBlock= :DateBlock
+                            ,@Email    = :Email
+
+                 select @r as retcode
+                ''';
+      UniMainModule.Query.Close;
+      UniMainModule.Query.SQL.Text := sqltext;
+
+      Sql.Open(UniMainModule.Query,
+               ['UserID', 'Brief','Name','isBlock','DateBlock', 'Email'],
+               [FID,
+                edtBrief.Text,
+                edtName.Text,
+                cbisBlock.Checked,
+                edtDataBlock.DateTime,
+               // edtPass.Text,
+                Email.Text]);
+
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
     end;
     acDelete:
@@ -154,7 +171,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    Audit.Add(TObjectType.otUser, FID, FAction, '');
+    //udit.Add(TObjectType.otUser, FID, FAction, '');
     ModalResult:=mrOK;
   end
   else
@@ -219,6 +236,7 @@ begin
   cbIsActive.Checked   := UniMainModule.Query.FieldValues['isAdmin'];
   cbisBlock.Checked    := UniMainModule.Query.FieldValues['isBlock'];
   edtDataBlock.DateTime:= UniMainModule.Query.FieldByName('DateBlock').AsDateTime;
+  Email.Text           := UniMainModule.Query.FieldValues['Email'];
 
 
   Caption := 'Пользователь [' + edtBrief.Text   + ']';

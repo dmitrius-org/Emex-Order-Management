@@ -12,6 +12,7 @@ create proc UserInsert
              ,@isBlock	       bit      = null
              ,@DateBlock       datetime = null
              ,@Password        nvarchar(512)
+             ,@Email	       nvarchar(64) =null
 as
   declare @r int = 0
 
@@ -53,19 +54,33 @@ as
     end
 
     insert into tUser
-        (
-         Brief
-        ,Name
-        ,isBlock
-        ,DateBlock
-        ,Login
-        )
+          (
+           Brief
+          ,Name
+          ,isBlock
+          ,DateBlock
+          ,Login
+          ,Email
+          )
     OUTPUT INSERTED.UserID INTO @ID
     select @Brief     
           ,@Name	     
           ,@isBlock	 
           ,@DateBlock 
           ,@Brief
+          ,@Email
+
+
+   Select @UserID = ID from @ID
+   
+   declare @AuditID numeric(18, 0)
+   exec AuditInsert
+             @AuditID      = @AuditID out
+            ,@ObjectID     = @UserID
+            ,@ObjectTypeID = 2
+            ,@ActionID     = 1 --acInsert
+            ,@Comment      = 'Добавление пользователя'
+
     commit tran
   END TRY  
   BEGIN CATCH  
@@ -77,13 +92,11 @@ as
 
     goto exit_     
   END CATCH  
-
-   Select @UserID = ID from @ID
-
+   
  exit_:
  return @r
 
 grant exec on UserInsert to public
 go
-exec setOV 'UserInsert', 'P', '20240514', '1'
+exec setOV 'UserInsert', 'P', '20241007', '2'
 go

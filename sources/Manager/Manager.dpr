@@ -108,7 +108,8 @@ uses
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uBalanceTotalT in 'App\Clients\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
   uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
-  uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas';
+  uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas',
+  uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm};
 
 {$R *.res}
 

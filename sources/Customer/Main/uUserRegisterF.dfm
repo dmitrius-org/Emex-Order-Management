@@ -10,12 +10,23 @@ object UserRegisterF: TUserRegisterF
   MonitoredKeys.Keys = <>
   ClientEvents.ExtEvents.Strings = (
     
+      'window.afterlayout=function window.afterlayout(sender, layout, e' +
+      'Opts)'#13#10'{'#13#10'    var me=this;'#13#10'    window.addEventListener('#39'resize'#39 +
+      ', function(){me.center()});'#13#10'}'
+    
       'window.afterrender=function window.afterrender(sender, eOpts)'#13#10'{' +
       #13#10'    var me=sender.getEl();'#13#10'    if (me) {'#13#10'        me.setStyle' +
-      '("padding", 0);'#13#10'        //me.setStyle("border-width", 1);'#13#10'    ' +
-      '    me.setStyle("border-width", 0);'#13#10'        me.setStyle("-webki' +
-      't-border-radius", 0);'#13#10'        me.setStyle("-moz-'#65279'border-radius"' +
-      ', 0);'#13#10'        me.setStyle("border-radius", 0);'#13#10'    }'#13#10'}')
+      '("padding", 0);'#13#10'        me.setStyle("margin", 0);'#13#10'        me.s' +
+      'etStyle("border-width", 0);'#13#10'        me.setStyle("-webkit-border' +
+      '-radius", 0);'#13#10'        me.setStyle("-moz-'#65279'border-radius", 0);'#13#10' ' +
+      '       me.setStyle("border-radius", 0);'#13#10'    }'#13#10'}'
+    
+      'window.resize=function window.resize(sender, width, height, oldW' +
+      'idth, oldHeight, eOpts)'#13#10'{'#13#10'  //'#13#10'}')
+  ClientEvents.UniEvents.Strings = (
+    
+      'window.beforeInit=function window.beforeInit(sender, config)'#13#10'{'#13 +
+      #10'    config.shadow=false;'#13#10'}')
   LayoutConfig.Region = 'center'
   DesignSize = (
     800

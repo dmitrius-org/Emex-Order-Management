@@ -19,15 +19,14 @@ select u.UserID
       ,nullif(u.DateBlock, '18991230') DateBlock    
       ,u.inDatetime  
       ,u.updDatetime 
+      ,u.Email
   from tUser u (nolock)
  -- inner join  is_disabled from sys.server_principals
 go
 grant all on vUsers to public
 go
-exec setOV 'vUsers', 'V', '20240101', '0'
+exec setOV 'vUsers', 'V', '20241007', '1'
 go
  
-
-
-
---select * from vUsers
+ 
+ select * from vUsers

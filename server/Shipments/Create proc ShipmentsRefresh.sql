@@ -31,6 +31,7 @@ as
         ,s.VolumeKGDiff        = o.VolumeKGF - o.VolumeKG    -- указать разницу сумм вес объемный факт минус вес объемный из прайса   
         ,s.SuppliersID         = o.SuppliersID
         ,s.SupplierDelivery    = o.SupplierDelivery
+        ,s.ReceiptDate         = cast((dateadd(dd, isnull(o.SupplierDelivery, 0), s.ShipmentsDate)) as date) -- дата отгрузки + срок доставки с профиля доставки      
     from pShipments s with (Updlock index=ao1)
    cross apply (select sum(o.AmountPurchaseF)                    as ShipmentsAmount
                       ,sum(o.Amount)                             as ShipmentsAmountR
@@ -62,9 +63,7 @@ as
 
 
   Update s 
-     set s.ShipmentsDate = o.OperDate
-        ,s.ReceiptDate   = cast((dateadd(dd, isnull(s.SupplierDelivery, 0), o.OperDate)) as date) -- дата отгрузки + срок доставки с профиля доставки
-                             
+     set s.ShipmentsDate = o.OperDate                    
     from pShipments s with (Updlock index=ao1)
    cross apply (select Max(p.OperDate)  OperDate
                   from tOrders o with (nolock index=ao1)
@@ -77,7 +76,6 @@ as
                 ) o
    where s.Spid = @@SPID
      and isnull(s.ShipmentsDate, '') = ''  
-
 
   insert tShipments (       
                          
@@ -173,10 +171,6 @@ select
            on t.Invoice = p.Invoice
    where p.Spid = @@SPid
 
-
-
-
- --        - (Вес физический факт * WeightKGF из соответствующего профиля доставки) + (если Вес Объемный Факт > Вес Физический Факт, то (Вес Объемный Факт - Вес Физический Факт) * VolumeKGF из соответствующего профиля доставки)
 
 exit_:
 

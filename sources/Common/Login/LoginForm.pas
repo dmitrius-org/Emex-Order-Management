@@ -18,6 +18,7 @@ type
     edtPas: TUniEdit;
     btnCancel: TUniButton;
     UniCheckBox1: TUniCheckBox;
+    lblReset: TUniLabel;
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
     procedure UniLoginFormShow(Sender: TObject);

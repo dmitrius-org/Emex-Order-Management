@@ -30,7 +30,33 @@ Update p
                  and p.OrderDetailSubId<> '' ) o 
 where p.Spid = @@SPID
 
-Update pMovement
+--2. Статус и Количество совпадают
+Update p
+    set p.OrderID = o.OrderID
+       ,p.Tag     = 2 
+   from pMovement p (updlock) 
+  inner join tNodes n (nolock)
+          on n.EID = p.StatusId
+  cross apply (select top 1 o.OrderID
+                 from tOrders o (nolock) 
+                 left join pMovement m (nolock)
+                        on m.Spid        = @@spid
+                       and m.OrderID     = o.OrderID
+                       and m.OrderNumber = o.EmexOrderID 
+                where o.EmexOrderID   = p.OrderNumber
+                  and o.DetailNumber  = p.DetailNum            
+                  and o.CustomerSubId = p.CustomerSubId
+                  and o.Reference     = p.Reference 
+                  and o.Quantity      = p.Quantity
+                  and o.StatusID      = n.NodeID 
+
+                  and m.OrderID is null
+                ) o   
+where p.Spid = @@SPID
+  and isnull(p.OrderID, 0) = 0
+
+
+Update pMovement -- 
    set pMovement.N = p.N
   from (Select ID,
                ROW_NUMBER() over(partition by OrderNumber, DetailNum, CustomerSubId, Reference order by StatusID, isnull(p.Tag, 999)) N
@@ -57,65 +83,83 @@ FETCH NEXT FROM my_cur INTO @N
 WHILE @@FETCH_STATUS = 0
 BEGIN
     --2. Количество
-    Update p
-       set p.OrderID = o.OrderID
-          ,p.Tag     = 2 
-      from pMovement p (updlock) 
-      left join tNodes n (nolock)
-             on n.EID = p.StatusId
-     cross apply (select top 1 *
-                    from tOrders o (nolock) 
-                   where o.EmexOrderID   = p.OrderNumber
-                     and o.DetailNumber  = p.DetailNum            
-                     and o.CustomerSubId = p.CustomerSubId
-                     and o.Reference     = p.Reference 
-                     and o.Quantity      = p.Quantity
-                     and o.StatusID      = n.NodeID 
-                     and not exists (select 1
-                                       from pMovement m (nolock)
-                                      where m.Spid        = @@spid
-                                        and m.OrderID     = o.OrderID
-                                        and m.OrderNumber = o.EmexOrderID 
-                                     )
-                  ) o   
-    where p.Spid = @@SPID
-      and isnull(p.OrderID, 0) = 0
-      and p.N = @N
+    --Update p
+    --   set p.OrderID = o.OrderID
+    --      ,p.Tag     = 3 
+    --  from pMovement p (updlock) 
+    -- inner join tNodes n (nolock)
+    --         on n.EID = p.StatusId
+    -- cross apply (select top 1 o.OrderID
+    --                from tOrders o (nolock) 
+    --                left join pMovement m (nolock)
+    --                       on m.Spid        = @@spid
+    --                      and m.OrderID     = o.OrderID
+    --                      and m.OrderNumber = o.EmexOrderID 
+    --               where o.EmexOrderID   = p.OrderNumber
+    --                 and o.DetailNumber  = p.DetailNum            
+    --                 and o.CustomerSubId = p.CustomerSubId
+    --                 and o.Reference     = p.Reference 
+    --                 and o.Quantity      = p.Quantity
+    --                 and o.StatusID      = n.NodeID 
+    --                 and m.OrderID is null
+    --              ) o   
+    --where p.Spid = @@SPID
+    --  and isnull(p.OrderID, 0) = 0
+    --  and p.N = @N
 
 
     --3. Все остальное
     Update p
        set p.OrderID = o.OrderID
-          ,p.Tag     = 3
+          ,p.Tag     = 4
       from pMovement p (updlock) 
-      left join tNodes n (nolock)
+     inner join tNodes n (nolock)
              on n.EID = p.StatusId
      cross apply (select top 1 o.*
                     from tOrders o (nolock) 
                    inner join tNodes nn (nolock)
                            on nn.NodeID = o.StatusID
                          -- and nn.EID   <= p.StatusId
+                    left join pMovement m (nolock)
+                           on m.Spid        = @@spid
+                          and m.OrderID     = o.OrderID
+                          and m.OrderNumber = o.EmexOrderID 
                    where o.EmexOrderID   = p.OrderNumber 
                      and o.DetailNumber  = p.DetailNum               
                      and o.CustomerSubId = p.CustomerSubId
                      and o.Reference     = p.Reference 
-                     and not exists (select 1
-                                       from pMovement m (nolock)
-                                      where m.Spid        = @@spid
-                                        and m.OrderID     = o.OrderID
-                                        and m.OrderNumber = o.EmexOrderID 
-                                     )
+
+                     and m.OrderID is null
                    order by  
-                             case when p.Quantity         = o.Quantity         then 0 else 1 end
-                            ,case when p.MakeLogo         = o.MakeLogo         then 0 else 1 end
-                            ,case when n.NodeID           = o.StatusID         then 0 else 1 end
-                            ,case when p.PriceSale        = o.ReplacementPrice then 0 else 1 end
+                            -- case when p.Quantity         = o.Quantity         then 0 else 1 end
+                            
+                             case when p.PriceLogo        = o.PriceLogo         then 0 else 1 end
+                            ,case 
+                               when n.NodeID = o.StatusID then 0 
+                               when n.EID = 6 /*НЕТ В НАЛИЧИИ*/ then
+                                      case 
+                                        when nn.EID = 1 /* InWork        	В работе*/            then 2
+                                        when nn.EID = 2 /* Purchased	    Закуплено*/           then 20
+                                        when nn.EID = 3 /* ReceivedOnStock	Получено на склад*/   then 30
+                                        when nn.EID = 4 /* ReadyToSend	    Готово к выдаче*/     then 40
+                                        when nn.EID = 5 /* Sent             Отправлено*/          then 50
+                                        when nn.EID = 6 /* NOT AVAILABLE	НЕТ В НАЛИЧИИ*/       then 1
+                                        --when nn.EID = 0 /**/ 	                                  then 
+                                        when nn.EID = 7 /* AGREE	Изменение цены*/              then 70
+                                        else 99 -- закуплено в последнюю очередь                  
+                                      end
+                               else 1 
+                             end
+                            ,case when p.Quantity         = o.Quantity         then 0 else 1 end -- ??
+                            ,case when p.MakeLogo         = o.MakeLogo         then 0 else 1 end -- ??
                             ,case when nn.EID            <= p.StatusId         then 0 else 1 end
-                            ,nn.EID desc
+                           -- ,nn.EID desc
                   ) o  
     where p.Spid     = @@SPID
-      and p.OrderID is null
+      and isnull(p.OrderID, 0) = 0
       and p.N = @N
+
+     exec CloneOrders @N = @N -- разбиение заказа
 
      --считываем следующую строку курсора
      FETCH NEXT FROM my_cur INTO @N
@@ -125,22 +169,23 @@ END
 CLOSE my_cur
 DEALLOCATE my_cur
 
- Update p
-    set p.Flag    = case
-                      when p.Quantity<>o.Quantity then isnull(p.Flag, 0)|4 -- изменилось количество
-                      else isnull(p.Flag, 0) 
-                    end
-   from pMovement p (updlock)
-  inner join tOrders o (nolock) 
-          on o.OrderID = p.OrderID
-  where p.Spid = @@SPID
+
+     --Update p
+     --   set p.Flag    = case
+     --                     when p.Quantity<>o.Quantity then isnull(p.Flag, 0)|4 -- изменилось количество
+     --                     else isnull(p.Flag, 0) 
+     --                   end
+     --  from pMovement p (updlock)
+     -- inner join tOrders o (nolock) 
+     --         on o.OrderID = p.OrderID
+     -- where p.Spid = @@SPID
 
   -- помечаем строки в которых изменилось количество и нет строк для разбиения, т.е. наоборот нужно строки собрать
   Update p
      set p.Flag    = isnull(p.Flag, 0)|8 
     FROM pMovement p (updlock)
    where p.spid = @@spid
-     and p.Flag&4>0
+     --and p.Flag&4>0
      and not exists (select 1
                        from pMovement pp (nolock)
                       where pp.spid = @@spid
@@ -148,7 +193,7 @@ DEALLOCATE my_cur
                         and pp.OrderID is null
                      )
 
- exec CloneOrders2 -- разбиение заказа
+-- exec CloneOrders2 -- разбиение заказа
 
 
  -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
@@ -312,6 +357,17 @@ DEALLOCATE my_cur
 
 
 
+ -- расчет сроков дотавки
+ delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+ insert pDeliveryTerm (Spid, OrderID)
+ Select distinct @@spid, OrderID
+   from pMovement (nolock)
+  where Spid = @@SPID
+  
+ exec OrdersDeliveryTermCalcNext @IsSave = 1
+
+
+
  -- Данные по инвойсам
  delete pShipments from pShipments (rowlock) where Spid = @@Spid 
  insert pShipments
@@ -334,22 +390,11 @@ DEALLOCATE my_cur
  
  exec ShipmentsRefresh
 
-
-
- -- расчет сроков дотавки
- delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
- insert pDeliveryTerm (Spid, OrderID)
- Select distinct @@spid, OrderID
-   from pMovement (nolock)
-  where Spid = @@SPID
-  
- exec OrdersDeliveryTermCalcNext @IsSave = 1
-
  exit_:
  return @r
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20240911', '8'
+exec setOV 'EmexOrderStateSync', 'P', '20241004', '9'
 go
  

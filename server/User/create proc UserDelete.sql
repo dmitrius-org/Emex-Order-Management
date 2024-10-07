@@ -47,6 +47,14 @@ as
     delete tUser
       from tUser u (rowlock)
      where u.UserID = @UserID
+
+      declare @AuditID numeric(18, 0)
+      exec AuditInsert
+             @AuditID      = @AuditID out
+            ,@ObjectID     = @UserID
+            ,@ObjectTypeID = 2
+            ,@ActionID     = 3 --acDelete
+            ,@Comment      = 'Удаление пользователя'
     
     commit tran
   END TRY  
@@ -66,5 +74,5 @@ as
 go
 grant exec on UserDelete to public
 go
-exec setOV 'UserDelete', 'P', '20240101', '0'
+exec setOV 'UserDelete', 'P', '20241007', '1'
 go

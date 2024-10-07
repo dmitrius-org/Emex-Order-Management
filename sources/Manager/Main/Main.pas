@@ -40,6 +40,7 @@ type
     UniContainerPanel2: TUniContainerPanel;
     LogoImage: TUniImage;
     LogoPanel: TUniContainerPanel;
+    actProfile: TAction;
     procedure UniFormShow(Sender: TObject);
     procedure MainMenuClick(Sender: TObject);
     procedure TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -49,6 +50,7 @@ type
     procedure actinfoExecute(Sender: TObject);
     procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
     procedure UniFormCreate(Sender: TObject);
+    procedure actProfileExecute(Sender: TObject);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -79,7 +81,8 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant, uUserProfile,
+  uCommonType;
 
 function MainForm: TMainForm;
 begin
@@ -115,6 +118,13 @@ end;
 procedure TMainForm.actinfoExecute(Sender: TObject);
 begin
   Info.ShowModal();
+end;
+
+procedure TMainForm.actProfileExecute(Sender: TObject);
+begin
+  UserProfile.FormAction := acUpdate;
+  UserProfile.ID := UniMainModule.AUserID;
+  UserProfile.ShowModal();
 end;
 
 procedure TMainForm.ConstructNavigator;
@@ -280,6 +290,13 @@ begin
       Tag := -999;
       Action := actinfo;
       ImageIndex := 18;
+    end;
+
+    with MainMenu.Items.Add(Profile, 'Профиль пользователя') do
+    begin
+      Tag := -999;
+      Action := actProfile;
+      ImageIndex := 21;
     end;
 
     with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
