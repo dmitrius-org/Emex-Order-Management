@@ -29,29 +29,35 @@ as
          OrderType,
          OrderSum,
          Invoice,
-         OperDateS
+         OperDateS, -- поле для сортировки
+         ReceiptDate,
+         ReceiptDate2
          )
   select @@spid
         ,@ClientID
         ,n.SearchID
         ,n.SearchBrief
-        ,pr.OperDate
-        ,max(o.DestinationName)
+        ,cast(s.ShipmentsDate as date) -- OperDate
+        ,max(o.DestinationName) -- OperDateS
         ,sum(o.Amount)
         ,o.Invoice
-        ,max(pr.OperDateS)
+        ,max(s.ShipmentsDate)-- OperDateS
+        ,Max(s.ReceiptDate)
+        ,Max(s.ReceiptDate2)
     from tNodes n with (nolock)
    inner join tOrders o with (nolock index =ao2)
            on o.ClientID = @ClientID
           and o.StatusID = n.NodeID
-          and isnull(Invoice, '') <> ''
+   --       and isnull(Invoice, '') <> ''
+   inner join tShipments s (nolock)
+           on s.Invoice = o.Invoice
 
-   cross apply (select max(cast(pr.OperDate as date)) as OperDate,
-                       max(pr.OperDate) as OperDateS
-                  from tProtocol pr with (nolock index=ao2)
-                 where pr.ObjectID   = o.OrderID
-                   and pr.NewStateID = o.StatusID
-               ) as pr
+   --cross apply (select max(cast(pr.OperDate as date)) as OperDate,
+   --                    max(pr.OperDate) as OperDateS
+   --               from tProtocol pr with (nolock index=ao2)
+   --              where pr.ObjectID   = o.OrderID
+   --                and pr.NewStateID = 8	--Send
+   --            ) as pr
 
    where n.SearchID in ( 
                         
@@ -61,7 +67,7 @@ as
                         ,7 -- 'Выдано клиенту'
                          )
 
-  group by pr.OperDate, n.SearchID, n.SearchBrief, o.Invoice
+  group by cast(s.ShipmentsDate as date), n.SearchID, n.SearchBrief, o.Invoice
 
   --select * from tNodes
 

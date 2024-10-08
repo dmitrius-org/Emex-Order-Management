@@ -487,7 +487,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 1
         end
         object fCancel: TUniBitBtn
-          Left = 784
+          Left = 811
           Top = 35
           Width = 128
           Height = 24
@@ -497,7 +497,7 @@ object OrdersT2: TOrdersT2
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 918
+          Left = 945
           Top = 35
           Width = 139
           Height = 24
@@ -530,7 +530,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 3
         end
         object UniLabel5: TUniLabel
-          Left = 697
+          Left = 724
           Top = 16
           Width = 34
           Height = 13
@@ -540,7 +540,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 5
         end
         object cbCancel: TUniComboBox
-          Left = 697
+          Left = 724
           Top = 35
           Width = 81
           Height = 23
@@ -608,7 +608,7 @@ object OrdersT2: TOrdersT2
         object fDetailNum: TUniEdit
           Left = 563
           Top = 35
-          Width = 128
+          Width = 155
           Hint = ''
           ShowHint = True
           Text = ''
@@ -835,7 +835,8 @@ object OrdersT2: TOrdersT2
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-      '      ,o.[ReceiptDate2]      '
+      '      ,o.[ReceiptDate2]   '
+      '      ,o.[OrderDetailSubId]   '
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
       ' '
@@ -847,9 +848,7 @@ object OrdersT2: TOrdersT2
         '   and ((:OrderNum = '#39#39') or (o.OrderNum like '#39'%'#39' + isnull(nullif' +
         '(:OrderNum, '#39#39'), o.OrderNum) + '#39'%'#39'))'
       '  '
-      
-        '   and ((:DetailNum = '#39#39') or (o.DetailNumber like '#39'%'#39' + isnull(n' +
-        'ullif(:DetailNum, '#39#39'), o.DetailNumber) + '#39'%'#39'))       '
+      '   !DetailNum    '
       '   '
       '   and o.isCancel = isnull(nullif(:isCancel, -1), o.isCancel)'
       '   '
@@ -872,10 +871,6 @@ object OrdersT2: TOrdersT2
         Value = Null
       end
       item
-        Name = 'DETAILNUM'
-        ParamType = ptInput
-      end
-      item
         Name = 'ISCANCEL'
         DataType = ftInteger
         ParamType = ptInput
@@ -889,6 +884,10 @@ object OrdersT2: TOrdersT2
       item
         Value = ''
         Name = 'PRICELOGO'
+      end
+      item
+        Value = Null
+        Name = 'DETAILNUM'
       end
       item
         Value = Null
@@ -1121,6 +1120,10 @@ object OrdersT2: TOrdersT2
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
       ReadOnly = True
+    end
+    object QueryOrderDetailSubId: TWideStringField
+      FieldName = 'OrderDetailSubId'
+      Size = 32
     end
   end
   object DataSource: TDataSource

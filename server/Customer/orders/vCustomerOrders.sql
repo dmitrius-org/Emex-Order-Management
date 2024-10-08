@@ -70,6 +70,7 @@ SELECT o.[OrderID]
       ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
       ,sh.ReceiptDate                  -- Ожидаемая дата поступления
       ,sh.ReceiptDate2
+      ,o.OrderDetailSubId
       ,o.OrderNum              Reference
 
       ,o.[inDatetime]
@@ -110,7 +111,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241002', '6'
+exec setOV 'vCustomerOrders', 'V', '20241002', '7'
 go
  
 -- Описание таблицы

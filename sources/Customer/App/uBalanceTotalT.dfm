@@ -306,6 +306,7 @@ object BalanceTotalT: TBalanceTotalT
           Menu.MenuEnabled = False
         end
         item
+          FieldName = 'ReceiptDate'
           Title.Alignment = taCenter
           Title.Caption = ' '#1044#1072#1090#1072' '#1087#1088#1080#1073#1099#1090#1080#1103
           Title.Font.Height = -13
@@ -574,6 +575,13 @@ object BalanceTotalT: TBalanceTotalT
     object qShipmentsInvoice: TStringField
       FieldName = 'Invoice'
       Size = 64
+    end
+    object qShipmentsReceiptDate: TSQLTimeStampField
+      FieldName = 'ReceiptDate'
+      OnGetText = qShipmentsReceiptDateGetText
+    end
+    object qShipmentsReceiptDate2: TSQLTimeStampField
+      FieldName = 'ReceiptDate2'
     end
   end
   object dsShipments: TDataSource

@@ -110,6 +110,20 @@
     text-align: left
 }
 
+/* Ожидаемая дата поставки */
+.grid-balance-totall-detail .x-receipt-date-arrow{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
+/* Ожидаемая дата поставки */
+.grid-balance-totall-detail .x-receipt-date{
+    line-height: 0.0; 
+    color: #4183C4;
+    text-align: left
+}
+
 /* Иконка: сообщение по заказу*/
 .x-orders-message {
     /* position: absolute; */

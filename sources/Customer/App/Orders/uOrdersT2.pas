@@ -139,6 +139,7 @@ type
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
     QueryReceiptDate2: TSQLTimeStampField;
+    QueryOrderDetailSubId: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -309,20 +310,6 @@ begin
   UniSession.Synchronize;
 end;
 
-//procedure TOrdersT2.FilterPriceLogoCreate;
-//begin
-////  qPriceLogo.Open(); // используется в фильтре PriceLogo
-////
-////  fPriceLogo.Clear;
-////  qPriceLogo.First;
-////  while not qPriceLogo.Eof do
-////  begin
-////    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
-////    qPriceLogo.Next;
-////  end;
-////
-////  fPriceLogo.Refresh;
-//end;
 
 procedure TOrdersT2.FilterStatusCreate;
 begin
@@ -426,7 +413,22 @@ begin
   Query.MacroByName('Status').Value :=  FStatus;
   Query.MacroByName('PriceLogo').Value := FPriceLogo;
   Query.ParamByName('OrderNum').Value := fOrderNum.Text;
-  Query.ParamByName('DetailNum').Value := fDetailNum.Text;
+
+  if fDetailNum.Text <> '' then
+    if string(fDetailNum.Text)[1] = '!' then
+    begin
+      Query.MacroByName('DetailNum').Value := ' and o.OrderDetailSubId = :DetailNum';
+      Query.ParamByName('DetailNum').AsString := Trim(fDetailNum.Text);
+    end
+    else
+    begin
+      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like ''%'   + Trim(fDetailNum.Text) + '%''' +
+                                              '   or o.ReplacementDetailNumber like ''%'   + Trim(fDetailNum.Text) + '%'')'
+    end
+  else
+    Query.MacroByName('DetailNum').Value := '';
+
+
   Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
   Query.Open();
@@ -437,48 +439,17 @@ end;
 procedure TOrdersT2.GridSelectionChange(Sender: TObject);
 begin
   Marks.Select;
- // GetMarksInfo;
 end;
 
 procedure TOrdersT2.OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
 begin
   logger.Info('OrdersMessageFCallBack begin');
   if AResult <> mrOK then Exit;
-
-//  try
-   // if OrdersMessageF.FormAction = acMessage then
     begin
-      //Query.Edit ;
-      //Query.Post;
-
       Marks.DataRefresh;
-
-//      ToastOK('Комментарий успешно сохранен!', unisession);
     end;
     logger.Info('OrdersMessageFCallBack end');
-//  except
-//    on E: Exception do
-//      logger.Info('TOrdersT2.OrdersMessageFCallBack Ошибка: ' + e.Message);
-//  end;
 end;
-
-//procedure TOrdersT2.GetMarksInfo;
-//begin
-//  lblSelRowCunt.Caption := 'Выделено строк: ' + Grid.SelectedRows.Count.ToString + '  ';
-//
-//  if Marks.Count > 0 then
-//  begin
-//    Sql.Open('Select Amount, AmountPurchase from vMarksSum', [], []);
-//
-//    lblSelRowSum.Caption  := '  Сумма строк: ' + Sql.Q.FieldByName('Amount').AsString  + '  ₽';
-//    lblSelRowSum2.Caption := ' ' + Sql.Q.FieldByName('AmountPurchase').AsString+  ' $';
-//  end
-//  else
-//  begin
-//    lblSelRowSum.Caption  := '  Сумма строк: 0 ₽';
-//    lblSelRowSum2.Caption := ' 0 $';
-//  end;
-//end;
 
 procedure TOrdersT2.ppMainPopup(Sender: TObject);
 begin
@@ -622,15 +593,6 @@ begin
   begin
     Attribs.Color:=rgb(242, 169, 210);
   end;
-//  else if (Query.FieldByName('Flag').AsInteger and 32) = 32 then
-//  begin
-//    Attribs.Color:=rgb(0,191,255);
-//  end;
-//  else if (Query.FieldByName('Flag').AsInteger and 64) = 64 then // Горчичный
-//  begin
-//    Attribs.Color:=rgb(255,219,88); //#F34723
-//  end;
-
 
   if (Query.FieldByName('Flag').AsInteger and 4) > 0 then // отказан
   begin
@@ -741,11 +703,6 @@ procedure TOrdersT2.UniFrameReady(Sender: TObject);
 begin
   qPriceLogo.Open();
 end;
-
-//procedure TOrdersT2.OrderFCallBack(Sender: TComponent; AResult: Integer);
-//begin
-//
-//end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin

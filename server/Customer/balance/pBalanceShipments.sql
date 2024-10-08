@@ -20,6 +20,10 @@ create table pBalanceShipments
 ,BalanceSum          money          --
 ,OperDate            datetime       --
 ,OperDateS           datetime       --
+
+,ReceiptDate         datetime       --
+,ReceiptDate2        datetime       --
+
 ,IsCalc              bit            --
 )
 go

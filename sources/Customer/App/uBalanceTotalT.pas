@@ -53,11 +53,15 @@ type
     UniImageList: TUniImageList;
     UniImageListAdapter: TUniImageListAdapter;
     actShippmentReportPrint: TAction;
+    qShipmentsReceiptDate: TSQLTimeStampField;
+    qShipmentsReceiptDate2: TSQLTimeStampField;
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actShippmentReportPrintExecute(Sender: TObject);
     procedure ShipmentsGridColumnActionClick(Column: TUniDBGridColumn;
       ButtonId: Integer);
+    procedure qShipmentsReceiptDateGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
 
 
   private
@@ -111,6 +115,19 @@ begin
   Query.Open;
 
   //Grid.Columns.ColumnFromFieldName('IsUpdating').Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
+end;
+
+procedure TBalanceTotalT.qShipmentsReceiptDateGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  // Ожидаемая дата поступления
+  if (not qShipmentsReceiptDate2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + qShipmentsReceiptDate2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
 end;
 
 procedure TBalanceTotalT.ShipmentReportPrint;
