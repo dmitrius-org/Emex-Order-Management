@@ -147,6 +147,15 @@
     cursor: pointer;
 }
 
+.grid-search .makelogo-label {
+    margin-left: 20px; /* Отступ слева в пикселей */
+    font-family: Arial, sans-serif;
+    font-size: 13px; 
+    border: 0; 
+    background: none; 
+    color:#3892d4;
+}
+
 /* .grid-search .volume-edit {
     float: left;
     position: relative;
@@ -306,22 +315,25 @@
 /* } */
 
 
-
-.analogLBL {
-    text-align: center;
-    color: #094c99  
-}
-
-.analogLBL:hover {
-    border-bottom: 1px solid;
-    color: hsl(36, 91%, 50%);
-    cursor: pointer;
-}
-
-
 /* таблица Баланс и Отгрузки */
 /* Перенос строки в заголовке таблицы Баланс и Отгрузки */
 .grid-balance-totall .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
+}
+
+
+/* grid-search для объединения строк в таблице */
+.grid-search .span-columns {
+    width: auto !important;
+}
+
+.grid-search .x-grid-item {
+    /* This is pretty key... the framework sets a width of 0 on the table rows,
+     * so this could have some other side effects */
+    width: 100% !important;
+}
+
+.grid-search .hide-column {
+    display: none;
 }

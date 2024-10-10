@@ -29,33 +29,40 @@ object SearchF: TSearchF
     BorderStyle = ubsNone
     ShowCaption = False
     Caption = 'TopPanel'
+    LayoutConfig.Padding = '5'
     LayoutConfig.Width = '0'
     OnClick = TopPanelClick
-    DesignSize = (
-      1247
-      49)
     object btnSearch: TUniButton
-      Left = 1127
-      Top = 12
+      AlignWithMargins = True
+      Left = 1138
+      Top = 5
       Width = 106
-      Height = 30
+      Height = 39
       Hint = ''
+      Margins.Top = 5
+      Margins.Bottom = 5
       Caption = #1053#1072#1081#1090#1080
-      Anchors = [akTop, akRight]
+      Align = alRight
       TabOrder = 2
       ScreenMask.ShowMessage = False
       ScreenMask.Color = clHighlight
       OnClick = btnSearchClick
+      ExplicitLeft = 1127
+      ExplicitTop = 12
+      ExplicitHeight = 30
     end
     object edtSearch: TUniComboBox
-      Left = 12
-      Top = 12
-      Width = 1102
-      Height = 37
+      AlignWithMargins = True
+      Left = 3
+      Top = 5
+      Width = 1017
+      Height = 39
       Hint = ''
+      Margins.Top = 5
+      Margins.Bottom = 5
       MaxLength = 40
       Text = ''
-      Anchors = [akLeft, akTop, akRight]
+      Align = alClient
       TabOrder = 1
       EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
       MinQueryLength = 0
@@ -67,6 +74,30 @@ object SearchF: TSearchF
       OnKeyDown = edtSearchKeyDown
       OnClick = edtSearchClick
       OnRemoteQuery = edtSearchRemoteQuery
+      ExplicitLeft = 12
+      ExplicitTop = 12
+      ExplicitWidth = 959
+      ExplicitHeight = 37
+    end
+    object btnRefresh: TUniButton
+      AlignWithMargins = True
+      Left = 1026
+      Top = 5
+      Width = 106
+      Height = 39
+      Hint = ''
+      Margins.Top = 5
+      Margins.Bottom = 5
+      Visible = False
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+      Align = alRight
+      TabOrder = 3
+      ScreenMask.ShowMessage = False
+      ScreenMask.Color = clHighlight
+      OnClick = btnRefreshClick
+      ExplicitLeft = 1015
+      ExplicitTop = 13
+      ExplicitHeight = 30
     end
   end
   object MainPanel: TUniPanel
@@ -89,15 +120,44 @@ object SearchF: TSearchF
       Hint = ''
       ClientEvents.ExtEvents.Strings = (
         
+          'beforeedit=function beforeedit(editor, context, eOpts)'#13#10'{'#13#10'  if ' +
+          '(context.colIdx==4 && context.rowIdx == 0){'#13#10'     ajaxRequest(th' +
+          'is, '#39'VKGPanelLeft'#39', ['#39'VKGPanelLeft='#39' + context.cell.offsetLeft])' +
+          ';'#13#10'  } '#13#10#13#10'  return (context.rowIdx == 0);'#13#10'  '#13#10'}'
+        
           'click=function click(sender, eOpts)'#13#10'{'#13#10'  if (SearchF.MakeLogoPa' +
           'nel.isVisible()){'#13#10'    ajaxRequest(this, '#39'MakeLogoPanelVisibleFa' +
           'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13 +
           #10'    ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
         
-          'beforeedit=function beforeedit(editor, context, eOpts)'#13#10'{'#13#10'  if ' +
-          '(context.colIdx==4 && context.rowIdx == 0){'#13#10'     ajaxRequest(th' +
-          'is, '#39'VKGPanelLeft'#39', ['#39'VKGPanelLeft='#39' + context.cell.offsetLeft])' +
-          ';'#13#10'  } '#13#10#13#10'  return (context.rowIdx == 0);'#13#10'  '#13#10'}')
+          'reconfigure=function reconfigure(sender, store, columns, oldStor' +
+          'e, oldColumns, eOpts) {'#13#10'    var startCol = 0; // zero based'#13#10'  ' +
+          '  '#13#10'    // '#1059#1089#1090#1072#1085#1072#1074#1083#1080#1074#1072#1077#1084' '#1088#1077#1085#1076#1077#1088#1077#1088' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1081' '#1082#1086#1083#1086#1085#1082#1080#13#10'    column' +
+          's[startCol].renderer = function(value, metaData, record) {'#13#10#13#10'  ' +
+          '      if (record.id !== 0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'     ' +
+          '       metaData.tdCls = '#39'span-columns'#39';'#13#10'            metaData.td' +
+          'Attr = '#39'colspan=6'#39';'#13#10'            '#13#10'            if (record.id == ' +
+          '1){'#13#10'                return '#39'<form method="post" action="">'#39'+'#13#10' ' +
+          '                      '#39'   <span class="makelogo-caret-down">'#39'+'#13#10 +
+          '                       '#39'        <a>'#39'+'#13#10'                       '#39' ' +
+          '       <button type="button" onclick="setMakelogo()" class="make' +
+          'logo-label" data-tabindex-value="none" tabindex="-1" data-tabind' +
+          'ex-counter="1">'#1048#1084#1077#1102#1090#1089#1103' '#1079#1072#1084#1077#1085#1099'</button>'#39'+'#13#10'                      ' +
+          ' '#39'        </a>'#39'+'#13#10'                       '#39'   </span>'#39'+'#13#10'        ' +
+          '               '#39'</form>'#39';'#13#10'            }            '#13#10'          ' +
+          '  else {'#13#10'                return '#39#39';'#13#10'            }'#13#10'        }'#13#10 +
+          '        return value;'#13#10'    };'#13#10'    '#13#10'    startCol += 1;'#13#10'    '#13#10' ' +
+          '   for (let i = startCol; i < 6; i++) {  '#13#10'        if (columns[i' +
+          '].widget) {'#13#10'            columns[i].onWidgetAttach = function(co' +
+          'lumn, widget, record) {'#13#10'                if (record.id !== 0) { ' +
+          ' // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    widget.element' +
+          '.up('#39'td'#39').addCls('#39'hide-column'#39');'#13#10'                }'#13#10'           ' +
+          ' };'#13#10'        } else {'#13#10'            columns[i].renderer = functio' +
+          'n(value, metaData, record) {'#13#10'                if (record.id !== ' +
+          '0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    metaData.' +
+          'tdCls = '#39'hide-column'#39';'#13#10'                    return '#39#39';'#13#10'        ' +
+          '        }            '#13#10'                return value;'#13#10'          ' +
+          '  };'#13#10'        }'#13#10'    }'#13#10'}'#13#10)
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
@@ -106,59 +166,65 @@ object SearchF: TSearchF
           'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
           'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
           'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
-          't.body.removeChild(el);'#13#10'    };'#13#10'    '#13#10'  config.updateRowSpan = ' +
-          'function() {'#13#10'        var columns = sender.getColumns(),'#13#10'      ' +
-          '  view = sender.getView(),'#13#10'        store = sender.getStore(),'#13#10 +
-          '        rowCount = store.getCount();'#13#10'        //console.log(colu' +
-          'mns);  '#13#10'        for (var col = 0; col < columns.length; ++col) ' +
-          '{     '#13#10'            var colIndx = col; // second column for exam' +
-          'ple'#13#10'            var column = columns[colIndx];'#13#10'            var' +
-          ' dataIndex = column.dataIndex,'#13#10'            spanCell = null,'#13#10'  ' +
-          '          spanCount = null,'#13#10'            spanValue = null;'#13#10'    ' +
-          '        '#13#10'            for (var row = 0; row < rowCount; ++row) {' +
-          #13#10'                var cell = view.getCellByPosition({ row: row, ' +
-          'column: colIndx }).dom,'#13#10'                record = store.getAt(ro' +
-          'w),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'         ' +
-          '       if (col < 6) {'#13#10'                    if (spanValue != valu' +
-          'e) {'#13#10'                        if (spanCell !== null) {'#13#10'        ' +
-          '                    spanCell.rowSpan = spanCount;'#13#10'             ' +
-          '           }'#13#10#13#10'                        Ext.fly(cell).query('#39'.x-' +
-          'grid-cell-inner'#39')[0].style.display='#39#39';'#13#10'                        ' +
-          'spanCell = cell;'#13#10'                        spanCount = 1;'#13#10'      ' +
-          '                  spanValue = value;'#13#10'                    } else' +
-          ' {'#13#10'                        spanCount++;'#13#10'                    //' +
-          '  Ext.fly(cell).setStyle('#39'display'#39', '#39'none'#39');     '#13#10'             ' +
-          '           Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0].style.di' +
-          'splay='#39'none'#39';'#13#10'                    }'#13#10'                }'#13#10'       ' +
-          '         else {'#13#10'                '#13#10'                    if (row =' +
-          '= 0) {'#13#10'                        Ext.fly(cell).query('#39'.x-grid-cel' +
-          'l-inner'#39')[0].style.display='#39#39#13#10'                    }'#13#10'          ' +
-          '          else { '#13#10'                '#13#10'                        Ext' +
-          '.fly(cell).setStyle('#39'border-style'#39', '#39'solid'#39');'#13#10'                 ' +
-          '       Ext.fly(cell).setStyle('#39'border-width'#39', '#39'1px 0 0'#39');'#13#10'     ' +
-          '                   Ext.fly(cell).setStyle('#39'border-color'#39', '#39'#cfcf' +
-          'cf'#39');  '#13#10'                    }'#13#10'                }  //if (col < 5' +
-          ') {'#13#10'                '#13#10'            }'#13#10'            '#13#10'            ' +
-          'if (spanCell !== null) {'#13#10'                spanCell.rowSpan = spa' +
-          'nCount;'#13#10'            }'#13#10'        };'#13#10#13#10'    }; '#13#10'}'
+          't.body.removeChild(el);'#13#10'    };'#13#10'        '#13#10#13#10'config.updateRowSpa' +
+          'n = function() {'#13#10'    console.log('#39'updateRowSpan'#39');'#13#10'    var col' +
+          'umns = sender.getColumns(),'#13#10'        view = sender.getView(),'#13#10' ' +
+          '       store = sender.getStore(),'#13#10'        rowCount = store.getC' +
+          'ount();'#13#10#13#10'    for (var col = 0; col < columns.length; ++col) { ' +
+          '    '#13#10'        var colIndx = col; '#13#10'        var column = columns[' +
+          'colIndx];'#13#10'        var dataIndex = column.dataIndex;'#13#10'        va' +
+          'r spanCell = null,'#13#10'            spanCount = 0,'#13#10'            span' +
+          'Value = null;'#13#10#13#10'        for (var row = 0; row < rowCount; ++row' +
+          ') {'#13#10'            var cell = view.getCellByPosition({ row: row, c' +
+          'olumn: colIndx }).dom,'#13#10'                record = store.getAt(row' +
+          '),'#13#10'                value = record.get(dataIndex);'#13#10#13#10'          ' +
+          '  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1087#1088#1086#1074#1077#1088#1082#1091' '#1085#1072' '#1089#1091#1097#1077#1089#1090#1074#1086#1074#1072#1085#1080#1077' '#1103#1095#1077#1081#1082#1080#13#10'          //  i' +
+          'f (!cell || !Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0]) {'#13#10'  ' +
+          '        //      continue;'#13#10'          //  }'#13#10#13#10'            if (co' +
+          'l < 6) {'#13#10'                if (spanValue !== value) {'#13#10'          ' +
+          '          // '#1055#1088#1080#1084#1077#1085#1103#1077#1084' rowSpan '#1076#1083#1103' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1081' '#1075#1088#1091#1087#1087#1099#13#10'          ' +
+          '          if (spanCell !== null) {'#13#10'                        span' +
+          'Cell.rowSpan = spanCount;'#13#10'                    }'#13#10#13#10'            ' +
+          '        // '#1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072#13#10'                    Ext.fly(cell).query' +
+          '('#39'.x-grid-cell-inner'#39')[0].style.display = '#39#39';'#13#10'                 ' +
+          '   spanCell = cell;'#13#10'                    spanCount = 1;'#13#10'       ' +
+          '             spanValue = value;'#13#10'                } else {'#13#10'     ' +
+          '               // '#1059#1074#1077#1083#1080#1095#1080#1074#1072#1077#1084' '#1089#1095#1077#1090#1095#1080#1082' '#1076#1083#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1075#1088#1091#1087#1087#1099'    '#13#10'  ' +
+          '                  spanCount++;'#13#10'                    console.log(' +
+          'spanCount);'#13#10'                    '#13#10'                    Ext.fly(c' +
+          'ell).query('#39'.x-grid-cell-inner'#39')[0].style.display = '#39'none'#39';'#13#10'   ' +
+          '                 '#13#10'                }'#13#10'            } else {'#13#10'    ' +
+          '            // '#1051#1086#1075#1080#1082#1072' '#1076#1083#1103' '#1082#1086#1083#1086#1085#1086#1082' '#1073#1086#1083#1100#1096#1077' 6'#13#10'                if (' +
+          'row === 0) {'#13#10'                    Ext.fly(cell).query('#39'.x-grid-c' +
+          'ell-inner'#39')[0].style.display = '#39#39';'#13#10'                } else {'#13#10'  ' +
+          '                  Ext.fly(cell).addCls('#39'bordered-cell'#39'); // '#1042#1084#1077#1089 +
+          #1090#1086' '#1087#1088#1103#1084#1086#1081' '#1088#1072#1073#1086#1090#1099' '#1089' inline-'#1089#1090#1080#1083#1103#1084#1080#13#10'                }'#13#10'          ' +
+          '  }'#13#10'        }'#13#10#13#10'        // '#1055#1088#1080#1084#1077#1085#1103#1077#1084' rowSpan '#1076#1083#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1075#1088#1091 +
+          #1087#1087#1099' '#1089#1090#1088#1086#1082' ('#1086#1089#1086#1073#1077#1085#1085#1086' '#1076#1083#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1090#1088#1086#1082#1080')'#13#10'        if (spanCell ' +
+          '!== null) {'#13#10'            spanCell.rowSpan = spanCount;'#13#10'        ' +
+          '}'#13#10'    }'#13#10'};'#13#10#13#10#13#10'}'
         
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  sender.getView().' +
-          'on('#39'refresh'#39', sender.updateRowSpan, sender);'#13#10'}')
+          'afterCreate=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.c' +
+          'opyToClipboard = str => {'#13#10'        const el = document.createEle' +
+          'ment('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0]' +
+          '.data[sender.uniCol];'#13#10'        el.value = document.activeElement' +
+          '.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.' +
+          'select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docume' +
+          'nt.body.removeChild(el);'#13#10'    };'#13#10'}')
       ClicksToEdit = 1
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgColumnResize, dgTitleClick]
       WebOptions.Paged = False
+      WebOptions.PageSize = 1000
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       WebOptions.RetainCursorOnSort = True
-      LoadMask.WaitData = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clInactiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-search'
       BorderStyle = ubsNone
-      StripeRows = False
       Align = alClient
       TabOrder = 0
       ParentColor = False
@@ -422,23 +488,6 @@ object SearchF: TSearchF
           end>
       end
     end
-    object lblAnalog: TUniLabel
-      Left = 46
-      Top = 64
-      Width = 90
-      Height = 13
-      Hint = ''
-      Visible = False
-      Alignment = taCenter
-      Caption = #1048#1084#1077#1102#1090#1089#1103' '#1079#1072#1084#1077#1085#1099
-      ParentFont = False
-      Font.Height = -12
-      TabOrder = 4
-      LayoutConfig.ComponentCls = 'analogLBL'
-      LayoutConfig.IgnorePosition = False
-      LayoutConfig.DockWhenAligned = False
-      OnClick = lblAnalogClick
-    end
     object VKGPanel: TUniGroupBox
       AlignWithMargins = True
       Left = 795
@@ -557,6 +606,9 @@ object SearchF: TSearchF
     Top = 245
   end
   object Query: TFDQuery
+    BeforeOpen = QueryBeforeOpen
+    AfterOpen = QueryAfterOpen
+    IndexFieldNames = 'ID'
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []

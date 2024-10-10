@@ -46,7 +46,6 @@ type
     qMakeLogoPriceRub: TCurrencyField;
     UniCheckBox1: TUniCheckBox;
     QueryOurDeliverySTR: TWideStringField;
-    lblAnalog: TUniLabel;
     UpdateSQL: TFDUpdateSQL;
     UniNumberEdit1: TUniNumberEdit;
     QueryPriceLogo: TWideStringField;
@@ -60,6 +59,7 @@ type
     VolumeSave: TUniButton;
     QueryOurDelivery: TIntegerField;
     QueryAvailable: TIntegerField;
+    btnRefresh: TUniButton;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -78,7 +78,6 @@ type
     procedure MakeLogoGridDblClick(Sender: TObject);
     procedure TopPanelClick(Sender: TObject);
     procedure edtSearchClick(Sender: TObject);
-    procedure lblAnalogClick(Sender: TObject);
     procedure SearchGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure QueryPercentSuppedGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure edtLChange(Sender: TObject);
@@ -87,6 +86,9 @@ type
       DisplayText: Boolean);
     procedure QueryAvailableGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure QueryAfterOpen(DataSet: TDataSet);
+    procedure QueryBeforeOpen(DataSet: TDataSet);
+    procedure btnRefreshClick(Sender: TObject);
 
 
   private
@@ -226,6 +228,17 @@ begin
 //  end;
 end;
 
+procedure TSearchF.QueryAfterOpen(DataSet: TDataSet);
+begin
+//  Query.ResourceOptions.CmdExecMode := amBlocking;
+//  DataSource.DataSet := Query;
+end;
+
+procedure TSearchF.QueryBeforeOpen(DataSet: TDataSet);
+begin
+//  DataSource.DataSet := nil;
+end;
+
 procedure TSearchF.GridRefresh();
 begin
   logger.Info('TSearchF.GridRefresh begin');
@@ -237,15 +250,13 @@ begin
   Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
   Query.ParamByName('MakeName').Value        := FMakeName;
   Query.ParamByName('DetailNum').Value       := FDetailNum;
+
+ // Query.ResourceOptions.CmdExecMode :=amNonBlocking;
   Query.Open;
 
   AnalogLblVisible;
-  logger.Info('TSearchF.GridRefresh end');
-end;
 
-procedure TSearchF.lblAnalogClick(Sender: TObject);
-begin
-  MakeLogoGridShow;
+  logger.Info('TSearchF.GridRefresh end');
 end;
 
 procedure TSearchF.MakeLogoGridDblClick(Sender: TObject);
@@ -307,7 +318,7 @@ end;
 procedure TSearchF.AnalogLblVisible;
 begin
   logger.Info(FMakeCount.ToString);
-  lblAnalog.Visible :=(not MakeLogoPanel.Visible) and (FMakeCount > 1) and (Query.RecordCount > 0);
+  //lblAnalog.Visible :=(not MakeLogoPanel.Visible) and (FMakeCount > 1) and (Query.RecordCount > 0);
 end;
 
 procedure TSearchF.PartSearch;
@@ -319,14 +330,20 @@ begin
   ShowMask('Поиск...');
   UniSession.Synchronize();
   try
+
     emex.Connection := UniMainModule.FDConnection;
     emex.FindByDetailNumber(UniMainModule.AUserID, Trim(edtSearch.Text));
+    logger.Info('TSearchF.PartSearch Получили данные с эмекс');
 
     SetMakeName;
 
     PriceCalc;
 
+    logger.Info('TSearchF.PartSearch расчитали цены');
+
     GridRefresh();
+
+    logger.Info('TSearchF.PartSearch обновили таблицу');
 
     if (Query.RecordCount > 1) then
     begin
@@ -335,6 +352,8 @@ begin
         edtSearch.Items.Add(FDetailNum);
 
       SearchHistorySave;
+
+      logger.Info('TSearchF.PartSearch обновили историю поиска');
     end;
   finally
     FreeAndNil(emex);
@@ -389,6 +408,8 @@ begin
   end;
 end;
 
+
+
 procedure TSearchF.QueryAvailableGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
@@ -399,6 +420,8 @@ begin
   else
     Text := '<span>' + Sender.AsString + '</span>';
 end;
+
+
 
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
 begin
@@ -521,13 +544,24 @@ begin
 
 end;
 
+procedure TSearchF.btnRefreshClick(Sender: TObject);
+begin
+  GridRefresh();
+end;
+
 procedure TSearchF.UniFrameCreate(Sender: TObject);
 var
   js: string;
 begin
+  {$IFDEF Debug}
+    btnRefresh.visible := True;
+  {$ENDIF}
+
   {$IFDEF Realese}
+    btnRefresh.Enabled := True;
     SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   {$ENDIF}
+
 
   js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
