@@ -893,11 +893,6 @@ object OrdersT2: TOrdersT2
         Value = Null
         Name = 'ORDERDATE'
       end>
-    object QueryFlag: TIntegerField
-      FieldName = 'Flag'
-      ReadOnly = True
-      OnGetText = QueryFlagGetText
-    end
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'OrderID'
@@ -907,6 +902,16 @@ object OrdersT2: TOrdersT2
       ReadOnly = True
       Precision = 18
       Size = 0
+    end
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
+      ReadOnly = True
+      OnGetText = QueryFlagGetText
+    end
+    object QueryisCancel: TBooleanField
+      FieldName = 'isCancel'
+      Origin = 'isCancel'
+      ReadOnly = True
     end
     object QueryOrderDate: TSQLTimeStampField
       FieldName = 'OrderDate'
@@ -928,12 +933,7 @@ object OrdersT2: TOrdersT2
       FieldName = 'StatusName'
       Origin = 'StatusName'
       ReadOnly = True
-      Size = 512
-    end
-    object QueryisCancel: TBooleanField
-      FieldName = 'isCancel'
-      Origin = 'isCancel'
-      ReadOnly = True
+      Size = 64
     end
     object QueryMakeLogo: TWideStringField
       FieldName = 'MakeLogo'
@@ -946,7 +946,7 @@ object OrdersT2: TOrdersT2
       Origin = 'Manufacturer'
       ReadOnly = True
       OnGetText = QueryManufacturerGetText
-      Size = 32
+      Size = 64
     end
     object QueryDetailNumber: TWideStringField
       FieldName = 'DetailNumber'
@@ -958,7 +958,7 @@ object OrdersT2: TOrdersT2
     object QueryDetailName: TWideStringField
       FieldName = 'DetailName'
       ReadOnly = True
-      Size = 512
+      Size = 256
     end
     object QueryQuantity: TIntegerField
       FieldName = 'Quantity'
@@ -1095,7 +1095,7 @@ object OrdersT2: TOrdersT2
     object QueryOrderNum: TWideStringField
       FieldName = 'OrderNum'
       ReadOnly = True
-      Size = 128
+      Size = 32
     end
     object QueryDestinationName: TWideStringField
       FieldName = 'DestinationName'

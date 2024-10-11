@@ -620,6 +620,13 @@ object OrdersT: TOrdersT
           Width = 100
           Hint = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' (tShipments.ReceiptDate)'
           Sortable = True
+        end
+        item
+          FieldName = 'OrderDetailSubId'
+          Title.Alignment = taCenter
+          Title.Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+          Width = 130
+          Sortable = True
         end>
     end
     object pFilter: TUniPanel
@@ -1369,7 +1376,7 @@ object OrdersT: TOrdersT
       FieldName = 'ClientName'
       Origin = 'ClientName'
       ReadOnly = True
-      Size = 256
+      Size = 32
     end
     object QueryOrderDate: TSQLTimeStampField
       FieldName = 'OrderDate'
@@ -1399,23 +1406,23 @@ object OrdersT: TOrdersT
     object QueryMakeLogo: TWideStringField
       FieldName = 'MakeLogo'
       OnGetText = QueryMakeLogoGetText
-      Size = 128
+      Size = 32
     end
     object QueryManufacturer: TWideStringField
       FieldName = 'Manufacturer'
       Origin = 'Manufacturer'
       OnGetText = QueryManufacturerGetText
-      Size = 256
+      Size = 64
     end
     object QueryDetailNumber: TWideStringField
       FieldName = 'DetailNumber'
       Origin = 'DetailNumber'
       OnGetText = QueryDetailNumberGetText
-      Size = 30
+      Size = 32
     end
     object QueryDetailName: TWideStringField
       FieldName = 'DetailName'
-      Size = 512
+      Size = 256
     end
     object QueryDetailID: TWideStringField
       FieldName = 'DetailID'
@@ -1576,15 +1583,15 @@ object OrdersT: TOrdersT
     end
     object QueryCustomerPriceLogo: TWideStringField
       FieldName = 'CustomerPriceLogo'
-      Size = 64
+      Size = 10
     end
     object QueryDestinationLogo: TWideStringField
       FieldName = 'DestinationName'
-      Size = 30
+      Size = 32
     end
     object QueryInvoice: TWideStringField
       FieldName = 'Invoice'
-      Size = 64
+      Size = 32
     end
     object QueryFileDate: TSQLTimeStampField
       FieldName = 'FileDate'
@@ -1622,7 +1629,7 @@ object OrdersT: TOrdersT
     object QueryUserName: TWideStringField
       FieldName = 'UserName'
       Origin = 'UserName'
-      Size = 512
+      Size = 64
     end
     object QueryinDatetime: TSQLTimeStampField
       FieldName = 'inDatetime'
@@ -1633,6 +1640,10 @@ object OrdersT: TOrdersT
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
       ReadOnly = True
+    end
+    object QueryOrderDetailSubId: TWideStringField
+      FieldName = 'OrderDetailSubId'
+      Size = 32
     end
   end
   object DataSource: TDataSource

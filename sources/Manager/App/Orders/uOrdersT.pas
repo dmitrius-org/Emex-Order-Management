@@ -205,6 +205,7 @@ type
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
     QueryReceiptDate2: TSQLTimeStampField;
+    QueryOrderDetailSubId: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
