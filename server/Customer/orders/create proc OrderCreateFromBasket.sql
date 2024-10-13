@@ -171,7 +171,6 @@ declare @r int = 0
         ,DestinationLogo
         ,DestinationName
         ,PercentSupped
-       
         ,Margin
         ,Discount
         ,Kurs
@@ -179,19 +178,19 @@ declare @r int = 0
         ,Commission
         ,Reliability
         ,Fragile
-
         ,ClientOrderNum
-        ,DeliveryTerm -- срок поставки поставщику
-
+        ,DeliveryTerm           -- Срок поставки поставщику
         ,DetailID
         ,CustomerSubId
         ,PriceID  
         ,ID
         ,WeightKGAmount
         ,VolumeKGAmount
-
-        ,DeliveryTermToCustomer -- срок поставки клиенту
+         -- cроки поставки клиента
+        ,DeliveryTermToCustomer -- Срок поставки клиенту
         ,DeliveryDateToCustomer -- Дата поставки клиенту	
+        ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
+        ,DaysInWork
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
@@ -218,51 +217,48 @@ declare @r int = 0
         ,b.WeightKG              -- Вес Физический из прайса    
         ,b.VolumeKG              -- Вес Объемный из прайса
         ,b.DestinationLogo
-        ,pd.Name --DestinationName
+        ,pd.Name                 -- DestinationName
         ,b.PercentSupped         -- процент поставки
-        --
-        ,b.Margin  -- Наценка из прайса
-        ,b.Discount-- Скидка  
+         --
+        ,b.Margin                -- Наценка из прайса
+        ,b.Discount              -- Скидка  
         ,b.Kurs
         ,b.ExtraKurs
         ,b.Commission
         ,b.Reliability
         ,b.Fragile
-        --
+         --
         ,ROW_NUMBER() Over(Partition by b.ClientID order by b.ClientID ) + isnull(@ClientOrderNum, 0) -- ClientOrderNum
-        ,b.GuaranteedDay
-
-        ,b.BasketID -- DetailID 
-        ,b.BasketID -- CustomerSubId
-        ,p.PriceID  -- tPrice.PriceID
-        ,b.BasketID -- ID
-        ,pd.WeightKG
-        ,pd.VolumeKG
-        ,b.OurDelivery -- срок поставки клиенту
+        ,b.GuaranteedDay         -- DeliveryTerm           -- Срок поставки поставщику
+        ,b.BasketID              -- DetailID 
+        ,b.BasketID              -- CustomerSubId
+        ,p.PriceID               -- tPrice.PriceID
+        ,b.BasketID              -- ID
+        ,pd.WeightKG             
+        ,pd.VolumeKG          
+         -- cроки поставки клиента
+        ,b.OurDelivery           -- Срок поставки клиенту
         ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту	
-    from tMarks m (nolock)
-   inner join tBasket b (nolock)
+        ,b.OurDelivery           -- Остаток срока до поставки клиенту
+        ,0
+    from tMarks m with (nolock index=pk_tMarks)
+   inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
-   
-   inner join tClients c (nolock)
+   inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = b.ClientID 
-   inner join tSuppliers s (nolock)
+   inner join tSuppliers s with (nolock index=ao1)
            on S.SuppliersID = c.SuppliersID
-   inner join tSupplierDeliveryProfiles pd (nolock)
+   inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
            on pd.SuppliersID     = s.SuppliersID
           and pd.DestinationLogo = b.DestinationLogo    
-   inner join tProfilesCustomer pc (nolock)
+   inner join tProfilesCustomer pc with (nolock index=ao2)
            on pc.ClientID           = c.ClientID
           and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
-
    inner join @P p
            on p.BasketID = b.BasketID
 
    where m.spid = @@spid   
      and m.Type = 6--Корзина
-
-
-
 
   -- Протокол
   declare @ToNew numeric(18, 0)
@@ -329,6 +325,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20240906', '17'
+exec setOV 'OrderCreateFromBasket', 'P', '20241011', '18'
 go
  

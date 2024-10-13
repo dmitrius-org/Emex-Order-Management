@@ -13,71 +13,31 @@
 --go
 
 
---alter table tPartsStatistics add WorkOrderCount           int            -- процент поставки
---go
 
-
---alter table tPartsStatistics add WorkOrderUniqueCount           int            -- процент поставки
-
-
---    ,WorkOrderCount        int        -- Количество заказанных позиций, только в работе 
---    ,WorkOrderUniqueCount  int        -- Количество уникальных заказов, только в работе
-
---alter table torders  add DeliveryDaysReserve2            int            -- Дней запаса до вылета, рассчитывается если прошол срок DeliveryNextDate		
---go  
-
-
---alter table tProfilesCustomer    add DeliveryTermCustomer            int            -- Дней запаса до вылета, рассчитывается если прошол срок DeliveryNextDate
---go  
-
-
---alter table    tShipments add TransporterNumber nvarchar(64)
---go  
---alter table    tShipments add     StatusID                        int
---go
---alter table    tShipments add  ReceiptDate2                    datetime 
---go
---drop index ao1 on tNodes
---go
---alter table tNodes alter column brief nvarchar(32)
---go
---alter table tNodes alter column name nvarchar(64)
---go
---create index ao1 on tNodes(NodeID, Type) INCLUDE (Brief, Name);
---go
---alter table tNodes alter column EName nvarchar(64)
---go
-
-
---alter table    tSupplierDeliveryProfiles add Brief nvarchar(10)
---go
---exec dbo.sys_setTableDescription 'tSupplierDeliveryProfiles', 'Brief'                 ,'Короткое обозначение' 
---go
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1014, 1014, 'Указать номер груза',  'TShipmentsT.actSetTransporterNumber', 63, 1
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1015, 1015, 'Изменить дату доставки',  'TShipmentsT.actSetReceiptDate', 63, 1
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1016, 1016, 'Получен',  'TShipmentsT.actSetReceivedStatus', 63, 1
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1017, 1017, 'Указать вес по данным перевозчика',  'TShipmentsT.actSetTransporterData', 63, 1
-
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1018, 1018, 'Протокол',  'TShipmentsT.actProtocol', 63, 1
-
-
-
---alter table tNodes add N int
-
---alter table tNodes add SearchID               int
-
---alter table tNodes add SearchBrief            nvarchar(32)
-
---alter table tNodes add SearchName             nvarchar(64)
-
---select * from tNodes
-
---alter table tClients add StatusRequiringPayment varchar(256)
---alter table tDocuments add PayType int 
-
-
-alter table tShipments add DeliverySumF money 
-
-alter table tShipments add AmountF money 
+ update tNodes 
+ set flag = Flag|4
+ where Type=0
+ and nodeid in (
+ 1	--New	Новый
+,2	--InChecked	Проверено
+,3	--InBasket	В корзине
+,4	--InWork	В работе
+,5	--Purchased	Закуплено
+,6	--ReceivedOnStock	Получено на склад в ОАЭ
+,7	--ReadyToSend	Готово к отправке из ОАЭ
+,8	--Send	Передано для доставки из ОАЭ в РФ
+--,9	--NotAvailable	Нет в наличии
+--,10	--LessMinLot	Меньше минимальной партии
+--,11	--PriceChange	Изменение цены
+--,12	--InCancel	Отказано
+,22	--Preparation	Предварительный
+--,24	--Received	Готовим к выдаче в РФ
+--,26	--IssuedClient	Выдано клиенту
+,32	--InShipment	На пути в РФ
+,37	--InShipmentWait	Ожидает отправки из ОАЭ в РФ
+,38	--InShipmentBorderPassed	Прошел границу РФ
+,39	--InShipmentDelivered	Прибыл в РФ
+,36	--OnHold	Задерживается
+)
 
 

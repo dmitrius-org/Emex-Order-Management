@@ -51,7 +51,7 @@ SELECT o.[OrderID]
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
       ,o.DeliveredDateToSupplier               -- Доставлена поставщику
       ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
-      ,o.DeliveryDaysReserve2          --
+      ,o.DeliveryDaysReserve2                  --
       ,o.DeliveryNextDate                      -- Ближайшая дата вылета
       ,o.DeliveryNextDate2                     -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate
       ,o.DeliveryDateToCustomer                -- Дата поставки клиенту	
@@ -61,15 +61,14 @@ SELECT o.[OrderID]
 	  ,o.Warning                               -- предупреждение/замечания
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
-	  ,o.ReplacementMakeLogo           -- бренд замены
-	  ,o.ReplacementDetailNumber       -- номер замены
-	  ,o.ReplacementPrice              -- Изменение цены
-	  ,o.CustomerPriceLogo             -- Наименование прайса заказа от клиента
-      ,p.Restrictions                  -- ограничение
-      ,o.Invoice                       -- номер инвойса
+	  ,o.ReplacementMakeLogo                   -- бренд замены
+	  ,o.ReplacementDetailNumber               -- номер замены
+	  ,o.ReplacementPrice                      -- Изменение цены
+	  ,o.CustomerPriceLogo                     -- Наименование прайса заказа от клиента
+      ,p.Restrictions                          -- ограничение
+      ,o.Invoice                               -- номер инвойса
       ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
-      ,sh.ReceiptDate                  -- Ожидаемая дата поступления
-      ,sh.ReceiptDate2
+      ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
       ,o.OrderDetailSubId
       ,o.OrderNum              Reference
 
@@ -111,7 +110,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241002', '7'
+exec setOV 'vCustomerOrders', 'V', '20241002', '8'
 go
  
 -- Описание таблицы

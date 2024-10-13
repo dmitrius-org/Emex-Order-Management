@@ -71,11 +71,17 @@ as
         ,Fragile
         --,Kurs
         ,Taxes
-        ,WeightKGAmount     -- Стоимость кг физического веса
+        ,WeightKGAmount         -- Стоимость кг физического веса
         ,VolumeKGAmount   
         ,DestinationLogo
         ,DestinationName
         ,PercentSupped
+        ,DeliveryTerm           -- Срок поставки поставщику
+         -- cроки поставки клиента
+        ,DeliveryTermToCustomer -- Срок поставки клиенту
+        ,DeliveryDateToCustomer -- Дата поставки клиенту	
+        ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
+        ,DaysInWork
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
@@ -97,23 +103,28 @@ as
 		,p.MakeLogo				-- Код бренда
 		,coalesce(pd.Name_RUS, o.DetailName) -- наименование детали
         ,o.FileDate  
-
         ,pc.Margin              -- Наценка из прайса
 		,pc.Discount            -- Скидка
-        ,pc.Reliability         -- вероятность поставки с "Профили обработки прайсов"
+        ,pc.Reliability         -- Вероятность поставки с "Профили обработки прайсов"
         ,pc.Commission
         ,pc.ExtraKurs
         ,pc.Fragile
         ,c.Taxes
-        ,pc.WeightKG   -- Стоимость кг физического веса
+        ,pc.WeightKG            -- Стоимость кг физического веса
         ,pc.VolumeKG 
         ,pc.DestinationLogo
         ,pc.DestinationName
-        ,p.Reliability -- процент поставки
+        ,p.Reliability          -- Процент поставки
+        ,Prices.DeliveryTerm    -- Срок поставки поставщику
+         -- cроки поставки клиента
+        ,pc.DeliveryTermCustomer           -- Срок поставки клиенту
+        ,iif(pc.DeliveryTermCustomer is not null, cast( dateadd(dd, pc.DeliveryTermCustomer, getdate()) as date ), null)-- Дата поставки клиенту	
+        ,pc.DeliveryTermCustomer           -- Остаток срока до поставки клиенту
+        ,0
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
-    - - -
+
    outer apply (select top 1 
                        pc.UploadPriceName,
                        pc.ProfilesDeliveryID,
@@ -126,7 +137,8 @@ as
                        pd.WeightKG,   -- Стоимость кг физического веса
                        pd.VolumeKG,
                        pd.Fragile,
-                       pd.Name as DestinationName
+                       pd.Name as DestinationName,
+                       pc.DeliveryTermCustomer
                   from tProfilesCustomer pc with (nolock index=ao2)
                  inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
                          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -134,7 +146,8 @@ as
                          on s.SuppliersID = pd.SuppliersID 
                  where pc.ClientID        = c.ClientID
                    and pc.ClientPriceLogo = o.PriceNum -- CustomerPriceLogo
-                 order by pc.ProfilesCustomerID) pc
+                 order by pc.ProfilesCustomerID
+                 ) pc
    -- - - -
    outer apply (select top 1 *
                   from tPrice p with (nolock index=ao2) 
@@ -150,9 +163,15 @@ as
 						 ,p.DetailPrice 
 			    ) p
   -- - - -
-  left join tPartDescription pd with (nolock index=ao2)     
-         on pd.Make   = p.MakeLogo	
-        and pd.Number = p.DetailNum 
+    left join tPartDescription pd with (nolock index=ao2)     
+           on pd.Make   = p.MakeLogo	
+          and pd.Number = p.DetailNum 
+
+  outer apply (select top 1 *
+                 from tPrices t (nolock) 
+                where t.Name = pc.UploadPriceName
+               ) as Prices
+
 
    where o.Spid = @@Spid
      and not exists (select 1 -- проверка на повторную загрузку
@@ -239,6 +258,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20240810', '5'
+exec setOV 'LoadOrders', 'P', '20241011', '6'
 go
  

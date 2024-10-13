@@ -1,6 +1,6 @@
 drop proc if exists OrdersDeliveryTermCalc
 /*
-  OrdersDeliveryTermCalc - расчет сроков доставки при создании заказа:
+  OrdersDeliveryTermCalc - расчет сроков доставки поставщика, при создании заказа:
 
   - Ближайшая дата вылета	
     Добавить настройку дня вылета
@@ -34,21 +34,26 @@ SET DATEFIRST 1 ;
 declare @r int = 0
 
 Update p
-   set p.ClientID           = o.ClientID
-      ,p.OrderDate          = o.OrderDate
-      ,p.PriceLogo          = o.PriceLogo
-      ,p.ProfilesDeliveryID = o.ProfilesDeliveryID
-      ,p.DeliveryPlanDateSupplier  =  case 
-	                                    when o.Flag&16>0 then DATEADD(dd, isnull(o.DeliveryTerm, 0), o.OrderDate)
-                                        when isnull(t.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(o.OrderDate, isnull(t.DeliveryTerm, 0), 1)
-                                        else DATEADD(dd, isnull(t.DeliveryTerm, 0), o.OrderDate)
-                                      end
-      ,p.DeliveryTerm = iif(o.Flag&16>0, isnull(o.DeliveryTerm, 0), isnull(t.DeliveryTerm, 0))
+   set p.ClientID                  = o.ClientID
+      ,p.OrderDate                 = o.OrderDate
+      ,p.PriceLogo                 = o.PriceLogo
+      ,p.ProfilesDeliveryID        = o.ProfilesDeliveryID
+      ,p.DeliveryPlanDateSupplier  = case 
+	                                   when o.Flag&16>0 then DATEADD(dd, isnull(o.DeliveryTerm, 0), o.OrderDate)
+                                       when isnull(Prices.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(o.OrderDate, isnull(Prices.DeliveryTerm, 0), 1)
+                                       else DATEADD(dd, isnull(Prices.DeliveryTerm, 0), o.OrderDate)
+                                     end
+      ,p.DeliveryTerm              = iif(o.Flag&16>0, isnull(o.DeliveryTerm, 0), isnull(Prices.DeliveryTerm, 0)) -- срок доставки по поставщику
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-  left join tPrices t (nolock)
-         on t.Name = o.PriceLogo
+ inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
+         on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
+ outer apply (select top 1 *
+                from tPrices t (nolock) 
+               where t.Name = o.PriceLogo
+              ) as Prices
+
  where p.Spid = @@Spid
 
 -- расчет ближайшей дата вылета
@@ -85,11 +90,6 @@ update p
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-        --and isnull(o.StatusID, 0) not in (8  -- Send
-        --                                 ,12 -- InCancel 
-        --                                 ,24 -- Received Получено
-        --                                 ,26 -- IssuedClient Выдано клиенту
-     	  --                               )
  where p.Spid = @@spid
 
 
@@ -110,6 +110,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalc to public
 go
-exec setOV 'OrdersDeliveryTermCalc', 'P', '20240906', '11'
+exec setOV 'OrdersDeliveryTermCalc', 'P', '20241011', '12'
 go
   

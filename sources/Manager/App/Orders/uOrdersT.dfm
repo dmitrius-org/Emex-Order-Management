@@ -614,14 +614,6 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
-          FieldName = 'ReceiptDate'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-          Width = 100
-          Hint = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' (tShipments.ReceiptDate)'
-          Sortable = True
-        end
-        item
           FieldName = 'OrderDetailSubId'
           Title.Alignment = taCenter
           Title.Caption = #1064#1090#1088#1080#1093#1082#1086#1076
@@ -1216,12 +1208,10 @@ object OrdersT: TOrdersT
       '      ,o.[StatusID]'
       '      ,o.[StatusName]'
       '      ,o.[isCancel]'
-      '--      ,o.isCancelToClient'
       '      ,o.[MakeLogo]'
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
-      '     -- ,o.[DetailNameF]'
       '      ,o.[DetailID]'
       '      ,o.[Quantity]'
       '      ,o.[Price]'
@@ -1280,7 +1270,6 @@ object OrdersT: TOrdersT
       '      ,o.[OrderUniqueCount]'
       '      ,o.[PercentSupped]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-      '      ,o.[ReceiptDate2]'
       '      ,o.[OrderDetailSubId]'
       '  FROM [vOrders] o'
       ' where 1=1'
@@ -1614,10 +1603,6 @@ object OrdersT: TOrdersT
     end
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
-      OnGetText = QueryReceiptDateGetText
-    end
-    object QueryReceiptDate2: TSQLTimeStampField
-      FieldName = 'ReceiptDate2'
     end
     object QueryUserID: TFMTBCDField
       FieldName = 'UserID'

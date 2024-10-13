@@ -83,8 +83,7 @@ SELECT o.[OrderID]
       ,o.DeliveryTermToCustomer	       -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer        -- Остаток срока до поставки клиенту
 	  ,o.DateDeparture                 -- Дата вылета 
-      ,sh.ReceiptDate                  -- Ожидаемая дата поступления
-      ,sh.ReceiptDate2
+      ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
 	  ,o.DaysInWork                    -- Дней в работе                             
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
@@ -171,7 +170,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20241002', '12'
+exec setOV 'vOrders', 'V', '20241002', '13'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

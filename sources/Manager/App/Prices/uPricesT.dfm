@@ -48,7 +48,7 @@ object PricesT: TPricesT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 2
+      TabOrder = 3
       EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
     end
     object fBrief: TUniEdit
@@ -58,7 +58,7 @@ object PricesT: TPricesT
       Hint = ''
       ShowHint = True
       Text = ''
-      TabOrder = 3
+      TabOrder = 2
       EmptyText = #1051#1086#1075#1080#1085'...'
     end
     object fisAdmin: TUniCheckBox
@@ -92,7 +92,7 @@ object PricesT: TPricesT
     Margins.Bottom = 0
     ShowHint = True
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     Caption = '1234'
     Color = clBtnShadow
@@ -130,7 +130,7 @@ object PricesT: TPricesT
         ShowHint = True
         Action = actAdd
         ImageIndex = 1
-        TabOrder = 1
+        TabOrder = 0
       end
       object UniToolButton2: TUniToolButton
         Left = 90
@@ -158,7 +158,7 @@ object PricesT: TPricesT
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -206,7 +206,7 @@ object PricesT: TPricesT
       BorderStyle = ubsNone
       Align = alClient
       Anchors = []
-      TabOrder = 1
+      TabOrder = 0
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown
@@ -249,7 +249,7 @@ object PricesT: TPricesT
         item
           FieldName = 'ShowInSearch'
           Title.Alignment = taCenter
-          Title.Caption = #1053#1091' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1087#1086#1080#1089#1082#1077
+          Title.Caption = #1053#1077' '#1087#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1087#1086#1080#1089#1082#1077
           Width = 110
           Sortable = True
           CheckBoxField.AutoPost = True

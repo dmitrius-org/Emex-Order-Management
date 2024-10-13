@@ -421,15 +421,6 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'ReceiptDate'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-          Width = 100
-          ReadOnly = True
-          Hint = #1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-          Sortable = True
-        end
-        item
           FieldName = 'Warning'
           Title.Alignment = taCenter
           Title.Caption = #1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077
@@ -835,7 +826,6 @@ object OrdersT2: TOrdersT2
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-      '      ,o.[ReceiptDate2]   '
       '      ,o.[OrderDetailSubId]   '
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
@@ -854,7 +844,7 @@ object OrdersT2: TOrdersT2
       '   '
       '   !OrderDate'
       '   '
-      '  order by  o.[OrderID]  '
+      '  order by  o.[OrderID]  desc'
       '   ')
     Left = 575
     Top = 255
@@ -1043,6 +1033,7 @@ object OrdersT2: TOrdersT2
       FieldName = 'DeliveryDateToCustomer'
       Origin = 'DeliveryDateToCustomer'
       ReadOnly = True
+      OnGetText = QueryDeliveryDateToCustomerGetText
     end
     object QueryDeliveryTermToCustomer: TIntegerField
       FieldName = 'DeliveryTermToCustomer'
@@ -1104,11 +1095,6 @@ object OrdersT2: TOrdersT2
     end
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
-      ReadOnly = True
-      OnGetText = QueryReceiptDateGetText
-    end
-    object QueryReceiptDate2: TSQLTimeStampField
-      FieldName = 'ReceiptDate2'
       ReadOnly = True
     end
     object QueryinDatetime: TSQLTimeStampField

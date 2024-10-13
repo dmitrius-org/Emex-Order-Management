@@ -1,34 +1,31 @@
-if OBJECT_ID('tUnloadRefusals') is null
+if OBJECT_ID('tChatsMessage') is null
 /* **********************************************************
-tUnloadRefusals - Таблица отказов
+tChatsMessage - Таблица 
+
+drop table tChatsMessage
 ********************************************************** */
 begin
-	create table tUnloadRefusals
+	create table tChatsMessage
 	(
-	 OperDate             datetime -- дата выгрузки ответа
-	,FileName             nvarchar(256)  
-	,ClientID             numeric(18, 0)
-	,ClientName           nvarchar(512)
-	,OrderNum             nvarchar(128)
-	,MakeLogo             nvarchar(32)
-	,DetailNumber         nvarchar(128)
-	,Reference            nvarchar(128)
-	,DetailID             nvarchar(128)
-	,Quantity             int 
-	,PricePurchase        money
-	,AmountPurchase       money
-	,Flag                 int
-	,InDateTime           DateTime default GetDate()
-	)
+	 MessageID   numeric(18, 0) identity
+    ,ChatID      numeric(18, 0)
+	,ClientID    numeric(18, 0)
+    ,UserID      numeric(18, 0)
+	,Message     nvarchar(512)
+	,Flag        int
+	,InDateTime  DateTime2 default sysdatetime()
+	);
 
-	create index ao2 on tUnloadRefusals(OperDate)
+	create index ao1 on tChatsMessage(MessageID);
 
-	create index ao3 on tUnloadRefusals(ClientID, DetailNumber, Reference, DetailID)
+	create index ao2 on tChatsMessage(ChatID);
+
+    create index ao3 on tChatsMessage(ClientID);
 end
 go
-grant all on tUnloadRefusals to public
+grant all on tChatsMessage to public
 go
-exec setOV 'tUnloadRefusals', 'U', '20240101', '0'
+exec setOV 'tChatsMessage', 'U', '20240101', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tUnloadRefusals', @desc = 'Таблица отказов'
+exec dbo.sys_setTableDescription @table = 'tChatsMessage', @desc = 'Таблица'

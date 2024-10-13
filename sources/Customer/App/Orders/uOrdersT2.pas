@@ -138,7 +138,6 @@ type
     QueryDeliveryNextDate2: TSQLTimeStampField;
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
-    QueryReceiptDate2: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
@@ -168,9 +167,10 @@ type
     procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest; var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
     procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryDeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure QueryReceiptDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
+    procedure QueryDeliveryDateToCustomerGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -459,6 +459,18 @@ begin
                           ((Query.FieldByName('Flag').AsInteger and 32) = 32);
 end;
 
+procedure TOrdersT2.QueryDeliveryDateToCustomerGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryReceiptDate.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + QueryReceiptDate.AsString + '</span>'; // Ожидаемая дата поступления
+  end
+  else
+    Text := Sender.AsString; // Дата поставки клиенту
+end;
+
 procedure TOrdersT2.QueryDeliveryDaysReserveGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
@@ -547,19 +559,6 @@ begin
   begin
     Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
     '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
-  end
-  else
-    Text := Sender.AsString;
-end;
-
-procedure TOrdersT2.QueryReceiptDateGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
-begin
-  // Ожидаемая дата поступления
-  if (not QueryReceiptDate2.IsNull) then
-  begin
-    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
-            '</span><span class="x-receipt-date">' + QueryReceiptDate2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;
