@@ -64,7 +64,6 @@ type
     QueryOrderID: TFMTBCDField;
     QueryOrderDate: tSqlTimeStampField;
     QueryPriceLogo: TWideStringField;
-    QueryisCancel: TBooleanField;
     QueryManufacturer: TWideStringField;
     QueryDetailNumber: TWideStringField;
     QueryQuantity: TIntegerField;
@@ -76,7 +75,6 @@ type
     QueryVolumeKGF: TCurrencyField;
     QueryDeliveryPlanDateSupplier: TSQLTimeStampField;
     QueryDeliveredDateToSupplier: TSQLTimeStampField;
-    QueryDeliveryDaysReserve: TIntegerField;
     QueryDeliveryNextDate: TSQLTimeStampField;
     QueryDeliveryDateToCustomer: TSQLTimeStampField;
     QueryDeliveryTermToCustomer: TIntegerField;
@@ -94,12 +92,10 @@ type
     UniLabel4: TUniLabel;
     QueryStatusID: TFMTBCDField;
     QueryFlag: TIntegerField;
-    QueryWarning: TWideStringField;
     UniLabel5: TUniLabel;
     cbCancel: TUniComboBox;
     QueryReplacementMakeLogo: TWideStringField;
     QueryReplacementDetailNumber: TWideStringField;
-    QueryMakeLogo: TWideStringField;
     QueryReplacementManufacturer: TWideStringField;
     UniImageListAdapter: TUniImageListAdapter;
     actProtocol: TAction;
@@ -123,7 +119,6 @@ type
     lblSelRowSum: TUniLabel;
     UniPanel5: TUniPanel;
     lblSelRowSum2: TUniLabel;
-    QueryReference: TWideStringField;
     QueryComment: TWideStringField;
     QueryDeliveryRestToCustomer: TIntegerField;
     QueryDeliveryRestTermSupplier: TIntegerField;
@@ -148,7 +143,6 @@ type
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridCellClick(Column: TUniDBGridColumn);
     procedure QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actProtocolExecute(Sender: TObject);
     procedure ppMainPopup(Sender: TObject);
@@ -166,7 +160,6 @@ type
     procedure QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest; var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
     procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure QueryDeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure QueryDeliveryDateToCustomerGetText(Sender: TField;
@@ -471,18 +464,6 @@ begin
     Text := Sender.AsString; // Дата поставки клиенту
 end;
 
-procedure TOrdersT2.QueryDeliveryDaysReserveGetText(Sender: TField;
-  var Text: string; DisplayText: Boolean);
-begin
-  if (not QueryDeliveryDaysReserve2.IsNull) then
-  begin
-    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
-            '</span><span class="x-delivery-next-date">' + QueryDeliveryDaysReserve2.AsString + '</span>';
-  end
-  else
-    Text := Sender.AsString;
-end;
-
 procedure TOrdersT2.QueryDeliveryNextDateGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
@@ -530,16 +511,6 @@ begin
   end;
 
   Text := t;
-end;
-
-procedure TOrdersT2.QueryMakeLogoGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-begin
-  if (Sender.FieldName = 'MakeLogo') and (QueryReplacementMakeLogo.Value <> '') then
-  begin
-    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-make-logo-arrow">&#10149;</span><span class="x-replacement-make-logo">' + QueryReplacementMakeLogo.Value + '</span>';
-  end
-  else
-    Text := Sender.AsString;
 end;
 
 procedure TOrdersT2.QueryManufacturerGetText(Sender: TField; var Text: string; DisplayText: Boolean);

@@ -8,9 +8,8 @@ begin
 	create table tChatsMessage
 	(
 	 MessageID   numeric(18, 0) identity
-    ,ChatID      numeric(18, 0)
-	,ClientID    numeric(18, 0)
-    ,UserID      numeric(18, 0)
+    ,ChatID      numeric(18, 0) not null
+    ,UserID      numeric(18, 0) not null
 	,Message     nvarchar(512)
 	,Flag        int
 	,InDateTime  DateTime2 default sysdatetime()
@@ -19,8 +18,6 @@ begin
 	create index ao1 on tChatsMessage(MessageID);
 
 	create index ao2 on tChatsMessage(ChatID);
-
-    create index ao3 on tChatsMessage(ClientID);
 end
 go
 grant all on tChatsMessage to public

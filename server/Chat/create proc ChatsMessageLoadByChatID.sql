@@ -10,13 +10,14 @@ create proc ChatsMessageLoadByChatID
 as
 
     select cm.ChatID
-          ,cm.ClientID
+          ,0 ClientID
           ,cm.UserID
           ,cm.Message
           ,cm.InDateTime
           
           ,u.Brief
           ,u.Name
+          ,cm.Flag
       from tChatsMessage cm (nolock)
      inner join tUser u (nolock)
              on u.UserID = cm.UserID

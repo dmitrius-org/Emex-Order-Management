@@ -161,14 +161,6 @@ object OrdersT2: TOrdersT2
       OnColumnResize = GridColumnResize
       Columns = <
         item
-          ShowToolTipAlways = False
-          FieldName = 'Flag'
-          Title.Caption = ' '
-          Width = 64
-          Alignment = taLeftJustify
-          ReadOnly = True
-        end
-        item
           ShowToolTip = True
           FieldName = 'OrderID'
           Title.Alignment = taCenter
@@ -180,20 +172,10 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'isCancel'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1090#1082#1072#1079
-          Width = 84
-          Visible = False
-          ReadOnly = True
-          Hint = #1054#1090#1082#1072#1079
-          Sortable = True
-        end
-        item
           FieldName = 'OrderDate'
           Title.Alignment = taCenter
           Title.Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
-          Width = 100
+          Width = 85
           ReadOnly = True
           Hint = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
           Sortable = True
@@ -203,18 +185,44 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           Width = 120
+          Visible = False
           ReadOnly = True
           Hint = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           Sortable = True
         end
         item
-          FieldName = 'Reference'
+          FieldName = 'DeliveryTermToCustomer'
           Title.Alignment = taCenter
-          Title.Caption = 'Reference'
-          Width = 120
-          Visible = False
+          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 80
           ReadOnly = True
+          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
           Sortable = True
+        end
+        item
+          FieldName = 'DeliveryRestToCustomer'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 90
+          ReadOnly = True
+          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'DeliveryDateToCustomer'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 100
+          ReadOnly = True
+          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'DestinationName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Width = 100
+          ReadOnly = True
         end
         item
           FieldName = 'StatusName'
@@ -226,21 +234,23 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'MakeLogo'
-          Title.Alignment = taCenter
-          Title.Caption = #1041#1088#1077#1085#1076
-          Width = 65
-          Visible = False
-          ReadOnly = True
-          Sortable = True
-        end
-        item
           FieldName = 'Manufacturer'
           Title.Alignment = taCenter
           Title.Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
           Width = 161
           ReadOnly = True
           Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+          Sortable = True
+        end
+        item
+          ShowToolTip = True
+          FieldName = 'PriceLogo'
+          Title.Alignment = taCenter
+          Title.Caption = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
+          Width = 86
+          Visible = False
+          ReadOnly = True
+          Hint = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
           Sortable = True
         end
         item
@@ -258,17 +268,6 @@ object OrdersT2: TOrdersT2
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080
           Width = 258
           ReadOnly = True
-          Sortable = True
-        end
-        item
-          ShowToolTip = True
-          FieldName = 'PriceLogo'
-          Title.Alignment = taCenter
-          Title.Caption = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
-          Width = 86
-          Visible = False
-          ReadOnly = True
-          Hint = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
           Sortable = True
         end
         item
@@ -303,6 +302,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072
           Sortable = True
@@ -312,6 +312,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072
           Sortable = True
@@ -321,6 +322,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1042#1077#1089' '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090
           Sortable = True
@@ -330,22 +332,17 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1042#1077#1089' '#1054#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090
           Sortable = True
-        end
-        item
-          FieldName = 'DestinationName'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
-          Width = 150
-          ReadOnly = True
         end
         item
           FieldName = 'DeliveryPlanDateSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Sortable = True
@@ -355,6 +352,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
+          Visible = False
           ReadOnly = True
         end
         item
@@ -362,6 +360,7 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Sortable = True
@@ -371,17 +370,9 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 134
+          Visible = False
           ReadOnly = True
           Hint = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-          Sortable = True
-        end
-        item
-          FieldName = 'DeliveryDaysReserve'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072
-          Width = 100
-          ReadOnly = True
-          Hint = #1044#1085#1077#1081' '#1079#1072#1087#1072#1089#1072' '#1076#1086' '#1074#1099#1083#1077#1090#1072
           Sortable = True
         end
         item
@@ -389,44 +380,18 @@ object OrdersT2: TOrdersT2
           Title.Alignment = taCenter
           Title.Caption = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
           Width = 100
+          Visible = False
           ReadOnly = True
           Hint = #1041#1083#1080#1078#1072#1081#1096#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
           Sortable = True
         end
         item
-          FieldName = 'DeliveryDateToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 100
+          ShowToolTipAlways = False
+          FieldName = 'Flag'
+          Title.Caption = ' '#1057#1090#1072#1090#1091#1089#1099
+          Width = 70
+          Alignment = taLeftJustify
           ReadOnly = True
-          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'DeliveryTermToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 100
-          ReadOnly = True
-          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'DeliveryRestToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 100
-          ReadOnly = True
-          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'Warning'
-          Title.Alignment = taCenter
-          Title.Caption = #1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077
-          Width = 188
-          ReadOnly = True
-          Sortable = True
         end
         item
           FieldName = 'Comment'
@@ -898,11 +863,6 @@ object OrdersT2: TOrdersT2
       ReadOnly = True
       OnGetText = QueryFlagGetText
     end
-    object QueryisCancel: TBooleanField
-      FieldName = 'isCancel'
-      Origin = 'isCancel'
-      ReadOnly = True
-    end
     object QueryOrderDate: TSQLTimeStampField
       FieldName = 'OrderDate'
       Origin = 'OrderDate'
@@ -924,12 +884,6 @@ object OrdersT2: TOrdersT2
       Origin = 'StatusName'
       ReadOnly = True
       Size = 64
-    end
-    object QueryMakeLogo: TWideStringField
-      FieldName = 'MakeLogo'
-      ReadOnly = True
-      OnGetText = QueryMakeLogoGetText
-      Size = 32
     end
     object QueryManufacturer: TWideStringField
       FieldName = 'Manufacturer'
@@ -1009,12 +963,6 @@ object OrdersT2: TOrdersT2
       Origin = 'DeliveredDateToSupplier'
       ReadOnly = True
     end
-    object QueryDeliveryDaysReserve: TIntegerField
-      FieldName = 'DeliveryDaysReserve'
-      Origin = 'DeliveryDaysReserve'
-      ReadOnly = True
-      OnGetText = QueryDeliveryDaysReserveGetText
-    end
     object QueryDeliveryDaysReserve2: TIntegerField
       FieldName = 'DeliveryDaysReserve2'
       ReadOnly = True
@@ -1067,16 +1015,6 @@ object OrdersT2: TOrdersT2
       FieldName = 'CustomerPriceLogo'
       ReadOnly = True
       Size = 64
-    end
-    object QueryReference: TWideStringField
-      FieldName = 'Reference'
-      ReadOnly = True
-      Size = 64
-    end
-    object QueryWarning: TWideStringField
-      FieldName = 'Warning'
-      ReadOnly = True
-      Size = 128
     end
     object QueryComment: TWideStringField
       FieldName = 'Comment'
