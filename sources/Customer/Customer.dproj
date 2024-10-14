@@ -221,12 +221,12 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUtils.Grid.pas"/>
-        <DCCReference Include="App\uBalanceTotalT.pas">
+        <DCCReference Include="..\Common\Loading\uniGUI.Loading.pas"/>
+        <DCCReference Include="..\Common\Balance\uBalanceTotalT.pas">
             <Form>BalanceTotalT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\Loading\uniGUI.Loading.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

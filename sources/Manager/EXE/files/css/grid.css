@@ -122,6 +122,22 @@
     text-align: left
 }
 
+/* Ожидаемая дата поставки */
+.grid-balance-totall-detail .x-receipt-date-arrow{
+    line-height: 0.0; 
+    color: #1375bc;
+    text-align: left;
+    /* font-size: 10px;    */
+}
+
+/* Ожидаемая дата поставки */
+.grid-balance-totall-detail .x-receipt-date{
+    line-height: 0.0; 
+    color: #1375bc;
+    text-align: left; 
+    /* font-size: 11px;       */
+}
+
 /* Иконка: Запрос отказа */
 .grid-order-request-cancellation {
     width: 100%;

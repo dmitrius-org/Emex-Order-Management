@@ -16,6 +16,7 @@
     line-height: 0.0; 
     color: #4183C4;
     text-align: left;
+    font-size: 10px;  
 }
 
 /* Номер детали замены*/
@@ -23,61 +24,70 @@
     line-height: 0.0; 
     color: #4183C4;
     text-align: left;
+    font-size: 11px;  
 }
 
 /* Стрелка бренд замены*/
 .grid-order .x-replacement-make-logo-arrow{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 10px;  
 }
 
 /* Бренд замены*/
 .grid-order .x-replacement-make-logo{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 11px;  
 }
 
 /* Стрелка производитель замены*/
 .grid-order .x-replacement-manufacturer-arrow{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 10px;  
 }
 
 /* Производитель замены*/
 .grid-order .x-replacement-manufacturer{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 11px;  
 }
 
 /* Цена замены*/
 .grid-order .x-replacement-price-arrow{
     line-height: 0.0; 
     color: #c45b41;
-    text-align: left
+    text-align: left;
+    font-size: 10px;  
 }
 
 .grid-order .x-replacement-price{
     line-height: 0.0; 
     color: #c45b41;
-    text-align: left
+    text-align: left;
+    font-size: 11px;  
 }
 
 /* Стрелка ближайшая дата вылета*/
 .grid-order .x-delivery-next-date-arrow{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 10px;  
 }
 
 /* Ближайшая дата вылета*/
 .grid-order .x-delivery-next-date{
     line-height: 0.0; 
     color: #4183C4;
-    text-align: left
+    text-align: left;
+    font-size: 11px;  
 }
 
 /* Иконка: Запрос отказа*/

@@ -151,7 +151,6 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       TabOrder = 2
       OnClick = UniButton1Click
-      ExplicitTop = 57
     end
     object edtDateEnd: TUniDateTimePicker
       Left = 159
@@ -166,7 +165,6 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       TabOrder = 4
       ClearButton = True
-      ExplicitTop = 57
     end
     object edtDateBegin: TUniDateTimePicker
       Left = 13
@@ -181,7 +179,6 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       TabOrder = 3
       ClearButton = True
-      ExplicitTop = 57
     end
     object UniPanel2: TUniPanel
       Left = 822
@@ -195,7 +192,6 @@ object BalanceT: TBalanceT
       BorderStyle = ubsNone
       ShowCaption = False
       Caption = 'UniPanel2'
-      ExplicitHeight = 126
       DesignSize = (
         275
         97)
@@ -238,7 +234,6 @@ object BalanceT: TBalanceT
         Action = actInsert
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 3
-        ExplicitTop = 88
       end
     end
     object cbClient: TUniFSComboBox
@@ -256,9 +251,8 @@ object BalanceT: TBalanceT
       AnyMatch = True
       ClearButton = True
       IconItems = <>
-      OnChangeValue = cbClientChangeValue
+      OnSelect = cbClientSelect
       Value = '-1'
-      ExplicitTop = 27
     end
     object UniLabel6: TUniLabel
       Left = 13
@@ -272,7 +266,6 @@ object BalanceT: TBalanceT
       ParentFont = False
       Font.Height = -13
       TabOrder = 6
-      ExplicitTop = 14
     end
   end
   object DataSource: TDataSource

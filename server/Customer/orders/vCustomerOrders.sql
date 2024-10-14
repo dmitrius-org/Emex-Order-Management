@@ -16,7 +16,6 @@ SELECT o.[OrderID]
       ,o.[StatusID]
       ,s.[Name]          as StatusName -- статус/состояние
       ,o.[isCancel]
-	  ,o.[MakeLogo]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
       ,ltrim(rtrim(Replace( case 
@@ -29,19 +28,14 @@ SELECT o.[OrderID]
       ,o.[Quantity]
       ,o.[Price]
       ,o.[Amount]
-      ,o.[PricePurchase]
-      ,o.[AmountPurchase]
-      ,o.[PricePurchaseF]
-      ,o.[AmountPurchaseF]
+      --,o.[PricePurchase]
+      --,o.[AmountPurchase]
+      --,o.[PricePurchaseF]
+      --,o.[AmountPurchaseF]
       ,o.[WeightKG]
       ,o.[VolumeKG]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
-      ,o.[Margin]
-      ,o.[MarginF]
-      ,o.[Profit]
-      ,o.[Income]
-      ,o.[IncomePRC]
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
       ,case 
          when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
@@ -58,19 +52,13 @@ SELECT o.[OrderID]
       ,o.DeliveryTermToCustomer	               -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
 	  ,o.OverPricing                           -- превышение
-	  ,o.Warning                               -- предупреждение/замечания
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
-	  ,o.ReplacementMakeLogo                   -- бренд замены
 	  ,o.ReplacementDetailNumber               -- номер замены
-	  ,o.ReplacementPrice                      -- Изменение цены
-	  ,o.CustomerPriceLogo                     -- Наименование прайса заказа от клиента
-      ,p.Restrictions                          -- ограничение
       ,o.Invoice                               -- номер инвойса
       ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
       ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
       ,o.OrderDetailSubId
-      ,o.OrderNum              Reference
 
       ,o.[inDatetime]
       ,o.[updDatetime]
@@ -110,7 +98,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241002', '8'
+exec setOV 'vCustomerOrders', 'V', '20241002', '10'
 go
  
 -- Описание таблицы

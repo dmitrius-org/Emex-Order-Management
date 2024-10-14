@@ -238,6 +238,7 @@ begin
     FBalance :=  TBalanceTotalT.Create(Self);
     FBalance.Align := alClient;
     FBalance.Parent := tsBalance;
+    FBalance.ClientID:= UniMainModule.AUserID;
   end;
 
   FBalance.GridRefresh;
@@ -304,7 +305,10 @@ procedure TMainForm.UniFormShow(Sender: TObject);
 begin
   logger.Info('get _MicroWidth:' + UniApplication.Cookies.Values['_MicroWidth']);
 
-  MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);
+  if UniApplication.Cookies.Values['_MicroWidth'].Empty = '' then
+    MainMenu.Micro := True
+  else
+    MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);
 
   SetMainMenuMicroName;
 

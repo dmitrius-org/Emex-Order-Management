@@ -94,7 +94,6 @@ type
     QueryFlag: TIntegerField;
     UniLabel5: TUniLabel;
     cbCancel: TUniComboBox;
-    QueryReplacementMakeLogo: TWideStringField;
     QueryReplacementDetailNumber: TWideStringField;
     QueryReplacementManufacturer: TWideStringField;
     UniImageListAdapter: TUniImageListAdapter;
@@ -111,8 +110,6 @@ type
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
     fDetailNum: TUniEdit;
-    QueryReplacementPrice: TCurrencyField;
-    QueryCustomerPriceLogo: TWideStringField;
     UniPanel3: TUniPanel;
     lblSelRowCunt: TUniLabel;
     UniPanel4: TUniPanel;
@@ -153,7 +150,6 @@ type
     procedure fStatus2Select(Sender: TObject);
     procedure fPriceLogoSelect(Sender: TObject);
     procedure cbCancelSelect(Sender: TObject);
-    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
@@ -523,17 +519,6 @@ begin
     Text := Sender.AsString;
 end;
 
-procedure TOrdersT2.QueryPricePurchaseGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
-begin
-  if (Sender.FieldName = 'PricePurchase') and (QueryReplacementPrice.Value > 0)  then
-  begin
-    Text := '<span>' + FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price-arrow">'+
-    '&#10149;</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
-  end
-  else
-    Text := Sender.AsString;
-end;
 
 procedure TOrdersT2.QueryUpdateRecord(ASender: TDataSet;
   ARequest: TFDUpdateRequest; var AAction: TFDErrorAction;

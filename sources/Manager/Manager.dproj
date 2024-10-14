@@ -475,11 +475,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Clients\uBalanceTotalT.pas">
-            <Form>BalanceTotalT</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsTransporterNumberF.pas">
             <Form>ShipmentsTransporterNumberF</Form>
             <FormType>dfm</FormType>
@@ -490,6 +485,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>UserProfile</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Clients\uBalanceTotalT_Wrapper.pas">
+            <Form>BalanceTotalT_W</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\Balance\uBalanceTotalT.pas">
+            <Form>BalanceTotalT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">

@@ -106,10 +106,11 @@ uses
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
-  uBalanceTotalT in 'App\Clients\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
   uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
   uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas',
-  uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm};
+  uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm},
+  uBalanceTotalT_Wrapper in 'App\Clients\uBalanceTotalT_Wrapper.pas' {BalanceTotalT_W: TUniForm},
+  uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
 
 {$R *.res}
 

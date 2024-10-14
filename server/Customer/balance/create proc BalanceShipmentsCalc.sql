@@ -13,8 +13,8 @@ as
   select @R         = 0
 
   -- test !!!
-  if @ClientID in (57)
-    select @ClientID= 39
+  --if @ClientID in (57)
+  --  select @ClientID= 39
 
   delete pBalanceShipments
     from pBalanceShipments with (rowlock index=ao2)
@@ -139,6 +139,6 @@ return @r
 go
 grant exec on BalanceShipmentsCalc to public
 go
-exec setOV 'BalanceShipmentsCalc', 'P', '20240917', '1'
+exec setOV 'BalanceShipmentsCalc', 'P', '20240917', '2'
 go
 

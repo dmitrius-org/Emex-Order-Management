@@ -54,10 +54,10 @@ type
     procedure UniFormShow(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniButton1Click(Sender: TObject);
-    procedure cbClientChangeValue(Sender: TObject);
     procedure actInsertExecute(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
+    procedure cbClientSelect(Sender: TObject);
   private
     FID: integer;
     procedure SetID(const Value: integer);
@@ -142,9 +142,9 @@ begin
   end;
 end;
 
-procedure TBalanceT.cbClientChangeValue(Sender: TObject);
+procedure TBalanceT.cbClientSelect(Sender: TObject);
 begin
-  DataRefresh
+  DataRefresh;
 end;
 
 procedure TBalanceT.DataRefresh;

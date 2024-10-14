@@ -62,23 +62,26 @@ type
       ButtonId: Integer);
     procedure qShipmentsReceiptDateGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
-
-
   private
+    FClientID: Integer;
     { Private declarations }
     procedure ShipmentReportPrint();
     procedure ShipmentReportToExcel(FQuery: TFDQuery; const FileName: string);
+    procedure SetClientID(const Value: Integer);
   public
     { Public declarations }
     procedure GridRefresh;
 
-    procedure ShipmentsGridRefresh;
+    procedure ShipmentsTotalRefresh;
+    procedure ShipmentsTotalDetailRefresh;
+
+    property ClientID: Integer  read FClientID write SetClientID;
   end;
 
 implementation
 
 uses
-  MainModule, ServerModule, uMainVar;
+  MainModule, ServerModule, uMainVar, uLogger;
 
 {$R *.dfm}
 
@@ -87,9 +90,7 @@ uses
 procedure TBalanceTotalT.actRefreshAllExecute(Sender: TObject);
 begin
   GridRefresh;
-  ShipmentsGridRefresh;
 end;
-
 
 procedure TBalanceTotalT.actShippmentReportPrintExecute(Sender: TObject);
 begin
@@ -110,11 +111,18 @@ end;
 
 procedure TBalanceTotalT.GridRefresh;
 begin
-  Query.Close;
-  Query.ParamByName('ClientID').AsInteger := UniMainModule.AUserID;
-  Query.Open;
+  ShowMask('∆дите, операци€ выполн€етс€');
+ // UniSession.Synchronize;
+  try
 
-  //Grid.Columns.ColumnFromFieldName('IsUpdating').Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
+    ShipmentsTotalRefresh;
+
+    ShipmentsTotalDetailRefresh;
+
+  finally
+    HideMask();
+   // UniSession.Synchronize;
+  end;
 end;
 
 procedure TBalanceTotalT.qShipmentsReceiptDateGetText(Sender: TField;
@@ -130,13 +138,20 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TBalanceTotalT.SetClientID(const Value: Integer);
+begin
+  FClientID := Value;
+
+  GridRefresh;
+end;
+
 procedure TBalanceTotalT.ShipmentReportPrint;
 begin
   Sql.Open('''
     exec ExportImplementationByClient
               @Invoice  = :Invoice
              ,@ClientID = :ClientID
-  ''', ['Invoice', 'ClientID'], [qShipments.FieldByName('Invoice').Value, UniMainModule.AUserID]);
+  ''', ['Invoice', 'ClientID'], [qShipments.FieldByName('Invoice').Value, FClientID]);
 
   if Sql.Count > 0 then
   begin
@@ -211,22 +226,23 @@ end;
 procedure TBalanceTotalT.ShipmentsGridColumnActionClick(
   Column: TUniDBGridColumn; ButtonId: Integer);
 begin
-//  case ButtonId of
-//    0 :
-//      begin
-//        ShowMessage('Grid custom action: ');
-//        ShipmentReportPrint;
-//      end;
-//  end;
+ // не удал€ть !!!
 end;
 
-procedure TBalanceTotalT.ShipmentsGridRefresh;
+procedure TBalanceTotalT.ShipmentsTotalDetailRefresh;
 begin
   qShipments.Close;
-  qShipments.ParamByName('ClientID').AsInteger := UniMainModule.AUserID;
+  qShipments.ParamByName('ClientID').AsInteger := FClientID;
   qShipments.Open;
 end;
 
+
+procedure TBalanceTotalT.ShipmentsTotalRefresh;
+begin
+  Query.Close;
+  Query.ParamByName('ClientID').AsInteger := FClientID;
+  Query.Open;
+end;
 
 initialization
   RegisterClass(TBalanceTotalT);

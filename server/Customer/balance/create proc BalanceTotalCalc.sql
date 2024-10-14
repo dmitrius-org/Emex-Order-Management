@@ -14,8 +14,8 @@ as
   select @R         = 0
 
   -- test !!!
-  if @ClientID in (57)
-    select @ClientID= 39
+  --if @ClientID in (57)
+  --  select @ClientID= 39
 
   select @StatusRequiringPayment = c.StatusRequiringPayment  
     from tClients c (nolock)
@@ -95,7 +95,7 @@ as
 
   -- Баланс
   Update t
-     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.StatusID >= t.StatusID ), 0) - 
+     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
                        isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0))  * -1
     from pBalanceTotal t (updlock)
    where t.Spid     = @@Spid
@@ -112,6 +112,6 @@ return @r
 go
 grant exec on BalanceTotalCalc to public
 go
-exec setOV 'BalanceTotalCalc', 'P', '20240917', '2'
+exec setOV 'BalanceTotalCalc', 'P', '20240917', '3'
 go
 

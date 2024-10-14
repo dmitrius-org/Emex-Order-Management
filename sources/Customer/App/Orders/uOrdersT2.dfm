@@ -746,20 +746,20 @@ object OrdersT2: TOrdersT2
       'SELECT o.[OrderID]'
       '      ,o.[OrderDate]'
       '      ,o.[PriceLogo]'
-      '      ,o.[CustomerPriceLogo] -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      '    --  ,o.[CustomerPriceLogo] -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       '      ,o.[OrderNum]'
       '      ,o.[StatusID]'
       '      ,o.[StatusName]'
-      '      ,o.[isCancel]'
-      '      ,o.[MakeLogo]'
+      '    --  ,o.[isCancel]'
+      '    --  ,o.[MakeLogo]'
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
       '      ,o.[Quantity]'
       '      ,o.[Price]'
       '      ,o.[Amount]'
-      '      ,o.[PricePurchase]'
-      '      ,o.[AmountPurchase]'
+      '      --,o.[PricePurchase]'
+      '      --,o.[AmountPurchase]'
       '      ,o.[WeightKG]'
       '      ,o.[VolumeKG]'
       '      ,o.[WeightKGF]'
@@ -781,13 +781,13 @@ object OrdersT2: TOrdersT2
       '      ,o.[DeliveryRestToCustomer]'
       '      ,o.[inDatetime]'
       '      ,o.[updDatetime]      '
-      '      ,o.[Warning]'
+      '      --,o.[Warning]'
       '      ,o.[Comment]'
-      '      ,o.[ReplacementMakeLogo]'
+      '      --,o.[ReplacementMakeLogo]'
       '      ,o.[ReplacementDetailNumber]'
       '      ,o.[ReplacementManufacturer]    '
-      '      ,o.[ReplacementPrice]  '
-      '      ,o.[Reference]'
+      '      --,o.[ReplacementPrice]  '
+      '     -- ,o.[Reference]'
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
@@ -992,11 +992,6 @@ object OrdersT2: TOrdersT2
       FieldName = 'DeliveryRestToCustomer'
       ReadOnly = True
     end
-    object QueryReplacementMakeLogo: TWideStringField
-      FieldName = 'ReplacementMakeLogo'
-      ReadOnly = True
-      Size = 32
-    end
     object QueryReplacementDetailNumber: TWideStringField
       FieldName = 'ReplacementDetailNumber'
       ReadOnly = True
@@ -1006,15 +1001,6 @@ object OrdersT2: TOrdersT2
       FieldName = 'ReplacementManufacturer'
       ReadOnly = True
       Size = 32
-    end
-    object QueryReplacementPrice: TCurrencyField
-      FieldName = 'ReplacementPrice'
-      ReadOnly = True
-    end
-    object QueryCustomerPriceLogo: TWideStringField
-      FieldName = 'CustomerPriceLogo'
-      ReadOnly = True
-      Size = 64
     end
     object QueryComment: TWideStringField
       FieldName = 'Comment'
@@ -1122,21 +1108,6 @@ object OrdersT2: TOrdersT2
       ' WHERE OrderID  = :OLD_OrderID')
     FetchRowSQL.Strings = (
       'SELECT StatusID, '
-      '/*       StatusName,'
-      '       PricePurchaseF,'
-      '       AmountPurchaseF,'
-      '       ReplacementMakeLogo,'
-      '       ReplacementDetailNumber,'
-      '       OverPricing,'
-      '       updDatetime,'
-      '       WeightKGF,'
-      '       VolumeKGf,'
-      '       DetailName,'
-      '       WeightKG,'
-      '       VolumeKG,'
-      '       isCancel,'
-      '       Warning,'
-      '       Comment,*/'
       '       Flag'
       '  FROM tOrders (nolock)'
       ' WHERE OrderID = :OrderID')

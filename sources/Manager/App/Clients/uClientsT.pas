@@ -73,6 +73,9 @@ type
     actClientType: TAction;
     flClientBrief: TUniEdit;
     flClientID: TUniNumberEdit;
+    actBalanceTotal: TAction;
+    tbBalanceTotal: TUniToolButton;
+    N11: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -90,6 +93,7 @@ type
     procedure GridClearFilters(Sender: TObject);
     procedure GridColumnFilter(Sender: TUniDBGrid;
       const Column: TUniDBGridColumn; const Value: Variant);
+    procedure actBalanceTotalExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -106,7 +110,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T, uLogger;
+  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper;
 
 {$R *.dfm}
 
@@ -128,6 +132,13 @@ procedure TClientsT.actBalanceExecute(Sender: TObject);
 begin
   BalanceT.ID:= QueryClientID.AsInteger;
   BalanceT.ShowModal;
+end;
+
+procedure TClientsT.actBalanceTotalExecute(Sender: TObject);
+begin
+  //Баланс и Отгрузки
+  BalanceTotalT_W.ClientID:=QueryClientID.AsInteger;
+  BalanceTotalT_W.ShowModal();
 end;
 
 procedure TClientsT.actClientTypeExecute(Sender: TObject);
