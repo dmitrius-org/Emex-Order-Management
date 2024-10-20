@@ -36,7 +36,11 @@ update t
 	  ,t.PackQuantity = p.PackQuantity
 	  ,t.Reliability  = p.Reliability -- Вероятность поставки 
 	  ,t.WeightKG     = p.WeightKG
-  	  ,t.VolumeKG	  = p.VolumeKG
+  	  ,t.VolumeKG	  = case
+                          when p.VolumeKG = 0 
+                            then p.WeightKG
+                            else p.VolumeKG
+                        end
 	  ,t.MOSA         = p.MOSA
 	  ,t.Restrictions = isnull(t.Restrictions, nullif(p.Restrictions, ''))
       ,t.updDatetime  = GetDate()
@@ -74,7 +78,11 @@ select p.MakeLogo
 	  ,p.PackQuantity 
 	  ,p.Reliability  -- Вероятность поставки
 	  ,p.WeightKG     
-  	  ,p.VolumeKG 
+  	  ,case
+         when p.VolumeKG = 0 
+           then p.WeightKG
+           else p.VolumeKG
+       end
 	  ,p.MOSA  
 	  ,nullif(p.Restrictions, '')
   from tMakes m with (nolock index=ao2)  
@@ -179,4 +187,4 @@ exit_:
 go
 grant execute on PriceUpdate to public
 go
-exec setOV 'PriceUpdate', 'P', '20240705', '2'
+exec setOV 'PriceUpdate', 'P', '20241020', '3'
