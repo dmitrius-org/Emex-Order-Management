@@ -110,7 +110,8 @@ uses
   uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas',
   uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm},
   uBalanceTotalT_Wrapper in 'App\Clients\uBalanceTotalT_Wrapper.pas' {BalanceTotalT_W: TUniForm},
-  uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
+  uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
+  uUtils.Date in '..\Common\CommonApp\uUtils.Date.pas';
 
 {$R *.res}
 

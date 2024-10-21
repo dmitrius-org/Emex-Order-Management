@@ -28,8 +28,6 @@ object BasketF: TBasketF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
-    ExplicitTop = 99
-    ExplicitHeight = 519
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -71,7 +69,9 @@ object BasketF: TBasketF
       WebOptions.FetchAll = True
       LoadMask.Message = 'Loading data...'
       LoadMask.Target = Owner
-      EmptyText = #1050#1086#1088#1079#1080#1085#1072' '#1087#1091#1089#1090#1072
+      EmptyText = 
+        '<div style="text-align: center;"><i class="fas fa-shopping-baske' +
+        't"></i> '#1050#1086#1088#1079#1080#1085#1072' '#1087#1091#1089#1090#1072'</div>'#13#10
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-basket'
       LayoutConfig.Width = '0'
@@ -266,7 +266,6 @@ object BasketF: TBasketF
       Align = alClient
       TabOrder = 1
       LayoutAttribs.Columns = 2
-      ExplicitHeight = 99
       object UniPanel1: TUniPanel
         Left = 0
         Top = 0
@@ -279,7 +278,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel1'
         LayoutConfig.Region = 'center'
-        ExplicitHeight = 99
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -314,7 +312,6 @@ object BasketF: TBasketF
           ParentColor = False
           Align = alLeft
           TabOrder = 1
-          ExplicitHeight = 93
           object UniFieldContainer1: TUniFieldContainer
             AlignWithMargins = True
             Left = 3
@@ -329,8 +326,6 @@ object BasketF: TBasketF
             LayoutAttribs.Align = 'top'
             LayoutAttribs.Pack = 'center'
             LayoutAttribs.Columns = 3
-            ExplicitTop = 16
-            ExplicitHeight = 40
             object edtOrderAmount: TUniLabel
               Left = 22
               Top = 21
@@ -453,7 +448,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel2'
         LayoutConfig.Region = 'east'
-        ExplicitHeight = 99
         DesignSize = (
           418
           80)

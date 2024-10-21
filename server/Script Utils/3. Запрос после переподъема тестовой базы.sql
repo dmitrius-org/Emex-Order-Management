@@ -17,8 +17,8 @@ select *
 --where ClientID <> 15
 
 
-select * 
-  from tClients 
+--select * 
+--  from tClients 
 
 
 update tTask

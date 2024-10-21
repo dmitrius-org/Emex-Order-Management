@@ -14,7 +14,7 @@ uses
   UniFSCombobox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
-  System.Actions, Vcl.ActnList;
+  System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList;
 
 type
 
@@ -101,33 +101,39 @@ type
     cbPrice: TUniFSComboBox;
     UniActionList1: TUniActionList;
     actRefreshFormDate: TAction;
+    UniHTMLFrame1: TUniHTMLFrame;
+    UniContainerPanel1: TUniContainerPanel;
+    actProtocol: TAction;
+    UniNativeImageList1: TUniNativeImageList;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure UniFormShow(Sender: TObject);
     procedure edtLChange(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
     procedure btnYandexImagesClick(Sender: TObject);
     procedure btnExistClick(Sender: TObject);
     procedure btnZZAPClick(Sender: TObject);
     procedure btnEmExClick(Sender: TObject);
-    procedure UniBitBtn1Click(Sender: TObject);
-    procedure UniFormReady(Sender: TObject);
-    procedure UniTimerTimer(Sender: TObject);
     procedure edtVKGKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnNumberClick(Sender: TObject);
     procedure btnNumber2Click(Sender: TObject);
     procedure btnDestinationLogoClick(Sender: TObject);
     procedure cbPriceChange(Sender: TObject);
-    procedure UniFormDestroy(Sender: TObject);
     procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cbDestinationLogoChange(Sender: TObject);
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
     procedure edtDetailNameFRemoteQuery(const QueryString: string; Result: TStrings);
     procedure actRefreshFormDateExecute(Sender: TObject);
+    procedure UniBitBtn1Click(Sender: TObject);
+    procedure UniFormDestroy(Sender: TObject);
+    procedure UniFormReady(Sender: TObject);
+    procedure UniFormShow(Sender: TObject);
+    procedure UniTimerTimer(Sender: TObject);
+    procedure actProtocolExecute(Sender: TObject);
 
   private
     FAction: TFormAction;
+    /// <remarks> FID - Идентификатор заказа </remarks>
     FID: Integer;
     FFlag: Integer;
     FClientID: Integer;
@@ -154,6 +160,7 @@ type
     FProfin2:  Real;
     FQuantity2: Integer;
 
+    /// <value>FStatusID - текущее состояние</value>
     FStatusID: Integer;
     FIsCounter: Boolean;
 
@@ -169,6 +176,11 @@ type
     procedure DataCheck();
 
     procedure SetOpenUrl(AUrl: string);
+
+    /// <summary>
+    ///  GooglePSE - интеграция программируемой поисковой системы google
+    ///</summary>
+    procedure GooglePSE();
   public
     { Public declarations }
 
@@ -204,6 +216,9 @@ type
 
     procedure SetBtnEnabled();
 
+    /// <summary>
+    /// OrderUpdate - Изменение информации по заказу
+    /// </summary>
     procedure OrderUpdate(ATargetStateID: integer = 0);
 
     /// <summary>
@@ -222,20 +237,54 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast, uOrdersProtocol_T;
 
 function OrderF: TOrderF;
 begin
   Result := TOrderF(UniMainModule.GetFormInstance(TOrderF));
 end;
 
+
+
+{ TSQLQueryThread }
+
+constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+begin
+  inherited Create(False);
+
+  FConnection  := AConnection;
+  FClientID    := AClientID;
+  FPriceLogo   := APriceLogo;
+  FDetailNumber:= ADetailNumber;
+end;
+
+procedure TSQLQueryThread.Execute();
+var Emex:TEmex;
+begin
+  Emex := TEmex.Create;
+  try
+    Emex.Connection := FConnection;
+    Emex.FindByDetailNumber(FClientID, FDetailNumber);
+
+    Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
+  finally
+    Emex.Destroy;
+  end;
+end;
+
 { TOrderF }
+
+procedure TOrderF.actProtocolExecute(Sender: TObject);
+begin
+  OrdersProtocol_T.ID:= FID;
+  OrdersProtocol_T.ShowModal;
+end;
 
 procedure TOrderF.actRefreshFormDateExecute(Sender: TObject);
 begin
-    SetEditDataRating(0);
-    LoadDataPart;
-    GetPartFromEmex;
+  SetEditDataRating(0);
+  LoadDataPart;
+  GetPartFromEmex;
 end;
 
 procedure TOrderF.btnCancelClick(Sender: TObject);
@@ -316,43 +365,63 @@ begin
     case FAction of
       acUpdate:
       begin
-        sqltext :='''
-                   declare @R      int
 
-                   exec @r = OrderUpdate
-                               @OrderID        = :OrderID
-                              ,@DetailNameF    = :DetailNameF
-                              ,@WeightKGF      = :WeightKGF
-                              ,@VolumeKGF      = :VolumeKGF
-                              ,@Fragile        = :Fragile
-                              ,@NoAir          = :NoAir
-                              ,@Price          = :Price
-                              ,@DestinationLogo=:DestinationLogo
-                              ,@Comment        =:Comment
-                              ,@TargetStateID  =:TargetStateID
-                              ,@MakeLogo       =:MakeLogo
-                              ,@ReplacementPrice = :ReplacementPrice
-                   select @r as retcode
-                  ''';
+        // если заказа в корзине, нужно его удалить
+        if (FStatusID = 3)	{InBasket	В корзине}  and (ATargetStateID = 12) then
+        begin
+            var Emex:TEmex;
 
-        Sql.Open(sqltext,
-                 ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
-                  'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID', 'ReplacementPrice'],
-                 [edtWeightKGF.Value,
-                  edtVolumeKGF.Value,
-                  edtDetailNameF.Text,
-                  FID,
-                  FPriceLogo,
-                  FMakeLogo,
-                  cbDestinationLogo.Value ,
-                  cbFragile.Checked,
-                  cbNoAir.Checked,
-                  edtMessage.Text,
-                  ATargetStateID,
-                  FPrice2
-                  ]);
+            Emex := TEmex.Create;
+            try
+              Emex.Connection := UniMainModule.FDConnection;
+              RetVal.Code := Emex.DeleteFromBasketByOrderID(FID);
 
-        RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+              Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
+            finally
+              Emex.Destroy;
+            end;
+        end;
+
+        if RetVal.Code = 0 then
+        begin
+          sqltext :='''
+                     declare @R      int
+
+                     exec @r = OrderUpdate
+                                 @OrderID        = :OrderID
+                                ,@DetailNameF    = :DetailNameF
+                                ,@WeightKGF      = :WeightKGF
+                                ,@VolumeKGF      = :VolumeKGF
+                                ,@Fragile        = :Fragile
+                                ,@NoAir          = :NoAir
+                                ,@Price          = :Price
+                                ,@DestinationLogo=:DestinationLogo
+                                ,@Comment        =:Comment
+                                ,@TargetStateID  =:TargetStateID
+                                ,@MakeLogo       =:MakeLogo
+                                ,@ReplacementPrice = :ReplacementPrice
+                     select @r as retcode
+          ''';
+
+          Sql.Open(sqltext,
+                   ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
+                    'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID', 'ReplacementPrice'],
+                   [edtWeightKGF.Value,
+                    edtVolumeKGF.Value,
+                    edtDetailNameF.Text,
+                    FID,
+                    FPriceLogo,
+                    FMakeLogo,
+                    cbDestinationLogo.Value ,
+                    cbFragile.Checked,
+                    cbNoAir.Checked,
+                    edtMessage.Text,
+                    ATargetStateID,
+                    FPrice2
+                    ]);
+
+          RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+        end;
       end;
     end;
   end;
@@ -367,6 +436,50 @@ begin
   else
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
+  end;
+end;
+
+procedure TOrderF.UniBitBtn1Click(Sender: TObject);
+begin
+  cbPrice.Enabled := true;
+  cbPrice.SetFocus;
+end;
+
+procedure TOrderF.UniFormDestroy(Sender: TObject);
+begin
+  UniTimer.Enabled := false;
+end;
+
+procedure TOrderF.UniFormReady(Sender: TObject);
+begin
+  GetPartFromEmex;
+
+  SetRating(FPercentSupped);
+end;
+
+procedure TOrderF.UniFormShow(Sender: TObject);
+begin
+  btnOk.Caption := ' Сохранить';
+
+  LoadDataPart;
+end;
+
+procedure TOrderF.UniTimerTimer(Sender: TObject);
+var Price: string;
+begin
+  try
+    Sql.Open('select 1 from #IsPart (nolock)', [],[]);
+    logger.Info('UniTimerTimer IsPart:' + Sql.Q.RecordCount.ToString);
+
+    if Sql.Q.RecordCount > 0 then
+    begin
+      PriceCalc();
+
+      getPartRatingFromDB2();
+
+      UniTimer.Enabled := False;
+    end;
+  finally
   end;
 end;
 
@@ -414,16 +527,16 @@ procedure TOrderF.DataCheck;
 begin
   RetVal.Clear;
 
-//  case FAction of
-//    acInsert, acReportCreate, acUpdate, acReportEdit:
-//    begin
-//      if edtBrief.IsBlank then
-//      begin
-//        RetVal.Code := 1;
-//        RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!'; Exit();
-//      end
-//    end;
-//  end;
+  case FAction of
+    acInsert, acReportCreate, acUpdate, acReportEdit:
+    begin
+      if edtDetailNameF.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!'; Exit();
+      end
+    end;
+  end;
 end;
 
 procedure TOrderF.DataLoad;
@@ -928,17 +1041,6 @@ begin
   UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
 end;
 
-procedure TOrderF.UniBitBtn1Click(Sender: TObject);
-begin
-  cbPrice.Enabled := true;
-  cbPrice.SetFocus;
-end;
-
-procedure TOrderF.UniFormDestroy(Sender: TObject);
-begin
-  UniTimer.Enabled := false;
-end;
-
 procedure TOrderF.LoadDataPart;
 begin
   ComboBoxFill(cbDestinationLogo,'''
@@ -958,7 +1060,11 @@ begin
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
       DataLoad;
+
       edtDetailNameF.SetFocus;
+
+
+      GooglePSE();
     end
   else
     //
@@ -1016,62 +1122,67 @@ begin
   end;
 end;
 
-procedure TOrderF.UniFormReady(Sender: TObject);
+procedure TOrderF.GooglePSE;
+var GoogleKey : string;
+
 begin
-  GetPartFromEmex;
+  GoogleKey := Sql.GetSetting('GoogleProgrammableSearchEngineKey');
 
-  SetRating(FPercentSupped);
-end;
 
-procedure TOrderF.UniFormShow(Sender: TObject);
-begin
-  btnOk.Caption := ' Сохранить';
-
-  LoadDataPart;
-end;
-
-procedure TOrderF.UniTimerTimer(Sender: TObject);
-var Price: string;
-begin
-  try
-    Sql.Open('select 1 from #IsPart (nolock)', [],[]);
-    logger.Info('UniTimerTimer IsPart:' + Sql.Q.RecordCount.ToString);
-
-    if Sql.Q.RecordCount > 0 then
+  if GoogleKey = '' then
+  begin
+    with TStringList.Create() do
     begin
-      PriceCalc();
-
-      getPartRatingFromDB2();
-
-      UniTimer.Enabled := False;
+      LoadFromFile('.\files\html\GoogleCSEKeyErr.html');
+      UniHTMLFrame1.HTML.Text := Text;
+      Free;
     end;
-  finally
+
+    exit ;
   end;
-end;
+  UniHTMLFrame1.HTML.Text := Format(
+   '''
+    <script async src="https://cse.google.com/cse.js?cx=%s"></script>
+    <div class="gcse-search" data-gname="search"></div>
+
+    <script>
+        // Функция для создания поискового запроса
+        function performSearch(brand, partNumber) {
 
 
-{ TSQLQueryThread }
+            // Получаем объект поиска
+            var searchControl = google.search.cse.element.getElement('search');
+            if (searchControl) {
+                // Устанавливаем поисковый запрос
+                const searchQuery = brand + " " + partNumber;
+                searchControl.prefillQuery(searchQuery);
+                // Выполняем поиск
+                searchControl.execute();
+            };
+        };
 
-constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
-begin
-  inherited Create(False);
+      // Ждем загрузки компонента Google Custom Search
+      function onGoogleSearchLoaded() {
+        console.log("Google Custom Search загружен");
 
-  FConnection  := AConnection;
-  FClientID    := AClientID;
-  FPriceLogo   := APriceLogo;
-  FDetailNumber:= ADetailNumber;
-end;
+        performSearch("%s", "%s");
 
-procedure TSQLQueryThread.Execute();
-var Emex:TEmex;
-begin
-  Emex := TEmex.Create;
-  Emex.Connection := FConnection;
-  Emex.FindByDetailNumber(FClientID, FDetailNumber);
+      };
 
-  Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
+      // Событие инициализации поиска Google Custom Search
+      window.__gcse = {
+        callback: onGoogleSearchLoaded
+      };
 
-  FreeAndNil(Emex);
+    </script>
+
+    '''
+    , [GoogleKey, FManufacturer, FDetailNumber]);
 end;
 
 end.
+
+
+
+
+

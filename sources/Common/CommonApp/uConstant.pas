@@ -2,9 +2,10 @@ unit uConstant;
 //                     Пользовательские типы и константы
 interface
 
+uses System.SysUtils;
 
 
-//const
+const  NullDate: TDateTime = 2; // 01-01-1900
 
 
 Type

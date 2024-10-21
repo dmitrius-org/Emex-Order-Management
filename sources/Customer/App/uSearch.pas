@@ -669,8 +669,7 @@ begin
  if (Assigned(ACurrColumn)) and (not MakeLogoPanel.Visible )then
   if (
        (ACurrColumn.FieldName = 'MakeName') or
-       (ACurrColumn.FieldName = 'DetailNum') or
-       (ACurrColumn.FieldName = 'PartNameRus') )
+       (ACurrColumn.FieldName = 'DetailNum') )
   then
   begin
     UniSession.BrowserWindow(Format('https://www.google.com/search?tbm=isch&q=%s+%s', [QueryMakeName.Value, QueryDetailNum.Value]), 0, 0, '_blank');

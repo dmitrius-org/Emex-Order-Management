@@ -250,7 +250,9 @@ object BalanceTotalT: TBalanceTotalT
       LoadMask.WaitData = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
-      EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EmptyText = 
+        '<div style="text-align: center;"><i class="fas fa-inbox"></i> '#1053#1077 +
+        #1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084'</div>'#13#10
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-balance-totall-detail'
       LayoutConfig.Height = '100'

@@ -154,12 +154,12 @@ type
     procedure actCancelRequestExecute(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
     procedure QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure QueryUpdateRecord(ASender: TDataSet; ARequest: TFDUpdateRequest; var AAction: TFDErrorAction; AOptions: TFDUpdateRowOptions);
     procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
-    procedure QueryDeliveryDateToCustomerGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryDateToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -491,7 +491,7 @@ begin
 
   if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
+    t := t + '<div class="x-orders-message" data-qtip="Сообщение по заказу"><i class="fa fa-exclamation-triangle"></i></div> ';
   end;
 
   // запрошен отказ по детали
@@ -520,11 +520,39 @@ begin
 end;
 
 
-procedure TOrdersT2.QueryUpdateRecord(ASender: TDataSet;
-  ARequest: TFDUpdateRequest; var AAction: TFDErrorAction;
-  AOptions: TFDUpdateRowOptions);
+procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
 begin
-  logger.Info('QueryUpdateRecord: ');
+  logger.Info(EventName);
+  if (EventName = '_columnhide') then
+  begin
+      Sql.Exec('''
+               exec CustomerGridOptionsVisible
+                      @Grid   = :Grid
+                     ,@Column = :Column
+                     ,@Visible= 0
+                     ,@ClientID=:ClientID
+               ''',
+              ['Grid', 'Column', 'ClientID'],
+              [self.ClassName +'.' + Grid.Name,
+               Grid.Columns[Params['column'].Value.ToInteger].FieldName,
+               UniMainModule.AUserID]);
+  end
+  else
+  if (EventName = '_columnshow') then
+  begin
+    Sql.Exec('''
+              exec CustomerGridOptionsVisible
+                    @Grid   = :Grid
+                   ,@Column = :Column
+                   ,@Visible= 1
+                   ,@ClientID=:ClientID
+            ''',
+            ['Grid', 'Column', 'ClientID'],
+            [self.ClassName +'.' + Grid.Name,
+             Grid.Columns[Params['column'].Value.ToInteger].FieldName,
+             UniMainModule.AUserID]);
+  end
 end;
 
 procedure TOrdersT2.GridCellClick(Column: TUniDBGridColumn);
@@ -577,13 +605,13 @@ end;
 procedure TOrdersT2.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
   NewIndex: Integer);
 begin
-  //GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+  GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TOrdersT2.GridColumnResize(Sender: TUniBaseDBGridColumn;
   NewSize: Integer);
 begin
-  //GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+  GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TOrdersT2.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -635,7 +663,7 @@ begin
   end;
 
   // восстановление настроек грида для пользователя
-  //GridLayout(Self, Grid, tGridLayout.glLoad, False);
+  GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glLoad);
 
  // actExecuteActionEnabled.Enabled  := Grid.SelectedRows.Count > 0;
  // actExecuteActionRollback.Enabled := Grid.SelectedRows.Count > 0;

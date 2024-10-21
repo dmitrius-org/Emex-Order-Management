@@ -19,7 +19,6 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
   TEmex= class
     private
       FConnection: TFDConnection;
-     // FCustomer: Customer;
       FQuery: TFDQuery;
       FEmex: ServiceSoap;
       FSQl: TSQL;
@@ -63,11 +62,12 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// DeleteBasketDetails - Удаление детали из корзины
       /// </summary>
       procedure DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer = 0);
+
     public
       destructor Destroy; override;
       property Connection: TFDConnection read GetConnection write SetConnection;
-      property Qry: TFDQuery read GetQry write SetQry;
       property Emex: ServiceSoap read GetEmex;
+      property Qry: TFDQuery read GetQry write SetQry;
       property SQl: TSQL read GetSQl write SetSQl;
 
       /// <summary>Login - Авторизация </summary>
@@ -109,6 +109,20 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       procedure InsertPartToBasketByPartDelete();
 
       procedure InsertPartToBasketCancel();
+
+
+      /// <summary>
+      /// DeleteFromBasketByBasketID - Удаление детали из корзины.
+      /// </summary>
+      /// <param name="ABasketID">идентификатор строки корзины</param>
+      procedure DeleteFromBasketByBasketID(ABasketID: Integer);
+
+      /// <summary>
+      /// DeleteFromBasketByOrderID - Удаление детали из корзины по идентификатору заказа
+      /// </summary>
+      /// <param name="AOrderID">идентификатор заказа</param>
+      function DeleteFromBasketByOrderID(AOrderID: Integer): integer;
+
 
       /// <summary>
       /// CreateOrder - создание заказа клиента по данным корзины.
@@ -152,25 +166,10 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 implementation
 
 uses
-  uLogger
- // ,         uOrdersT
-  ;
+  uLogger;
 
 
 { TEmex }
-
-//procedure TEmex.BasketСheck;
-//begin
-//  logger.Info('TEmex.BasketСheck Begin');
-//  // получаем данные корзины emex
-//  GetBasketDetailsByMarks();
-//
-//  Qry.Close;
-//  Qry.SQL.Text := ' declare @R int; exec @r = BasketСheck; select @r as retcode ';
-//  Qry.Open;
-//
-//  logger.Info('TEmex.BasketСheck End');
-//end;
 
 procedure TEmex.CreateOrder();
 var Suppliers : TStringList;
@@ -310,16 +309,6 @@ begin
         logger.Info('TEmex.DeleteBasketDetails 537 Ошибка удаления товара из корзины, требуется ручная проверка! '+
         '[ASupplier: ' + ASupplier.ToString + ', BasketId: ' + part.BasketId.ToString +  ']');
 
-        Qry.Close;
-        Qry.SQL.Text := ' Update pBasketDetails '+
-                 '    set Retval = 537   '+
-                 '   from pBasketDetails with (updlock index=ao2) '+
-                 '  where Spid     = @@spid     '+
-                 '    and BasketId = :BasketId  ';
-        Qry.ParamByName('BasketId').Value := part.BasketId;
-        Qry.ExecSQL;
-
-
         Sql.Exec(' Update pBasketDetails '+
                  '    set Retval = 537   '+
                  '   from pBasketDetails with (updlock index=ao2) '+
@@ -335,6 +324,58 @@ begin
     part.Destroy;
   end;
   logger.Info('TEmex.DeleteBasketDetails End');
+end;
+
+procedure TEmex.DeleteFromBasketByBasketID(ABasketID: Integer);
+var part: BasketDetails;
+    outBasket: ArrayOfBasketDetails;
+    I, R: Integer;
+begin
+
+end;
+
+function TEmex.DeleteFromBasketByOrderID(AOrderID: Integer): integer;
+var part: BasketDetails;
+    outBasket: ArrayOfBasketDetails;
+begin
+  logger.Info('TEmex.DeleteFromBasketByOrderID Begin');
+  result:=0;
+
+  FQuery.close;
+  FQuery.sql.Text := 'select BasketId, SuppliersID from tOrders (nolock) where OrderID = :OrderID ';
+  FQuery.ParamByName('OrderID').AsInteger := AOrderID;
+  FQuery.Open();
+
+  if FQuery.RecordCount > 0 then
+  begin
+    SetLength(outBasket, 1);
+
+    part:= BasketDetails.Create;
+
+    FQuery.First;
+    begin
+      logger.Info('TEmex.DeleteFromBasketByOrderID BasketId: ' + FQuery.FieldByName('BasketId').AsString);
+
+      part.BasketId := FQuery.FieldByName('BasketId').AsLargeInt;
+      part.Date_add:= TXSDateTime.Create;
+
+      outBasket[0]:= part;
+
+      result:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SuppliersID').AsLargeInt), outBasket);
+
+      if result <> 1 then
+      begin
+        Result := 537;
+        logger.Info('TEmex.DeleteFromBasketByOrderID 537 Количество удаленных товаров: ' + result.ToString);
+        logger.Info('TEmex.DeleteFromBasketByOrderID 537 Ошибка удаления товара из корзины. '+ '[ASupplier: ' + FQuery.FieldByName('SuppliersID').AsLargeInt.ToString + ', BasketId: ' + part.BasketId.ToString +  ']');
+      end;
+
+      FQuery.Next;
+    end;
+
+    part.Destroy;
+  end;
+  logger.Info('TEmex.DeleteFromBasketByOrderID End');
 end;
 
 destructor TEmex.Destroy;
@@ -409,10 +450,6 @@ begin
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
 
-    //logger.Info('TEmex.getCustomer UserName: ' + result.UserName);
-    //logger.Info('TEmex.getCustomer Password: ' + result.Password );
-
-
   end;
   logger.Info('TEmex.getCustomer end');
 end;
@@ -432,8 +469,7 @@ begin
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
     result.Password      := SQl.Q.FieldByName('emexPassword').AsString;
-    //logger.Info('TEmex.getCustomerByClient UserName: ' + result.UserName);
-    //logger.Info('TEmex.getCustomerByClient Password: ' + result.Password );
+
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
   end;

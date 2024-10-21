@@ -10,6 +10,7 @@ create proc ChatsMessageLoadByOrderID
 as
 
     select cm.ChatID
+          ,cm.MessageID
           ,c.ClientID
           ,cm.UserID
           ,cm.Message
@@ -37,4 +38,4 @@ exec setOV 'ChatsLoad', 'P', '20240813', '1'
 go
  
 
- exec ChatsMessageLoadByOrderID @OrderID = 10
+ exec ChatsMessageLoadByOrderID @OrderID = 167120

@@ -109,7 +109,16 @@ object OrdersT2: TOrdersT2
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
           '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
           'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=true;'#13#10'  ' +
-          '  }'#13#10'}')
+          '  }'#13#10'}'
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
+          't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
+          '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10' ajaxReque' +
+          'st(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden="' +
+          ' + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
@@ -152,6 +161,7 @@ object OrdersT2: TOrdersT2
       DragDrop.PromptDrop = False
       RowWidget.DestroyOnCollapse = False
       OnKeyDown = GridKeyDown
+      OnAjaxEvent = GridAjaxEvent
       OnSelectionChange = GridSelectionChange
       OnCellClick = GridCellClick
       OnColumnSort = GridColumnSort
@@ -191,66 +201,12 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
-          FieldName = 'DeliveryTermToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 80
-          ReadOnly = True
-          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'DeliveryRestToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 90
-          ReadOnly = True
-          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'DeliveryDateToCustomer'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Width = 100
-          ReadOnly = True
-          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
-          Sortable = True
-        end
-        item
-          FieldName = 'DestinationName'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
-          Width = 100
-          ReadOnly = True
-        end
-        item
-          FieldName = 'StatusName'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1090#1072#1090#1091#1089
-          Width = 173
-          ReadOnly = True
-          Hint = #1057#1090#1072#1090#1091#1089
-          Sortable = True
-        end
-        item
           FieldName = 'Manufacturer'
           Title.Alignment = taCenter
           Title.Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
           Width = 161
           ReadOnly = True
           Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-          Sortable = True
-        end
-        item
-          ShowToolTip = True
-          FieldName = 'PriceLogo'
-          Title.Alignment = taCenter
-          Title.Caption = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
-          Width = 86
-          Visible = False
-          ReadOnly = True
-          Hint = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
           Sortable = True
         end
         item
@@ -295,6 +251,60 @@ object OrdersT2: TOrdersT2
           Width = 110
           ReadOnly = True
           Hint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'DestinationName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
+          Width = 100
+          ReadOnly = True
+        end
+        item
+          FieldName = 'DeliveryTermToCustomer'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 80
+          ReadOnly = True
+          Hint = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'DeliveryRestToCustomer'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 90
+          ReadOnly = True
+          Hint = #1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'DeliveryDateToCustomer'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Width = 100
+          ReadOnly = True
+          Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080
+          Sortable = True
+        end
+        item
+          FieldName = 'StatusName'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089
+          Width = 173
+          ReadOnly = True
+          Hint = #1057#1090#1072#1090#1091#1089' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1079#1072#1082#1072#1079#1072')'
+          Sortable = True
+        end
+        item
+          ShowToolTip = True
+          FieldName = 'PriceLogo'
+          Title.Alignment = taCenter
+          Title.Caption = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
+          Width = 86
+          Visible = False
+          ReadOnly = True
+          Hint = #1051#1086#1075#1086' '#1087#1088#1072#1081#1089#1072' '#1082#1083#1080#1077#1085#1090#1072
           Sortable = True
         end
         item
@@ -392,6 +402,7 @@ object OrdersT2: TOrdersT2
           Width = 70
           Alignment = taLeftJustify
           ReadOnly = True
+          Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1087#1088#1080#1079#1085#1072#1082#1080' '#1087#1086' '#1089#1090#1072#1090#1091#1089#1091' '#1079#1072#1082#1072#1079#1072
         end
         item
           FieldName = 'Comment'
@@ -443,7 +454,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 1
         end
         object fCancel: TUniBitBtn
-          Left = 811
+          Left = 829
           Top = 35
           Width = 128
           Height = 24
@@ -453,7 +464,7 @@ object OrdersT2: TOrdersT2
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 945
+          Left = 963
           Top = 35
           Width = 139
           Height = 24
@@ -464,7 +475,7 @@ object OrdersT2: TOrdersT2
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
-          Left = 429
+          Left = 447
           Top = 35
           Width = 128
           Hint = ''
@@ -476,7 +487,7 @@ object OrdersT2: TOrdersT2
           ClearButton = True
         end
         object UniLabel4: TUniLabel
-          Left = 429
+          Left = 447
           Top = 16
           Width = 76
           Height = 13
@@ -486,7 +497,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 3
         end
         object UniLabel5: TUniLabel
-          Left = 724
+          Left = 742
           Top = 16
           Width = 34
           Height = 13
@@ -496,7 +507,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 5
         end
         object cbCancel: TUniComboBox
-          Left = 724
+          Left = 742
           Top = 35
           Width = 81
           Height = 23
@@ -514,7 +525,7 @@ object OrdersT2: TOrdersT2
         object fStatus2: TUniCheckComboBox
           Left = 17
           Top = 35
-          Width = 270
+          Width = 288
           Hint = ''
           ShowHint = True
           Text = ''
@@ -552,7 +563,7 @@ object OrdersT2: TOrdersT2
           OnSelect = fStatus2Select
         end
         object UniLabel6: TUniLabel
-          Left = 563
+          Left = 581
           Top = 16
           Width = 78
           Height = 13
@@ -562,7 +573,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 4
         end
         object fDetailNum: TUniEdit
-          Left = 563
+          Left = 581
           Top = 35
           Width = 155
           Hint = ''
@@ -574,7 +585,7 @@ object OrdersT2: TOrdersT2
           ClearButton = True
         end
         object fOrderDate: TUniDateTimePicker
-          Left = 293
+          Left = 311
           Top = 35
           Width = 130
           Height = 21
@@ -588,7 +599,7 @@ object OrdersT2: TOrdersT2
           EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
         end
         object UniLabel8: TUniLabel
-          Left = 293
+          Left = 311
           Top = 16
           Width = 65
           Height = 13
@@ -729,7 +740,6 @@ object OrdersT2: TOrdersT2
     LayoutConfig.Width = '100'
   end
   object Query: TFDQuery
-    OnUpdateRecord = QueryUpdateRecord
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
@@ -1129,11 +1139,7 @@ object OrdersT2: TOrdersT2
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'SELECT distinct'
-      '       n.[NodeID]'
-      '      ,n.[Name]'
-      '  FROM [tNodes] n (nolock)'
-      ' where n.Type = 0 -- '#1089#1086#1089#1090#1086#1103#1085#1080#1103)
+      ' exec OrderFilter_Status ')
     Left = 575
     Top = 316
   end

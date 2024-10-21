@@ -19,7 +19,7 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'UploadingEmexRefusalsScript', 'Скрипт для выгрузки отказов для EMEX', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'EmexdwcClient', 'Клиент для интеграции', '', '3', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrderAutoSetStatus', 'Автоматический перевод в Проверено при загрузке заказа', '', '1', 0
-
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'GoogleProgrammableSearchEngineKey', 'Ключ для программируемой поисковой системы', '', '42f36a3f7fa7d4e09', 0
 
 
 

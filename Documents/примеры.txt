@@ -1,0 +1,2 @@
+//  js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "MakeLogoGridShow", []); } ;';
+//  UniSession.JSCode(js);

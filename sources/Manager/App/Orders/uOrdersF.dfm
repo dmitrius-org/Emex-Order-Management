@@ -1,21 +1,27 @@
 object OrderF: TOrderF
   Left = 0
   Top = 0
-  ClientHeight = 404
-  ClientWidth = 867
+  ClientHeight = 803
+  ClientWidth = 884
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
   OldCreateOrder = False
   ShowHint = True
   MonitoredKeys.Keys = <>
   LayoutConfig.Cls = 'x-header-orderf'
+  Images = UniNativeImageList1
   ToolButtons = <
+    item
+      Action = actProtocol
+      ButtonId = 1
+      ImageIndex = 0
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
+    end
     item
       Action = actRefreshFormDate
       ButtonId = 0
-      IconCls = 'refresh'
+      ImageIndex = 1
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ToolType = 'refresh'
     end>
   OnReady = UniFormReady
   OnDestroy = UniFormDestroy
@@ -23,28 +29,16 @@ object OrderF: TOrderF
   object tabCommon: TUniFieldContainer
     Left = 0
     Top = 0
-    Width = 867
-    Height = 404
+    Width = 884
+    Height = 334
     Hint = ''
     ShowHint = True
     ParentColor = False
     Align = alClient
     TabOrder = 0
     DesignSize = (
-      867
-      404)
-    object edtNextPart: TUniCheckBox
-      AlignWithMargins = True
-      Left = 16
-      Top = 372
-      Width = 361
-      Height = 17
-      Hint = ''
-      ShowHint = True
-      Caption = #1055#1077#1088#1077#1093#1086#1076#1080#1090#1100' '#1082' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1089#1090#1088#1086#1082#1077' '#1087#1086#1089#1083#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103
-      Anchors = [akLeft, akBottom]
-      TabOrder = 29
-    end
+      884
+      334)
     object lblWeightKGF: TUniLabel
       Left = 17
       Top = 102
@@ -74,34 +68,6 @@ object OrderF: TOrderF
       ShowHint = True
       Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
       TabOrder = 4
-    end
-    object btnCancel: TUniBitBtn
-      AlignWithMargins = True
-      Left = 355
-      Top = 369
-      Width = 81
-      Height = 27
-      Hint = ''
-      ShowHint = True
-      Caption = #1047#1072#1082#1088#1099#1090#1100
-      Anchors = [akRight, akBottom]
-      TabStop = False
-      TabOrder = 25
-      OnClick = btnCancelClick
-    end
-    object btnOk: TUniBitBtn
-      AlignWithMargins = True
-      Left = 442
-      Top = 369
-      Width = 82
-      Height = 27
-      Hint = ''
-      Margins.Right = 30
-      ShowHint = True
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-      Anchors = [akRight, akBottom]
-      TabOrder = 26
-      OnClick = btnOkClick
     end
     object UniGroupBox1: TUniGroupBox
       Left = 267
@@ -246,12 +212,16 @@ object OrderF: TOrderF
     object UniGroupBox3: TUniGroupBox
       Left = 250
       Top = 3
-      Width = 601
+      Width = 618
       Height = 56
       Hint = ''
       ShowHint = True
       Caption = #1055#1086#1080#1089#1082':'
       Anchors = [akLeft, akTop, akRight]
+      Layout = 'column'
+      LayoutAttribs.Align = 'top'
+      LayoutAttribs.Pack = 'center'
+      LayoutAttribs.Columns = 5
       TabOrder = 2
       object btnGoogleImages: TUniButton
         Left = 13
@@ -325,7 +295,7 @@ object OrderF: TOrderF
       TabOrder = 20
     end
     object UniBitBtn1: TUniBitBtn
-      Left = 829
+      Left = 846
       Top = 128
       Width = 22
       Height = 24
@@ -341,7 +311,7 @@ object OrderF: TOrderF
       OnClick = UniBitBtn1Click
     end
     object btnDestinationLogo: TUniBitBtn
-      Left = 829
+      Left = 846
       Top = 100
       Width = 22
       Height = 24
@@ -510,7 +480,7 @@ object OrderF: TOrderF
     object edtMessage: TUniEdit
       Left = 472
       Top = 156
-      Width = 379
+      Width = 396
       Hint = ''
       ShowHint = True
       Text = ''
@@ -519,18 +489,18 @@ object OrderF: TOrderF
       ClearButton = True
     end
     object UniGroupBox9: TUniGroupBox
-      Left = 17
+      Left = 16
       Top = 211
-      Width = 834
+      Width = 852
       Height = 60
       Hint = ''
       ShowHint = True
       AlignmentControl = uniAlignmentClient
       Caption = #1055#1086#1082#1072#1079#1072#1090#1077#1083#1080' '#1076#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
       Anchors = [akLeft, akTop, akRight]
-      Layout = 'hbox'
+      Layout = 'column'
       LayoutAttribs.Align = 'top'
-      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Pack = 'center'
       LayoutAttribs.Padding = '1'
       LayoutAttribs.Columns = 9
       LayoutConfig.ComponentCls = 'order-indicators'
@@ -538,13 +508,13 @@ object OrderF: TOrderF
       object edtPrice: TUniEdit
         Left = 3
         Top = 17
-        Width = 122
+        Width = 132
         Hint = ''
         Margins.Top = 0
         Margins.Right = 0
         ShowHint = True
         Text = ''
-        TabOrder = 2
+        TabOrder = 1
         ReadOnly = True
         FieldLabel = #1047#1072#1082#1091#1087#1082#1072
         FieldLabelAlign = laTop
@@ -553,7 +523,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtMargin: TUniEdit
-        Left = 91
+        Left = 128
         Top = 18
         Width = 65
         Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
@@ -563,7 +533,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 3
+        TabOrder = 2
         ReadOnly = True
         FieldLabel = #1053#1072#1094#1077#1085#1082#1072
         FieldLabelAlign = laTop
@@ -572,8 +542,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtMarginF: TUniEdit
-        Left = 164
-        Top = 26
+        Left = 196
+        Top = 21
         Width = 80
         Hint = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090
         Margins.Top = 0
@@ -582,7 +552,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 5
+        TabOrder = 3
         ReadOnly = True
         FieldLabel = #1053#1072#1094#1077#1085#1082#1072'  '#1092#1072#1082#1090
         FieldLabelAlign = laTop
@@ -591,8 +561,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtIncome: TUniEdit
-        Left = 237
-        Top = 26
+        Left = 279
+        Top = 22
         Width = 65
         Hint = ''
         Margins.Top = 0
@@ -601,7 +571,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 6
+        TabOrder = 4
         ReadOnly = True
         FieldLabel = #1044#1086#1093#1086#1076
         FieldLabelAlign = laTop
@@ -610,8 +580,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtProfit: TUniEdit
-        Left = 310
-        Top = 22
+        Left = 347
+        Top = 23
         Width = 90
         Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
         Margins.Top = 0
@@ -620,7 +590,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 4
+        TabOrder = 5
         ReadOnly = True
         FieldLabel = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
         FieldLabelAlign = laTop
@@ -629,8 +599,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtReliabilityGroup: TUniFieldContainer
-        Left = 403
-        Top = 16
+        Left = 455
+        Top = 19
         Width = 121
         Height = 35
         Hint = ''
@@ -639,14 +609,12 @@ object OrderF: TOrderF
         FieldLabel = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100
         FieldLabelWidth = 100
         FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        TabOrder = 1
+        TabOrder = 6
         Layout = 'vbox'
         LayoutAttribs.Align = 'end'
         LayoutAttribs.Pack = 'end'
         LayoutConfig.Padding = '1'
-        LayoutConfig.IgnorePosition = False
         LayoutConfig.Margin = '3'
-        LayoutConfig.DockWhenAligned = False
         object edtReliability: TUniHTMLFrame
           Left = 0
           Top = 15
@@ -702,8 +670,8 @@ object OrderF: TOrderF
         end
       end
       object edtDelivery: TUniEdit
-        Left = 527
-        Top = 26
+        Left = 579
+        Top = 35
         Width = 79
         Hint = ''
         Margins.Top = 0
@@ -721,8 +689,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtDeliveryClient: TUniEdit
-        Left = 609
-        Top = 26
+        Left = 657
+        Top = 35
         Width = 79
         Hint = ''
         Margins.Top = 0
@@ -740,8 +708,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtCount: TUniEdit
-        Left = 699
-        Top = 27
+        Left = 739
+        Top = 35
         Width = 85
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
@@ -760,18 +728,18 @@ object OrderF: TOrderF
       end
     end
     object UniGroupBox4: TUniGroupBox
-      Left = 17
+      Left = 16
       Top = 271
-      Width = 834
+      Width = 852
       Height = 60
       Hint = ''
       ShowHint = True
       AlignmentControl = uniAlignmentClient
       Caption = #1055#1086#1082#1072#1079#1072#1090#1077#1083#1080' '#1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
       Anchors = [akLeft, akTop, akRight]
-      Layout = 'hbox'
+      Layout = 'column'
       LayoutAttribs.Align = 'top'
-      LayoutAttribs.Pack = 'start'
+      LayoutAttribs.Pack = 'center'
       LayoutAttribs.Padding = '1'
       LayoutAttribs.Columns = 9
       LayoutConfig.ComponentCls = 'order-indicators'
@@ -779,13 +747,13 @@ object OrderF: TOrderF
       object edtPrice2: TUniEdit
         Left = 3
         Top = 18
-        Width = 122
+        Width = 132
         Hint = ''
         Margins.Top = 0
         Margins.Right = 0
         ShowHint = True
         Text = ''
-        TabOrder = 2
+        TabOrder = 1
         ReadOnly = True
         FieldLabel = #1047#1072#1082#1091#1087#1082#1072
         FieldLabelAlign = laTop
@@ -794,7 +762,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtMargin2: TUniEdit
-        Left = 91
+        Left = 128
         Top = 18
         Width = 65
         Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
@@ -804,7 +772,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 3
+        TabOrder = 2
         ReadOnly = True
         FieldLabel = #1053#1072#1094#1077#1085#1082#1072
         FieldLabelAlign = laTop
@@ -813,8 +781,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtMarginF2: TUniEdit
-        Left = 164
-        Top = 26
+        Left = 196
+        Top = 19
         Width = 80
         Hint = #1053#1072#1094#1077#1085#1082#1072' '#1092#1072#1082#1090
         Margins.Top = 0
@@ -823,7 +791,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 4
+        TabOrder = 3
         ReadOnly = True
         FieldLabel = #1053#1072#1094#1077#1085#1082#1072'  '#1092#1072#1082#1090
         FieldLabelAlign = laTop
@@ -832,8 +800,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtIncome2: TUniEdit
-        Left = 237
-        Top = 26
+        Left = 279
+        Top = 20
         Width = 65
         Hint = ''
         Margins.Top = 0
@@ -842,7 +810,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 5
+        TabOrder = 4
         ReadOnly = True
         FieldLabel = #1044#1086#1093#1086#1076
         FieldLabelAlign = laTop
@@ -851,8 +819,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtProfit2: TUniEdit
-        Left = 310
-        Top = 31
+        Left = 347
+        Top = 19
         Width = 90
         Hint = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
         Margins.Top = 0
@@ -861,7 +829,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 9
+        TabOrder = 5
         ReadOnly = True
         FieldLabel = #1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1100
         FieldLabelAlign = laTop
@@ -870,25 +838,22 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtReliabilityGroup2: TUniFieldContainer
-        Left = 403
-        Top = 11
+        Left = 448
+        Top = 14
         Width = 121
-        Height = 35
+        Height = 39
         Hint = ''
         ShowHint = True
         ParentColor = False
         FieldLabel = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100
         FieldLabelWidth = 100
         FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        TabOrder = 1
+        TabOrder = 6
         Layout = 'vbox'
         LayoutAttribs.Align = 'end'
         LayoutAttribs.Pack = 'end'
-        LayoutConfig.ComponentCls = 'order-rating-body'
         LayoutConfig.Padding = '1'
-        LayoutConfig.IgnorePosition = False
         LayoutConfig.Margin = '3'
-        LayoutConfig.DockWhenAligned = False
         object NotExists: TUniLabel
           Left = 27
           Top = 3
@@ -906,7 +871,7 @@ object OrderF: TOrderF
         end
         object edtReliability2: TUniHTMLFrame
           Left = 0
-          Top = 13
+          Top = 17
           Width = 121
           Height = 22
           Hint = ''
@@ -956,29 +921,9 @@ object OrderF: TOrderF
         end
       end
       object edtDelivery2: TUniEdit
-        Left = 527
-        Top = 26
+        Left = 575
+        Top = 22
         Width = 79
-        Hint = ''
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Alignment = taCenter
-        Text = ''
-        TabOrder = 6
-        ReadOnly = True
-        FieldLabel = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
-        FieldLabelAlign = laTop
-        FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        ReadOnlyMode = urmNotEditable
-        LayoutConfig.Padding = '1'
-      end
-      object edtDeliveryClient2: TUniEdit
-        Left = 609
-        Top = 26
-        Width = 79
-        Height = 31
         Hint = ''
         Margins.Top = 0
         Margins.Right = 0
@@ -988,6 +933,25 @@ object OrderF: TOrderF
         Text = ''
         TabOrder = 7
         ReadOnly = True
+        FieldLabel = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+        FieldLabelAlign = laTop
+        FieldLabelFont.OverrideDefaults = [ovFontHeight]
+        ReadOnlyMode = urmNotEditable
+        LayoutConfig.Padding = '1'
+      end
+      object edtDeliveryClient2: TUniEdit
+        Left = 657
+        Top = 23
+        Width = 79
+        Hint = ''
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        ShowHint = True
+        Alignment = taCenter
+        Text = ''
+        TabOrder = 8
+        ReadOnly = True
         FieldLabel = #1057#1088#1086#1082' '#1082#1083#1080#1077#1085#1090#1072
         FieldLabelAlign = laTop
         FieldLabelFont.OverrideDefaults = [ovFontHeight]
@@ -995,8 +959,8 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
       object edtCount2: TUniEdit
-        Left = 699
-        Top = 27
+        Left = 739
+        Top = 21
         Width = 85
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
@@ -1005,7 +969,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 8
+        TabOrder = 9
         ReadOnly = True
         FieldLabel = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
         FieldLabelAlign = laTop
@@ -1017,7 +981,7 @@ object OrderF: TOrderF
     object cbDestinationLogo: TUniFSComboBox
       Left = 472
       Top = 100
-      Width = 351
+      Width = 368
       Hint = ''
       Enabled = False
       ShowHint = True
@@ -1029,41 +993,14 @@ object OrderF: TOrderF
       OnChange = cbDestinationLogoChange
       Value = '-1'
     end
-    object btnOkToCancel: TUniBitBtn
-      AlignWithMargins = True
-      Left = 530
-      Top = 369
-      Width = 144
-      Height = 27
-      Hint = ''
-      Margins.Right = 30
-      ShowHint = True
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1080' '#1086#1090#1082#1072#1079#1072#1090#1100
-      Anchors = [akRight, akBottom]
-      TabOrder = 27
-      OnClick = btnOkToCancelClick
-    end
-    object btnOkToProc: TUniBitBtn
-      AlignWithMargins = True
-      Left = 680
-      Top = 369
-      Width = 171
-      Height = 27
-      Hint = ''
-      Margins.Right = 30
-      ShowHint = True
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1080' '#1087#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
-      Anchors = [akRight, akBottom]
-      TabOrder = 28
-      OnClick = btnOkToProcClick
-    end
     object edtDetailNameF: TUniComboBox
       Left = 116
       Top = 63
-      Width = 735
+      Width = 752
       Hint = ''
       ShowHint = True
       Text = ''
+      Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       MinQueryLength = 3
       RemoteQuery = True
@@ -1073,7 +1010,7 @@ object OrderF: TOrderF
     object cbPrice: TUniFSComboBox
       Left = 472
       Top = 128
-      Width = 351
+      Width = 368
       Hint = ''
       Enabled = False
       ShowHint = True
@@ -1088,9 +1025,104 @@ object OrderF: TOrderF
       Value = '-1'
     end
   end
+  object UniContainerPanel1: TUniContainerPanel
+    Left = 0
+    Top = 334
+    Width = 884
+    Height = 37
+    Hint = ''
+    ShowHint = True
+    ParentColor = False
+    Align = alBottom
+    TabOrder = 1
+    LayoutConfig.Padding = '2'
+    DesignSize = (
+      884
+      37)
+    object edtNextPart: TUniCheckBox
+      AlignWithMargins = True
+      Left = 16
+      Top = 10
+      Width = 359
+      Height = 16
+      Hint = ''
+      ShowHint = True
+      Caption = #1055#1077#1088#1077#1093#1086#1076#1080#1090#1100' '#1082' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1089#1090#1088#1086#1082#1077' '#1087#1086#1089#1083#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103
+      Anchors = [akLeft, akBottom]
+      TabOrder = 5
+    end
+    object btnOkToProc: TUniBitBtn
+      AlignWithMargins = True
+      Left = 706
+      Top = 6
+      Width = 162
+      Height = 27
+      Hint = ''
+      Margins.Right = 30
+      ShowHint = True
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1080' '#1087#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100
+      Anchors = [akRight, akBottom]
+      TabOrder = 1
+      OnClick = btnOkToProcClick
+    end
+    object btnOkToCancel: TUniBitBtn
+      AlignWithMargins = True
+      Left = 556
+      Top = 6
+      Width = 144
+      Height = 27
+      Hint = ''
+      Margins.Right = 30
+      ShowHint = True
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1080' '#1086#1090#1082#1072#1079#1072#1090#1100
+      Anchors = [akRight, akBottom]
+      TabOrder = 2
+      OnClick = btnOkToCancelClick
+    end
+    object btnOk: TUniBitBtn
+      AlignWithMargins = True
+      Left = 469
+      Top = 6
+      Width = 82
+      Height = 27
+      Hint = ''
+      Margins.Right = 30
+      ShowHint = True
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Anchors = [akRight, akBottom]
+      TabOrder = 3
+      OnClick = btnOkClick
+    end
+    object btnCancel: TUniBitBtn
+      AlignWithMargins = True
+      Left = 382
+      Top = 6
+      Width = 81
+      Height = 27
+      Hint = ''
+      ShowHint = True
+      Caption = #1047#1072#1082#1088#1099#1090#1100
+      Anchors = [akRight, akBottom]
+      TabStop = False
+      TabOrder = 4
+      OnClick = btnCancelClick
+    end
+  end
+  object UniHTMLFrame1: TUniHTMLFrame
+    Left = 0
+    Top = 371
+    Width = 884
+    Height = 432
+    Hint = ''
+    ShowHint = True
+    AutoScroll = True
+    Align = alBottom
+    ScrollHeight = 432
+    ScrollWidth = 884
+  end
   object ImageList16: TUniImageList
-    Left = 722
-    Top = 188
+    Left = 696
+    Top = 454
     Bitmap = {
       494C010104003C00040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
@@ -1382,5 +1414,18 @@ object OrderF: TOrderF
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       OnExecute = actRefreshFormDateExecute
     end
+    object actProtocol: TAction
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      ImageIndex = 4
+      ImageName = 'protocol'
+      OnExecute = actProtocolExecute
+    end
+  end
+  object UniNativeImageList1: TUniNativeImageList
+    Left = 549
+    Top = 398
+    Images = {
+      02000000008080FF061400000063616C656E6461722D636865636B2D6F3B6661
+      3B008080FF060B000000726566726573683B66613B}
   end
 end

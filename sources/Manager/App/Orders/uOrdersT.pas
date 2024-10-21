@@ -19,7 +19,8 @@ uses
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
-  uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils;
+  uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
+  UniFSCombobox, uniHTMLFrame;
 
 type
   tMarks = class
@@ -168,7 +169,6 @@ type
     QueryIncomePRC: TCurrencyField;
     actSetComment: TAction;
     N14: TUniMenuItem;
-    fOrderDate: TUniDateTimePicker;
     UniLabel8: TUniLabel;
     actGroupDetailNameEdit: TAction;
     N15: TUniMenuItem;
@@ -205,6 +205,8 @@ type
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
+    UniFSComboBox1: TUniFSComboBox;
+    fOrderDate: TUniHTMLFrame;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -246,13 +248,12 @@ type
     procedure QueryPricePurchaseFGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure UniFrameReady(Sender: TObject);
     procedure TimerProcessedShowTimer(Sender: TObject);
-    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryPricePurchaseGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actRequestClosedExecute(Sender: TObject);
-    procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryDateDeliveryToCustomerGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
+    procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDateDeliveryToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure fOrderDateAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -268,6 +269,9 @@ type
 
     FProcessed: Integer;
     FTotal    : Integer;
+
+    OrderDateB: TDateTime;
+    OrderDateE: TDateTime;
 
     /// <summary>
     /// GridOpen - получение данных с сервера
@@ -331,7 +335,8 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast, uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm;
+  MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast,
+  uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date, uConstant;
 
 {$R *.dfm}
 
@@ -602,7 +607,20 @@ begin
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
-  fOrderDate.Text := '';
+  UniSession.AddJS(
+  Format(
+     '''
+       $(function() {
+       console.log('Очистить фильтр');
+       $("input[name='fOrderDate']").val("");
+
+       console.log($("input[name='fOrderDate']").data("daterangepicker").startDate.format('YYYY-MM-DD'));
+       console.log($("input[name='fOrderDate']").data("daterangepicker").endDate.format('YYYY-MM-DD'));
+
+       ajaxRequest(%s, "OrderDate", [ "BeginDate=", "EndDate="]);
+       });
+     ''', [fOrderDate.jsName]));
+
   edtUpdDate.Text := '';
   edtInvoice.Text := '';
 
@@ -776,6 +794,20 @@ begin
 end;
 
 
+procedure TOrdersT.fOrderDateAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if (EventName = 'OrderDate')
+  then
+  begin
+    logger.Info('BeginDate=' + Params.Values['BeginDate']);
+    logger.Info('EndDate=' + Params.Values['EndDate']);
+
+    OrderDateB:= VarToDateTimeDef(Params.Values['BeginDate'], NullDate);
+    OrderDateE:= VarToDateTimeDef(Params.Values['EndDate'],   NullDate);
+  end;
+end;
+
 procedure TOrdersT.fPriceLogoSelect(Sender: TObject);
 var
   s: String;
@@ -901,18 +933,18 @@ begin
     else
       Query.MacroByName('isCancel').Value := '';
 
-    if (fOrderDate.Text <> '') and (fOrderDate.Text <> '30.12.1899') then
-      Query.MacroByName('OrderDate').Value := ' and o.OrderDate = '''   + FormatDateTime('yyyymmdd', fOrderDate.DateTime) + ''''
+    if (OrderDateB <> NullDate) and (OrderDateE <> NullDate) then
+      Query.MacroByName('OrderDate').Value := ' and o.OrderDate between ''' + FormatDateTime('yyyymmdd', OrderDateB) + ''' and ''' + FormatDateTime('yyyymmdd', OrderDateE) + ''''
     else
       Query.MacroByName('OrderDate').Value := '';
 
     if (edtUpdDate.Text <> '') and (edtUpdDate.Text <> '30.12.1899') then
-      Query.MacroByName('updDateTime').Value := ' and cast(o.updDateTime as date) = '''   + FormatDateTime('yyyymmdd', edtUpdDate.DateTime) + ''''
+      Query.MacroByName('updDateTime').Value := ' and cast(o.updDateTime as date) = ''' + FormatDateTime('yyyymmdd', edtUpdDate.DateTime) + ''''
     else
       Query.MacroByName('updDateTime').Value := '';
 
     if edtInvoice.Text <> '' then
-      Query.MacroByName('Invoice').Value := ' and o.Invoice like '''   + edtInvoice.Text + ''''
+      Query.MacroByName('Invoice').Value := ' and o.Invoice like ''' + edtInvoice.Text + ''''
     else
       Query.MacroByName('Invoice').Value := '';
 
@@ -1177,7 +1209,7 @@ begin
 
     StatusForm.ShowModal();
    // StatusForm.Free;
-  end;
+  end
 end;
 
 procedure TOrdersT.GridCellClick(Column: TUniDBGridColumn);
@@ -1417,7 +1449,7 @@ begin
 
   actSelect.Caption   := '';
   actUnSelect.Caption := '';
-  fOrderDate.Text     := '';
+ // fOrderDate.Text     := '';
   edtUpdDate.Text     := '';
 
   FilterStatusCreate;
@@ -1444,9 +1476,10 @@ begin
 
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
 
+  fOrderDate.AfterScript.Add(daterangepicker('fOrderDate', fOrderDate.JSName));
+
   logger.Info('TOrdersT.UniFrameCreate End');
 end;
-
 
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);
 begin
@@ -1457,7 +1490,7 @@ end;
 procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
-     fOrderDate.DateTime := date();
+    // fOrderDate.DateTime := date();
      fClient.Text := 'egud@mail.ru';
     // fDetailNum.Text := '32008XJ';
   {$ENDIF}
@@ -1598,14 +1631,14 @@ end;
 { tMarks }
 constructor tMarks.Create(AGrid: TUniDBGrid);
 begin
-    if Assigned(AGrid) then
-    begin
-        FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
-        FQuery := TFDQuery.Create(nil);
-        FQuery.Connection := FConnection;
-        FGrid := AGrid;
-    end;
-    FMarks := TDictionary <integer, integer>.Create();
+  if Assigned(AGrid) then
+  begin
+    FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
+    FQuery := TFDQuery.Create(nil);
+    FQuery.Connection := FConnection;
+    FGrid := AGrid;
+  end;
+  FMarks := TDictionary <integer, integer>.Create();
 end;
 
 procedure tMarks.DataRefresh;
@@ -1614,46 +1647,46 @@ var Key: Integer;
 begin
   logger.Info('tMarks.DataRefresh Begin');
   begin
-      FGrid.DataSource.DataSet.DisableControls;
-      BM := FGrid.DataSource.DataSet.GetBookmark;
-      try
-          for Key in FMarks.Keys  do
-          begin
-              if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
-              begin
-                  tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-                  FGrid.RefreshCurrentRow();
-              end;
-          end;
-      finally
-          FGrid.DataSource.DataSet.GotoBookmark(BM);
-          FGrid.DataSource.DataSet.FreeBookmark(BM);
-          FGrid.DataSource.DataSet.EnableControls;
+    FGrid.DataSource.DataSet.DisableControls;
+    BM := FGrid.DataSource.DataSet.GetBookmark;
+    try
+      for Key in FMarks.Keys  do
+      begin
+        if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+        begin
+          tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
+          FGrid.RefreshCurrentRow();
+        end;
       end;
+    finally
+      FGrid.DataSource.DataSet.GotoBookmark(BM);
+      FGrid.DataSource.DataSet.FreeBookmark(BM);
+      FGrid.DataSource.DataSet.EnableControls;
+    end;
   end;
   logger.Info('tMarks.DataRefresh End');
 end;
 
 procedure tMarks.DeleteInDB();
 begin
-    Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
+  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
 end;
 
 procedure tMarks.Clear;
 begin
-    DeleteInDB();
-    FMarks.Clear;
+  DeleteInDB();
+  FMarks.Clear;
 end;
 
 destructor tMarks.Destroy;
 begin
-   FMarks.Free;
-   inherited;
+ FMarks.Free;
+ inherited;
 end;
 
 function tMarks.GetCount: Integer;
 begin
-    Result := FMarks.Count;
+  Result := FMarks.Count;
 end;
 
 procedure tMarks.Select();

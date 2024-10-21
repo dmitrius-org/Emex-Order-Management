@@ -47,9 +47,6 @@ object SearchF: TSearchF
       ScreenMask.ShowMessage = False
       ScreenMask.Color = clHighlight
       OnClick = btnSearchClick
-      ExplicitLeft = 1127
-      ExplicitTop = 12
-      ExplicitHeight = 30
     end
     object edtSearch: TUniComboBox
       AlignWithMargins = True
@@ -74,10 +71,6 @@ object SearchF: TSearchF
       OnKeyDown = edtSearchKeyDown
       OnClick = edtSearchClick
       OnRemoteQuery = edtSearchRemoteQuery
-      ExplicitLeft = 12
-      ExplicitTop = 12
-      ExplicitWidth = 959
-      ExplicitHeight = 37
     end
     object btnRefresh: TUniButton
       AlignWithMargins = True
@@ -95,9 +88,6 @@ object SearchF: TSearchF
       ScreenMask.ShowMessage = False
       ScreenMask.Color = clHighlight
       OnClick = btnRefreshClick
-      ExplicitLeft = 1015
-      ExplicitTop = 13
-      ExplicitHeight = 30
     end
   end
   object MainPanel: TUniPanel

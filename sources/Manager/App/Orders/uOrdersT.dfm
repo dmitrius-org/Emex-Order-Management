@@ -663,14 +663,14 @@ object OrdersT: TOrdersT
           TabOrder = 1
         end
         object UniLabel2: TUniLabel
-          Left = 224
+          Left = 219
           Top = 58
           Width = 36
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1055#1088#1072#1081#1089':'
-          TabOrder = 11
+          TabOrder = 10
         end
         object UniLabel3: TUniLabel
           Left = 6
@@ -680,11 +680,11 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1050#1083#1080#1077#1085#1090':'
-          TabOrder = 10
+          TabOrder = 9
         end
         object fCancel: TUniBitBtn
           Left = 771
-          Top = 32
+          Top = 33
           Width = 146
           Height = 24
           ShowHint = True
@@ -699,7 +699,7 @@ object OrdersT: TOrdersT
           Height = 24
           ShowHint = True
           Action = actFilter
-          TabOrder = 20
+          TabOrder = 19
           IconPosition = ipButtonEdge
           ScreenMask.ShowMessage = False
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
@@ -707,20 +707,20 @@ object OrdersT: TOrdersT
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
-          Left = 462
+          Left = 490
           Top = 33
-          Width = 167
+          Width = 185
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 8
+          TabOrder = 7
           EmptyText = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel4: TUniLabel
-          Left = 462
+          Left = 490
           Top = 14
           Width = 76
           Height = 13
@@ -737,7 +737,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1054#1090#1082#1072#1079':'
-          TabOrder = 14
+          TabOrder = 13
         end
         object cbCancel: TUniComboBox
           Left = 681
@@ -751,7 +751,7 @@ object OrdersT: TOrdersT
             #1053#1077#1090
             #1044#1072)
           ItemIndex = 0
-          TabOrder = 19
+          TabOrder = 18
           EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
           IconItems = <>
@@ -800,13 +800,13 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fPriceLogo: TUniCheckComboBox
-          Left = 224
+          Left = 219
           Top = 75
-          Width = 96
+          Width = 101
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 16
+          TabOrder = 15
           ClientEvents.UniEvents.Strings = (
             'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
             
@@ -851,7 +851,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 15
+          TabOrder = 14
           ClientEvents.UniEvents.Strings = (
             'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
             
@@ -895,21 +895,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080':'
-          TabOrder = 13
-        end
-        object fOrderDate: TUniDateTimePicker
-          Left = 326
-          Top = 33
-          Width = 130
-          Hint = ''
-          ShowHint = True
-          DateTime = 45257.000000000000000000
-          DateFormat = 'dd/MM/yyyy'
-          TimeFormat = 'HH:mm:ss'
-          TabOrder = 7
-          ClearButton = True
-          EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
-          OnKeyDown = fStatus2KeyDown
+          TabOrder = 12
         end
         object UniLabel8: TUniLabel
           Left = 326
@@ -930,7 +916,7 @@ object OrdersT: TOrdersT
           DateTime = 45257.000000000000000000
           DateFormat = 'dd/MM/yyyy'
           TimeFormat = 'HH:mm:ss'
-          TabOrder = 17
+          TabOrder = 16
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           OnKeyDown = fStatus2KeyDown
@@ -943,23 +929,23 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103':'
-          TabOrder = 12
+          TabOrder = 11
         end
         object edtInvoice: TUniEdit
-          Left = 635
+          Left = 681
           Top = 33
-          Width = 130
+          Width = 84
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 9
+          TabOrder = 8
           EmptyText = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel11: TUniLabel
-          Left = 635
+          Left = 681
           Top = 14
           Width = 87
           Height = 13
@@ -975,11 +961,30 @@ object OrdersT: TOrdersT
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''
-          TabOrder = 18
+          TabOrder = 17
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
+        end
+        object fOrderDate: TUniHTMLFrame
+          Left = 326
+          Top = 33
+          Width = 158
+          Height = 24
+          Hint = ''
+          ParentCustomHint = False
+          ShowHint = True
+          ParentShowHint = False
+          HTML.Strings = (
+            '<div class="">'
+            
+              '<input type="text" name="fOrderDate" value="" class="x-form-fiel' +
+              'd x-form-empty-field x-form-empty-field-default x-form-text x-fo' +
+              'rm-text-default" />'
+            '</div>')
+          LayoutConfig.ComponentCls = 'daterangepicker-container '
+          OnAjaxEvent = fOrderDateAjaxEvent
         end
       end
     end
@@ -1175,6 +1180,18 @@ object OrdersT: TOrdersT
       Hint = ''
       Visible = True
       ShowHint = True
+    end
+    object UniFSComboBox1: TUniFSComboBox
+      Left = 865
+      Top = 362
+      Width = 145
+      Hint = ''
+      ShowHint = True
+      Text = 'UniFSComboBox1'
+      TabOrder = 5
+      AnyMatch = True
+      IconItems = <>
+      Value = '-1'
     end
   end
   object Query: TFDQuery
@@ -1893,16 +1910,7 @@ object OrdersT: TOrdersT
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'SELECT c.[ClientID]'
-      '      ,c.[Brief]'
-      '      ,c.[Name]'
-      '  FROM [tClients] c (nolock)'
-      ' -- '#1087#1088#1072#1074#1072
-      ' inner join vUserAccess ua (nolock)'
-      '         on ua.UserID    = dbo.GetUserID()'
-      '        and ua.LinkType  = 7'
-      '        and ua.LinkID    = c.ClientID'
-      ' order by c.[Brief]        ')
+      'exec OrderFilter_Client  ')
     Left = 498
     Top = 379
     object qClientClientID: TFMTBCDField

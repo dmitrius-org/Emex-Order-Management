@@ -19,7 +19,7 @@ select u.UserID
       ,nullif(u.DateBlock, '18991230') DateBlock    
       ,u.inDatetime  
       ,u.updDatetime 
-      ,u.Email
+      ,isnull(u.Email, '') Email
   from tUser u (nolock)
  -- inner join  is_disabled from sys.server_principals
 go

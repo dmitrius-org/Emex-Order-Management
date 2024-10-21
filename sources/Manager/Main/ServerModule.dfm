@@ -10,17 +10,19 @@ object UniServerModule: TUniServerModule
   Bindings = <>
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (
+    'files/fonts/fontawesome-pro-5.14.0-web/css/all.css'
+    ''
+    '<!-->  <-->'
     'files/css/custom.css '
-    ''
     'files/css/grid.css'
-    ''
     'files/css/main_menu.css'
-    ''
     'files/css/dashboard.css'
     ''
     'files/tinyMCE5/tinymce.js'
     ''
-    'files/fonts/fontawesome-pro-5.14.0-web/css/all.css')
+    'files/daterangepicker/moment.min.js'
+    'files/daterangepicker/daterangepicker.js'
+    'files/daterangepicker/daterangepicker.css')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'

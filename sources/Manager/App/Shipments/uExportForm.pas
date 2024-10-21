@@ -14,7 +14,7 @@ uses
 
 type
   TExportForm = class(TUniForm)
-    UniPageControl1: TUniPageControl;
+    PG: TUniPageControl;
     TabNomenclature: TUniTabSheet;
     GridNomenclature: TUniDBGrid;
     pmNomenclature: TUniPopupMenu;
@@ -74,6 +74,27 @@ type
     qImplementationBox: TWideStringField;
     qImplementationreference: TWideStringField;
     FDExportAdmissionreference: TWideStringField;
+    tabFragile: TUniTabSheet;
+    UniDBGrid1: TUniDBGrid;
+    dsFragile: TDataSource;
+    actFragileRefresh: TAction;
+    pmFragile: TUniPopupMenu;
+    UniMenuItem5: TUniMenuItem;
+    UniMenuItem6: TUniMenuItem;
+    ExportFragile: TUniGridExcelExporter;
+    actExportFragile: TAction;
+    GridFragile: TUniDBGrid;
+    qFragile: TFDQuery;
+    WideStringField7: TWideStringField;
+    WideStringField8: TWideStringField;
+    WideStringField9: TWideStringField;
+    WideStringField10: TWideStringField;
+    WideStringField11: TWideStringField;
+    IntegerField2: TIntegerField;
+    CurrencyField3: TCurrencyField;
+    CurrencyField4: TCurrencyField;
+    WideStringField12: TWideStringField;
+    WideStringField13: TWideStringField;
     procedure GridNomenclatureCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actExportNomenklatureExecute(Sender: TObject);
@@ -88,6 +109,10 @@ type
       Y: Integer);
     procedure GridImplementationKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure actFragileRefreshExecute(Sender: TObject);
+    procedure GridFragileCellContextClick(Column: TUniDBGridColumn; X,
+      Y: Integer);
+    procedure actExportFragileExecute(Sender: TObject);
   private
     FInvoice: String;
     procedure SetInvoice(const Value: String);
@@ -102,6 +127,7 @@ type
     procedure AdmissionRefresh();
     procedure ImplementationRefresh();
 
+    procedure FragileRefresh();
   end;
 
 function ExportForm: TExportForm;
@@ -118,6 +144,13 @@ begin
   Result := TExportForm(UniMainModule.GetFormInstance(TExportForm));
 end;
 
+procedure TExportForm.actExportFragileExecute(Sender: TObject);
+begin
+  GridFragile.Exporter.FileName :=  FInvoice + '-Хрупкое';
+  GridFragile.Exporter.Title := FInvoice + '-Хрупкое';
+  GridFragile.Exporter.ExportGrid;
+end;
+
 procedure TExportForm.actExportImplementationExecute(Sender: TObject);
 begin
   GridImplementation.Exporter.FileName :=  FInvoice + '-Реализация';
@@ -130,6 +163,11 @@ begin
   GridNomenclature.Exporter.FileName := FInvoice + '-Номенклатура';
   GridNomenclature.Exporter.Title := FInvoice + '-Номенклатура';
   GridNomenclature.Exporter.ExportGrid;
+end;
+
+procedure TExportForm.actFragileRefreshExecute(Sender: TObject);
+begin
+  FragileRefresh;
 end;
 
 procedure TExportForm.actRefreschImplementationExecute(Sender: TObject);
@@ -156,10 +194,23 @@ begin
   GridAdmission.Exporter.ExportGrid;
 end;
 
+procedure TExportForm.FragileRefresh;
+begin
+  qFragile.Close;
+  qFragile.ParamByName('Invoice').AsWideString := FInvoice;
+  qFragile.Open;
+end;
+
 procedure TExportForm.GridAdmissionCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
   pmAdmission.Popup(X, Y, GridAdmission);
+end;
+
+procedure TExportForm.GridFragileCellContextClick(Column: TUniDBGridColumn; X,
+  Y: Integer);
+begin
+  pmFragile.Popup(X, Y, GridFragile);
 end;
 
 procedure TExportForm.GridImplementationCellContextClick(
@@ -207,12 +258,14 @@ end;
 
 procedure TExportForm.UniFormShow(Sender: TObject);
 begin
-  UniPageControl1.ActivePage := TabNomenclature;
+  PG.ActivePage := TabNomenclature;
   NomenklatureRefresh;
 
   AdmissionRefresh;
 
   ImplementationRefresh;
+
+  FragileRefresh;
 
   self.Caption := 'ExportForm. Поставка: ' + FInvoice;
 end;

@@ -105,7 +105,7 @@ object UserF: TUserF
         Width = 138
         Height = 17
         Hint = ''
-        Caption = #1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088
+        Caption = #1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088' '
         ParentFont = False
         Font.Height = -12
         TabOrder = 3
