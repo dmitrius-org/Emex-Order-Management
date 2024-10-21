@@ -69,19 +69,20 @@ begin
   if 1=1 then
   begin
      sqltext :=
-     ' declare @R int = 0                '+
-     '                                   '+
-     ' DELETE pGrantObject               '+
-     '   FROM pGrantObject (rowlock)     '+
-     '  WHERE Spid      = @@spid         '+
-     '    and ObjectType= :ObjectType    '+
-     '    and ObjectID  = :ObjectID      '+
-     '    and LinkType  = 7 /*Клиенты*/  '+
-     '    and LinkID    = :ClientID      '+
-     ' exit_:                            '+
-     '                                   '+
-     ' select @r as retcode '+
-     '';
+     '''
+      declare @R int = 0
+
+      DELETE pGrantObject
+        FROM pGrantObject (rowlock)
+       WHERE Spid      = @@spid
+         and ObjectType= :ObjectType
+         and ObjectID  = :ObjectID
+         and LinkType  = 7 /*Клиенты*/
+         and LinkID    = :ClientID
+      exit_:
+
+      select @r as retcode
+     ''';
 
     UniMainModule.Query.Close;
     UniMainModule.Query.SQL.Text := sqltext;
@@ -121,29 +122,30 @@ begin
     if f.ShowModal = mrOk then
     begin
        sqltext :=
-       ' declare @R int = 0                                              '+
-       '                                                                 '+
-       ' if exists (   select 1                                          '+
-       '                 FROM pGrantObject (nolock)                      '+
-       '                where Spid= @@spid                               '+
-       '                  and ObjectType=:ObjectType                     '+
-       '                  and ObjectID = :ObjectID                       '+
-       '                  and LinkID   = :ClientID                       '+
-       '                  and LinkType = 7 /*Клиенты*/                   '+
-       '           )                                                     '+
-       ' begin                                                           '+
-       '   set @R = 10 /* Клиент существует */                           '+
-       '   goto exit_                                                    '+
-       ' end                                                             '+
-       '                                                                 '+
-       ' INSERT INTO pGrantObject                                        '+
-       '       (  Spid,  ObjectType,  ObjectID,  LinkID,   LinkType )    '+
-       ' Select @@spid, :ObjectType, :ObjectID, :ClientID, 7 /*Клиенты*/ '+
-       '                                                                 '+
-       ' exit_:                                                          '+
-       '                                                                 '+
-       ' select @r as retcode '+
-       '';
+       '''
+        declare @R int = 0
+
+        if exists (   select 1
+                        FROM pGrantObject (nolock)
+                       where Spid= @@spid
+                         and ObjectType=:ObjectType
+                         and ObjectID = :ObjectID
+                         and LinkID   = :ClientID
+                         and LinkType = 7 /*Клиенты*/
+                  )
+        begin
+          set @R = 10 /* Клиент существует */
+          goto exit_
+        end
+
+        INSERT INTO pGrantObject
+              (  Spid,  ObjectType,  ObjectID,  LinkID,   LinkType )
+        Select @@spid, :ObjectType, :ObjectID, :ClientID, 7 /*Клиенты*/
+
+        exit_:
+
+        select @r as retcode
+       ''';
 
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := sqltext;
@@ -189,33 +191,34 @@ begin
     if f.ShowModal = mrOk then
     begin
        sqltext :=
-       ' declare @R int = 0                                '+
-       '                                                   '+
-       ' if exists (   select 1                            '+
-       '                 FROM pGrantObject (nolock)        '+
-       '                where Spid      = @@spid           '+
-       '                  and ObjectType= :ObjectType      '+
-       '                  and ObjectID  = :ObjectID        '+
-       '                  and LinkID    = :ClientID        '+
-       '                  and LinkType  = 7 /*Клиенты*/    '+
-       '           )                                       '+
-       ' begin                                             '+
-       '   set @R = 10 /* Клиент существует */             '+
-       '   goto exit_                                      '+
-       ' end                                               '+
-       '                                                   '+
-       ' Update pGrantObject                               '+
-       '    set LinkID    = :ClientID                      '+
-       '  where Spid      = @@spid                         '+
-       '    and ObjectType= :ObjectType                    '+
-       '    and ObjectID  = :ObjectID                      '+
-       '    and LinkID    = :ClientID                      '+
-       '    and LinkType  = 7 /*Клиенты*/                  '+
-       '                                                   '+
-       ' exit_:                                            '+
-       '                                                   '+
-       ' select @r as retcode '+
-       '';
+       '''
+        declare @R int = 0
+
+        if exists (   select 1
+                        FROM pGrantObject (nolock)
+                       where Spid      = @@spid
+                         and ObjectType= :ObjectType
+                         and ObjectID  = :ObjectID
+                         and LinkID    = :ClientID
+                         and LinkType  = 7 /*Клиенты*/
+                  )
+        begin
+          set @R = 10 /* Клиент существует */
+          goto exit_
+        end
+
+        Update pGrantObject
+           set LinkID    = :ClientID
+         where Spid      = @@spid
+           and ObjectType= :ObjectType
+           and ObjectID  = :ObjectID
+           and LinkID    = :ClientID
+           and LinkType  = 7 /*Клиенты*/
+
+        exit_:
+
+        select @r as retcode
+       ''';
 
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text := sqltext;
