@@ -31,7 +31,7 @@ as
 go
 grant exec on ChatsMessageLoadByChatID to public
 go
-exec setOV 'ChatsLoad', 'P', '20240813', '1'
+exec setOV 'ChatsMessageLoadByChatID', 'P', '20240813', '1'
 go
  
 

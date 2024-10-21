@@ -395,6 +395,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20241004', '9'
+exec setOV 'EmexOrderStateSync', 'P', '20241004', '8'
 go
  
