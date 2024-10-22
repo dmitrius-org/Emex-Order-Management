@@ -1,6 +1,7 @@
 ## Управление заказами на emexdwc.ae
 
 ### Зависимости
- - delphi 12
+ - Delphi 12
+ - UniGui
  - Delphi-GCharts-main
  - UniFalcon
