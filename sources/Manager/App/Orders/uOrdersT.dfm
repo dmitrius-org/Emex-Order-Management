@@ -652,6 +652,8 @@ object OrdersT: TOrdersT
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
+        ExplicitLeft = -93
+        ExplicitTop = -46
         object UniLabel1: TUniLabel
           Left = 6
           Top = 14
@@ -683,7 +685,7 @@ object OrdersT: TOrdersT
           TabOrder = 9
         end
         object fCancel: TUniBitBtn
-          Left = 771
+          Left = 794
           Top = 33
           Width = 146
           Height = 24
@@ -693,7 +695,7 @@ object OrdersT: TOrdersT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 771
+          Left = 794
           Top = 75
           Width = 146
           Height = 24
@@ -742,7 +744,7 @@ object OrdersT: TOrdersT
         object cbCancel: TUniComboBox
           Left = 681
           Top = 75
-          Width = 84
+          Width = 107
           Height = 23
           Hint = ''
           ShowHint = True
@@ -847,7 +849,7 @@ object OrdersT: TOrdersT
         object fClient: TUniCheckComboBox
           Left = 6
           Top = 75
-          Width = 208
+          Width = 203
           Hint = ''
           ShowHint = True
           Text = ''
@@ -934,7 +936,7 @@ object OrdersT: TOrdersT
         object edtInvoice: TUniEdit
           Left = 681
           Top = 33
-          Width = 84
+          Width = 107
           Hint = ''
           ShowHint = True
           Text = ''

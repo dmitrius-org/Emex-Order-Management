@@ -16,7 +16,7 @@ uses
   uCommonType, uAuditUtils, uAccrualUtils, uEmexUtils, uSqlUtils, uLogger,
   uGrantUtils, FireDAC.Moni.RemoteClient, Windows, uniGUIBaseClasses,
   uniGUIClasses, uniTimer
-  ;
+  , uUtils.WS;
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -54,6 +54,9 @@ type
     AGrant: TGrant;
 
     ASPID: Integer;
+
+     /// <summary> WS - WebSocket </summary>
+    WS:  tWS;
 
     const _loginname = '_loginname';
     const _pwd = '_pwd';
@@ -107,11 +110,14 @@ begin
       UniServerModule.Logger.AddLog('TUniMainModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
 
       FDConnection.Open;
+
       MemTable.Open;
 
       AUserName:=AUser;
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
       AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
+
+      WS := TWS.Create('manager:' + AUserID.ToString);
 
       AppVersion;
 
@@ -138,20 +144,16 @@ begin
           if not ABefore then
           begin
            raise Exception.Create('Имя пользователя или пароль неверны!'{+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
-//          UniSession.AddJS('alert("Имя пользователя или пароль неверны! ")')
           end
         end;
         ekUserPwdExpired:
         if not ABefore then
         begin
-//          UniSession.AddJS('alert("Ошибка подключения к БД. Срок действия пароля пользователя истек!")');
           raise Exception.Create('Ошибка подключения к БД. Срок действия пароля пользователя истек!' {+#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
         end;
         ekServerGone:
-//        UniSession.AddJS('alert("Ошибка соединения с базой данных. СУБД недоступна по какой-то причине!")')
           raise Exception.Create('Ошибка соединения с базой данных. СУБД недоступна по какой-то причине!' {+#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
       else // other issues
-//         UniSession.AddJS('alert("Ошибка соединения с базой данных. Неизвестная ошибка! ")')
         raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка!' {+#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
       end;
       on E : Exception do
@@ -199,6 +201,7 @@ begin
     end;
 
   end;
+
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'end');
 end;
 
@@ -206,15 +209,14 @@ procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
 begin
   {$IFDEF RELEASE}
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
-
-  //FDConnection.Close;
-  //FDConnection.ConnectionIntf.ConnectionDef.Clear;
   {$ENDIF}
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 var FAudit : TAudit;
 begin
+  WS.Destroy('manager:' + AUserID.ToString);
+
   FAudit := TAudit.Create(FDConnection);
   FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);
   FAudit.Free;

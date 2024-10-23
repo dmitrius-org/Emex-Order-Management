@@ -111,7 +111,10 @@ uses
   uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm},
   uBalanceTotalT_Wrapper in 'App\Clients\uBalanceTotalT_Wrapper.pas' {BalanceTotalT_W: TUniForm},
   uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
-  uUtils.Date in '..\Common\CommonApp\uUtils.Date.pas';
+  uUtils.Date in '..\Common\CommonApp\uUtils.Date.pas',
+  uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
+  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
+  uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas';
 
 {$R *.res}
 

@@ -322,6 +322,9 @@ type
     procedure OrderSetCancellation();
     /// <summary>OrderSetRequestClosed - установка признака: Обращение закрыто</summary>
     procedure OrderSetRequestClosed();
+
+
+    procedure fOrderDateClear();
   public
     { Public declarations }
     /// <summary>
@@ -336,7 +339,8 @@ implementation
 
 uses
   MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast,
-  uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date, uConstant;
+  uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date, uConstant,
+  uMessengerMessage, uMessengerF;
 
 {$R *.dfm}
 
@@ -607,19 +611,7 @@ begin
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
-  UniSession.AddJS(
-  Format(
-     '''
-       $(function() {
-       console.log('Очистить фильтр');
-       $("input[name='fOrderDate']").val("");
-
-       console.log($("input[name='fOrderDate']").data("daterangepicker").startDate.format('YYYY-MM-DD'));
-       console.log($("input[name='fOrderDate']").data("daterangepicker").endDate.format('YYYY-MM-DD'));
-
-       ajaxRequest(%s, "OrderDate", [ "BeginDate=", "EndDate="]);
-       });
-     ''', [fOrderDate.jsName]));
+  fOrderDateClear();
 
   edtUpdDate.Text := '';
   edtInvoice.Text := '';
@@ -806,6 +798,23 @@ begin
     OrderDateB:= VarToDateTimeDef(Params.Values['BeginDate'], NullDate);
     OrderDateE:= VarToDateTimeDef(Params.Values['EndDate'],   NullDate);
   end;
+end;
+
+procedure TOrdersT.fOrderDateClear;
+begin
+  UniSession.AddJS(
+  Format(
+     '''
+       $(function() {
+       console.log('Очистить фильтр');
+       $("input[name='fOrderDate']").val("");
+
+       console.log($("input[name='fOrderDate']").data("daterangepicker").startDate.format('YYYY-MM-DD'));
+       console.log($("input[name='fOrderDate']").data("daterangepicker").endDate.format('YYYY-MM-DD'));
+
+       ajaxRequest(%s, "OrderDate", [ "BeginDate=", "EndDate="]);
+       });
+     ''', [fOrderDate.jsName]));
 end;
 
 procedure TOrdersT.fPriceLogoSelect(Sender: TObject);
@@ -1396,9 +1405,8 @@ end;
 
 procedure TOrdersT.actSetCommentExecute(Sender: TObject);
 begin
-  OrdersMessageF.FormAction := TFormAction.acUpdate;
-  OrdersMessageF.ID:=QueryOrderID.AsInteger;
-  OrdersMessageF.ShowModal(OrdersMessageFCallBack);
+   MessageF.OrderID := QueryOrderID.AsInteger;
+   MessageF.ShowModal();
 end;
 
 procedure TOrdersT.actUnselectExecute(Sender: TObject);
@@ -1449,7 +1457,7 @@ begin
 
   actSelect.Caption   := '';
   actUnSelect.Caption := '';
- // fOrderDate.Text     := '';
+
   edtUpdDate.Text     := '';
 
   FilterStatusCreate;
@@ -1491,7 +1499,7 @@ procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
   {$IFDEF Debug}
     // fOrderDate.DateTime := date();
-     fClient.Text := 'egud@mail.ru';
+    // fClient.Text := 'egud@mail.ru';
     // fDetailNum.Text := '32008XJ';
   {$ENDIF}
 end;
@@ -1569,13 +1577,13 @@ procedure TOrdersT.OrdersMessageFCallBack(Sender: TComponent; AResult: Integer);
 begin
   if AResult <> mrOK then Exit;
   try
-    if OrdersMessageF.FormAction = acUpdate then
-    begin
-      Query.Edit ;
-      Query.Post;
-
-      ToastOK('Комментарий успешно сохранен!', unisession);
-    end;
+//    if OrdersMessageF.FormAction = acUpdate then
+//    begin
+//      Query.Edit ;
+//      Query.Post;
+//
+//      ToastOK('Комментарий успешно сохранен!', unisession);
+//    end;
   except
     on E: Exception do
       logger.Info('TOrdersT.OrdersMessageFCallBack Ошибка: ' + e.Message);
@@ -1625,6 +1633,11 @@ begin
     begin
       actProtocolExecute(Sender);
     end;
+  end;
+
+  if (CHAR(KEY)='M') AND (SHIFT=[SSCTRL]) then
+  begin
+    actSetCommentExecute(Sender);
   end;
 end;
 

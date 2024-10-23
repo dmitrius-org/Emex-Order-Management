@@ -3,8 +3,8 @@
 interface
 
 uses System.SysUtils, System.UITypes, Variants,  Data.DB,//System.Rtti,
-     FireDAC.Comp.Client, FireDAC.Comp.Script
-
+     FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Intf,
+     FireDAC.Stan.Async,  System.Threading
     // uniGUIForm, uniGUITypes
      ;
 
@@ -15,10 +15,12 @@ Type
   TSql = class
   private
     var FQuery: TFDQuery;
+    var FConnection: TFDConnection;
+
     function GetConnection: TFDConnection;
     procedure SetConnection(const Value: TFDConnection);
     function GetCount: integer;
-    var FConnection: TFDConnection;
+
 //    var FSql: TSql;
 
 //    function GetConnection: TFDConnection;
@@ -45,6 +47,15 @@ Type
     procedure Open(ASql: String; AParams: array of string; AArgs: array of variant);     overload;
 
     procedure Exec(ASql: String; AParams: array of string; AArgs: array of variant);
+
+    /// <summary>
+    /// ExecAsync - асинхронное выполнение запроса
+    /// </summary>
+    /// <param name="ASql">Запрос</param>
+    /// <param name="AParams">Массив списка наименований параметров</param>
+    /// <param name="AArgs">Массив значений параметров</param>
+    procedure ExecAsync(ASql: String; AParams: array of string; AArgs: array of variant);
+
 
     /// <summary>
     /// GetSetting - получение значния настройки
@@ -136,6 +147,31 @@ begin
   FQueryTMP.ExecSQL;
   FQueryTMP.Close;
   FreeAndNil(FQueryTMP);
+end;
+
+procedure TSql.ExecAsync(ASql: String; AParams: array of string; AArgs: array of variant);
+VAR SQL: string; FQueryTMP:TFDQuery;
+begin
+
+  FQueryTMP := TFDQuery.Create(nil);
+  FQueryTMP.Connection := FConnection;
+  FQueryTMP.SQL.Text := ASql;
+  Prepare(FQueryTMP, AParams, AArgs);
+
+  TTask.Run(procedure
+  var
+      I: Integer;
+  begin
+    try
+      // Асинхронное выполнение запроса
+      //FQueryTMP.ResourceOptions.CmdExecMode := amAsync;
+      //FQueryTMP.AsyncExec := True;
+      FQueryTMP.ExecSQL;
+    finally
+      FQueryTMP.Free;
+    end;
+
+  end).Start;
 end;
 
 procedure TSql.Open(AQuery: TFDQuery; AParams: array of string; AArgs: array of variant);

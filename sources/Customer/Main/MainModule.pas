@@ -15,7 +15,7 @@ uses
 
   uCommonType, uAuditUtils, uEmexUtils, uSqlUtils, uLogger,
   FireDAC.Moni.RemoteClient
-  ;
+  , uUtils.WS;
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -40,8 +40,11 @@ type
     ARetVal  : TRetVal;
     /// <summary> AAudit -  </summary>
     AAudit   : TAudit;
-
+    /// <summary> ASPID - ИД SQL соединения </summary>
     ASPID: Integer;
+
+    /// <summary> WS - WebSocket </summary>
+    WS: tWS;
 
     const _loginname = '_loginname2D02D0BF';
     const _pwd = '_pwd2D02D0BF';
@@ -136,9 +139,13 @@ begin
 
   if RetVal.Code = 0 then
   begin
+
     UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
     AUserID  := Query.FieldByName('ClientID').AsInteger;
     AUserName:= AU;
+
+    WS :=TWS.Create('client:' + AUserID.ToString);
+
     Result   := True;
 
     Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
@@ -199,17 +206,16 @@ end;
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject); // Отрабатывает с некоторой задержкой
 var FAudit : TAudit;
 begin
-
-  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'begin');
-  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', FDConnection.Connected.ToString());
+  WS.Destroy('client:' + AUserID.ToString);
 
   FAudit := TAudit.Create(FDConnection);
   FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);
   FAudit.Free;
 
-  FDConnection.Connected := False;
+  FDConnection.Close;
 
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'Программа остановлена');
+
   logger.Info('Программа остановлена');
 
   FreeDefLogger;

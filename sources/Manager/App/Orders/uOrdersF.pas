@@ -164,6 +164,9 @@ type
     FStatusID: Integer;
     FIsCounter: Boolean;
 
+    /// <value>FGoogleKey - ключ к программируемой поисковой системы google</value>
+    FGoogleKey : string;
+
     procedure SetAction(const Value: TFormAction);
     /// <summary>
     ///  DataLoad - получение данных с сервера, для отображения на форме
@@ -196,8 +199,8 @@ type
     procedure getPartRatingFromDB2();
 
     procedure SetRating(ARating: integer);
-    procedure SetEditDataRating(ARating: integer);
 
+    procedure SetEditDataRating(ARating: integer);
 
     /// <summary>
     /// PriceCalc - расчет цены и срока поставки
@@ -227,6 +230,7 @@ type
     procedure LoadDataPart();
 
     procedure GetPartFromEmex();
+
     function LoadNextPart():Boolean;
   end;
 
@@ -459,7 +463,7 @@ end;
 
 procedure TOrderF.UniFormShow(Sender: TObject);
 begin
-  btnOk.Caption := ' Сохранить';
+  FGoogleKey := Sql.GetSetting('GoogleProgrammableSearchEngineKey');
 
   LoadDataPart;
 end;
@@ -533,7 +537,8 @@ begin
       if edtDetailNameF.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!'; Exit();
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
+        Exit();
       end
     end;
   end;
@@ -595,9 +600,11 @@ begin
   ''' + FID.ToString);
 
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
-  FDetailNumber2     := UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' + FDetailNumber;
-  FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
+
+  FDetailNumber2     := FManufacturer + ' ' + FDetailNumber;
+
+  FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
   FMargin            := UniMainModule.Query.FieldByName('Margin').Value;
@@ -850,18 +857,14 @@ begin
 
     SetEditDataStyle();
     SetEditDataRating(0);
+
   end;
 
   Price:=cbPrice.Value;
+  // список поставщиков
+  ComboBoxFill( cbPrice, ' OrderF_SupplierList @OrderID = ' + FID.ToString );
 
-  ComboBoxFill(cbPrice,
-  '''
-    -- список поставщиков
-    OrderF_SupplierList
-               @OrderID =
-  ''' + FID.ToString);
-
-   cbPrice.Value:=Price;
+  cbPrice.Value:=Price;
 
   logger.Info('getPartRatingFromDB2 end');
 end;
@@ -1061,10 +1064,9 @@ begin
     begin
       DataLoad;
 
-      edtDetailNameF.SetFocus;
-
-
       GooglePSE();
+
+      edtDetailNameF.SetFocus;
     end
   else
     //
@@ -1092,6 +1094,7 @@ end;
 function TOrderF.LoadNextPart:Boolean;
 begin
   Result := False;
+
   if not edtNextPart.Checked then Exit;
 
   sql.open('''
@@ -1109,27 +1112,31 @@ begin
            [FID]
            );
 
+  sql.q.first;
   if sql.Q.RecordCount > 0 then
   begin
     Result := True;
+
     ID := sql.Q.FieldByName('OrderID').AsInteger;
 
     SetRating(0);
+
     SetEditDataRating(0);
 
     LoadDataPart;
+
     GetPartFromEmex;
   end;
 end;
 
 procedure TOrderF.GooglePSE;
-var GoogleKey : string;
-
 begin
-  GoogleKey := Sql.GetSetting('GoogleProgrammableSearchEngineKey');
+  logger.info('GooglePSE');
 
+  logger.info(FManufacturer);
+  logger.info(FDetailNumber);
 
-  if GoogleKey = '' then
+  if FGoogleKey = '' then
   begin
     with TStringList.Create() do
     begin
@@ -1140,6 +1147,9 @@ begin
 
     exit ;
   end;
+
+  UniHTMLFrame1.HTML.clear;
+
   UniHTMLFrame1.HTML.Text := Format(
    '''
     <script async src="https://cse.google.com/cse.js?cx=%s"></script>
@@ -1149,10 +1159,13 @@ begin
         // Функция для создания поискового запроса
         function performSearch(brand, partNumber) {
 
-
             // Получаем объект поиска
             var searchControl = google.search.cse.element.getElement('search');
             if (searchControl) {
+                console.log(searchControl);
+
+                searchControl.clearAllResults();
+
                 // Устанавливаем поисковый запрос
                 const searchQuery = brand + " " + partNumber;
                 searchControl.prefillQuery(searchQuery);
@@ -1177,7 +1190,7 @@ begin
     </script>
 
     '''
-    , [GoogleKey, FManufacturer, FDetailNumber]);
+    , [FGoogleKey, FManufacturer, FDetailNumber]);
 end;
 
 end.

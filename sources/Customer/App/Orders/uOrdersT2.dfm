@@ -169,7 +169,19 @@ object OrdersT2: TOrdersT2
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
       OnColumnResize = GridColumnResize
+      OnColumnActionClick = GridColumnActionClick
       Columns = <
+        item
+          ActionColumn.Enabled = True
+          ActionColumn.Buttons = <
+            item
+              Action = actShowMessage
+              ButtonId = 0
+              ImageIndex = 7
+            end>
+          Title.Caption = ' '
+          Width = 64
+        end
         item
           ShowToolTip = True
           FieldName = 'OrderID'

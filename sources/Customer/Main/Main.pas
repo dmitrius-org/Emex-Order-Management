@@ -242,6 +242,7 @@ begin
   end;
 
   FBalance.GridRefresh;
+  FBalance.ShipmentsGridRefresh;
 end;
 
 procedure TMainForm.tsBBeforeActivate(Sender: TObject;

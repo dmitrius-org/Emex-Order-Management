@@ -160,6 +160,8 @@ type
     procedure QueryDeliveryDateToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
+    procedure GridColumnActionClick(Column: TUniDBGridColumn;
+      ButtonId: Integer);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -202,7 +204,7 @@ implementation
 
 uses
   MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main,
-  ServerModule, uOrdersMessageF, uError_T, uUtils.Grid;
+  ServerModule, uOrdersMessageF, uError_T, uUtils.Grid, uMessengerF;
 
   var screenmask: Boolean;
   var Marks: TMarks;
@@ -284,9 +286,8 @@ end;
 
 procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
-  OrdersMessageF.FormAction := TFormAction.acMessage;
-  OrdersMessageF.ID:=QueryOrderID.AsInteger;
-  OrdersMessageF.ShowModal(OrdersMessageFCallBack);
+   MessageF.OrderID := QueryOrderID.AsInteger;
+   MessageF.ShowModal();
 end;
 
 procedure TOrdersT2.DoHideMask;
@@ -486,12 +487,11 @@ end;
 procedure TOrdersT2.QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 var t: string;
 begin
-  logger.Info('QueryFlagGetText: ');
   t := '';
 
   if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message" data-qtip="Сообщение по заказу"><i class="fa fa-exclamation-triangle"></i></div> ';
+    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
   end;
 
   // запрошен отказ по детали
@@ -600,6 +600,12 @@ begin
     Query.IndexName := FieldName+'_index_asc'
   else
     Query.IndexName := FieldName+'_index_des';
+end;
+
+procedure TOrdersT2.GridColumnActionClick(Column: TUniDBGridColumn;
+  ButtonId: Integer);
+begin
+  //
 end;
 
 procedure TOrdersT2.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,

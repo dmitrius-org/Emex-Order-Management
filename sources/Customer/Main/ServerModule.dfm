@@ -15,6 +15,8 @@ object UniServerModule: TUniServerModule
     'files/css/grid.css'
     'files/css/custom.css '
     ''
+    'files/css/messenger.css'
+    'files/css/messenger_style.css'
     ''
     'files/js/functions.js')
   ExtLocale = 'ru'

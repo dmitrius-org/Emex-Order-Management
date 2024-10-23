@@ -56,7 +56,10 @@ uses
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   uUtils.Grid in '..\Common\Common\uUtils.Grid.pas',
   uniGUI.Loading in '..\Common\Loading\uniGUI.Loading.pas',
-  uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame};
+  uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
+  uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
+  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
+  uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame};
 
 {$R *.res}
 

@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Manager.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -497,6 +497,17 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.Date.pas"/>
+        <DCCReference Include="..\Common\Messenger\uMessengerMessage.pas">
+            <Form>Message</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Messenger\uMessengerF.pas">
+            <Form>MessageF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -564,15 +575,21 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\compile.inc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="EXE\Manager.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>Manager.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="EXE\Manager.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="EXE\Manager.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>Manager.rsm</RemoteName>
+                        <RemoteName>Manager.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -227,6 +227,17 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
+        <DCCReference Include="App\Messenger\uMessengerF.pas">
+            <Form>MessageF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\Messenger\uMessengerMessage.pas">
+            <Form>Message</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -314,7 +325,19 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\compile.inc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Exe\Customer.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>Customer.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Exe\Customer.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>Customer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
