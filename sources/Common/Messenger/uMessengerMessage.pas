@@ -41,7 +41,6 @@ type
     procedure UniFrameCreate(Sender: TObject);
     procedure MessageTextChange(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
-    procedure UniSpeedButton1Click(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
     procedure pnlContentChatContainerAjaxEvent(Sender: TComponent;
       EventName: string; Params: TUniStrings);
@@ -144,7 +143,7 @@ implementation
 
 {$R *.dfm}
 
-uses MainModule, uMainVar, uLogger;
+uses MainModule, uMainVar, uLogger, uUtils.Math, ServerModule;
 
 
 { TMessage }
@@ -266,11 +265,8 @@ begin
        MessageIsRead(MID);   //
    end;
 
-
    i:=MessageEditor.Items.Add( Message );
 end;
-
-
 
 procedure TMessage.btnSendClick(Sender: TObject);
 begin
@@ -331,7 +327,8 @@ begin
     while not EOF do
     begin
       lblChatTitleText.Caption := 'Заказ: ' + FOrderID.ToString +
-                                  ' Клиент: ' + FieldByName('ClientBrief').AsString;
+
+      IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
 
       FClientID := FieldByName('ClientID').AsInteger;
       Next;
@@ -445,11 +442,6 @@ procedure TMessage.pnlContentChatContainerAjaxEvent(Sender: TComponent;
 begin
   logger.Info(EventName );
 
-//  for i := 0 to Params.Count - 1 do
-//  begin
-//    logger.Info(Format('Param[%d]: %s = %s', [i, Params.Names[i], Params.Values[Params.Names[i]]]));
-//  end;
-
   if EventName = 'websocket_message' then
   begin
     logger.Info( Params.Values['message'] );
@@ -508,45 +500,28 @@ begin
   end;
 end;
 
-procedure TMessage.UniSpeedButton1Click(Sender: TObject);
-begin
-//  UniMainModule.WS.send (
-//
-////  'Sessions',
-//                    [
-//                      'Session', UniSession.SessionId,
-//                      'User',    UniMainModule.AUserID,
-//                      'InDateTime', DateTimeToStr(Now())
-//                    ]
-////                    []      //boIgnoreCurrentSession
-//  );
-
-end;
-
 procedure TMessage.UserStatusTimerTimer(Sender: TObject);
 begin
-//  Sleep(3000);
-
   // статуса пользователя (клиента)
   if FAppType = 1 then
     UniMainModule.WS.Send('request_status:' + FClientID.ToString) ;
- // UniMainModule.WS.Send('request_status:' + UniMainModule.AUserID.ToString) ;
 end;
 
 procedure TMessage.UniFrameCreate(Sender: TObject);
 var f: TStringList;
 begin
   f :=TStringList.Create;
-
-  f.LoadFromFile('.\files\html\MessageItem.html');
-  FMessageItem := f.Text;
-
-  f.Free;
+  try
+    f.LoadFromFile(UniServerModule.StartPath + '\files\html\MessageItem.html');
+    FMessageItem := f.Text;
+  finally
+    f.Free;
+  end;
 end;
 
 procedure TMessage.UniFrameDestroy(Sender: TObject);
 begin
-  UniMainModule.WS.FormUnRegister ( pnlContentChatContainer.JSName);
+  UniMainModule.WS.FormUnRegister (pnlContentChatContainer.JSName);
 end;
 
 procedure TMessage.UniFrameReady(Sender: TObject);
@@ -559,15 +534,12 @@ begin
     logger.Info(AppType.ToString);
     AppType:=1;
     OrderID  := 167120;
-
   end;
 
   btnSendEnabled;
 
   UniMainModule.WS.FormRegister (pnlContentChatContainer.JSName , 'websocket_message');
 end;
-
-
 
 initialization
   RegisterClass(TMessage);

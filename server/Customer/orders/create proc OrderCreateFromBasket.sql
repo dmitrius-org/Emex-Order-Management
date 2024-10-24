@@ -191,6 +191,7 @@ declare @r int = 0
         ,DeliveryDateToCustomer -- Дата поставки клиенту	
         ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
         ,DaysInWork
+        ,Comment2
         )
   output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
   select b.ClientID
@@ -241,6 +242,7 @@ declare @r int = 0
         ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту	
         ,b.OurDelivery           -- Остаток срока до поставки клиенту
         ,0
+        ,b.Comment2
     from tMarks m with (nolock index=pk_tMarks)
    inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
@@ -325,6 +327,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20241011', '18'
+exec setOV 'OrderCreateFromBasket', 'P', '20241011', '19'
 go
  

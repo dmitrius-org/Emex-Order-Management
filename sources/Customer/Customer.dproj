@@ -204,11 +204,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\CommonApp\emexdwc\uEmexService.pas"/>
         <DCCReference Include="App\uEmexUtils.pas"/>
         <DCCReference Include="..\Common\CommonApp\uToast.pas"/>
-        <DCCReference Include="App\Orders\uOrdersMessageF.pas">
-            <Form>OrdersMessageF</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
         <DCCReference Include="..\Common\Common\uApp.pas"/>
         <DCCReference Include="Main\uUserRegisterF.pas">
             <Form>UserRegisterF</Form>
@@ -238,6 +233,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

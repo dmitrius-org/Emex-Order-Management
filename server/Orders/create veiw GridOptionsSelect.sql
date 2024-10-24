@@ -19,6 +19,6 @@ as
 go
 grant all on GridOptionsSelect to public
 go
-exec setOV 'GridOptionsSelect', 'P', '20240101', '0'
+exec setOV 'GridOptionsSelect', 'V', '20240101', '0'
 go
 select * from GridOptionsSelect

@@ -59,13 +59,15 @@ SELECT o.[OrderID]
       ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
       ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
       ,o.OrderDetailSubId
+      ,o.Comment2
+      ,um.UnreadMessagesCount
 
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,o.Flag
   FROM [tOrders] o (nolock)
- inner join tUser u with (nolock index=ao1)
-         on u.UserID = o.UserID
+ --inner join tUser u with (nolock index=ao1)
+ --        on u.UserID = o.UserID
  inner join tNodes s with (nolock index=ao1)
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 
@@ -94,14 +96,17 @@ SELECT o.[OrderID]
          
   left join tShipments sh (nolock)
          on sh.Invoice = o.Invoice
+
+ outer apply (
+              select count(*) as UnreadMessagesCount
+                from vUnreadManagerMessages um 
+               where um.OrderID = o.OrderID
+              ) as um
   
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241002', '10'
+exec setOV 'vCustomerOrders', 'V', '20241023', '12'
 go
- 
--- Описание таблицы
---exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
 
 select * from vCustomerOrders  where ClientID =31

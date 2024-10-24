@@ -1140,7 +1140,7 @@ begin
   begin
     with TStringList.Create() do
     begin
-      LoadFromFile('.\files\html\GoogleCSEKeyErr.html');
+      LoadFromFile(UniServerModule.StartPath +  '\files\html\GoogleCSEKeyErr.html');
       UniHTMLFrame1.HTML.Text := Text;
       Free;
     end;

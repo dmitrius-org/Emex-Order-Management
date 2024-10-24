@@ -338,9 +338,10 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar, uOrdersProtocol_T, Main, uOrdersF, ServerModule,  uToast,
-  uOrdersMessageF, uGroupDetailNameEditF, uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date, uConstant,
-  uMessengerMessage, uMessengerF;
+  MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar,
+  uOrdersProtocol_T, Main, uOrdersF, ServerModule, uToast,uGroupDetailNameEditF,
+  uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date,
+  uConstant, uMessengerMessage, uMessengerF;
 
 {$R *.dfm}
 
@@ -437,7 +438,6 @@ begin
       then
       begin
         OrderF.IsCounter := True;
-
 
         BM := Query.GetBookmark;
         Query.DisableControls;
@@ -989,8 +989,6 @@ begin
   try
     if GroupDetailNameEditF.FormAction = acUpdate then
     begin
-      //Query.Edit ;
-      //Query.Post;
       Marks.DataRefresh;
 
       ToastOK('Изменения успешно внесены!', unisession);
@@ -1146,10 +1144,16 @@ var t: string;
 begin
  // logger.Info('QueryFlagGetText: ');
   t := '';
+  //Сообщение от менеджера клиенту
+//  if (Sender.AsInteger and 32) > 0 then
+//  begin
+//    t := t + '<div class="grid-order-message" data-qtip="Сообщение клиенту"><i class="fa fa-exclamation-triangle"></i></div> ';
+//  end;
 
-  if (Sender.AsInteger and 32) > 0 then
+  //Сообщение от клиента
+  if (Sender.AsInteger and 2048) > 0 then
   begin
-    t := t + '<div class="grid-order-message" data-qtip="Сообщение клиенту"><i class="fa fa-exclamation-triangle"></i></div> ';
+    t := t + '<div class="grid-order-message" data-qtip="Имеется непрочитанное сообщение от клиента"><i class="fa fa-bell"></i></div> ';
   end;
 
   if (Sender.AsInteger and 64) > 0 then

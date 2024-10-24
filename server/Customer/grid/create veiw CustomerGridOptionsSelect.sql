@@ -19,5 +19,5 @@ as
 go
 grant all on CustomerGridOptionsSelect to public
 go
-exec setOV 'CustomerGridOptionsSelect', 'P', '20240101', '0'
+exec setOV 'CustomerGridOptionsSelect', 'V', '20240101', '0'
 go

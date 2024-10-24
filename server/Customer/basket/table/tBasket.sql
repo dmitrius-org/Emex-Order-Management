@@ -37,7 +37,8 @@ tBasket - корзина деталей
   ,Commission              money          -- Комиссия эквайера
   ,Reliability             money          -- Вероятность поставки
   ,Fragile                 money 
-  ,DeliveryTermToCustomer  int            -- Срок поставки клиенту	
+  ,DeliveryTermToCustomer  int            -- Срок поставки клиенту
+  ,Comment2                varchar(128)   -- Комментарий клиента
   
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int

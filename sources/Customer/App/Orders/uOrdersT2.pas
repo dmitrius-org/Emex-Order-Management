@@ -131,6 +131,10 @@ type
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
+    QueryUnreadMessagesCount: TIntegerField;
+    QueryComment2: TStringField;
+    edtComment2: TUniEdit;
+    UniLabel2: TUniLabel;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -204,7 +208,7 @@ implementation
 
 uses
   MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main,
-  ServerModule, uOrdersMessageF, uError_T, uUtils.Grid, uMessengerF;
+  ServerModule, uError_T, uUtils.Grid, uMessengerF;
 
   var screenmask: Boolean;
   var Marks: TMarks;
@@ -264,6 +268,8 @@ begin
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
+  edtComment2.Clear;
+
   GridRefresh();
 end;
 
@@ -271,7 +277,6 @@ procedure TOrdersT2.actFilterExecute(Sender: TObject);
 begin
   GridRefresh();
 end;
-
 
 procedure TOrdersT2.actProtocolExecute(Sender: TObject);
 begin
@@ -315,7 +320,6 @@ begin
 
   fStatus2.Refresh;
 end;
-
 
 procedure TOrdersT2.fPriceLogoSelect(Sender: TObject);
 var
@@ -418,6 +422,12 @@ begin
   else
     Query.MacroByName('DetailNum').Value := '';
 
+  // комментарий
+  if edtComment2.Text <> '' then
+    Query.MacroByName('Comment2').Value := ' and o.Comment2 like ''%' + edtComment2.Text + '%'''
+  else
+    Query.MacroByName('Comment2').Value := '';
+
 
   Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
@@ -489,9 +499,10 @@ var t: string;
 begin
   t := '';
 
+  // Сообщение от менеджера
   if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message"><i class="fa fa-exclamation-triangle"></i></div> ';
+    t := t + '<div class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></div> ';
   end;
 
   // запрошен отказ по детали
@@ -518,7 +529,6 @@ begin
   else
     Text := Sender.AsString;
 end;
-
 
 procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
@@ -581,6 +591,39 @@ begin
   begin
     Attribs.Font.Color:=clGray;
   end;
+
+//  if Column.ActionColumn.Enabled then
+//  begin
+//     logger.Info('GridDrawColumnCell');
+//
+//     logger.Info(Column.ActionColumn.Buttons.Items[0].JSName);
+//     logger.Info(Column.ActionColumn.Buttons[0].JSName);
+//     logger.Info(Column.ActionColumn.Buttons.Items[0].JSId);
+//     logger.Info(Column.ActionColumn.Buttons[0].JSId);
+//     logger.Info(Column.ActionColumn.Buttons.Items[0].JSMenuItem.JSClassName);
+//     logger.Info(Column.ActionColumn.Buttons[0].JSMenuItem.JSClassName);
+//    // Column.ActionColumn.Buttons.Items[0].
+//
+//     Attribs.Font.Color:=clGray;
+//   var
+//    bJSName: string;
+//
+//    bJSName := Column.ActionColumn.Buttons[0].JSName;
+//
+//    UniSession.AddJS(
+//
+//    'var row = Ext.getCmp("' + bJSName + '");'  +
+//
+//    '''
+//    console.log(row);
+//
+//    if (row) {
+//      Ext.fly(row).insertHtml("beforeEnd",'<span class="badgeText">Новый бейдж</span>');
+//    };
+//    '''
+//  );
+//  end;
+
 end;
 
 

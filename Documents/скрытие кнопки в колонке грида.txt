@@ -1,3 +1,4 @@
+﻿// WidgetAttach
 function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
 {
     // скрытие кнопки Обновить цену
@@ -8,14 +9,36 @@ function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
 }
 
 
+// actioncolumn
+// actioncolumn через класс
 function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
 {
-    console.log(sender); 
-    //console.log(store);
-    console.log(columns); 
-    
-    //console.log(eOpts); 
-    
+    dataColIndx = 4;   
+    actionColIndx = 7;
+    actionItemsIndx = 0;
+             
+    columns[actionColIndx].items[actionItemsIndx].getClass = function (v, metadata, record) {
+        if (record.data[dataColIndx] == "") {
+            return 'x-hidden'
+        } else {
+            return '';    //x-uni-action-cls
+        }
+    };  
+}
+
+columns.forEach(function(col){
+    if (col.xtype && col.xtype == 'actioncolumn') {
+        col.items.forEach(function(actioncol) {
+            actioncol.getClass = function(value, metadata, record) {
+                return "x-hidden"
+            }
+        })
+    }
+ });
+
+
+function reconfigure(sender, store, columns, oldStore, oldColumns, eOpts)
+{
     dataColIndx = 4;   // инвойс
     actionColIndx = 7;
     actionItemsIndx = 0;

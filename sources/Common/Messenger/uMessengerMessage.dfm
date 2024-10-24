@@ -2,7 +2,7 @@ object Message: TMessage
   AlignWithMargins = True
   Left = 0
   Top = 0
-  Width = 911
+  Width = 778
   Height = 480
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
@@ -17,7 +17,7 @@ object Message: TMessage
   object pnlContentChatContainer: TUniContainerPanel
     Left = 0
     Top = 0
-    Width = 911
+    Width = 778
     Height = 480
     Hint = ''
     ParentColor = False
@@ -31,7 +31,7 @@ object Message: TMessage
     object pnlContentChatContent: TUniContainerPanel
       Left = 0
       Top = 0
-      Width = 911
+      Width = 778
       Height = 480
       Hint = ''
       ParentColor = False
@@ -43,7 +43,7 @@ object Message: TMessage
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 905
+        Width = 772
         Height = 424
         Hint = ''
         ParentColor = False
@@ -54,8 +54,8 @@ object Message: TMessage
         object pnlChatHeader: TUniPanel
           Left = 0
           Top = 0
-          Width = 905
-          Height = 42
+          Width = 772
+          Height = 30
           Hint = ''
           Align = alTop
           TabOrder = 2
@@ -69,7 +69,7 @@ object Message: TMessage
             Left = 1
             Top = 1
             Width = 705
-            Height = 40
+            Height = 28
             Hint = ''
             Align = alLeft
             TabOrder = 1
@@ -81,7 +81,7 @@ object Message: TMessage
               Left = 0
               Top = 0
               Width = 705
-              Height = 40
+              Height = 28
               Hint = ''
               ParentColor = False
               Align = alClient
@@ -91,7 +91,7 @@ object Message: TMessage
                 Left = 0
                 Top = 0
                 Width = 705
-                Height = 40
+                Height = 28
                 Hint = ''
                 ParentColor = False
                 Align = alClient
@@ -134,10 +134,10 @@ object Message: TMessage
           end
           object pnlChatHeaderRight: TUniContainerPanel
             AlignWithMargins = True
-            Left = 762
+            Left = 629
             Top = 4
             Width = 136
-            Height = 34
+            Height = 22
             Hint = ''
             Margins.Left = 6
             Margins.Right = 6
@@ -149,8 +149,9 @@ object Message: TMessage
               Left = 3
               Top = 3
               Width = 35
-              Height = 28
+              Height = 16
               Hint = ''
+              Visible = False
               ShowHint = True
               ParentShowHint = False
               Caption = ''
@@ -164,8 +165,9 @@ object Message: TMessage
               Left = 98
               Top = 3
               Width = 35
-              Height = 28
+              Height = 16
               Hint = ''
+              Visible = False
               ShowHint = True
               ParentShowHint = False
               Caption = ''
@@ -173,16 +175,15 @@ object Message: TMessage
               ParentColor = False
               IconAlign = iaCenter
               TabOrder = 2
-              OnClick = UniSpeedButton1Click
             end
           end
         end
         object MessageEditor: TUniListBox
           AlignWithMargins = True
           Left = 3
-          Top = 45
-          Width = 899
-          Height = 376
+          Top = 33
+          Width = 766
+          Height = 388
           Hint = ''
           Align = alClient
           TabOrder = 1
@@ -193,7 +194,7 @@ object Message: TMessage
         AlignWithMargins = True
         Left = 0
         Top = 430
-        Width = 911
+        Width = 778
         Height = 50
         Hint = ''
         Margins.Left = 0
@@ -209,7 +210,7 @@ object Message: TMessage
           AlignWithMargins = True
           Left = 0
           Top = 0
-          Width = 911
+          Width = 778
           Height = 50
           Hint = ''
           Margins.Left = 0
@@ -226,7 +227,7 @@ object Message: TMessage
             AlignWithMargins = True
             Left = 0
             Top = 0
-            Width = 861
+            Width = 728
             Height = 50
             Hint = ''
             Margins.Left = 0
@@ -242,7 +243,7 @@ object Message: TMessage
               AlignWithMargins = True
               Left = 3
               Top = 3
-              Width = 855
+              Width = 722
               Height = 44
               Hint = ''
               ParentColor = False
@@ -254,7 +255,7 @@ object Message: TMessage
                 AlignWithMargins = True
                 Left = 3
                 Top = 3
-                Width = 849
+                Width = 716
                 Height = 38
                 Hint = ''
                 ParentColor = False
@@ -270,6 +271,7 @@ object Message: TMessage
                   Width = 32
                   Height = 32
                   Hint = ''
+                  Visible = False
                   ShowHint = True
                   ParentShowHint = False
                   ParentColor = False
@@ -297,7 +299,7 @@ object Message: TMessage
                   AlignWithMargins = True
                   Left = 41
                   Top = 3
-                  Width = 805
+                  Width = 672
                   Height = 32
                   Hint = ''
                   BorderStyle = ubsNone
@@ -315,7 +317,7 @@ object Message: TMessage
           end
           object pnlSendButton: TUniContainerPanel
             AlignWithMargins = True
-            Left = 867
+            Left = 734
             Top = 6
             Width = 38
             Height = 38
@@ -360,7 +362,7 @@ object Message: TMessage
       ' '
       '}')
     OnTimer = UserStatusTimerTimer
-    Left = 768
-    Top = 190
+    Left = 659
+    Top = 181
   end
 end

@@ -21,6 +21,22 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrderAutoSetStatus', 'Автоматический перевод в Проверено при загрузке заказа', '', '1', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'GoogleProgrammableSearchEngineKey', 'Ключ для программируемой поисковой системы', '', '42f36a3f7fa7d4e09', 0
 
+go
+begin tran
+Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'WebSocketMessage', 'Сервер сообщений WebSocket', 4--, 'TSettingsT'
+--commit tran
+
+begin tran
+declare @ID numeric(18, 0)
+select @ID = InstrumentID from tInstrument where brief = 'WebSocketMessage'
+
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'WebSocketAddress', 'Адрес сервера сообщений WebSocket', '', '', 0
+
+
+
+
+
+
 
 
 -- Настройки для клиентского приложения

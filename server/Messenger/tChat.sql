@@ -16,6 +16,8 @@ begin
 	create index ao1 on tChats(ChatID)
 
 	create index ao2 on tChats(ClientID)
+
+    create index ao3 on tChats(OrderID)
 end
 go
 grant all on tChats to public

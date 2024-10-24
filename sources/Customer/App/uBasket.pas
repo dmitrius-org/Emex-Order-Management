@@ -81,6 +81,7 @@ type
     btnPriceRefresh: TUniButtonWidget;
     QueryIsUpdatingExists: TIntegerField;
     QueryPacking: TIntegerField;
+    QueryComment2: TStringField;
 
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -158,13 +159,17 @@ begin
       exit;
     end;
 
-    f := TOrderF.Create(UniApplication);
-    if f.ShowModal = mrOk then
-    begin
-      GridRefresh;
+    try
+      f := TOrderF.Create(UniApplication);
+      if f.ShowModal = mrOk then
+      begin
+        GridRefresh;
+      end;
+    finally
+      f.Free
     end;
   finally
-    f.Free
+
   end;
 end;
 

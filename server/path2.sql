@@ -13,31 +13,5 @@
 --go
 
 
-
- update tNodes 
- set flag = Flag|4
- where Type=0
- and nodeid in (
- 1	--New	Новый
-,2	--InChecked	Проверено
-,3	--InBasket	В корзине
-,4	--InWork	В работе
-,5	--Purchased	Закуплено
-,6	--ReceivedOnStock	Получено на склад в ОАЭ
-,7	--ReadyToSend	Готово к отправке из ОАЭ
-,8	--Send	Передано для доставки из ОАЭ в РФ
---,9	--NotAvailable	Нет в наличии
---,10	--LessMinLot	Меньше минимальной партии
---,11	--PriceChange	Изменение цены
---,12	--InCancel	Отказано
-,22	--Preparation	Предварительный
---,24	--Received	Готовим к выдаче в РФ
---,26	--IssuedClient	Выдано клиенту
-,32	--InShipment	На пути в РФ
-,37	--InShipmentWait	Ожидает отправки из ОАЭ в РФ
-,38	--InShipmentBorderPassed	Прошел границу РФ
-,39	--InShipmentDelivered	Прибыл в РФ
-,36	--OnHold	Задерживается
-)
-
-
+ALTER TABLE tBasket add Comment2                        varchar(512)   -- Комментарий клиента
+ALTER TABLE tOrders add Comment2                        varchar(512)   -- Комментарий клиента

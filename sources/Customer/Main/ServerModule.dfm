@@ -24,7 +24,7 @@ object UniServerModule: TUniServerModule
   SSL.SSLOptions.CertFile = 'cert.pem'
   SSL.SSLOptions.KeyFile = 'key.pem'
   SSL.SSLOptions.Method = sslvSSLv23
-  SSL.SSLOptions.SSLVersions = [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2]
+  SSL.SSLOptions.SSLVersions = [sslvSSLv2, sslvSSLv3, sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2]
   SSL.SSLOptions.Mode = sslmClient
   SSL.SSLOptions.VerifyMode = []
   SSL.SSLOptions.VerifyDepth = 0

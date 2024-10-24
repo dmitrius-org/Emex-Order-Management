@@ -229,11 +229,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Orders\uOrdersMessageF.pas">
-            <Form>OrdersMessageF</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
         <DCCReference Include="Core\uTexT.pas">
             <Form>TexT</Form>
             <FormType>dfm</FormType>
@@ -508,6 +503,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
+        <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -590,6 +586,12 @@ $(PreBuildEvent)]]></PreBuildEvent>
                 <DeployFile LocalName="EXE\Manager.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>Manager.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="EXE\Manager.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>Manager.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

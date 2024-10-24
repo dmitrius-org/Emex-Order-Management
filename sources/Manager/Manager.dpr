@@ -41,7 +41,6 @@ uses
   uBalanceT in 'App\Clients\uBalanceT.pas' {BalanceT: TUniForm},
   uRefusalsT in 'App\Orders\uRefusalsT.pas' {RefusalsT: TUniFrame},
   uShipmentsT in 'App\Shipments\uShipmentsT.pas' {ShipmentsT: TUniFrame},
-  uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
   uTexT in 'Core\uTexT.pas' {TexT: TUniFrame},
   uClientsT in 'App\Clients\uClientsT.pas' {ClientsT: TUniFrame},
   uUploadingRefusals in 'App\Orders\uUploadingRefusals.pas',
@@ -114,7 +113,8 @@ uses
   uUtils.Date in '..\Common\CommonApp\uUtils.Date.pas',
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
-  uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas';
+  uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
+  uUtils.Math in '..\Common\Common\uUtils.Math.pas';
 
 {$R *.res}
 

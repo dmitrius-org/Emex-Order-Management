@@ -97,7 +97,7 @@ object OrdersT: TOrdersT
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgFilterClearButton, dgTabs, dgDontShowSelected, dgRowNumbers]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgTabs, dgDontShowSelected, dgRowNumbers]
       WebOptions.PageSize = 500
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
@@ -652,8 +652,6 @@ object OrdersT: TOrdersT
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        ExplicitLeft = -93
-        ExplicitTop = -46
         object UniLabel1: TUniLabel
           Left = 6
           Top = 14

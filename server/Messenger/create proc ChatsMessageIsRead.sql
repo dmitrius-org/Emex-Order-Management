@@ -14,7 +14,7 @@ as
          
     
   Update tChatsMessage
-     set Flag = Flag | 2 -- 2 - Сообщение прочитано             
+     set Flag = Flag | 2 -- 2 - РЎРѕРѕР±С‰РµРЅРёРµ РїСЂРѕС‡РёС‚Р°РЅРѕ             
    where MessageID = @MessageID
  
 
@@ -28,13 +28,13 @@ as
 
   if @OrderID > 0
   begin
-    if @Flag&1>0 -- Сообщение от менеджера
+    if @Flag&1>0 -- РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ РјРµРЅРµРґР¶РµСЂР°
     begin
-      set @Flag2 = 32--32 - Сообщение от менеджера
+      set @Flag2 = 32--32 - РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ РјРµРЅРµРґР¶РµСЂР°
     end
     else
     begin
-      set @Flag2 = 2048-- 2048 - Сообщение от клиента
+      set @Flag2 = 2048-- 2048 - РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ РєР»РёРµРЅС‚Р°
     end
 
     Update tOrders

@@ -2,7 +2,7 @@ object BasketF: TBasketF
   AlignWithMargins = True
   Left = 0
   Top = 0
-  Width = 1247
+  Width = 1541
   Height = 618
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
@@ -19,7 +19,7 @@ object BasketF: TBasketF
   object MainPanel: TUniPanel
     Left = 0
     Top = 80
-    Width = 1247
+    Width = 1541
     Height = 538
     Hint = ''
     Align = alClient
@@ -28,10 +28,11 @@ object BasketF: TBasketF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
+    ExplicitWidth = 1247
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 1247
+      Width = 1541
       Height = 538
       Hint = ''
       Margins.Left = 0
@@ -41,11 +42,15 @@ object BasketF: TBasketF
       ClientEvents.ExtEvents.Strings = (
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
-          'e, oldColumns, eOpts)'#13#10'{'#13#10'    // '#1089#1082#1088#1099#1090#1080#1077' '#1082#1075#1086#1087#1082#1080' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091#13#10' ' +
-          '   var widgetColIndx=9;'#13#10'    columns[widgetColIndx].onWidgetAtta' +
-          'ch = function(column, widget, record) {'#13#10'        widget.setHidde' +
-          'n(record.get(widgetColIndx) == 0);'#13#10'    };'#13#10'}')
+          'e, oldColumns, eOpts)'#13#10'{'#13#10'    // '#1089#1082#1088#1099#1090#1080#1077' '#1082#1085#1086#1087#1082#1080' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091#13#10' ' +
+          '   var widgetColIndx=10;'#13#10'    columns[widgetColIndx].onWidgetAtt' +
+          'ach = function(column, widget, record) {'#13#10'        widget.setHidd' +
+          'en(record.get(widgetColIndx) == 0);'#13#10'    };'#13#10'}')
       ClientEvents.UniEvents.Strings = (
+        
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10' // var toolbar=sen' +
+          'der.getDockedItems()[1]; '#13#10' // toolbar.items.getAt(10).hide(); '#13 +
+          #10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
           'copyToClipboard = str => {'#13#10'        const el = document.createEl' +
@@ -55,11 +60,7 @@ object BasketF: TBasketF
           'body.removeChild(el);'#13#10'    };'#13#10'}'
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'   config.displayInfo=true;'#13#10'}'
-        
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10' // var toolbar=sen' +
-          'der.getDockedItems()[1]; '#13#10' // toolbar.items.getAt(10).hide(); '#13 +
-          #10'}')
+          'g)'#13#10'{'#13#10'   config.displayInfo=true;'#13#10'}')
       ClicksToEdit = 1
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgConfirmDelete, dgMultiSelect, dgTabs, dgAutoRefreshRow, dgDontShowSelected]
@@ -172,6 +173,12 @@ object BasketF: TBasketF
           Menu.ColumnHideable = False
         end
         item
+          FieldName = 'Comment2'
+          Title.Alignment = taCenter
+          Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+          Width = 350
+        end
+        item
           WidgetColumn.Enabled = True
           WidgetColumn.Widget = btnPriceRefresh
           WidgetColumn.Height = 25
@@ -246,7 +253,7 @@ object BasketF: TBasketF
   object TopPanel: TUniPanel
     Left = 0
     Top = 0
-    Width = 1247
+    Width = 1541
     Height = 80
     Hint = ''
     Align = alTop
@@ -256,20 +263,22 @@ object BasketF: TBasketF
     Caption = 'TopPanel'
     Layout = 'fit'
     LayoutConfig.Width = '0'
+    ExplicitWidth = 1247
     object UniContainerPanel1: TUniContainerPanel
       Left = 0
       Top = 0
-      Width = 1247
+      Width = 1541
       Height = 80
       Hint = ''
       ParentColor = False
       Align = alClient
       TabOrder = 1
       LayoutAttribs.Columns = 2
+      ExplicitWidth = 1247
       object UniPanel1: TUniPanel
         Left = 0
         Top = 0
-        Width = 829
+        Width = 1123
         Height = 80
         Hint = ''
         Align = alClient
@@ -278,6 +287,7 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel1'
         LayoutConfig.Region = 'center'
+        ExplicitWidth = 829
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -437,7 +447,7 @@ object BasketF: TBasketF
         end
       end
       object UniPanel2: TUniPanel
-        Left = 829
+        Left = 1123
         Top = 0
         Width = 418
         Height = 80
@@ -448,6 +458,7 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel2'
         LayoutConfig.Region = 'east'
+        ExplicitLeft = 829
         DesignSize = (
           418
           80)
@@ -736,6 +747,10 @@ object BasketF: TBasketF
       FieldName = 'Packing'
       ReadOnly = True
     end
+    object QueryComment2: TStringField
+      FieldName = 'Comment2'
+      Size = 128
+    end
   end
   object qStatus: TFDQuery
     AutoCalcFields = False
@@ -765,18 +780,21 @@ object BasketF: TBasketF
     ConnectionName = 'Connection'
     ModifySQL.Strings = (
       'declare @Quantity int'
+      '       ,@Comment2 varchar(128)'
       ''
-      'select @Quantity = :NEW_Quantity      '
+      'select @Quantity = :NEW_Quantity   '
+      '      ,@Comment2 = :NEW_Comment2   '
       ''
       'update tBasket'
       
-        '      set Quantity      = (( @Quantity + Packing - 1 ) /Packing)' +
-        ' * Packing '
+        '   set Quantity = (( @Quantity + Packing - 1 ) / Packing) * Pack' +
+        'ing '
       
-        '           ,Amount        =(( @Quantity + Packing - 1 ) /Packing' +
-        ') * Packing * PriceRub'
-      ' FROM tBasket (updlock)'
-      'WHERE BasketID = :BasketID')
+        '      ,Amount   = (( @Quantity + Packing - 1 ) / Packing) * Pack' +
+        'ing * PriceRub'
+      '      ,Comment2 = @Comment2'
+      '  FROM tBasket (updlock)'
+      ' WHERE BasketID = :BasketID')
     DeleteSQL.Strings = (
       'declare @Comment   nvarchar(1024)'
       '       ,@AuditID   numeric(18, 0)'
@@ -803,6 +821,7 @@ object BasketF: TBasketF
     FetchRowSQL.Strings = (
       'SELECT Quantity'
       '      ,Amount'
+      '      ,Comment2'
       '  FROM vBasket'
       ' WHERE BasketID = :BasketID')
     Left = 497

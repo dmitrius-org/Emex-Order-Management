@@ -50,7 +50,6 @@ uses
   uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
   uEmexUtils in 'App\uEmexUtils.pas',
   uToast in '..\Common\CommonApp\uToast.pas',
-  uOrdersMessageF in 'App\Orders\uOrdersMessageF.pas' {OrdersMessageF: TUniForm},
   uApp in '..\Common\Common\uApp.pas',
   uUserRegisterF in 'Main\uUserRegisterF.pas' {UserRegisterF: TUniForm},
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
@@ -59,7 +58,8 @@ uses
   uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
-  uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame};
+  uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
+  uUtils.Math in '..\Common\Common\uUtils.Math.pas';
 
 {$R *.res}
 

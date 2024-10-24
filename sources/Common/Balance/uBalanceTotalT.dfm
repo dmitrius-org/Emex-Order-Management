@@ -214,13 +214,12 @@ object BalanceTotalT: TBalanceTotalT
           '   }'#13#10'}'
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
-          'e, oldColumns, eOpts)'#13#10'{'#13#10'    //dataColIndx = sender.headerCt.fi' +
-          'ndColumnIndex('#39'Invoice'#39');'#13#10'    dataColIndx = 4;   '#13#10'    actionCo' +
-          'lIndx = 7;'#13#10'    actionItemsIndx = 0;'#13#10'             '#13#10'    columns' +
-          '[actionColIndx].items[actionItemsIndx].getClass = function (v, m' +
-          'etadata, record) {'#13#10'        if (record.data[dataColIndx] == "") ' +
-          '{'#13#10'            return '#39'x-hidden'#39#13#10'        } else {'#13#10'            ' +
-          'return '#39#39';    //x-uni-action-cls'#13#10'        }'#13#10'    };  '#13#10'}')
+          'e, oldColumns, eOpts)'#13#10'{'#13#10'    dataColIndx = 4;   '#13#10'    actionCol' +
+          'Indx = 7;'#13#10'    actionItemsIndx = 0;'#13#10'             '#13#10'    columns[' +
+          'actionColIndx].items[actionItemsIndx].getClass = function (v, me' +
+          'tadata, record) {'#13#10'        if (record.data[dataColIndx] == "") {' +
+          #13#10'            return '#39'x-hidden'#39#13#10'        } else {'#13#10'            r' +
+          'eturn '#39#39';    //x-uni-action-cls'#13#10'        }'#13#10'    };  '#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  //var toolbar=sen' +

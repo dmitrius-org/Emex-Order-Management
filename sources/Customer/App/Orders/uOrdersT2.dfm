@@ -107,9 +107,9 @@ object OrdersT2: TOrdersT2
       ClientEvents.ExtEvents.Strings = (
         
           'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10'    var me' +
-          '=sender.checkboxModel;'#13#10'    if (me) {'#13#10'        // '#1089#1082#1088#1099#1074#1072#1077#1084' Check' +
-          'box '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'        me.showHeaderCheckbox=true;'#13#10'  ' +
-          '  }'#13#10'}'
+          '=sender.checkboxModel;'#13#10'    if (me) {        '#13#10'        me.showHe' +
+          'aderCheckbox=true; // '#1089#1082#1088#1099#1074#1072#1077#1084' Checkbox '#1089' '#1079#1072#1075#1086#1083#1086#1074#1082#1072' '#1090#1072#1073#1083#1080#1094#1099#13#10'   ' +
+          ' }'#13#10'}'
         
           'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
           'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
@@ -121,32 +121,30 @@ object OrdersT2: TOrdersT2
           ' + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
-          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
-          'copyToClipboard = str => {'#13#10'        const el = document.createEl' +
-          'ement('#39'textarea'#39');'#13#10'        el.value = document.activeElement.in' +
-          'nerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.sel' +
-          'ect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        document.' +
-          'body.removeChild(el);'#13#10'    };'#13#10'}'
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(9).hide(); '#13#10'  too' +
+          'lbar.items.getAt(10).hide(); '#13#10'}'
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+          'ent('#39'textarea'#39');'#13#10'        el.value = document.activeElement.inne' +
+          'rText;'#13#10'        document.body.appendChild(el);'#13#10'        el.selec' +
+          't();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        document.bo' +
+          'dy.removeChild(el);'#13#10'    };'#13#10'         '#13#10'}'
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}'
-        
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(9).hide(); //Remove the Refresh button in' +
-          ' the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(10).hid' +
-          'e(); //Remove the Refresh button in the ToolBar, number 10, hide' +
-          ' him'#13#10'}')
+          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
+      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
       WebOptions.PageSize = 150
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.WaitData = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
+      Images = UniImageList
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
       LayoutConfig.ComponentCls = 'grid-order'
       LayoutConfig.Height = '100'
@@ -177,10 +175,15 @@ object OrdersT2: TOrdersT2
             item
               Action = actShowMessage
               ButtonId = 0
+              Hint = #1057#1086#1086#1073#1097#1077#1085#1080#1103
               ImageIndex = 7
             end>
+          FieldName = 'UnreadMessagesCount'
           Title.Caption = ' '
-          Width = 64
+          Width = 26
+          Alignment = taCenter
+          ReadOnly = True
+          Hint = #1044#1077#1081#1089#1090#1074#1080#1103
         end
         item
           ShowToolTip = True
@@ -423,6 +426,13 @@ object OrdersT2: TOrdersT2
           Width = 300
           ReadOnly = True
           Sortable = True
+        end
+        item
+          FieldName = 'Comment2'
+          Title.Alignment = taCenter
+          Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+          Width = 300
+          Sortable = True
         end>
     end
     object pFilter: TUniPanel
@@ -466,7 +476,7 @@ object OrdersT2: TOrdersT2
           TabOrder = 1
         end
         object fCancel: TUniBitBtn
-          Left = 829
+          Left = 990
           Top = 35
           Width = 128
           Height = 24
@@ -476,7 +486,7 @@ object OrdersT2: TOrdersT2
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 963
+          Left = 1123
           Top = 35
           Width = 139
           Height = 24
@@ -522,7 +532,6 @@ object OrdersT2: TOrdersT2
           Left = 742
           Top = 35
           Width = 81
-          Height = 23
           Hint = ''
           ShowHint = True
           Text = ''
@@ -600,7 +609,6 @@ object OrdersT2: TOrdersT2
           Left = 311
           Top = 35
           Width = 130
-          Height = 21
           Hint = ''
           ShowHint = True
           DateTime = 45257.000000000000000000
@@ -629,6 +637,28 @@ object OrdersT2: TOrdersT2
           Action = actCancelRequest
           Anchors = [akTop, akRight]
           TabOrder = 13
+        end
+        object edtComment2: TUniEdit
+          Left = 829
+          Top = 35
+          Width = 155
+          Hint = ''
+          ShowHint = True
+          Text = ''
+          TabOrder = 14
+          EmptyText = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+          CheckChangeDelay = 200
+          ClearButton = True
+        end
+        object UniLabel2: TUniLabel
+          Left = 829
+          Top = 16
+          Width = 77
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081':'
+          TabOrder = 15
         end
       end
     end
@@ -755,12 +785,16 @@ object OrdersT2: TOrdersT2
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvRefreshDelete, uvCountUpdatedRecords]
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
     UpdateOptions.EnableDelete = False
     UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
+    UpdateOptions.LockWait = True
     UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.UpdateTableName = 'tOrders'
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.CheckReadOnly = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'vCustomerUpdateOrders'
     UpdateOptions.KeyFields = 'OrderID'
     UpdateOptions.AutoIncFields = 'OrderID'
     UpdateObject = UpdateSQL
@@ -813,25 +847,29 @@ object OrdersT2: TOrdersT2
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-      '      ,o.[OrderDetailSubId]   '
+      '      ,o.[OrderDetailSubId]  '
+      
+        '      ,o.UnreadMessagesCount -- '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1077#1087#1088#1086#1095#1080#1090#1072#1085#1085#1099#1093' '#1089#1086#1086#1073#1097#1077#1085 +
+        #1080#1081' '
+      '      ,o.Comment2'
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
-      ' '
-      '   !Status'
-      '   '
-      '   !PriceLogo     '
-      '   '
       
         '   and ((:OrderNum = '#39#39') or (o.OrderNum like '#39'%'#39' + isnull(nullif' +
         '(:OrderNum, '#39#39'), o.OrderNum) + '#39'%'#39'))'
-      '  '
-      '   !DetailNum    '
-      '   '
       '   and o.isCancel = isnull(nullif(:isCancel, -1), o.isCancel)'
+      ' '
+      '      !Status'
       '   '
-      '   !OrderDate'
+      '      !PriceLogo     '
+      '     '
+      '      !DetailNum    '
       '   '
-      '  order by  o.[OrderID]  desc'
+      '      !OrderDate'
+      '   '
+      '      !Comment2'
+      '   '
+      ' order by o.[OrderID] desc'
       '   ')
     Left = 575
     Top = 255
@@ -869,6 +907,10 @@ object OrdersT2: TOrdersT2
       item
         Value = Null
         Name = 'ORDERDATE'
+      end
+      item
+        Value = Null
+        Name = 'COMMENT2'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -1055,7 +1097,16 @@ object OrdersT2: TOrdersT2
     end
     object QueryOrderDetailSubId: TWideStringField
       FieldName = 'OrderDetailSubId'
+      ReadOnly = True
       Size = 32
+    end
+    object QueryUnreadMessagesCount: TIntegerField
+      FieldName = 'UnreadMessagesCount'
+      ReadOnly = True
+    end
+    object QueryComment2: TStringField
+      FieldName = 'Comment2'
+      Size = 128
     end
   end
   object DataSource: TDataSource
@@ -1124,13 +1175,10 @@ object OrdersT2: TOrdersT2
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
-    ModifySQL.Strings = (
-      'select OrderID  '
-      '  from vCustomerOrders '
-      ' WHERE OrderID  = :OLD_OrderID')
     FetchRowSQL.Strings = (
       'SELECT StatusID, '
-      '       Flag'
+      '       Flag,'
+      '       Comment2'
       '  FROM tOrders (nolock)'
       ' WHERE OrderID = :OrderID')
     Left = 498

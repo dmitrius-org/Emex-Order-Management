@@ -65,6 +65,7 @@ begin
     ,OrderDetailSubId                nvarchar(32)   -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
     ,Warning                         nvarchar(128)  -- Предупреждение
     ,Comment                         nvarchar(512)  -- Комментарий
+    ,Comment2                        varchar(128)   -- Комментарий клиента
     ,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
     ,OverPricing                     money          -- Превышение Цены
 
