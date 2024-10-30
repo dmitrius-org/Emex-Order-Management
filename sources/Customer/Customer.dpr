@@ -47,7 +47,6 @@ uses
   uOrderF in 'App\Orders\uOrderF.pas' {OrderF: TUniForm},
   uEmail.gmail in '..\Common\Common\uEmail.gmail.pas',
   uFileU in '..\Common\Common\uFileU.pas',
-  uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
   uEmexUtils in 'App\uEmexUtils.pas',
   uToast in '..\Common\CommonApp\uToast.pas',
   uApp in '..\Common\Common\uApp.pas',
@@ -59,7 +58,8 @@ uses
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
-  uUtils.Math in '..\Common\Common\uUtils.Math.pas';
+  uUtils.Math in '..\Common\Common\uUtils.Math.pas',
+  uServiceEmex in '..\Service\uServiceEmex.pas';
 
 {$R *.res}
 

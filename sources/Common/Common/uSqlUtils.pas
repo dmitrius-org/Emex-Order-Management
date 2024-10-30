@@ -21,17 +21,11 @@ Type
     procedure SetConnection(const Value: TFDConnection);
     function GetCount: integer;
 
-//    var FSql: TSql;
-
-//    function GetConnection: TFDConnection;
-//    procedure SetConnection(const Value: TFDConnection);
     procedure Prepare(AQuery: TFDQuery; AParams: array of string; AArgs: array of variant);
   public
     constructor Create(AConnection: TFDConnection);
     destructor Destroy; override;
-   // property Connection: TFDConnection read GetConnection write SetConnection;
 
-    // overload;
     function Q():TFDQuery;
 
     /// <summary>
@@ -44,9 +38,10 @@ Type
     /// Возвращает результат запроса переданного в параметре ASqlText
     /// в компонент TSql.Q.
     /// </summary>
-    procedure Open(ASql: String; AParams: array of string; AArgs: array of variant);     overload;
+    procedure Open(ASql: String; AParams: array of string; AArgs: array of variant); overload;
 
-    procedure Exec(ASql: String; AParams: array of string; AArgs: array of variant);
+    procedure Exec(ASql: String; AParams: array of string; AArgs: array of variant); overload;
+    procedure Exec(ASql: String); overload;
 
     /// <summary>
     /// ExecAsync - асинхронное выполнение запроса
@@ -61,6 +56,7 @@ Type
     /// GetSetting - получение значния настройки
     /// </summary>
     function GetSetting(ASetting: String): Variant; overload;
+    function GetSetting(ASetting: String; ADefValue: String): String; overload;
     function GetSetting(ASetting: String; ADefValue: Double): Double; overload;
     function GetSetting(ASetting: String; ADefValue: Boolean): Boolean; overload;
     function GetSetting(ASetting: String; ADefValue: Integer): Integer; overload;
@@ -149,6 +145,11 @@ begin
   FreeAndNil(FQueryTMP);
 end;
 
+procedure TSql.Exec(ASql: String);
+begin
+  Exec(ASql, [], []);
+end;
+
 procedure TSql.ExecAsync(ASql: String; AParams: array of string; AArgs: array of variant);
 VAR SQL: string; FQueryTMP:TFDQuery;
 begin
@@ -233,6 +234,13 @@ var v: Variant;
 begin
   v := GetSetting(ASetting);
   result:= VarToIntDef(v, ADefValue);
+end;
+
+function TSql.GetSetting(ASetting, ADefValue: String): String;
+var v: Variant;
+begin
+  v := GetSetting(ASetting);
+  result:= VarToStrDef(v, ADefValue);
 end;
 
 end.

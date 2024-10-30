@@ -27,11 +27,14 @@ create table pBasketDetails
 ,bitOnlyThisNumber     Bit           -- признак ТОЛЬКО ЭТОТ НОМЕР
 ,bitOnlyThisQuantity   Bit           -- признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
 ,bitWait               Bit           -- признак СОГЛАСЕН ЖДАТЬ 1 месяц
-,Reference             nvarchar(64)  -- Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
+,Reference             nvarchar(64)  -- текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
 ,CustomerSubId         nvarchar(32)  -- идентификатор запчасти клиента
 ,TransportPack         nvarchar(100) -- тип упаковки (WOOD – требуется деревянная обрешетка, CARTON – отправка в картонной коробке)
 ,DetailWeight          decimal(18,2) -- вес детали в кг
 ,EmExWeight            decimal(18,2) -- последнее изменение веса детали, сделанное на нашем складе
+,WarnCode              int
+,WarnText              varchar(256)  -- текстовое предупреждение о проблемах с позицией
+,AvailableQuantity     int           -- количество, доступное для заказа 
 ,RetVal	               int
 )
 go
@@ -41,7 +44,7 @@ create index ao1 on pBasketDetails(Spid, OrderID)
 go
 create index ao2 on pBasketDetails(Spid, BasketId)
 go
-exec setOV 'pBasketDetails', 'U', '20240606', '2'
+exec setOV 'pBasketDetails', 'U', '20241025', '4'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'pBasketDetails', @desc = 'Корзина клиента (подклиента). Результат выполнения сервиса GetBasketDetails'
+exec dbo.sys_setTableDescription @table = 'pBasketDetails', @desc = 'Корзина клиента (подклиента). Результат выполнения сервиса GetBasketDetails_v2'

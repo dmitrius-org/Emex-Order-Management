@@ -1,6 +1,6 @@
-unit uEmexUtils;
+п»їunit uEmexUtils;
 {
-                            Интеграция с Emex api
+                            РРЅС‚РµРіСЂР°С†РёСЏ СЃ Emex api
 }
 interface
 
@@ -10,58 +10,68 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
      uCommonType,
 
-     uEmexService, Soap.XSBuiltIns, uSqlUtils;
+     uServiceEmex, Soap.XSBuiltIns, uSqlUtils;
 
   Type
   /// <summary>
-  /// TEmex класс интеграции с Emex api
+  /// TEmex РєР»Р°СЃСЃ РёРЅС‚РµРіСЂР°С†РёРё СЃ Emex api
   /// </summary>
   TEmex= class
     private
       FConnection: TFDConnection;
-     // FCustomer: Customer;
-      FQuery: TFDQuery;
-      FEmex:ServiceSoap;
+
+      FEmex: ServiceSoap;
+
       FSQl: TSQL;
+      FQuery: TFDQuery;
 
-      function GetConnection: TFDConnection;
-      procedure SetConnection(const Value: TFDConnection);
+      FLang:string;
+      FUrl:string;
 
-      function GetQry: TFDQuery;
-      procedure SetQry(const Value: TFDQuery);
+     // function GetConnection: TFDConnection;
+     // procedure SetConnection(const Value: TFDConnection);
+
+      //function GetQry: TFDQuery;
+      //procedure SetQry(const Value: TFDQuery);
       function GetEmex: ServiceSoap;
-      procedure SetSQl(const Value: TSQL);
       function GetSQl: TSQL;
 
       function ForClients: TStringList;
 
       /// <summary>
-      /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
+      /// FillFindByNumber - Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР° РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ pFindByNumber
       /// </summary>
       procedure FillFindByNumber(AClientID:LongInt; APparts: ArrayOfFindByNumber);
-      property Emex: ServiceSoap read GetEmex;
-    public
-      property Connection: TFDConnection read GetConnection write SetConnection;
-      property Qry: TFDQuery read GetQry write SetQry;
 
-      property SQl: TSQL read GetSQl write SetSQl;
+//      property Emex: ServiceSoap read GetEmex;
+    public
+      constructor Create(Value: TFDConnection); overload;
+      destructor Destroy; override;
+
+      //property Connection: TFDConnection read GetConnection write SetConnection;
+
+      property Emex: ServiceSoap read GetEmex;
+
+      //property Qry: TFDQuery read GetQry write SetQry;
+
+      property SQl: TSQL read GetSQl;
 
       /// <summary>
-      /// TestConnect - тестовый метод для проверки работоспособности сервисов emex.
+      /// TestConnect - С‚РµСЃС‚РѕРІС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїСЂРѕРІРµСЂРєРё СЂР°Р±РѕС‚РѕСЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё СЃРµСЂРІРёСЃРѕРІ emex.
       /// </summary>
-      /// <returns>Возвращает тестовую стоку с текущим временем</returns>
+      /// <returns>Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РµСЃС‚РѕРІСѓСЋ СЃС‚РѕРєСѓ СЃ С‚РµРєСѓС‰РёРј РІСЂРµРјРµРЅРµРј</returns>
       function TestConnect(): string;
 
       /// <summary>
-      /// getCustomer - описание клиента. Подготовка авторизационных данных (пользователь, пароль)
+      /// getCustomer - РѕРїРёСЃР°РЅРёРµ РєР»РёРµРЅС‚Р°. РџРѕРґРіРѕС‚РѕРІРєР° Р°РІС‚РѕСЂРёР·Р°С†РёРѕРЅРЅС‹С… РґР°РЅРЅС‹С… (РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ, РїР°СЂРѕР»СЊ)
       /// </summary>
-      /// <returns> объект Customer</returns>
+      /// <returns> РѕР±СЉРµРєС‚ Customer</returns>
       function getCustomer(AAccount: Integer): Customer;
 
-      /// <summary>Login - Авторизация </summary>
+      /// <summary>Login - РђРІС‚РѕСЂРёР·Р°С†РёСЏ </summary>
       function Login(AAccount: Integer): String;
 
-      /// <summary>FindByDetailNumber - поиск детали по номеру</summary>
+      /// <summary>FindByDetailNumber - РїРѕРёСЃРє РґРµС‚Р°Р»Рё РїРѕ РЅРѕРјРµСЂСѓ</summary>
       procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
   end;
 
@@ -72,27 +82,56 @@ uses
 
 
 { TEmex }
+constructor TEmex.Create(Value: TFDConnection);
+begin
+  logger.Info('TEmex.Create Begin');
+
+  if Assigned(Value) then
+    FConnection:= Value;
+
+  if not Assigned(FSQl) then
+    FSQl:=TSQl.Create(FConnection);
+
+  if not assigned(FQuery) then
+  begin
+    FQuery:= TFDQuery.Create(nil);
+    FQuery.Connection := FConnection;
+    FQuery.FetchOptions.RowsetSize := 1000000;
+    FQuery.Connection := FConnection;
+  end;
+
+  // РљРѕРґ СЏР·С‹РєР°, РЅР° РєРѕС‚РѕСЂРѕРј Р±СѓРґСѓС‚ РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РѕР± РѕС€РёР±РєР°С… - EN (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ) РёР»Рё RU
+  FLang := FSQl.GetSetting('EmexServiceSoapLang', 'EN');
+
+  FUrl := FSQl.GetSetting('EmexServiceSoapUrl');
+
+  if Trim(FUrl) = '' then
+  begin
+    raise Exception.Create('РќРµР·Р°РґР°РЅ Р°РґСЂРµСЃ Emex Service Soap! (EmexServiceSoapUrl)');
+  end;
+
+  logger.Info('TEmex.Create End');
+end;
 
 function TEmex.ForClients: TStringList;
 var i: Integer;
 begin
     result := TStringList.Create;
-    Qry.Close;
-    Qry.Open('Select distinct o.ClientID '+
-             '  from pAccrualAction p (nolock)'+
-             ' inner join tOrders o (nolock) on o.OrderID=p.ObjectID'+
-             ' where p.Spid = @@spid and p.Retval = 0  ', [], []);
-    Qry.First;
-    for I := 0 to qry.RecordCount - 1 do
+    FQuery.Close;
+    FQuery.Open('''
+              Select distinct o.ClientID
+               from pAccrualAction p with (nolock index=ao2)
+              inner join tOrders o with (nolock)
+                      on o.OrderID=p.ObjectID
+              where p.Spid = @@spid
+                and p.Retval = 0
+             ''', [], []);
+    FQuery.First;
+    for I := 0 to FQuery.RecordCount - 1 do
     begin
-      result.Add(qry.FieldByName('ClientID').AsString);
-      Qry.Next;
+      result.Add(FQuery.FieldByName('ClientID').AsString);
+      FQuery.Next;
     end;
-end;
-
-function TEmex.GetConnection: TFDConnection;
-begin
-  Result:= FConnection;
 end;
 
 function TEmex.getCustomer(AAccount: Integer): Customer;
@@ -101,26 +140,17 @@ begin
   logger.Info('TEmex.getCustomer begin');
   logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-    SuppliersID := Sql.GetSetting('SearchSuppliers', 0);
 
-    if SuppliersID = 0 then
-    begin
-      //данные для интеграции берем из справочника "Клиенты"
-      SQl.Open('Select s.emexUsername, s.emexPassword '+
-               '  from tClients c (nolock)            ' +
-               '  join tSuppliers  s (nolock)         ' +
-               '    on s.SuppliersID = c.SuppliersID  ' +
-               ' where c.ClientID = :ClientID',
-              ['ClientID'], [AAccount]);
-    end
-    else
-    begin
-      //данные для интеграции берем из настройки SearchSuppliers
-      SQl.Open('Select s.emexUsername, s.emexPassword '+
-               '  from tSuppliers  s (nolock)         ' +
-               ' where s.SuppliersID = :SuppliersID  ',
-              ['SuppliersID'], [SuppliersID]);
-    end;
+      //РґР°РЅРЅС‹Рµ РґР»СЏ РёРЅС‚РµРіСЂР°С†РёРё Р±РµСЂРµРј РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° "РљР»РёРµРЅС‚С‹"
+    SQl.Open('''
+             Select s.emexUsername, s.emexPassword
+               from tClients c with (nolock index=PK_tClients_ClientID)
+               join tSuppliers  s with (nolock)
+                 on s.SuppliersID = c.SuppliersID
+              where c.ClientID = :ClientID
+             ''',
+            ['ClientID'], [AAccount]);
+
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -133,48 +163,17 @@ end;
 
 function TEmex.GetEmex: ServiceSoap;
 begin
-  result:= GetServiceSoap();; //FEmex;
+  logger.Info('TEmex.GetEmex: ServiceSoap');
+
+  result:= GetServiceSoap(false, FUrl);
 end;
 
-function TEmex.GetQry: TFDQuery;
-begin
-  if not assigned(FQuery) then
-  begin
-    FQuery:= TFDQuery.Create(nil);
-    FQuery.Connection := FConnection;
-  end;
-
-  if not assigned(FQuery.Connection) then
-  begin
-    FQuery.Connection := FConnection;
-  end;
-
-  result:= FQuery;
-end;
 
 function TEmex.GetSQl: TSQL;
 begin
-  if not Assigned(FSQl) then
-    FSQl:=TSQl.Create(FConnection);
-
   Result :=FSQl;
 end;
 
-procedure TEmex.SetConnection(const Value: TFDConnection);
-begin
-  if Assigned(Value) then FConnection:= Value;
-end;
-
-
-procedure TEmex.SetQry(const Value: TFDQuery);
-begin
-  if Assigned(Value) then FQuery:= Value;
-end;
-
-procedure TEmex.SetSQl(const Value: TSQL);
-begin
-  if Assigned(Value) then FSQl := Value;
-end;
 
 function TEmex.TestConnect: string;
 begin
@@ -186,13 +185,13 @@ var c: Customer;
 begin
   Result:='';
   try
-    Emex.Login(getCustomer(AAccount));
+    c:=Emex.Login(getCustomer(AAccount));
     Result := c.ToString;
-
+    c.Destroy;
   except
     on E: Exception do
     begin
-      Result := 'Ошибка авторизации. Клиент [' + AAccount.ToString + ']' + #13#10 +
+      Result := 'РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё. РљР»РёРµРЅС‚ [' + AAccount.ToString + ']' + #13#10 +
                 E.Message;
     end;
   end;
@@ -205,7 +204,7 @@ var part: FindByNumber;
  ShowSubsts: Boolean;
 begin
   logger.Info('TEmex.MovementByOrderNumber Begin');
-  // Показывать аналоги в поиске
+  // РџРѕРєР°Р·С‹РІР°С‚СЊ Р°РЅР°Р»РѕРіРё РІ РїРѕРёСЃРєРµ
   ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
   logger.Info('TEmex.MovementByOrderNumber SearchPart begin');
@@ -215,6 +214,14 @@ begin
   FillFindByNumber(AClientID, parts);
 
   logger.Info('TEmex.MovementByOrderNumber End');
+end;
+
+destructor TEmex.Destroy;
+begin
+  inherited;
+
+  FreeAndNil(FQuery);
+  FreeAndNil(FSQl);
 end;
 
 procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumber);

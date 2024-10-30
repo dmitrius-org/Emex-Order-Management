@@ -44,7 +44,7 @@ uses
   LoginEditForm in '..\Common\Login\LoginEditForm.pas' {LoginEditF: TUniForm},
   InfoForm in '..\Common\InfoForm.pas' {Info: TUniForm},
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
-  uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
+  uEmexService_old in '..\Common\CommonApp\emexdwc\uEmexService_old.pas',
   uMainVar in '..\Common\uMainVar.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},

@@ -321,7 +321,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Grid.pas"/>
         <DCCReference Include="..\Common\Common\uSqlUtils.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Varriant.pas"/>
-        <DCCReference Include="..\Common\CommonApp\emexdwc\uEmexService.pas"/>
         <DCCReference Include="..\Common\CommonApp\uAuditUtils.pas"/>
         <DCCReference Include="..\Common\CommonApp\uError_T.pas">
             <Form>Error_T</Form>
@@ -504,6 +503,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
+        <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

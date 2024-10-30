@@ -1,15 +1,24 @@
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  0, 'State',    'Модель состояния',  1
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  0, 'Settings', 'Настройки системы', 2
 
+
+-- Настройки интеграции с emexdwc
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'emexdwc', 'Настройки интеграции с emexdwc', 4--, 'TSettingsT'
-insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select 3, 'CoeffMaxAgree', 'Максимальный коэффициент превышения цены продажи для клиента над ценой', 'Максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)', '1.1', 0
-insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select 3, 'AutomaticRejectionPartsByCreatOrder', 'Автоматический отказ деталей с ошибками при создании заказа', '', '1', 0
+
+declare @ID numeric(18, 0)
+select @ID = InstrumentID from tInstrument where brief = 'emexdwc'
+
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'CoeffMaxAgree', 'Максимальный коэффициент превышения цены продажи для клиента над ценой', 'Максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)', '1.1', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AutomaticRejectionPartsByCreatOrder', 'Автоматический отказ деталей с ошибками при создании заказа', '', '1', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'EmexServiceSoapUrl',  'Адресс для интеграции с EMEX', '', 'http://soap.emexdwc.ae:3000/service.asmx', 0
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'EmexServiceSoapLang', 'Код языка интеграции с EMEX', 'Код языка, на котором будут возвращаться сообщения об ошибках - EN (по умолчанию) или RU ', 'RU', 0
+
+
 
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID, ObjectTypeID) Select  1, 'Заказы',    'Заказы',  5, 3
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'Orders', 'Заказы', 4--, 'TSettingsT'
 
 
-go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'Orders'
 
@@ -17,37 +26,27 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'TemplateOrderRefusals', 'Шаблон Excel для экспорта отказов', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'UploadingRefusalsCatalog', 'Папка для сохранения файлов отказов', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'UploadingEmexRefusalsScript', 'Скрипт для выгрузки отказов для EMEX', '', '', 0
-insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'EmexdwcClient', 'Клиент для интеграции', '', '3', 0
+--insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'EmexdwcClient', 'Клиент для интеграции', '', '3', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrderAutoSetStatus', 'Автоматический перевод в Проверено при загрузке заказа', '', '1', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'GoogleProgrammableSearchEngineKey', 'Ключ для программируемой поисковой системы', '', '42f36a3f7fa7d4e09', 0
 
-go
-begin tran
+--begin tran
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'WebSocketMessage', 'Сервер сообщений WebSocket', 4--, 'TSettingsT'
 --commit tran
 
-begin tran
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'WebSocketMessage'
 
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'WebSocketAddress', 'Адрес сервера сообщений WebSocket', '', '', 0
 
 
-
-
-
-
-
-
 -- Настройки для клиентского приложения
-go
 declare @PID numeric(18, 0)
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  0, 'SettingsClientApp', 'Настройки для клиентского приложения', 2
 select @PID = InstrumentID from tInstrument where brief = 'SettingsClientApp'
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  @PID, 'ClientAppCommon', 'Общие настройки', 4--, 'TSettingsT'
 
 
-go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'ClientAppCommon'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'TemplateClientsShipments', 'Шаблон Excel для выгрузки информации по отгрузке', '', '', 0
@@ -69,13 +68,12 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'RedirectOnExit','Адрес для редиректа при выходе из приложения', '', 'www.booster.ae', 0
 --
-go
+
 declare @PID numeric(18, 0)
 select @PID = InstrumentID from tInstrument where brief = 'SettingsClientApp'
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  @PID, 'SMTP', 'Почтовый сервер для регистрации', 4--, 'TSettingsT'
 
 
-go
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'SMTP'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_Host', 'Host', '', 'smtp.yandex.ru', 0
@@ -86,15 +84,17 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_RegistrationLink', 'Registration link', 'Заголовок адреса для валидации регистрации', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_FromName', 'Имя отправителя', 'Имя отправителя', 'Boster.ae', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'SMTP_FromAlias','Почта отправителя', 'Почта отправителя', 'noreply@booster.ae', 0
-go
+
+
 Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'AppProfiles', 'Профили программы', 4--, 'TSettingsT'
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'AppProfiles'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'AppProfilesName', 'Наименование программы', '', 'Booster LLC', 0
+
 /*
 delete
   from tSettings 
- where brief in ('SMTP_FromName')
+ where brief in ('EmexdwcClient')
 */
 
 
@@ -102,4 +102,4 @@ select *
   from tInstrument (nolock)
 select *
   from tSettings (nolock)
-  where brief = 'SeaachSuppliers'
+  where brief = 'EmexServiceSoapLang'

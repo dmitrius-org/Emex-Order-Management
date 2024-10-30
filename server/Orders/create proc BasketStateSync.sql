@@ -80,8 +80,7 @@ as
 							  then p.Price / iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) * 100 - 100
 							  else 0
                             end 
-
-							
+						
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
@@ -90,6 +89,7 @@ as
  -- превышение цены
  Update o
     set o.Warning         = case
+                              when isnull(p.WarnText, '') <> '' then p.WarnText
 	                          when @CoeffMaxAgree < o.OverPricing then '+' + convert(varchar(128), o.OverPricing)
 							  else ''
 	                        end
@@ -152,6 +152,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20240515', '3'
+exec setOV 'BasketStateSync', 'P', '20241025', '3'
 go
  

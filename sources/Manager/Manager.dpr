@@ -14,6 +14,7 @@
 {$ENDIF}
   Manager;
 
+
 uses
   {$IFDEF UNIGUI_SERVICE}
   SvcMgr,
@@ -69,7 +70,6 @@ uses
   uUtils.Grid in '..\Common\Common\uUtils.Grid.pas',
   uSqlUtils in '..\Common\Common\uSqlUtils.pas',
   uUtils.Varriant in '..\Common\Common\uUtils.Varriant.pas',
-  uEmexService in '..\Common\CommonApp\emexdwc\uEmexService.pas',
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   uLookupF in '..\Common\CommonApp\uLookupF.pas' {LookupF: TUniForm},
@@ -114,7 +114,8 @@ uses
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
-  uUtils.Math in '..\Common\Common\uUtils.Math.pas';
+  uUtils.Math in '..\Common\Common\uUtils.Math.pas',
+  uServiceEmex in '..\Service\uServiceEmex.pas';
 
 {$R *.res}
 

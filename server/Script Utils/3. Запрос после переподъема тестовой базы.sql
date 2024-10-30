@@ -32,3 +32,9 @@ update tTaskProperties
 
 
 --select * from tUsersAuthorization
+
+
+Update tSettings
+set Val = 'http://soaptest.emexdwc.ae/service.asmx'
+where Brief = 'EmexServiceSoapUrl'
+

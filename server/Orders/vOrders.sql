@@ -68,11 +68,7 @@ SELECT o.[OrderID]
       ,o.[Income]
       ,o.[IncomePRC]
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
-      ,case 
-         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
-         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
-         else 0
-       end  [DeliveryRestTermSupplier]         -- Остаток срока до поступления поставщику	
+      ,o.[DeliveryRestTermSupplier]            -- Остаток срока до поступления поставщику	
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
       ,o.[DeliveredDateToSupplier]             -- Доставлена поставщику
       ,o.DeliveryDaysReserve           -- Дней запаса до вылета	
@@ -170,7 +166,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20241002', '13'
+exec setOV 'vOrders', 'V', '20241030', '14'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

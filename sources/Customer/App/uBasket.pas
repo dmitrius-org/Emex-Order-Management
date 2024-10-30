@@ -214,11 +214,10 @@ procedure TBasketF.PartPriceRefresh;
 var
   emex: TEmex;
 begin
-  emex := TEmex.Create;
+  ShowMask('');
+  UniSession.Synchronize;
   try
-    ShowMask('');
-    UniSession.Synchronize;
-    emex.Connection := UniMainModule.FDConnection;
+    emex := TEmex.Create(UniMainModule.FDConnection);
     emex.FindByDetailNumber(UniMainModule.AUserID, Query.FieldByName('DetailNum').AsString );
 
     PriceCalc;
@@ -232,27 +231,6 @@ begin
   end;
 end;
 
-//procedure TBasketF.QueryIsUpdatingGetText(Sender: TField; var Text: string;
-//  DisplayText: Boolean);
-//begin
-//  // иконка для выбора аналогов
-//  if Sender.Value > 0 then
-//  begin
-//    Text := '<form method="post" action="">' +
-//            '<span  data-qtip="Необходимо обновить цену">'+
-//            '<a>'+
-//            '<button type="button" onclick="setMakelogo()" class="x-btn x-unselectable x-btn-default-small x-border-box"> '+
-////            '<button type="button" onclick="setMakelogo()" style="border: 0; background: none;"> '+
-//            '  <i class="x-price-is-updating fa fa-exclamation-triangle fa-lg"></i>Обновить'+
-//            '</button>'+
-//            '</a>'+
-//            '</span>'+
-//            '</form>';
-//  end
-//  else
-//    Text := '';
-//end;
-
 procedure TBasketF.GetAgregateDate;
 begin
   RetVal.Clear;
@@ -262,7 +240,7 @@ begin
 
   edtOrderAmount.Text := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('Amount').Value);
   edtWeight.Text := Sql.Q.FieldByName('WeightKG').AsString;
-  edtCount.Text := Sql.Q.FieldByName('Cnt').AsString;
+  edtCount.Text  := Sql.Q.FieldByName('Cnt').AsString;
 end;
 
 procedure TBasketF.GridAfterLoad(Sender: TUniCustomDBGrid);
@@ -276,9 +254,6 @@ end;
 procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
- // Logger.Info('TBasketF.GridAjaxEvent: ' + EventName);
- // Logger.Info('TBasketF.GridAjaxEvent: ' + Params.text);
-
   if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
   begin
     Query.Post;
@@ -358,7 +333,7 @@ begin
   begin
     BM := FGrid.DataSource.DataSet.GetBookmark;
     try
-      //DeleteInDB;
+
       for I := 0 to FGrid.SelectedRows.Count - 1 do
       begin
         FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
@@ -379,8 +354,7 @@ begin
     end;
 
   end;
-//  else
-//    DeleteInDB;
+
 
   logger.Info('tMarks.Count: ' + Count.ToString);
   logger.Info('tMarks.Select End');

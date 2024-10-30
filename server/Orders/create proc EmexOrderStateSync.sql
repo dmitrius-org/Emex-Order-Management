@@ -29,6 +29,7 @@ Update p
                  and o.OrderDetailSubId = p.OrderDetailSubId
                  and p.OrderDetailSubId<> '' ) o 
 where p.Spid = @@SPID
+  and SUBSTRING(p.OrderDetailSubId, 1,1) = '!'
 
 --2. Статус и Количество совпадают
 Update p

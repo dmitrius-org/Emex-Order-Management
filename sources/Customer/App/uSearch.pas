@@ -326,12 +326,10 @@ var
   emex: TEmex;
 begin
   logger.Info('TSearchF.PartSearch Begin');
-  emex := TEmex.Create;
   ShowMask('Поиск...');
   UniSession.Synchronize();
   try
-
-    emex.Connection := UniMainModule.FDConnection;
+    emex := TEmex.Create(UniMainModule.FDConnection);
     emex.FindByDetailNumber(UniMainModule.AUserID, Trim(edtSearch.Text));
     logger.Info('TSearchF.PartSearch Получили данные с эмекс');
 

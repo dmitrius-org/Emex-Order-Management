@@ -37,11 +37,7 @@ SELECT o.[OrderID]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
-      ,case 
-         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
-         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
-         else 0
-       end  [DeliveryRestTermSupplier]         -- Остаток срока до поступления поставщику	
+      ,o.[DeliveryRestTermSupplier]    -- Остаток срока до поступления поставщику	
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
       ,o.DeliveredDateToSupplier               -- Доставлена поставщику
       ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
@@ -106,7 +102,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241023', '12'
+exec setOV 'vCustomerOrders', 'V', '20241030', '30'
 go
 
 select * from vCustomerOrders  where ClientID =31

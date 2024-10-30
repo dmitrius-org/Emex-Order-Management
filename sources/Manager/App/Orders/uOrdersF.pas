@@ -265,9 +265,8 @@ end;
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
-  Emex := TEmex.Create;
+  Emex := TEmex.Create(FConnection);
   try
-    Emex.Connection := FConnection;
     Emex.FindByDetailNumber(FClientID, FDetailNumber);
 
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
@@ -375,10 +374,11 @@ begin
         begin
             var Emex:TEmex;
 
-            Emex := TEmex.Create;
+            Emex := TEmex.Create(UniMainModule.FDConnection);
             try
-              Emex.Connection := UniMainModule.FDConnection;
               RetVal.Code := Emex.DeleteFromBasketByOrderID(FID);
+
+              if RetVal.Code = 1 then  RetVal.Clear;
 
               Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
             finally

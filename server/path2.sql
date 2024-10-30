@@ -13,5 +13,31 @@
 --go
 
 
-ALTER TABLE tBasket add Comment2                        varchar(512)   -- Комментарий клиента
-ALTER TABLE tOrders add Comment2                        varchar(512)   -- Комментарий клиента
+Update o
+   set o.DeliveryRestTermSupplier =       case 
+         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
+         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
+         else 0
+       end 
+  from tOrders o (nolock)
+ where isnull(o.isCancel, 0) = 0
+
+
+
+Update o
+   set o.DeliveryRestTermSupplier = o.DeliveryTerm - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки 
+  from tOrders o (nolock)
+ inner join tNodes n (nolock)
+         on n.NodeID = o.StatusID
+        and n.Flag&8>0 
+
+
+tClients
+tSuppliers
+
+select *
+from tNodes n (nolock)
+where n.Flag&8>0 
+  
+
+exec OrdersSupplierDeliveryTermRecalc

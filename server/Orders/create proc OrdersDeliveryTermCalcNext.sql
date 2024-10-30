@@ -30,22 +30,15 @@ SET DATEFIRST 1 ;
 declare @r int = 0
 
 Update p
-   set p.ClientID                   = o.ClientID
-      ,p.ProfilesDeliveryID         = o.ProfilesDeliveryID	  
+   set p.ClientID                  = o.ClientID
+      ,p.ProfilesDeliveryID        = o.ProfilesDeliveryID	  
 	  ,p.DeliveryNextDate          = coalesce(o.DeliveryNextDate2, o.DeliveryNextDate) --, cast(GetDate() as date)
-	  ,p.DeliveryPlanDateSupplier  = --coalesce(o.DeliveredDateToSupplier, -- Доставлена поставщику
-                                               o.DeliveryPlanDateSupplier
-                                               --)
+	  ,p.DeliveryPlanDateSupplier  = o.DeliveryPlanDateSupplier-- Доставлена поставщику
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
 		and coalesce(o.DeliveryNextDate2, o.DeliveryNextDate, getdate()) < GetDate()
         and isnull(o.Invoice, '') = '' --+Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, если у детали статус сменился на “Отгружена” (дополнительно проговорили по телефону, разобрались). Ставим дату которую получаем по API
-        --and isnull(o.StatusID, 0) not in (8  -- Send
-        --                                 ,12 -- InCancel 
-        --                                 ,24 -- Received Получено
-        --                                 ,26 -- IssuedClient Выдано клиенту
-     	  --                               )
   left join tSupplierDeliveryProfiles pd (nolock)
          on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
  where p.Spid = @@Spid
@@ -84,13 +77,9 @@ update p
 									   else datediff(dd, p.DeliveryNextDate, GetDate()) 
 		                             end
    from pDeliveryTerm p (updlock)
-  --inner join tOrders o (updlock)
-  --        on o.OrderID=p.OrderID 
   where p.Spid = @@spid
 
 
-
---Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, если у детали статус сменился на “Отгружена” (дополнительно проговорили по телефону, разобрались). Ставим дату которую получаем по API
 Update s 
    set s.DeliveryNextDate  = o.OperDate
       ,s.DeliveryNextDate2 = o.OperDate
@@ -114,8 +103,9 @@ where s.Spid = @@SPID
 
 if @IsSave = 1
     update o
-       set o.DeliveryNextDate2    = p.DeliveryNextDate2
-		  ,o.DeliveryDaysReserve2 = p.DeliveryDaysReserve
+       set o.DeliveryNextDate2        = p.DeliveryNextDate2   -- Следующая ближайшая дата вылета
+		  ,o.DeliveryDaysReserve2     = p.DeliveryDaysReserve -- Дней запаса до вылета
+          ,o.DeliveryRestTermSupplier = p.DeliveryTerm  - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки поставщику
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 

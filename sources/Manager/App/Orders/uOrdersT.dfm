@@ -61,30 +61,6 @@ object OrdersT: TOrdersT
           '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
-          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
-          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
-          'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
-          'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
-          'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
-          'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
-          't.body.removeChild(el);'#13#10'    };'#13#10'    '#13#10'    // '#1079#1072#1082#1088#1077#1087#1083#1077#1085#1080#1077' '#1089#1090#1086#1083#1073#1094 +
-          #1086#1074#13#10'        /*'#13#10'    config.enableLocking = true;'#13#10#13#10'    Ext.defi' +
-          'ne('#39'Ext.overrides.selection.CheckboxModel'#39', {'#13#10'        override:' +
-          ' '#39'Ext.selection.CheckboxModel'#39','#13#10#13#10'        hasLockedHeader: func' +
-          'tion() {'#13#10'            return this.callParent(arguments) || this.' +
-          'view.ownerGrid.lockable;'#13#10'        },'#13#10'        onReconfigure: fun' +
-          'ction(grid, store, columns) {'#13#10'            if (columns && grid.l' +
-          'ockable) {'#13#10'                grid.lock(this.column, 0);'#13#10'        ' +
-          '        grid.view.refreshView();'#13#10'                return;'#13#10'     ' +
-          '       }'#13#10'            return this.callParent(arguments);'#13#10'      ' +
-          '  }'#13#10'    }); '#13#10'    '#13#10'    function reconfigure(sender, store, col' +
-          'umns, oldStore, oldColumns, eOpts)'#13#10'    {'#13#10'        columns.forEa' +
-          'ch(function(col){'#13#10'            col.lockable=false'#13#10'        });'#13#10 +
-          '    }'#13#10'    */     '#13#10'}'#13#10#13#10
-        
-          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}'
-        
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
           'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(9).hide();'#13#10'  tool' +
           'bar.items.getAt(10).hide();'#13#10'  '#13#10'  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' ' +
@@ -93,7 +69,18 @@ object OrdersT: TOrdersT
           #10'       {xtype: '#39'button'#39', text: '#39#39', tooltip : '#39#1054#1087#1080#1089#1072#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1086#1074 +
           ' '#1079#1072#1082#1072#1079#1086#1074#39', handler: function() {'#13#10'          ajaxRequest(sender, ' +
           '"btnStatusFormShow", {})'#13#10'       }}'#13#10'     );'#13#10'     toolbar.expor' +
-          'tBtn.setIconCls('#39'StatusIcons'#39');// icon...'#13#10'  }  '#13#10'}')
+          'tBtn.setIconCls('#39'StatusIcons'#39');// icon...'#13#10'  }  '#13#10'}'
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+          'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
+          'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
+          'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
+          'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
+          't.body.removeChild(el);'#13#10'    };'#13#10'}'#13#10#13#10
+        
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
@@ -108,7 +95,9 @@ object OrdersT: TOrdersT
       LoadMask.Target = Owner
       LoadMask.Color = 13421772
       Images = UniImageList
-      EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EmptyText = 
+        '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+        '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
       LayoutConfig.ComponentCls = 'grid-order'
       BorderStyle = ubsNone
       Align = alClient
@@ -417,6 +406,8 @@ object OrdersT: TOrdersT
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
+          ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'DeliveryRestTermSupplier'
@@ -435,7 +426,7 @@ object OrdersT: TOrdersT
           Title.Caption = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Width = 100
           ReadOnly = True
-          Hint = #1044#1086#1089#1090#1072#1074#1083#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+          Hint = #1044#1072#1090#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
           Sortable = True
         end
         item
@@ -521,6 +512,9 @@ object OrdersT: TOrdersT
           Title.Caption = #1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077
           Width = 188
           ReadOnly = True
+          Hint = 
+            '<div style='#39'text-align: center;'#39'><i class='#39'fas fa-question'#39'></i>' +
+            ' '#1058#1077#1082#1089#1090#1086#1074#1086#1077' '#1087#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077' '#1086' '#1087#1088#1086#1073#1083#1077#1084#1072#1093' '#1089' '#1087#1086#1079#1080#1094#1080#1077#1081'</div>'
           Sortable = True
         end
         item
@@ -1810,9 +1804,7 @@ object OrdersT: TOrdersT
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
     ModifySQL.Strings = (
-      'select OrderID  '
-      '  from vOrders (nolock)'
-      ' WHERE OrderID  = :OLD_OrderID')
+      'select :OLD_OrderID as OrderID  ')
     DeleteSQL.Strings = (
       'DELETE FROM tOrders WHERE OrderID = :OLD_OrderID')
     FetchRowSQL.Strings = (

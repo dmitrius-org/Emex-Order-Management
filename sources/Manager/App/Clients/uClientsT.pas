@@ -76,6 +76,9 @@ type
     actBalanceTotal: TAction;
     tbBalanceTotal: TUniToolButton;
     N11: TUniMenuItem;
+    actClientAuthorizationClear: TAction;
+    N12: TUniMenuItem;
+    N13: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -94,6 +97,7 @@ type
     procedure GridColumnFilter(Sender: TUniDBGrid;
       const Column: TUniDBGridColumn; const Value: Variant);
     procedure actBalanceTotalExecute(Sender: TObject);
+    procedure actClientAuthorizationClearExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -110,7 +114,8 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF, uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper;
+  MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF,
+  uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper, uToast;
 
 {$R *.dfm}
 
@@ -139,6 +144,13 @@ begin
   //Баланс и Отгрузки
   BalanceTotalT_W.ClientID:=QueryClientID.AsInteger;
   BalanceTotalT_W.ShowModal();
+end;
+
+procedure TClientsT.actClientAuthorizationClearExecute(Sender: TObject);
+begin
+  sql.Exec('exec ClientAuthorizationClear @ClientID = :ClientID', ['ClientID'], [QueryClientID.AsInteger]);
+
+  ToastOK('Выполнено', UniSession);
 end;
 
 procedure TClientsT.actClientTypeExecute(Sender: TObject);

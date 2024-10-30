@@ -20,7 +20,7 @@ Update o
 	  ,o.DaysInWork                = 0
   from tOrders o (nolock)
 
-   outer apply (select top 1 
+ outer apply (  select top 1 
                        pc.DeliveryTermCustomer
                   from tProfilesCustomer pc with (nolock index=ao2)
                  --inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
@@ -33,7 +33,6 @@ Update o
  where o.DeliveryTermToCustomer is null
 
 
-
 Update o
    set o.DaysInWork = DATEDIFF(dd, o.OrderDate, getdate())  --Дней в работе
       ,o.DeliveryRestToCustomer    = o.DeliveryTermToCustomer - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки клиенту
@@ -44,9 +43,7 @@ Update o
  where isnull(o.isCancel, 0) = 0
    and o.DeliveryTermToCustomer is not null
 
-   
-
-
+  
  exit_:
 
  return @r
@@ -56,3 +53,4 @@ go
 exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20241011', '1'
 go
   
+

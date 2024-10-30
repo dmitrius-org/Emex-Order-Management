@@ -92,7 +92,6 @@ object ClientsT: TClientsT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 1065
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -112,7 +111,6 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 1065
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -215,7 +213,6 @@ object ClientsT: TClientsT
         Action = actBalanceTotal
         ImageIndex = 8
         TabOrder = 10
-        ExplicitTop = 0
       end
     end
   end
@@ -238,7 +235,6 @@ object ClientsT: TClientsT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
-    ExplicitWidth = 1065
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -2112,6 +2108,10 @@ object ClientsT: TClientsT
       ImageIndex = 8
       OnExecute = actBalanceTotalExecute
     end
+    object actClientAuthorizationClear: TAction
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1089#1095#1077#1090#1095#1080#1082' '#1085#1077#1074#1077#1088#1085#1099#1093' '#1087#1086#1087#1099#1090#1086#1082' '#1074#1074#1086#1076#1072' '#1087#1072#1088#1086#1083#1103' '
+      OnExecute = actClientAuthorizationClearExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -2145,6 +2145,12 @@ object ClientsT: TClientsT
       Action = actBalanceTotal
     end
     object N10: TUniMenuItem
+      Caption = '-'
+    end
+    object N13: TUniMenuItem
+      Action = actClientAuthorizationClear
+    end
+    object N12: TUniMenuItem
       Caption = '-'
     end
     object N6: TUniMenuItem

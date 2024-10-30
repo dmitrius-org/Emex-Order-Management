@@ -16,7 +16,7 @@ type
   TMyFuncType = function(): integer of object;
   TProcExec = class
   private
-    Emex:TEmex;
+    Emex: TEmex;
   published
     /// <summary>
     /// InsertPartToBasketByPartFromMark - Помещение запчастей в корзину на основе меток tMarks
@@ -123,16 +123,30 @@ uses
 procedure TProcExec.Call(MethodName: string);
 var m: TMethod;
 begin
-  m.Code := Self.MethodAddress(MethodName); //find method code
-  m.Data := pointer(Self); //store pointer to object instance
-  //Result := TMyFuncType(m)(a, b);
-  TMyFuncType(m);
+
+
+  try
+     m.Code := Self.MethodAddress(MethodName); //find method code
+     m.Data := pointer(Self); //store pointer to object instance
+     //Result := TMyFuncType(m)(a, b);
+     TMyFuncType(m);
+  except
+    on E : exception do
+       // MessageDlg('Caught an OS error with code: ' + (Ex.Message), mtError, [mbOK], 0);
+//           raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
+
+     Emex.SQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid',
+                  ['Message'],[e.Message]);
+  end;
+
+
 end;
 
 constructor TProcExec.Create(Value: TFDConnection);
 begin
-  Emex := TEmex.Create;
-  Emex.Connection := Value;
+  logger.Info('TProcExec.Create Begin');
+  Emex := TEmex.Create(Value);
+  logger.Info('TProcExec.Create Begin');
 end;
 
 destructor TProcExec.Destroy;
@@ -161,14 +175,13 @@ end;
 
 procedure TProcExec.EmexOrderStateSync;
 begin
-  Emex.Connection.ExecSQL('''
-       delete pAccrualAction
-         from pAccrualAction (rowlock)
-        where spid = @@Spid
+  Emex.SQl.Exec('''
+       delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
     ''');
 
-  Emex.Connection.ExecSQL('''
-       insert pAccrualAction (Spid, ObjectID, StateID, Retval)
+  Emex.SQl.Exec('''
+       insert pAccrualAction with (rowlock)
+             (Spid, ObjectID, StateID, Retval)
        Select @@Spid, OrderID, StatusID, 0
          from vOrderStateSyncByOrderNum
     ''');
@@ -187,7 +200,7 @@ begin
   begin
     Emex.GetBasketDetailsByMarks;
 
-    Emex.Qry.ExecSQL('exec BasketStateSync select 0', [],[]);
+    Emex.SQl.Exec('exec BasketStateSync select 0');
 
     // Удаление деталей из корзины которые не смогли смапить с заказами на нашей стороне
     Emex.InsertPartToBasketCancel();
@@ -468,15 +481,13 @@ var
   qActionMetod: TFDQuery;
   qMetod: TFDQuery;
 begin
- // inherited;
-  if not Assigned(qMetod) then qMetod := TFDQuery.Create(nil);
 
+  if not Assigned(qMetod) then qMetod := TFDQuery.Create(nil);
   if not Assigned(qActionMetod) then qActionMetod := TFDQuery.Create(nil);
 
   try
       qMetod.Connection := FAccrual.FConnection;
 
-   // try
       qActionMetod.Connection := FAccrual.FConnection;
       qActionMetod.Close;
       qActionMetod.Open('Select distinct ord, ActionID, StateID from pAccrualAction (nolock) where spid = @@spid and retval = 0 order by ord', [], []);
@@ -524,10 +535,6 @@ begin
 
         qActionMetod.Next;
       end;
-  //  finally
-    //  FreeAndNil(qActionMetod);
-      logger.Info('TAccrualThread.Execute ActionMetod End');
-   // end;
 
       // Добавление протокола
       begin

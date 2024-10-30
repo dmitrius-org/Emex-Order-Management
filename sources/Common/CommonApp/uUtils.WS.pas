@@ -2,7 +2,7 @@
 
 interface
 
-uses System.SysUtils, System.Generics.Collections, uniGUIJSUtils; //uniStrUtils
+uses System.SysUtils, System.Generics.Collections, uniGUIJSUtils;
 
 type
 
@@ -49,6 +49,8 @@ uses
 { tMessenger }
 
 constructor tWS.Create(const Args: string);
+// Args
+// manager:56
 begin
 
   if not Assigned(FEventForm) then
@@ -61,14 +63,18 @@ begin
     UniSession.AddJS(
     format(
     '''
-
       var WebSockets;
+
       if (!WebSockets) {
-        WebSockets = new WebSocket("%s");
+        var url = '%s';
+        if (url) {
+          WebSockets = new WebSocket(url);
+        }
       }
 
       // Обработчик при открытии соединения
       WebSockets.onopen = function(event) {
+        //manager:56
         console.log("Connection opened!");
 
         WebSockets.send('%s');
@@ -132,9 +138,8 @@ begin
 
         //  получения сообщений
         WebSockets.onmessage = function(event) {
-         console.log("FormRegister");
-         console.log("Message received: " + event.data);
-
+          console.log("FormRegister");
+          console.log("Message received: " + event.data);
      '''
      +  ObjMessage +
      '''
@@ -154,13 +159,9 @@ begin
     UniSession.AddJS(
     '''
       if (WebSockets) {
-
         //  получения сообщений
         WebSockets.onmessage = function(event) {
-          console.log("FormUnRegister");
-
           console.log("Message received: " + event.data);
-
      '''
      +  ObjMessage +
      '''
@@ -190,6 +191,8 @@ begin
   if FWSAddress <> '' then
   begin
     UniSession.AddJS(
+
+
       'if (WebSockets) {' +
       '  if (WebSockets && WebSockets.readyState === WebSocket.OPEN) {' +
       '    WebSockets.send("' + Args + '");' +

@@ -93,7 +93,8 @@ INSERT INTO [tOrders]
       ,Fragile
       ,PercentSupped
       ,Comment2
-	  ,ID)	  
+	  ,ID)	 
+       --                         o.OrderID                    p.ID
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
   INTO @ID (OrderID, ParentID, StateID, ID)
 select o.ClientID

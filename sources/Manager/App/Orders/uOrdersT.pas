@@ -1258,8 +1258,6 @@ procedure TOrdersT.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
 begin
   if (Query.FieldByName('Flag').AsInteger and 1) = 1 then // 1 - Превышение цены
   begin
-    //Attribs.Font.Color:=clMaroon;
-    //Attribs.Font.Style:=[fsBold, fsItalic];
     Attribs.Color:= rgb(255, 207, 217);
   end
   else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then // 2 - Нет цены

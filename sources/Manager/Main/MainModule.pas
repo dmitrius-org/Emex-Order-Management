@@ -41,21 +41,22 @@ type
     procedure AppVersion();
   public
     { Public declarations }
+
     /// <summary> AUserName - логин пользователя </summary>
     AUserName: string;
+    /// <summary> AUserID - ИД пользователя </summary>
     AUserID : Integer;
-    /// <summary> ASql -  </summary>
+    /// <summary> ASql -  Объект для выполнения sql запросов  </summary>
     ASql     : TSql;
-    /// <summary> ARetVal -  </summary>
+    /// <summary> ARetVal - Объект для обработки ошибок </summary>
     ARetVal  : TRetVal;
-    /// <summary> AAudit -  </summary>
+    /// <summary> AAudit - объект для аудита </summary>
     AAudit   : TAudit;
-    /// <summary> AGrant -  </summary>
+    /// <summary> AGrant - Объект для хранения прав доступа на систему </summary>
     AGrant: TGrant;
-
+    /// <summary> ASPID - Идентификатор сессии подключения к БД </summary>
     ASPID: Integer;
-
-     /// <summary> WS - WebSocket </summary>
+    /// <summary> WS - Объект WebSocket </summary>
     WS:  tWS;
 
     const _loginname = '_loginname';
@@ -143,7 +144,7 @@ begin
         begin
           if not ABefore then
           begin
-           raise Exception.Create('Имя пользователя или пароль неверны!'{+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
+            raise Exception.Create('Имя пользователя или пароль неверны!'{+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
           end
         end;
         ekUserPwdExpired:

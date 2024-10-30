@@ -98,7 +98,8 @@ if @IsSave = 1
        set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier 
           ,o.DeliveryNextDate         = p.DeliveryNextDate            -- Ближайшая дата вылета
 		  ,o.DeliveryDaysReserve      = p.DeliveryDaysReserve         -- Дней запаса до вылета
-		  ,o.DeliveryTerm             = iif(o.Flag&16>0, o.DeliveryTerm, p.DeliveryTerm) -- срок доставки
+		  ,o.DeliveryTerm             = p.DeliveryTerm                -- срок доставки
+          ,o.DeliveryRestTermSupplier = p.DeliveryTerm  - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки 
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 

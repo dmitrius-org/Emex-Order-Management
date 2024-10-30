@@ -171,7 +171,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uAuditUtils.pas"/>
-        <DCCReference Include="..\Common\CommonApp\emexdwc\uEmexService.pas"/>
+        <DCCReference Include="..\Common\CommonApp\emexdwc\uEmexService_old.pas"/>
         <DCCReference Include="..\Common\uMainVar.pas"/>
         <DCCReference Include="..\Common\CommonApp\uError_T.pas">
             <Form>Error_T</Form>
