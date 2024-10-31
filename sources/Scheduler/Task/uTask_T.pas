@@ -10,7 +10,8 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
   Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList, uniGUIBaseClasses,
   uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid, uniDBGrid,
-  uniToolBar, uniPanel, uTaskUtils, System.ImageList, Vcl.ImgList;
+  uniToolBar, uniPanel, uTaskUtils, System.ImageList, Vcl.ImgList,
+  uniGUIApplication;
 
 type
   TTask_T = class(TUniFrame)
@@ -21,9 +22,9 @@ type
     UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
-    GridUsers: TUniDBGrid;
-    Query: TFDQuery;
-    DataSource: TDataSource;
+    GridTasks: TUniDBGrid;
+    qTask: TFDQuery;
+    dsTask: TDataSource;
     ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
@@ -40,26 +41,34 @@ type
     N6: TUniMenuItem;
     ImageList16: TUniImageList;
     FDUpdateSQL: TFDUpdateSQL;
-    QueryTaskID: TFMTBCDField;
-    QueryBrief: TWideStringField;
-    QueryName: TWideStringField;
-    QueryDateBegin: TSQLTimeStampField;
-    QueryDateExec: TSQLTimeStampField;
-    QueryinDatetime: TSQLTimeStampField;
-    QueryupdDatetime: TSQLTimeStampField;
-    QueryIsActive: TBooleanField;
+    qTaskTaskID: TFMTBCDField;
+    qTaskBrief: TWideStringField;
+    qTaskName: TWideStringField;
+    qTaskDateBegin: TSQLTimeStampField;
+    qTaskDateExec: TSQLTimeStampField;
+    qTaskinDatetime: TSQLTimeStampField;
+    qTaskupdDatetime: TSQLTimeStampField;
+    qTaskIsActive: TBooleanField;
     actDateExecClear: TAction;
     tbActive: TUniToolButton;
     actTaskActive: TAction;
-    N8: TUniMenuItem;
-    N9: TUniMenuItem;
     N7: TUniMenuItem;
     N10: TUniMenuItem;
     UniToolButton5: TUniToolButton;
-    QueryMessage: TWideStringField;
+    qTaskMessage: TWideStringField;
+    qTDetail: TFDQuery;
+    FMTBCDField1: TFMTBCDField;
+    SQLTimeStampField3: TSQLTimeStampField;
+    dsTDetail: TDataSource;
+    GridDetail: TUniDBGrid;
+    pnlCommon: TUniContainerPanel;
+    pnlTask: TUniContainerPanel;
+    pnlTaskDetail: TUniContainerPanel;
+    qTDetailComment: TStringField;
+    qTDetailFlag: TIntegerField;
+    qTaskFlag: TIntegerField;
     procedure actAddExecute(Sender: TObject);
-    procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
-      Y: Integer);
+    procedure GridTasksCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actEditExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure actViewExecute(Sender: TObject);
@@ -67,10 +76,13 @@ type
     procedure UniFrameCreate(Sender: TObject);
     procedure actDateExecClearExecute(Sender: TObject);
     procedure actTaskActiveExecute(Sender: TObject);
-    procedure GridUsersKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure GridTasksKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameReady(Sender: TObject);
     procedure PopupMenuPopup(Sender: TObject);
+    procedure GridDetailKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure qTaskFlagGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
 
@@ -82,11 +94,17 @@ type
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
 
     procedure DataRefresh();
+    procedure DataDetailRefresh();
 
-    procedure SetTaskEnabledStatus();
+    procedure SetTaskEnabledStatus(); overload;
+    //procedure SetTaskEnabledStatus(AIsEnabled: boolean); overload;
+
+
+    procedure SetTaskEnabledLabel();
   public
     { Public declarations }
-
+    procedure TaskProcessing(ATaskID: Integer);
+    procedure SetTaskEnabledStatus(AIsEnabled: boolean); overload;
   end;
 
 implementation
@@ -105,29 +123,29 @@ end;
 procedure TTask_T.actDateExecClearExecute(Sender: TObject);
 var sqltext: string;
 begin
-  sqltext :=' declare @R      int                 '+
-            '                                     '+
-            ' exec @r = TaskExecuteClear          '+
-            '             @TaskID    = :TaskID    '+
-            '                                     '+
-            ' select @r as retcode                '+
-            ' ';
-  Sql.Open(sqltext,
-           ['TaskID'], [QueryTaskID.AsInteger]);
-  Query.Edit; Query.Post;
+  sqltext :='''
+             declare @R      int
+
+             exec @r = TaskExecuteClear @TaskID    = :TaskID
+
+             select @r as retcode
+            ''';
+  Sql.Open(sqltext, ['TaskID'], [qTaskTaskID.AsInteger]);
+  qTask.Edit;
+  qTask.Post;
 end;
 
 procedure TTask_T.actDeleteExecute(Sender: TObject);
 begin
   Task_F.FormAction := TFormAction.acDelete;
-  Task_F.ID:=QueryTaskID.AsInteger;
+  Task_F.ID:=qTaskTaskID.AsInteger;
   Task_F.ShowModal(UserFCallBack);
 end;
 
 procedure TTask_T.actEditExecute(Sender: TObject);
 begin
   Task_F.FormAction := TFormAction.acUpdate;
-  Task_F.ID:=QueryTaskID.AsInteger;
+  Task_F.ID:=qTaskTaskID.AsInteger;
   Task_F.ShowModal(UserFCallBack);
 end;
 
@@ -148,35 +166,56 @@ begin
     Audit.Add(TObjectType.otTask, 0, acOff, 'Выключение планировщика');
 
   SetTaskEnabledStatus;
+
+  BroadcastMessage('TaskEnabled',
+                  ['Enabled', IsActive],
+                  [boIgnoreCurrentSession]); //  boClientOnly
 end;
 
 procedure TTask_T.actViewExecute(Sender: TObject);
 begin
   Task_F.FormAction := TFormAction.acShow;
-  Task_F.ID:=QueryTaskID.AsInteger;
+  Task_F.ID:=qTaskTaskID.AsInteger;
   Task_F.ShowModal(UserFCallBack);
+end;
+
+procedure TTask_T.DataDetailRefresh;
+begin
+  qTDetail.Close;
+  qTDetail.Open();
 end;
 
 procedure TTask_T.DataRefresh;
 begin
-  Query.Close;
-  Query.Open();
+  qTask.Close;
+  qTask.Open();
 end;
 
-procedure TTask_T.GridUsersCellContextClick(Column: TUniDBGridColumn; X,
-  Y: Integer);
-begin
-  PopupMenu.Popup(x, y, GridUsers);
-end;
-
-procedure TTask_T.GridUsersKeyDown(Sender: TObject; var Key: Word;
+procedure TTask_T.GridDetailKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
   begin
     if (Sender is Tunidbgrid) then
     begin
-      GridUsers.JSInterface.JSCall('copyToClipboard', []);
+      GridDetail.JSInterface.JSCall('copyToClipboard', []);
+    end;
+  end;
+end;
+
+procedure TTask_T.GridTasksCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
+begin
+  PopupMenu.Popup(x, y, GridTasks);
+end;
+
+procedure TTask_T.GridTasksKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (CHAR(KEY)='C') AND (SHIFT=[SSCTRL]) then
+  begin
+    if (Sender is Tunidbgrid) then
+    begin
+      GridTasks.JSInterface.JSCall('copyToClipboard', []);
     end;
   end;
 end;
@@ -186,14 +225,19 @@ begin
   SetTaskEnabledStatus;
 end;
 
-procedure TTask_T.SetTaskEnabledStatus;
+procedure TTask_T.qTaskFlagGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
 begin
-	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
+  if (Sender.AsInteger and 1 > 0) then
+  begin
+    Text := '<div class="task-works fa-pulse"></div>'; //&nbsp;
+  end
+  else
+    Text := '';
+end;
 
-  Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
-
-  IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
-
+procedure TTask_T.SetTaskEnabledLabel();
+begin
   if IsActive then
   begin
     actTaskActive.Caption:= 'Выполнение задач включено';
@@ -204,8 +248,57 @@ begin
     actTaskActive.Caption:= 'Выполнение задач выключено';
     actTaskActive.ImageIndex := 4;
   end;
+end;
+
+procedure TTask_T.SetTaskEnabledStatus(AIsEnabled: boolean);
+begin
+	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
+
+  IsActive := AIsEnabled;
+
+  SetTaskEnabledLabel();
 
   logger.Info('TTask_T.SetTaskEnabledStatus End');
+end;
+
+procedure TTask_T.SetTaskEnabledStatus;
+begin
+	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
+
+  Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
+
+  IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
+
+  SetTaskEnabledLabel();
+
+  logger.Info('TTask_T.SetTaskEnabledStatus End');
+end;
+
+procedure TTask_T.TaskProcessing(ATaskID: Integer);
+var Key: Integer;
+    BM : TBookmark;
+begin
+  logger.Info('TTask_T.TaskProcessing Begin');
+
+  qTask.DisableControls;
+  BM := qTask.GetBookmark;
+ // try
+      if qTask.Locate('TaskID', Key, [loCaseInsensitive, loPartialKey]) then
+      begin
+        qTask.RefreshRecord(True) ;
+        GridTasks.RefreshCurrentRow();
+
+       // UniSession.Synchronize;
+      end;
+ // finally // внутри finally не работает  :(
+    qTask.GotoBookmark(BM);
+    qTask.FreeBookmark(BM);
+    qTask.EnableControls;
+
+
+ // end;
+
+  logger.Info('TTask_T.TaskProcessing End');
 end;
 
 procedure TTask_T.UniFrameCreate(Sender: TObject);
@@ -216,6 +309,7 @@ begin
   Grant.SetGrant(self, ActionList);
 
   DataRefresh;
+  DataDetailRefresh;
 end;
 
 procedure TTask_T.UniFrameReady(Sender: TObject);
@@ -229,16 +323,16 @@ begin
 
   if Task_F.FormAction = acInsert then
   begin
-    Query.Refresh();
+    qTask.Refresh();
   end;
   if Task_F.FormAction = acUpdate then
   begin
-    Query.Edit ;
-    Query.Post;
+    qTask.Edit ;
+    qTask.Post;
   end;
   if Task_F.FormAction = acDelete then
   begin
-    Query.Refresh();
+    qTask.Refresh();
   end;
 end;
 

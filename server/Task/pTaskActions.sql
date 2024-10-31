@@ -27,7 +27,7 @@ create index ao2 on pTaskActions(Spid);
 go
 grant all on pTaskActions to public;
 go
-exec setOV 'pTaskActions', 'U', '20240307', '1';
+exec setOV 'pTaskActions', 'U', '20240307', '2';
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pTaskActions', @desc = 'Действия для задачи';

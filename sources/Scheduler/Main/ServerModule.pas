@@ -33,6 +33,9 @@ type
       var AException: Exception);
     procedure UniGUIServerModuleException(Sender: TUniGUIMainModule;
       AException: Exception; var Handled: Boolean);
+    procedure UniGUIServerModuleControlPanelLogin(ASession: TUniGUISession;
+      const AUser, APassword: string; var LoginValid: Boolean;
+      LoginAttempt: Integer);
   private
     { Private declarations }
 
@@ -155,6 +158,16 @@ begin
   Logger.AddLog('TUniServerModule.TaskEnabled', 'End');
 end;
 
+procedure TUniServerModule.UniGUIServerModuleControlPanelLogin(
+  ASession: TUniGUISession; const AUser, APassword: string;
+  var LoginValid: Boolean; LoginAttempt: Integer);
+begin
+ Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', AUser);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin APassword', AUser);
+   Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginValid.ToString());
+      Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginAttempt.ToString);
+end;
+
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
@@ -211,6 +224,13 @@ begin
     //Logger.AddLog('TUniServerModule.UniThreadTimerTimer');
     if MTask.IsActive then
       MTask.Execute;
+
+
+//            BroadcastMessage('TaskProgress',
+//                            [
+//                             'TaskID', 6
+//                            ],
+//                            []); //boIgnoreCurrentSession
   except
     on E: Exception do
       Logger.AddLog('TUniServerModule.UniThreadTimerTimer Exception', E.Message);

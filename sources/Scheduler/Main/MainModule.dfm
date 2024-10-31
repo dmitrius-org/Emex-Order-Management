@@ -9,6 +9,7 @@ object UniMainModule: TUniMainModule
   BrowserOptions = [boDisableMouseRightClick, boDisableChromeRefresh]
   MonitoredKeys.Keys = <>
   EnableSynchronousOperations = True
+  WebSocketConnection.Enabled = True
   ExtLocale = 'ru'
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
   Height = 351
@@ -16,7 +17,8 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
-      'DriverID=MSSQL')
+      'DriverID=MSSQL'
+      'MonitorBy=Remote')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
     Left = 42
@@ -43,7 +45,7 @@ object UniMainModule: TUniMainModule
     Top = 139
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
-    EventKinds = [ekError, ekConnConnect, ekConnTransact, ekConnService, ekCmdPrepare, ekCmdExecute, ekCmdDataIn, ekCmdDataOut]
+    EventKinds = [ekSQL, ekSQLVarIn, ekSQLVarOut]
     Tracing = True
     Left = 407
     Top = 17

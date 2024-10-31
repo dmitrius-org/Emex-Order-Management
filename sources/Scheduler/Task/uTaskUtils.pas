@@ -8,7 +8,7 @@ uses System.SysUtils, //Vcl.Dialogs, //System.Variants,
 
      FireDAC.Comp.Client, FireDAC.Comp.Script,
 
-     uCommonType;
+     uCommonType, uSqlUtils, uniGUIApplication, uniGUITypes;
 
 Type
   /// <summary>
@@ -16,7 +16,10 @@ Type
   /// </summary>
   TMTask = class
   strict private
-    var FConnection: TFDConnection;
+    FConnection: TFDConnection;
+    FSQL: TSql;
+
+//    FIsActive: Boolean;
 
   private
     function GetIsActive: Boolean;
@@ -34,18 +37,24 @@ Type
 
     /// <summary>
     /// AuditInsert - добавление аудита
-    /// AObjectID     - ИД объекта по которому ведется аудит
-    /// AObjectTypeID - тип объекта
-    /// AActionID     - ИД выполняемое дейстие из tAction
-    /// AComment      - Комментарий
     /// </summary>
+    /// <param name="AObjectTypeID">Тип объекта</param>
+    /// <param name="AObjectID">ИД объекта по которому ведется аудит</param>
+    /// <param name="AActionID">ИД выполняемое дейстие из tAction</param>
+    /// <param name="AComment">Комментарий</param>
+    /// <param name="AFlag">Флаги</param>
+    /// <param name="AUserID">ИД пользователя</param>
+    /// <param name="AHostInfoID">Хост</param>
     procedure AuditInsert(
                    AObjectTypeID:TObjectType; AObjectID: Integer;
                    AActionID: TFormAction;
                    AComment: string;
+                   AFlag: tAuditFlag = tAuditFlag.agInfo;
                    AUserID: integer = 0;
                    AHostInfoID: string = ''
                   );
+
+   procedure TaskProgress(ATaskID:Integer; ASatus:Boolean);
   public
     constructor Create(Value: TFDConnection); overload;
     destructor Destroy; override;
@@ -69,7 +78,19 @@ uses
 
 function TMTask.GetIsActive: Boolean;
 begin
+
   Result:= FConnection.ExecSQLScalar(' Select IsActive from tTaskActive (nolock) ', []);
+
+//  if FIsActive <> Result then
+//  begin
+//    FIsActive:=Result;
+//
+//    BroadcastMessage('TaskEnabled',
+//                    ['Enabled', FIsActive],
+//                    [boIgnoreCurrentSession]); //  boClientOnly
+//
+//  end;
+
 end;
 
 procedure TMTask.SetIsActive(const Value: Boolean);
@@ -92,6 +113,11 @@ begin
   finally
     FreeAndNil(qry);
   end;
+end;
+
+procedure TMTask.TaskProgress(ATaskID: Integer; ASatus: Boolean);
+begin
+  FSQl.Exec('exec TaskProgress @TaskID = :TaskID, @IsActive = :IsActive', ['TaskID', 'IsActive'], [ATaskID, ASatus]);
 end;
 
 procedure TMTask.WriteTaskMessage(ATaskID: Integer; AMessage: String);
@@ -118,6 +144,7 @@ procedure TMTask.AuditInsert(
                    AObjectTypeID:TObjectType; AObjectID: Integer;
                    AActionID: TFormAction;
                    AComment: string;
+                   AFlag: tAuditFlag = tAuditFlag.agInfo;
                    AUserID: integer = 0;
                    AHostInfoID: string = '');
 var qry: TFDQuery;
@@ -126,26 +153,29 @@ Begin
     qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
     qry.Close;
-    qry.SQL.Text := ' declare @R      int                     '+
-                    '        ,@AuditID numeric(18, 0)         '+
-                    ' ' +
-                    ' exec @r = AuditInsert                   '+
-                    '             @AuditID     = @AuditID out  '+
-                    '            ,@ObjectID    = :ObjectID     '+
-                    '            ,@ObjectTypeID= :ObjectTypeID '+
-                    '            ,@ActionID    = :ActionID     '+
-                    '            ,@Comment     = :Comment      '+
-                    '            ,@UserID      = :UserID       '+
-                    '            ,@HostInfoID  = :HostInfoID   '+
-                    ' ' +
-                    ' select @r as retcode, @AuditID as AuditID'+
-                    ' ';
+    qry.SQL.Text := '''
+                     declare @R      int
+                            ,@AuditID numeric(18, 0)
+
+                     exec @r = AuditInsert
+                                 @AuditID     = @AuditID out
+                                ,@ObjectID    = :ObjectID
+                                ,@ObjectTypeID= :ObjectTypeID
+                                ,@ActionID    = :ActionID
+                                ,@Comment     = :Comment
+                                ,@UserID      = :UserID
+                                ,@HostInfoID  = :HostInfoID
+                                ,@Flag        = :Flag
+
+                     select @r as retcode, @AuditID as AuditID
+                    ''';
     qry.ParamByName('ObjectID').Value     := AObjectID;
     qry.ParamByName('ObjectTypeID').Value := AObjectTypeID ;
     qry.ParamByName('ActionID').Value     := AActionID;
     qry.ParamByName('Comment').Value      := AComment;
     qry.ParamByName('UserID').Value       := AUserID;
     qry.ParamByName('HostInfoID').Value   := AHostInfoID;
+    qry.ParamByName('Flag').Value         := AFlag;
     qry.Open;
     qry.Close;
   finally
@@ -157,11 +187,14 @@ constructor TMTask.Create(Value: TFDConnection);
 begin
   inherited Create;
   FConnection := Value;
+
+  FSQL:= TSql.Create(FConnection);
 end;
 
 destructor TMTask.Destroy;
 begin
   inherited;
+  FSQL.Destroy;
 end;
                    {
 procedure TMTask.ExecFile2(const sComand, sParameter: string; var rc: word; isExecuteHide:Boolean=True);
@@ -211,6 +244,8 @@ var
 TaskID: Integer;
    Msg: string;
 
+TaskErr: Boolean;
+
    /// <summary>
    /// ExecProcedure - Выполнение внутренней процедуры
    /// </summary>
@@ -226,6 +261,8 @@ TaskID: Integer;
 
          // следующая дата выполнения
          //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
        except
          on E: Exception do
          begin
@@ -233,6 +270,8 @@ TaskID: Integer;
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
 
            WriteTaskMessage(TaskID, E.Message);
+
+           TaskErr := True;
          end
        end;
      finally
@@ -263,6 +302,8 @@ TaskID: Integer;
              raise Exception.Create(Msg);
          end;
 
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
+
        except
          on E: Exception do
          begin
@@ -271,6 +312,8 @@ TaskID: Integer;
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
 
            WriteTaskMessage(TaskID, e.Message);
+
+           TaskErr := True;
          end
        end;
      finally
@@ -294,13 +337,16 @@ TaskID: Integer;
 
          // следующая дата выполнения
          //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
        except
          on E: Exception do
          begin
            Logger.Info('ExecSQL.Exception' + E.Message);
-           AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
+           AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message, tAuditFlag.agError);
 
            WriteTaskMessage(TaskID, e.Message);
+
+           TaskErr := True;
          end
        end;
      finally
@@ -323,21 +369,29 @@ begin
         for i := 0 to qry.RecordCount-1 do
         begin
             Logger.Info('TMTask.Execute Задача:' + qry.FieldByName('TaskBrief').AsString);
+
             TaskID:= qry.FieldByName('TaskID').AsInteger;
+            TaskErr := false;
+
+            TaskProgress(TaskID, true);
+
+            BroadcastMessage('TaskProgress',
+                            ['TaskID', TaskID],
+                            []); //boIgnoreCurrentSession boClientOnly
 
             act:= TFDQuery.Create(nil);
-            act.Connection:= FConnection;
-            act.Close;
-            act.SQL.Text := ' Select *                  ' +
-                            '   from vTaskActionsSelect ' +
-                            '  where TaskID=:TaskID     ' +
-                            '  order by Number          ';
-            act.ParamByName('TaskID').Value := TaskID;
-            act.Open;
             Try
-                // цикл по действиям
+                act.Connection:= FConnection;
+                act.Close;
+                act.SQL.Text := ' Select *                  ' +
+                                '   from vTaskActionsSelect ' +
+                                '  where TaskID=:TaskID     ' +
+                                '  order by Number          ';
+                act.ParamByName('TaskID').Value := TaskID;
+                act.Open;
+
                 act.First;
-                for a := 0 to act.RecordCount-1 do
+                for a := 0 to act.RecordCount-1 do  // цикл по действиям / шагам
                 begin
                     M := act.FieldByName('Method').AsString; Msg := '';
 
@@ -358,6 +412,9 @@ begin
                       end;
                     end;
 
+                    //если на каком-то шаге получили ошибку, то прекращаем выполнение
+                    if TaskErr then Break;
+
                     act.Next;
                 end;
 
@@ -365,7 +422,14 @@ begin
                 FreeAndNil(act);
 
                 // следующая дата выполнения
-                Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = null', [TaskID]);
+                if TaskErr then
+                  Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = null', [TaskID])
+                else
+                  Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1', [TaskID]);
+
+                BroadcastMessage('TaskProgress',
+                                ['TaskID', TaskID],
+                                []); //boIgnoreCurrentSession  boClientOnly
             End;
             Qry.Next;
         end;

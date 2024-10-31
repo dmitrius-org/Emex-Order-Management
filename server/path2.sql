@@ -12,32 +12,16 @@
 --SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = History.tBasket));
 --go
 
-
-Update o
-   set o.DeliveryRestTermSupplier =       case 
-         when datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier]) > 0
-         then datediff(dd, cast(getdate() as date), o.[DeliveryPlanDateSupplier])
-         else 0
-       end 
-  from tOrders o (nolock)
- where isnull(o.isCancel, 0) = 0
+alter table tAudit alter column Comment           varchar(1024)
+alter table tAudit alter  column HostInfoID        varchar(256) null
 
 
 
-Update o
-   set o.DeliveryRestTermSupplier = o.DeliveryTerm - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки 
-  from tOrders o (nolock)
- inner join tNodes n (nolock)
-         on n.NodeID = o.StatusID
-        and n.Flag&8>0 
+go
+ALTER TABLE tAudit DROP CONSTRAINT DF__tAudit__InDateTi__5EDF0F2E;
 
+ALTER TABLE tAudit 
+ALTER COLUMN InDateTime DateTime2;
 
-tClients
-tSuppliers
-
-select *
-from tNodes n (nolock)
-where n.Flag&8>0 
-  
-
-exec OrdersSupplierDeliveryTermRecalc
+ALTER TABLE tAudit 
+ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime;

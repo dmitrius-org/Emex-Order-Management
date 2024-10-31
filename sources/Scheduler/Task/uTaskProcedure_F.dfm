@@ -86,7 +86,7 @@ object TaskProcedure_F: TTaskProcedure_F
   end
   object UniLabel1: TUniLabel
     Left = 8
-    Top = 67
+    Top = 64
     Width = 57
     Height = 13
     Hint = ''

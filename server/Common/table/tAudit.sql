@@ -10,11 +10,11 @@ begin
 	,ObjectTypeID      numeric(18, 0)   -- тип объекта 
 	,ObjectID          numeric(18, 0)   -- ИД объекта по которому ведется аудит
 	,ActionID          numeric(18, 0)   -- ИД выполняемое дейстие из tAction
-	,Comment           nvarchar(1024)
+	,Comment           varchar(1024)
     ,Flag              int
 	,UserID            numeric(18, 0)   -- 
-	,HostInfoID        nvarchar(256) null
-	,InDateTime        DateTime      default getdate()   -- 
+	,HostInfoID        varchar(256) null
+	,InDateTime        DateTime2  default sysdatetime()   -- 
 	)
 
 	create index ao1 on tAudit(UserID, ObjectID)
@@ -29,3 +29,13 @@ go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tAudit', @desc = 'Таблица аудита'
 
+
+/*
+ALTER TABLE tAudit DROP CONSTRAINT DF__tAudit__InDateTi__5EDF0F2E;
+
+ALTER TABLE tAudit 
+ALTER COLUMN InDateTime DateTime2;
+
+ALTER TABLE tAudit 
+ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime;
+*/

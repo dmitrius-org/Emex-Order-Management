@@ -9,13 +9,16 @@ object MainForm: TMainForm
   OnKeyDown = UniFormKeyDown
   MonitoredKeys.Keys = <>
   Layout = 'fit'
+  ReceiveSocketEvents = True
   OnDestroy = UniFormDestroy
+  OnBroadcastMessage = UniFormBroadcastMessage
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
-    Left = 0
-    Top = 0
-    Width = 1028
-    Height = 533
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 1022
+    Height = 527
     Hint = ''
     ParentColor = False
     Align = alClient
@@ -25,13 +28,15 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
-    ExplicitWidth = 1024
-    ExplicitHeight = 532
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 1028
+    ExplicitHeight = 533
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
-      Width = 1028
-      Height = 533
+      Width = 1022
+      Height = 527
       Hint = ''
       Align = alClient
       TabOrder = 1
@@ -39,13 +44,13 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'fit'
-      ExplicitWidth = 1024
-      ExplicitHeight = 532
+      ExplicitWidth = 1028
+      ExplicitHeight = 533
       object UniPanelLeft: TUniPanel
         Left = 1
         Top = 56
         Width = 304
-        Height = 476
+        Height = 470
         Hint = ''
         Align = alLeft
         TabOrder = 1
@@ -60,27 +65,27 @@ object MainForm: TMainForm
         LayoutAttribs.Columns = 1
         LayoutConfig.Split = True
         LayoutConfig.Region = 'west'
-        ExplicitHeight = 475
+        ExplicitHeight = 476
         object MainMenu: TUnimTreeMenu
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 298
-          Height = 470
+          Height = 464
           Hint = ''
           Align = alClient
           Items.FontData = {0100000000}
           LayoutConfig.Width = '0'
           SelectOnExpander = True
           OnClick = MainMenuClick
-          ExplicitHeight = 469
+          ExplicitHeight = 470
         end
       end
       object UniPanelCentral: TUniPanel
         Left = 305
         Top = 56
-        Width = 722
-        Height = 476
+        Width = 716
+        Height = 470
         Hint = ''
         Margins.Bottom = 0
         Align = alClient
@@ -93,14 +98,14 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 718
-        ExplicitHeight = 475
+        ExplicitWidth = 722
+        ExplicitHeight = 476
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 0
           Top = 2
-          Width = 722
-          Height = 471
+          Width = 716
+          Height = 465
           Hint = ''
           Margins.Left = 0
           Margins.Top = 2
@@ -111,14 +116,14 @@ object MainForm: TMainForm
           TabOrder = 1
           ScreenMask.Enabled = True
           ScreenMask.Target = Owner
-          ExplicitWidth = 718
-          ExplicitHeight = 470
+          ExplicitWidth = 722
+          ExplicitHeight = 471
         end
       end
       object UniPanelTop: TUniPanel
         Left = 1
         Top = 1
-        Width = 1026
+        Width = 1020
         Height = 55
         Hint = ''
         Align = alTop
@@ -126,9 +131,9 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
-        ExplicitWidth = 1022
+        ExplicitWidth = 1026
         object UniPanel: TUniPanel
-          Left = 711
+          Left = 705
           Top = 0
           Width = 315
           Height = 55
@@ -137,7 +142,7 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
-          ExplicitLeft = 707
+          ExplicitLeft = 711
           object btnProfile: TUniMenuButton
             AlignWithMargins = True
             Left = 153

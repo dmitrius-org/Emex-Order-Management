@@ -44,7 +44,6 @@ uses
   LoginEditForm in '..\Common\Login\LoginEditForm.pas' {LoginEditF: TUniForm},
   InfoForm in '..\Common\InfoForm.pas' {Info: TUniForm},
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
-  uEmexService_old in '..\Common\CommonApp\emexdwc\uEmexService_old.pas',
   uMainVar in '..\Common\uMainVar.pas',
   uError_T in '..\Common\CommonApp\uError_T.pas' {Error_T: TUniForm},
   LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},
@@ -52,9 +51,10 @@ uses
   uTaskProcedure_F in 'Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
   uTaskSQL_F in 'Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
   uTaskActionHead in 'Task\uTaskActionHead.pas' {TaskActionHead: TUniFrame},
-  uEmexUtils in '..\Manager\App\emexdwc\uEmexUtils.pas',
   uConstant in '..\Common\CommonApp\uConstant.pas',
-  uAccrualUtils in '..\Manager\App\Orders\uAccrualUtils.pas';
+  uAccrualUtils in '..\Manager\App\Orders\uAccrualUtils.pas',
+  uServiceEmex in '..\Service\uServiceEmex.pas',
+  uEmexUtils in '..\Manager\App\emexdwc\uEmexUtils.pas';
 
 {$R *.res}
 

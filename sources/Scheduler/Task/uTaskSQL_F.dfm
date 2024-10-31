@@ -1,32 +1,32 @@
 object TaskSQL_F: TTaskSQL_F
   Left = 0
   Top = 0
-  ClientHeight = 555
-  ClientWidth = 925
+  ClientHeight = 457
+  ClientWidth = 869
   Caption = 'TaskSQL_F'
   OnShow = UniFormShow
   OldCreateOrder = False
   OnClose = UniFormClose
   MonitoredKeys.Keys = <>
   DesignSize = (
-    925
-    555)
+    869
+    457)
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 517
-    Width = 919
+    Top = 419
+    Width = 863
     Height = 35
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 516
-    ExplicitWidth = 915
+    ExplicitTop = 517
+    ExplicitWidth = 919
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 831
+      Left = 775
       Top = 4
       Width = 82
       Height = 27
@@ -36,11 +36,11 @@ object TaskSQL_F: TTaskSQL_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 827
+      ExplicitLeft = 831
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 744
+      Left = 688
       Top = 4
       Width = 81
       Height = 27
@@ -49,7 +49,7 @@ object TaskSQL_F: TTaskSQL_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 740
+      ExplicitLeft = 744
     end
   end
   object edtIsActive: TUniCheckBox
@@ -67,17 +67,17 @@ object TaskSQL_F: TTaskSQL_F
   object edtComment: TUniEdit
     Left = 103
     Top = 70
-    Width = 806
+    Width = 758
     Hint = ''
     Text = ''
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     ClearButton = True
-    ExplicitWidth = 802
+    ExplicitWidth = 814
   end
   object UniLabel1: TUniLabel
     Left = 8
-    Top = 75
+    Top = 70
     Width = 57
     Height = 13
     Hint = ''
@@ -95,7 +95,7 @@ object TaskSQL_F: TTaskSQL_F
   end
   object UniLabel3: TUniLabel
     Left = 8
-    Top = 45
+    Top = 42
     Width = 39
     Height = 13
     Hint = ''
@@ -105,14 +105,14 @@ object TaskSQL_F: TTaskSQL_F
   object edtSQL: TUniSyntaxEdit
     Left = 8
     Top = 112
-    Width = 901
-    Height = 399
+    Width = 853
+    Height = 301
     Hint = ''
     Language = 'SQL'
     Font.Name = 'Courier New'
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 897
-    ExplicitHeight = 398
+    ExplicitWidth = 909
+    ExplicitHeight = 399
   end
   object DataSource: TDataSource
     DataSet = FDQuery

@@ -30,7 +30,8 @@ as
 
 						   else '20700101'
 	                     end
-        ,Message = isnull(@Message, Message)
+        ,Flag        = Flag & ~ 1
+        ,Message     = isnull(@Message, Message)
 		,updDatetime = GetDate()
    where TaskID = @TaskID
 
@@ -40,5 +41,5 @@ as
 go
 grant exec on TaskDateExecCalc to public
 go
-exec setOV 'TaskDateExecCalc', 'P', '20240326', '1'
+exec setOV 'TaskDateExecCalc', 'P', '20241031', '2'
 go

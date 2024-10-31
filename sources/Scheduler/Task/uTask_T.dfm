@@ -1,18 +1,23 @@
 object Task_T: TTask_T
+  AlignWithMargins = True
   Left = 0
   Top = 0
-  Width = 1036
-  Height = 441
+  Width = 1173
+  Height = 589
   OnCreate = UniFrameCreate
   OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.Width = '100'
+  ParentAlignmentControl = False
+  AlignmentControl = uniAlignmentClient
+  Align = alClient
+  Anchors = [akLeft, akTop, akRight, akBottom]
   TabOrder = 0
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 4
     Top = 4
-    Width = 1029
+    Width = 1166
     Height = 67
     Hint = ''
     Margins.Left = 4
@@ -37,7 +42,7 @@ object Task_T: TTask_T
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 1023
+      Width = 1160
       Height = 64
       Hint = ''
       Margins.Bottom = 0
@@ -47,6 +52,7 @@ object Task_T: TTask_T
       Images = ImageList32
       ShowCaptions = True
       ButtonAutoWidth = True
+      LayoutConfig.Padding = '0px 0px 0px 3px'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
       Align = alClient
@@ -57,6 +63,8 @@ object Task_T: TTask_T
       object UniToolButton1: TUniToolButton
         Left = 0
         Top = 0
+        Margins.Left = 0
+        Margins.Right = 0
         ShowHint = True
         Action = actAdd
         ImageIndex = 1
@@ -65,6 +73,8 @@ object Task_T: TTask_T
       object UniToolButton2: TUniToolButton
         Left = 168
         Top = 0
+        Margins.Left = 0
+        Margins.Right = 0
         ShowHint = True
         Action = actEdit
         ImageIndex = 3
@@ -107,8 +117,8 @@ object Task_T: TTask_T
   object UniPanel2: TUniPanel
     Left = 0
     Top = 71
-    Width = 1036
-    Height = 370
+    Width = 1173
+    Height = 518
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -124,131 +134,244 @@ object Task_T: TTask_T
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
-    object GridUsers: TUniDBGrid
+    object pnlCommon: TUniContainerPanel
       Left = 0
       Top = 0
-      Width = 1036
-      Height = 370
+      Width = 1173
+      Height = 518
       Hint = ''
       ShowHint = True
-      BodyRTL = False
-      ClientEvents.UniEvents.Strings = (
-        
-          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
-          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
-          'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
-          'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
-          't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
-          '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
-          'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
-        
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10'}')
-      DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgFilterClearButton]
-      WebOptions.PageSize = 50
-      WebOptions.AppendPosition = tpCurrentRow
-      WebOptions.FetchAll = True
-      LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
-      LoadMask.Color = clActiveCaption
-      LayoutConfig.ComponentCls = 'grid-task'
-      LayoutConfig.Height = '100'
-      LayoutConfig.Width = '100'
-      BorderStyle = ubsNone
-      Align = alClient
-      Anchors = []
-      TabOrder = 1
       ParentColor = False
-      Color = clBtnFace
-      OnKeyDown = GridUsersKeyDown
-      OnCellContextClick = GridUsersCellContextClick
-      Columns = <
-        item
-          FieldName = 'TaskID'
-          Title.Alignment = taCenter
-          Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
-          Title.Font.Height = -13
-          Width = 118
-          Visible = False
-          ReadOnly = True
+      Align = alClient
+      TabOrder = 1
+      Layout = 'border'
+      object pnlTask: TUniContainerPanel
+        Left = 0
+        Top = 0
+        Width = 1173
+        Height = 300
+        Hint = ''
+        ShowHint = True
+        ParentColor = False
+        Align = alTop
+        TabOrder = 1
+        Layout = 'fit'
+        LayoutConfig.Split = True
+        LayoutConfig.Region = 'north'
+        object GridTasks: TUniDBGrid
+          Left = 0
+          Top = 0
+          Width = 1173
+          Height = 300
+          Hint = ''
+          ShowHint = True
+          BodyRTL = False
+          ClientEvents.UniEvents.Strings = (
+            
+              'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+              'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+              'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
+              'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
+              't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
+              '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
+              'ent.body.removeChild(el);'#13#10'    };'#13#10'}')
+          DataSource = dsTask
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgFilterClearButton]
+          WebOptions.Paged = False
+          WebOptions.PageSize = 50
+          WebOptions.AppendPosition = tpCurrentRow
+          WebOptions.FetchAll = True
+          LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
+          LoadMask.Color = clActiveCaption
+          LayoutConfig.ComponentCls = 'grid-task'
+          LayoutConfig.Height = '100'
+          LayoutConfig.Width = '100'
+          BorderStyle = ubsNone
+          Align = alClient
+          Anchors = []
+          TabOrder = 1
+          ParentColor = False
+          Color = clBtnFace
+          OnKeyDown = GridTasksKeyDown
+          OnCellContextClick = GridTasksCellContextClick
+          Columns = <
+            item
+              FieldName = 'TaskID'
+              Title.Alignment = taCenter
+              Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+              Title.Font.Height = -13
+              Width = 118
+              Visible = False
+              ReadOnly = True
+            end
+            item
+              FieldName = 'Flag'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1090#1072#1090#1091#1089
+              Width = 64
+              Alignment = taCenter
+            end
+            item
+              FieldName = 'IsActive'
+              Title.Alignment = taCenter
+              Title.Caption = ' '#1040#1082#1090#1080#1074#1077#1085
+              Title.Font.Height = -13
+              Width = 74
+              Alignment = taCenter
+            end
+            item
+              FieldName = 'Brief'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077
+              Title.Font.Height = -13
+              Width = 244
+            end
+            item
+              FieldName = 'Name'
+              Title.Alignment = taCenter
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+              Title.Font.Height = -13
+              Width = 335
+            end
+            item
+              FieldName = 'DateBegin'
+              Title.Alignment = taCenter
+              Title.Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072
+              Title.Font.Height = -13
+              Width = 160
+              Visible = False
+            end
+            item
+              FieldName = 'DateExec'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1083#1077#1076#1091#1102#1097#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
+              Title.Font.Height = -13
+              Width = 145
+            end
+            item
+              FieldName = 'inDatetime'
+              Title.Alignment = taCenter
+              Title.Caption = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103
+              Title.Font.Height = -13
+              Width = 150
+              Visible = False
+            end
+            item
+              FieldName = 'updDatetime'
+              Title.Alignment = taCenter
+              Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
+              Title.Font.Height = -13
+              Width = 150
+            end
+            item
+              FieldName = 'Message'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
+              Title.Font.Height = -13
+              Width = 400
+            end>
         end
-        item
-          FieldName = 'IsActive'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1090#1072#1090#1091#1089
-          Title.Font.Height = -13
-          Width = 84
+      end
+      object pnlTaskDetail: TUniContainerPanel
+        Left = 0
+        Top = 300
+        Width = 1173
+        Height = 218
+        Hint = ''
+        ShowHint = True
+        ParentColor = False
+        Align = alClient
+        TabOrder = 2
+        Layout = 'fit'
+        LayoutConfig.Region = 'center'
+        object GridDetail: TUniDBGrid
+          Left = 0
+          Top = 0
+          Width = 1173
+          Height = 218
+          Hint = ''
+          ShowHint = True
+          BodyRTL = False
+          ClientEvents.UniEvents.Strings = (
+            
+              'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+              'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+              'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
+              'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
+              't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
+              '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
+              'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
+            
+              'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+              'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
+              #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
+              'n the ToolBar, number 10, hide him'#13#10'}')
+          HeaderTitle = #1046#1091#1088#1085#1072#1083
+          DataSource = dsTDetail
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgFilterClearButton]
+          WebOptions.PageSize = 50
+          WebOptions.AppendPosition = tpCurrentRow
+          WebOptions.FetchAll = True
+          LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
+          LoadMask.Color = clActiveCaption
+          LayoutConfig.ComponentCls = 'grid-task'
+          LayoutConfig.Height = '100'
+          LayoutConfig.Width = '100'
+          BorderStyle = ubsNone
+          Align = alClient
+          Anchors = []
+          TabOrder = 1
+          ParentColor = False
+          Color = clBtnFace
+          OnKeyDown = GridDetailKeyDown
+          Columns = <
+            item
+              FieldName = 'TaskID'
+              Title.Alignment = taCenter
+              Title.Caption = 'TaskID'
+              Width = 118
+              Visible = False
+              ReadOnly = True
+            end
+            item
+              FieldName = 'Flag'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1090#1072#1090#1091#1089#1099
+              Width = 84
+            end
+            item
+              FieldName = 'Comment'
+              Title.Alignment = taCenter
+              Title.Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090
+              Width = 840
+              DisplayMemo = True
+            end
+            item
+              FieldName = 'InDateTime'
+              Title.Alignment = taCenter
+              Title.Caption = #1044#1072#1090#1072' '#1080' '#1074#1088#1077#1084#1103' '#1086#1087#1077#1088#1072#1094#1080#1080
+              Width = 181
+            end>
         end
-        item
-          FieldName = 'Brief'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077
-          Title.Font.Height = -13
-          Width = 244
-        end
-        item
-          FieldName = 'Name'
-          Title.Alignment = taCenter
-          Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-          Title.Font.Height = -13
-          Width = 335
-        end
-        item
-          FieldName = 'DateBegin'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072
-          Title.Font.Height = -13
-          Width = 160
-          Visible = False
-        end
-        item
-          FieldName = 'DateExec'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1083#1077#1076#1091#1102#1097#1072#1103' '#1076#1072#1090#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-          Title.Font.Height = -13
-          Width = 145
-        end
-        item
-          FieldName = 'inDatetime'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103
-          Title.Font.Height = -13
-          Width = 150
-          Visible = False
-        end
-        item
-          FieldName = 'updDatetime'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-          Title.Font.Height = -13
-          Width = 150
-        end
-        item
-          FieldName = 'Message'
-          Title.Alignment = taCenter
-          Title.Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
-          Title.Font.Height = -13
-          Width = 400
-          DisplayMemo = True
-        end>
+      end
     end
   end
-  object Query: TFDQuery
+  object qTask: TFDQuery
+    IndexFieldNames = 'TaskID'
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords]
     UpdateOptions.RefreshMode = rmAll
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.UpdateTableName = 'tTask'
     UpdateOptions.KeyFields = 'TaskID'
+    UpdateOptions.AutoIncFields = 'TaskID'
     UpdateObject = FDUpdateSQL
     SQL.Strings = (
       'Select *'
       '  from vTask')
     Left = 684
     Top = 119
-    object QueryTaskID: TFMTBCDField
+    object qTaskTaskID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'TaskID'
       Origin = 'TaskID'
@@ -257,43 +380,47 @@ object Task_T: TTask_T
       Precision = 18
       Size = 0
     end
-    object QueryBrief: TWideStringField
+    object qTaskFlag: TIntegerField
+      FieldName = 'Flag'
+      OnGetText = qTaskFlagGetText
+    end
+    object qTaskBrief: TWideStringField
       FieldName = 'Brief'
       Origin = 'Brief'
       Size = 60
     end
-    object QueryName: TWideStringField
+    object qTaskName: TWideStringField
       FieldName = 'Name'
       Origin = 'Name'
       Size = 128
     end
-    object QueryDateBegin: TSQLTimeStampField
+    object qTaskDateBegin: TSQLTimeStampField
       FieldName = 'DateBegin'
       Origin = 'DateBegin'
     end
-    object QueryDateExec: TSQLTimeStampField
+    object qTaskDateExec: TSQLTimeStampField
       FieldName = 'DateExec'
       Origin = 'DateExec'
     end
-    object QueryinDatetime: TSQLTimeStampField
+    object qTaskinDatetime: TSQLTimeStampField
       FieldName = 'inDatetime'
       Origin = 'inDatetime'
     end
-    object QueryupdDatetime: TSQLTimeStampField
+    object qTaskupdDatetime: TSQLTimeStampField
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
     end
-    object QueryIsActive: TBooleanField
+    object qTaskIsActive: TBooleanField
       FieldName = 'IsActive'
       Origin = 'IsActive'
     end
-    object QueryMessage: TWideStringField
+    object qTaskMessage: TWideStringField
       FieldName = 'Message'
       Size = 2000
     end
   end
-  object DataSource: TDataSource
-    DataSet = Query
+  object dsTask: TDataSource
+    DataSet = qTask
     Left = 686
     Top = 181
   end
@@ -1928,7 +2055,7 @@ object Task_T: TTask_T
       OnExecute = actRefreshAllExecute
     end
     object actDateExecClear: TAction
-      Caption = ' '#1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1079#1072#1087#1091#1089#1082#1072
+      Caption = #1055#1077#1088#1077#1079#1072#1087#1091#1089#1090#1080#1090#1100' '#1079#1072#1076#1072#1085#1080#1077
       ImageIndex = 6
       OnExecute = actDateExecClearExecute
     end
@@ -1955,12 +2082,6 @@ object Task_T: TTask_T
     end
     object N4: TUniMenuItem
       Action = actDelete
-    end
-    object N8: TUniMenuItem
-      Caption = '-'
-    end
-    object N9: TUniMenuItem
-      Action = actTaskActive
     end
     object N5: TUniMenuItem
       Caption = '-'
@@ -2398,5 +2519,49 @@ object Task_T: TTask_T
       ' WHERE TaskID = :OLD_TaskID')
     Left = 751
     Top = 118
+  end
+  object qTDetail: TFDQuery
+    IndexFieldNames = 'TaskID'
+    MasterSource = dsTask
+    MasterFields = 'TaskID'
+    DetailFields = 'TaskID'
+    Connection = UniMainModule.FDConnection
+    FetchOptions.AssignedValues = [evDetailOptimize, evDetailCascade]
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords]
+    UpdateOptions.RefreshMode = rmAll
+    UpdateOptions.CountUpdatedRecords = False
+    UpdateOptions.UpdateTableName = 'tTask'
+    UpdateOptions.KeyFields = 'TaskID'
+    SQL.Strings = (
+      'Select *'
+      '  from vTaskDetail'
+      ' order by InDateTime desc')
+    Left = 868
+    Top = 183
+    object FMTBCDField1: TFMTBCDField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'TaskID'
+      Origin = 'TaskID'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+      Precision = 18
+      Size = 0
+    end
+    object SQLTimeStampField3: TSQLTimeStampField
+      FieldName = 'InDateTime'
+      Origin = 'InDateTime'
+    end
+    object qTDetailComment: TStringField
+      FieldName = 'Comment'
+      Size = 1024
+    end
+    object qTDetailFlag: TIntegerField
+      FieldName = 'Flag'
+    end
+  end
+  object dsTDetail: TDataSource
+    DataSet = qTDetail
+    Left = 870
+    Top = 237
   end
 end

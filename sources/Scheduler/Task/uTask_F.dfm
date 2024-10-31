@@ -20,8 +20,6 @@ object Task_F: TTask_F
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 447
-    ExplicitWidth = 887
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 803
@@ -34,7 +32,6 @@ object Task_F: TTask_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 799
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -47,7 +44,6 @@ object Task_F: TTask_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 712
     end
   end
   object MainPage: TUniPageControl
@@ -56,11 +52,9 @@ object Task_F: TTask_F
     Width = 897
     Height = 445
     Hint = ''
-    ActivePage = MainSheet
+    ActivePage = TaskPage
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 893
-    ExplicitHeight = 444
     object MainSheet: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
@@ -68,13 +62,11 @@ object Task_F: TTask_F
         Left = 0
         Top = 0
         Width = 889
-        Height = 415
+        Height = 417
         Hint = ''
         ParentColor = False
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 885
-        ExplicitHeight = 416
         DesignSize = (
           889
           417)
@@ -87,7 +79,6 @@ object Task_F: TTask_F
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
-          ExplicitWidth = 668
         end
         object edtName: TUniEdit
           Left = 150
@@ -98,7 +89,6 @@ object Task_F: TTask_F
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
           ClearButton = True
-          ExplicitWidth = 668
         end
         object lblBruef: TUniLabel
           Left = 17
@@ -149,7 +139,6 @@ object Task_F: TTask_F
           Font.Height = -13
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 7
-          ExplicitWidth = 125
         end
         object pnlInteval: TUniPanel
           Left = 17
@@ -202,8 +191,6 @@ object Task_F: TTask_F
           ParentColor = False
           Align = alBottom
           TabOrder = 9
-          ExplicitTop = 288
-          ExplicitWidth = 885
           DesignSize = (
             889
             128)
@@ -228,7 +215,6 @@ object Task_F: TTask_F
             Color = clWindow
             Columns = 2
             OnClick = edtPeriodTypeClick
-            ExplicitWidth = 879
           end
           object PeriodType1: TUniPanel
             Left = 110
@@ -310,8 +296,6 @@ object Task_F: TTask_F
         ParentAlignmentControl = False
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitWidth = 885
-        ExplicitHeight = 362
         object ActionGrid: TUniDBGrid
           Left = 1
           Top = 1
@@ -337,7 +321,7 @@ object Task_F: TTask_F
               'n the ToolBar, number 10, hide him'#13#10'}')
           RowEditor = True
           DataSource = DataSourceAction
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
+          Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
           WebOptions.PageSize = 50
           WebOptions.AppendPosition = tpCurrentRow
           WebOptions.FetchAll = True
@@ -361,18 +345,22 @@ object Task_F: TTask_F
               Title.Caption = #1048#1044
               Width = 112
               Visible = False
+              ReadOnly = True
             end
             item
               FieldName = 'Number'
               Title.Alignment = taCenter
               Title.Caption = #1053#1086#1084#1077#1088
               Width = 79
+              ReadOnly = True
             end
             item
               FieldName = 'IsActive'
               Title.Alignment = taCenter
               Title.Caption = #1057#1090#1072#1090#1091#1089
               Width = 82
+              Alignment = taCenter
+              CheckBoxField.AutoPost = True
             end
             item
               FieldName = 'TaskTypeName'
@@ -386,6 +374,7 @@ object Task_F: TTask_F
               Title.Alignment = taCenter
               Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
               Width = 526
+              ReadOnly = True
             end>
         end
       end
@@ -408,7 +397,6 @@ object Task_F: TTask_F
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitWidth = 879
         object UniToolButton7: TUniToolButton
           Left = 0
           Top = 0
@@ -454,8 +442,6 @@ object Task_F: TTask_F
         ParentColor = False
         Align = alBottom
         TabOrder = 0
-        ExplicitTop = 349
-        ExplicitWidth = 885
         DesignSize = (
           889
           67)
@@ -507,7 +493,13 @@ object Task_F: TTask_F
   end
   object FDQueryAction: TFDQuery
     AutoCalcFields = False
+    IndexFieldNames = 'ID'
     Connection = UniMainModule.FDConnection
+    UpdateOptions.AssignedValues = [uvAutoCommitUpdates]
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.KeyFields = 'ID'
+    UpdateOptions.AutoIncFields = 'ID'
+    UpdateObject = FDUpdateSQL
     SQL.Strings = (
       'select ID '
       '      ,Comment'
@@ -575,18 +567,20 @@ object Task_F: TTask_F
       OnExecute = actRefreshAllExecute
     end
     object actAddActionProc: TAction
-      Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1103#1103' '#1087#1088#1086#1094#1077#1076#1091#1088#1072
-      Hint = #1042#1085#1091#1090#1088#1077#1085#1085#1103#1103' '#1087#1088#1086#1094#1077#1076#1091#1088#1072
+      Caption = #1055#1088#1086#1094#1077#1076#1091#1088#1072
+      Hint = #1047#1072#1087#1091#1089#1082' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1087#1088#1086#1094#1077#1076#1091#1088
       ImageIndex = 5
       OnExecute = actAddActionProcExecute
     end
     object actAddActionBat: TAction
-      Caption = #1060#1072#1081#1083' BAT'
+      Caption = 'BAT'
+      Hint = #1047#1072#1087#1091#1089#1082' '#1092#1072#1081#1083#1086#1074' BAT'
       ImageIndex = 6
       OnExecute = actAddActionBatExecute
     end
     object actAddActionSQL: TAction
-      Caption = #1057#1082#1088#1080#1087#1090' SQL'
+      Caption = 'SQL'
+      Hint = #1047#1072#1087#1091#1089#1082' SQl '#1089#1082#1088#1080#1087#1090#1086#1074
       ImageIndex = 4
       OnExecute = actAddActionSQLExecute
     end
@@ -911,5 +905,15 @@ object Task_F: TTask_F
     object SQL1: TUniMenuItem
       Action = actAddActionSQL
     end
+  end
+  object FDUpdateSQL: TFDUpdateSQL
+    ModifySQL.Strings = (
+      'Update pTaskActions'
+      '   set IsActive = :NEW_IsActive'
+      ' where ID = :OLD_ID')
+    FetchRowSQL.Strings = (
+      'select IsActive from vTaskActions where ID = :OLD_ID')
+    Left = 724
+    Top = 214
   end
 end

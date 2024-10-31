@@ -4,9 +4,22 @@
     opacity: 1 !important;
 }
 
-
 /* Перенос строки в заголовке таблицы планировщика */
 .grid-task .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
+}
+
+.grid-task .task-works::before {
+    font-family: 'Font Awesome 5 Free'; /*Имя шрифта Font Awesome*/
+    content: '\f110'; /* Unicode для fa-spinner */
+    font-weight: 900; /* Убедитесь, что шрифт соответствует стилю иконки */
+    animation: spin 2s infinite linear; /* Анимация для эффекта вращения */
+    color: #449c29; 
+    /* Установите нужный цвет */
+}
+
+.fa-pulse {
+    -webkit-animation: fa-spin 1s infinite steps(8);
+    animation: fa-spin 1s infinite steps(8);
 }

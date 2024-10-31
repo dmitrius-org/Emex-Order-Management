@@ -47,6 +47,8 @@ type
     procedure actinfoExecute(Sender: TObject);
     procedure UniFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure UniFormBroadcastMessage(const Sender: TComponent;
+      const Msg: string; const Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -70,7 +72,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uTask_T, uLogger;
 
 function MainForm: TMainForm;
 begin
@@ -201,17 +203,22 @@ begin
 
       if Nd.Text <> '√лавна€' then
         Ts.Closable   := True;
-      Ts.OnClose    := TabMainClose;
+
+     // Ts.OnClose    := TabMainClose;
       Ts.Tag        := NativeInt(Nd);
       Ts.Caption    := Nd.Text;
       Ts.ImageIndex := Nd.ImageIndex;
+      Ts.BorderStyle:= ubsNone;
+      Ts.Layout     := 'fit';
 
       FClassName := FormNames.Values[Nd.Text];
       FrC := TUniFrameClass(FindClass(FClassName));
 
       Fr := FrC.Create(Self);
+      Fr.Name := FClassName + 'F';
       Fr.Align := alClient;
       Fr.Parent := Ts;
+
 
       Nd.Data := Ts;
     end;
@@ -251,6 +258,42 @@ begin
   end;
 end;
 
+procedure TMainForm.UniFormBroadcastMessage(const Sender: TComponent;
+  const Msg: string; const Params: TUniStrings);
+var Form: TComponent;
+begin
+  logger.Info('TMainForm.UniFormBroadcastMessage');
+  logger.Info(Msg);
+
+  if Msg = 'TaskProgress' then
+  begin
+    Form := self.FindComponent('TTask_TF'); // »щем форму по имени
+   // logger.Info(Assigned(Form).ToString());
+   // logger.Info(Params['TaskID'].AsString);
+
+    if Assigned(Form) and (Form is TTask_T) then
+    begin
+      logger.Info(Form.ClassName);
+      TTask_T(Form).TaskProcessing(Params['TaskID'].AsInteger());
+    end;
+  end
+  else
+  if Msg = 'TaskEnabled' then
+  begin
+    Form := self.FindComponent('TTask_TF'); // »щем форму по имени
+
+    if Assigned(Form) and (Form is TTask_T) then
+    begin
+      logger.Info(Form.ClassName);
+      TTask_T(Form).SetTaskEnabledStatus(Params['Enabled'].AsBoolean());
+    end;
+  end;
+
+  //Form.Free;
+
+
+end;
+
 procedure TMainForm.UniFormDestroy(Sender: TObject);
 begin
   FormNames.Free;
@@ -259,7 +302,7 @@ end;
 procedure TMainForm.UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
  case Key of
-    76 : // 'l'
+    76 : // 'L'
       if (ssCtrl in Shift) and (ssAlt in Shift) then
         LoggerF.ShowModal;
   end;
@@ -267,6 +310,8 @@ end;
 
 procedure TMainForm.UniFormShow(Sender: TObject);
 begin
+  pcMain.Layout := 'fit';
+
   btnProfile.Caption := UniMainModule.AUserName;
 
   Grant.UserGrantLoad;

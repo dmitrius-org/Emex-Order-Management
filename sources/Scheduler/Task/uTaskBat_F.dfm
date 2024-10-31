@@ -22,11 +22,9 @@ object TaskBAT_F: TTaskBAT_F
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 182
-    ExplicitWidth = 708
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 676
+      Left = 668
       Top = 4
       Width = 82
       Height = 27
@@ -36,11 +34,10 @@ object TaskBAT_F: TTaskBAT_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 620
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 589
+      Left = 581
       Top = 4
       Width = 81
       Height = 27
@@ -49,7 +46,6 @@ object TaskBAT_F: TTaskBAT_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 533
     end
   end
   object edtpath: TUniEdit
@@ -61,11 +57,10 @@ object TaskBAT_F: TTaskBAT_F
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     ClearButton = True
-    ExplicitWidth = 649
   end
   object UniLabel2: TUniLabel
     Left = 19
-    Top = 137
+    Top = 128
     Width = 29
     Height = 13
     Hint = ''
@@ -93,11 +88,10 @@ object TaskBAT_F: TTaskBAT_F
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 4
     ClearButton = True
-    ExplicitWidth = 649
   end
   object UniLabel1: TUniLabel
     Left = 19
-    Top = 93
+    Top = 88
     Width = 57
     Height = 13
     Hint = ''
@@ -115,7 +109,7 @@ object TaskBAT_F: TTaskBAT_F
   end
   object UniLabel3: TUniLabel
     Left = 19
-    Top = 51
+    Top = 48
     Width = 39
     Height = 13
     Hint = ''

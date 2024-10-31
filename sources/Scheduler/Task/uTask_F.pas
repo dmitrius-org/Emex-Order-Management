@@ -84,6 +84,7 @@ type
     N7: TUniMenuItem;
     BAT2: TUniMenuItem;
     SQL2: TUniMenuItem;
+    FDUpdateSQL: TFDUpdateSQL;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);

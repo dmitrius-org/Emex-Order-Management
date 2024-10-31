@@ -10,9 +10,10 @@ create proc AuditInsert
 
              ,@ObjectTypeID     numeric(18, 0)   -- тип объекта 
              ,@ActionID         numeric(18, 0)   -- ИД выполняемое дейстие из tAction
-             ,@Comment          nvarchar(1024)   -- Комментарий
+             ,@Comment          varchar(1024)   -- Комментарий
              ,@UserID           numeric(18, 0) = null  -- 
-             ,@HostInfoID       nvarchar(256)  = null
+             ,@HostInfoID       varchar(256)  = null
+             ,@Flag             int = null
 as
   set nocount on
 
@@ -32,7 +33,8 @@ as
           ,ActionID         
           ,Comment
           ,UserID
-          ,HostInfoID)
+          ,HostInfoID
+          ,Flag)
     OUTPUT INSERTED.AuditID INTO @ID
     select      
            @ObjectID	     
@@ -41,6 +43,7 @@ as
           ,@Comment
           ,@UserID
           ,@HostInfoID
+          ,@Flag
     --commit tran
   END TRY  
   BEGIN CATCH  
@@ -60,5 +63,5 @@ return @r
 go
 grant exec on AuditInsert to public
 go
-exec setOV 'AuditInsert', 'P', '20240101', '0'
+exec setOV 'AuditInsert', 'P', '20241031', '2'
 go

@@ -128,6 +128,13 @@ Type
   );
 
 
+  /// <summary> tAuditFlag - </summary>
+  tAuditFlag = (
+   agInfo = 0
+   /// <remarks>Ошибка</remarks>
+  ,agError = 1
+  );
+
   /// <summary> Типы для обработки ошибок </summary>
   TRetVal = class
   private
