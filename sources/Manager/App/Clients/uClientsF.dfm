@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabShipments
+    ActivePage = tabManager
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -228,9 +228,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 1177
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -271,8 +268,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitTop = 48
-        ExplicitHeight = 410
         object Grid: TUniDBGrid
           Left = 1
           Top = 1
@@ -459,9 +454,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 1177
         object UniToolButton7: TUniToolButton
           Left = 0
           Top = 0
@@ -510,8 +502,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitTop = 48
-        ExplicitHeight = 410
         object ProfilesCustomerGrid: TUniDBGrid
           Left = 1
           Top = 1
@@ -828,8 +818,6 @@ object ClientsF: TClientsF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitTop = 48
-        ExplicitHeight = 410
         object UniHiddenPanel1: TUniHiddenPanel
           Left = 25
           Top = 191
@@ -857,7 +845,7 @@ object ClientsF: TClientsF
           Top = 1
           Width = 1175
           Height = 402
-          Hint = #1057#1074#1103#1079#1072#1085#1085#1099#1077' '#1082#1083#1080#1077#1085#1090#1099
+          Hint = ''
           ShowHint = True
           ParentShowHint = False
           BodyRTL = False
@@ -888,9 +876,17 @@ object ClientsF: TClientsF
           ParentColor = False
           Color = clBtnFace
           OnKeyDown = GridKeyDown
+          OnCellClick = ManagerGridCellClick
           OnColumnSort = ManagerGridColumnSort
           OnCellContextClick = ManagerGridCellContextClick
           Columns = <
+            item
+              FieldName = 'ObjectType'
+              Title.Alignment = taCenter
+              Title.Caption = #1057#1090#1072#1090#1091#1089
+              Width = 64
+              Alignment = taCenter
+            end
             item
               FieldName = 'EmployeeID'
               Title.Alignment = taCenter
@@ -953,9 +949,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 1177
         object UniToolButton3: TUniToolButton
           Left = 0
           Top = 0
@@ -1651,6 +1644,10 @@ object ClientsF: TClientsF
       '  from vClientEmployeeReliation ')
     Left = 895
     Top = 133
+    object qManagerObjectType: TIntegerField
+      FieldName = 'ObjectType'
+      OnGetText = qManagerObjectTypeGetText
+    end
     object FMTBCDField1: TFMTBCDField
       FieldName = 'ID'
     end
@@ -1686,7 +1683,7 @@ object ClientsF: TClientsF
       '            @ID                = @ID output                 '
       '           ,@ClientID          = :ClientID'
       '           ,@LinkID            = :NEW_EmployeeID   '
-      '           ,@LinkType          = 5  '
+      '           ,@LinkType          = 7  '
       ''
       'if @R > 0'
       'begin'
@@ -1709,7 +1706,7 @@ object ClientsF: TClientsF
       'exec @R = ClientReliationUpdateP'
       '                @ClientID          = :ClientID  '
       '               ,@LinkID            = :NEW_EmployeeID'
-      '               ,@LinkType          = 5  '
+      '               ,@LinkType          = 7  '
       '               ,@ID                = :ID'
       '       '
       'if @R > 0'
@@ -1742,6 +1739,7 @@ object ClientsF: TClientsF
   end
   object pmManager: TUniPopupMenu
     Images = ImageList16
+    OnPopup = pmManagerPopup
     Left = 457
     Top = 113
     object N1: TUniMenuItem

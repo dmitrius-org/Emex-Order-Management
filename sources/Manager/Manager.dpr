@@ -115,7 +115,8 @@ uses
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
-  uServiceEmex in '..\Service\uServiceEmex.pas';
+  uServiceEmex in '..\Service\uServiceEmex.pas',
+  uUtils.Strings in '..\Common\Common\uUtils.Strings.pas';
 
 {$R *.res}
 

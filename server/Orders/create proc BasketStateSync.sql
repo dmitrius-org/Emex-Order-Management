@@ -80,7 +80,10 @@ as
 							  then p.Price / iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) * 100 - 100
 							  else 0
                             end 
-						
+        ,o.Warning         = case
+                              when isnull(p.WarnText, '') <> '' then p.WarnText	
+                              else o.Warning  
+                             end
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
@@ -88,12 +91,12 @@ as
    
  -- превышение цены
  Update o
-    set o.Warning         = case
+    set /*o.Warning         = case
                               when isnull(p.WarnText, '') <> '' then p.WarnText
 	                          when @CoeffMaxAgree < o.OverPricing then '+' + convert(varchar(128), o.OverPricing)
 							  else ''
-	                        end
-	   ,o.flag            = case
+	                        end*/
+	    o.flag            = case
 	                          when @CoeffMaxAgree < o.OverPricing then isnull (o.flag, 0) | 1
 							  else (isnull(o.flag, 0) & ~1)
 	                        end
@@ -104,12 +107,12 @@ as
 
  -- нет цены
  Update o
-    set o.Warning         = case
+    set /*o.Warning         = case
 	                          when p.Price = 0 then 'Нет цены'
 							  else o.Warning
-	                        end
+	                        end*/
 							
-	   ,o.flag            = case
+	   o.flag            = case
 	                          when p.Price = 0 then isnull (o.flag, 0) | 2
 							  else (isnull(o.flag, 0) & ~2)
 	                        end 

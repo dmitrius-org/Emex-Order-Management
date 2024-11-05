@@ -4,7 +4,7 @@ unit uOrdersF;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, System.StrUtils,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uniButton, uniBitBtn, uniGUIBaseClasses, uniPanel,
   uniLabel, uniEdit, uCommonType, Vcl.ExtCtrls, uniGroupBox, Math, uniMultiItem,
@@ -176,7 +176,8 @@ type
     /// <summary>
     ///  DataCheck - проверка заполнения обязательных полей
     ///</summary>
-    procedure DataCheck();
+    procedure DataCheck(ATargetStateID: integer = 0);
+
 
     procedure SetOpenUrl(AUrl: string);
 
@@ -241,7 +242,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast, uOrdersProtocol_T;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast, uOrdersProtocol_T, uUtils.Strings;
 
 function OrderF: TOrderF;
 begin
@@ -361,7 +362,10 @@ end;
 
 procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0); var sqltext: string;
 begin
-  DataCheck();
+
+  RetVal.Clear;
+
+  DataCheck(ATargetStateID);
 
   if RetVal.Code = 0 then
   begin
@@ -503,6 +507,7 @@ end;
 procedure TOrderF.btnOkToCancelClick(Sender: TObject);
 begin
   btnOkToCancel.Enabled := False;
+
   OrderUpdate(12 {InCancel	Отказан});
 
   if RetVal.Code = 0 then
@@ -527,22 +532,69 @@ begin
   SetBtnEnabled;
 end;
 
-procedure TOrderF.DataCheck;
+procedure TOrderF.DataCheck(ATargetStateID: integer = 0);
+const
+  ValidNameSymbols = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789-()., ';
+  ForbiddenWords: array[1..8] of string = (
+  'Запчасть', 'Запасные части', 'Автозапчасть', 'Автозч', 'Деталь',
+  'Автодеталь', 'Автопринадлежность', 'Автокомпонент');
+var
+  I: Integer;
 begin
   RetVal.Clear;
 
   case FAction of
     acInsert, acReportCreate, acUpdate, acReportEdit:
     begin
+      if ATargetStateID <> 0 then
       if edtDetailNameF.IsBlank then
       begin
         RetVal.Code := 1;
         RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
         Exit();
-      end
+      end;
+
+      // Проверка допустимых символов
+      for I := 1 to Length(edtDetailNameF.Text) do
+      begin
+        if not CharInSet(edtDetailNameF.Text[I], ValidNameSymbols) then
+        begin
+          RetVal.Code := 1;
+          RetVal.Message := 'Поле [Наименование] содержит недопустимые символы!';
+          Exit();
+        end;
+      end;
+
+      // Проверка запрещенных слов
+      for I := Low(ForbiddenWords) to High(ForbiddenWords) do
+      begin
+        if Pos(ForbiddenWords[I], edtDetailNameF.Text) > 0 then
+        begin
+          RetVal.Code := 1;
+          RetVal.Message := 'Поле [Наименование] содержит запрещенные слова!';
+          Exit();
+        end;
+      end;
+
+      // Проверка на пустое или только пробелы
+//      if Trim(edtDetailNameF.Text) = '' then
+//      begin
+//        RetVal.Code := 1;
+//        RetVal.Message := 'Поле [Наименование] не должно содержать только пробелы!';
+//        Exit();
+//      end;
+
+      // Проверка веса
+      if (edtWeightKG.Value = 0) and ((edtWeightKGF.Value = 0) or (edtWeightKGF.Text = '')) then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Невозможно подтвердить деталь: Вес Физический и Вес Физический Факт равны нулю или отсутствуют!';
+        Exit();
+      end;
     end;
   end;
 end;
+
 
 procedure TOrderF.DataLoad;
 var js: string;

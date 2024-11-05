@@ -29,13 +29,15 @@ as
          Spid                
         ,ClientID            
         ,LinkID	             
-        ,LinkType                       
+        ,LinkType 
+        ,ObjectType
         )
   OUTPUT INSERTED.ID INTO @tID
   select @@SPID      
         ,@ClientID           
         ,@LinkID        
-        ,@LinkType     
+        ,@LinkType   
+        ,0
 
   Select @ID = ID from @tID
 
@@ -44,5 +46,5 @@ return @r
 go
 grant exec on ClientReliatioInsertP to public
 go
-exec setOV 'ClientReliatioInsertP', 'P', '20240101', '0'
+exec setOV 'ClientReliatioInsertP', 'P', '20241105', '1'
 go

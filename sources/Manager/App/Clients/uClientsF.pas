@@ -177,6 +177,7 @@ type
     tabShipments: TUniTabSheet;
     cbStatusRequiringPayment: TUniCheckComboBox;
     UniLabel10: TUniLabel;
+    qManagerObjectType: TIntegerField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -210,6 +211,10 @@ type
     procedure pmProfilesCustomerPopup(Sender: TObject);
     procedure actMarginEditExecute(Sender: TObject);
     procedure actReliabilityEditExecute(Sender: TObject);
+    procedure qManagerObjectTypeGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure ManagerGridCellClick(Column: TUniDBGridColumn);
+    procedure pmManagerPopup(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -239,6 +244,8 @@ type
     procedure DelimiterList();
 
     procedure PromptMarginEditCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure ManagerEditEnabled();
   public
     { Public declarations }
     property FormAction: TFormAction read FAction write SetAction;
@@ -527,6 +534,17 @@ begin
   end;
 end;
 
+procedure TClientsF.ManagerEditEnabled;
+begin
+  actManagerEdit.Enabled := qManagerObjectType.Value = 0;
+  actManagerDelete.Enabled := qManagerObjectType.Value = 0;
+end;
+
+procedure TClientsF.ManagerGridCellClick(Column: TUniDBGridColumn);
+begin
+  ManagerEditEnabled;
+end;
+
 procedure TClientsF.ManagerGridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
@@ -549,6 +567,11 @@ begin
 
   qManager.Close;
   qManager.Open;
+end;
+
+procedure TClientsF.pmManagerPopup(Sender: TObject);
+begin
+  ManagerEditEnabled;
 end;
 
 procedure TClientsF.pmProfilesCustomerPopup(Sender: TObject);
@@ -581,6 +604,17 @@ end;
 procedure TClientsF.qManagerAfterPost(DataSet: TDataSet);
 begin
   ManagerGridRefresh
+end;
+
+procedure TClientsF.qManagerObjectTypeGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if (Sender.AsInteger = 1) then
+  begin
+    Text := '<div class="grid-order-message" data-qtip="Права на группе пользователей"><i class="fa fa-users"></i></div> ';
+  end
+  else
+    Text := '';
 end;
 
 procedure TClientsF.SetAction(const Value: TFormAction);

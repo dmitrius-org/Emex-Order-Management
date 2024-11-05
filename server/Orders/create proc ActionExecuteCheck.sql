@@ -118,12 +118,54 @@ as
    inner join tNodes n2 (nolock)
            on n2.NodeID     = o.StatusID
 		  and n2.Brief      = 'InBasket'-- В корзине
-
   where p.Spid = @@spid 
     and not exists (select 1
 	                  from pAccrualAction pp (nolock)
 					 where pp.Spid     = @@spid
 					   and pp.ObjectID = o.OrderID)
+
+
+
+  -- Обновляем pAccrualAction с проверками в одном запросе
+  UPDATE pAccrualAction
+     SET RetVal = CASE 
+                    -- Проверка на пустое наименование
+                    WHEN o.DetailName IS NULL OR LTRIM(RTRIM(o.DetailName)) = '' 
+                    THEN 540 -- 'Поле наименования пустое!'
+     
+                    -- Проверка на недопустимые символы
+                    WHEN o.DetailName LIKE '%[^а-яА-Я0-9\-\(\)\.\,\ ]%' ESCAPE '\' 
+                    THEN 541 -- 'Наименование содержит недопустимые символы!'
+     
+                    -- Проверка на запрещенные слова
+                    WHEN o.DetailName LIKE '%Запчасть%' 
+                      OR o.DetailName LIKE '%Запасные части%'
+                      OR o.DetailName LIKE '%Автозапчасть%'
+                      OR o.DetailName LIKE '%Автозч%'
+                      OR o.DetailName LIKE '%Деталь%'
+                      OR o.DetailName LIKE '%Автодеталь%'
+                      OR o.DetailName LIKE '%Автопринадлежность%'
+                      OR o.DetailName LIKE '%Автокомпонент%' 
+                    THEN 542 -- 'Наименование содержит запрещенные слова!'
+     
+                    -- Проверка на только пробелы
+                    WHEN LTRIM(RTRIM(o.DetailName)) = '' 
+                    THEN 543 -- 'Наименование содержит только пробелы!'
+     
+                    -- Проверка веса
+                    WHEN o.WeightKG = 0  AND (o.WeightKGF IS NULL OR o.WeightKGF = 0) 
+                    THEN 544 -- 'Вес Физический из прайса = 0, и Вес Физический Факт пустой или равен 0!'
+     
+                    ELSE p.RetVal -- Если ошибок нет, оставляем текущее значение
+                  END
+    FROM pAccrualAction p (NOLOCK)
+   INNER JOIN tNodes n2 (NOLOCK)
+           ON n2.NodeID = p.NewStateID
+          AND n2.Brief in ('InChecked', 'InBasket')
+   INNER JOIN vOrders o 
+           ON o.OrderID = p.ObjectID
+   WHERE p.Spid = @@SPID
+     AND p.RetVal = 0;
 
                          
   if exists (select count(distinct cp.SuppliersID)

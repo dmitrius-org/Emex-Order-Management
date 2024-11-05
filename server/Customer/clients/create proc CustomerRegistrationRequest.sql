@@ -67,6 +67,7 @@ as
             ,Hash
             ,HashDate
             ,SuppliersID
+            ,StatusRequiringPayment
             )
       OUTPUT INSERTED.ClientID INTO @ID
       select @Email  
@@ -77,6 +78,8 @@ as
             ,@Hash
             ,getdate()
             ,@SuppliersID
+            ,'3;4;5;7'
+
 
      Select @ClientID = ID from @ID
 
@@ -128,5 +131,5 @@ return @r
 go
 grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'CustomerRegistrationRequest', 'P', '20241021', '2'
+exec setOV 'CustomerRegistrationRequest', 'P', '20241105', '3'
 go

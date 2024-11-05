@@ -149,7 +149,7 @@ object Task_T: TTask_T
         Left = 0
         Top = 0
         Width = 1173
-        Height = 300
+        Height = 400
         Hint = ''
         ShowHint = True
         ParentColor = False
@@ -162,7 +162,7 @@ object Task_T: TTask_T
           Left = 0
           Top = 0
           Width = 1173
-          Height = 300
+          Height = 400
           Hint = ''
           ShowHint = True
           BodyRTL = False
@@ -274,9 +274,9 @@ object Task_T: TTask_T
       end
       object pnlTaskDetail: TUniContainerPanel
         Left = 0
-        Top = 300
+        Top = 400
         Width = 1173
-        Height = 218
+        Height = 118
         Hint = ''
         ShowHint = True
         ParentColor = False
@@ -284,11 +284,13 @@ object Task_T: TTask_T
         TabOrder = 2
         Layout = 'fit'
         LayoutConfig.Region = 'center'
+        ExplicitTop = 300
+        ExplicitHeight = 218
         object GridDetail: TUniDBGrid
           Left = 0
           Top = 0
           Width = 1173
-          Height = 218
+          Height = 118
           Hint = ''
           ShowHint = True
           BodyRTL = False
@@ -314,7 +316,7 @@ object Task_T: TTask_T
           WebOptions.FetchAll = True
           LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
           LoadMask.Color = clActiveCaption
-          LayoutConfig.ComponentCls = 'grid-task'
+          LayoutConfig.ComponentCls = 'grid-task-detail'
           LayoutConfig.Height = '100'
           LayoutConfig.Width = '100'
           BorderStyle = ubsNone

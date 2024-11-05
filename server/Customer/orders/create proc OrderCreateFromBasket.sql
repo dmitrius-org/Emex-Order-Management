@@ -101,7 +101,7 @@ declare @r int = 0
    where m.spid = @@spid   
      and m.Type = 6 -- Корзина
      
-  insert into tPrice with (rowlock)
+  insert into tPrice with (rowlock) -- если детали нет в нашей системе, то добавим его
         (     
          MakeLogo 
   	    ,Brand    
@@ -124,7 +124,10 @@ declare @r int = 0
   	    ,b.PartNameRus --DetailName
   	    ,b.PriceLogo  
   	    ,b.WeightKG
-        ,b.VolumeKG
+        ,case
+           when b.VolumeKG = 0 then b.WeightKG
+           else b.VolumeKG
+         end 
   	    ,b.WeightKG
         ,b.VolumeKG
         --,b.Price
@@ -216,7 +219,10 @@ declare @r int = 0
         ,16                      -- on-line заказ
          + iif((isnull(b.flag, 0)&512)>0, 512/*Вес изменен клиентом*/, 0)
         ,b.WeightKG              -- Вес Физический из прайса    
-        ,b.VolumeKG              -- Вес Объемный из прайса
+        ,case
+           when b.VolumeKG = 0 then b.WeightKG
+           else b.VolumeKG
+         end                     -- Вес Объемный из прайса
         ,b.DestinationLogo
         ,pd.Name                 -- DestinationName
         ,b.PercentSupped         -- процент поставки
@@ -327,6 +333,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20241011', '19'
+exec setOV 'OrderCreateFromBasket', 'P', '20241101', '20'
 go
  

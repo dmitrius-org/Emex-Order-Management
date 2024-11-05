@@ -26,48 +26,21 @@ as
 			 (               
              Spid                              
             ,ClientID 
-            ,ClientReliationID --идентификатор ClientReliationID
-            ,LinkID	   -- пользователь        
-            ,LinkType  -- тип объекта                    
+            ,ClientReliationID -- идентификатор ClientReliationID
+            ,LinkID	           -- пользователь/группа        
+            ,LinkType  -- тип объекта  
+            ,ObjectType
 			)
       Select @@SPID        
             ,o.LinkID        -- ClientID            
             ,o.GrantObjectID -- ClientReliationID
-            ,o.ObjectID      -- LinkID пользователь  
-            ,5               -- LinkType
+            ,o.ObjectID      -- LinkID пользователь/группа  
+            ,o.LinkType      -- LinkType
+            ,o.ObjectType
         from tGrantObject o (nolock)
-       where o.ObjectType = 0
+       where o.ObjectType in (0, 1)
          and o.LinkType   = 7
          and o.LinkID     = @ClientID
-
-
-	  insert pClientReliation   -- данные с группы пользователей
-			 (               
-             Spid                              
-            ,ClientID 
-            ,ClientReliationID --идентификатор ClientReliationID
-            ,LinkID	   -- пользователь        
-            ,LinkType  -- тип объекта                    
-			)
-      Select @@SPID 
-            ,o.LinkID
-            ,o.GrantObjectID
-            ,ur.UserID        -- LinkID  пользователь 
-            ,5                -- LinkType
-        from tGrantObject o (nolock)
-       inner join tGroups g (nolock)
-               on g.GroupID= o.ObjectID 
-       inner join tUserReliation ur (nolock)
-               on ur.GroupID = g.GroupID
-              and ur.LinkType= 2 
-       where o.ObjectType = 1
-         and o.LinkType   = 7
-         and o.LinkID     = @ClientID
-         and not exists (select 1
-                           from pClientReliation p (nolock)
-                          where p.Spid     = @@spid
-                            and p.LinkID   = ur.UserID
-                            and p.LinkType = 5)
 
   end
   else
@@ -82,24 +55,29 @@ as
 	   and not exists ( select 1
 	                      from pClientReliation p (nolock)
 						 where p.Spid              = @@spid
-						   and p.ClientReliationID = t.GrantObjectID
-                           and p.LinkType          = 5
-						   and isnull(p.ClientReliationID, 0) <> 0   
+						   and isnull(p.ClientReliationID, 0) = t.GrantObjectID 
                       )
 
-	  insert tGrantObject  
-			(ObjectID -- пользователь
-            ,ObjectType
-            ,LinkID   -- клиент
-            ,LinkType)
-	  select LinkID   -- пользователь
-            ,0
-            ,@ClientID-- клиент
-            ,7    
-	   from pClientReliation (nolock)
-	  where Spid     = @@Spid 
-        and LinkType = 5
-	    and isnull(ClientReliationID, 0) = 0
+	 insert tGrantObject with (rowlock) 
+	       (ObjectID -- пользователь/группа
+           ,ObjectType
+           ,LinkID   -- клиент
+           ,LinkType)
+	 select p.LinkID   -- пользователь/группа
+           ,p.ObjectType
+           ,@ClientID-- клиент
+           ,p.LinkType   
+	   from pClientReliation p (nolock)
+	  where p.Spid     = @@Spid 
+        and p.LinkType = 7
+        and p.ClientReliationID is null
+	    --and not exists (select 1
+	    --                  from tGrantObject t (nolock)
+		   --              where t.ObjectID   = p.LinkID
+					--	   and t.ObjectType = p.ObjectType
+     --                      and t.LinkID     = @ClientID     
+     --                      and t.LinkType   = p.LinkType 
+     --                 )
 
      Update t
         set t.ObjectID = p.LinkID   --пользователь   
@@ -108,7 +86,7 @@ as
       inner join tGrantObject t (updlock)
               on t.GrantObjectID = p.ClientReliationID
       where p.Spid     = @@Spid 
-        and p.LinkType = 5
+        and p.LinkType = 7
   end
 
 
@@ -117,5 +95,5 @@ return @r
 go
 grant exec on EmployeeReliationload to public
 go
-exec setOV 'EmployeeReliationload', 'P', '20240101', '0'
+exec setOV 'EmployeeReliationload', 'P', '20241105', '1'
 go

@@ -504,6 +504,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
+        <DCCReference Include="..\Common\Common\uUtils.Strings.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

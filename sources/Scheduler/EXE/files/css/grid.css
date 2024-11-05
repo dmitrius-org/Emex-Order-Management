@@ -23,3 +23,22 @@
     -webkit-animation: fa-spin 1s infinite steps(8);
     animation: fa-spin 1s infinite steps(8);
 }
+
+/* Перенос строки в заголовке таблицы планировщика */
+.grid-task-detail .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+.grid-task-detail .x-grid-cell-inner {
+    position: relative;
+    z-index: 1;
+    text-overflow: ellipsis;
+    padding: 3px 2px 2px;
+}
+
+.grid-task-detail .x-grid-item {
+    color: #000;
+    font: 250 12px / 15px helvetica, arial, verdana, sans-serif;
+    background-color: #fff;
+}

@@ -51,13 +51,13 @@ var
 
 implementation
 
-uses
-  ServerModule;
+//uses
+//  ServerModule;
 
 function logger: TLoggerThread;
 begin
-  if not Assigned(Flogger) then
-     CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + 'admin_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
+//  if not Assigned(Flogger) then
+//     CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + 'admin_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
 
   Result := Flogger;
 end;
