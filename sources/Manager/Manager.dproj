@@ -78,9 +78,7 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <UWP_DelphiLogo150>$(ProjectName).Artwork\Windows\Uwp_150.png</UWP_DelphiLogo150>
         <UWP_DelphiLogo44>$(ProjectName).Artwork\Windows\Uwp_44.png</UWP_DelphiLogo44>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
@@ -123,8 +121,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
-        <PostBuildEvent><![CDATA[Taskkill /F /im $(OUTPUTFILENAME) 2>1 || exit /b 0
-$(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEvent><![CDATA[Taskkill /F /im $(OUTPUTFILENAME) 2>1 || exit /b 0
 $(PreBuildEvent)]]></PreBuildEvent>
         <PreBuildEventCancelOnError>false</PreBuildEventCancelOnError>
@@ -139,10 +135,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>94</VerInfo_Build>
+        <VerInfo_Build>95</VerInfo_Build>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.94;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.5;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.95;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.5;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -505,6 +502,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Strings.pas"/>
+        <DCCReference Include="App\Statistics\uStatisticCanceled.pas">
+            <Form>StatisticCanceled</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Statistics\uStatisticBrand.pas">
+            <Form>StatisticBrand</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -1602,7 +1609,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PreBuildEventIgnoreExitCode>True</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PostBuildEvent>
+        <PostBuildEvent/>
         <PostBuildEventIgnoreExitCode>True</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>

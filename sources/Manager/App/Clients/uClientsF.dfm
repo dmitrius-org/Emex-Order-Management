@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabManager
+    ActivePage = tabHome
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -62,14 +62,14 @@ object ClientsF: TClientsF
         Left = 0
         Top = 0
         Width = 1177
-        Height = 143
+        Height = 217
         Hint = ''
         ParentColor = False
         Align = alTop
         TabOrder = 0
         DesignSize = (
           1177
-          143)
+          217)
         object edtBrief: TUniEdit
           Left = 144
           Top = 16
@@ -117,6 +117,25 @@ object ClientsF: TClientsF
           AnyMatch = True
           IconItems = <>
           Value = '-1'
+        end
+        object UniLabel11: TUniLabel
+          Left = 25
+          Top = 141
+          Width = 30
+          Height = 13
+          Hint = ''
+          Caption = 'Email:'
+          TabOrder = 6
+        end
+        object edtEmail: TUniEdit
+          Left = 144
+          Top = 138
+          Width = 385
+          Hint = ''
+          Text = ''
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 7
+          ClearButton = True
         end
       end
       object fsAudit: TUniFieldSet
@@ -294,7 +313,9 @@ object ClientsF: TClientsF
           WebOptions.FetchAll = True
           LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
           LoadMask.Color = clActiveCaption
-          EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+          EmptyText = 
+            '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+            '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
           LayoutConfig.ComponentCls = 'grid-clients-file-format'
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Height = '100'
@@ -528,7 +549,9 @@ object ClientsF: TClientsF
           WebOptions.FetchAll = True
           LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
           LoadMask.Color = clActiveCaption
-          EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+          EmptyText = 
+            '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+            '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
           LayoutConfig.ComponentCls = 'grid-clients-file-format'
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Height = '100'
@@ -866,7 +889,9 @@ object ClientsF: TClientsF
           WebOptions.FetchAll = True
           LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
           LoadMask.Color = clActiveCaption
-          EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+          EmptyText = 
+            '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+            '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Height = '0'
           LayoutConfig.Width = '100'

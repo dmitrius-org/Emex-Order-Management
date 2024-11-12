@@ -16,16 +16,16 @@ object StatisticsT: TStatisticsT
   TabOrder = 0
   ParentColor = False
   ParentBackground = False
-  object UniPageControl1: TUniPageControl
+  object PageCommon: TUniPageControl
     Left = 0
     Top = 0
     Width = 1324
     Height = 549
     Hint = ''
-    ActivePage = UniTabSheet1
+    ActivePage = TabCanceled
     Align = alClient
     TabOrder = 0
-    object UniTabOrders: TUniTabSheet
+    object TabOrderChart: TUniTabSheet
       Hint = ''
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1072#1084
       Layout = 'fit'
@@ -166,7 +166,7 @@ object StatisticsT: TStatisticsT
         end
       end
     end
-    object UniTabSheet1: TUniTabSheet
+    object TabOrders: TUniTabSheet
       Hint = ''
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
@@ -430,6 +430,22 @@ object StatisticsT: TStatisticsT
           end>
       end
     end
+    object TabBrand: TUniTabSheet
+      Hint = ''
+      Caption = #1041#1088#1077#1085#1076#1099
+      Layout = 'fit'
+      OnBeforeFirstActivate = TabBrandBeforeFirstActivate
+    end
+    object TabCanceled: TUniTabSheet
+      Hint = ''
+      Caption = #1054#1090#1082#1072#1079#1099
+      Layout = 'fit'
+      OnBeforeFirstActivate = TabCanceledBeforeFirstActivate
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1324
+      ExplicitHeight = 549
+    end
   end
   object qAverageCountOrders: TFDQuery
     Connection = UniMainModule.FDConnection
@@ -519,15 +535,7 @@ object StatisticsT: TStatisticsT
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
-      'SELECT c.[ClientID]'
-      '      ,c.[Brief]'
-      '      ,c.[Name]'
-      '  FROM [tClients] c (nolock)'
-      ' -- '#1087#1088#1072#1074#1072
-      ' inner join vUserAccess ua (nolock)'
-      '         on ua.UserID    = dbo.GetUserID()'
-      '        and ua.LinkType  = 7'
-      '        and ua.LinkID    = c.ClientID')
+      'exec OrderFilter_Client')
     Left = 572
     Top = 433
     object qClientClientID: TFMTBCDField

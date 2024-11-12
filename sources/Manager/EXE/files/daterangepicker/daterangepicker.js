@@ -70,7 +70,7 @@
         this.locale = {
             direction: 'ltr',
             format: moment.localeData().longDateFormat('L'),
-            separator: ' - ',
+            separator: '-',
             applyLabel: 'Apply',
             cancelLabel: 'Cancel',
             weekLabel: 'W',
@@ -425,10 +425,10 @@
             .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
             .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this));
 
-        if (this.element.is('input') || this.element.is('button')) {
+        if (this.element.is('input') ||  this.element.is('button')) {
             this.element.on({
-                'click.daterangepicker': $.proxy(this.show, this),
-                'focus.daterangepicker': $.proxy(this.show, this),
+               // 'click.daterangepicker': $.proxy(this.show, this),
+               // 'focus.daterangepicker': $.proxy(this.show, this),
                 'keyup.daterangepicker': $.proxy(this.elementChanged, this),
                 'keydown.daterangepicker': $.proxy(this.keydown, this) //IE 11 compatibility
             });

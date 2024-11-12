@@ -701,9 +701,9 @@ object OrdersT: TOrdersT
           ImageIndex = 2
         end
         object fOrderNum: TUniEdit
-          Left = 490
+          Left = 527
           Top = 33
-          Width = 185
+          Width = 148
           Hint = ''
           ShowHint = True
           Text = ''
@@ -714,7 +714,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel4: TUniLabel
-          Left = 490
+          Left = 527
           Top = 14
           Width = 76
           Height = 13
@@ -961,24 +961,27 @@ object OrdersT: TOrdersT
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
-        object fOrderDate: TUniHTMLFrame
-          Left = 326
+        object edtOrderDate: TUniDateRangePicker
+          Left = 324
           Top = 33
-          Width = 158
-          Height = 24
+          Width = 197
           Hint = ''
-          ParentCustomHint = False
           ShowHint = True
-          ParentShowHint = False
-          HTML.Strings = (
-            '<div class="">'
-            
-              '<input type="text" name="fOrderDate" value="" class="x-form-fiel' +
-              'd x-form-empty-field x-form-empty-field-default x-form-text x-fo' +
-              'rm-text-default" />'
-            '</div>')
-          LayoutConfig.ComponentCls = 'daterangepicker-container '
-          OnAjaxEvent = fOrderDateAjaxEvent
+          Text = 'edtOrderDate'
+          TabOrder = 20
+          Triggers = <
+            item
+              ButtonId = 0
+              IconCls = 'x-form-clear-trigger'
+              HandleClicks = True
+            end
+            item
+              ButtonId = 1
+              IconCls = 'x-form-date-trigger'
+              HandleClicks = True
+            end>
+          DateFormat = 'DD/MM/YYYY'
+          DatePickerOptions.Opens = ooCenter
         end
       end
     end

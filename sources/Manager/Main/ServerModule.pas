@@ -1,4 +1,4 @@
-unit ServerModule;
+п»їunit ServerModule;
 
 {$I ..\compile.inc}
 
@@ -38,8 +38,8 @@ type
   function UniServerModule: TUniServerModule;
 
   /// <summary>
-  ///  ExploreWeb - Автоматический запуск приложения в браузере
-  ///               Для ускорения разработки
+  ///  ExploreWeb - РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ Р·Р°РїСѓСЃРє РїСЂРёР»РѕР¶РµРЅРёСЏ РІ Р±СЂР°СѓР·РµСЂРµ
+  ///               Р”Р»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°Р·СЂР°Р±РѕС‚РєРё
   ///</summary>
   procedure ExploreWeb(page:PChar);
 
@@ -79,7 +79,6 @@ begin
   ExploreWeb('http://127.0.0.1:8077');
   {$ENDIF}
   MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
-  //MimeTable.AddMimeType('mjs', 'application/javascript');
 
   FDManager.DriverDefFileName     := UniServerModule.StartPath + 'Drivers.ini';
   FDManager.ConnectionDefFileName := UniServerModule.StartPath + 'Connection.ini';
@@ -91,7 +90,7 @@ begin
   if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger > 0 then
     SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger
   else
-    SessionTimeout := 600000; // 10 минут
+    SessionTimeout := 600000; // 10 РјРёРЅСѓС‚
 
   Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
 
@@ -113,12 +112,12 @@ begin
   if Returnvalue <= 32  then
     begin
       case Returnvalue of
-         0: ShowMessage ('Ошибка, недостаточная память!');
-         2: ShowMessage ('Ошибка, ошибка имени файла!');
-         3: ShowMessage ('Ошибка, ошибка имени пути!');
-         11: ShowMessage ('Ошибка, файл EXE недействителен!');
+         0: ShowMessage ('РћС€РёР±РєР°, РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅР°СЏ РїР°РјСЏС‚СЊ!');
+         2: ShowMessage ('РћС€РёР±РєР°, РѕС€РёР±РєР° РёРјРµРЅРё С„Р°Р№Р»Р°!');
+         3: ShowMessage ('РћС€РёР±РєР°, РѕС€РёР±РєР° РёРјРµРЅРё РїСѓС‚Рё!');
+         11: ShowMessage ('РћС€РёР±РєР°, С„Р°Р№Р» EXE РЅРµРґРµР№СЃС‚РІРёС‚РµР»РµРЅ!');
       else
-        ShowMessage (PCHAR ('Код ошибки: '+ InttoStr (ReturnValue) +', пожалуйста, проверьте ошибку. '));
+        ShowMessage (PCHAR ('РљРѕРґ РѕС€РёР±РєРё: '+ InttoStr (ReturnValue) +', РїРѕР¶Р°Р»СѓР№СЃС‚Р°, РїСЂРѕРІРµСЂСЊС‚Рµ РѕС€РёР±РєСѓ. '));
       end;
     end;
 end;

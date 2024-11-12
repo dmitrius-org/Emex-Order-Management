@@ -40,13 +40,7 @@ as
       from tDocuments with (updlock index=PK_tDocuments_DocumentID)    
      where DocumentID = @DocumentID
 
-    Update r
-       set r.Amount   = isnull((select sum(d2.Amount*d2.Type)
-                                  from tDocuments d2 (nolock)
-                                 where d2.ClientID = r.ClientID
-                                ), 0)
-      from tRest r (updlock) 
-     where r.ClientID = @ClientID
+    exec RestCalc  @ClientID  = @ClientID
 
     commit tran
 
@@ -66,5 +60,5 @@ return @r
 go
 grant exec on DocumentEdit to public
 go
-exec setOV 'DocumentEdit', 'P', '20240917', '2'
+exec setOV 'DocumentEdit', 'P', '20241112', '3'
 go

@@ -106,7 +106,8 @@ begin
     First;
     while not Eof do
       begin
-        AComboBox.Items.Add(FieldByName('Name').AsString);
+        //AComboBox.Items.Add(FieldByName('Name').AsString);
+        AComboBox.Items.AddObject( FieldByName('Name').AsString, Pointer(FieldByName('ID').AsInteger) );
         Next;
       end;
     AComboBox.Items.EndUpdate;

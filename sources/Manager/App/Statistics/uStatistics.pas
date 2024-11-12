@@ -12,7 +12,7 @@ uses
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniButton,
   cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
   UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
-  uniGridExporters;
+  uniGridExporters, uStatisticBrand, uStatisticCanceled;
 
 type
   TStatisticsT = class(TUniFrame)
@@ -33,9 +33,9 @@ type
     dsClient: TDataSource;
     fClient: TUniCheckComboBox;
     UniLabel3: TUniLabel;
-    UniPageControl1: TUniPageControl;
-    UniTabOrders: TUniTabSheet;
-    UniTabSheet1: TUniTabSheet;
+    PageCommon: TUniPageControl;
+    TabOrderChart: TUniTabSheet;
+    TabOrders: TUniTabSheet;
     UniPanel3: TUniPanel;
     btnGridStatisticOpen: TUniButton;
     UniLabel6: TUniLabel;
@@ -58,6 +58,8 @@ type
     cbCancel: TUniComboBox;
     UniLabel8: TUniLabel;
     fCancel: TUniBitBtn;
+    TabBrand: TUniTabSheet;
+    TabCanceled: TUniTabSheet;
     procedure UniFrameCreate(Sender: TObject);
     procedure UniButton1Click(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
@@ -66,9 +68,16 @@ type
       Shift: TShiftState);
     procedure btnExcelExportButtonClick(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
+    procedure TabBrandBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
+    procedure TabCanceledBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
   private
     { Private declarations }
     FFilterTextClient: string;
+
+    StatisticBrand :TStatisticBrand;
+    StatisticCanceled :TStatisticCanceled;
 
     procedure FilterClientsCreate();
 
@@ -173,12 +182,12 @@ begin
 //    Options.Annotations('legendPosition', 'newRow');
     Options.hAxis('minValue', 0);
     SetLength(Series, 3);
-  Series[0] := 'annotations: {    '+
+    Series[0] := 'annotations: {    '+
                  '  stem: {         '+
                  '     length: 2  '+
                  '  }  '+
                  '} ';
-  Series[1] := 'annotations: {    '+
+    Series[1] := 'annotations: {    '+
                  '  stem: {         '+
                  '     length: 15  '+
                  '  }  '+
@@ -385,21 +394,44 @@ end;
 
 procedure TStatisticsT.UniFrameCreate(Sender: TObject);
 begin
-   UniPageControl1.ActivePage := UniTabOrders;
-  edtDateBegin.DateTime := IncDay(now(), -7);
+
   {$IFDEF Debug}
-  edtDateBegin.DateTime := IncDay(now(), -10);
+     edtDateBegin.DateTime := IncDay(now(), -10);
+  {$ELSE}
+     PageCommon.ActivePage := UniTabOrders;
+
+     edtDateBegin.DateTime := IncDay(now(), -7);
   {$ENDIF}
   edtDateEnd.DateTime := now();
 
   edtEndDate2.DateTime := now();
   edtBeginDate2.DateTime :=EnCodeDate(YearOf(Date), MonthOf(Date), 1);
 
-
-
   FilterClientsCreate;
 
   AverageCountOrders;
+end;
+
+procedure TStatisticsT.TabCanceledBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  if not Assigned(StatisticCanceled) then
+  begin
+    StatisticCanceled :=  TStatisticCanceled.Create(Self);
+    StatisticCanceled.Align := alClient;
+    StatisticCanceled.Parent := TabCanceled;
+  end;
+end;
+
+procedure TStatisticsT.TabBrandBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  if not Assigned(StatisticBrand) then
+  begin
+    StatisticBrand :=  TStatisticBrand.Create(Self);
+    StatisticBrand.Align := alClient;
+    StatisticBrand.Parent := TabBrand;
+  end;
 end;
 
 initialization

@@ -24,13 +24,7 @@ as
       
       delete tDocuments from tDocuments (rowlock) where DocumentID=@DocumentID
       
-      Update r
-         set r.Amount   = isnull((select sum(d2.Amount*d2.Type)
-                                    from tDocuments d2 (nolock)
-                                   where d2.ClientID   = r.ClientID
-                                  ), 0)
-        from tRest r (updlock) 
-       where r.ClientID = @ClientID
+      exec RestCalc  @ClientID  = @ClientID
       
       commit tran
 
@@ -50,5 +44,5 @@ return @r
 go
 grant exec on DocumentDelete to public
 go
-exec setOV 'DocumentDelete', 'P', '20241002', '1'
+exec setOV 'DocumentDelete', 'P', '20241112', '2'
 go

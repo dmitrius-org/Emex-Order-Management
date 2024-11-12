@@ -13,7 +13,7 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList,  Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, uCommonType;
+  uUserF, uGrant, uCommonType, uUtils.Grid;
 
 type
   TClientsT = class(TUniFrame)
@@ -79,6 +79,7 @@ type
     actClientAuthorizationClear: TAction;
     N12: TUniMenuItem;
     N13: TUniMenuItem;
+    QueryRest: TCurrencyField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -98,16 +99,28 @@ type
       const Column: TUniDBGridColumn; const Value: Variant);
     procedure actBalanceTotalExecute(Sender: TObject);
     procedure actClientAuthorizationClearExecute(Sender: TObject);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+      NewIndex: Integer);
+    procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
+    procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     FAction: Integer;
     procedure SetAction(const Value: Integer);
+
+    procedure SortColumn(const FieldName: string; Dir: Boolean);
+
+    procedure Refresh();
   public
     { Public declarations }
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  ClientCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
-    procedure UserFCallBack(Sender: TComponent; AResult:Integer);
+    procedure ClientCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure BalanceAddCallBack(Sender: TComponent; AResult:Integer);
     property FormAction: Integer read FAction write SetAction;
   end;
 
@@ -122,7 +135,7 @@ uses
 procedure TClientsT.actAddExecute(Sender: TObject);
 begin
   ClientsF.FormAction := TFormAction.acInsert;
-  ClientsF.ShowModal(UserFCallBack);
+  ClientsF.ShowModal(ClientCallBack);
 end;
 
 procedure TClientsT.actBalanceAddExecute(Sender: TObject);
@@ -130,7 +143,7 @@ begin
   BalanceAddF.FormAction := TFormAction.acInsert;
   BalanceAddF.ClientID:=QueryClientID.AsInteger;
 
-  BalanceAddF.ShowModal();
+  BalanceAddF.ShowModal(BalanceAddCallBack);
 end;
 
 procedure TClientsT.actBalanceExecute(Sender: TObject);
@@ -162,14 +175,14 @@ procedure TClientsT.actDeleteExecute(Sender: TObject);
 begin
   ClientsF.FormAction := TFormAction.acDelete;
   ClientsF.ID:=QueryClientID.AsInteger;
-  ClientsF.ShowModal(UserFCallBack);
+  ClientsF.ShowModal(ClientCallBack);
 end;
 
 procedure TClientsT.actEditExecute(Sender: TObject);
 begin
   ClientsF.FormAction := TFormAction.acUpdate;
   ClientsF.ID:=QueryClientID.AsInteger;
-  ClientsF.ShowModal(UserFCallBack);
+  ClientsF.ShowModal(ClientCallBack);
 end;
 
 procedure TClientsT.actLookupExecute(Sender: TObject);
@@ -200,15 +213,53 @@ end;
 
 procedure TClientsT.actRefreshAllExecute(Sender: TObject);
 begin
-  Query.Close();
-  Query.Open();
+  Refresh;
 end;
 
 procedure TClientsT.actViewExecute(Sender: TObject);
 begin
   ClientsF.FormAction := TFormAction.acShow;
   ClientsF.ID:=QueryClientID.AsInteger;
-  ClientsF.ShowModal(UserFCallBack);
+end;
+
+procedure TClientsT.BalanceAddCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+
+  if BalanceAddF.FormAction = acInsert then
+  begin
+    Query.RefreshRecord();
+    Grid.RefreshCurrentRow();
+  end;
+end;
+
+procedure TClientsT.ClientCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+
+  if ClientsF.FormAction = acInsert then
+  begin
+    Query.Refresh;
+  end;
+  if ClientsF.FormAction = acUpdate then
+  begin
+    Query.RefreshRecord();
+    Grid.RefreshCurrentRow();
+  end;
+  if ClientsF.FormAction = acDelete then
+  begin
+    Query.Delete;
+  end;
+end;
+
+procedure TClientsT.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if Params.Count > 0 then
+  begin
+    if ((EventName = '_columnhide') or (EventName = '_columnshow')) then
+      GridExt.GridLayoutSave(self, Grid, Params, EventName);
+  end;
 end;
 
 procedure TClientsT.GridCellContextClick(Column: TUniDBGridColumn; X,
@@ -243,6 +294,24 @@ begin
   end;
 end;
 
+procedure TClientsT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
+  NewIndex: Integer);
+begin
+  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TClientsT.GridColumnResize(Sender: TUniBaseDBGridColumn;
+  NewSize: Integer);
+begin
+ GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+end;
+
+procedure TClientsT.GridColumnSort(Column: TUniDBGridColumn;
+  Direction: Boolean);
+begin
+  SortColumn(Column.FieldName, Direction);
+end;
+
 procedure TClientsT.GridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -258,6 +327,12 @@ end;
 procedure TClientsT.QueryAfterPost(DataSet: TDataSet);
 begin
   if FAction = Integer(acInsert) then  Query.Refresh;
+end;
+
+procedure TClientsT.Refresh;
+begin
+  Query.Close;
+  Query.Open;
 end;
 
 procedure TClientsT.SetAction(const Value: Integer);
@@ -282,8 +357,14 @@ begin
       ''');
 
   end;
+end;
 
-
+procedure TClientsT.SortColumn(const FieldName: string; Dir: Boolean);
+begin
+  if Dir then
+    Query.IndexName := FieldName+'_index_asc'
+  else
+    Query.IndexName := FieldName+'_index_des';
 end;
 
 procedure TClientsT.UniFrameCreate(Sender: TObject);
@@ -295,27 +376,13 @@ begin
 
 
   Grid.ReadOnly := not actEdit.Enabled;
+  // индексы для сортировки
+  GridExt.SortColumnCreate(Grid);
 
-  Query.Close;
-  Query.Open;
-end;
+  // восстановление настроек грида для пользователя
+  GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
 
-procedure TClientsT.UserFCallBack(Sender: TComponent; AResult: Integer);
-begin
-  if AResult <> mrOK then Exit;
-
-  if ClientsF.FormAction = acInsert then
-  begin
-    Query.Refresh();
-  end;
-  if ClientsF.FormAction = acUpdate then
-  begin
-    Query.Refresh();
-  end;
-  if ClientsF.FormAction = acDelete then
-  begin
-    Query.Refresh();
-  end;
+  Refresh;
 end;
 
 initialization

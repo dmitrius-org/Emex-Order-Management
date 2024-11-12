@@ -28,7 +28,6 @@ grant exec on OrderFilter_Client to public
 go
 exec setOV 'OrderFilter_Client', 'P', '20241020', '1'
 go
-exec OrderFilter_Client 
 
 
-
+exec OrderFilter_Client

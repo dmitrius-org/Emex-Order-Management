@@ -2,7 +2,7 @@ object BalanceT: TBalanceT
   Left = 0
   Top = 0
   ClientHeight = 527
-  ClientWidth = 1098
+  ClientWidth = 1125
   Caption = #1041#1072#1083#1072#1085#1089
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -13,7 +13,7 @@ object BalanceT: TBalanceT
   object Grid: TUniDBGrid
     Left = 0
     Top = 99
-    Width = 1098
+    Width = 1125
     Height = 428
     Hint = ''
     ShowHint = True
@@ -24,19 +24,6 @@ object BalanceT: TBalanceT
         'store.load=function store.load(sender, records, successful, oper' +
         'ation, eOpts)'#13#10'{'#13#10#13#10'  '#13#10'}')
     ClientEvents.UniEvents.Strings = (
-      
-        'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-        'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10' // config.displayMsg  = '#39'Vi' +
-        'sualizando {0} - {1} de <b>{2}</b>'#39','#13#10' // config.emptyMsg    = "' +
-        'N'#227'o h'#225' registros",'#13#10'}'
-      
-        'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
-        'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
-        'ent('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0].' +
-        'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
-        't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
-        '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
-        'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
       
         'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  //'#1059#1073#1080#1088#1072#1077#1084' '#1082#1085#1086#1087#1082#1091' ' +
         #1054#1073#1085#1086#1074#1080#1090#1100' '#1074' '#1055#1072#1085#1077#1083#1080' '#1080#1085#1089#1090#1088#1091#1084#1077#1085#1090#1086#1074', '#1085#1086#1084#1077#1088' 9-10, '#1089#1082#1088#1099#1074#1072#1077#1084' '#1077#1075#1086#13#10'  var ' +
@@ -52,7 +39,20 @@ object BalanceT: TBalanceT
         'utton'#39', text: '#39#39', tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handler: functi' +
         'on() {'#13#10'          sender.saveDocumentAs(exporterCfg);'#13#10'       }}' +
         #13#10'     );'#13#10'     toolbar.exportBtn.setIconCls('#39'ToExcel'#39');// icon.' +
-        '..     '#13#10'  }  '#13#10'}')
+        '..     '#13#10'  }  '#13#10'}'
+      
+        'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+        'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+        'ent('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0].' +
+        'data[sender.uniCol+1];'#13#10'        el.value = document.activeElemen' +
+        't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
+        '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
+        'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
+      
+        'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+        'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10' // config.displayMsg  = '#39'Vi' +
+        'sualizando {0} - {1} de <b>{2}</b>'#39','#13#10' // config.emptyMsg    = "' +
+        'N'#227'o h'#225' registros",'#13#10'}')
     RowEditor = True
     DataSource = DataSource
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgRowNumbers]
@@ -126,7 +126,7 @@ object BalanceT: TBalanceT
   object UniPanel1: TUniPanel
     Left = 0
     Top = 0
-    Width = 1098
+    Width = 1125
     Height = 99
     Hint = ''
     ShowHint = True
@@ -138,12 +138,12 @@ object BalanceT: TBalanceT
     ShowCaption = False
     Caption = 'UniPanel1'
     DesignSize = (
-      1098
+      1125
       99)
     object UniButton1: TUniButton
-      Left = 305
+      Left = 280
       Top = 61
-      Width = 75
+      Width = 127
       Height = 28
       Hint = ''
       ShowHint = True
@@ -152,36 +152,8 @@ object BalanceT: TBalanceT
       TabOrder = 2
       OnClick = UniButton1Click
     end
-    object edtDateEnd: TUniDateTimePicker
-      Left = 159
-      Top = 61
-      Width = 140
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      DateTime = 45253.000000000000000000
-      DateFormat = 'dd/MM/yyyy'
-      TimeFormat = 'HH:mm:ss'
-      Anchors = [akLeft, akRight, akBottom]
-      TabOrder = 4
-      ClearButton = True
-    end
-    object edtDateBegin: TUniDateTimePicker
-      Left = 13
-      Top = 61
-      Width = 140
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      DateTime = 45253.000000000000000000
-      DateFormat = 'dd/MM/yyyy'
-      TimeFormat = 'HH:mm:ss'
-      Anchors = [akLeft, akRight, akBottom]
-      TabOrder = 3
-      ClearButton = True
-    end
     object UniPanel2: TUniPanel
-      Left = 822
+      Left = 849
       Top = 1
       Width = 275
       Height = 97
@@ -213,7 +185,7 @@ object BalanceT: TBalanceT
       end
       object UniLabel1: TUniLabel
         Left = 51
-        Top = 7
+        Top = 10
         Width = 48
         Height = 17
         Hint = #1057#1088#1077#1076#1089#1090#1074#1072' '#1080#1084#1077#1102#1097#1080#1077#1089#1103' '#1085#1072' '#1073#1072#1083#1072#1085#1089#1077
@@ -239,7 +211,7 @@ object BalanceT: TBalanceT
     object cbClient: TUniFSComboBox
       Left = 13
       Top = 31
-      Width = 367
+      Width = 394
       Height = 26
       Hint = ''
       ShowHint = True
@@ -247,7 +219,7 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       ParentFont = False
       Font.Height = -12
-      TabOrder = 5
+      TabOrder = 3
       AnyMatch = True
       ClearButton = True
       IconItems = <>
@@ -265,7 +237,41 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       ParentFont = False
       Font.Height = -13
-      TabOrder = 6
+      TabOrder = 4
+    end
+    object edtDate: TUniDateRangePicker
+      Left = 13
+      Top = 63
+      Width = 236
+      Height = 26
+      Hint = ''
+      ShowHint = True
+      Text = 'edtDate'
+      TabOrder = 5
+      Triggers = <
+        item
+          ButtonId = 0
+          IconCls = 'x-form-clear-trigger'
+          HandleClicks = True
+        end
+        item
+          ButtonId = 1
+          IconCls = 'x-form-date-trigger'
+          HandleClicks = True
+        end>
+      DateFormat = 'DD/MM/YYYY'
+      DatePickerOptions.Opens = ooRight
+      DatePickerOptions.Ranges.Strings = (
+        #1057#1077#1075#1086#1076#1085#1103'=[moment(), moment()]'
+        
+          #1042#1095#1077#1088#1072'=[moment().subtract(1, "days"), moment().subtract(1, "days"' +
+          ')]'
+        #1055#1086#1089#1083#1077#1076#1085#1080#1077' 7 '#1076#1085#1077#1081'=[moment().subtract(6, "days"), moment()]'
+        #1055#1086#1089#1083#1077#1076#1085#1080#1077' 30 '#1076#1085#1077#1081'=[moment().subtract(29, "days"), moment()]'
+        #1069#1090#1086#1090' '#1084#1077#1089#1103#1094'=[moment().startOf("month"), moment().endOf("month")]'
+        
+          #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
+          'oment().subtract(1, "month").endOf("month")]')
     end
   end
   object DataSource: TDataSource

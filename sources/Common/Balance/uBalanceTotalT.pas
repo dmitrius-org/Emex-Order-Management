@@ -1,4 +1,4 @@
-unit uBalanceTotalT;
+п»їunit uBalanceTotalT;
 
 interface
 
@@ -111,7 +111,7 @@ end;
 
 procedure TBalanceTotalT.GridRefresh;
 begin
-  ShowMask('Ждите, операция выполняется');
+  ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ');
  // UniSession.Synchronize;
   try
 
@@ -128,7 +128,7 @@ end;
 procedure TBalanceTotalT.qShipmentsReceiptDateGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
-  // Ожидаемая дата поступления
+  // РћР¶РёРґР°РµРјР°СЏ РґР°С‚Р° РїРѕСЃС‚СѓРїР»РµРЅРёСЏ
   if (not qShipmentsReceiptDate2.IsNull) then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
@@ -167,7 +167,7 @@ var
 
   excelTemplate: string;
 begin
-  // Инициализируем TExcelFile и загружаем шаблон
+  // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј TExcelFile Рё Р·Р°РіСЂСѓР¶Р°РµРј С€Р°Р±Р»РѕРЅ
   ExcelFile := TXlsFile.Create;
   MemoryStream := TMemoryStream.Create;
 
@@ -175,19 +175,19 @@ begin
 
     excelTemplate := Sql.GetSetting('TemplateClientsShipments');
 
-    ExcelFile.Open(excelTemplate);  // Загружаем шаблон Excel
+    ExcelFile.Open(excelTemplate);  // Р—Р°РіСЂСѓР¶Р°РµРј С€Р°Р±Р»РѕРЅ Excel
 
     FQuery.First;
-    Row := 3;  // Начинаем с 2-й строки, так как 1-я — заголовки
+    Row := 3;  // РќР°С‡РёРЅР°РµРј СЃ 2-Р№ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє 1-СЏ вЂ” Р·Р°РіРѕР»РѕРІРєРё
 
-    // Проходим по записям DataSource и заполняем Excel
+    // РџСЂРѕС…РѕРґРёРј РїРѕ Р·Р°РїРёСЃСЏРј DataSource Рё Р·Р°РїРѕР»РЅСЏРµРј Excel
     while not FQuery.Eof do
     begin
-      Col := 1;  // Начинаем с первого столбца
+      Col := 1;  // РќР°С‡РёРЅР°РµРј СЃ РїРµСЂРІРѕРіРѕ СЃС‚РѕР»Р±С†Р°
 
       ExcelFile.SetCellValue(1, 1, qShipments.FieldByName('Invoice').Value);
 
-      // Заполняем ячейки данными из полей DataSet
+      // Р—Р°РїРѕР»РЅСЏРµРј СЏС‡РµР№РєРё РґР°РЅРЅС‹РјРё РёР· РїРѕР»РµР№ DataSet
       ExcelFile.SetCellValue(Row, Col, FQuery.FieldByName('ClientBrief').AsString);
       ExcelFile.SetCellValue(Row, Col + 1, FQuery.FieldByName('Manufacturer').AsString);
 
@@ -205,17 +205,17 @@ begin
       ExcelFile.SetCellValue(Row, Col + 10, FQuery.FieldByName('CustomerSubId').AsString);
       ExcelFile.SetCellValue(Row, Col + 11, FQuery.FieldByName('OrderDetailSubId').AsString);
       ExcelFile.SetCellValue(Row, Col + 12, FQuery.FieldByName('Box').AsString);
-      // Добавьте больше полей при необходимости...
+      // Р”РѕР±Р°РІСЊС‚Рµ Р±РѕР»СЊС€Рµ РїРѕР»РµР№ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё...
 
       Inc(Row);
       FQuery.Next;
     end;
 
-    // Сохраняем файл
+    // РЎРѕС…СЂР°РЅСЏРµРј С„Р°Р№Р»
     ExcelFile.Save(MemoryStream);
-    MemoryStream.Position := 0; // Возвращаем указатель в начало потока
+    MemoryStream.Position := 0; // Р’РѕР·РІСЂР°С‰Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РІ РЅР°С‡Р°Р»Рѕ РїРѕС‚РѕРєР°
 
-    // Отправка файла пользователю
+    // РћС‚РїСЂР°РІРєР° С„Р°Р№Р»Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
     UniSession.SendStream(MemoryStream, FileName);
   finally
     ExcelFile.Free;
@@ -226,7 +226,7 @@ end;
 procedure TBalanceTotalT.ShipmentsGridColumnActionClick(
   Column: TUniDBGridColumn; ButtonId: Integer);
 begin
- // не удалять !!!
+ // РЅРµ СѓРґР°Р»СЏС‚СЊ !!!
 end;
 
 procedure TBalanceTotalT.ShipmentsTotalDetailRefresh;

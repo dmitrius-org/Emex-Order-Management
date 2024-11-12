@@ -243,10 +243,23 @@ object ClientsT: TClientsT
       Hint = ''
       ShowHint = True
       BodyRTL = False
+      ClientEvents.ExtEvents.Strings = (
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
+          't out of range'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["column=" ' +
+          '+ column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
-          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'    config.displayInfo = true'#13#10'}'
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
+          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
+          'n the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(11).hi' +
+          'de();'#13#10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -256,10 +269,8 @@ object ClientsT: TClientsT
           '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
           'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
         
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'    config.displayInfo = true'#13#10'}')
       RowEditor = True
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete]
@@ -268,7 +279,9 @@ object ClientsT: TClientsT
       WebOptions.FetchAll = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clActiveCaption
-      EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EmptyText = 
+        '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+        '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
       LayoutConfig.ComponentCls = 'grid-clients'
       LayoutConfig.Flex = 1
       BorderStyle = ubsNone
@@ -278,8 +291,12 @@ object ClientsT: TClientsT
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown
+      OnAjaxEvent = GridAjaxEvent
+      OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnClearFilters = GridClearFilters
       OnCellContextClick = GridCellContextClick
+      OnColumnResize = GridColumnResize
       OnColumnFilter = GridColumnFilter
       Columns = <
         item
@@ -290,6 +307,7 @@ object ClientsT: TClientsT
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
           Width = 125
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'IsActive'
@@ -301,6 +319,7 @@ object ClientsT: TClientsT
           Hint = 
             #1040#1082#1090#1080#1074#1085#1099#1081' '#1087#1088#1086#1092#1080#1083#1100' ('#1054#1090#1082#1083#1102#1095#1072#1077#1090' '#1074#1086#1079#1084#1086#1078#1085#1086#1089#1090#1100' '#1074#1093#1086#1076#1072' '#1082#1083#1080#1077#1085#1090#1072' '#1074' '#1083#1080#1095#1085#1099#1081' '#1082 +
             #1072#1073#1080#1085#1077#1090')'
+          Sortable = True
         end
         item
           FieldName = 'Brief'
@@ -310,6 +329,7 @@ object ClientsT: TClientsT
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
           Width = 603
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'Name'
@@ -318,18 +338,27 @@ object ClientsT: TClientsT
           Width = 200
           Visible = False
           ReadOnly = True
+          Sortable = True
         end
         item
           FieldName = 'ClientTypeName'
           Title.Alignment = taCenter
           Title.Caption = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
           Width = 273
+          Sortable = True
         end
         item
           FieldName = 'Supplier'
           Title.Alignment = taCenter
           Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
           Width = 200
+          Sortable = True
+        end
+        item
+          FieldName = 'Rest'
+          Title.Alignment = taCenter
+          Title.Caption = #1041#1072#1083#1072#1085#1089
+          Width = 64
         end>
     end
     object UniHiddenPanel: TUniHiddenPanel
@@ -440,6 +469,10 @@ object ClientsT: TClientsT
     object QuerySupplier: TWideStringField
       FieldName = 'Supplier'
       Size = 512
+    end
+    object QueryRest: TCurrencyField
+      FieldName = 'Rest'
+      DisplayFormat = '###,##0.00 '#8381
     end
   end
   object DataSource: TDataSource
@@ -2669,24 +2702,7 @@ object ClientsT: TClientsT
       ''
       '')
     DeleteSQL.Strings = (
-      'declare @R numeric(18, 0)'
-      ''
-      'exec @R=ClientDelete @ClientID = :OLD_ClientID '
-      '/*'
-      'if @R = 0'
-      'begin'
-      '   exec @R = OrderFileFormatDelete'
-      '                --@OrderFileFormatID = @OrderFileFormatID'
-      '                @ClientID          = :OLD_ClientID'
-      'end*/'
-      ''
-      'if @R > 0'
-      'begin'
-      ' declare @M nvarchar(1024)'
-      ' set @M = dbo.GetRetMsg(@R)'
-      ''
-      ' RAISERROR (@M, 16, 1); '
-      'end')
+      'select 1')
     FetchRowSQL.Strings = (
       'SELECT *'
       '  FROM dbo.vClients'

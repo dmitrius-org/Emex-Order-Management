@@ -498,14 +498,10 @@ end;
 procedure TShipmentsT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  logger.Info(EventName);
-
-
   if Params.Count > 0 then
   begin
-    if (EventName = 'columnhide')     then
-    logger.Info(Params['column'].Value);
-    GridExt.GridLayoutSave(self, Grid, Params, EventName);
+    if ((EventName = '_columnhide') or (EventName = '_columnshow')) then
+      GridExt.GridLayoutSave(self, Grid, Params, EventName);
   end;
 end;
 

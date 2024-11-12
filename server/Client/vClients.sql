@@ -16,8 +16,9 @@ select c.ClientID
       ,c.updDatetime 
 	  ,c.IsActive
 	  ,c.UserID
-      ,ct.Name as ClientTypeName --
-	  ,s.Brief as Supplier
+      ,ct.Name  as ClientTypeName --
+	  ,s.Brief  as Supplier
+      ,r.Amount as Rest 
   from tClients c (nolock)
   left join tSuppliers s (nolock)
          on s.SuppliersID = c.SuppliersID
@@ -25,8 +26,12 @@ select c.ClientID
          on ct.ClientTypeID = c.ClientTypeID
   left join tOrderFileFormat o (nolock)
          on o.ClientID = c.ClientID
+  left join tRest r  (updlock) 
+         on r.ClientID = c.ClientID  
 go
 grant all on vClients to public
 go
-exec setOV 'vClients', 'V', '20240521', '1'
+exec setOV 'vClients', 'V', '20241112', '2'
 go
+
+select * from vClients

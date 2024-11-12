@@ -178,6 +178,8 @@ type
     cbStatusRequiringPayment: TUniCheckComboBox;
     UniLabel10: TUniLabel;
     qManagerObjectType: TIntegerField;
+    UniLabel11: TUniLabel;
+    edtEmail: TUniEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -365,24 +367,28 @@ begin
   case FAction of
     acInsert:
     begin
-      sqltext :=' declare @R      int                        '+
-                '        ,@ClientID numeric(18, 0)           '+
-                ' exec @r = ClientInsert                     '+
-                '             @ClientID  = @ClientID out     '+
-                '            ,@Brief     = :Brief            '+
-                '            ,@Name      = :Name             '+
-                '            ,@IsActive  = :IsActive         '+
-                '            ,@SuppliersID   = :SuppliersID '+
-                '            ,@Taxes         = :Taxes        '+
-                '            ,@ResponseType  = :ResponseType '+
-                '            ,@NotificationMethod  = :NotificationMethod '+
-                '            ,@NotificationAddress = :NotificationAddress'+
-                '            ,@ClientTypeID	       = :ClientTypeID	     '+
-                '' +
-                ' select @r as retcode      ';
+      sqltext :='''
+                 declare @R      int
+                        ,@ClientID numeric(18, 0)
+                 exec @r = ClientInsert
+                             @ClientID  = @ClientID out
+                            ,@Brief     = :Brief
+                            ,@Name      = :Name
+                            ,@IsActive  = :IsActive
+                            ,@SuppliersID   = :SuppliersID
+                            ,@Taxes         = :Taxes
+                            ,@ResponseType  = :ResponseType
+                            ,@NotificationMethod  = :NotificationMethod
+                            ,@NotificationAddress = :NotificationAddress
+                            ,@ClientTypeID	      = :ClientTypeID
+                            ,@Email	              = :Email
+
+                 select @r as retcode
+                 ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID'],
+               ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType',
+                'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'Email'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -391,7 +397,8 @@ begin
                cbResponseType.ItemIndex,
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
-               cbClientType.Value//,
+               cbClientType.Value,
+               edtEmail.Text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -414,12 +421,15 @@ begin
                             ,@NotificationAddress = :NotificationAddress
                             ,@ClientTypeID	      = :ClientTypeID
                             ,@StatusRequiringPayment=:StatusRequiringPayment
+                            ,@Email	              = :Email
 
                  select @r as retcode
                 ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes', 'ResponseType', 'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'StatusRequiringPayment'],
+               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes',
+               'ResponseType', 'NotificationMethod', 'NotificationAddress',
+               'ClientTypeID', 'StatusRequiringPayment', 'Email'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -430,7 +440,8 @@ begin
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
                cbClientType.value,
-               cbStatusRequiringPayment.Text
+               cbStatusRequiringPayment.Text,
+               edtEmail.Text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -509,6 +520,7 @@ begin
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
   cbStatusRequiringPayment.Text  := UniMainModule.Query.FieldByName('StatusRequiringPayment').AsString;
+  edtEmail.Text  := UniMainModule.Query.FieldByName('Email').AsString;
 
   //
   cbClientType.Value :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
@@ -682,7 +694,7 @@ begin
 
   ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
 
-  ComboBoxFill(cbStatusRequiringPayment,   ' select distinct SearchBrief as name, SearchID from tNodes (nolock) where Type = 0 and SearchID <> 8 order by SearchID ');
+  ComboBoxFill(cbStatusRequiringPayment,   ' select distinct SearchBrief as name, SearchID as ID from tNodes (nolock) where Type = 0 and SearchID <> 8 order by ID ');
 
   case FAction of
     acInsert, acReportCreate:

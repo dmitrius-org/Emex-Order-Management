@@ -41,9 +41,6 @@ object PromptMarginEdit: TPromptMarginEdit
       Align = alRight
       TabOrder = 2
       OnClick = btnOkClick
-      ExplicitLeft = 183
-      ExplicitTop = 5
-      ExplicitHeight = 25
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -56,9 +53,6 @@ object PromptMarginEdit: TPromptMarginEdit
       Align = alRight
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 93
-      ExplicitTop = 5
-      ExplicitHeight = 25
     end
   end
 end

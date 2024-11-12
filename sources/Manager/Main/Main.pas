@@ -1,4 +1,4 @@
-unit Main;
+п»їunit Main;
 
 interface
 
@@ -58,7 +58,7 @@ type
     Profile : TUniTreeNode;
 
     /// <summary>
-    ///  ConstructNavigator - создание меню пользователя
+    ///  ConstructNavigator - СЃРѕР·РґР°РЅРёРµ РјРµРЅСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
     ///</summary>
     procedure ConstructNavigator;
 
@@ -139,24 +139,26 @@ begin
   Path := UniServerModule.StartPath + 'files\';
   with UniMainModule.Query do
   begin
-    close;
-    sql.Clear;
-    sql.Add( '  declare @UserID numeric(18, 0);      '+
-             '   select @UserID = dbo.GetUserID();   '
-             );
+    Close;
+    Sql.Clear;
+    Sql.text :=
+     '''
+       declare @UserID numeric(18, 0);
+               select @UserID = dbo.GetUserID();
 
-    sql.Add( '  Select *      '+
-             '    from vGrant '+
-             '   where ObjectID = @UserID '+
-             '     and type  = 0          '+
-             '     and (value = 1         '+
-             '       or GroupValue = 1 or menuid =  600)   '+
-             '   order by N      ');
+       Select *
+         from vGrant
+        where ObjectID = @UserID
+          and type  = 0
+          and (value = 1
+            or GroupValue = 1 or menuid =  600)
+        order by N
+     ''';
 
-    open;
+    Open;
     if RecordCount = 0 then
     begin
-      exit
+      Exit
     end;
   end;
 
@@ -168,7 +170,7 @@ begin
       PID := UniMainModule.Query.FieldByName('ParentID').Value;
       c   := UniMainModule.Query.FieldByName('Caption').Value;
 
-      // сохраняем форму, которая будет открываться по клику на элементе меню
+      // СЃРѕС…СЂР°РЅСЏРµРј С„РѕСЂРјСѓ, РєРѕС‚РѕСЂР°СЏ Р±СѓРґРµС‚ РѕС‚РєСЂС‹РІР°С‚СЊСЃСЏ РїРѕ РєР»РёРєСѓ РЅР° СЌР»РµРјРµРЅС‚Рµ РјРµРЅСЋ
       FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
 
       Nd := FindNodeByID(PID);
@@ -192,7 +194,7 @@ begin
 
       UniMainModule.Query.Next;
     end;
-  finally
+  except
   end;
 end;
 
@@ -219,7 +221,7 @@ begin
     Exit();
   end;
 
-  // под 999 меню профиль
+  // РїРѕРґ 999 РјРµРЅСЋ РїСЂРѕС„РёР»СЊ
   if (Nd.Tag = -999) and (Nd.Action <> nil)  then
   begin
     Nd.Action.Execute;
@@ -229,30 +231,37 @@ begin
   if ((Nd.Count = 0) and (Nd.Text <> '') and (Nd.Tag<>-999)) then
   begin
     Ts := Nd.Data;
+
     if not Assigned(Ts) then
     begin
-      Ts := TUniTabSheet.Create(Self);
-      Ts.PageControl := pcMain;
-
-      if Nd.Text <> 'Главная' then
-        Ts.Closable   := True;
-
-      Ts.OnClose    := TabMainClose;
-      Ts.Tag        := NativeInt(Nd);
-      Ts.Caption    := Nd.Text;
-      Ts.ImageIndex := Nd.ImageIndex;
-      Ts.BorderStyle:=ubsNone;
-      Ts.Layout     := 'fit';
 
       FClassName := FormNames.Values[Nd.Text];
-      FrC := TUniFrameClass(FindClass(FClassName));
+      if FClassName <> '' then
+      begin
 
-      Fr := FrC.Create(Self);
-      Fr.Align := alClient;
-      Fr.Parent := Ts;
+        Ts := TUniTabSheet.Create(Self);
+        Ts.PageControl := pcMain;
 
-      Nd.Data := Ts;
+        if Nd.Text <> 'Р“Р»Р°РІРЅР°СЏ' then
+          Ts.Closable   := True;
+
+        Ts.OnClose    := TabMainClose;
+        Ts.Tag        := NativeInt(Nd);
+        Ts.Caption    := Nd.Text;
+        Ts.ImageIndex := Nd.ImageIndex;
+        Ts.BorderStyle:=ubsNone;
+        Ts.Layout     := 'fit';
+
+        FrC := TUniFrameClass(FindClass(FClassName));
+
+        Fr := FrC.Create(Self);
+        Fr.Align := alClient;
+        Fr.Parent := Ts;
+
+        Nd.Data := Ts;
+      end;
     end;
+
     pcMain.ActivePage := Ts;
   end
   else
@@ -277,7 +286,7 @@ end;
 
 procedure TMainForm.ProfileMenuAdd;
 begin
-//  Profile := MainMenu.Items.Add(Profile, 'О системе');// FindNodeByID(600);
+//  Profile := MainMenu.Items.Add(Profile, 'Рћ СЃРёСЃС‚РµРјРµ');// FindNodeByID(600);
 //  Profile.Tag := 600;
 //  Profile.ImageIndex := 2;
 
@@ -285,21 +294,21 @@ begin
 
   if Assigned(Profile) then
   begin
-    with MainMenu.Items.Add(Profile, 'О системе') do
+    with MainMenu.Items.Add(Profile, 'Рћ СЃРёСЃС‚РµРјРµ') do
     begin
       Tag := -999;
       Action := actinfo;
       ImageIndex := 18;
     end;
 
-    with MainMenu.Items.Add(Profile, 'Профиль пользователя') do
+    with MainMenu.Items.Add(Profile, 'РџСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ') do
     begin
       Tag := -999;
       Action := actProfile;
       ImageIndex := 21;
     end;
 
-    with MainMenu.Items.Add(Profile, 'Изменить пароль входа') do
+    with MainMenu.Items.Add(Profile, 'РР·РјРµРЅРёС‚СЊ РїР°СЂРѕР»СЊ РІС…РѕРґР°') do
     begin
       Tag := -999;
       Action := actEditPas;
@@ -312,13 +321,13 @@ procedure TMainForm.SetMainMenuMicroName;
 begin
   if MainMenu.Micro then
   begin
-      MainMenu.Items[0].Text := 'Развернуть';
+      MainMenu.Items[0].Text := 'Р Р°Р·РІРµСЂРЅСѓС‚СЊ';
       MainMenuPanel.Width := MainMenu.MicroWidth;
       btnExit.Visible :=  false;
   end
   else
   begin
-      MainMenu.Items[0].Text := 'Свернуть';
+      MainMenu.Items[0].Text := 'РЎРІРµСЂРЅСѓС‚СЊ';
       MainMenuPanel.Width := 300;
       btnExit.Visible :=  True;
   end;
@@ -385,7 +394,7 @@ begin
   begin
     MainMenu.Selected := MainMenu.Items[1];
     {$IFDEF Debug}
-    MainMenu.Selected := MainMenu.Items[2];
+    MainMenu.Selected := MainMenu.Items[5];
     {$ENDIF}
     MainMenuClick(Sender);
   end;

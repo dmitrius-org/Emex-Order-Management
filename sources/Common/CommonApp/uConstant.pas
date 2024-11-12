@@ -5,7 +5,7 @@ interface
 uses System.SysUtils;
 
 
-const  NullDate: TDateTime = 2; // 01-01-1900
+const  NullDate: TDateTime = 0; // 30.12.1899
 
 
 Type

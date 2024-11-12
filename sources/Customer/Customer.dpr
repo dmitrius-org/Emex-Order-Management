@@ -59,7 +59,8 @@ uses
   uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
-  uServiceEmex in '..\Service\uServiceEmex.pas';
+  uServiceEmex in '..\Service\uServiceEmex.pas',
+  uConstant in '..\Common\CommonApp\uConstant.pas';
 
 {$R *.res}
 

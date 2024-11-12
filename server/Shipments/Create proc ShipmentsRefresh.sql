@@ -171,6 +171,38 @@ select
            on t.Invoice = p.Invoice
    where p.Spid = @@SPid
 
+   -- пересчет баланса
+   -- пока так, нужна массовая процедура !!!
+    DECLARE @ClientID numeric(18, 0)
+
+    -- Определение курсора для выборки всех идентификаторов клиентов из таблицы tClients
+    DECLARE ClientCursor CURSOR FOR
+    select distinct
+           o.ClientID
+      from pShipments p with (nolock index=ao1)
+     inner join tOrders o with (Updlock index=ao3)
+             on o.Invoice = p.Invoice
+    where p.Spid = @@SPid
+
+    -- Открываем курсор и начинаем обработку каждой записи
+    OPEN ClientCursor
+
+    FETCH NEXT FROM ClientCursor INTO @ClientID
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- Вызов процедуры RestCalc для текущего ClientID
+        EXEC RestCalc @ClientID = @ClientID
+
+        -- Переход к следующей записи в курсоре
+        FETCH NEXT FROM ClientCursor INTO @ClientID
+    END
+
+    -- Закрываем и освобождаем курсор после завершения обработки
+    CLOSE ClientCursor
+    DEALLOCATE ClientCursor
+
+
 
 exit_:
 
@@ -178,5 +210,5 @@ return @r
 GO
 grant exec on ShipmentsRefresh to public
 go
-exec setOV 'ShipmentsRefresh', 'P', '20240927', '3'
+exec setOV 'ShipmentsRefresh', 'P', '20241112', '3'
 go

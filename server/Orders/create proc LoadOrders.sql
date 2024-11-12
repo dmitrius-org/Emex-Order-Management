@@ -55,6 +55,7 @@ as
         ,OrderDate
         ,CustomerPriceLogo 
         ,PriceLogo
+        ,PriceLogoOrg
         ,ProfilesDeliveryID
 
         ,isCancel
@@ -96,6 +97,7 @@ as
         ,cast(o.OrderDate as date)
         ,o.PriceNum             -- CustomerPriceLogo
         ,pc.UploadPriceName     -- PriceLogo
+        ,pc.UploadPriceName     -- PriceLogoOrg
         ,pc.ProfilesDeliveryID  --
 
         ,0                      -- isCancel
@@ -258,6 +260,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20241011', '6'
+exec setOV 'LoadOrders', 'P', '20241011', '7'
 go
  

@@ -43,6 +43,34 @@ object MainForm: TMainForm
       Caption = 'UniPanel'
       Layout = 'border'
       LayoutConfig.DockWhenAligned = False
+      object MainMenuPanelDetail: TUniPanel
+        Left = 300
+        Top = 0
+        Width = 526
+        Height = 409
+        Hint = ''
+        Align = alClient
+        TabOrder = 2
+        BorderStyle = ubsNone
+        TitlePosition = tpBottom
+        Caption = 'MainMenuPanelDetail'
+        Color = clMenuHighlight
+        Layout = 'fit'
+        LayoutConfig.Region = 'center'
+        object pcMain: TUniPageControl
+          Left = 0
+          Top = 0
+          Width = 526
+          Height = 409
+          Hint = ''
+          Images = MainMenuImage
+          Align = alClient
+          LayoutConfig.Cls = 'main-menu-detail'
+          LayoutConfig.IgnorePosition = False
+          LayoutConfig.DockWhenAligned = False
+          TabOrder = 1
+        end
+      end
       object MainMenuPanel: TUniPanel
         Left = 0
         Top = 0
@@ -3660,34 +3688,6 @@ object MainForm: TMainForm
           Images = MainMenuImage
           MicroWidth = 50
           OnClick = MainMenuClick
-        end
-      end
-      object MainMenuPanelDetail: TUniPanel
-        Left = 300
-        Top = 0
-        Width = 526
-        Height = 409
-        Hint = ''
-        Align = alClient
-        TabOrder = 2
-        BorderStyle = ubsNone
-        TitlePosition = tpBottom
-        Caption = 'MainMenuPanelDetail'
-        Color = clMenuHighlight
-        Layout = 'fit'
-        LayoutConfig.Region = 'center'
-        object pcMain: TUniPageControl
-          Left = 0
-          Top = 0
-          Width = 526
-          Height = 409
-          Hint = ''
-          Images = MainMenuImage
-          Align = alClient
-          LayoutConfig.Cls = 'main-menu-detail'
-          LayoutConfig.IgnorePosition = False
-          LayoutConfig.DockWhenAligned = False
-          TabOrder = 1
         end
       end
     end

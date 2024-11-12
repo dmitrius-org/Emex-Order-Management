@@ -102,9 +102,6 @@ object SuppliersT: TSuppliersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitLeft = 3
-    ExplicitTop = 3
-    ExplicitWidth = 1021
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -123,10 +120,6 @@ object SuppliersT: TSuppliersT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 3
-      ExplicitTop = 3
-      ExplicitWidth = 1015
-      ExplicitHeight = 61
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -173,8 +166,6 @@ object SuppliersT: TSuppliersT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
-    ExplicitTop = 70
-    ExplicitHeight = 432
     object Grid: TUniDBGrid
       Left = 0
       Top = 0

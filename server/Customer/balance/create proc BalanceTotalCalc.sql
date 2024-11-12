@@ -95,11 +95,13 @@ as
 
   -- Баланс
   Update t
-     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
-                       isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0))  * -1
+     set BalanceSum = (
+                       isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
+                       isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0)
+                       )  * -1
     from pBalanceTotal t (updlock)
    where t.Spid     = @@Spid
-     and (t.isCalc  = 1)
+     and t.isCalc  = 1
 
   Update t
      set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 

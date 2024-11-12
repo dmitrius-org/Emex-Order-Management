@@ -11,7 +11,8 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
-  System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, UniFSCombobox;
+  System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, UniFSCombobox,
+  uUniDateRangePicker, uConstant;
 
 type
   TBalanceT = class(TUniForm)
@@ -24,8 +25,6 @@ type
     N6: TUniMenuItem;
     UniPanel1: TUniPanel;
     UniButton1: TUniButton;
-    edtDateEnd: TUniDateTimePicker;
-    edtDateBegin: TUniDateTimePicker;
     QueryDocumentID: TFMTBCDField;
     QueryDocument: TStringField;
     QueryNumber: TWideStringField;
@@ -48,6 +47,7 @@ type
     N3: TUniMenuItem;
     N4: TUniMenuItem;
     UpdateSQL: TFDUpdateSQL;
+    edtDate: TUniDateRangePicker;
 
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
@@ -151,8 +151,18 @@ procedure TBalanceT.DataRefresh;
 begin
   Query.Close;
   Query.ParamByName('ClientID').AsInteger := cbClient.Value.ToInteger;
-  Query.ParamByName('BDate').AsDate := edtDateBegin.DateTime;
-  Query.ParamByName('EDate').AsDate := edtDateEnd.DateTime;
+
+  if (edtDate.DateStart <> NullDate) and (edtDate.DateEnd <> NullDate) then
+  begin
+    Query.ParamByName('BDate').AsDateTime := edtDate.DateStart;
+    Query.ParamByName('EDate').AsDateTime := edtDate.DateEnd;
+  end
+  else
+  begin
+    Query.ParamByName('BDate').Value := null;
+    Query.ParamByName('EDate').Value := null;
+  end;
+
   Query.Open;
 
   edtBalance.Value := Query.FieldByName('Rest').AsCurrency;
@@ -190,9 +200,6 @@ procedure TBalanceT.UniFormShow(Sender: TObject);
 begin
   ComboBoxFill(cbClient, 'select ClientID as ID, Brief as Name from tClients (nolock)');
   cbClient.Value := FID.ToString;
-
-  edtDateBegin.DateTime := Now();
-  edtDateEnd.DateTime   := Now();
 
   DataRefresh;
 end;

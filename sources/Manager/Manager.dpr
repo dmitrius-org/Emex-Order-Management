@@ -116,7 +116,9 @@ uses
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
-  uUtils.Strings in '..\Common\Common\uUtils.Strings.pas';
+  uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
+  uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
+  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame};
 
 {$R *.res}
 

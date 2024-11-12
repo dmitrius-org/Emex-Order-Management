@@ -26,7 +26,6 @@ begin
 	,SuppliersID          numeric(18,0)-- Поставщик
     --
 	,ClientTypeID         int          -- Тип клиента
-
     ,StatusRequiringPayment varchar(256)-- Статусы требующие предоплаты
 
 

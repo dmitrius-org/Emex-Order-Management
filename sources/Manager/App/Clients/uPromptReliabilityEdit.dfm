@@ -43,9 +43,6 @@ object PromptReliabilityEdit: TPromptReliabilityEdit
       Align = alRight
       TabOrder = 2
       OnClick = btnOkClick
-      ExplicitLeft = 634
-      ExplicitTop = 5
-      ExplicitHeight = 25
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -58,9 +55,6 @@ object PromptReliabilityEdit: TPromptReliabilityEdit
       Align = alRight
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 544
-      ExplicitTop = 5
-      ExplicitHeight = 25
     end
   end
 end

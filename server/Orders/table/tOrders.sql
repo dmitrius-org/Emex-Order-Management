@@ -15,6 +15,7 @@ begin
     ,isCancelToClient                bit            -- Отказ отправлен клиенту
     ,Manufacturer                    nvarchar(64)   -- Производитель
     ,CustomerPriceLogo               nvarchar(10)   -- Наименование прайса клиента по которым заказываются детали
+    ,PriceLogoOrg                    nvarchar(32)   -- Лого прайса клиента/правйс при добавлении
     ,PriceLogo                       nvarchar(32)   -- Лого прайса клиента
     ,DetailNumber                    nvarchar(32)   -- Номер детали
     ,DetailName                      nvarchar(512)  -- Название детали

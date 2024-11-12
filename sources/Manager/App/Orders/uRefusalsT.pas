@@ -108,7 +108,6 @@ end;
 
 procedure TRefusalsT.actDeleteExecute(Sender: TObject);  var isCancel: Boolean;
 begin
-  //MessageDlg('Отказ дан?' +#13+#10 , mtConfirmation, mbYesNo,
   MessageDlg('Вы действительно хотите удалить файл?' +#13+#10 , mtConfirmation, mbYesNo,
   procedure(Sender: TComponent; Res: Integer)
   begin
@@ -126,11 +125,9 @@ begin
 
       //mrNo  :
       //  isCancel := False;
-      else
-        Exit;
+    else
+      Exit;
     end;
-
-
   end);
 end;
 

@@ -15,7 +15,8 @@ uses
   uCommonType, uniButton, uniBitBtn, uniLabel, uniDBComboBox,
   uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
-  System.Generics.Collections, System.MaskUtils, uniDateTimePicker;
+  System.Generics.Collections, System.MaskUtils, uniDateTimePicker,
+  uUniDateRangePicker, uConstant;
 
 
 type
@@ -84,12 +85,8 @@ type
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     qStatus: TFDQuery;
-    qPriceLogo: TFDQuery;
     dsStatus: TDataSource;
-    dsPriceLogo: TDataSource;
     QueryStatusName: TWideStringField;
-    fOrderNum: TUniEdit;
-    UniLabel4: TUniLabel;
     QueryStatusID: TFMTBCDField;
     QueryFlag: TIntegerField;
     UniLabel5: TUniLabel;
@@ -106,7 +103,6 @@ type
     actUnselect: TAction;
     QueryDetailName: TWideStringField;
     fStatus2: TUniCheckComboBox;
-    qPriceLogoPriceLogo: TWideStringField;
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
     fDetailNum: TUniEdit;
@@ -121,7 +117,6 @@ type
     QueryDeliveryRestTermSupplier: TIntegerField;
     QueryOrderNum: TWideStringField;
     actShowMessage: TAction;
-    fOrderDate: TUniDateTimePicker;
     UniLabel8: TUniLabel;
     UniPanel: TUniPanel;
     btnCancel: TUniBitBtn;
@@ -135,6 +130,7 @@ type
     QueryComment2: TStringField;
     edtComment2: TUniEdit;
     UniLabel2: TUniLabel;
+    fOrderDate: TUniDateRangePicker;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -156,7 +152,6 @@ type
     procedure cbCancelSelect(Sender: TObject);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
-    procedure UniFrameReady(Sender: TObject);
     procedure QueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryDeliveryNextDateGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
@@ -264,8 +259,8 @@ begin
   FFilterTextPriceLogo := '';
   FFilterTextClient := '';
 
-  fOrderDate.Text:= '';
-  fOrderNum.Text := '';
+  fOrderDate.ClearDateRange;
+//  fOrderNum.Text := '';
   fDetailNum.Text:='';
 
   edtComment2.Clear;
@@ -399,14 +394,19 @@ begin
     Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
   end;
 
-  if (fOrderDate.Text <> '') and (fOrderDate.Text <> '30.12.1899') then
-     Query.MacroByName('OrderDate').Value := ' and o.OrderDate = '''   + FormatDateTime('yyyymmdd', fOrderDate.DateTime) + ''''
+  if (fOrderDate.DateStart <> NullDate) and (fOrderDate.DateEnd <> NullDate) then
+  begin
+    Query.MacroByName('OrderDate').Value := ' and o.OrderDate between '''   + FormatDateTime('yyyymmdd', fOrderDate.DateStart) + ''' and '''  +
+                                              FormatDateTime('yyyymmdd', fOrderDate.DateEnd) + ''''
+  end
   else
-     Query.MacroByName('OrderDate').Value := '';
+  begin
+    Query.MacroByName('OrderDate').Value := '';
+  end;
 
   Query.MacroByName('Status').Value :=  FStatus;
   Query.MacroByName('PriceLogo').Value := FPriceLogo;
-  Query.ParamByName('OrderNum').Value := fOrderNum.Text;
+  //Query.ParamByName('OrderNum').Value := fOrderNum.Text;
 
   if fDetailNum.Text <> '' then
     if string(fDetailNum.Text)[1] = '!' then
@@ -729,11 +729,6 @@ end;
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
-end;
-
-procedure TOrdersT2.UniFrameReady(Sender: TObject);
-begin
-  qPriceLogo.Open();
 end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

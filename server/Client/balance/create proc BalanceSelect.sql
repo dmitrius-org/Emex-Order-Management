@@ -15,6 +15,10 @@ set nocount on;
 declare @r     int = 0
        ,@Rest  money
 
+
+select @BDate = '19000101'     
+      ,@EDate = '20701231'
+      
 if OBJECT_ID('tempdb..#Documents') is not null
   drop table #Documents;
 create table #Documents
@@ -127,5 +131,5 @@ return @r
 go
 grant exec on BalanceSelect to public
 go
-exec setOV 'BalanceSelect', 'P', '20240101', '0'
+exec setOV 'BalanceSelect', 'P', '20241107', '1'
 go

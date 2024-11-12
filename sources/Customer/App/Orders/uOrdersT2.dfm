@@ -5,7 +5,6 @@ object OrdersT2: TOrdersT2
   Height = 596
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
-  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
@@ -482,7 +481,7 @@ object OrdersT2: TOrdersT2
           Height = 24
           ShowHint = True
           Action = actFilterClear
-          TabOrder = 11
+          TabOrder = 8
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
@@ -492,44 +491,22 @@ object OrdersT2: TOrdersT2
           Height = 24
           ShowHint = True
           Action = actFilter
-          TabOrder = 12
+          TabOrder = 9
           IconPosition = ipButtonEdge
           ImageIndex = 2
         end
-        object fOrderNum: TUniEdit
-          Left = 447
-          Top = 35
-          Width = 128
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 8
-          EmptyText = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
-          CheckChangeDelay = 200
-          ClearButton = True
-        end
-        object UniLabel4: TUniLabel
-          Left = 447
-          Top = 16
-          Width = 76
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072':'
-          TabOrder = 3
-        end
         object UniLabel5: TUniLabel
-          Left = 742
+          Left = 894
           Top = 16
           Width = 34
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1054#1090#1082#1072#1079':'
-          TabOrder = 5
+          TabOrder = 4
         end
         object cbCancel: TUniComboBox
-          Left = 742
+          Left = 894
           Top = 35
           Width = 81
           Hint = ''
@@ -538,7 +515,7 @@ object OrdersT2: TOrdersT2
           Items.Strings = (
             #1053#1077#1090
             #1044#1072)
-          TabOrder = 10
+          TabOrder = 7
           ClearButton = True
           IconItems = <>
           OnSelect = cbCancelSelect
@@ -550,7 +527,7 @@ object OrdersT2: TOrdersT2
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 6
+          TabOrder = 5
           ClientEvents.UniEvents.Strings = (
             'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
             
@@ -584,39 +561,26 @@ object OrdersT2: TOrdersT2
           OnSelect = fStatus2Select
         end
         object UniLabel6: TUniLabel
-          Left = 581
+          Left = 513
           Top = 16
           Width = 78
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080':'
-          TabOrder = 4
+          TabOrder = 3
         end
         object fDetailNum: TUniEdit
-          Left = 581
+          Left = 513
           Top = 35
-          Width = 155
+          Width = 171
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 9
+          TabOrder = 6
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
-        end
-        object fOrderDate: TUniDateTimePicker
-          Left = 311
-          Top = 35
-          Width = 130
-          Hint = ''
-          ShowHint = True
-          DateTime = 45257.000000000000000000
-          DateFormat = 'dd/MM/yyyy'
-          TimeFormat = 'HH:mm:ss'
-          TabOrder = 7
-          ClearButton = True
-          EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
         end
         object UniLabel8: TUniLabel
           Left = 311
@@ -636,29 +600,65 @@ object OrdersT2: TOrdersT2
           ShowHint = True
           Action = actCancelRequest
           Anchors = [akTop, akRight]
-          TabOrder = 13
+          TabOrder = 10
         end
         object edtComment2: TUniEdit
-          Left = 829
+          Left = 690
           Top = 35
-          Width = 155
+          Width = 198
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 14
+          TabOrder = 11
           EmptyText = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
           CheckChangeDelay = 200
           ClearButton = True
         end
         object UniLabel2: TUniLabel
-          Left = 829
+          Left = 690
           Top = 16
           Width = 77
           Height = 13
           Hint = ''
           ShowHint = True
           Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081':'
-          TabOrder = 15
+          TabOrder = 12
+        end
+        object fOrderDate: TUniDateRangePicker
+          Left = 311
+          Top = 35
+          Width = 196
+          Hint = ''
+          ShowHint = True
+          Text = 'fOrderDate'
+          TabOrder = 13
+          EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+          Triggers = <
+            item
+              ButtonId = 0
+              IconCls = 'x-form-clear-trigger'
+              HandleClicks = True
+            end
+            item
+              ButtonId = 1
+              IconCls = 'x-form-date-trigger'
+              HandleClicks = True
+            end>
+          DateFormat = 'DD/MM/YYYY'
+          DatePickerOptions.AutoUpdateInput = False
+          DatePickerOptions.Opens = ooCenter
+          DatePickerOptions.RangesEnabled = True
+          DatePickerOptions.Ranges.Strings = (
+            #1057#1077#1075#1086#1076#1085#1103'=[moment(), moment()]'
+            
+              #1042#1095#1077#1088#1072'=[moment().subtract(1, "days"), moment().subtract(1, "days"' +
+              ')]'
+            #1055#1086#1089#1083#1077#1076#1085#1080#1077' 7 '#1076#1085#1077#1081'=[moment().subtract(6, "days"), moment()]'
+            #1055#1086#1089#1083#1077#1076#1085#1080#1077' 30 '#1076#1085#1077#1081'=[moment().subtract(29, "days"), moment()]'
+            #1069#1090#1086#1090' '#1084#1077#1089#1103#1094'=[moment().startOf("month"), moment().endOf("month")]'
+            
+              #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
+              'oment().subtract(1, "month").endOf("month")]')
         end
       end
     end
@@ -1203,41 +1203,10 @@ object OrdersT2: TOrdersT2
     Left = 575
     Top = 316
   end
-  object qPriceLogo: TFDQuery
-    AutoCalcFields = False
-    Connection = UniMainModule.FDConnection
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
-    UpdateOptions.UpdateChangedFields = False
-    UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
-    UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.CheckUpdatable = False
-    SQL.Strings = (
-      'SELECT distinct'
-      '       PriceLogo PriceLogo'
-      '  FROM [tOrders] (nolock)'
-      ' where PriceLogo is not null')
-    Left = 574
-    Top = 379
-    object qPriceLogoPriceLogo: TWideStringField
-      FieldName = 'PriceLogo'
-      Size = 64
-    end
-  end
   object dsStatus: TDataSource
     DataSet = qStatus
     Left = 649
     Top = 315
-  end
-  object dsPriceLogo: TDataSource
-    DataSet = qPriceLogo
-    Left = 650
-    Top = 377
   end
   object UniImageListAdapter: TUniImageListAdapter
     UniImageList = UniImageList

@@ -162,6 +162,7 @@ declare @r int = 0
         ,OrderDate
         ,CustomerPriceLogo 
         ,PriceLogo
+        ,PriceLogoOrg
         ,ProfilesDeliveryID
         ,isCancel
         ,MakeLogo
@@ -211,6 +212,7 @@ declare @r int = 0
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
+        ,b.PriceLogo             -- PriceLogoOrg
         ,pd.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
         ,b.Make                  -- Бренд
@@ -333,6 +335,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20241101', '20'
+exec setOV 'OrderCreateFromBasket', 'P', '20241101', '21'
 go
  

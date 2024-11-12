@@ -1,4 +1,4 @@
-unit uPromptMarginEdit;
+﻿unit uPromptMarginEdit;
 
 interface
 

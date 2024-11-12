@@ -16,6 +16,7 @@ create proc ClientInsert
              ,@NotificationAddress    nvarchar(256)-- Адрес оповещения
              ,@ClientTypeID	          int          = null -- Тип клиента
              ,@StatusRequiringPayment varchar(256) = null
+             ,@Email	              nvarchar(256)= null
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -113,6 +114,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20240918', '1'
+exec setOV 'ClientInsert', 'P', '20240918', '2'
 go
 

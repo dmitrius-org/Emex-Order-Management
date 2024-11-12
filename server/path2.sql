@@ -12,16 +12,15 @@
 --SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = History.tBasket));
 --go
 
-alter table tAudit alter column Comment           varchar(1024)
-alter table tAudit alter  column HostInfoID        varchar(256) null
+alter table tOrders add PriceLogoOrg nvarchar(32)
 
+sp_who
 
+--go
+--ALTER TABLE tAudit DROP CONSTRAINT DF__tAudit__InDateTi__5EDF0F2E;
 
-go
-ALTER TABLE tAudit DROP CONSTRAINT DF__tAudit__InDateTi__5EDF0F2E;
+--ALTER TABLE tAudit 
+--ALTER COLUMN InDateTime DateTime2;
 
-ALTER TABLE tAudit 
-ALTER COLUMN InDateTime DateTime2;
-
-ALTER TABLE tAudit 
-ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime;
+--ALTER TABLE tAudit 
+--ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime;

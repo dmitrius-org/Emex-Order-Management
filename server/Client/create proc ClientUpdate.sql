@@ -16,6 +16,7 @@ create proc ClientUpdate
              ,@NotificationAddress  nvarchar(256)-- Адрес оповещения
              ,@ClientTypeID	        int            = null
              ,@StatusRequiringPayment varchar(256) = null
+             ,@Email	              nvarchar(256)= null
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -38,6 +39,7 @@ as
       delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
       Begin tran 
 
+      --Статусы требующие предоплаты
       SELECT @StatusRequiringPayment = STRING_AGG(n.SearchID, ';') WITHIN GROUP (ORDER BY n.SearchID ASC) 
         FROM ( 
               SELECT DISTINCT n.SearchID 
@@ -84,6 +86,9 @@ as
           exec @r=ProfilesCustomerLoad
                     @ClientID  = @ClientID 
                    ,@Direction = 1  
+
+        exec RestCalc 
+               @ClientID = @ClientID
 		
 		if @r <> 0
 		begin 
@@ -108,5 +113,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20240918', '1'
+exec setOV 'ClientUpdate', 'P', '20241112', '2'
 go

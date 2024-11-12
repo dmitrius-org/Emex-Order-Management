@@ -20,7 +20,7 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
-  UniFSCombobox, uniHTMLFrame;
+  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker;
 
 type
   tMarks = class
@@ -42,10 +42,8 @@ type
     procedure Select();
     procedure Clear();
 
-
     procedure DataRefresh();
   end;
-
 
 
   TOrdersT = class(TUniFrame)
@@ -206,7 +204,7 @@ type
     QueryReceiptDate: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
     UniFSComboBox1: TUniFSComboBox;
-    fOrderDate: TUniHTMLFrame;
+    edtOrderDate: TUniDateRangePicker;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -252,8 +250,6 @@ type
     procedure actRequestClosedExecute(Sender: TObject);
     procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryDateDeliveryToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure fOrderDateAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -269,9 +265,6 @@ type
 
     FProcessed: Integer;
     FTotal    : Integer;
-
-    OrderDateB: TDateTime;
-    OrderDateE: TDateTime;
 
     /// <summary>
     /// GridOpen - получение данных с сервера
@@ -323,8 +316,6 @@ type
     /// <summary>OrderSetRequestClosed - установка признака: Обращение закрыто</summary>
     procedure OrderSetRequestClosed();
 
-
-    procedure fOrderDateClear();
   public
     { Public declarations }
     /// <summary>
@@ -476,7 +467,6 @@ begin
                  ''' + SqlText
                  , [], []);
 
-
         Continue;
       end;
     end;
@@ -539,9 +529,7 @@ begin
   FProcessed:= 0;
   FTotal    := 0;
 
-
-  Sql.exec(
-  '''
+  Sql.exec('''
     -- таблица для возврата количества обработанных записей
     delete from #ProcessedRecords
 
@@ -611,7 +599,7 @@ begin
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
-  fOrderDateClear();
+  edtOrderDate.ClearDateRange;
 
   edtUpdDate.Text := '';
   edtInvoice.Text := '';
@@ -627,13 +615,13 @@ end;
 procedure TOrdersT.actGridSettingDefaultExecute(Sender: TObject);
 begin
   Sql.Exec('''
-              delete tGridOptions
-                from tGridOptions (rowlock)
-               where UserID = dbo.GetUserID()
-                 and Grid   = :Grid
-           ''',
-           ['Grid'],
-           [self.ClassName +'.' + Grid.Name]);
+      delete tGridOptions
+        from tGridOptions (rowlock)
+       where UserID = dbo.GetUserID()
+         and Grid   = :Grid
+  ''',
+  ['Grid'],
+  [self.ClassName +'.' + Grid.Name]);
   GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
 
@@ -692,15 +680,13 @@ end;
 procedure TOrdersT.actRequestClosedExecute(Sender: TObject);
 begin
   MessageDlg('Вы действительно хотите проставить признак "Обращение закрыто"? ' , mtConfirmation, mbYesNo,
-
-  procedure(Sender: TComponent; Res: Integer)
-  begin
-    case Res of
-      mrYes : OrderSetRequestClosed;
-      mrNo  : Exit;
-    end;
-  end
-
+    procedure(Sender: TComponent; Res: Integer)
+    begin
+      case Res of
+        mrYes : OrderSetRequestClosed;
+        mrNo  : Exit;
+      end;
+    end
   );
 end;
 
@@ -786,37 +772,6 @@ begin
 end;
 
 
-procedure TOrdersT.fOrderDateAjaxEvent(Sender: TComponent; EventName: string;
-  Params: TUniStrings);
-begin
-  if (EventName = 'OrderDate')
-  then
-  begin
-    logger.Info('BeginDate=' + Params.Values['BeginDate']);
-    logger.Info('EndDate=' + Params.Values['EndDate']);
-
-    OrderDateB:= VarToDateTimeDef(Params.Values['BeginDate'], NullDate);
-    OrderDateE:= VarToDateTimeDef(Params.Values['EndDate'],   NullDate);
-  end;
-end;
-
-procedure TOrdersT.fOrderDateClear;
-begin
-  UniSession.AddJS(
-  Format(
-     '''
-       $(function() {
-       console.log('Очистить фильтр');
-       $("input[name='fOrderDate']").val("");
-
-       console.log($("input[name='fOrderDate']").data("daterangepicker").startDate.format('YYYY-MM-DD'));
-       console.log($("input[name='fOrderDate']").data("daterangepicker").endDate.format('YYYY-MM-DD'));
-
-       ajaxRequest(%s, "OrderDate", [ "BeginDate=", "EndDate="]);
-       });
-     ''', [fOrderDate.jsName]));
-end;
-
 procedure TOrdersT.fPriceLogoSelect(Sender: TObject);
 var
   s: String;
@@ -863,8 +818,7 @@ begin
     end;
   end;
 
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
+  if (s<> '') and  (s[length(s)]=',') then delete(s,length(s),1);
 
   FFilterTextStatus := s;
 
@@ -942,8 +896,9 @@ begin
     else
       Query.MacroByName('isCancel').Value := '';
 
-    if (OrderDateB <> NullDate) and (OrderDateE <> NullDate) then
-      Query.MacroByName('OrderDate').Value := ' and o.OrderDate between ''' + FormatDateTime('yyyymmdd', OrderDateB) + ''' and ''' + FormatDateTime('yyyymmdd', OrderDateE) + ''''
+      logger.Info(datetostr( edtOrderDate.DateStart) );
+    if (edtOrderDate.DateStart <> NullDate) and (edtOrderDate.DateEnd <> NullDate) then
+      Query.MacroByName('OrderDate').Value := ' and o.OrderDate between ''' + FormatDateTime('yyyymmdd', edtOrderDate.DateStart) + ''' and ''' + FormatDateTime('yyyymmdd', edtOrderDate.DateEnd) + ''''
     else
       Query.MacroByName('OrderDate').Value := '';
 
@@ -963,7 +918,7 @@ begin
 
   finally
     DoHideMask();
-    UniSession.Synchronize;
+    //UniSession.Synchronize;
     logger.Info('TOrdersT.GridOpen End');
   end;
 end;
@@ -1221,7 +1176,6 @@ begin
     StatusForm.StatusFile := UniServerModule.StartPath + '\files\html\OrderStatus.html';
 
     StatusForm.ShowModal();
-   // StatusForm.Free;
   end
 end;
 
@@ -1486,8 +1440,6 @@ begin
 
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
 
-  fOrderDate.AfterScript.Add(daterangepicker('fOrderDate', fOrderDate.JSName));
-
   logger.Info('TOrdersT.UniFrameCreate End');
 end;
 
@@ -1537,7 +1489,6 @@ begin
     logger.Info('TOrdersT.TimerProcessedShowTimer Finished: ' + FAccrual.Finished.ToString());
     if FAccrual.Finished then
     begin
-
       // ОБРАБОТКА ОШИБОК
       // проверка наличия серверных ошибок
       Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
