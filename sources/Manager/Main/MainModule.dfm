@@ -16,14 +16,8 @@ object UniMainModule: TUniMainModule
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (
-      'Database=testdb'
-      'User_Name=sa'
-      'Password=CE192a12!@'
-      'Server=WIN-26BJ6Q2GFSI\BOOSTER'
-      'DriverID=MSSQL'
-      'MonitorBy=Remote')
+      'DriverID=MSSQL')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
-    Connected = True
     LoginPrompt = False
     AfterConnect = FDConnectionAfterConnect
     Left = 42
@@ -51,7 +45,6 @@ object UniMainModule: TUniMainModule
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
     EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
-    Tracing = True
     Left = 407
     Top = 17
   end

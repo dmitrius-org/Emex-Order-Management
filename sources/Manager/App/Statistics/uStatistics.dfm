@@ -22,7 +22,7 @@ object StatisticsT: TStatisticsT
     Width = 1324
     Height = 549
     Hint = ''
-    ActivePage = TabCanceled
+    ActivePage = TabOrderChart
     Align = alClient
     TabOrder = 0
     object TabOrderChart: TUniTabSheet
@@ -432,19 +432,17 @@ object StatisticsT: TStatisticsT
     end
     object TabBrand: TUniTabSheet
       Hint = ''
+      TabVisible = False
       Caption = #1041#1088#1077#1085#1076#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabBrandBeforeFirstActivate
     end
     object TabCanceled: TUniTabSheet
       Hint = ''
+      TabVisible = False
       Caption = #1054#1090#1082#1072#1079#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabCanceledBeforeFirstActivate
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1324
-      ExplicitHeight = 549
     end
   end
   object qAverageCountOrders: TFDQuery

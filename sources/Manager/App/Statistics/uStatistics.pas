@@ -398,7 +398,7 @@ begin
   {$IFDEF Debug}
      edtDateBegin.DateTime := IncDay(now(), -10);
   {$ELSE}
-     PageCommon.ActivePage := UniTabOrders;
+     PageCommon.ActivePage := TabBrand;
 
      edtDateBegin.DateTime := IncDay(now(), -7);
   {$ENDIF}
