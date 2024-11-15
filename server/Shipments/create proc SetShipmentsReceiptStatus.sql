@@ -12,25 +12,20 @@ as
   declare @r        int = 0
 		 ,@AuditID  numeric(18,0)
 
-  update t
-     set t.ReceiptDate2	   = @ReceiptDate
-	from tShipments t (updlock)
-   where t.ShipmentsID  = @ShipmentsID
-    
-   --  and isnull(t.ReceiptDate, '') <> ''
-     
-     --and isnull(t.ReceiptDate2, '') <> @ReceiptDate
+  delete pShipmentsProtocol from pShipmentsProtocol with (rowlock index=ao2) where spid = @@Spid
 
-  if @@ROWCOUNT > 0
-  begin
+  delete pAccrualAction from pAccrualAction with (rowlock index=ao2) where spid = @@Spid
 
-  BEGIN TRY 
-      delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
+  delete tRetMessage from tRetMessage with (rowlock index=ao1) where spid=@@spid
+
+  BEGIN TRY       
+ 
       Begin tran 
 
-          delete pShipmentsProtocol from pShipmentsProtocol (rowlock) where spid = @@Spid
-
-          delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
+          update t
+              set t.ReceiptDate2 = @ReceiptDate
+	         from tShipments t with (updlock index=ao1)
+            where t.ShipmentsID  = @ShipmentsID
 
           insert pShipmentsProtocol with (rowlock)
                  (Spid, ShipmentsID, StateID, NewStateID, ActionID, OperDate, Message, ord)
@@ -43,7 +38,8 @@ as
                   'Получено',
                   0
              from tShipments s (nolock)
-            where isnull(s.StatusID, 0) <> 24 --	Received	Готовим к выдаче в РФ                             
+            where s.ShipmentsID  = @ShipmentsID
+              and isnull(s.StatusID, 0) <> 24 --	Received	Готовим к выдаче в РФ   
           
           insert pAccrualAction with (rowlock) 
                 (Spid, ObjectID,  StateID, NewStateID, ActionID, OperDate, Message,  ord)
@@ -90,8 +86,8 @@ as
       insert tRetMessage(RetCode, Message) select @r,  ERROR_MESSAGE()  
 
       goto exit_     
-  END CATCH  
-  end
+  END CATCH 
+  
 
  exit_:
  return @r

@@ -15,21 +15,16 @@ SELECT p.ShipmentsProtocolID  ProtocolID
       ,a.Name          ActionName 
       ,p.OperDate      OperDate
       ,p.[Comment]     Comment
-      ,case 
-         when p.Flag & 1 > 0 /*Протокол по клиентскому приложению*/ then c.Brief
-         else u.Name
-       end as UserName
+      ,u.Name          UserName
 	  ,p.InDateTime    InDateTime
       ,0               ProtocolType
   FROM tShipmentsProtocol p (nolock)
- inner join tOrders o with (nolock index=ao1)
-         on o.OrderID = p.ShipmentsID
- inner join tClients c with (nolock index=ao1)
-         on c.ClientID = o.ClientID  
+ inner join tShipments s with (nolock index=ao1)
+         on s.ShipmentsID = p.ShipmentsID
  inner join tNodes n with (nolock index=ao1)
          on n.NodeID = p.NewStateID
-  left join tNodes s with (nolock index=ao1)
-         on s.NodeID = p.StateID
+  left join tNodes st with (nolock index=ao1)
+         on st.NodeID = p.StateID
   left join tNodes a with (nolock index=ao1)
          on a.NodeID = p.ActionID
  inner join tUser u with (nolock index=ao1)
@@ -62,5 +57,5 @@ SELECT p.[AuditID]     ProtocolID
 go
 grant all on vShipmentsProtocolSelect to public
 go
-exec setOV 'vShipmentsProtocolSelect', 'V', '20240915', '0'
+exec setOV 'vShipmentsProtocolSelect', 'V', '20241115', '1'
 go

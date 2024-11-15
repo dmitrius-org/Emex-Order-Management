@@ -4,7 +4,7 @@ cross apply (select top 1 *
                from tShipmentsProtocol p (nolock)
               where p.ShipmentsID = s.ShipmentsID
                 and p.NewStateID  = 24
-                and p.InDateTime  = '20241017 15:29:09.397'
+             --   and p.InDateTime  = '20241114 11:30:50.903'
                 and p.userID = 2
 
               order by p.ShipmentsProtocolID desc
@@ -18,7 +18,7 @@ cross apply (select top 1 *
                from tShipmentsProtocol p (nolock)
               where p.ShipmentsID = s.ShipmentsID
                 and p.NewStateID  = 24
-                and p.InDateTime  = '20241017 15:29:09.397'
+                and p.InDateTime  ='20241114 11:30:50.903'
                 and p.userID = 2
 
               order by p.ShipmentsProtocolID desc
@@ -39,7 +39,7 @@ outer apply (select top 1 *
 
 
 
-  /*
+  
 
 select p.*
 from tOrders o (nolock)
@@ -48,7 +48,7 @@ cross apply (select top 1 *
               where p.ObjectID = o.OrderID
               and p.NewStateID  = 24
               and p.userID = 2
-              and p.InDateTime  >= '20241017 14:50:05.213'
+              and p.InDateTime  >= '20241114 11:30:52.060'
               order by p.ProtocolID desc
               ) as p
 where o.StatusID=24
@@ -68,7 +68,7 @@ cross apply (select top 1 *
               where p.ObjectID = o.OrderID
               and p.NewStateID  = 24
               and p.userID = 2
-              and p.InDateTime  = '20241017 15:29:10.657'
+              and p.InDateTime  = '2024-11-14 11:30:52.060'
               order by p.ProtocolID desc
               ) as p
 where o.StatusID=24

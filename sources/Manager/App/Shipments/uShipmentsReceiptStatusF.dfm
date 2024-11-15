@@ -19,9 +19,6 @@ object ShipmentsReceivedStatusF: TShipmentsReceivedStatusF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitLeft = -388
-    ExplicitTop = 204
-    ExplicitWidth = 1012
     DesignSize = (
       278
       44)
@@ -35,7 +32,6 @@ object ShipmentsReceivedStatusF: TShipmentsReceivedStatusF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 140
     end
     object btnCancel: TUniBitBtn
       Left = 56
@@ -47,7 +43,6 @@ object ShipmentsReceivedStatusF: TShipmentsReceivedStatusF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 53
     end
   end
   object UniLabel1: TUniLabel
