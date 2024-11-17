@@ -27,6 +27,8 @@ type
     FGrid: TUniDBGrid;
     FMarks: TDictionary <Integer, Integer>;
 
+
+
     procedure DeleteInDB();
     function GetCount: Integer;
   public
@@ -131,6 +133,7 @@ type
     edtComment2: TUniEdit;
     UniLabel2: TUniLabel;
     fOrderDate: TUniDateRangePicker;
+    btnNotification: TUniBitBtn;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -161,6 +164,8 @@ type
       Params: TUniStrings);
     procedure GridColumnActionClick(Column: TUniDBGridColumn;
       ButtonId: Integer);
+    procedure btnNotificationClick(Sender: TObject);
+    procedure UniFrameReady(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -168,6 +173,8 @@ type
     FFilterTextStatus: string;
     FFilterTextPriceLogo: string;
     FFilterTextClient: string;
+
+    FIsNotification: Boolean;
 
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
@@ -190,11 +197,20 @@ type
 
     procedure FilterStatusCreate();
 
+    /// <summary>
+    /// GetNotificationOrders - показать заказы с уведомлениями
+    /// </summary>
+    procedure GetNotificationOrders();
+
+    procedure SetNotificationIcon();
+
+
+
   public
     { Public declarations }
 
     /// <summary>
-    /// GridRefresh -
+    /// GridRefresh - загрузка данных из БД
     /// </summary>
     procedure GridRefresh;
   end;
@@ -236,7 +252,6 @@ begin
 
   if (ServerErr = 0) then
   begin
-    //MessageDlg('Запрос успешно выполнен! ', TMsgDlgType.mtConfirmation, mbOK);
     OrdersMessageFCallBack(self, mrOk)
   end
   else
@@ -260,7 +275,6 @@ begin
   FFilterTextClient := '';
 
   fOrderDate.ClearDateRange;
-//  fOrderNum.Text := '';
   fDetailNum.Text:='';
 
   edtComment2.Clear;
@@ -288,6 +302,11 @@ procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
    MessageF.OrderID := QueryOrderID.AsInteger;
    MessageF.ShowModal();
+end;
+
+procedure TOrdersT2.btnNotificationClick(Sender: TObject);
+begin
+  GetNotificationOrders;
 end;
 
 procedure TOrdersT2.DoHideMask;
@@ -372,64 +391,84 @@ begin
   logger.Info('GridOpen Begin');
   Query.Close();
 
-  if FFilterTextStatus <> '' then
-    FStatus := ' and StatusID in (' + FFilterTextStatus + ')'
-  else
-    FStatus := '';
-
-  if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
-  else
-    FClient := '';
-
-
-  if FStatus <> '' then
+  if FIsNotification then
   begin
-    Grid.Refresh;
-    Grid.WebOptions.Paged := True;
-    Grid.WebOptions.PageSize:=1000000;
+      Query.MacroByName('IsNotification').Value :=
+      '''
+        and o.[Flag] & 4 /*отказан*/ > 0
+        and (o.[Flag] & 4096 /*Отказ подтвержден*/= 0
+          or o.[Flag] & 8192 /*Перезаказан*/= 0)
+
+      ''';
+
+      Query.ParamByName('isCancel').Value := true;
+
+      Query.MacroByName('DetailNum').Value := '';
+      Query.MacroByName('Comment2').Value := '';
+      Query.MacroByName('OrderDate').Value := '';
+      Query.MacroByName('Status').Value :=  '';
   end
   else
   begin
-    Grid.WebOptions.Paged := True;
-    Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
-  end;
 
-  if (fOrderDate.DateStart <> NullDate) and (fOrderDate.DateEnd <> NullDate) then
-  begin
-    Query.MacroByName('OrderDate').Value := ' and o.OrderDate between '''   + FormatDateTime('yyyymmdd', fOrderDate.DateStart) + ''' and '''  +
-                                              FormatDateTime('yyyymmdd', fOrderDate.DateEnd) + ''''
-  end
-  else
-  begin
-    Query.MacroByName('OrderDate').Value := '';
-  end;
+    if FFilterTextStatus <> '' then
+      FStatus := ' and StatusID in (' + FFilterTextStatus + ')'
+    else
+      FStatus := '';
 
-  Query.MacroByName('Status').Value :=  FStatus;
-  Query.MacroByName('PriceLogo').Value := FPriceLogo;
-  //Query.ParamByName('OrderNum').Value := fOrderNum.Text;
+    if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
+    else
+      FClient := '';
 
-  if fDetailNum.Text <> '' then
-    if string(fDetailNum.Text)[1] = '!' then
+    if FStatus <> '' then
     begin
-      Query.MacroByName('DetailNum').Value := ' and o.OrderDetailSubId = :DetailNum';
-      Query.ParamByName('DetailNum').AsString := Trim(fDetailNum.Text);
+      Grid.Refresh;
+      Grid.WebOptions.Paged := True;
+      Grid.WebOptions.PageSize:=1000000;
     end
     else
     begin
-      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like ''%'   + Trim(fDetailNum.Text) + '%''' +
-                                              '   or o.ReplacementDetailNumber like ''%'   + Trim(fDetailNum.Text) + '%'')'
+      Grid.WebOptions.Paged := True;
+      Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
+    end;
+
+    Query.MacroByName('IsNotification').Value :=  '';
+
+    if (fOrderDate.DateStart <> NullDate) and (fOrderDate.DateEnd <> NullDate) then
+    begin
+      Query.MacroByName('OrderDate').Value := ' and o.OrderDate between '''   + FormatDateTime('yyyymmdd', fOrderDate.DateStart) + ''' and '''  +
+                                                FormatDateTime('yyyymmdd', fOrderDate.DateEnd) + ''''
     end
-  else
-    Query.MacroByName('DetailNum').Value := '';
+    else
+    begin
+      Query.MacroByName('OrderDate').Value := '';
+    end;
 
-  // комментарий
-  if edtComment2.Text <> '' then
-    Query.MacroByName('Comment2').Value := ' and o.Comment2 like ''%' + edtComment2.Text + '%'''
-  else
-    Query.MacroByName('Comment2').Value := '';
+    Query.MacroByName('Status').Value :=  FStatus;
 
+    if fDetailNum.Text <> '' then
+      if string(fDetailNum.Text)[1] = '!' then
+      begin
+        Query.MacroByName('DetailNum').Value := ' and o.OrderDetailSubId = :DetailNum';
+        Query.ParamByName('DetailNum').AsString := Trim(fDetailNum.Text);
+      end
+      else
+      begin
+        Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like ''%'   + Trim(fDetailNum.Text) + '%''' +
+                                                '   or o.ReplacementDetailNumber like ''%'   + Trim(fDetailNum.Text) + '%'')'
+      end
+    else
+      Query.MacroByName('DetailNum').Value := '';
 
-  Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
+    // комментарий
+    if edtComment2.Text <> '' then
+      Query.MacroByName('Comment2').Value := ' and o.Comment2 like ''%' + edtComment2.Text + '%'''
+    else
+      Query.MacroByName('Comment2').Value := '';
+
+    Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
+  end;
+
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
   Query.Open();
 
@@ -530,6 +569,46 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT2.GetNotificationOrders;
+begin
+  fStatus2.Enabled := FIsNotification;
+  fOrderDate.Enabled := FIsNotification;
+  fDetailNum.Enabled := FIsNotification;
+  edtComment2.Enabled := FIsNotification;
+  cbCancel.Enabled := FIsNotification;
+
+  fCancel.Enabled := FIsNotification;
+  fOk.Enabled := FIsNotification;
+
+  FIsNotification := not FIsNotification;
+
+  GridRefresh;
+
+//  if FIsNotification then
+//  begin
+//
+//  end
+//  else
+//  begin
+//
+//  end;
+
+end;
+
+
+procedure TOrdersT2.SetNotificationIcon;
+begin
+//  if FIsNotification then
+//  begin
+//    btnNotification.Caption:=   order-notification-btn
+//  end
+//  else
+//  begin
+//
+//  end;
+
+end;
+
 procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -625,7 +704,6 @@ begin
 //  end;
 
 end;
-
 
 procedure TOrdersT2.StateActionMenuCreate;
 begin
@@ -729,6 +807,13 @@ end;
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);
 begin
   Marks.Free;
+end;
+
+procedure TOrdersT2.UniFrameReady(Sender: TObject);
+begin
+  FIsNotification := false;
+
+  SetNotificationIcon();
 end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

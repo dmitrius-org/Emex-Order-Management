@@ -16,6 +16,9 @@ begin
 	,Email                nvarchar(256)  null     -- 
 	,Password             nvarchar(256)  null     -- 
 
+    ,Phone                varchar(32
+    ,ContactPerson        varchar(64) 
+
 	,IsActive             bit
 	,IsConfirmed          bit          -- Признак что регистрация подтверждена
 	,IsConfirmedDate      datetime	   -- Дата подтверждения регистрации

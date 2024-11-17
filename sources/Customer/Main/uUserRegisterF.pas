@@ -15,6 +15,17 @@ type
     btnOk: TUniButton;
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
+    edtBrief: TUniEdit;
+    UniLabel3: TUniLabel;
+    edtPhone: TUniEdit;
+    UniLabel4: TUniLabel;
+    edtContactPerson: TUniEdit;
+    UniLabel5: TUniLabel;
+    UniLabel6: TUniLabel;
+    UniLabel7: TUniLabel;
+    UniLabel8: TUniLabel;
+    UniLabel9: TUniLabel;
+    UniLabel10: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -41,9 +52,10 @@ procedure TUserRegisterF.btnOkClick(Sender: TObject);
 var Gmail: TcfsGmail;
 begin
 
-  if (edtEmail.Text = '') or (edtPassword.text = '') then
+  if (edtEmail.Text = '') or (edtPassword.text = '') or (edtBrief.text = '') or (edtPhone.text = '')
+  then
   begin
-    MessageDlg('Заполните все поля!', mtError, [mbOK]);
+    MessageDlg('Заполните все обязательные поля!', mtError, [mbOK]);
     Exit;
   end;
 
@@ -61,12 +73,19 @@ begin
                         ,@Hash     = @Hash     out
                         ,@Email    = :Email
                         ,@Password = :Password
+                        ,@Brief    = :Brief
+                        ,@Phone    = :Phone
+                        ,@ContactPerson = :ContactPerson
 
                 Select @R as R, @ClientID as ClientID, @Hash as Hash
 
              ''' ,
-             ['Email', 'Password'],
-             [edtEmail.Text, edtPassword.text]);
+             ['Email', 'Password', 'Brief', 'Phone', 'ContactPerson'],
+             [edtEmail.Text,
+              edtPassword.text,
+              edtBrief.text,
+              edtPhone.text,
+              edtContactPerson.text]);
 
     RetVal.Code := sql.Q.FieldByName('R').Value;
 

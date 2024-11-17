@@ -6,7 +6,7 @@ if OBJECT_ID('ClientUpdate') is not null
 go
 create proc ClientUpdate
               @ClientID             numeric(18,0)  --  
-             ,@Brief                nvarchar(512)  --
+             ,@Brief                nvarchar(256)  --
              ,@Name	                nvarchar(512)  -- 
 			 ,@SuppliersID          numeric(18,0)=null--поставщик
 			 ,@IsActive             bit
@@ -17,10 +17,8 @@ create proc ClientUpdate
              ,@ClientTypeID	        int            = null
              ,@StatusRequiringPayment varchar(256) = null
              ,@Email	              nvarchar(256)= null
-            -- ,@Margin               money       =null -- Наценка в процентах
-            -- ,@Reliability          money       =null -- Вероятность поставки 
-            -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
-            -- ,@Commission           money       =null -- Комиссия эквайера 
+             ,@Phone                  varchar(32)  = null
+             ,@ContactPerson          varchar(256) = null
 
 as
   declare @r int = 0
@@ -36,7 +34,7 @@ as
   end
 
   BEGIN TRY 
-      delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
+      delete tRetMessage from tRetMessage with (rowlock index=ao1) where spid=@@spid
       Begin tran 
 
       --Статусы требующие предоплаты
@@ -50,8 +48,6 @@ as
                  AND n.SearchID <> 8
              ) AS n;
 
-     
-
 	    Update tClients
 		   set Brief               = @Brief
 		   	  ,Name                = @Name
@@ -63,15 +59,10 @@ as
               ,NotificationMethod  = @NotificationMethod
               ,NotificationAddress = @NotificationAddress
               ,ClientTypeID        = @ClientTypeID
-              ,StatusRequiringPayment =  @StatusRequiringPayment
-
-
-                                          --  select distinct SearchID, SearchBrief from tNodes (nolock) where Type = 0 and SearchID <> 8 order by SearchID
-             -- ,Margin              = nullif(@Margin      , -1) 
-             -- ,Reliability         = nullif(@Reliability , -1) 
-             -- ,Discount            = nullif(@Discount    , -1) 
-             -- ,Commission          = nullif(@Commission  , -1) 
-		  from tClients (rowlock)
+              ,StatusRequiringPayment = @StatusRequiringPayment
+              ,Phone                 = @Phone         
+              ,ContactPerson         = @ContactPerson 
+		  from tClients with (rowlock index=PK_tClients_ClientID)
 	     where ClientID     = @ClientID 
 
 	    exec @r=OrderFileFormat_load 
@@ -102,7 +93,7 @@ as
         rollback tran
     
       set @r = -1
-      insert tRetMessage(RetCode, Message) select @r,  ERROR_MESSAGE()  
+      insert tRetMessage with (rowlock) (RetCode, Message) select @r,  ERROR_MESSAGE()  
 
       goto exit_     
   END CATCH  
@@ -113,5 +104,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20241112', '2'
+exec setOV 'ClientUpdate', 'P', '20241117', '3'
 go

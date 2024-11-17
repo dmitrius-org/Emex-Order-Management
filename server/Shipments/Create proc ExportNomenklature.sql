@@ -29,7 +29,10 @@ select o.OrderID
          when isnull(o.ReplacementMakeLogo, '') = '' then o.OrderDetailSubId 
          else ''
        end as BarCode
-  from tOrders o with (nolock)
+      ,c.Brief ClientBrief
+  from tOrders o with (nolock index=ao3)
+ inner join tClients c with (nolock index=ao1)
+         on c.ClientID = o.ClientID
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID 
  where o.Invoice = @Invoice
@@ -48,7 +51,10 @@ select o.OrderID
       ,m.Name + ' ' + o.ReplacementDetailNumber
       ,coalesce(p.WeightKGF, o.WeightKG, 0) WeightKGF
       ,o.OrderDetailSubId    as BarCode
-  from tOrders o with (nolock)
+      ,c.Brief ClientBrief
+  from tOrders o with (nolock index=ao3)
+ inner join tClients c with (nolock index=ao1)
+         on c.ClientID = o.ClientID
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID 
  inner join tMakes m (nolock)
@@ -57,7 +63,7 @@ select o.OrderID
     --and o.OrderID= 133499
    and isnull(o.ReplacementMakeLogo, '') <> ''
 
-order by OrderID
+order by ClientBrief, OrderID
 
 exit_:
 
@@ -65,7 +71,7 @@ return @r
 GO
 grant exec on ExportNomenklature to public
 go
-exec setOV 'ExportNomenklature', 'P', '20240819', '2'
+exec setOV 'ExportNomenklature', 'P', '20241115', '3'
 go
 
 exec ExportNomenklature @Invoice = '240126'

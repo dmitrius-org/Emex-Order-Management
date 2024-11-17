@@ -17,7 +17,7 @@ object ExportForm: TExportForm
     Width = 1606
     Height = 650
     Hint = ''
-    ActivePage = tabFragile
+    ActivePage = TabNomenclature
     Align = alClient
     TabOrder = 0
     object TabNomenclature: TUniTabSheet
@@ -99,6 +99,12 @@ object ExportForm: TExportForm
             Title.Alignment = taCenter
             Title.Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
             Width = 196
+          end
+          item
+            FieldName = 'ClientBrief'
+            Title.Alignment = taCenter
+            Title.Caption = #1050#1083#1080#1077#1085#1090
+            Width = 201
           end>
       end
     end
@@ -412,10 +418,6 @@ object ExportForm: TExportForm
     object tabFragile: TUniTabSheet
       Hint = ''
       Caption = #1061#1088#1091#1087#1082#1086#1077
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1606
-      ExplicitHeight = 650
       object GridFragile: TUniDBGrid
         Left = 0
         Top = 0
@@ -641,6 +643,10 @@ object ExportForm: TExportForm
     object FDExportNomenclatureBarCode: TWideStringField
       FieldName = 'BarCode'
       Size = 32
+    end
+    object FDExportNomenclatureClientBrief: TWideStringField
+      FieldName = 'ClientBrief'
+      Size = 256
     end
   end
   object DSNomenklature: TDataSource

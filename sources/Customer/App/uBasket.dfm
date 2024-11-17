@@ -28,7 +28,6 @@ object BasketF: TBasketF
     ShowCaption = False
     Caption = 'MainPanel'
     LayoutConfig.Width = '0'
-    ExplicitWidth = 1247
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -263,7 +262,6 @@ object BasketF: TBasketF
     Caption = 'TopPanel'
     Layout = 'fit'
     LayoutConfig.Width = '0'
-    ExplicitWidth = 1247
     object UniContainerPanel1: TUniContainerPanel
       Left = 0
       Top = 0
@@ -274,7 +272,6 @@ object BasketF: TBasketF
       Align = alClient
       TabOrder = 1
       LayoutAttribs.Columns = 2
-      ExplicitWidth = 1247
       object UniPanel1: TUniPanel
         Left = 0
         Top = 0
@@ -287,7 +284,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel1'
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 829
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -458,7 +454,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'UniPanel2'
         LayoutConfig.Region = 'east'
-        ExplicitLeft = 829
         DesignSize = (
           418
           80)

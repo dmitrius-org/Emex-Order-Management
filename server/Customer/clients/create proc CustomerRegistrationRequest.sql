@@ -9,10 +9,13 @@ if OBJECT_ID('CustomerRegistrationRequest') is not null
 */
 go
 create proc CustomerRegistrationRequest
-              @ClientID  numeric(18,0) output -- 
-             ,@Hash      nvarchar(512) output
-             ,@Email     nvarchar(64)
-             ,@Password  nvarchar(64)
+              @ClientID       numeric(18,0) output -- 
+             ,@Hash           nvarchar(512) output
+             ,@Email          nvarchar(64)
+             ,@Password       nvarchar(64)
+             ,@Brief          nvarchar(256)
+             ,@Phone          varchar(32)
+             ,@ContactPerson  varchar(256)
 as
   declare @r              int = 0
          ,@IsConfirmed    bit 
@@ -54,10 +57,10 @@ as
       -- Поставщик по умолчанию 
       declare @SuppliersID numeric(18,0)
       select @SuppliersID = cast(isnull(nullif(Val, ''), '0') as numeric(18,0)) 
-        from tSettings (nolock)
+        from tSettings with (nolock index=ao2)
        where Brief = 'DefaultSuppliers'
 
-      insert into tClients
+      insert into tClients with (rowlock) 
             (
              Brief
             ,Email
@@ -68,9 +71,12 @@ as
             ,HashDate
             ,SuppliersID
             ,StatusRequiringPayment
+            --,Name 
+            ,Phone
+            ,ContactPerson
             )
       OUTPUT INSERTED.ClientID INTO @ID
-      select @Email  
+      select @Brief  
             ,@Email
             ,master.dbo.fn_varbintohexstr(HashBytes('SHA2_512', @Password))    
             ,dbo.GetUserID()
@@ -79,13 +85,16 @@ as
             ,getdate()
             ,@SuppliersID
             ,'3;4;5;7'
+            --,@Name 
+            ,@Phone
+            ,@ContactPerson
 
 
      Select @ClientID = ID from @ID
 
      if @ClientID > 0 
      begin
-         insert tProfilesCustomer
+         insert tProfilesCustomer with (rowlock)
                (
                 Brief
                ,ProfilesDeliveryID
@@ -100,8 +109,8 @@ as
                ,ct.Reliability
                ,1
                ,@ClientID
-           from tSupplierDeliveryProfiles sdp (nolock)
-           left join tClientType ct (nolock)
+           from tSupplierDeliveryProfiles sdp with (nolock index=ao1)
+           left join tClientType ct with (nolock index=PK_tClientType_ClientTypeID)
                   on ct.ClientTypeID=@ClientTypeID
           where sdp.SuppliersID=@SuppliersID
 
@@ -114,16 +123,15 @@ as
                 ,LinkID
                 ,LinkType
                 )
-          select g.GroupID
+          select GroupID
                 ,1 -- группа
                 ,@ClientID
                 ,7 -- клиенты
-            from tGroups g (nolock)
-           where g.GroupID in (1--Менеджеры
-                              ,2--Админы
-                              )
+            from tGroups with (nolock index=ao1)
+           where GroupID in (1--Менеджеры
+                            ,2--Админы
+                             )
      end
-
 
   end
 exit_:
@@ -131,5 +139,5 @@ return @r
 go
 grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'CustomerRegistrationRequest', 'P', '20241105', '3'
+exec setOV 'CustomerRegistrationRequest', 'P', '20241117', '4'
 go

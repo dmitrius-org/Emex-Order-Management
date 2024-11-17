@@ -23,6 +23,8 @@ select c.ClientID
       ,c.NotificationAddress
       ,c.ClientTypeID
       ,c.Email
+      ,c.Phone
+      ,c.ContactPerson
       ,(SELECT STRING_AGG(n.SearchBrief, ';') WITHIN GROUP (ORDER BY n.SearchID ASC)
           FROM ( 
                SELECT DISTINCT n.SearchBrief,  n.SearchID 
@@ -37,8 +39,7 @@ select c.ClientID
 go
 grant all on vClientEdit to public
 go
-exec setOV 'vClientEdit', 'V', '20241112', '4'
+exec setOV 'vClientEdit', 'V', '20241117', '5'
 go
-
 
 select * from vClientEdit

@@ -23,4 +23,13 @@ sp_who
 --ALTER COLUMN InDateTime DateTime2;
 
 --ALTER TABLE tAudit 
---ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime;
+--ADD CONSTRAINT DF_tAudit_InDateTime DEFAULT SYSDATETIME() FOR InDateTime
+
+
+ALTER TABLE tClients add     Phone                varchar(32)
+    ,ContactPerson        varchar(256) 
+
+
+
+    ALTER TABLE tClients 
+    alter column ContactPerson        varchar(256) 

@@ -6,7 +6,7 @@ if OBJECT_ID('ClientInsert') is not null
 go
 create proc ClientInsert
               @ClientID               numeric(18,0) output --  
-             ,@Brief                  nvarchar(512)  --
+             ,@Brief                  nvarchar(256)  --
              ,@Name	                  nvarchar(1024)  -- 
 			 ,@SuppliersID            numeric(18,0)=null--поставщик
 			 ,@IsActive               bit
@@ -17,6 +17,8 @@ create proc ClientInsert
              ,@ClientTypeID	          int          = null -- Тип клиента
              ,@StatusRequiringPayment varchar(256) = null
              ,@Email	              nvarchar(256)= null
+             ,@Phone                  varchar(32)= null
+             ,@ContactPerson          varchar(256) = null
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -36,10 +38,10 @@ as
   end
 
   BEGIN TRY 
-      delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
+      delete tRetMessage from tRetMessage with (rowlock index=ao1) where spid=@@spid
       Begin tran
 
-		insert into tClients
+		insert into tClients with (rowlock)
 		      (
 		       Brief
 		      ,Name
@@ -52,10 +54,8 @@ as
               ,NotificationAddress
               ,ClientTypeID	
               ,StatusRequiringPayment
-              --,Margin       
-              --,Reliability  
-              --,Discount     
-              --,Commission   
+              ,Phone       
+              ,ContactPerson  
 		       )
 		OUTPUT INSERTED.ClientID INTO @ID
 		select @Brief     
@@ -69,10 +69,8 @@ as
               ,@NotificationAddress
               ,@ClientTypeID
               ,@StatusRequiringPayment
-              --,nullif(@Margin       , -1)
-              --,nullif(@Reliability  , -1)
-              --,nullif(@Discount     , -1)
-              --,nullif(@Commission   , -1)
+              ,@Phone
+              ,@ContactPerson
 
 		Select @ClientID = ID from @ID	    
  
@@ -102,7 +100,7 @@ as
         rollback tran
     
       set @r = -1
-      insert tRetMessage(RetCode, Message) select @r,  ERROR_MESSAGE()  
+      insert tRetMessage with (rowlock) (RetCode, Message) select @r,  ERROR_MESSAGE()  
 
       goto exit_     
   END CATCH  
@@ -114,6 +112,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20240918', '2'
+exec setOV 'ClientInsert', 'P', '20241117', '3'
 go
 

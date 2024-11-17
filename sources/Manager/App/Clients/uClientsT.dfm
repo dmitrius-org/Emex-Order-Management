@@ -274,7 +274,7 @@ object ClientsT: TClientsT
       RowEditor = True
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete]
-      WebOptions.PageSize = 50
+      WebOptions.PageSize = 300
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
@@ -358,7 +358,8 @@ object ClientsT: TClientsT
           FieldName = 'Rest'
           Title.Alignment = taCenter
           Title.Caption = #1041#1072#1083#1072#1085#1089
-          Width = 64
+          Width = 120
+          Sortable = True
         end>
     end
     object UniHiddenPanel: TUniHiddenPanel

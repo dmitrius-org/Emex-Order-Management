@@ -317,7 +317,7 @@ end;
 
 procedure TSearchF.AnalogLblVisible;
 begin
-  logger.Info(FMakeCount.ToString);
+  //logger.Info(FMakeCount.ToString);
   //lblAnalog.Visible :=(not MakeLogoPanel.Visible) and (FMakeCount > 1) and (Query.RecordCount > 0);
 end;
 
@@ -406,8 +406,6 @@ begin
   end;
 end;
 
-
-
 procedure TSearchF.QueryAvailableGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
@@ -418,8 +416,6 @@ begin
   else
     Text := '<span>' + Sender.AsString + '</span>';
 end;
-
-
 
 procedure TSearchF.QueryDeliveryTypeGetText(Sender: TField; var Text: string;  DisplayText: Boolean);
 begin
@@ -539,7 +535,6 @@ begin
   Text := StringReplace(Text, 'PriceLogo' , Query.FieldByName('PriceLogo').AsString, [] );
   Text := StringReplace(Text, 'PercentSupped' , Sender.AsString, [rfReplaceAll] );
   Text := StringReplace(Text, 'Packing' ,  Query.FieldByName('Packing').AsString, [rfReplaceAll] );
-
 end;
 
 procedure TSearchF.btnRefreshClick(Sender: TObject);
@@ -559,7 +554,6 @@ begin
     btnRefresh.Enabled := True;
     SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   {$ENDIF}
-
 
   js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
@@ -640,7 +634,6 @@ begin
     VKGPanel.Visible := True;
   end;
 end;
-
 
 procedure TSearchF.SearchGridCellClick(Column: TUniDBGridColumn);
 begin
@@ -723,7 +716,6 @@ begin
     from pFindByNumber f with (nolock index=ao1)
    where f.Spid      = @@Spid
      and f.DetailNum = :DetailNum
-
   ''',
   ['DetailNum'],
   [FDetailNum]);
@@ -769,7 +761,6 @@ procedure TSearchF.VolumeCalc;
 begin
   edtVKG.Value := ( (edtL.Value * edtW.Value * edtH.Value) / 5000 );
 end;
-
 
 procedure TSearchF.VolumeSaveClick(Sender: TObject);
 begin

@@ -245,10 +245,8 @@ end;
 
 procedure TBasketF.GridAfterLoad(Sender: TUniCustomDBGrid);
 begin
-  Logger.Info('TBasketF.GridAfterLoad Begin');
   with Grid, JSInterface do
     JSCallDefer('getSelectionModel().selectAll', [], 100 );
-  Logger.Info('GridAfterLoad End ');
 end;
 
 procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -340,7 +338,7 @@ begin
         id := FGrid.DataSource.DataSet.FieldByName('BasketID').AsLargeInt;
         FMarks.Add(id, id);
         if i = 0 then
-          SqlText:= SqlText + ' Insert into tMarks (Spid, Type, ID) select @@Spid, 6, '
+          SqlText:= SqlText + ' Insert into tMarks with (rowlock) (Spid, Type, ID) select @@Spid, 6, '
         else
           SqlText:= SqlText + ' Union all select @@Spid, 6, ';
 
@@ -354,7 +352,6 @@ begin
     end;
 
   end;
-
 
   logger.Info('tMarks.Count: ' + Count.ToString);
   logger.Info('tMarks.Select End');

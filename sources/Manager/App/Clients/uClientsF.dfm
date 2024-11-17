@@ -62,19 +62,21 @@ object ClientsF: TClientsF
         Left = 0
         Top = 0
         Width = 1177
-        Height = 217
+        Height = 348
         Hint = ''
         ParentColor = False
         Align = alTop
         TabOrder = 0
+        ExplicitLeft = 3
         DesignSize = (
           1177
-          217)
+          348)
         object edtBrief: TUniEdit
           Left = 144
           Top = 16
           Width = 1009
           Hint = ''
+          MaxLength = 256
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
@@ -82,7 +84,7 @@ object ClientsF: TClientsF
         end
         object cbIsActive: TUniCheckBox
           Left = 144
-          Top = 103
+          Top = 78
           Width = 138
           Height = 17
           Hint = ''
@@ -90,8 +92,8 @@ object ClientsF: TClientsF
           TabOrder = 5
         end
         object lblName: TUniLabel
-          Left = 25
-          Top = 19
+          Left = 18
+          Top = 18
           Width = 84
           Height = 13
           Hint = ''
@@ -99,8 +101,8 @@ object ClientsF: TClientsF
           TabOrder = 2
         end
         object UniLabel5: TUniLabel
-          Left = 25
-          Top = 61
+          Left = 19
+          Top = 51
           Width = 68
           Height = 13
           Hint = ''
@@ -109,7 +111,7 @@ object ClientsF: TClientsF
         end
         object cbClientType: TUniFSComboBox
           Left = 144
-          Top = 56
+          Top = 44
           Width = 183
           Hint = ''
           Text = ''
@@ -119,8 +121,8 @@ object ClientsF: TClientsF
           Value = '-1'
         end
         object UniLabel11: TUniLabel
-          Left = 25
-          Top = 141
+          Left = 18
+          Top = 106
           Width = 30
           Height = 13
           Hint = ''
@@ -129,13 +131,62 @@ object ClientsF: TClientsF
         end
         object edtEmail: TUniEdit
           Left = 144
-          Top = 138
-          Width = 385
+          Top = 106
+          Width = 387
           Hint = ''
+          MaxLength = 64
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 7
+          InputType = 'email'
+        end
+        object edtPhone: TUniEdit
+          Left = 144
+          Top = 134
+          Width = 387
+          Hint = ''
+          PasswordChar = '*'
+          MaxLength = 64
+          CharEOL = '*'
+          Text = ''
+          ParentFont = False
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 8
           ClearButton = True
+          FieldLabelWidth = 5
+          FieldLabelFont.Color = clCrimson
+          InputType = 'tel'
+        end
+        object UniLabel13: TUniLabel
+          Left = 18
+          Top = 134
+          Width = 49
+          Height = 13
+          Hint = ''
+          Caption = #1058#1077#1083#1077#1092#1086#1085':'
+          TabOrder = 9
+        end
+        object edtContactPerson: TUniEdit
+          Left = 144
+          Top = 162
+          Width = 1009
+          Hint = ''
+          MaxLength = 256
+          CharEOL = '*'
+          Text = ''
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 10
+          ClearButton = True
+          FieldLabelWidth = 5
+        end
+        object UniLabel14: TUniLabel
+          Left = 18
+          Top = 162
+          Width = 95
+          Height = 13
+          Hint = ''
+          Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086':'
+          TabOrder = 11
         end
       end
       object fsAudit: TUniFieldSet

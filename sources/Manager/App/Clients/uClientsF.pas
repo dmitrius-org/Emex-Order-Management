@@ -180,6 +180,10 @@ type
     qManagerObjectType: TIntegerField;
     UniLabel11: TUniLabel;
     edtEmail: TUniEdit;
+    edtPhone: TUniEdit;
+    UniLabel13: TUniLabel;
+    edtContactPerson: TUniEdit;
+    UniLabel14: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -382,13 +386,16 @@ begin
                             ,@NotificationAddress = :NotificationAddress
                             ,@ClientTypeID	      = :ClientTypeID
                             ,@Email	              = :Email
+                            ,@Phone	              = :Phone
+                            ,@ContactPerson       = :ContactPerson
 
                  select @r as retcode
                  ''';
 
       Sql.Open(sqltext,
                ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType',
-                'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'Email'],
+                'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'Email',
+                'Phone', 'ContactPerson'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -398,7 +405,9 @@ begin
                cbNotificationMethod.ItemIndex,
                edtNotificationAddress.Text,
                cbClientType.Value,
-               edtEmail.Text
+               edtEmail.Text,
+               edtPhone.Text,
+               edtContactPerson.text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -422,14 +431,16 @@ begin
                             ,@ClientTypeID	      = :ClientTypeID
                             ,@StatusRequiringPayment=:StatusRequiringPayment
                             ,@Email	              = :Email
-
+                            ,@Phone	              = :Phone
+                            ,@ContactPerson       = :ContactPerson
                  select @r as retcode
                 ''';
 
       Sql.Open(sqltext,
                ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes',
                'ResponseType', 'NotificationMethod', 'NotificationAddress',
-               'ClientTypeID', 'StatusRequiringPayment', 'Email'],
+               'ClientTypeID', 'StatusRequiringPayment', 'Email',
+                'Phone', 'ContactPerson'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -441,7 +452,9 @@ begin
                edtNotificationAddress.Text,
                cbClientType.value,
                cbStatusRequiringPayment.Text,
-               edtEmail.Text
+               edtEmail.Text,
+               edtPhone.Text,
+               edtContactPerson.text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -521,6 +534,8 @@ begin
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
   cbStatusRequiringPayment.Text  := UniMainModule.Query.FieldByName('StatusRequiringPayment').AsString;
   edtEmail.Text  := UniMainModule.Query.FieldByName('Email').AsString;
+  edtPhone.Text  := UniMainModule.Query.FieldByName('Phone').AsString;
+  edtContactPerson.Text  := UniMainModule.Query.FieldByName('ContactPerson').AsString;
 
   //
   cbClientType.Value :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
@@ -667,7 +682,6 @@ begin
   Sql.Exec('delete pOrderFileFormat  from pOrderFileFormat  (rowlock) where spid = @@spid;' +
            'delete pClientReliation  from pClientReliation  (rowlock) where spid = @@spid;' +
            'delete pProfilesCustomer from pProfilesCustomer (rowlock) where spid = @@spid;', [], []);
-
   {$ENDIF}
 end;
 

@@ -74,7 +74,7 @@ as
 		                else o.isCancel 
 		              end
 	    ,o.Flag     = case
-	                    when ns.Brief = 'InCancel' then isnull (o.flag, 0) | 4 -- признак "Отказан"
+	                    when ns.Brief = 'InCancel' then isnull (o.flag, 0) | 4  -- признак "Отказан"
 						when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
 					    else o.flag
 	                  end
