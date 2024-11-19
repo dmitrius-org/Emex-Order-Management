@@ -63,12 +63,13 @@ object MainForm: TMainForm
           Width = 616
           Height = 511
           Hint = ''
-          ActivePage = tsBalance
+          ActivePage = tsOrder
           Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
+          OnChange = pcMainChange
           object tbS: TUniTabSheet
             Hint = ''
             ImageIndex = 2
@@ -81,12 +82,12 @@ object MainForm: TMainForm
             OnBeforeActivate = tsBBeforeActivate
             OnBeforeFirstActivate = tsBBeforeFirstActivate
           end
-          object tsO: TUniTabSheet
+          object tsOrder: TUniTabSheet
             Hint = ''
             ImageIndex = 3
             Caption = #1047#1072#1082#1072#1079#1099
-            OnBeforeActivate = tsOBeforeActivate
-            OnBeforeFirstActivate = tsOBeforeFirstActivate
+            OnBeforeActivate = tsOrderBeforeActivate
+            OnBeforeFirstActivate = tsOrderBeforeFirstActivate
           end
           object tsBalance: TUniTabSheet
             Hint = ''

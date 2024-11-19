@@ -18,6 +18,7 @@ SELECT o.[OrderID]
       ,o.[isCancel]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
+      ,o.MakeLogo
       ,ltrim(rtrim(Replace( case 
                   when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
                   then p.DetailName
@@ -28,7 +29,7 @@ SELECT o.[OrderID]
       ,o.[Quantity]
       ,o.[Price]
       ,o.[Amount]
-      --,o.[PricePurchase]
+      ,o.[PricePurchase] -- используем в форме редактирования
       --,o.[AmountPurchase]
       --,o.[PricePurchaseF]
       --,o.[AmountPurchaseF]
@@ -52,7 +53,8 @@ SELECT o.[OrderID]
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
       ,o.Invoice                               -- номер инвойса
-      ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
+      ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки 
+      ,coalesce(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo -- используем в форме редактирования
       ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
       ,o.OrderDetailSubId
       ,o.Comment2
@@ -102,7 +104,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241030', '30'
+exec setOV 'vCustomerOrders', 'V', '20241119', '31'
 go
 
 select * from vCustomerOrders  where ClientID =31

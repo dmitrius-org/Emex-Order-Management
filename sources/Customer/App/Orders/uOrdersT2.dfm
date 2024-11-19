@@ -94,7 +94,6 @@ object OrdersT2: TOrdersT2
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '100'
-    ExplicitWidth = 1402
     object Grid: TUniDBGrid
       Left = 0
       Top = 86
@@ -421,6 +420,7 @@ object OrdersT2: TOrdersT2
           Hint = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1087#1088#1080#1079#1085#1072#1082#1080' '#1087#1086' '#1089#1090#1072#1090#1091#1089#1091' '#1079#1072#1082#1072#1079#1072
         end
         item
+          ShowToolTip = True
           FieldName = 'Comment'
           Title.Alignment = taCenter
           Title.Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
@@ -429,6 +429,7 @@ object OrdersT2: TOrdersT2
           Sortable = True
         end
         item
+          ShowToolTip = True
           FieldName = 'Comment2'
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
@@ -450,7 +451,6 @@ object OrdersT2: TOrdersT2
       ShowCaption = False
       Caption = 'pFilter'
       ParentAlignmentControl = False
-      ExplicitWidth = 1396
       object gbFilter: TUniGroupBox
         AlignWithMargins = True
         Left = 3
@@ -464,7 +464,6 @@ object OrdersT2: TOrdersT2
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        ExplicitWidth = 1390
         DesignSize = (
           1723
           74)
@@ -485,7 +484,7 @@ object OrdersT2: TOrdersT2
           Height = 24
           ShowHint = True
           Action = actFilterClear
-          Caption = '<i class="fa fa-times"></i> '#1054#1095#1080#1089#1090#1080#1090#1100
+          Caption = '<i class="fa fa-times red"></i> '#1054#1095#1080#1089#1090#1080#1090#1100
           TabOrder = 8
         end
         object fOk: TUniBitBtn
@@ -605,7 +604,6 @@ object OrdersT2: TOrdersT2
           Action = actCancelRequest
           Anchors = [akTop, akRight]
           TabOrder = 10
-          ExplicitLeft = 1264
         end
         object edtComment2: TUniEdit
           Left = 690
@@ -672,7 +670,7 @@ object OrdersT2: TOrdersT2
           Height = 24
           ShowHint = True
           Action = actCancelRequest
-          Caption = '<i class="fa fa-bell"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+          Caption = '<i class="order fa fa-bell"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           Anchors = [akTop, akRight]
           TabOrder = 14
           LayoutConfig.ComponentCls = 'order-notification-btn'
@@ -798,14 +796,12 @@ object OrdersT2: TOrdersT2
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Height = '0'
     LayoutConfig.Width = '100'
-    ExplicitWidth = 1396
   end
   object Query: TFDQuery
     Connection = UniMainModule.FDConnection
     FetchOptions.AssignedValues = [evItems, evAutoFetchAll]
     FetchOptions.Items = []
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
-    UpdateOptions.EnableDelete = False
     UpdateOptions.EnableInsert = False
     UpdateOptions.LockWait = True
     UpdateOptions.CountUpdatedRecords = False
@@ -821,20 +817,15 @@ object OrdersT2: TOrdersT2
       'SELECT o.[OrderID]'
       '      ,o.[OrderDate]'
       '      ,o.[PriceLogo]'
-      '    --  ,o.[CustomerPriceLogo] -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       '      ,o.[OrderNum]'
       '      ,o.[StatusID]'
       '      ,o.[StatusName]'
-      '    --  ,o.[isCancel]'
-      '    --  ,o.[MakeLogo]'
       '      ,o.[Manufacturer]'
       '      ,o.[DetailNumber]'
       '      ,o.[DetailName]'
       '      ,o.[Quantity]'
       '      ,o.[Price]'
       '      ,o.[Amount]'
-      '      --,o.[PricePurchase]'
-      '      --,o.[AmountPurchase]'
       '      ,o.[WeightKG]'
       '      ,o.[VolumeKG]'
       '      ,o.[WeightKGF]'
@@ -856,13 +847,9 @@ object OrdersT2: TOrdersT2
       '      ,o.[DeliveryRestToCustomer]'
       '      ,o.[inDatetime]'
       '      ,o.[updDatetime]      '
-      '      --,o.[Warning]'
       '      ,o.[Comment]'
-      '      --,o.[ReplacementMakeLogo]'
       '      ,o.[ReplacementDetailNumber]'
       '      ,o.[ReplacementManufacturer]    '
-      '      --,o.[ReplacementPrice]  '
-      '     -- ,o.[Reference]'
       '      ,o.[DestinationName]'
       '      ,o.[Flag]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
@@ -1186,15 +1173,23 @@ object OrdersT2: TOrdersT2
       ImageIndex = 3
       OnExecute = actShowMessageExecute
     end
+    object actIsCancelApproval: TAction
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1086#1090#1082#1072#1079
+      OnExecute = actIsCancelApprovalExecute
+    end
+    object actReOrder: TAction
+      Caption = #1055#1077#1088#1077#1079#1072#1082#1072#1079#1072#1090#1100
+      OnExecute = actReOrderExecute
+    end
   end
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
+    DeleteSQL.Strings = (
+      'select 0')
     FetchRowSQL.Strings = (
-      'SELECT StatusID, '
-      '       Flag,'
-      '       Comment2'
-      '  FROM tOrders (nolock)'
+      'SELECT *'
+      '  FROM vCustomerOrders'
       ' WHERE OrderID = :OrderID')
     Left = 498
     Top = 255
@@ -2569,5 +2564,15 @@ object OrdersT2: TOrdersT2
       FF0000FFFFFFFFFFFE00000FFFFFFFFFFFF00FFFFFFFFFFFFF00000FFFFFFFFF
       FFF81FFFFFFFFFFFFF80001FFFFFFFFF00000000000000000000000000000000
       000000000000}
+  end
+  object ppMain: TUniPopupMenu
+    Left = 241
+    Top = 218
+    object N1: TUniMenuItem
+      Action = actIsCancelApproval
+    end
+    object N2: TUniMenuItem
+      Action = actReOrder
+    end
   end
 end

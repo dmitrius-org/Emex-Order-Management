@@ -276,6 +276,7 @@ type
     ///  OrdersFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
     procedure OrdersFCallBack(Sender: TComponent; AResult:Integer);
+
     procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
     /// <summary>
     ///  GroupDetailNameEditCallBack - CallBack обработчик группового изменения наименования детали
@@ -1675,7 +1676,7 @@ begin
         id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
         FMarks.Add(id, id);
         if i = 0 then
-          SqlText:= SqlText + ' Insert into tMarks (Spid, Type, ID) select @@Spid, 3, '
+          SqlText:= SqlText + ' Insert into tMarks with (rowlock) (Spid, Type, ID) select @@Spid, 3, '
         else
           SqlText:= SqlText + ' Union all select @@Spid, 3, ';
 

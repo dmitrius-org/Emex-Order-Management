@@ -882,7 +882,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel6: TUniLabel
-          Left = 462
+          Left = 478
           Top = 58
           Width = 78
           Height = 13
@@ -904,7 +904,7 @@ object OrdersT: TOrdersT
         object edtUpdDate: TUniDateTimePicker
           Left = 326
           Top = 75
-          Width = 130
+          Width = 146
           Hint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           ShowHint = True
           DateTime = 45257.000000000000000000
@@ -949,9 +949,9 @@ object OrdersT: TOrdersT
           TabOrder = 4
         end
         object fDetailNum: TUniEdit
-          Left = 462
+          Left = 478
           Top = 75
-          Width = 213
+          Width = 197
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''
@@ -982,6 +982,17 @@ object OrdersT: TOrdersT
             end>
           DateFormat = 'DD/MM/YYYY'
           DatePickerOptions.Opens = ooCenter
+          DatePickerOptions.Ranges.Strings = (
+            #1057#1077#1075#1086#1076#1085#1103'=[moment(), moment()]'
+            
+              #1042#1095#1077#1088#1072'=[moment().subtract(1, "days"), moment().subtract(1, "days"' +
+              ')]'
+            #1055#1086#1089#1083#1077#1076#1085#1080#1077' 7 '#1076#1085#1077#1081'=[moment().subtract(6, "days"), moment()]'
+            #1055#1086#1089#1083#1077#1076#1085#1080#1077' 30 '#1076#1085#1077#1081'=[moment().subtract(29, "days"), moment()]'
+            #1069#1090#1086#1090' '#1084#1077#1089#1103#1094'=[moment().startOf("month"), moment().endOf("month")]'
+            
+              #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
+              'oment().subtract(1, "month").endOf("month")]')
         end
       end
     end

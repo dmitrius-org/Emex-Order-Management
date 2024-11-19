@@ -100,7 +100,7 @@ type
     NotExists: TUniLabel;
     cbPrice: TUniFSComboBox;
     UniActionList1: TUniActionList;
-    actRefreshFormDate: TAction;
+    actRefreshFormData: TAction;
     UniHTMLFrame1: TUniHTMLFrame;
     UniContainerPanel1: TUniContainerPanel;
     actProtocol: TAction;
@@ -123,7 +123,7 @@ type
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
     procedure edtDetailNameFRemoteQuery(const QueryString: string; Result: TStrings);
-    procedure actRefreshFormDateExecute(Sender: TObject);
+    procedure actRefreshFormDataExecute(Sender: TObject);
     procedure UniBitBtn1Click(Sender: TObject);
     procedure UniFormDestroy(Sender: TObject);
     procedure UniFormReady(Sender: TObject);
@@ -168,6 +168,7 @@ type
     FGoogleKey : string;
 
     procedure SetAction(const Value: TFormAction);
+
     /// <summary>
     ///  DataLoad - получение данных с сервера, для отображения на форме
     ///</summary>
@@ -284,7 +285,7 @@ begin
   OrdersProtocol_T.ShowModal;
 end;
 
-procedure TOrderF.actRefreshFormDateExecute(Sender: TObject);
+procedure TOrderF.actRefreshFormDataExecute(Sender: TObject);
 begin
   SetEditDataRating(0);
   LoadDataPart;
@@ -362,7 +363,6 @@ end;
 
 procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0); var sqltext: string;
 begin
-
   RetVal.Clear;
 
   DataCheck(ATargetStateID);
@@ -576,14 +576,6 @@ begin
         end;
       end;
 
-      // Проверка на пустое или только пробелы
-//      if Trim(edtDetailNameF.Text) = '' then
-//      begin
-//        RetVal.Code := 1;
-//        RetVal.Message := 'Поле [Наименование] не должно содержать только пробелы!';
-//        Exit();
-//      end;
-
       // Проверка веса
       if (edtWeightKG.Value = 0) and ((edtWeightKGF.Value = 0) or (edtWeightKGF.Text = '')) then
       begin
@@ -608,7 +600,6 @@ begin
              ,v.WeightKGF
              ,v.VolumeKGF
              ,v.DetailName as DetailName
-             ,v.Manufacturer
              ,v.DetailNumber
              ,v.NoAir
              ,v.Fragile
@@ -647,7 +638,7 @@ begin
   ComboBoxFill(cbPrice,
   '''
     -- список поставщиков
-    OrderF_SupplierList
+    exec OrderF_SupplierList
                @OrderID =
   ''' + FID.ToString);
 
@@ -914,7 +905,7 @@ begin
 
   Price:=cbPrice.Value;
   // список поставщиков
-  ComboBoxFill( cbPrice, ' OrderF_SupplierList @OrderID = ' + FID.ToString );
+  ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
 
   cbPrice.Value:=Price;
 
@@ -1150,15 +1141,14 @@ begin
   if not edtNextPart.Checked then Exit;
 
   sql.open('''
-              Update #CounterPart
-                 set Processed = 1
-               where OrderID   = :OrderID
+             Update #CounterPart
+                set Processed = 1
+              where OrderID   = :OrderID
 
              Select top 1 OrderID
                from #CounterPart (nolock)
               where isnull(Processed, 0) = 0
               order by N
-
            ''',
            ['OrderID'],
            [FID]

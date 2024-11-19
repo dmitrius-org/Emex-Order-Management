@@ -18,7 +18,7 @@ object OrderF: TOrderF
       Hint = #1055#1088#1086#1090#1086#1082#1086#1083
     end
     item
-      Action = actRefreshFormDate
+      Action = actRefreshFormData
       ButtonId = 0
       ImageIndex = 1
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1409,10 +1409,10 @@ object OrderF: TOrderF
   object UniActionList1: TUniActionList
     Left = 609
     Top = 183
-    object actRefreshFormDate: TAction
+    object actRefreshFormData: TAction
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      OnExecute = actRefreshFormDateExecute
+      OnExecute = actRefreshFormDataExecute
     end
     object actProtocol: TAction
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083

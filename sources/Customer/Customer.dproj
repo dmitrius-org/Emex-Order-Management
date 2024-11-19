@@ -235,6 +235,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Common\CommonApp\uConstant.pas"/>
+        <DCCReference Include="App\Orders\uReOrderF.pas">
+            <Form>ReOrder</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

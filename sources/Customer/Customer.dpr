@@ -60,7 +60,8 @@ uses
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
-  uConstant in '..\Common\CommonApp\uConstant.pas';
+  uConstant in '..\Common\CommonApp\uConstant.pas',
+  uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm};
 
 {$R *.res}
 

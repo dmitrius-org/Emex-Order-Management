@@ -37,7 +37,7 @@ type
     actinfo: TAction;
     tbS: TUniTabSheet;
     tsB: TUniTabSheet;
-    tsO: TUniTabSheet;
+    tsOrder: TUniTabSheet;
     MainMenuPanel: TUniPanel;
     MainMenu: TUniTreeMenu;
     MainMenuImage: TUniNativeImageList;
@@ -57,12 +57,13 @@ type
     procedure UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tsBBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure UniFormCreate(Sender: TObject);
-    procedure tsOBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure tsOrderBeforeActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure tsBBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
-    procedure tsOBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure tsOrderBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure MainMenuClick(Sender: TObject);
     procedure btnBasketClick(Sender: TObject);
     procedure tsBalanceBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure pcMainChange(Sender: TObject);
 
   private
     ///<summary>
@@ -104,20 +105,17 @@ begin
   Result := TMainForm(UniMainModule.GetFormInstance(TMainForm));
 end;
 
-
 procedure TMainForm.actEditPasExecute(Sender: TObject);
 begin
   LoginEditF.ShowModal();
 end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
+var UrlRedirect: string;
 begin  // выход из программы
   UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
   UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',      Date-1);
 
-
-
-  var UrlRedirect: string;
   UrlRedirect := Sql.GetSetting('RedirectOnExit');
 
   if UrlRedirect <> '' then
@@ -184,6 +182,13 @@ begin
       end;
     end
   end;// if Assigned(N) then
+end;
+
+procedure TMainForm.pcMainChange(Sender: TObject);
+begin
+  if Assigned(FOrdersT2) then
+    if pcmain.ActivePage <> tsOrder then
+      FOrdersT2.SetMenuVisible(false);
 end;
 
 procedure TMainForm.ProfileMenuAdd;
@@ -261,20 +266,21 @@ begin
   end;
 end;
 
-procedure TMainForm.tsOBeforeActivate(Sender: TObject;
+procedure TMainForm.tsOrderBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
+  FOrdersT2.SetMenuVisible;
   FOrdersT2.GridRefresh;
 end;
 
-procedure TMainForm.tsOBeforeFirstActivate(Sender: TObject;
+procedure TMainForm.tsOrderBeforeFirstActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
   if not Assigned(FOrdersT2) then
   begin
     FOrdersT2 :=  TOrdersT2.Create(Self);
     FOrdersT2.Align := alClient;
-    FOrdersT2.Parent := tsO;
+    FOrdersT2.Parent := tsOrder;
   end;
 end;
 
@@ -302,13 +308,12 @@ end;
 
 procedure TMainForm.UniFormShow(Sender: TObject);
 begin
-  logger.Info('get _MicroWidth:' + UniApplication.Cookies.Values['_MicroWidth']);
+  ProfileMenuAdd;
+
+  //unisession.AddJS('{var menu = Ext.ComponentQuery.query("container[cls=x-treelist x-unselectable x-treelist-nav x-treelist-floater]");if (menu.length >0) {Ext.get(menu[0].id).hide();}}');
 
   MainMenu.Micro := VarToBoolDef(UniApplication.Cookies.Values['_MicroWidth'], false);
-
   SetMainMenuMicroName;
-
-  ProfileMenuAdd;
 
   pcMain.ActivePageIndex := 0;
 end;

@@ -35,19 +35,18 @@ as
 
 select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc, cast(p.Available as int) desc) N,
        p.ID,
+       p.Make as MakeLogo,
        p.MakeName,
        p.DetailNum,
 	   p.PartNameRus,
 	   0 as DeliveryType,   -- тип доставки
 	   p.WeightGr [Weight], -- вес детали в граммах
 	   p.VolumeAdd,         -- наценка объем (объемный вес)
-	   --dbo.AddDaysAndWeekends(GetDate(), p.Delivery, 1) 
-	   p.OurDelivery,     -- наш срок поставки
-	   p.OurDeliverySTR,  -- наш срок поставки строкой, показываем клиенту
-       p.PercentSupped,   -- процент поставки (Статистика)
-	   p.Price,           -- цена детали у emex
-       p.PriceRub,        -- цена детали, показаваемая на сайте
-       --p.Available,       -- наличие детали на складе
+	   p.OurDelivery,       -- наш срок поставки
+	   p.OurDeliverySTR,    -- наш срок поставки строкой, показываем клиенту
+       p.PercentSupped,     -- процент поставки (Статистика)
+	   p.Price,             -- цена детали у emex
+       p.PriceRub,          -- цена детали, показаваемая на сайте
        case 
          when isnumeric(p.Available) = 1 
          then cast(p.Available as int)
@@ -74,5 +73,6 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20240730', '10'
+exec setOV 'vFindByNumber', 'V', '20241119', '11'
 go
+
