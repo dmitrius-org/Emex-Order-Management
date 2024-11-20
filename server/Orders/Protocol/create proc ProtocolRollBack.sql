@@ -27,7 +27,13 @@ as
 		 ,o.AmountPurchaseF= null
 		 ,o.OverPricing    = null
 		 ,o.Warning        = ''
-		 ,o.Flag           = ((o.Flag & ~1) & ~2)
+		 ,o.Flag           =  o.Flag & ~1 -- превышение цены
+                                     & ~2 --нет цены
+                                     & ~16384-- Несоответствие упаковке
+                                     & ~32768-- Нет в наличии
+      
+
+
 		 --,o.updDatetime      = GetDate()
 	 from pAccrualAction p (nolock)
     inner join tOrders o (updlock)

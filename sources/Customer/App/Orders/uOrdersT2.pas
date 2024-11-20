@@ -211,6 +211,8 @@ type
 
     procedure SetNotificationIcon();
 
+    procedure SetNotificationCount();
+
     /// <summary>
     /// IsCancelApproval -подтверждение отказа от заказа
     /// </summary>
@@ -394,6 +396,17 @@ end;
 procedure TOrdersT2.btnNotificationClick(Sender: TObject);
 begin
   GetNotificationOrders;
+
+//  if FISNotification then
+//  begin
+//    UniSession.AddJS(btnNotification.JSName +'.badgeEl.setStyle({'+quotedstr('color')+' : '+quotedstr('orange')+'});');
+//
+//  end
+//  else
+//  begin
+//
+//    UniSession.AddJS(btnNotification.JSName +'.badgeEl.setStyle({'+quotedstr('color')+' : '+quotedstr('white')+'});');
+//  end;
 end;
 
 procedure TOrdersT2.DoHideMask;
@@ -481,7 +494,8 @@ begin
   begin
       Query.MacroByName('IsNotification').Value :=
       '''
-        and o.[Flag] & 4 /*отказан*/ > 0
+        -- and o.[Flag] & 4 /*отказан*/ > 0
+        and o.[IsCancel] = 1
         and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
         and o.[Flag] & 8192 /*Перезаказан*/= 0
       ''';
@@ -489,6 +503,7 @@ begin
   else
   begin
     Query.MacroByName('IsNotification').Value := '';
+    Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
   end;
 
   if FFilterTextStatus <> '' then
@@ -544,9 +559,6 @@ begin
   else
     Query.MacroByName('Comment2').Value := '';
 
-  Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
-
-
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
   Query.Open();
 
@@ -571,6 +583,8 @@ begin
 
   Query.Delete ;
   Grid.RefreshCurrentRow();
+
+  SetNotificationCount;
 end;
 
 procedure TOrdersT2.OrdersFCallBack;
@@ -675,6 +689,8 @@ begin
     begin
       Query.RefreshRecord(False) ;
       Grid.RefreshCurrentRow();
+
+      SetNotificationCount;
     end;
   except
     on E: Exception do
@@ -685,6 +701,7 @@ end;
 procedure TOrdersT2.GetNotificationOrders;
 begin
   btnCancel.Enabled := FIsNotification;
+  cbCancel.Enabled := FIsNotification;
 
   FIsNotification := not FIsNotification;
 
@@ -693,7 +710,7 @@ begin
   SetMenuVisible(FIsNotification);
 end;
 
-procedure TOrdersT2.SetMenuVisible(AVisible: boolean);
+procedure TOrdersT2.SetMenuVisible(AVisible: boolean); var bJSName: string;
 begin
 
   if AVisible then
@@ -720,11 +737,27 @@ begin
     );
   end;
 
+  SetNotificationCount;
+
 end;
 
 procedure TOrdersT2.SetMenuVisible;
 begin
   SetMenuVisible(FIsNotification);
+end;
+
+procedure TOrdersT2.SetNotificationCount;
+var
+  bJSName: string;
+begin
+
+  Sql.Open('exec GetNotificationCount @ClientID=:ClientID', ['ClientID'], [UniMainModule.AUserID]);
+
+  if Sql.Count > 0 then
+  begin
+     bJSName := btnNotification.JSName;
+     UniSession.AddJS(bJSName + '.setBadgeText(' + Sql.Q.FieldByName('NotificationCount').AsString +  ');');
+  end;
 end;
 
 procedure TOrdersT2.SetNotificationIcon;
@@ -911,6 +944,8 @@ begin
   FIsNotification := false;
 
   SetNotificationIcon();
+
+  SetNotificationCount;
 end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

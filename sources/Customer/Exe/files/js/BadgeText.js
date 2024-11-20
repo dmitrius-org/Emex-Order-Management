@@ -4,7 +4,7 @@ Ext.define('Ext.ux.plugin.BadgeText', {
 
 	disableBg: 'gray',
 	enableBg: 'red',
-	textSize: 10,
+	textSize: 14,
 	textColor: 'white',
 	defaultText: '&#160;',
 	disableOpacity: 0,
@@ -12,6 +12,7 @@ Ext.define('Ext.ux.plugin.BadgeText', {
 	text: '&#160;',
 	disable: true,
 	button: null,
+	top: -5,
 	/**
 	 *
 	 * @param button
@@ -63,7 +64,7 @@ Ext.define('Ext.ux.plugin.BadgeText', {
 				'color': me.textColor,
 				'padding': '1px 2px',
 				'index': 50,
-				'top': '-5px',
+				'top': me.top + 'px',
 				'border-radius': '3px',
 				'font-weight': 'bold',
 				'text-shadow': 'rgba(0, 0, 0, 0.5) 0 -0.08em 0',
@@ -90,6 +91,14 @@ Ext.define('Ext.ux.plugin.BadgeText', {
 	onBadgeClick:function(){
 		var me = this;
 		me.button.fireEvent('badgeclick', me.button, me.text)
+	},
+	
+	setBadgeColor:function(){
+		var me = this;
+		me.button.badgeEl.setStyle({
+			//'background-color': (disable ? me.disableBg : me.enableBg),
+			'color': (disable ? 'black' : 'Yellow')
+		});		
 	},
 
 	/**

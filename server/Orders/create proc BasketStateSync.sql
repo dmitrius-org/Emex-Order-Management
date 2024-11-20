@@ -84,44 +84,29 @@ as
                               when isnull(p.WarnText, '') <> '' then p.WarnText	
                               else o.Warning  
                              end
+        
+
+                             
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
  where p.Spid   = @@SPID
    
- -- превышение цены
- Update o
-    set /*o.Warning         = case
-                              when isnull(p.WarnText, '') <> '' then p.WarnText
-	                          when @CoeffMaxAgree < o.OverPricing then '+' + convert(varchar(128), o.OverPricing)
-							  else ''
-	                        end*/
-	    o.flag            = case
-	                          when @CoeffMaxAgree < o.OverPricing then isnull (o.flag, 0) | 1
-							  else (isnull(o.flag, 0) & ~1)
-	                        end
-   from pBasketDetails p (nolock)        
-  inner join tOrders o (Updlock) 
-          on o.OrderID = p.OrderID     
- where p.Spid   = @@SPID
 
- -- нет цены
  Update o
-    set /*o.Warning         = case
-	                          when p.Price = 0 then 'Нет цены'
-							  else o.Warning
-	                        end*/
-							
-	   o.flag            = case
-	                          when p.Price = 0 then isnull (o.flag, 0) | 2
-							  else (isnull(o.flag, 0) & ~2)
-	                        end 
+    set 
+	    o.flag            = case
+                              when p.WarnCode = -1 then isnull (o.flag, 0) | 1  -- превышение цены
+                              when p.WarnCode = -2 then isnull (o.flag, 0) | 2  -- нет цены
+                              when p.WarnCode = -4 then isnull (o.flag, 0) | 16384 -- Несоответствие упаковке
+                              when p.WarnCode = -5 then isnull (o.flag, 0) | 32768 -- Нет в наличии
+	                          else o.flag
+	                        end
        ,o.updDatetime = GetDate()
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
  where p.Spid   = @@SPID
-   --and p.Price  = 0
 
 
 Update p 
@@ -155,6 +140,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20241025', '3'
+exec setOV 'BasketStateSync', 'P', '20241119', '4'
 go
  

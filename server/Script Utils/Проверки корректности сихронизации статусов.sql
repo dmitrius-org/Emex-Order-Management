@@ -88,12 +88,12 @@ update tOrders
   */
 
 -- Протоколы без заказа
---Select 'Протоколы без заказа', *
---  from tProtocol p (nolock)
--- where not exists (select 1
---                    from tOrders o (nolock)
---				   where o.OrderID = p.ObjectID
---				   )
+Select 'Протоколы без заказа', *
+  from tProtocol p (nolock)
+ where not exists (select 1
+                    from tOrders o (nolock)
+				   where o.OrderID = p.ObjectID
+				   )
 --
 /* -- исправление
 delete p
@@ -109,7 +109,6 @@ delete p
 select 'Заказы, которые не удалось разбить на части', *
   from tMovement (nolock)
  where OrderID is null
-
 
 
 --delete
@@ -169,8 +168,6 @@ select 'Разное количество', m.Quantity QuantityM , o.Quantity Qu
           on c.ClientID = o.ClientID
 where m.Quantity <> o.Quantity
 
-
-
 --
 select 'Смапили не те детали', m.OrderDetailSubId, o.DetailNumber, m.DetailNum, o.EmexOrderID, m.OrderNumber,  o.DetailNumber, o.CustomerSubId, o.Reference, m.DetailNum, m.CustomerSubId, m.Reference ,    *
   from tMovement m (nolock)
@@ -178,8 +175,6 @@ select 'Смапили не те детали', m.OrderDetailSubId, o.DetailNumb
           on o.OrderDetailSubId = m.OrderDetailSubId
 		 and ( (o.DetailNumber    <> m.DetailNum)
 		    or (o.Reference <> m.Reference and o.CustomerSubId = m.CustomerSubId))
-
-
 where isnull(m.OrderDetailSubId, '') <> '' 
 	--	 and o.Manufacturer <> m.MakeLogo
 

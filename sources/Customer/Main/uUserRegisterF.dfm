@@ -128,7 +128,6 @@ object UserRegisterF: TUserRegisterF
     Top = 126
     Width = 325
     Hint = ''
-    PasswordChar = '*'
     MaxLength = 64
     CharEOL = '*'
     Text = ''
@@ -151,7 +150,6 @@ object UserRegisterF: TUserRegisterF
     Top = 203
     Width = 325
     Hint = ''
-    PasswordChar = '*'
     MaxLength = 256
     CharEOL = '*'
     Text = ''

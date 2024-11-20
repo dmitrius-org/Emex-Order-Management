@@ -28,10 +28,6 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 1028
-    ExplicitHeight = 533
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
@@ -44,8 +40,6 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'fit'
-      ExplicitWidth = 1028
-      ExplicitHeight = 533
       object UniPanelLeft: TUniPanel
         Left = 1
         Top = 56
@@ -65,7 +59,6 @@ object MainForm: TMainForm
         LayoutAttribs.Columns = 1
         LayoutConfig.Split = True
         LayoutConfig.Region = 'west'
-        ExplicitHeight = 476
         object MainMenu: TUnimTreeMenu
           AlignWithMargins = True
           Left = 3
@@ -78,7 +71,6 @@ object MainForm: TMainForm
           LayoutConfig.Width = '0'
           SelectOnExpander = True
           OnClick = MainMenuClick
-          ExplicitHeight = 470
         end
       end
       object UniPanelCentral: TUniPanel
@@ -98,8 +90,6 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 722
-        ExplicitHeight = 476
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 0
@@ -116,8 +106,6 @@ object MainForm: TMainForm
           TabOrder = 1
           ScreenMask.Enabled = True
           ScreenMask.Target = Owner
-          ExplicitWidth = 722
-          ExplicitHeight = 471
         end
       end
       object UniPanelTop: TUniPanel
@@ -131,7 +119,6 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
-        ExplicitWidth = 1026
         object UniPanel: TUniPanel
           Left = 705
           Top = 0
@@ -142,7 +129,6 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
-          ExplicitLeft = 711
           object btnProfile: TUniMenuButton
             AlignWithMargins = True
             Left = 153

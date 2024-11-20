@@ -1211,13 +1211,19 @@ end;
 procedure TOrdersT.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
   Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 begin
-  if (Query.FieldByName('Flag').AsInteger and 1) = 1 then // 1 - Превышение цены
+  if (Query.FieldByName('Flag').AsInteger and 1) > 0 then // Превышение цены
   begin
     Attribs.Color:= rgb(255, 207, 217);
   end
-  else if (Query.FieldByName('Flag').AsInteger and 2) = 2 then // 2 - Нет цены
+  else
+  if (Query.FieldByName('Flag').AsInteger and 2) > 0 then // Нет цены
   begin
     Attribs.Color:=rgb(242, 169, 210);
+  end
+  else
+  if (Query.FieldByName('Flag').AsInteger and 16384) > 0 then // Несоответствие упаковке
+  begin
+    Attribs.Color:=rgb(242,169,210);
   end;
 
   if (Query.FieldByName('IsCancel').AsBoolean) then // отказан

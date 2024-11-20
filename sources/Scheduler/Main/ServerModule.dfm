@@ -35,10 +35,11 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.FullSequenceLog = True
   ConnectionFailureRecovery.ErrorMessage = #1054#1096#1080#1073#1082#1072' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
   ConnectionFailureRecovery.RetryMessage = #1055#1086#1074#1090#1086#1088#1085#1072#1103' '#1087#1086#1087#1099#1090#1082#1072'...'
+  WebSocketServer.AuxPort = 91
   WebSocketServer.AlwaysUseHTTP = True
   OnException = UniGUIServerModuleException
   OnControlPanelLogin = UniGUIServerModuleControlPanelLogin
-  Height = 281
+  Height = 182
   Width = 776
   object FDManager: TFDManager
     DriverDefFileAutoLoad = False
@@ -67,7 +68,7 @@ object UniServerModule: TUniServerModule
     LoginPrompt = False
     OnError = FDTaskConnectionError
     Left = 452
-    Top = 23
+    Top = 25
   end
   object UniThreadTimer: TUniThreadTimer
     OnTimer = UniThreadTimerTimer
@@ -79,7 +80,7 @@ object UniServerModule: TUniServerModule
   object DBAlert: TFDEventAlerter
     Connection = FDTaskConnection
     OnAlert = DBAlertAlert
-    Left = 608
-    Top = 21
+    Left = 560
+    Top = 25
   end
 end

@@ -29,3 +29,8 @@ go
 go
 exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240914', '2'
 go
+
+select EmexOrderID, count(*) 
+  
+  from vOrderStateSyncByOrderNum 
+ group by EmexOrderID

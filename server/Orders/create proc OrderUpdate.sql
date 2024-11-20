@@ -68,7 +68,7 @@ as
                                                                                         order by p.PercentSupped desc), t.PercentSupped) 
 							   else t.PercentSupped
                              end
-        ,t.Comment         = @Comment     
+        --,t.Comment         = @Comment     
         ,t.DetailName      = nullif(@DetailNameF, '')
 	from tOrders t (updlock)
    where t.OrderID = @OrderID

@@ -63,17 +63,17 @@ begin
   DataCheck();
 
   if RetVal.Code = 0 then
-      begin
-        sqltext :='''
-          declare @R  int
-             exec @r = OrderCreateFromBasket
-           select @r as retcode
-        ''';
+  begin
+    sqltext :='''
+      declare @R  int
+         exec @r = OrderCreateFromBasket
+       select @r as retcode
+    ''';
 
-        Sql.Open(sqltext, [], []);
+    Sql.Open(sqltext, [], []);
 
-        RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-      end;
+    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+  end;
 
   if RetVal.Code = 0 then
   begin

@@ -268,8 +268,6 @@ begin
   if Msg = 'TaskProgress' then
   begin
     Form := self.FindComponent('TTask_TF'); // »щем форму по имени
-   // logger.Info(Assigned(Form).ToString());
-   // logger.Info(Params['TaskID'].AsString);
 
     if Assigned(Form) and (Form is TTask_T) then
     begin
@@ -288,10 +286,6 @@ begin
       TTask_T(Form).SetTaskEnabledStatus(Params['Enabled'].AsBoolean());
     end;
   end;
-
-  //Form.Free;
-
-
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

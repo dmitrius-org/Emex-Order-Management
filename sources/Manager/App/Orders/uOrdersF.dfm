@@ -473,6 +473,7 @@ object OrderF: TOrderF
       Width = 66
       Height = 13
       Hint = ''
+      Visible = False
       ShowHint = True
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077':'
       TabOrder = 19
@@ -482,6 +483,7 @@ object OrderF: TOrderF
       Top = 156
       Width = 396
       Hint = ''
+      Visible = False
       ShowHint = True
       Text = ''
       Anchors = [akLeft, akTop, akRight]

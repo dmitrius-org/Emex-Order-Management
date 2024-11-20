@@ -15,7 +15,7 @@ as
 					  ,ID       numeric(18, 0)
 					  )
 
-INSERT INTO [tOrders]
+INSERT INTO [tOrders] with (rowlock)
       (
        ClientID
       ,OrderDate
@@ -184,13 +184,6 @@ where p.Spid = @@SPID
   and p.N    = @N
 order by p.DetailNum
 
--- проставляем новый ИД заказа
-Update p
-   set p.OrderID = i.OrderID
-  from pMovement p (updlock)
- inner join @ID i
-         on i.ID = p.ID
- where p.Spid = @@SPID
 
 -- меняем данные по заказу, который был разбит на части
 Update o
@@ -204,6 +197,14 @@ Update o
  inner join pMovement p (nolock)
          on p.Spid    = @@Spid
 		and p.OrderID = o.OrderID
+
+-- проставляем новый ИД заказа
+Update p
+   set p.OrderID = i.OrderID
+  from pMovement p (updlock)
+ inner join @ID i
+         on i.ID = p.ID
+ where p.Spid = @@SPID
 
 --копирование протоколов для новых записей
 insert tProtocol 

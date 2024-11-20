@@ -202,6 +202,7 @@ DEALLOCATE my_cur
 
 
  -- чистим ошибочные заказа после разбиения, иногда такое бывает
+ /*--
  delete o
    from pMovement p (nolock) 
   inner join tOrders op (rowlock)

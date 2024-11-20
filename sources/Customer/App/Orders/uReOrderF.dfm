@@ -46,7 +46,6 @@ object ReOrder: TReOrder
     IconItems = <>
     OnChange = cbDestinationLogoChange
     Value = '-1'
-    ExplicitWidth = 514
   end
   object UniLabel12: TUniLabel
     Left = 8
@@ -76,7 +75,6 @@ object ReOrder: TReOrder
     IconItems = <>
     OnChange = cbDestinationLogoChange
     Value = '-1'
-    ExplicitWidth = 514
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
@@ -90,7 +88,6 @@ object ReOrder: TReOrder
     Align = alBottom
     TabOrder = 4
     LayoutConfig.Padding = '2'
-    ExplicitWidth = 634
     DesignSize = (
       620
       37)
@@ -120,8 +117,9 @@ object ReOrder: TReOrder
       Caption = #1055#1077#1088#1077#1079#1072#1082#1072#1079#1072#1090#1100
       Anchors = [akRight, akBottom]
       TabOrder = 1
+      ScreenMask.Enabled = True
+      ScreenMask.WaitData = True
       OnClick = btnOkClick
-      ExplicitLeft = 535
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -136,7 +134,6 @@ object ReOrder: TReOrder
       TabStop = False
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 448
     end
   end
   object UniTimer: TUniTimer

@@ -275,28 +275,24 @@ begin
 end;
 
 procedure TTask_T.TaskProcessing(ATaskID: Integer);
-var Key: Integer;
-    BM : TBookmark;
+var BM : TBookmark;
 begin
   logger.Info('TTask_T.TaskProcessing Begin');
 
   qTask.DisableControls;
   BM := qTask.GetBookmark;
- // try
-      if qTask.Locate('TaskID', Key, [loCaseInsensitive, loPartialKey]) then
+  try
+      if qTask.Locate('TaskID', ATaskID, [loCaseInsensitive, loPartialKey]) then
       begin
         qTask.RefreshRecord(True) ;
         GridTasks.RefreshCurrentRow();
-
        // UniSession.Synchronize;
       end;
- // finally // внутри finally не работает  :(
+  finally // внутри finally не работает  :(
     qTask.GotoBookmark(BM);
     qTask.FreeBookmark(BM);
     qTask.EnableControls;
-
-
- // end;
+  end;
 
   logger.Info('TTask_T.TaskProcessing End');
 end;

@@ -596,7 +596,8 @@ object OrdersT2: TOrdersT2
           TabOrder = 2
         end
         object btnCancel: TUniBitBtn
-          Left = 1597
+          AlignWithMargins = True
+          Left = 1600
           Top = 35
           Width = 113
           Height = 24
@@ -604,6 +605,7 @@ object OrdersT2: TOrdersT2
           Action = actCancelRequest
           Anchors = [akTop, akRight]
           TabOrder = 10
+          ExplicitLeft = 1597
         end
         object edtComment2: TUniEdit
           Left = 690
@@ -664,7 +666,8 @@ object OrdersT2: TOrdersT2
               'oment().subtract(1, "month").endOf("month")]')
         end
         object btnNotification: TUniBitBtn
-          Left = 1472
+          AlignWithMargins = True
+          Left = 1475
           Top = 35
           Width = 119
           Height = 24
@@ -673,8 +676,21 @@ object OrdersT2: TOrdersT2
           Caption = '<i class="order fa fa-bell"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           Anchors = [akTop, akRight]
           TabOrder = 14
+          ClientEvents.UniEvents.Strings = (
+            
+              'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.styl' +
+              'e={'#39'overflow'#39': '#39'visible'#39'};'#13#10'  sender.action = '#39'badgetext'#39'; '#13#10'  s' +
+              'ender.plugins = ['#13#10'                        {'#13#10'                  ' +
+              '          ptype:'#39'badgetext'#39','#13#10'                            defaul' +
+              'tText: 12,'#13#10'                            textSize: 12,'#13#10'         ' +
+              '                   disableOpacity:1,'#13#10'                          ' +
+              '  disableBg: '#39'grey'#39','#13#10'                            enableBg: '#39'gre' +
+              'y'#39','#13#10'                            align:'#39'right'#39','#13#10'               ' +
+              '             top:-15'#13#10'                        }'#13#10'               ' +
+              '   ];'#13#10'}')
           LayoutConfig.ComponentCls = 'order-notification-btn'
           OnClick = btnNotificationClick
+          ExplicitLeft = 1472
         end
       end
     end

@@ -116,8 +116,6 @@ end;
 
 procedure TReOrder.actRefreshFormDataExecute(Sender: TObject);
 begin
-  btnOk.Enabled := False;
-
   actRefreshFormData.Enabled := False;
   cbPrice.Enabled := False;
 
@@ -131,8 +129,6 @@ begin
     cbPrice.Enabled := True;
     actRefreshFormData.Enabled := True;
   end;
-
- // SetBtnEnabled;
 end;
 
 procedure TReOrder.btnCancelClick(Sender: TObject);
@@ -143,6 +139,7 @@ end;
 procedure TReOrder.btnOkClick(Sender: TObject);
 begin
   btnOk.Enabled := False;
+  btnOk.ScreenMask.ShowMask('∆дите, операци€ выполн€етс€!');
 
   OrderUpdate();
 
@@ -228,31 +225,10 @@ begin
                   @DestinationLogo = :DestinationLogo,
                   @DetailNum       = :DetailNum
 
-
-                 /*
-           select top 1 *,
-                  case
-                    when p.Available = -1 then 'под заказ'
-                    else cast(p.Available as nvarchar)
-                  end as AvailableStr -- наличие детали на складе
-                 ,f.MarginF
-                 ,f.IncomePrc
-                 ,f.Profit
-             from pFindByNumber p with (nolock index= ao3)
-            inner join pOrdersFin f with (nolock index= ao1)
-                    on f.spid = @@spid
-            where p.spid      = @@spid
-              and p.Make      = :MakeLogo
-              and p.DetailNum = :DetailNum
-              and p.PriceLogo = :PriceLogo
-
-            order by p.PercentSupped desc  */
          ''',
          ['DestinationLogo', 'DetailNum'],
          [cbDestinationLogo.Value, FDetailNumber]);
 
-       //   ['DestinationLogo', 'DetailNum', 'PriceLogo', 'MakeLogo'],
-       //  [cbDestinationLogo.Value, FDetailNumber, FPriceLogo, FMakeLogo]);
 
   Price:=cbPrice.Value;
   // список поставщиков
@@ -354,24 +330,22 @@ begin
                from #CounterPart (nolock)
               where isnull(Processed, 0) = 0
               order by N
+
            ''',
            ['OrderID'],
            [FID]
            );
 
-  sql.q.first;
-  if sql.Q.RecordCount > 0 then
+  if sql.count > 0 then
   begin
-    Result := True;
-
     ID := sql.Q.FieldByName('OrderID').AsInteger;
 
     LoadDataPart;
 
     GetPartFromEmex;
-  end;
 
-  SetBtnEnabled;
+    Result := True;
+  end;
 end;
 
 procedure TReOrder.SetBtnEnabled;
@@ -382,7 +356,7 @@ begin
 //  begin
 //    //
 //  end;
-
+  btnOk.ScreenMask.HideMask;
   btnOk.Enabled := True;
 end;
 

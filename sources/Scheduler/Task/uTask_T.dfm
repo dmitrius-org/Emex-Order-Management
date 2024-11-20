@@ -284,8 +284,6 @@ object Task_T: TTask_T
         TabOrder = 2
         Layout = 'fit'
         LayoutConfig.Region = 'center'
-        ExplicitTop = 300
-        ExplicitHeight = 218
         object GridDetail: TUniDBGrid
           Left = 0
           Top = 0
