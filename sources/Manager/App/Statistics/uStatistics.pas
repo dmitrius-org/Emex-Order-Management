@@ -12,7 +12,7 @@ uses
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniButton,
   cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
   UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
-  uniGridExporters, uStatisticBrand, uStatisticCanceled;
+  uniGridExporters, uStatisticBrand, uStatisticCanceled, math;
 
 type
   TStatisticsT = class(TUniFrame)
@@ -99,28 +99,31 @@ uses
 procedure TStatisticsT.AverageCountOrders;
 var
   //Defined as TInterfacedObject. No need try..finally
- // AreaChart: IcfsGChartProducer;
+//  AreaChart: IcfsGChartProducer;
   ChartCount: IcfsGChartProducer;
   ChartSum:   IcfsGChartProducer;
 
   Series: TArray<string>;
-var FClient:string;
+
+  max1, max2: integer;
+//var FClient:string;
 begin
-  if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
-  else
-    FClient := '';
+//  if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
+//  else
+//    FClient := '';
 
 
   qAverageCountOrders.Close;
   qAverageCountOrders.ParamByName('DateBegin').AsDate := edtDateBegin.DateTime;
   qAverageCountOrders.ParamByName('DateEnd').AsDate := edtDateEnd.DateTime;
 
-  qAverageCountOrders.MacroByName('Client').Value    := FClient;
+  qAverageCountOrders.ParamByName('Clients').Value    := FFilterTextClient;
 
   qAverageCountOrders.Open;
 
   ChartCount := TcfsGChartProducer.Create;
-  ChartCount.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
+  //ChartCount.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
+  ChartCount.ClassChartType := TcfsGChartProducer.CLASS_COMBO_CHART;
 
   ChartCount.Data.DefineColumns([
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
@@ -129,7 +132,9 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка')
+    //TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
   ]);
 
 
@@ -145,6 +150,7 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
 
   ]);
+
   qAverageCountOrders.First;
   while not qAverageCountOrders.eof do
   begin
@@ -154,8 +160,11 @@ begin
                             qAverageCountOrders.FieldByName('CancelCount').Value,
                             qAverageCountOrders.FieldByName('CancelCount').Value,
                             0,
-                            qAverageCountOrders.FieldByName('TotalCount').Value
+                            qAverageCountOrders.FieldByName('TotalCount').Value,
+                            qAverageCountOrders.FieldByName('Margin').Value  // Наценка
+                         //   qAverageCountOrders.FieldByName('Margin').Value   // Наценка
                             ]);
+
 
     ChartSum.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
@@ -166,8 +175,15 @@ begin
                           qAverageCountOrders.FieldByName('TotalSum').Value
                           ]);
 
+    max1 := max(max1, qAverageCountOrders.FieldByName('WorkCount').Value);
+    //max2 := max(max2, qAverageCountOrders.FieldByName('Margin').Value);
+
     qAverageCountOrders.Next;
   end;
+
+
+  max1 := max1+50;
+ //max2 := max2+5;
 
 // Г1
   with ChartCount do
@@ -175,37 +191,44 @@ begin
     LibraryLanguage := UniSession.Language;
     Options.Title('Количество заказов по дням за период');
     Options.IsStacked(True);
-//  ColumnChartCount.Options.Legend('position', 'none');
-//  ChartCount.Options.Annotations('alwaysOutside', True);
-//    Options.Annotations('alwaysOutside', True);
-//    Options.Annotations('displayAnnotationsFilter', True);
-//    Options.Annotations('legendPosition', 'newRow');
+
+  //  Options.SeriesType('bars');
     Options.hAxis('minValue', 0);
-    SetLength(Series, 3);
+
+    SetLength(Series, 4);
+
     Series[0] := 'annotations: {    '+
                  '  stem: {         '+
                  '     length: 2  '+
-                 '  }  '+
+                 '  } '+
                  '} ';
+
     Series[1] := 'annotations: {    '+
                  '  stem: {         '+
                  '     length: 15  '+
-                 '  }  '+
+                 '  } '+
                  '} ';
+
     Series[2] := 'annotations: {    '+
                  '  stem: {         '+
                 // '     color: "transparent",'+
                  '     length: 30  '+
                  '  }  '+
                  '} '+
-                 //'type: "Bar"' +
                  '';
+
     Options.Series(Series);
 
 
     Options.hAxis('title', 'Дни');
-    Options.vAxis('title', 'Заказы (Количество)');
-    Options.vAxis('title', 'Заказы (Количество)');
+    Options.Series([
+     '0: {type: "bars", targetAxisIndex: 0}',
+     '1: {type: "bars", targetAxisIndex: 0}',
+     '2: {type: "bars" ,targetAxisIndex: 0}',
+     '3: {type: "line", targetAxisIndex: 1}' ]);
+    Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString,
+                   'title: "Наценка" ']);
+//    Options.vAxis('title', 'Заказы (Количество)');
   end;
 
 // Г2

@@ -2,7 +2,7 @@ object StatisticCanceled: TStatisticCanceled
   Left = 0
   Top = 0
   Width = 1199
-  Height = 480
+  Height = 419
   OnCreate = UniFrameCreate
   OnDestroy = UniFrameDestroy
   Layout = 'fit'
@@ -12,7 +12,7 @@ object StatisticCanceled: TStatisticCanceled
     Left = 3
     Top = 3
     Width = 1193
-    Height = 70
+    Height = 71
     Hint = ''
     Align = alTop
     TabOrder = 0
@@ -22,8 +22,8 @@ object StatisticCanceled: TStatisticCanceled
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'north'
     object btnGridStatisticOpen: TUniButton
-      Left = 556
-      Top = 25
+      Left = 836
+      Top = 24
       Width = 100
       Height = 25
       Hint = ''
@@ -43,8 +43,8 @@ object StatisticCanceled: TStatisticCanceled
       TabOrder = 2
     end
     object fCancel: TUniBitBtn
-      Left = 662
-      Top = 25
+      Left = 942
+      Top = 24
       Width = 100
       Height = 25
       Hint = ''
@@ -55,48 +55,6 @@ object StatisticCanceled: TStatisticCanceled
       ImageIndex = 3
       OnClick = fCancelClick
     end
-    object fClient: TUniCheckComboBox
-      Left = 215
-      Top = 27
-      Width = 209
-      Hint = ''
-      ShowHint = True
-      ParentShowHint = False
-      Text = ''
-      TabOrder = 4
-      ClientEvents.UniEvents.Strings = (
-        'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-        
-          'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-          ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-          'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-          'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-          ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-          '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-          '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-          '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-      EmptyText = #1050#1083#1080#1077#1085#1090
-      CheckChangeDelay = 100
-      ClearButton = True
-      Triggers = <
-        item
-          ImageIndex = 3
-          ButtonId = 0
-          HandleClicks = True
-          Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-        end
-        item
-          ImageIndex = 2
-          ButtonId = 1
-          HandleClicks = True
-          Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-        end>
-      HideTrigger = True
-      HideDefaultTrigger = False
-      IconItems = <>
-      OnSelect = fClientSelect
-      OnKeyDown = edtOrderDateKeyDown
-    end
     object UniLabel3: TUniLabel
       Left = 215
       Top = 8
@@ -106,7 +64,7 @@ object StatisticCanceled: TStatisticCanceled
       ShowHint = True
       ParentShowHint = False
       Caption = #1050#1083#1080#1077#1085#1090':'
-      TabOrder = 5
+      TabOrder = 4
     end
     object edtOrderDate: TUniDateRangePicker
       Left = 6
@@ -114,7 +72,7 @@ object StatisticCanceled: TStatisticCanceled
       Width = 203
       Hint = ''
       Text = ''
-      TabOrder = 6
+      TabOrder = 5
       Triggers = <
         item
           ButtonId = 0
@@ -129,13 +87,105 @@ object StatisticCanceled: TStatisticCanceled
       OnKeyDown = edtOrderDateKeyDown
       DateFormat = 'DD/MM/YYYY'
       DatePickerOptions.Opens = ooRight
+      DatePickerOptions.Ranges.Strings = (
+        #1057#1077#1075#1086#1076#1085#1103'=[moment(), moment()]'
+        
+          #1042#1095#1077#1088#1072'=[moment().subtract(1, "days"), moment().subtract(1, "days"' +
+          ')]'
+        #1055#1086#1089#1083#1077#1076#1085#1080#1077' 7 '#1076#1085#1077#1081'=[moment().subtract(6, "days"), moment()]'
+        #1055#1086#1089#1083#1077#1076#1085#1080#1077' 30 '#1076#1085#1077#1081'=[moment().subtract(29, "days"), moment()]'
+        #1069#1090#1086#1090' '#1084#1077#1089#1103#1094'=[moment().startOf("month"), moment().endOf("month")]'
+        
+          #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
+          'oment().subtract(1, "month").endOf("month")]')
+    end
+    object UniLabel2: TUniLabel
+      Left = 430
+      Top = 8
+      Width = 62
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      ParentShowHint = False
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      TabOrder = 6
+    end
+    object fPriceLogo: TUniADCheckComboBox
+      Left = 430
+      Top = 27
+      Width = 131
+      Hint = ''
+      Text = ''
+      TabOrder = 7
+      ClearButton = True
+      IconItems = <>
+    end
+    object fClient: TUniADCheckComboBox
+      Left = 215
+      Top = 27
+      Width = 209
+      Hint = ''
+      Text = ''
+      TabOrder = 8
+      ClientEvents.ExtEvents.Strings = (
+        
+          'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10'    var me =' +
+          ' sender;'#13#10'    var _insertCheckbox = function() {'#13#10'        var _i' +
+          'd = me.getPicker().id;'#13#10'        Ext.DomHelper.insertFirst(_id, {' +
+          #13#10'            tag: '#39'label'#39','#13#10'            for: _id + '#39'_allCh'#39','#13#10' ' +
+          '           html: '#39'AllCheck/AllUnCheck<hr>'#39#13#10'        });'#13#10'       ' +
+          ' Ext.DomHelper.insertFirst(_id, {'#13#10'            tag: '#39'input'#39','#13#10'  ' +
+          '          type: '#39'checkbox'#39','#13#10'            id: _id + '#39'_allCh'#39#13#10'   ' +
+          '     });'#13#10#13#10'        Ext.get(_id + '#39'_allCh'#39').on('#39'change'#39', functio' +
+          'n(e, combo) {'#13#10'            ajaxRequest(me, '#39'allCheckUnCheck'#39', {'#13 +
+          #10'                checked: combo.checked.toString()'#13#10'            ' +
+          '});'#13#10'        });'#13#10#13#10'        me.on('#39'change'#39', function(combo, b) {' +
+          #13#10'            if (combo.getStore().count() == b.length) {'#13#10'     ' +
+          '           Ext.get(_id + '#39'_allCh'#39').dom.checked = true'#13#10'         ' +
+          '   } else {'#13#10'                Ext.get(_id + '#39'_allCh'#39').dom.checked' +
+          ' = false'#13#10'            }'#13#10'        }, {'#13#10'            delegate: '#39'.x' +
+          '-boundlist-item'#39#13#10'        });'#13#10#13#10'        me.getPicker().un('#39'show' +
+          #39', _insertCheckbox);'#13#10'    };'#13#10'    me.getPicker().on('#39'show'#39', _ins' +
+          'ertCheckbox);'#13#10'}')
+      ClearButton = True
+      IconItems = <>
+    end
+    object UniLabel1: TUniLabel
+      Left = 567
+      Top = 8
+      Width = 95
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      ParentShowHint = False
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1060#1072#1082#1090'):'
+      TabOrder = 9
+    end
+    object fPriceLogoF: TUniADCheckComboBox
+      Left = 567
+      Top = 27
+      Width = 131
+      Hint = ''
+      Text = ''
+      TabOrder = 10
+      ClearButton = True
+      IconItems = <>
+    end
+    object fPriceLogoCancel: TUniCheckBox
+      Left = 566
+      Top = 52
+      Width = 97
+      Height = 17
+      Hint = ''
+      Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100
+      TabOrder = 11
     end
   end
   object Grid: TUniDBGrid
     Left = 0
-    Top = 76
+    Top = 77
     Width = 1199
-    Height = 404
+    Height = 342
     Hint = ''
     Margins.Bottom = 0
     ShowHint = True
@@ -197,51 +247,51 @@ object StatisticCanceled: TStatisticCanceled
     OnColumnSort = GridColumnSort
     Columns = <
       item
-        FieldName = 'Manufacturer'
+        FieldName = 'OrderDate'
         Title.Alignment = taCenter
-        Title.Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-        Width = 183
-        ReadOnly = True
-        Sortable = True
-      end
-      item
-        FieldName = 'DetailNumber'
-        Title.Alignment = taCenter
-        Title.Caption = #1044#1077#1090#1072#1083#1100
-        Width = 201
-        ReadOnly = True
-        Sortable = True
-      end
-      item
-        FieldName = 'DetailName'
-        Title.Alignment = taCenter
-        Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        Width = 455
-        ReadOnly = True
-        Sortable = True
-      end
-      item
-        FieldName = 'DetailAmount'
-        Title.Alignment = taCenter
-        Title.Caption = #1057#1091#1084#1084#1072
-        Width = 158
-        ReadOnly = True
-        Sortable = True
-      end
-      item
-        FieldName = 'DetailQuantity'
-        Title.Alignment = taCenter
-        Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086#1079#1080#1094#1080#1081
-        Width = 168
-        ReadOnly = True
+        Title.Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+        Width = 204
         Sortable = True
       end
       item
         FieldName = 'Quantity'
         Title.Alignment = taCenter
-        Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1086#1074
-        Width = 152
+        Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '
+        Width = 150
         ReadOnly = True
+        Sortable = True
+        GroupHeader = #1047#1072#1082#1072#1079#1072#1085#1086
+      end
+      item
+        FieldName = 'Amount'
+        Title.Alignment = taCenter
+        Title.Caption = #1057#1091#1084#1084#1072
+        Width = 150
+        ReadOnly = True
+        Sortable = True
+        GroupHeader = #1047#1072#1082#1072#1079#1072#1085#1086
+      end
+      item
+        FieldName = 'QuantityCancel'
+        Title.Alignment = taCenter
+        Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '
+        Width = 150
+        Sortable = True
+        GroupHeader = #1054#1090#1082#1072#1079#1072#1085#1086
+      end
+      item
+        FieldName = 'AmountCancel'
+        Title.Alignment = taCenter
+        Title.Caption = #1057#1091#1084#1084#1072
+        Width = 150
+        Sortable = True
+        GroupHeader = #1054#1090#1082#1072#1079#1072#1085#1086
+      end
+      item
+        FieldName = 'PrcCancel'
+        Title.Alignment = taCenter
+        Title.Caption = '% '#1086#1090#1082#1072#1079#1086#1074
+        Width = 100
         Sortable = True
       end>
   end
@@ -268,17 +318,32 @@ object StatisticCanceled: TStatisticCanceled
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
       ''
-      'DECLARE @Clients as ID;'
+      'DECLARE @Clients as ID'
+      '       ,@Prices  as SID'
+      '       ,@PricesF as SID'
       ' '
       'if :Clients <> '#39#39'    '
       '  INSERT INTO @Clients (ID)'
       '  SELECT CAST(value AS NUMERIC(18, 0))'
       '    FROM STRING_SPLIT(:Clients, '#39','#39');'
+      '    '
+      'if :Prices <> '#39#39'    '
+      '  INSERT INTO @Prices (Name)'
+      '  SELECT value'
+      '    FROM STRING_SPLIT(:Prices, '#39','#39'); '
+      '    '
+      'if :PricesF <> '#39#39'    '
+      '  INSERT INTO @PricesF (Name)'
+      '  SELECT value'
+      '    FROM STRING_SPLIT(:PricesF, '#39','#39');     '
       '                         '
       ' exec dbo.StatisticCancelledCalc            '
       '    @Clients   = @Clients  '
+      '   ,@Prices    = @Prices  '
+      '   ,@PricesF   = @PricesF  '
       '   ,@DateBegin = :DateBegin  '
       '   ,@DateEnd   = :DateEnd  '
+      '   ,@PricesFCan= :PricesFCan'
       ' '
       ''
       ''
@@ -294,6 +359,14 @@ object StatisticCanceled: TStatisticCanceled
         Value = Null
       end
       item
+        Name = 'PRICES'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PRICESF'
+        ParamType = ptInput
+      end
+      item
         Name = 'DATEBEGIN'
         DataType = ftDateTime
         ParamType = ptInput
@@ -304,6 +377,35 @@ object StatisticCanceled: TStatisticCanceled
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
+      end
+      item
+        Name = 'PRICESFCAN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = Null
       end>
+    object qCanceledOrderDate: TSQLTimeStampField
+      FieldName = 'OrderDate'
+    end
+    object qCanceledQuantity: TIntegerField
+      FieldName = 'Quantity'
+      DisplayFormat = '###,##0'
+    end
+    object qCanceledAmount: TCurrencyField
+      FieldName = 'Amount'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object qCanceledQuantityCancel: TIntegerField
+      FieldName = 'QuantityCancel'
+      DisplayFormat = '###,##0'
+    end
+    object qCanceledAmountCancel: TCurrencyField
+      FieldName = 'AmountCancel'
+      DisplayFormat = '###,##0.00 '#8381
+    end
+    object qCanceledPrcCancel: TFMTBCDField
+      FieldName = 'PrcCancel'
+      DisplayFormat = '###,##0.00 %'
+    end
   end
 end

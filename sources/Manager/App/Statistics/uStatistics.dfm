@@ -432,14 +432,12 @@ object StatisticsT: TStatisticsT
     end
     object TabBrand: TUniTabSheet
       Hint = ''
-      TabVisible = False
       Caption = #1041#1088#1077#1085#1076#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabBrandBeforeFirstActivate
     end
     object TabCanceled: TUniTabSheet
       Hint = ''
-      TabVisible = False
       Caption = #1054#1090#1082#1072#1079#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabCanceledBeforeFirstActivate
@@ -448,46 +446,25 @@ object StatisticsT: TStatisticsT
   object qAverageCountOrders: TFDQuery
     Connection = UniMainModule.FDConnection
     SQL.Strings = (
-      ';with t as'
-      '('
-      '  Select o.OrderDate  , '
-      '         o.Amount,'
-      '         o.isCancel'
-      '    from tOrders o (nolock)'
-      '   where 1=1'
-      '     and o.OrderDate between :DateBegin  and :DateEnd'
+      ''
+      'DECLARE @Clients as ID'
+      ' '
+      'if :Clients <> '#39#39'    '
+      '  INSERT INTO @Clients (ID)'
+      '  SELECT CAST(value AS NUMERIC(18, 0))'
+      '    FROM STRING_SPLIT(:Clients, '#39','#39');'
       '    '
-      '     !Client'
-      ')'
-      '  --  '
-      '  Select o.OrderDate   as OrderDate, '
-      '         -- '#1086#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
-      '         count(*)      as TotalCount,'
-      '         sum(o.Amount) as TotalSum,  '
-      '         -- '#1074#1079#1103#1090#1086#1074' '#1088#1072#1073#1086#1090#1091'         '
-      '         sum(case '
-      '                 when o.isCancel = 0 then 1'
-      '                 else 0'
-      '             end)      as WorkCount,'
-      '         sum(case '
-      '                 when o.isCancel = 0 then o.Amount '
-      '                 else 0'
-      '             end)      as WorkSum,'
-      '         -- '#1086#1090#1082#1072#1079#1072#1085#1086
-      '         sum(case '
-      '                 when o.isCancel = 1 then 1'
-      '                 else 0'
-      '             end)      as CancelCount,'
-      '         sum(case '
-      '                 when o.isCancel = 1 then o.Amount '
-      '                 else 0'
-      '             end)      as CancelSum'
-      '  '
-      '    from t o (nolock)'
-      '   where 1=1'
-      '    '
-      '   group by o.OrderDate   '
-      '   order by o.OrderDate'
+      '                         '
+      ' exec StatisticqAverageCount            '
+      '    @Clients   = @Clients  '
+      '   ,@DateBegin = :DateBegin  '
+      '   ,@DateEnd   = :DateEnd  '
+      ''
+      ' '
+      ''
+      ''
+      ''
+      ''
       '    '
       '       '
       '    '
@@ -495,6 +472,12 @@ object StatisticsT: TStatisticsT
     Left = 186
     Top = 422
     ParamData = <
+      item
+        Name = 'CLIENTS'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
       item
         Name = 'DATEBEGIN'
         DataType = ftDate
@@ -506,11 +489,6 @@ object StatisticsT: TStatisticsT
         DataType = ftDate
         ParamType = ptInput
         Value = Null
-      end>
-    MacroData = <
-      item
-        Value = Null
-        Name = 'CLIENT'
       end>
   end
   object dsAverageCountOrders: TDataSource

@@ -23,7 +23,7 @@ WHERE 1=1
 GROUP BY
   t.Name, s.Name, p.Rows
 ORDER BY
-  t.Name;
+  SchemaName, TotalSpaceKB desc
 GO
 EXEC sp_spaceused N'tPrice'; 
 --EXEC sp_spaceused N'tOrders'; 

@@ -275,6 +275,12 @@
     background-color: #dff0d8;
 }
 
+/* Перенос строки в заголовке таблицы */
+.grid-statistics .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
 /* таблица форматов загрузки заказов на форме редактирования клентов */
 .grid-clients-file-format .x-column-header-inner .x-column-header-text {
     white-space: normal;

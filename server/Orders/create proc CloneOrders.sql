@@ -26,6 +26,7 @@ INSERT INTO [tOrders] with (rowlock)
       ,Manufacturer
       ,CustomerPriceLogo
       ,PriceLogo
+      ,PriceLogoOrg
       ,DetailNumber
       ,DetailName
       ,MakeLogo
@@ -106,6 +107,7 @@ select o.ClientID
       ,o.Manufacturer
       ,o.CustomerPriceLogo
       ,o.PriceLogo
+      ,o.PriceLogoOrg
       ,o.DetailNumber
       ,o.DetailName
       ,o.MakeLogo

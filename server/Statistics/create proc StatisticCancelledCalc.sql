@@ -1,85 +1,74 @@
-drop proc if exists StatisticCancelledCalc
+﻿drop proc if exists StatisticCancelledCalc
 /*
-  StatisticCancelledCalc - 
+  StatisticCancelledCalc - статистика по отказам
 */
 go
 create proc StatisticCancelledCalc
               @Clients     as ID READONLY, 
+              @Prices      as SID READONLY, 
+              @PricesF     as SID READONLY, --фактический поставщик
+              @PricesFCan  as bit      = null,
               @DateBegin   as datetime = null,
               @DateEnd     as datetime = null
 as
 
-declare @Orders as table(OrderID numeric(18, 0));
+declare @Orders as table(OrderID numeric(18, 0) PRIMARY KEY CLUSTERED);
 
-select @DateBegin = '19000101'
-      ,@DateEnd   = '20700101'
+select @DateBegin = isnull(@DateBegin, '19000101')
+      ,@DateEnd   = isnull(@DateEnd,   '20700101')
+      ,@PricesFCan= isnull(@PricesFCan, 0)
 
-if exists (select 1 from @Clients )
   insert @Orders 
         (OrderID)
-  select o.OrderID
-    from @Clients c 
-   inner join tOrders o with (nolock index = ao2)
-           on o.ClientID = c.ID
-          and o.OrderDate between @DateBegin and @DateEnd
-else
-  insert @Orders 
-        (OrderID)
-  select o.OrderID
-    from tOrders o with (nolock)
-   where o.OrderDate between @DateBegin and @DateEnd
-   and o.DetailNumber = '564583'
+  SELECT distinct o.OrderID
+    FROM tOrders o WITH (NOLOCK INDEX = ao2)
+    LEFT JOIN @Clients c
+           ON o.ClientID = c.ID
+    -- поставщик из заказа
+    LEFT JOIN @Prices p
+           ON p.Name = o.PriceLogoOrg
+    -- поставщик факт
+    LEFT JOIN @PricesF pа
+           ON (@PricesFCan = 0 and pа.Name = o.PriceLogo )
+           or (@PricesFCan = 1 and pа.Name <> o.PriceLogo)
+   WHERE o.OrderDate BETWEEN @DateBegin AND @DateEnd
+    -- AND o.isCancel = 1
+     AND (NOT EXISTS (SELECT 1 FROM @Clients) OR c.ID IS NOT NULL)
+     AND (NOT EXISTS (SELECT 1 FROM @Prices)  OR p.Name IS NOT NULL)
+     AND (NOT EXISTS (SELECT 1 FROM @PricesF) OR pа.Name IS NOT NULL);
+
 
 select 
---      o.Manufacturer 
---      ,o.DetailNumber 
---      ,o.DetailName
-       o.PriceLogo
-      ,sum(o.Quantity) DetailQuantity
-      ,sum(o.Amount)   DetailAmount
-      ,sum(case
-               when o.isCancel = 1 then o.Quantity
-               else 0
-           end)        DetailQuantityCancel
 
-      ,sum(case
-               when o.isCancel = 1 then o.Amount
-               else 0
-           end)        DetailAmountCancel
-      --,Sum(o.Amount)     DetailAmount
-      --,Count(0)          Quantity  
-from (
+       o.OrderDate
+      ,Quantity
+      ,Amount
+      ,QuantityCancel
+      ,AmountCancel
+      ,case
+         when QuantityCancel = 0 then 0.00
+         when Quantity > 0 and Quantity = QuantityCancel then 100.00
+         else ((QuantityCancel * 100.00 / Quantity)) 
+       end PrcCancel
+ from (
       select 
-            -- o.Manufacturer 
-            --,o.DetailNumber 
-            o.PriceLogo
-            --,ltrim(rtrim(Replace( case 
-            --                        when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('����������', '������������', '������', '��������')
-            --                        then p.DetailName
-            --                        else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
-            --                      end  
-            --                     ,o.[DetailNumber]  
-            --                     ,'')))    as DetailName
-            ,o.Quantity
-            ,o.Amount
-            ,o.isCancel
+             o.OrderDate
+            ,sum(o.Quantity) Quantity
+            ,sum(o.Amount)   Amount
+            ,sum(case when o.isCancel = 1 then o.Quantity else 0 end)   QuantityCancel
+            ,sum(case when o.isCancel = 1 then o.Amount else 0  end)    AmountCancel
         from @Orders os
        inner join tOrders o with (nolock index=ao1)
                on o.OrderID = os.OrderID  
-        left join tPrice p with (nolock index=ao1)
-               on p.PriceID = o.PriceID
-
+       group by o.OrderDate
       ) as o
-group by 
-        -- o.Manufacturer 
-        --,o.DetailNumber
-         o.PriceLogo
-        --,o.DetailName
+order by o.OrderDate desc
+
 
 go
 grant exec on StatisticCancelledCalc to public
 go
-exec setOV 'StatisticCancelledCalc', 'P', '20241107', '1'
+exec setOV 'StatisticCancelledCalc', 'P', '20241121', '2'
 go
  
 exec StatisticCancelledCalc

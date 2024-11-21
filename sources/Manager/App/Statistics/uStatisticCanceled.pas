@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker
+  uUniDateRangePicker, uUniADCheckComboBoxEx, uLogger, uniCheckBox
 
   ;
 
@@ -24,11 +24,22 @@ type
     Grid: TUniDBGrid;
     dsCanceled: TDataSource;
     qCanceled: TFDQuery;
-    fClient: TUniCheckComboBox;
     UniLabel3: TUniLabel;
     edtOrderDate: TUniDateRangePicker;
+    UniLabel2: TUniLabel;
+    fPriceLogo: TUniADCheckComboBox;
+    fClient: TUniADCheckComboBox;
+    UniLabel1: TUniLabel;
+    fPriceLogoF: TUniADCheckComboBox;
+    fPriceLogoCancel: TUniCheckBox;
+    qCanceledOrderDate: TSQLTimeStampField;
+    qCanceledQuantity: TIntegerField;
+    qCanceledAmount: TCurrencyField;
+    qCanceledQuantityCancel: TIntegerField;
+    qCanceledAmountCancel: TCurrencyField;
+    qCanceledPrcCancel: TFMTBCDField;
     procedure UniFrameCreate(Sender: TObject);
-    procedure fClientSelect(Sender: TObject);
+//    procedure fClientSelect(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure fCancelClick(Sender: TObject);
@@ -38,7 +49,7 @@ type
   private
     { Private declarations }
     //FClients: TFDMemTable;
-    FFilterTextClient: string;
+//    FFilterTextClient: string;
   public
     { Public declarations }
 
@@ -69,42 +80,22 @@ end;
 procedure TStatisticCanceled.fCancelClick(Sender: TObject);
 begin
   fClient.ClearSelection;
+  fPriceLogo.ClearSelection;
+  fPriceLogoF.ClearSelection;
+  fPriceLogoCancel.Checked := false;
   edtOrderDate.ClearDateRange;
-
-  FFilterTextClient := '';
 end;
 
-procedure TStatisticCanceled.fClientSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextClient := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextClient := s;
-
-//  FClients.EmptyDataSet;
-//
-//  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-//  begin
-//    if (Sender as TUniCheckComboBox).Selected[i] = True then
-//    begin
-//      FClients.AppendRecord([integer((Sender as TUniCheckComboBox).Items.Objects[i])]);
-//    end;
-//  end;
-end;
+//procedure TStatisticCanceled.fClientSelect(Sender: TObject);
+////
+////  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
+////  begin
+////    if (Sender as TUniCheckComboBox).Selected[i] = True then
+////    begin
+////      FClients.AppendRecord([integer((Sender as TUniCheckComboBox).Items.Objects[i])]);
+////    end;
+////  end;
+//end;
 
 procedure TStatisticCanceled.GridOpen(Key: Word);
 begin
@@ -124,7 +115,6 @@ begin
 end;
 
 procedure TStatisticCanceled.GridOpen;
-var FClient:string;
 begin
   ShowMask('∆дите, операци€ выполн€етс€');
   UniSession.Synchronize;
@@ -133,13 +123,14 @@ begin
 
 //    qBrand.ParamByName('Clients').DataType := ftDataSet;
 //    qBrand.ParamByName('Clients').AsDataSet := FClients;
+    logger.Info(fClient.SelectedKeys);
+    logger.Info(fClient.SelectedItems);
 
-    qCanceled.ParamByName('Clients').AsString := FFilterTextClient;
+    qCanceled.ParamByName('Clients').AsString := fClient.SelectedKeys;
+    qCanceled.ParamByName('Prices').AsString := fPriceLogo.SelectedItems;
+    qCanceled.ParamByName('PricesF').AsString := fPriceLogoF.SelectedItems;
 
-//    if cbCancel.ItemIndex > -1 then
-//      qCanceled.ParamByName('isCancel').AsBoolean := cbCancel.ItemIndex.ToBoolean
-//    else
-//      qCanceled.ParamByName('isCancel').Value := null;
+    qCanceled.ParamByName('PricesFCan').asBoolean := fPriceLogoCancel.Checked;
 
     if (edtOrderDate.DateStart <> NullDate) and (edtOrderDate.DateEnd <> NullDate) then
     begin
@@ -162,7 +153,7 @@ end;
 
 procedure TStatisticCanceled.UniFrameCreate(Sender: TObject);
 begin
-
+  fClient.IsValue := True;
   ComboBoxFill(fClient,'''
     DECLARE @R table (ID numeric(18, 0), Brief varchar(256), Name varchar(256)) ;
 
@@ -171,6 +162,25 @@ begin
 
     SELECT ID, Brief as Name from @R;
   ''');
+
+  ComboBoxFill(fPriceLogo,'''
+    DECLARE @R table (Name varchar(256)) ;
+
+    insert @R
+      EXEC StatisticCancelledFilter_PriceLogo
+
+    SELECT 0 ID, Name from @R;
+  ''');
+
+  ComboBoxFill(fPriceLogoF,'''
+    DECLARE @R table (Name varchar(256)) ;
+
+    insert @R
+      EXEC StatisticCancelledFilter_PriceLogo
+
+    SELECT 0 ID, Name from @R;
+  ''');
+
 
 //  FClients := TFDMemTable.Create(nil);
 //  FClients.FieldDefs.Add('ID', ftFMTBcd);
