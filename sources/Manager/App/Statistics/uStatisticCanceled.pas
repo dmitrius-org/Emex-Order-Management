@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker, uUniADCheckComboBoxEx, uLogger, uniCheckBox
+  uUniDateRangePicker, uUniADCheckComboBoxEx, uLogger, uniCheckBox, MainModule
 
   ;
 
@@ -46,6 +46,10 @@ type
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
+    procedure fClientAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure fPriceLogoAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     //FClients: TFDMemTable;
@@ -86,6 +90,19 @@ begin
   edtOrderDate.ClearDateRange;
 end;
 
+procedure TStatisticCanceled.fClientAjaxEvent(Sender: TComponent;
+  EventName: string; Params: TUniStrings);
+  var I: Integer;
+begin
+
+end;
+
+procedure TStatisticCanceled.fPriceLogoAjaxEvent(Sender: TComponent;
+  EventName: string; Params: TUniStrings);
+begin
+
+end;
+
 //procedure TStatisticCanceled.fClientSelect(Sender: TObject);
 ////
 ////  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
@@ -123,12 +140,10 @@ begin
 
 //    qBrand.ParamByName('Clients').DataType := ftDataSet;
 //    qBrand.ParamByName('Clients').AsDataSet := FClients;
-    logger.Info(fClient.SelectedKeys);
-    logger.Info(fClient.SelectedItems);
 
     qCanceled.ParamByName('Clients').AsString := fClient.SelectedKeys;
-    qCanceled.ParamByName('Prices').AsString := fPriceLogo.SelectedItems;
-    qCanceled.ParamByName('PricesF').AsString := fPriceLogoF.SelectedItems;
+    qCanceled.ParamByName('Prices').AsString := fPriceLogo.SelectedNames;
+    qCanceled.ParamByName('PricesF').AsString := fPriceLogoF.SelectedNames;
 
     qCanceled.ParamByName('PricesFCan').asBoolean := fPriceLogoCancel.Checked;
 
@@ -167,7 +182,7 @@ begin
     DECLARE @R table (Name varchar(256)) ;
 
     insert @R
-      EXEC StatisticCancelledFilter_PriceLogo
+      EXEC StatisticCancelledFilter_OrderPriceLogo
 
     SELECT 0 ID, Name from @R;
   ''');

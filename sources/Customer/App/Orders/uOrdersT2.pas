@@ -139,6 +139,7 @@ type
     N1: TUniMenuItem;
     actReOrder: TAction;
     N2: TUniMenuItem;
+    QueryisCancel: TBooleanField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -602,10 +603,22 @@ end;
 
 procedure TOrdersT2.ppMainPopup(Sender: TObject);
 begin
-  actProtocol.Visible := Query.RecordCount>0;
+//  actProtocol.Visible := Query.RecordCount>0;
+//
+//  actShowMessage.Visible:= (Query.RecordCount>0 ) and
+//                          ((Query.FieldByName('Flag').AsInteger and 32) = 32);
+//
+  actIsCancelApproval.Visible:= (Query.RecordCount>0 ) and
+                                (Query.FieldByName('IsCancel').AsBoolean);
 
-  actShowMessage.Visible:= (Query.RecordCount>0 ) and
-                          ((Query.FieldByName('Flag').AsInteger and 32) = 32);
+//
+  actReOrder.Visible:= (Query.RecordCount>0 ) and
+                       (Query.FieldByName('IsCancel').AsBoolean);
+
+
+
+                       //           and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
+       // and o.[Flag] & 8192 /*Перезаказан*/= 0
 end;
 
 procedure TOrdersT2.QueryDeliveryDateToCustomerGetText(Sender: TField;
@@ -946,6 +959,10 @@ begin
   SetNotificationIcon();
 
   SetNotificationCount;
+
+  UniSession.AddJS('Ext.getCmp("' + N2.JSId + '").addCls("menu-item-ok");');
+  UniSession.AddJS('Ext.getCmp("' + N1.JSId + '").addCls("menu-item-cancel");');
+
 end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

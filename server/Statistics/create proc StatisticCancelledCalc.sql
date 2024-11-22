@@ -26,7 +26,7 @@ select @DateBegin = isnull(@DateBegin, '19000101')
            ON o.ClientID = c.ID
     -- поставщик из заказа
     LEFT JOIN @Prices p
-           ON p.Name = o.PriceLogoOrg
+           ON p.Name = o.CustomerPriceLogo
     -- поставщик факт
     LEFT JOIN @PricesF pа
            ON (@PricesFCan = 0 and pа.Name = o.PriceLogo )

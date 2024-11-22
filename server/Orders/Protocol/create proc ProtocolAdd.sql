@@ -74,7 +74,8 @@ as
 		                else o.isCancel 
 		              end
 	    ,o.Flag     = case
-	                    when ns.Brief = 'InCancel' then isnull (o.flag, 0) | 4  -- признак "Отказан"
+	                    when ns.Brief = 'InCancel' then (isnull (o.flag, 0) | 4 /*Отказан*/) 
+                                                                        & ~8192 /*Перезаказан*/
 						when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
 					    else o.flag
 	                  end
@@ -104,6 +105,6 @@ as
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20241002', '3';
+exec setOV 'ProtocolAdd', 'P', '20241122', '4';
 go
  

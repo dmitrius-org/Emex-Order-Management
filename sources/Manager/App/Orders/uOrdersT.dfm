@@ -693,7 +693,7 @@ object OrdersT: TOrdersT
           Height = 24
           ShowHint = True
           Action = actFilter
-          TabOrder = 19
+          TabOrder = 17
           IconPosition = ipButtonEdge
           ScreenMask.ShowMessage = False
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
@@ -745,7 +745,7 @@ object OrdersT: TOrdersT
             #1053#1077#1090
             #1044#1072)
           ItemIndex = 0
-          TabOrder = 18
+          TabOrder = 16
           EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
           IconItems = <>
@@ -793,94 +793,6 @@ object OrdersT: TOrdersT
           OnSelect = fStatus2Select
           OnKeyDown = fStatus2KeyDown
         end
-        object fPriceLogo: TUniCheckComboBox
-          Left = 219
-          Top = 75
-          Width = 101
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 15
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          EmptyText = #1055#1088#1072#1081#1089
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-              HideOnReadOnly = False
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-              HideOnReadOnly = False
-            end>
-          Images = UniImageList
-          HideTrigger = True
-          HideDefaultTrigger = False
-          SelectOnFocus = True
-          IconItems = <>
-          OnSelect = fPriceLogoSelect
-          OnKeyDown = fStatus2KeyDown
-        end
-        object fClient: TUniCheckComboBox
-          Left = 6
-          Top = 75
-          Width = 203
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 14
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          EmptyText = #1050#1083#1080#1077#1085#1090
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-            end>
-          Images = UniImageList
-          HideTrigger = True
-          HideDefaultTrigger = False
-          SelectOnFocus = True
-          IconItems = <>
-          OnSelect = fClientSelect
-          OnKeyDown = fStatus2KeyDown
-        end
         object UniLabel6: TUniLabel
           Left = 478
           Top = 58
@@ -892,7 +804,7 @@ object OrdersT: TOrdersT
           TabOrder = 12
         end
         object UniLabel8: TUniLabel
-          Left = 326
+          Left = 322
           Top = 14
           Width = 65
           Height = 13
@@ -902,21 +814,21 @@ object OrdersT: TOrdersT
           TabOrder = 2
         end
         object edtUpdDate: TUniDateTimePicker
-          Left = 326
+          Left = 322
           Top = 75
-          Width = 146
+          Width = 150
           Hint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           ShowHint = True
           DateTime = 45257.000000000000000000
           DateFormat = 'dd/MM/yyyy'
           TimeFormat = 'HH:mm:ss'
-          TabOrder = 16
+          TabOrder = 14
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           OnKeyDown = fStatus2KeyDown
         end
         object UniLabel10: TUniLabel
-          Left = 326
+          Left = 322
           Top = 58
           Width = 97
           Height = 13
@@ -955,20 +867,20 @@ object OrdersT: TOrdersT
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''
-          TabOrder = 17
+          TabOrder = 15
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
         object edtOrderDate: TUniDateRangePicker
-          Left = 324
+          Left = 322
           Top = 33
-          Width = 197
+          Width = 199
           Hint = ''
           ShowHint = True
           Text = 'edtOrderDate'
-          TabOrder = 20
+          TabOrder = 18
           Triggers = <
             item
               ButtonId = 0
@@ -993,6 +905,42 @@ object OrdersT: TOrdersT
             
               #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
               'oment().subtract(1, "month").endOf("month")]')
+        end
+        object fClient: TUniADCheckComboBox
+          Left = 6
+          Top = 75
+          Width = 207
+          Hint = ''
+          ShowHint = True
+          ShowSearch = True
+          Text = ''
+          TabOrder = 19
+          ClientEvents.ExtEvents.Strings = (
+            
+              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+              'oxSearch(sender, "id", "val");'#13#10'}')
+          EmptyText = #1050#1083#1080#1077#1085#1090
+          ClearButton = True
+          IconItems = <>
+          OnKeyDown = fStatus2KeyDown
+        end
+        object fPriceLogo: TUniADCheckComboBox
+          Left = 219
+          Top = 75
+          Width = 97
+          Hint = ''
+          ShowHint = True
+          ShowSearch = True
+          Text = ''
+          TabOrder = 20
+          ClientEvents.ExtEvents.Strings = (
+            
+              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+              'oxSearch(sender, "id", "val");'#13#10'}')
+          EmptyText = #1055#1088#1072#1081#1089
+          ClearButton = True
+          IconItems = <>
+          OnKeyDown = fStatus2KeyDown
         end
       end
     end

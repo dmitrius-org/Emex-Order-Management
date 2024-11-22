@@ -102,12 +102,12 @@ object StatisticCanceled: TStatisticCanceled
     object UniLabel2: TUniLabel
       Left = 430
       Top = 8
-      Width = 62
+      Width = 114
       Height = 13
       Hint = ''
       ShowHint = True
       ParentShowHint = False
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1080#1079' '#1079#1072#1082#1072#1079#1072':'
       TabOrder = 6
     end
     object fPriceLogo: TUniADCheckComboBox
@@ -115,40 +115,33 @@ object StatisticCanceled: TStatisticCanceled
       Top = 27
       Width = 131
       Hint = ''
+      ShowSearch = True
       Text = ''
       TabOrder = 7
+      ClientEvents.ExtEvents.Strings = (
+        
+          'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+          'oxSearch(sender, "id", "val");'#13#10'}')
       ClearButton = True
       IconItems = <>
+      OnAjaxEvent = fPriceLogoAjaxEvent
     end
     object fClient: TUniADCheckComboBox
       Left = 215
       Top = 27
       Width = 209
       Hint = ''
+      ShowSearch = True
       Text = ''
       TabOrder = 8
       ClientEvents.ExtEvents.Strings = (
+        ''
         
-          'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10'    var me =' +
-          ' sender;'#13#10'    var _insertCheckbox = function() {'#13#10'        var _i' +
-          'd = me.getPicker().id;'#13#10'        Ext.DomHelper.insertFirst(_id, {' +
-          #13#10'            tag: '#39'label'#39','#13#10'            for: _id + '#39'_allCh'#39','#13#10' ' +
-          '           html: '#39'AllCheck/AllUnCheck<hr>'#39#13#10'        });'#13#10'       ' +
-          ' Ext.DomHelper.insertFirst(_id, {'#13#10'            tag: '#39'input'#39','#13#10'  ' +
-          '          type: '#39'checkbox'#39','#13#10'            id: _id + '#39'_allCh'#39#13#10'   ' +
-          '     });'#13#10#13#10'        Ext.get(_id + '#39'_allCh'#39').on('#39'change'#39', functio' +
-          'n(e, combo) {'#13#10'            ajaxRequest(me, '#39'allCheckUnCheck'#39', {'#13 +
-          #10'                checked: combo.checked.toString()'#13#10'            ' +
-          '});'#13#10'        });'#13#10#13#10'        me.on('#39'change'#39', function(combo, b) {' +
-          #13#10'            if (combo.getStore().count() == b.length) {'#13#10'     ' +
-          '           Ext.get(_id + '#39'_allCh'#39').dom.checked = true'#13#10'         ' +
-          '   } else {'#13#10'                Ext.get(_id + '#39'_allCh'#39').dom.checked' +
-          ' = false'#13#10'            }'#13#10'        }, {'#13#10'            delegate: '#39'.x' +
-          '-boundlist-item'#39#13#10'        });'#13#10#13#10'        me.getPicker().un('#39'show' +
-          #39', _insertCheckbox);'#13#10'    };'#13#10'    me.getPicker().on('#39'show'#39', _ins' +
-          'ertCheckbox);'#13#10'}')
+          'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+          'oxSearch(sender, "id", "val");'#13#10'}')
       ClearButton = True
       IconItems = <>
+      OnAjaxEvent = fClientAjaxEvent
     end
     object UniLabel1: TUniLabel
       Left = 567
@@ -166,8 +159,13 @@ object StatisticCanceled: TStatisticCanceled
       Top = 27
       Width = 131
       Hint = ''
+      ShowSearch = True
       Text = ''
       TabOrder = 10
+      ClientEvents.ExtEvents.Strings = (
+        
+          'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+          'oxSearch(sender, "id", "val");'#13#10'}')
       ClearButton = True
       IconItems = <>
     end

@@ -33,7 +33,28 @@
     z-index: 19000;
 } */
 
+/* Класс для изменения высоты и фона элемента меню */
+.menu-item-ok {
+    background-color: #d4edda; /* Зеленоватый оттенок */
+    height: 25px; /* Увеличенная высота */
+    line-height: 25px; /* Центрирование текста по вертикали */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.menu-item-ok:hover {
+    background-color: #c3e6cb; /* Более светлый зеленый при наведении */
+}
 
 
+.menu-item-cancel {
+    background-color: #f8d7da; /* Зеленоватый оттенок */
+    height: 25px; /* Увеличенная высота */
+    line-height: 25px; /* Центрирование текста по вертикали */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.menu-item-cancel:hover {
+    background-color: #f5c6cb; /* Более светлый зеленый при наведении */
+}
 
 

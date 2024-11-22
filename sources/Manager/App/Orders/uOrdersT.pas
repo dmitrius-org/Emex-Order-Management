@@ -20,7 +20,7 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
-  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker;
+  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx;
 
 type
   tMarks = class
@@ -142,8 +142,6 @@ type
     N11: TUniMenuItem;
     QueryDetailName: TWideStringField;
     fStatus2: TUniCheckComboBox;
-    fPriceLogo: TUniCheckComboBox;
-    fClient: TUniCheckComboBox;
     qPriceLogoPriceLogo: TWideStringField;
     N12: TUniMenuItem;
     N4: TUniMenuItem;
@@ -205,6 +203,8 @@ type
     QueryOrderDetailSubId: TWideStringField;
     UniFSComboBox1: TUniFSComboBox;
     edtOrderDate: TUniDateRangePicker;
+    fClient: TUniADCheckComboBox;
+    fPriceLogo: TUniADCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -229,8 +229,6 @@ type
     procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure GridDblClick(Sender: TObject);
     procedure fStatus2Select(Sender: TObject);
-    procedure fPriceLogoSelect(Sender: TObject);
-    procedure fClientSelect(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
 
     procedure actSetCommentExecute(Sender: TObject);
@@ -253,10 +251,8 @@ type
   private
     { Private declarations }
     FAction: tFormaction;
-
     FFilterTextStatus: string;
-    FFilterTextPriceLogo: string;
-    FFilterTextClient: string;
+
     Marks: TMarks;                  // отметки
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
@@ -594,8 +590,8 @@ begin
   fClient.ClearSelection;
 
   FFilterTextStatus := '';
-  FFilterTextPriceLogo := '';
-  FFilterTextClient := '';
+  //FFilterTextPriceLogo := '';
+  //FFilterTextClient := '';
 
   fOrderNum.Text := '';
   fDetailNum.Text:='';
@@ -703,30 +699,6 @@ begin
   UniSession.Synchronize
 end;
 
-procedure TOrdersT.fClientSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextClient := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextClient := s;
-
-  logger.Info('FFilterTextClient: ' + FFilterTextClient);
-end;
-
 procedure TOrdersT.FilterClientsCreate;
 begin
   qClient.Open(); // используется в фильтре Клиент
@@ -772,31 +744,6 @@ begin
   fStatus2.Refresh;
 end;
 
-
-procedure TOrdersT.fPriceLogoSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextPriceLogo := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + '''' + string((Sender as TUniCheckComboBox).Items[i]) +''',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextPriceLogo := s;
-
-  logger.Info('FFilterTextPriceLogo: ' + FFilterTextPriceLogo) ;
-end;
-
 procedure TOrdersT.fStatus2KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -835,9 +782,7 @@ begin
 end;
 
 procedure TOrdersT.GridOpen;
-var FClient:string;
-    FStatus :string;
-    FPriceLogo :string;
+var FStatus :string;
 begin
   logger.Info('TOrdersT.GridOpen Begin');
   DoShowMask;
@@ -849,13 +794,16 @@ begin
     else
       FStatus := '';
 
-    if FFilterTextPriceLogo <> '' then FPriceLogo := ' and PriceLogo in (' + FFilterTextPriceLogo + ')'
+    if fClient.SelCount > 0 then
+      Query.MacroByName('Client').Value  := ' and ClientID in (' + fClient.SelectedKeys + ')'
     else
-      FPriceLogo := '';
+      Query.MacroByName('Client').Value  := '';
 
-    if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
+     logger.Info(fPriceLogo.SelectedNames(True));
+    if fPriceLogo.SelCount > 0 then
+      Query.MacroByName('PriceLogo').Value := ' and PriceLogo in (' + fPriceLogo.SelectedNames(True) + ')'
     else
-      FClient := '';
+      Query.MacroByName('PriceLogo').Value := '';
 
     if (FStatus <> '') or (not edtInvoice.IsBlank )then
     begin
@@ -870,8 +818,8 @@ begin
     end;
 
     Query.MacroByName('Status').Value    := FStatus;
-    Query.MacroByName('PriceLogo').Value := FPriceLogo;
-    Query.MacroByName('Client').Value    := FClient;
+    //Query.MacroByName('PriceLogo').Value := FPriceLogo;
+    //Query.MacroByName('Client').Value    := FClient;
 
     if fOrderNum.Text <> '' then
       Query.MacroByName('OrderNum').Value := ' and o.OrderNum like '''   + fOrderNum.Text + ''''

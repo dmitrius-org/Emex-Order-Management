@@ -605,7 +605,6 @@ object OrdersT2: TOrdersT2
           Action = actCancelRequest
           Anchors = [akTop, akRight]
           TabOrder = 10
-          ExplicitLeft = 1597
         end
         object edtComment2: TUniEdit
           Left = 690
@@ -690,7 +689,6 @@ object OrdersT2: TOrdersT2
               '   ];'#13#10'}')
           LayoutConfig.ComponentCls = 'order-notification-btn'
           OnClick = btnNotificationClick
-          ExplicitLeft = 1472
         end
       end
     end
@@ -874,6 +872,7 @@ object OrdersT2: TOrdersT2
         '      ,o.UnreadMessagesCount -- '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1077#1087#1088#1086#1095#1080#1090#1072#1085#1085#1099#1093' '#1089#1086#1086#1073#1097#1077#1085 +
         #1080#1081' '
       '      ,o.Comment2'
+      '      ,o.isCancel'
       '  FROM vCustomerOrders o'
       ' where o.ClientID = :ClientID'
       
@@ -1129,6 +1128,9 @@ object OrdersT2: TOrdersT2
     object QueryComment2: TStringField
       FieldName = 'Comment2'
       Size = 128
+    end
+    object QueryisCancel: TBooleanField
+      FieldName = 'isCancel'
     end
   end
   object DataSource: TDataSource
@@ -2582,13 +2584,14 @@ object OrdersT2: TOrdersT2
       000000000000}
   end
   object ppMain: TUniPopupMenu
+    OnPopup = ppMainPopup
     Left = 241
     Top = 218
-    object N1: TUniMenuItem
-      Action = actIsCancelApproval
-    end
     object N2: TUniMenuItem
       Action = actReOrder
+    end
+    object N1: TUniMenuItem
+      Action = actIsCancelApproval
     end
   end
 end
