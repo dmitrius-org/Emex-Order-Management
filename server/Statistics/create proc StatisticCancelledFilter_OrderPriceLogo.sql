@@ -1,7 +1,7 @@
 if OBJECT_ID('StatisticCancelledFilter_OrderPriceLogo') is not null
     drop proc StatisticCancelledFilter_OrderPriceLogo
 /*
-  StatisticCancelledFilter_OrderPriceLogo - поставщик из заказа
+  StatisticCancelledFilter_OrderPriceLogo - РїРѕСЃС‚Р°РІС‰РёРє РёР· Р·Р°РєР°Р·Р°
 */
 go
 create proc StatisticCancelledFilter_OrderPriceLogo

@@ -259,15 +259,17 @@ begin
                                  @OrderID        = :OrderID
                                 ,@PriceLogo      = :PriceLogo
                                 ,@MakeLogo       = :MakeLogo
+                                ,@DestinationLogo= :DestinationLogo
 
                      select @r as retcode
           ''';
 
           Sql.Open(sqltext,
-                   ['OrderID', 'PriceLogo', 'MakeLogo'],
+                   ['OrderID', 'PriceLogo', 'MakeLogo', 'DestinationLogo'],
                    [FID,
                     FPriceLogo,
-                    FMakeLogo
+                    FMakeLogo,
+                    cbDestinationLogo.Value
                     ]);
 
           RetVal.Code := Sql.Q.FieldByName('retcode').Value;

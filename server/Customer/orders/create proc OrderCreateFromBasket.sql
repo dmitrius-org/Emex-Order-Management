@@ -104,31 +104,31 @@ declare @r int = 0
   insert into tPrice with (rowlock) -- если детали нет в нашей системе, то добавим его
         (     
          MakeLogo 
-  	    ,Brand    
-        ,DetailNum	  
-        ,DetailName	  
+        ,Brand    
+        ,DetailNum      
+        ,DetailName      
         ,PriceLogo    
         ,WeightKG     
         ,VolumeKG 
-        ,WeightKGF	
+        ,WeightKGF    
         ,VolumeKGf
-  	    --,MOSA  
-        --,DetailPrice 
+        --,Fragile
+        --,Restrictions
          ) 
   OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum, INSERTED.PriceLogo 
     INTO @PNew(PriceID, Make, DetailNum, PriceLogo)
   select distinct 
          b.Make 
         ,b.MakeName
-  	    ,b.DetailNum     
-  	    ,b.PartNameRus --DetailName
-  	    ,b.PriceLogo  
-  	    ,b.WeightKG
+        ,b.DetailNum     
+        ,b.PartNameRus --DetailName
+        ,b.PriceLogo  
+        ,b.WeightKG
         ,case
            when b.VolumeKG = 0 then b.WeightKG
            else b.VolumeKG
          end 
-  	    ,b.WeightKG
+        ,b.WeightKG
         ,b.VolumeKG
         --,b.Price
         --,b.Price
@@ -147,7 +147,7 @@ declare @r int = 0
    where p.PriceID is null
 
   declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0))
-  insert tOrders
+  insert tOrders with (rowlock)
         (ClientID
         ,SuppliersID 
         ,Manufacturer
@@ -192,7 +192,7 @@ declare @r int = 0
         ,VolumeKGAmount
          -- cроки поставки клиента
         ,DeliveryTermToCustomer -- Срок поставки клиенту
-        ,DeliveryDateToCustomer -- Дата поставки клиенту	
+        ,DeliveryDateToCustomer -- Дата поставки клиенту    
         ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
         ,DaysInWork
         ,Comment2
@@ -247,7 +247,7 @@ declare @r int = 0
         ,pd.VolumeKG          
          -- cроки поставки клиента
         ,b.OurDelivery           -- Срок поставки клиенту
-        ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту	
+        ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
         ,b.OurDelivery           -- Остаток срока до поставки клиенту
         ,0
         ,b.Comment2
@@ -277,7 +277,7 @@ declare @r int = 0
    Where Brief = 'ToNew'
 
   delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-  insert into pAccrualAction
+  insert into pAccrualAction with (rowlock)
         (Spid,
          ObjectID,
          ActionID,
@@ -305,7 +305,7 @@ declare @r int = 0
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn where spid = @@Spid
-  insert pOrdersFinIn
+  insert pOrdersFinIn with (rowlock)
         (Spid, OrderID)
   Select @@spid, OrderID
     from @ID
@@ -314,7 +314,8 @@ declare @r int = 0
 
   -- расчет сроков дотавки
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-  insert pDeliveryTerm (Spid, OrderID)
+  insert pDeliveryTerm  with (rowlock)
+        (Spid, OrderID)
   Select @@spid, OrderID
     from @ID
   

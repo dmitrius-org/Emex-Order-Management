@@ -47,8 +47,8 @@ as
 
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
-        --,t.MakeLogo        = isnull(@MakeLogo , t.MakeLogo ) 
         ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
+        --,t.DestinationName = isnull(@DestinationLogo, t.DestinationLogo)
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0

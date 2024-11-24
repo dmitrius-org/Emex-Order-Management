@@ -664,7 +664,7 @@ begin
   // Сообщение от менеджера
   if (Sender.AsInteger and 32) > 0 then
   begin
-    t := t + '<div class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></div> ';
+    t := t + '<span class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></span> ';
   end;
 
   // запрошен отказ по детали
