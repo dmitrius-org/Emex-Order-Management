@@ -1,6 +1,6 @@
 declare
-              @ProfileName  varchar(30)='EEZap (BEED-48H)',
-			  @DetailNum    varchar(30)= 'HYB168NA',
+              @ProfileName  varchar(30)='EEZap (OPT5-EMIN)',
+			  @DetailNum    varchar(30)= '1289269G20233',
 			  @ErrMessage   varchar(255) = null 
 
 --EmEx (MZYN-EMIN)
@@ -120,7 +120,7 @@ select-- top 200000
 	   t.DetailPrice,
 	   t.DetailName, 
 	   t.PriceLogo,
-	   t.Quantity, 
+	   isnull(t.Quantity, 0), 
 	   t.PackQuantity, 
 	   0,--pt.Term,
 	   isnull(t.WeightKGF, t.WeightKG),--
@@ -146,7 +146,7 @@ select-- top 200000
          or (@isIgnore = 1 and not (isnull(t.WeightKGF, t.WeightKG) = 0 and isnull(t.VolumeKGf, t.VolumeKG) = 0)))
             --Убираем все строки, у которых значения в столбце Reliability строго меньше, чем reliability из формы
         and t.Reliability >= @Reliability
-		 --and t.Quantity > 0
+		-- and t.Quantity > 0
         and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
 	                                        when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
 			                                else isnull(t.Restrictions, '')
@@ -251,4 +251,5 @@ select Brand,
 exit_:
 
 
-select * from tPrice where DetailNum='HYB168NA'
+select * from tPrice where DetailNum=@DetailNum 
+

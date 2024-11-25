@@ -5,10 +5,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm,
+  uniGUIClasses, uniGUIForm, System.Math,
 
   uCommonType, uniButton, uniBitBtn, uniGUIBaseClasses, uniPanel, uniEdit,
-  uniLabel, uniDateTimePicker;
+  uniLabel, uniDateTimePicker, uConstant, uUtils.Math;
 
 type
   TShipmentsEditF = class(TUniForm)
@@ -129,7 +129,7 @@ begin
                            'TransporterVolumeKG',
                            'DeliverySumF'],
                           [FID,
-                           ReceiptDate.DateTime,
+                           IfThen(ReceiptDate.DateTime <> NullDate, ReceiptDate.DateTime, null),
                            TransporterNumber.Text,
                            SupplierWeightKG.Value,
                            SupplierVolumeKG.Value,

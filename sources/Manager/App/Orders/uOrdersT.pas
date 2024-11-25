@@ -535,7 +535,7 @@ begin
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
     logger.Info('TOrdersT.ActionExecute 1');
-    Sql.exec(' insert #ProcessedRecords (Processed, Total) select 0, 0 ', [], []);
+    Sql.exec(' insert #ProcessedRecords with (rowlock) (Processed, Total) select 0, 0 ', [], []);
     FAccrual.ShowProgress := True;
   end;
 
@@ -1057,7 +1057,7 @@ begin
   //Сообщение от клиента
   if (Sender.AsInteger and 2048) > 0 then
   begin
-    t := t + '<div class="grid-order-message" data-qtip="Имеется непрочитанное сообщение от клиента"><i class="fa fa-bell"></i></div> ';
+    t := t + '<span class="grid-order-message" data-qtip="Имеется непрочитанное сообщение от клиента"><i class="fa fa-bell"></i></span> ';
   end;
 
   if (Sender.AsInteger and 64) > 0 then
@@ -1172,6 +1172,11 @@ begin
   if (Query.FieldByName('Flag').AsInteger and 16384) > 0 then // Несоответствие упаковке
   begin
     Attribs.Color:=rgb(242,169,210);
+  end
+  else
+  if (Query.FieldByName('Flag').AsInteger and 32768) > 0 then // Нет в наличии
+  begin
+    Attribs.Color:=rgb(255,255,0);
   end;
 
   if (Query.FieldByName('IsCancel').AsBoolean) then // отказан

@@ -28,10 +28,12 @@ as
   begin
       set @Comment = 'Изменение tShipments.ReceiptDate2 '
       update t
-         set t.ReceiptDate2 = @ReceiptDate
+         set t.ReceiptDate2 = case 
+                                when t.ReceiptDate = @ReceiptDate then null
+                                else @ReceiptDate
+                              end
 	    from tShipments t (updlock)
-       where t.ShipmentsID = @ShipmentsID
-         and isnull(t.ReceiptDate, '') <> @ReceiptDate
+       where t.ShipmentsID = @ShipmentsID         
   end
 
   if @@ROWCOUNT > 0
@@ -49,6 +51,6 @@ as
 go
 grant exec on SetShipmentsReceiptDate to public
 go
-exec setOV 'SetShipmentsReceiptDate', 'P', '20240101', '1'
+exec setOV 'SetShipmentsReceiptDate', 'P', '20241125', '2'
 go
  

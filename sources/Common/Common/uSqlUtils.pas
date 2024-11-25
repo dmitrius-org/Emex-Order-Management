@@ -4,7 +4,7 @@ interface
 
 uses System.SysUtils, System.UITypes, Variants,  Data.DB,//System.Rtti,
      FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Intf,
-     FireDAC.Stan.Async,  System.Threading
+     FireDAC.Stan.Async,  System.Threading, uUtils.Varriant
     // uniGUIForm, uniGUITypes
      ;
 
@@ -69,7 +69,7 @@ Type
 implementation
 
 uses
-  uLogger, uUtils.Varriant;
+  uLogger;
 
 
 { TSql }

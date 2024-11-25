@@ -19,7 +19,6 @@ object ShipmentsEditF: TShipmentsEditF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitWidth = 687
     DesignSize = (
       710
       44)
@@ -33,7 +32,6 @@ object ShipmentsEditF: TShipmentsEditF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 576
     end
     object btnCancel: TUniBitBtn
       Left = 511
@@ -45,7 +43,6 @@ object ShipmentsEditF: TShipmentsEditF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 488
     end
   end
   object UniLabel1: TUniLabel

@@ -120,7 +120,7 @@ select-- top 200000
 	   t.DetailPrice,
 	   t.DetailName, 
 	   t.PriceLogo,
-	   t.Quantity, 
+	   isnull(t.Quantity, 0), 
 	   t.PackQuantity, 
 	   0,--pt.Term,
 	   isnull(t.WeightKGF, t.WeightKG),--
