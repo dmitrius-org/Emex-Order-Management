@@ -118,19 +118,21 @@ function TUniMainModule.dbUserAuthorization(AU, AP: string; IsSaveSession: Boole
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'begin');
 
-  Query.SQL.Text := ('  declare @R int ' +
-                     '         ,@Password nvarchar(512)  ' +
-                     '         ,@ClientID numeric(18, 0) ' +
-                     ''+
-                     '  select @Password=  master.dbo.fn_varbintohexstr(HashBytes(''SHA2_512'', :Password)) ' +
-                     ''+
-                     '  exec @R = CustomerAuthorization ' +
-                     '    @UserName = :Email,           ' +
-                     '    @Password = @Password,        ' +
-                     '    @ClientID = @ClientID out     ' +
-                     ''+
-                     '  select @R        as R           ' +
-                     '        ,@ClientID as ClientID'    );
+  Query.SQL.Text := '''
+                       declare @R int
+                              ,@Password nvarchar(512)
+                              ,@ClientID numeric(18, 0)
+
+                       select @Password = master.dbo.fn_varbintohexstr(HashBytes('SHA2_512', :Password))
+
+                       exec @R = CustomerAuthorization
+                                   @UserName = :Email,
+                                   @Password = @Password,
+                                   @ClientID = @ClientID out
+
+                       select @R        as R
+                             ,@ClientID as ClientID
+                      ''';
   Query.ParamByName('Email').AsWideString    := AU;
   Query.ParamByName('Password').AsWideString := AP;
   Query.Open();

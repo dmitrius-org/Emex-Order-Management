@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker
+  uUniDateRangePicker, uUniADCheckComboBoxEx
 
   ;
 
@@ -26,7 +26,6 @@ type
     Grid: TUniDBGrid;
     dsBrand: TDataSource;
     qBrand: TFDQuery;
-    fClient: TUniCheckComboBox;
     UniLabel3: TUniLabel;
     edtOrderDate: TUniDateRangePicker;
     qBrandManufacturer: TWideStringField;
@@ -35,18 +34,15 @@ type
     qBrandDetailQuantity: TIntegerField;
     qBrandDetailAmount: TCurrencyField;
     qBrandQuantity: TIntegerField;
+    fClient: TUniADCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
-    procedure fClientSelect(Sender: TObject);
-    procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure fCancelClick(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
   private
     { Private declarations }
-    //FClients: TFDMemTable;
-    FFilterTextClient: string;
   public
     { Public declarations }
 
@@ -78,40 +74,6 @@ procedure TStatisticBrand.fCancelClick(Sender: TObject);
 begin
   fClient.ClearSelection;
   edtOrderDate.ClearDateRange;
-
-  FFilterTextClient := '';
-end;
-
-procedure TStatisticBrand.fClientSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextClient := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextClient := s;
-
-//  FClients.EmptyDataSet;
-//
-//  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-//  begin
-//    if (Sender as TUniCheckComboBox).Selected[i] = True then
-//    begin
-//      FClients.AppendRecord([integer((Sender as TUniCheckComboBox).Items.Objects[i])]);
-//    end;
-//  end;
 end;
 
 procedure TStatisticBrand.GridOpen(Key: Word);
@@ -132,17 +94,13 @@ begin
 end;
 
 procedure TStatisticBrand.GridOpen;
-var FClient:string;
 begin
   ShowMask('∆дите, операци€ выполн€етс€');
   UniSession.Synchronize;
   try
     qBrand.Close();
 
-//    qBrand.ParamByName('Clients').DataType := ftDataSet;
-//    qBrand.ParamByName('Clients').AsDataSet := FClients;
-
-    qBrand.ParamByName('Clients').AsString := FFilterTextClient;
+    qBrand.ParamByName('Clients').AsString := fClient.SelectedKeys;
 
     if cbCancel.ItemIndex > -1 then
       qBrand.ParamByName('isCancel').AsBoolean := cbCancel.ItemIndex.ToBoolean
@@ -151,8 +109,8 @@ begin
 
     if (edtOrderDate.DateStart <> NullDate) and (edtOrderDate.DateEnd <> NullDate) then
     begin
-      qBrand.ParamByName('DateBegin').AsDateTime := edtOrderDate.DateStart; //FormatDateTime('yyyymmdd', edtOrderDate.DateStart);
-      qBrand.ParamByName('DateEnd').AsDateTime := edtOrderDate.DateEnd; //FormatDateTime('yyyymmdd', edtOrderDate.DateEnd);
+      qBrand.ParamByName('DateBegin').AsDateTime := edtOrderDate.DateStart;
+      qBrand.ParamByName('DateEnd').AsDateTime := edtOrderDate.DateEnd;
     end
     else
     begin

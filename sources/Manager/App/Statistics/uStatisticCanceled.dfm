@@ -141,6 +141,7 @@ object StatisticCanceled: TStatisticCanceled
           'oxSearch(sender, "id", "val");'#13#10'}')
       ClearButton = True
       IconItems = <>
+      OnKeyDown = edtOrderDateKeyDown
       OnAjaxEvent = fClientAjaxEvent
     end
     object UniLabel1: TUniLabel
@@ -258,7 +259,7 @@ object StatisticCanceled: TStatisticCanceled
         Width = 150
         ReadOnly = True
         Sortable = True
-        GroupHeader = #1047#1072#1082#1072#1079#1072#1085#1086
+        GroupHeader = #1047#1072#1082#1072#1079#1099
       end
       item
         FieldName = 'Amount'
@@ -267,7 +268,7 @@ object StatisticCanceled: TStatisticCanceled
         Width = 150
         ReadOnly = True
         Sortable = True
-        GroupHeader = #1047#1072#1082#1072#1079#1072#1085#1086
+        GroupHeader = #1047#1072#1082#1072#1079#1099
       end
       item
         FieldName = 'QuantityCancel'

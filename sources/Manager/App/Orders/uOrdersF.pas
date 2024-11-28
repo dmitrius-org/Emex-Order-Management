@@ -130,6 +130,7 @@ type
     procedure UniFormShow(Sender: TObject);
     procedure UniTimerTimer(Sender: TObject);
     procedure actProtocolExecute(Sender: TObject);
+    procedure edtWeightKGFChange(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -186,6 +187,8 @@ type
     ///  GooglePSE - интеграция программируемой поисковой системы google
     ///</summary>
     procedure GooglePSE();
+
+    procedure WeightKGFStyle();
   public
     { Public declarations }
 
@@ -264,6 +267,8 @@ begin
   FDetailNumber:= ADetailNumber;
 end;
 
+
+
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
@@ -278,6 +283,11 @@ begin
 end;
 
 { TOrderF }
+
+procedure TOrderF.edtWeightKGFChange(Sender: TObject);
+begin
+  WeightKGFStyle
+end;
 
 procedure TOrderF.actProtocolExecute(Sender: TObject);
 begin
@@ -489,6 +499,14 @@ begin
     end;
   finally
   end;
+end;
+
+procedure TOrderF.WeightKGFStyle;
+begin
+  if edtWeightKGF.Value = 0 then
+    edtWeightKGF.Color := $008080FF
+  else
+    edtWeightKGF.Color := clWindow;
 end;
 
 procedure TOrderF.btnOkClick(Sender: TObject);
@@ -735,6 +753,8 @@ begin
   UniSession.AddJS(js);
 
   IsExistNext := True;
+
+  WeightKGFStyle;
 end;
 
 procedure TOrderF.SetIndicatorsStyle(AIncome: real);
@@ -1239,5 +1259,54 @@ end.
 
 
 
+
+
+procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
+  Result: TStrings);
+begin
+
+end;
+
+procedure TOrderF.edtLChange(Sender: TObject);
+begin
+
+end;
+
+procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+
+end;
+
+procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+
+end;
+
+procedure TOrderF.GetPartFromEmex;
+begin
+
+end;
+
+procedure TOrderF.getPartRatingFromDB2;
+begin
+
+end;
+
+procedure TOrderF.GooglePSE;
+begin
+
+end;
+
+procedure TOrderF.LoadDataPart;
+begin
+
+end;
+
+function TOrderF.LoadNextPart: Boolean;
+begin
+
+end;
 
 

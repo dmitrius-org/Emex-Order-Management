@@ -20,4 +20,5 @@ exec setOV 'vBalanceTotal', 'V', '20240521', '1'
 go
 
 
-select * from vBalanceTotal
+select * from vBalanceTotal 
+ order by StatusID  

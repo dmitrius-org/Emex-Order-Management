@@ -394,6 +394,7 @@ object OrderF: TOrderF
         BlankValue = 0
         DecimalPrecision = 3
         DecimalSeparator = ','
+        OnChange = edtWeightKGFChange
         OnKeyDown = edtWeightKGFKeyDown
       end
     end
@@ -852,24 +853,30 @@ object OrderF: TOrderF
         FieldLabelFont.OverrideDefaults = [ovFontHeight]
         TabOrder = 6
         Layout = 'vbox'
-        LayoutAttribs.Align = 'end'
-        LayoutAttribs.Pack = 'end'
+        LayoutAttribs.Align = 'center'
+        LayoutAttribs.Pack = 'center'
         LayoutConfig.Padding = '1'
         LayoutConfig.Margin = '3'
         object NotExists: TUniLabel
-          Left = 27
+          AlignWithMargins = True
+          Left = 3
           Top = 3
           Width = 64
           Height = 13
           Hint = ''
           Visible = False
           ShowHint = True
+          Alignment = taCenter
           Caption = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093
-          Align = alCustom
+          Align = alClient
           ParentFont = False
           Font.Color = clRed
           Font.Style = [fsBold]
           TabOrder = 1
+          LayoutConfig.IgnorePosition = False
+          LayoutConfig.Margin = '8px 0px 0px 0px'
+          LayoutConfig.DockWhenAligned = False
+          ExplicitLeft = 27
         end
         object edtReliability2: TUniHTMLFrame
           Left = 0
@@ -915,10 +922,10 @@ object OrderF: TOrderF
               '/><label class="half" for="" title="0 %"></label>    '
             '</fieldset>'
             '<label id="prc2" class="ratingprc" ></label>')
-          Align = alBottom
           ScreenMask.Enabled = True
           ScreenMask.WaitData = True
           LayoutConfig.IgnorePosition = False
+          LayoutConfig.Margin = '8px 0px 0px 0px'
           LayoutConfig.DockWhenAligned = False
         end
       end

@@ -29,7 +29,7 @@ select o.OrderID
          when isnull(o.ReplacementMakeLogo, '') = '' then o.OrderDetailSubId 
          else ''
        end as BarCode
-      ,c.Brief ClientBrief
+      ,c.Brief + ' ' + o.Invoice ClientBrief
   from tOrders o with (nolock index=ao3)
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
@@ -51,7 +51,7 @@ select o.OrderID
       ,m.Name + ' ' + o.ReplacementDetailNumber
       ,coalesce(p.WeightKGF, o.WeightKG, 0) WeightKGF
       ,o.OrderDetailSubId    as BarCode
-      ,c.Brief ClientBrief
+      ,c.Brief + ' ' + o.Invoice ClientBrief
   from tOrders o with (nolock index=ao3)
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID

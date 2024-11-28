@@ -12,7 +12,8 @@ uses
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniButton,
   cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
   UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
-  uniGridExporters, uStatisticBrand, uStatisticCanceled, math;
+  uniGridExporters, uStatisticBrand, uStatisticCanceled, math,
+  uUniADCheckComboBoxEx;
 
 type
   TStatisticsT = class(TUniFrame)
@@ -31,7 +32,6 @@ type
     qClientBrief: TWideStringField;
     qClientName: TWideStringField;
     dsClient: TDataSource;
-    fClient: TUniCheckComboBox;
     UniLabel3: TUniLabel;
     PageCommon: TUniPageControl;
     TabOrderChart: TUniTabSheet;
@@ -60,22 +60,17 @@ type
     fCancel: TUniBitBtn;
     TabBrand: TUniTabSheet;
     TabCanceled: TUniTabSheet;
+    fClient: TUniADCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure UniButton1Click(Sender: TObject);
-    procedure fClientSelect(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
-    procedure GridStatisticsKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure GridStatisticsKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnExcelExportButtonClick(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
-    procedure TabBrandBeforeFirstActivate(Sender: TObject;
-      var AllowActivate: Boolean);
-    procedure TabCanceledBeforeFirstActivate(Sender: TObject;
-      var AllowActivate: Boolean);
+    procedure TabBrandBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure TabCanceledBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
   private
     { Private declarations }
-    FFilterTextClient: string;
-
     StatisticBrand :TStatisticBrand;
     StatisticCanceled :TStatisticCanceled;
 
@@ -102,23 +97,17 @@ var
 //  AreaChart: IcfsGChartProducer;
   ChartCount: IcfsGChartProducer;
   ChartSum:   IcfsGChartProducer;
-
   Series: TArray<string>;
-
-  max1, max2: integer;
-//var FClient:string;
+  max1: Integer;
+  max2: Integer;
 begin
-//  if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
-//  else
-//    FClient := '';
-
+  max1 := 0;
+  max2 := 0;
 
   qAverageCountOrders.Close;
   qAverageCountOrders.ParamByName('DateBegin').AsDate := edtDateBegin.DateTime;
   qAverageCountOrders.ParamByName('DateEnd').AsDate := edtDateEnd.DateTime;
-
-  qAverageCountOrders.ParamByName('Clients').Value    := FFilterTextClient;
-
+  qAverageCountOrders.ParamByName('Clients').Value    := fClient.SelectedKeys;
   qAverageCountOrders.Open;
 
   ChartCount := TcfsGChartProducer.Create;
@@ -132,10 +121,13 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка')
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)//,
+    //TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка')
     //TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
   ]);
+
+  if fClient.SelCount = 1 then
+    ChartCount.Data.Columns.Add(TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка %'));
 
 
   ChartSum := TcfsGChartProducer.Create;
@@ -154,17 +146,25 @@ begin
   qAverageCountOrders.First;
   while not qAverageCountOrders.eof do
   begin
-    ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
-                            qAverageCountOrders.FieldByName('WorkCount').Value,
-                            qAverageCountOrders.FieldByName('WorkCount').Value,
-                            qAverageCountOrders.FieldByName('CancelCount').Value,
-                            qAverageCountOrders.FieldByName('CancelCount').Value,
-                            0,
-                            qAverageCountOrders.FieldByName('TotalCount').Value,
-                            qAverageCountOrders.FieldByName('Margin').Value  // Наценка
-                         //   qAverageCountOrders.FieldByName('Margin').Value   // Наценка
-                            ]);
-
+    if fClient.SelCount = 1 then
+      ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
+                              qAverageCountOrders.FieldByName('WorkCount').Value,
+                              qAverageCountOrders.FieldByName('WorkCount').Value,
+                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              0,
+                              qAverageCountOrders.FieldByName('TotalCount').Value,
+                              qAverageCountOrders.FieldByName('Margin').Value  // Наценка
+                              ])
+    else
+      ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
+                              qAverageCountOrders.FieldByName('WorkCount').Value,
+                              qAverageCountOrders.FieldByName('WorkCount').Value,
+                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              0,
+                              qAverageCountOrders.FieldByName('TotalCount').Value
+                              ]);
 
     ChartSum.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
@@ -176,14 +176,14 @@ begin
                           ]);
 
     max1 := max(max1, qAverageCountOrders.FieldByName('WorkCount').Value);
-    //max2 := max(max2, qAverageCountOrders.FieldByName('Margin').Value);
+    max2 := max(max2, Trunc(qAverageCountOrders.FieldByName('Margin').Value));
 
     qAverageCountOrders.Next;
   end;
 
 
-  max1 := max1+50;
- //max2 := max2+5;
+  max1 := max1 + IfThen(max1>1000, 50, 10);
+  max1 := max1 + IfThen(max1>10, 2, 1);
 
 // Г1
   with ChartCount do
@@ -192,10 +192,9 @@ begin
     Options.Title('Количество заказов по дням за период');
     Options.IsStacked(True);
 
-  //  Options.SeriesType('bars');
     Options.hAxis('minValue', 0);
 
-    SetLength(Series, 4);
+    SetLength(Series, IfThen(fClient.SelCount = 1, 4, 3));
 
     Series[0] := 'annotations: {    '+
                  '  stem: {         '+
@@ -221,14 +220,28 @@ begin
 
 
     Options.hAxis('title', 'Дни');
-    Options.Series([
-     '0: {type: "bars", targetAxisIndex: 0}',
-     '1: {type: "bars", targetAxisIndex: 0}',
-     '2: {type: "bars" ,targetAxisIndex: 0}',
-     '3: {type: "line", targetAxisIndex: 1}' ]);
-    Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString,
-                   'title: "Наценка" ']);
-//    Options.vAxis('title', 'Заказы (Количество)');
+
+    if fClient.SelCount = 1 then
+    begin
+      Options.Series([
+       '0: {type: "bars", targetAxisIndex: 0}',
+       '1: {type: "bars", targetAxisIndex: 0}',
+       '2: {type: "bars", targetAxisIndex: 0}',
+       '3: {type: "line", targetAxisIndex: 1}'
+      ]);
+
+      Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString,
+                     'title: "Наценка %" , maxValue: ' +  max2.ToString])
+    end
+    else
+    begin
+      Options.Series([
+       '0: {type: "bars", targetAxisIndex: 0}',
+       '1: {type: "bars", targetAxisIndex: 0}',
+       '2: {type: "bars", targetAxisIndex: 0}'
+      ]);
+      Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString])
+    end;
   end;
 
 // Г2
@@ -283,28 +296,6 @@ begin
   cbCancel.ItemIndex:= 0;
   HideMask;
   UniSession.Synchronize;
-end;
-
-procedure TStatisticsT.fClientSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextClient := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextClient := s;
 end;
 
 procedure TStatisticsT.FilterClientsCreate;

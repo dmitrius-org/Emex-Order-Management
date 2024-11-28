@@ -408,7 +408,8 @@ object BalanceTotalT: TBalanceTotalT
       ''
       ''
       'select * '
-      '  from vBalanceTotal')
+      '  from vBalanceTotal'
+      ' order by StatusID  ')
     Left = 592
     Top = 162
     ParamData = <

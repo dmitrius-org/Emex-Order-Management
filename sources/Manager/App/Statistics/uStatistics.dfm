@@ -82,55 +82,14 @@ object StatisticsT: TStatisticsT
           TabOrder = 4
         end
         object UniButton1: TUniButton
-          Left = 483
-          Top = 33
+          Left = 496
+          Top = 34
           Width = 75
           Height = 25
           Hint = ''
           Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
           TabOrder = 5
           OnClick = UniButton1Click
-        end
-        object fClient: TUniCheckComboBox
-          Left = 281
-          Top = 34
-          Width = 196
-          Hint = ''
-          ShowHint = True
-          ParentShowHint = False
-          Text = ''
-          TabOrder = 6
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          EmptyText = #1050#1083#1080#1077#1085#1090
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-            end>
-          HideTrigger = True
-          HideDefaultTrigger = False
-          IconItems = <>
-          OnSelect = fClientSelect
         end
         object UniLabel3: TUniLabel
           Left = 281
@@ -141,7 +100,23 @@ object StatisticsT: TStatisticsT
           ShowHint = True
           ParentShowHint = False
           Caption = #1050#1083#1080#1077#1085#1090':'
+          TabOrder = 6
+        end
+        object fClient: TUniADCheckComboBox
+          Left = 281
+          Top = 34
+          Width = 209
+          Hint = ''
+          ShowSearch = True
+          Text = ''
           TabOrder = 7
+          ClientEvents.ExtEvents.Strings = (
+            ''
+            
+              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+              'oxSearch(sender, "id", "val");'#13#10'}')
+          ClearButton = True
+          IconItems = <>
         end
       end
       object UniPanel2: TUniPanel
