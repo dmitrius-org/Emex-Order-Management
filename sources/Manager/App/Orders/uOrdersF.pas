@@ -643,6 +643,7 @@ begin
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.OrderUniqueCount
+             ,v.DeliveryTermToCustomer
              ,isnull((select count(*)
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
@@ -668,7 +669,7 @@ begin
   FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
-  FMargin            := UniMainModule.Query.FieldByName('Margin').Value;
+  FMargin            := UniMainModule.Query.FieldByName('Margin').AsFloat;
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
@@ -694,6 +695,7 @@ begin
   edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
   edtDelivery.Text   := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
   edtDelivery.Hint   := 'Плановая дата поступления поставщику: ' + UniMainModule.Query.FieldByName('DeliveryPlanDateSupplier').AsString;
+  edtDeliveryClient.Text :=  UniMainModule.Query.FieldByName('DeliveryTermToCustomer').AsString;
 
   FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
   //
@@ -869,7 +871,7 @@ begin
 
   if sql.Q.RecordCount>0 then
   begin
-    FPrice2            := sql.q.FieldByName('Price').Value;
+    FPrice2            := sql.q.FieldByName('Price').asfloat;
     FMarginF2          := sql.q.FieldByName('MarginF').AsFloat;
     FIncome2           := sql.q.FieldByName('IncomePrc').AsFloat;
     FProfin2           := sql.q.FieldByName('Profit').AsFloat;

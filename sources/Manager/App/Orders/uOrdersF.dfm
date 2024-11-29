@@ -876,7 +876,6 @@ object OrderF: TOrderF
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Margin = '8px 0px 0px 0px'
           LayoutConfig.DockWhenAligned = False
-          ExplicitLeft = 27
         end
         object edtReliability2: TUniHTMLFrame
           Left = 0

@@ -183,7 +183,7 @@ begin
 
 
   max1 := max1 + IfThen(max1>1000, 50, 10);
-  max1 := max1 + IfThen(max1>10, 2, 1);
+  max2 := max2 + IfThen(max2>10, 2, 1);
 
 // Г1
   with ChartCount do
@@ -412,7 +412,7 @@ begin
   {$IFDEF Debug}
      edtDateBegin.DateTime := IncDay(now(), -10);
   {$ELSE}
-     PageCommon.ActivePage := TabBrand;
+     PageCommon.ActivePage := TabOrderChart;
 
      edtDateBegin.DateTime := IncDay(now(), -7);
   {$ENDIF}

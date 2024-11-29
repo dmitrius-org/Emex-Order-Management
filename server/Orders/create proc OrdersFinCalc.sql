@@ -48,7 +48,7 @@ begin
         ,o.OrderID
         ,o.OrderDate
         ,o.Price                  -- цена продажи в рублях
-        ,isnull(nullif(o.PricePurchaseF, 0), o.PricePurchase) -- цена закупки в долларах
+        ,coalesce(nullif(o.PricePurchaseF, 0), o.ReplacementPrice, o.PricePurchase) -- цена закупки в долларах
         ,isnull(o.WeightKG,  0)
         ,isnull(o.VolumeKG , 0)
         ,isnull(p.WeightKGF, 0)
@@ -215,7 +215,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20240628', '3'
+exec setOV 'OrdersFinCalc', 'P', '20241128', '4'
 go
  
  

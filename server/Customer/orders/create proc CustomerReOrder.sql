@@ -96,8 +96,8 @@ as
         ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
         ,t.DeliveryRestToCustomer = 0 -- Остаток срока до поставки клиенту
         ,t.DaysInWork             = 0
-        --,t.de
 
+         -- параметры расчета себестоимости
         ,t.PercentSupped          = p.PercentSupped 
         ,t.Margin                 = p.Margin
         ,t.Discount               = p.Discount
@@ -105,7 +105,6 @@ as
         ,t.ExtraKurs              = p.ExtraKurs
         ,t.Commission             = p.Commission
         ,t.Reliability            = p.Reliability
-        ,t.Fragile                = t.Fragile 
 
         ,t.DeliveredDateToSupplier = null
         ,t.DeliveryPlanDateSupplier= null
@@ -115,7 +114,7 @@ as
         ,t.DeliveryNextDate        = null
         ,t.DeliveryNextDate2       = null
 
-        ,t.ReplacementMakeLogo       = null
+        ,t.ReplacementMakeLogo     = null
         ,t.ReplacementDetailNumber = null
         ,t.ReplacementPrice        = null
         ,t.PriceID                 = isnull(pp.PriceID, t.PriceID)
@@ -201,6 +200,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20241124', '2'
+exec setOV 'CustomerReOrder', 'P', '20241128', '3'
 go
  

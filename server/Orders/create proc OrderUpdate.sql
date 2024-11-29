@@ -14,11 +14,11 @@ create proc OrderUpdate
               ,@NoAir                   bit           = null 
               
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
-              ,@Comment                 nvarchar(1024)= null
+              ,@Comment                 nvarchar(1024)= null 
               ,@TargetStateID           numeric(18,0) = null
 
               ,@Price                   nvarchar(64)  = null -- Прайс
-              ,@MakeLogo                nvarchar(20)  = null -- посмотреть что сюда приходит !!!
+              ,@MakeLogo                nvarchar(20)  = null -- Код производителя
               ,@ReplacementPrice        float         = null -- новая цена              
               
 as
@@ -55,24 +55,34 @@ as
                                                  end
         ,t.ReplacementPrice= case  
 		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
-							   else null
+							   else t.ReplacementPrice
                              end
-        ,t.PercentSupped   = case  
-		                       when t.PriceLogo <> nullif(@Price, '') then isnull((   select top 1 
-                                                                                              p.PercentSupped
-                                                                                         from pFindByNumber p with (nolock index= ao3)
-                                                                                        where p.spid      = @@spid
-                                                                                          and p.Make      = t.MakeLogo
-                                                                                          and p.DetailNum = t.DetailNumber
-                                                                                          and p.PriceLogo = @Price
-                                                                                        order by p.PercentSupped desc), t.PercentSupped) 
-							   else t.PercentSupped
-                             end
-        --,t.Comment         = @Comment     
+        --,t.PercentSupped   = case  
+		      --                 when t.PriceLogo <> nullif(@Price, '') then isnull(p.PercentSupped, t.PercentSupped) 
+							 --  else t.PercentSupped
+        --                     end 
         ,t.DetailName      = nullif(@DetailNameF, '')
+
+         -- параметры расчета себестоимости 
+        ,t.PercentSupped          = p.PercentSupped 
+        --,t.Margin                 = p.Margin
+        --,t.Discount               = p.Discount
+        --,t.Kurs                   = p.Kurs
+        --,t.ExtraKurs              = p.ExtraKurs
+        --,t.Commission             = p.Commission
+        --,t.Reliability            = p.Reliability
+
 	from tOrders t (updlock)
+   cross apply ( select top 1 *
+                   from pFindByNumber p with (nolock index=ao3)
+                  where p.Spid = @@spid
+                    and p.Make      = @MakeLogo
+                    and p.DetailNum = t.DetailNumber
+                    and p.PriceLogo = @Price
+                ) as p
    where t.OrderID = @OrderID
 
+  -- сохранение данных на позиции/детали
   update p
      set p.DetailNameF	   = nullif(@DetailNameF, '')
         ,p.WeightKGF	   = case 
@@ -87,9 +97,9 @@ as
                                when @NoAir = 1 then 'NOAIR'
                                else null
                              end
-         ,Fragile          = nullif(@Fragile, 0)
-         
-   OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
+        ,p.Fragile          = nullif(@Fragile, 0)
+        
+  OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
 	from tOrders t (nolock)
    inner join tPrice p (updlock)
            on p.DetailNum = t.DetailNumber
@@ -97,20 +107,17 @@ as
    where t.OrderID       = @OrderID
 
   -- расчет финнасовых показателей
-  delete pOrdersFinIn from pOrdersFinIn (rowlock) where spid = @@Spid
-  insert pOrdersFinIn
+  delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
+  insert pOrdersFinIn with (rowlock) 
         (Spid, OrderID)
-  Select @@spid, t.OrderID
-    from @PriceID p     
-   inner join tOrders t (nolock)
-           on t.PriceID = p.PriceID
+  Select @@spid, @OrderID
 
   exec OrdersFinCalc @IsSave = 1
 
   if @TargetStateID > 0
   begin
-      delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-      insert pAccrualAction 
+      delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
+      insert pAccrualAction with (rowlock) 
             (Spid,   
              ObjectID,  
              StateID,
@@ -155,6 +162,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20240813', '7'
+exec setOV 'OrderUpdate', 'P', '20241128', '9'
 go
  

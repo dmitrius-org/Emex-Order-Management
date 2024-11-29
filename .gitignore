@@ -80,3 +80,4 @@ Components/
 Connection.ini
 compile.inc
 settings.ini
+*.dproj

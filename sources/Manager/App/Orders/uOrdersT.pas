@@ -590,9 +590,6 @@ begin
   fClient.ClearSelection;
 
   FFilterTextStatus := '';
-  //FFilterTextPriceLogo := '';
-  //FFilterTextClient := '';
-
   fOrderNum.Text := '';
   fDetailNum.Text:='';
 
@@ -1036,7 +1033,7 @@ procedure TOrdersT.QueryPricePurchaseGetText(Sender: TField; var Text: string;
 begin
   if (not QueryReplacementPrice.IsNull) then
   begin
-    Text := '<span>' +FormatFloat('###,##0.00 $', Sender.AsFloat) +  '</span><br><span class="x-replacement-price">&#10149;'+
+    Text := '<span>' +FormatFloat('###,##0.00 $', Sender.Value) +  '</span><br><span class="x-replacement-price">&#10149;'+
             '</span><span class="x-replacement-price">' + FormatFloat('###,##0.00 $', QueryReplacementPrice.Value) + '</span>';
   end
   else
@@ -1451,7 +1448,7 @@ begin
     begin
       // ОБРАБОТКА ОШИБОК
       // проверка наличия серверных ошибок
-      Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+      Sql.Open('select 1 from pAccrualAction (nolock) where Spid = @@spid and Retval <> 0', [], []);
       var ServerErr:integer;
       ServerErr := Sql.Q.RecordCount;
 
