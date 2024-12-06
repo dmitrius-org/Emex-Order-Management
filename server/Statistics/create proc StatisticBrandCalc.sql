@@ -37,7 +37,7 @@ select o.Manufacturer
       ,o.DetailName
       ,sum(o.Quantity) DetailQuantity
       ,Sum(o.Amount)     DetailAmount
-      ,Count(0)          Quantity  
+      ,Count(*)          Quantity  
 from (
       select --o.ClientID
              o.Manufacturer 

@@ -48,7 +48,7 @@ as
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
         ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
-        --,t.DestinationName = isnull(@DestinationLogo, t.DestinationLogo)
+       -- ,t.DestinationName = pd.Name
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
@@ -62,15 +62,15 @@ as
 							 --  else t.PercentSupped
         --                     end 
         ,t.DetailName      = nullif(@DetailNameF, '')
-
+        /*
          -- параметры расчета себестоимости 
         ,t.PercentSupped          = p.PercentSupped 
-        --,t.Margin                 = p.Margin
-        --,t.Discount               = p.Discount
-        --,t.Kurs                   = p.Kurs
-        --,t.ExtraKurs              = p.ExtraKurs
-        --,t.Commission             = p.Commission
-        --,t.Reliability            = p.Reliability
+        ,t.Margin                 = p.Margin
+        ,t.Discount               = p.Discount
+        ,t.Kurs                   = p.Kurs
+        ,t.ExtraKurs              = p.ExtraKurs
+        ,t.Commission             = p.Commission
+        ,t.Reliability            = p.Reliability */
 
 	from tOrders t (updlock)
    cross apply ( select top 1 *
@@ -80,7 +80,18 @@ as
                     and p.DetailNum = t.DetailNumber
                     and p.PriceLogo = @Price
                 ) as p
-   where t.OrderID = @OrderID
+/*
+   inner join tClients c with (nolock index=PK_tClients_ClientID)
+           on c.ClientID = t.ClientID 
+   inner join tSuppliers s with (nolock index=ao1)
+           on S.SuppliersID = c.SuppliersID
+   inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+           on pd.SuppliersID     = s.SuppliersID
+          and pd.DestinationLogo = @DestinationLogo  
+   inner join tProfilesCustomer pc with (nolock index=ao2)
+           on pc.ClientID           = c.ClientID
+          and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+   where t.OrderID = @OrderID*/
 
   -- сохранение данных на позиции/детали
   update p
@@ -104,7 +115,7 @@ as
    inner join tPrice p (updlock)
            on p.DetailNum = t.DetailNumber
 		  and p.MakeLogo  = t.MakeLogo -- производитель
-   where t.OrderID       = @OrderID
+   where t.OrderID = @OrderID
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
@@ -112,7 +123,8 @@ as
         (Spid, OrderID)
   Select @@spid, @OrderID
 
-  exec OrdersFinCalc @IsSave = 1
+  exec OrdersFinCalc 
+         @IsSave         = 1
 
   if @TargetStateID > 0
   begin
@@ -162,6 +174,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20241128', '9'
+exec setOV 'OrderUpdate', 'P', '20241206', '9'
 go
  

@@ -77,6 +77,7 @@ SELECT p.[AuditID]     ProtocolID
          on u.UserID = p.UserID
  where p.ActionID in ( 2 -- acUpdate
                       ,28--	acCancelRequest
+                      ,29--	acCancelConfirm
                      )
    and p.ObjectTypeID = 3
  union all
@@ -103,5 +104,5 @@ SELECT p.[AuditID]     ProtocolID
 go
 grant all on vProtocolSelect to public
 go
-exec setOV 'vProtocolSelect', 'V', '20240916', '4'
+exec setOV 'vProtocolSelect', 'V', '20240916', '5'
 go

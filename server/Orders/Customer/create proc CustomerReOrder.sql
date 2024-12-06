@@ -74,13 +74,14 @@ as
         ,t.PricePurchase          = p.Price
         ,t.AmountPurchase         = p.Price * t.Quantity
         ,t.AmountPurchaseF        = null
+        ,t.PricePurchaseF         = null
         ,t.MakeLogo               = p.Make
         ,t.PriceLogo              = p.PriceLogo
         ,t.CustomerPriceLogo      = p.PriceLogo
         ,t.PriceLogoOrg           = p.PriceLogo
         ,t.isCancel               = 0
         ,t.Flag                   = (isnull(t.Flag, 0) & ~4) 
-                                               | 8192 /*Перезаказан*/
+                                                     | 8192 /*Перезаказан*/
         ,t.OrderDate              = cast(getdate() as date)
         ,t.BasketId               = null
         ,t.EmexOrderID            = null
@@ -101,10 +102,11 @@ as
         ,t.PercentSupped          = p.PercentSupped 
         ,t.Margin                 = p.Margin
         ,t.Discount               = p.Discount
-        ,t.Kurs                   = p.Kurs
-        ,t.ExtraKurs              = p.ExtraKurs
         ,t.Commission             = p.Commission
         ,t.Reliability            = p.Reliability
+
+       -- ,t.Kurs                   = p.Kurs     --сохраняем в OrdersFinCalc
+       -- ,t.ExtraKurs              = p.ExtraKurs--сохраняем в OrdersFinCalc
 
         ,t.DeliveredDateToSupplier = null
         ,t.DeliveryPlanDateSupplier= null
@@ -158,14 +160,19 @@ as
          NewStateID,
          ActionID,
          OperDate,
-         Message)
+         Message,
+         Flag,
+         sgn -- признак для понимания где сделали insert
+         )
   select @@Spid, 
          o.OrderID, 
          o.StatusID, 
          1,--New
          18,--ToReNew
          cast(getdate() as date),
-         'Перезаказан'
+         'Перезаказано клиентом',
+         1,
+         9
     from tOrders o with (nolock index=ao1) 
    where o.OrderID = @OrderID
   
@@ -200,6 +207,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20241128', '3'
+exec setOV 'CustomerReOrder', 'P', '20241206', '4'
 go
  

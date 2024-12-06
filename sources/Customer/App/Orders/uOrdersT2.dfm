@@ -1,4 +1,4 @@
-object OrdersT2: TOrdersT2
+﻿object OrdersT2: TOrdersT2
   Left = 0
   Top = 0
   Width = 1735
@@ -1191,9 +1191,9 @@ object OrdersT2: TOrdersT2
       ImageIndex = 3
       OnExecute = actShowMessageExecute
     end
-    object actIsCancelApproval: TAction
+    object actCancelСonfirm: TAction
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1086#1090#1082#1072#1079
-      OnExecute = actIsCancelApprovalExecute
+      OnExecute = actCancelСonfirmExecute
     end
     object actReOrder: TAction
       Caption = #1055#1077#1088#1077#1079#1072#1082#1072#1079#1072#1090#1100
@@ -2591,7 +2591,7 @@ object OrdersT2: TOrdersT2
       Action = actReOrder
     end
     object N1: TUniMenuItem
-      Action = actIsCancelApproval
+      Action = actCancelСonfirm
     end
   end
 end

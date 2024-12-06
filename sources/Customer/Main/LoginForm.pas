@@ -46,7 +46,7 @@ end;
 
 procedure TLoginF.btnOkClick(Sender: TObject);
 begin
-  if UniMainModule.dbUserAuthorization(edtUser.Text, edtPassword.Text) then
+  if UniMainModule.CustomerAuthorization(edtUser.Text, edtPassword.Text) then
   begin
     if UniCheckBox1.Checked then
       begin

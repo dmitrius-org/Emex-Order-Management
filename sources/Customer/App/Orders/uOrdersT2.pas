@@ -16,36 +16,10 @@ uses
   uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
   System.Generics.Collections, System.MaskUtils, uniDateTimePicker,
-  uUniDateRangePicker, uConstant, uToast, uReOrderF;
+  uUniDateRangePicker, uConstant, uToast, uReOrderF, uUtils.Mark;
 
 
 type
-  tMarks = class
-  private
-    FConnection: TFDConnection;
-    FQuery: TFDQuery;
-    FGrid: TUniDBGrid;
-    FMarks: TDictionary <Integer, Integer>;
-
-
-
-    procedure DeleteInDB();
-    function GetCount: Integer;
-  public
-    constructor Create(AGrid: TUniDBGrid);
-    destructor Destroy; override;
-
-    procedure Select();
-    procedure Clear();
-
-    function IsSelected(AID: Integer): Boolean;
-
-    procedure Load();
-    procedure DataRefresh();
-
-    property Count: Integer read GetCount;
-  end;
-
 
   TOrdersT2 = class(TUniFrame)
     Query: TFDQuery;
@@ -135,7 +109,7 @@ type
     fOrderDate: TUniDateRangePicker;
     btnNotification: TUniBitBtn;
     ppMain: TUniPopupMenu;
-    actIsCancelApproval: TAction;
+    actCancelСonfirm: TAction;
     N1: TUniMenuItem;
     actReOrder: TAction;
     N2: TUniMenuItem;
@@ -172,7 +146,7 @@ type
       ButtonId: Integer);
     procedure btnNotificationClick(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
-    procedure actIsCancelApprovalExecute(Sender: TObject);
+    procedure actCancelСonfirmExecute(Sender: TObject);
     procedure actReOrderExecute(Sender: TObject);
   private
     { Private declarations }
@@ -212,17 +186,21 @@ type
 
     procedure SetNotificationIcon();
 
+    /// <summary>
+    /// SetNotificationCount - количество уведомлений
+    /// </summary>
     procedure SetNotificationCount();
 
     /// <summary>
-    /// IsCancelApproval -подтверждение отказа от заказа
+    /// CancelConfirm -подтверждение отказа от заказа
     /// </summary>
-    procedure IsCancelApproval();
+    procedure CancelConfirm();
 
     /// <summary>
-    ///  ReOrderCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  ReOrderCallBack - CallBack постобработчик действия на форме редактирования данных
     ///</summary>
     procedure ReOrderCallBack(Sender: TComponent; AResult:Integer);
+
     procedure OrdersFCallBack;
 
   public
@@ -234,6 +212,7 @@ type
     procedure GridRefresh;
 
     procedure SetMenuVisible(AVisible: boolean);overload;
+
     procedure SetMenuVisible(); overload;
   end;
 
@@ -264,7 +243,10 @@ procedure TOrdersT2.CancelRequest;
 begin
   logger.Info('actCancelRequestExecute:') ;
 
+  Marks.SaveMarksToDB;
+
   Sql.Exec(' exec CustomerOrderCancelRequest  ', [], []);
+
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
@@ -309,13 +291,13 @@ begin
   GridRefresh();
 end;
 
-procedure TOrdersT2.actIsCancelApprovalExecute(Sender: TObject);
+procedure TOrdersT2.actCancelСonfirmExecute(Sender: TObject);
 begin
   MessageDlg('Вы действительно подтверждаете отказ?' , mtConfirmation, mbYesNo,
   procedure(Sender: TComponent; Res: Integer)
   begin
     case Res of
-      mrYes : IsCancelApproval;
+      mrYes : CancelConfirm;
       mrNo  : Exit;
     end;
   end);
@@ -563,6 +545,8 @@ begin
   Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
   Query.Open();
 
+
+  SetNotificationCount;
   logger.Info('GridOpen End');
 end;
 
@@ -571,19 +555,15 @@ begin
   Marks.Select;
 end;
 
-procedure TOrdersT2.IsCancelApproval;
+procedure TOrdersT2.CancelConfirm;
 begin
-  Sql.Exec('''
-           exec IsCancelApproval
-                  @OrderID = :OrderID
-           ''',
-          ['OrderID'],
-          [QueryOrderID.AsLargeInt]);
+  Marks.SaveMarksToDB;
+
+  Sql.Exec(' exec CancelConfirm ');
 
   ToastOK ('Успешно выполнено!', unisession);
 
-  Query.Delete ;
-  Grid.RefreshCurrentRow();
+  Marks.DataRefresh(True);
 
   SetNotificationCount;
 end;
@@ -601,24 +581,42 @@ begin
     end;
 end;
 
+procedure TOrdersT2.ReOrderCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then
+    Exit;
+
+  try
+    if ReOrder.FormAction = acUpdate then
+    begin
+
+      if ReOrder.IsCounter then
+        GridRefresh
+      else
+      begin
+        Marks.DataRefresh(True);
+       // Query.Delete;
+       // Grid.RefreshCurrentRow();
+      end;
+
+      SetNotificationCount;
+    end;
+  except
+    on E: Exception do
+      logger.Info('TOrdersT2.ReOrderCallBack Ошибка: ' + e.Message);
+  end;
+end;
+
 procedure TOrdersT2.ppMainPopup(Sender: TObject);
 begin
-//  actProtocol.Visible := Query.RecordCount>0;
-//
-//  actShowMessage.Visible:= (Query.RecordCount>0 ) and
-//                          ((Query.FieldByName('Flag').AsInteger and 32) = 32);
-//
-  actIsCancelApproval.Visible:= (Query.RecordCount>0 ) and
-                                (Query.FieldByName('IsCancel').AsBoolean);
-
-//
-  actReOrder.Visible:= (Query.RecordCount>0 ) and
-                       (Query.FieldByName('IsCancel').AsBoolean);
+  begin
+    actCancelСonfirm.Enabled:= (Marks.Count>0 ) and
+                               (Query.FieldByName('IsCancel').AsBoolean);
 
 
-
-                       //           and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
-       // and o.[Flag] & 8192 /*Перезаказан*/= 0
+    actReOrder.Enabled:= (Marks.Count>0 ) and
+                         (Query.FieldByName('IsCancel').AsBoolean);
+  end;
 end;
 
 procedure TOrdersT2.QueryDeliveryDateToCustomerGetText(Sender: TField;
@@ -690,25 +688,6 @@ begin
   end
   else
     Text := Sender.AsString;
-end;
-
-procedure TOrdersT2.ReOrderCallBack(Sender: TComponent; AResult: Integer);
-begin
-  if AResult <> mrOK then
-    Exit;
-
-  try
-    if ReOrder.FormAction = acUpdate then
-    begin
-      Query.RefreshRecord(False) ;
-      Grid.RefreshCurrentRow();
-
-      SetNotificationCount;
-    end;
-  except
-    on E: Exception do
-      logger.Info('TOrdersT2.ReOrderCallBack Ошибка: ' + e.Message);
-  end;
 end;
 
 procedure TOrdersT2.GetNotificationOrders;
@@ -830,7 +809,8 @@ procedure TOrdersT2.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer)
 begin
   ACurrColumn := Column;
 
-  ppMain.Popup(X, Y, Column.Grid);
+  if FIsNotification then
+    ppMain.Popup(X, Y, Column.Grid);
 end;
 
 procedure TOrdersT2.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
@@ -962,7 +942,6 @@ begin
 
   UniSession.AddJS('Ext.getCmp("' + N2.JSId + '").addCls("menu-item-ok");');
   UniSession.AddJS('Ext.getCmp("' + N1.JSId + '").addCls("menu-item-cancel");');
-
 end;
 
 procedure TOrdersT2.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -976,109 +955,6 @@ begin
   end;
 end;
 
-{ tMarks }
-constructor tMarks.Create(AGrid: TUniDBGrid);
-begin
-  if Assigned(AGrid) then
-  begin
-    FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
-    FQuery := TFDQuery.Create(nil);
-    FQuery.Connection := FConnection;
-    FGrid := AGrid;
-  end;
-  FMarks := TDictionary <integer, integer>.Create();
-end;
-
-procedure tMarks.DataRefresh;
-var Key: Integer;
-    BM : TBookmark;
-begin
-  FGrid.DataSource.DataSet.DisableControls;
-  BM := FGrid.DataSource.DataSet.GetBookmark;
-  try
-    for Key in Marks.FMarks.Keys  do
-    begin
-      if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
-      begin
-        tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-        FGrid.RefreshCurrentRow();
-      end;
-    end;
-  finally
-    FGrid.DataSource.DataSet.GotoBookmark(BM);
-    FGrid.DataSource.DataSet.FreeBookmark(BM);
-    FGrid.DataSource.DataSet.EnableControls;
-  end;
-end;
-
-procedure tMarks.DeleteInDB();
-begin
-  Sql.Exec('Delete tMarks from tMarks with (rowlock index=pk_tMarks) where Spid=@@Spid', [], [])
-end;
-
-procedure tMarks.Clear;
-begin
-  DeleteInDB();
-  FMarks.Clear;
-end;
-
-destructor tMarks.Destroy;
-begin
-  FMarks.Free;
-  inherited;
-end;
-
-function tMarks.GetCount: Integer;
-begin
-  Result := FMarks.Count;
-end;
-
-function tMarks.IsSelected(AID: Integer):Boolean;
-begin
-  Result := FMarks.ContainsKey(AID);
-end;
-
-procedure tMarks.Load;
-begin
-end;
-
-procedure tMarks.Select();
-var i, id:Integer;
-    SqlText: string;
-    BM : TBookmark;
-begin
-  logger.Info('tMarks.Select Begin');
-
-  SqlText:='';
-  Clear;
-
-  if FGrid.SelectedRows.Count>0 then
-  begin
-    BM := FGrid.DataSource.DataSet.GetBookmark;
-
-    try
-      for I := 0 to FGrid.SelectedRows.Count - 1 do
-      begin
-        FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
-        id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
-        FMarks.Add(id, id);
-        if i = 0 then
-          SqlText:= SqlText + ' Insert into tMarks (Spid, Type, ID) select @@Spid, 3, '
-        else
-          SqlText:= SqlText + ' Union all select @@Spid, 3, ';
-
-        SqlText:= SqlText + id.ToString;
-      end;
-      if SqlText <> '' then Sql.Exec(SqlText ,[], []);
-
-    finally
-      FGrid.DataSource.DataSet.GotoBookmark(BM);
-      FGrid.DataSource.DataSet.FreeBookmark(BM);
-    end;
-
-  end;
-  logger.Info('tMarks.Select End');
-end;
 
 initialization
   RegisterClass(TOrdersT2);

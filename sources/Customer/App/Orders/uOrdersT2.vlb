@@ -218,9 +218,6 @@ Coordinates=175,10,142,58
 [QueryWeightKGF]
 Coordinates=701,1135,116,36
 
-[actIsCancelApproval]
-Coordinates=562,1135,133,36
-
 [QueryReplacementManufacturer]
 Coordinates=1062,1,201,36
 
@@ -280,4 +277,7 @@ Coordinates=1062,606,57,36
 
 []
 Coordinates=1062,661,91,36
+
+[actCancelСonfirm]
+Coordinates=562,1135,133,36
 

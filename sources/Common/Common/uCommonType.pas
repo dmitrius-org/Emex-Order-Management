@@ -135,7 +135,7 @@ Type
   ,agError = 1
   );
 
-  /// <summary> Типы для обработки ошибок </summary>
+  /// <summary> Тип для обработки ошибок </summary>
   TRetVal = class
   private
     var FCode: Integer;

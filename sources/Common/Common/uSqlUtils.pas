@@ -26,7 +26,7 @@ Type
     constructor Create(AConnection: TFDConnection);
     destructor Destroy; override;
 
-    function Q():TFDQuery;
+    property Count: integer read GetCount;
 
     /// <summary>
     /// Возвращает результат запроса переданного в параметре ASqlText
@@ -61,16 +61,12 @@ Type
     function GetSetting(ASetting: String; ADefValue: Boolean): Boolean; overload;
     function GetSetting(ASetting: String; ADefValue: Integer): Integer; overload;
 
-
-    property Count: integer read GetCount;
+    function Q():TFDQuery;
+    function F(const FieldName: string): TField;
   end;
 
 
 implementation
-
-uses
-  uLogger;
-
 
 { TSql }
 
@@ -139,7 +135,8 @@ begin
   FQueryTMP.Connection := FConnection;
 
   FQueryTMP.SQL.Text := ASql;
-  Prepare(FQueryTMP, AParams, AArgs);
+  if Length(AParams) > 0 then
+    Prepare(FQueryTMP, AParams, AArgs);
   FQueryTMP.ExecSQL;
   FQueryTMP.Close;
   FreeAndNil(FQueryTMP);
@@ -159,14 +156,10 @@ begin
   FQueryTMP.SQL.Text := ASql;
   Prepare(FQueryTMP, AParams, AArgs);
 
+  // Асинхронное выполнение запроса
   TTask.Run(procedure
-  var
-      I: Integer;
   begin
     try
-      // Асинхронное выполнение запроса
-      //FQueryTMP.ResourceOptions.CmdExecMode := amAsync;
-      //FQueryTMP.AsyncExec := True;
       FQueryTMP.ExecSQL;
     finally
       FQueryTMP.Free;
@@ -175,10 +168,18 @@ begin
   end).Start;
 end;
 
+function TSql.F(const FieldName: string): TField;
+begin
+  if not Assigned(FQuery) then
+    raise Exception.Create('No active query to fetch field from.');
+  Result := FQuery.FieldByName(FieldName);
+end;
+
 procedure TSql.Open(AQuery: TFDQuery; AParams: array of string; AArgs: array of variant);
 begin
   AQuery.Close;
-  Prepare(AQuery, AParams, AArgs);
+  if Length(AParams) > 0 then
+    Prepare(AQuery, AParams, AArgs);
   AQuery.Open;
 end;
 
@@ -196,11 +197,7 @@ begin
   begin
     if AArgs[i] = null then
     begin
-      with AQuery.ParamByName(AParams[i]) do
-      begin
-        DataType := ftString;
-        Clear;
-      end;
+      AQuery.ParamByName(AParams[I]).Clear;
     end
     else
       AQuery.ParamByName(AParams[i]).Value := AArgs[i];
@@ -214,7 +211,10 @@ end;
 
 function TSql.GetCount: integer;
 begin
-  result:= q.RecordCount;
+  if Assigned(FQuery) then
+    Result := FQuery.RecordCount
+  else
+    Result := 0;
 end;
 
 procedure TSql.SetConnection(const Value: TFDConnection);

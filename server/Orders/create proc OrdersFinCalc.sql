@@ -14,19 +14,19 @@ if OBJECT_ID('OrdersFinCalc') is not null
 */
 go
 create proc OrdersFinCalc
-              @IsSave   bit =  null,
-              @IsFilled bit =  null
+              @IsSave       bit =  null,
+              @IsFilled     bit =  null
              
 as
 declare @r int = 0
 
-select @IsFilled = isnull(@IsFilled, 0)
-
+select @IsFilled     = isnull(@IsFilled, 0)
 
 if @IsFilled  = 0
 begin
   delete pOrdersFin from pOrdersFin (rowlock) where spid = @@Spid
-  insert pOrdersFin
+
+  insert pOrdersFin with (rowlock) -- Данные с заказа
         (Spid
         ,OrderID
         ,OrderDate
@@ -53,7 +53,7 @@ begin
         ,isnull(o.VolumeKG , 0)
         ,isnull(p.WeightKGF, 0)
         ,isnull(p.VolumeKGF, 0)
-        ,isnull(o.Taxes, c.Taxes) -- Комиссия + Налоги
+        ,isnull(o.Taxes, c.Taxes)            -- Комиссия + Налоги
         ,isnull(o.Commission, 0)/100         -- Комиссия за оплату  Comission ExtraKurs
         ,isnull(o.Margin, 0)/100             -- Наценка             Margin
         ,isnull(o.ExtraKurs, 0)/100          -- Комиссия на курс    ExtraKurs
@@ -82,7 +82,6 @@ Update p
   		          and OnDate <= p.OrderDate
   		        order by OnDate desc) c
  where p.Spid = @@Spid
-
  
 Update p -- Закупка c комиссией	
    set p.Purchase = p.PricePurchase + (p.PricePurchase*p.Commission)
@@ -112,24 +111,6 @@ Update pOrdersFin --
  where Spid = @@Spid
 
 --Доставка vkg с комиссией Факт
-/*
-=IF((If(  OR(t.Orders.VolumeKGF=0,t.Orders.VolumeKGF=""),
-         (if( t.Orders.VolumeKG>t.Orders.WeightKGF, t.Orders.VolumeKG-t.Orders.WeightKG, 0 )),
-		 (t.Orders.VolumeKGF-(if( t.Orders.WeightKGF="", t.Orders.WeightKG, t.Orders.WeightKGF )))
-	   ) *
-		 
-		 (t.ProfilesDelivery.VolumeKGF+(t.ProfilesDelivery.VolumeKGF*t.ProfilesCustomer.Comission))
-        )<=0, 
-
-		 0,
-
-		 If(OR(t.Orders.VolumeKGF=0,t.Orders.VolumeKGF=""),
-		     (if(t.Orders.VolumeKG>t.Orders.WeightKGF,t.Orders.VolumeKG-t.Orders.WeightKG,0)),
-		     (t.Orders.VolumeKGF-(if(t.Orders.WeightKGF="",t.Orders.WeightKG,t.Orders.WeightKGF)))
-		   ) *
-		   
-		   (t.ProfilesDelivery.VolumeKGF+(t.ProfilesDelivery.VolumeKGF*t.ProfilesCustomer.Comission))
-	)*/
 Update pOrdersFin --
    set DeliveryvkgF = case 
                        when isnull(VolumeKGF, 0) = 0
@@ -200,6 +181,9 @@ begin
 		,o.IncomePrc        = p.IncomePrc  -- доход в процентах
         ,o.Profit           = p.Profit     -- Рентабельность
         ,o.CommissionAmount = isnull(o.CommissionAmount, p.PriceCommission) -- Комиссия от продажи
+
+        ,o.Kurs             = p.Course
+        ,o.ExtraKurs        = p.ExtraKurs
     from pOrdersFin p (nolock)
    inner join tOrders o with (updlock)
            on o.OrderID = p.OrderID
@@ -215,7 +199,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20241128', '4'
+exec setOV 'OrdersFinCalc', 'P', '20241206', '5'
 go
  
  

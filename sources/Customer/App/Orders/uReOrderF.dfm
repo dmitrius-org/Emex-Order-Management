@@ -41,6 +41,7 @@ object ReOrder: TReOrder
     ParentShowHint = False
     Text = ''
     Anchors = [akLeft, akTop, akRight]
+    ParentFont = False
     TabOrder = 1
     AnyMatch = True
     IconItems = <>
@@ -148,7 +149,7 @@ object ReOrder: TReOrder
     Top = 92
   end
   object UniActionList1: TUniActionList
-    Left = 414
+    Left = 310
     Top = 89
     object actRefreshFormData: TAction
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -162,8 +163,8 @@ object ReOrder: TReOrder
     end
   end
   object UniNativeImageList1: TUniNativeImageList
-    Left = 477
-    Top = 81
+    Left = 389
+    Top = 89
     Images = {
       02000000FFFFFF1F061400000063616C656E6461722D636865636B2D6F3B6661
       3BFFFFFF1F060B000000726566726573683B66613B}

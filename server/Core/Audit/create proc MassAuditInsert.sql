@@ -1,7 +1,7 @@
 if OBJECT_ID('MassAuditInsert') is not null
     drop proc MassAuditInsert
 /*
-  MassAuditInsert - массовое добавление аудита по заказам
+  MassAuditInsert - РјР°СЃСЃРѕРІРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ Р°СѓРґРёС‚Р° РїРѕ Р·Р°РєР°Р·Р°Рј
 */
 go
 create proc MassAuditInsert
@@ -18,7 +18,7 @@ as
  BEGIN TRY 
     delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
     --Begin tran
-    insert into tAudit
+    insert into tAudit with (rowlock)
           (           
            ObjectID         
           ,ObjectTypeID     
@@ -63,5 +63,5 @@ return @r
 go
 grant exec on MassAuditInsert to public
 go
-exec setOV 'MassAuditInsert', 'P', '20240708', '1'
+exec setOV 'MassAuditInsert', 'P', '20240708', '2'
 go

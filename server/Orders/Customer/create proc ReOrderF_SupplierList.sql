@@ -1,6 +1,6 @@
 drop proc if exists ReOrderF_SupplierList
 /*
-  ReOrderF_SupplierList - Список поставщиков
+  ReOrderF_SupplierList - Список поставщиков для формы перезаказа
 */
 go
 create proc ReOrderF_SupplierList
@@ -9,13 +9,18 @@ create proc ReOrderF_SupplierList
 as
 declare @r int = 0
 
+select p.ID
+      ,p.Name
+from (
+
 Select 
        o.PriceLogo  + '.' +  o.MakeLogo  as ID,
        o.PriceLogo + ' | ' + 
-       convert(varchar, o.Price) + ' руб | ' + 
+       FORMAT(o.Price, '# ##0.00 руб') + ' | ' + 
        convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%'  +' | ' + 
-       convert(varchar(20), o.Quantity) as Name
+       convert(varchar(20), o.Quantity) as Name,
+       o.Price
   from tOrders o (nolock)
  where o.OrderID =@OrderID
    and not exists (select 1
@@ -28,18 +33,20 @@ Select
 select 
        o.PriceLogo  + '.' +  o.MakeLogo  as ID,
        o.PriceLogo + ' | ' + 
-       convert(varchar(20), o.PriceRub) + ' руб | ' +
+       FORMAT(o.PriceRub, '# ##0.00 руб') + ' | ' +  +
        convert(varchar(20), o.OurDelivery) + ' дней  | ' + 
         convert(varchar(20), o.PercentSupped) + '% | ' + 
        case 
          when o.Available = -1 then 'под заказ'
          else cast(o.Available as varchar)
-       end  as Name
-  from vFindByNumber o (nolock)
--- where o.OrderID =@OrderID
- --order by Price
-
-
+       end  as Name,
+       o.PriceRub
+  from tOrders t with (nolock index=ao1)
+ inner join vFindByNumber o (nolock)
+         on o.MakeLogo = t.MakeLogo 
+ where t.OrderID =@OrderID
+) p
+order by p.Price
  --where MakeName        = :MakeName 
  --  and DetailNum       = :DetailNum
  --  and DestinationLogo = :DestinationLogo  
@@ -50,7 +57,7 @@ select
 go
 grant exec on ReOrderF_SupplierList to public
 go
-exec setOV 'ReOrderF_SupplierList', 'P', '20241119', '1'
+exec setOV 'ReOrderF_SupplierList', 'P', '20241206', '2'
 go
 
-exec ReOrderF_SupplierList @OrderID=159911
+exec ReOrderF_SupplierList @OrderID=167044

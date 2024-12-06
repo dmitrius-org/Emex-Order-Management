@@ -1045,7 +1045,7 @@ begin
                 ,PriceCommission -- Комиссия от продажи
                 )
           Select @@spid
-                ,o.OrderDate
+                ,cast(getdate() as date)   --o.OrderDate  -- чтобы курс брасля на текущую дату
                 ,p.ClientID
                 ,o.Price -- цена продажи в рублях c заказа
                 ,p.Price -- цена закупки в долларах из АПИ
@@ -1053,10 +1053,10 @@ begin
                 ,isnull(o.VolumeKG , 0)
                 ,isnull(:WeightGr,  0)
                 ,isnull(:VolumeAdd, 0)
-                ,isnull(o.Taxes, c.Taxes)    -- Комиссия + Налоги
-                ,isnull(o.Commission, 0)/100 -- Комиссия за оплату  Comission ExtraKurs
-                ,isnull(o.Margin, 0)/100     -- Наценка             Margin
-                ,isnull(o.ExtraKurs, 0)/100  -- Комиссия на курс    ExtraKurs
+                ,isnull(p.Taxes, c.Taxes)    -- Комиссия + Налоги
+                ,isnull(p.Commission, 0)/100 -- Комиссия за оплату  Comission ExtraKurs
+                ,isnull(p.Margin, 0)/100     -- Наценка             Margin
+                ,isnull(p.ExtraKurs, 0)/100  -- Комиссия на курс    ExtraKurs
                 ,pd.WeightKG                 -- Стоимость кг
                 ,pd.VolumeKG                 -- Стоимость vкг
                 ,o.CommissionAmount       -- Комиссия от продажи
@@ -1076,8 +1076,8 @@ begin
              and p.PriceLogo       = :PriceLogo
 
             exec OrdersFinCalc
-                   @IsSave = 0,
-                   @IsFilled=1
+                   @IsSave   = 0,
+                   @IsFilled = 1
 
   ''',
   ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID', 'MakeLogo'],

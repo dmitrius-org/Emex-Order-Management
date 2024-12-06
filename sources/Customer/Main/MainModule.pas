@@ -49,9 +49,10 @@ type
     const _loginname = '_loginname2D02D0BF';
     const _pwd = '_pwd2D02D0BF';
 
-    /// <summary> dbUserAuthorization - авторизация пользователя.
-    ///  IsSaveSession:Boolean - подключение используя сохраненные данные  </summary>
-    function dbUserAuthorization(AU: string; AP: string; IsSaveSession: Boolean = False): Boolean;
+    /// <summary> CustomerAuthorization - авторизация пользователя.
+    ///  IsSaveSession:Boolean - подключение используя сохраненные данные
+    /// </summary>
+    function CustomerAuthorization(AU: string; AP: string; IsSaveSession: Boolean = False): Boolean;
 
     function dbConnect(): Boolean;
   end;
@@ -114,7 +115,7 @@ begin
   end;
 end;
 
-function TUniMainModule.dbUserAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;
+function TUniMainModule.CustomerAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'begin');
 
@@ -133,6 +134,7 @@ begin
                        select @R        as R
                              ,@ClientID as ClientID
                       ''';
+  // Важно AsWideString
   Query.ParamByName('Email').AsWideString    := AU;
   Query.ParamByName('Password').AsWideString := AP;
   Query.Open();
@@ -185,7 +187,7 @@ begin
 
   if (S1 <> '') and ( S2 <> '') then
   begin
-    Handled := dbUserAuthorization (S1, S2, True);
+    Handled := CustomerAuthorization (S1, S2, True);
 
     if not Handled then
     begin

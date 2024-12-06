@@ -348,12 +348,12 @@ object StatisticBrand: TStatisticBrand
       FieldName = 'DetailQuantity'
       Origin = 'DetailQuantity'
       ReadOnly = True
-      DisplayFormat = '###,##0.00 '#8381
     end
     object qBrandDetailAmount: TCurrencyField
       FieldName = 'DetailAmount'
       Origin = 'DetailAmount'
       ReadOnly = True
+      DisplayFormat = '###,##0.00 '#8381
     end
     object qBrandQuantity: TIntegerField
       FieldName = 'Quantity'

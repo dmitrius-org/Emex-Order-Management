@@ -60,8 +60,8 @@ as
 	 and p.Retval = 0
 
   -- аудит
-  delete pAuditInsert from pAuditInsert (rowlock) where spid=@@spid
-  insert pAuditInsert
+  delete pAuditInsert from pAuditInsert with (rowlock index = ao1) where spid=@@spid
+  insert pAuditInsert with (rowlock)
         (Spid
         ,ObjectID
         ,ObjectTypeID
@@ -75,14 +75,14 @@ as
        ,28 -- acCancelRequest        
        ,'Запрос на отказ' 
        ,1
-   from pAccrualAction p (nolock)
+   from pAccrualAction p with (nolock index = ao2)
   where p.Spid   = @@spid
 	and p.Retval = 0
                 
    exec MassAuditInsert
 
    if exists (select 1
-                from pAccrualAction (nolock)
+                from pAccrualAction with (nolock index = ao2)
                where Spid   = @@SPID
                  and RetVal <> 0)
      set @r = 506 -- 'Ошибка!'
@@ -92,6 +92,6 @@ as
 go
 grant exec on CustomerOrderCancelRequest to public
 go
-exec setOV 'CustomerOrderCancelRequest', 'P', '20240609', '2'
+exec setOV 'CustomerOrderCancelRequest', 'P', '20241206', '3'
 go
  

@@ -61,7 +61,8 @@ uses
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uConstant in '..\Common\CommonApp\uConstant.pas',
-  uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm};
+  uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm},
+  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas';
 
 {$R *.res}
 
