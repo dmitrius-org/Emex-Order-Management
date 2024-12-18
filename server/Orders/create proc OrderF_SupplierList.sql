@@ -13,7 +13,7 @@ Select
        o.PriceLogo  + '.' +  o.MakeLogo  as ID,
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
-       '$' + convert(varchar, isnull(o.PricePurchaseF, o.PricePurchase)) + ' | ' + 
+       '$' + convert(varchar, coalesce(o.PricePurchaseF, o.PricePurchase, 0)) + ' | ' + 
        convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
        ,0 as Price
@@ -57,6 +57,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20240918', '4'
+exec setOV 'OrderF_SupplierList', 'P', '20241211', '4'
 go
  
+--exec OrderF_SupplierList @OrderID=178922

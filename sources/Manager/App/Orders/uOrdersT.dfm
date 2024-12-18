@@ -1770,34 +1770,8 @@ object OrdersT: TOrdersT
     DeleteSQL.Strings = (
       'DELETE FROM tOrders WHERE OrderID = :OLD_OrderID')
     FetchRowSQL.Strings = (
-      'SELECT StatusID, -- '#1089#1086#1089#1090#1086#1103#1085#1080#1077
-      '       StatusName, -- '#1089#1086#1089#1090#1086#1103#1085#1080#1077
-      '       PricePurchaseF,'
-      '       AmountPurchaseF,'
-      '       ReplacementMakeLogo,'
-      '       ReplacementDetailNumber,'
-      '       ReplacementPrice,'
-      '       OverPricing,'
-      '       Warning,'
-      '       Flag,'
-      '       updDatetime,'
-      '       DetailName,'
-      '       WeightKGF,'
-      '       VolumeKGf,'
-      '       DetailName,'
-      '       WeightKG,'
-      '       VolumeKG,'
-      '       isCancel,'
-      '       PriceLogo,'
-      '       Margin,'
-      '       MarginF,'
-      '       Income,'
-      '       IncomePRC,'
-      '       Profit,'
-      '       DestinationLogo,'
-      '       Fragile,'
-      '       PercentSupped,'
-      '       Flag as Status -- '#1080#1082#1086#1085#1082#1080
+      'SELECT *'
+      '      ,Flag as Status -- '#1080#1082#1086#1085#1082#1080
       '  FROM vOrders'
       ' WHERE OrderID = :OrderID')
     Left = 497

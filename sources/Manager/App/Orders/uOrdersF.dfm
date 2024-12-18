@@ -105,7 +105,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '0'
         DecimalSeparator = ','
-        OnChange = edtLChange
+        OnKeyDown = edtLKeyDown
       end
       object edtW: TUniNumberEdit
         Left = 3
@@ -121,7 +121,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '1'
         DecimalSeparator = ','
-        OnChange = edtLChange
+        OnKeyDown = edtLKeyDown
       end
       object edtH: TUniNumberEdit
         Left = 3
@@ -137,7 +137,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '1'
         DecimalSeparator = ','
-        OnChange = edtLChange
+        OnKeyDown = edtLKeyDown
       end
       object edtVKG: TUniNumberEdit
         Left = 3
@@ -292,7 +292,7 @@ object OrderF: TOrderF
       Hint = ''
       ShowHint = True
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103':'
-      TabOrder = 20
+      TabOrder = 18
     end
     object UniBitBtn1: TUniBitBtn
       Left = 846
@@ -334,7 +334,7 @@ object OrderF: TOrderF
       Hint = ''
       ShowHint = True
       Caption = 'Fragile'
-      TabOrder = 22
+      TabOrder = 20
     end
     object cbNoAir: TUniCheckBox
       Left = 117
@@ -344,7 +344,7 @@ object OrderF: TOrderF
       Hint = ''
       ShowHint = True
       Caption = 'NoAir'
-      TabOrder = 21
+      TabOrder = 19
     end
     object UniGroupBox5: TUniGroupBox
       AlignWithMargins = True
@@ -445,7 +445,7 @@ object OrderF: TOrderF
         BlankValue = 0
         DecimalPrecision = 3
         DecimalSeparator = ','
-        OnKeyDown = edtWeightKGFKeyDown
+        OnChange = edtVolumeKGFChange
       end
     end
     object UniLabel11: TUniLabel
@@ -468,29 +468,6 @@ object OrderF: TOrderF
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
       TabOrder = 16
     end
-    object UniLabel13: TUniLabel
-      Left = 382
-      Top = 160
-      Width = 66
-      Height = 13
-      Hint = ''
-      Visible = False
-      ShowHint = True
-      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077':'
-      TabOrder = 19
-    end
-    object edtMessage: TUniEdit
-      Left = 472
-      Top = 156
-      Width = 396
-      Hint = ''
-      Visible = False
-      ShowHint = True
-      Text = ''
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 18
-      ClearButton = True
-    end
     object UniGroupBox9: TUniGroupBox
       Left = 16
       Top = 211
@@ -507,7 +484,7 @@ object OrderF: TOrderF
       LayoutAttribs.Padding = '1'
       LayoutAttribs.Columns = 9
       LayoutConfig.ComponentCls = 'order-indicators'
-      TabOrder = 23
+      TabOrder = 21
       object edtPrice: TUniEdit
         Left = 3
         Top = 17
@@ -746,7 +723,7 @@ object OrderF: TOrderF
       LayoutAttribs.Padding = '1'
       LayoutAttribs.Columns = 9
       LayoutConfig.ComponentCls = 'order-indicators'
-      TabOrder = 24
+      TabOrder = 22
       object edtPrice2: TUniEdit
         Left = 3
         Top = 18
@@ -1029,7 +1006,7 @@ object OrderF: TOrderF
       TabOrder = 12
       AnyMatch = True
       IconItems = <>
-      OnChange = cbDestinationLogoChange
+      OnChange = cbPriceChange
       Value = '-1'
     end
   end

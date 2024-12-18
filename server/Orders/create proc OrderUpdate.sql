@@ -14,7 +14,7 @@ create proc OrderUpdate
               ,@NoAir                   bit           = null 
               
               ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
-              ,@Comment                 nvarchar(1024)= null 
+              --,@Comment                 nvarchar(1024)= null 
               ,@TargetStateID           numeric(18,0) = null
 
               ,@Price                   nvarchar(64)  = null -- Прайс
@@ -48,7 +48,7 @@ as
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
         ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
-       -- ,t.DestinationName = pd.Name
+        ,t.DestinationName = pd.DestinationName
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
@@ -57,41 +57,57 @@ as
 		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
 							   else t.ReplacementPrice
                              end
-        --,t.PercentSupped   = case  
-		      --                 when t.PriceLogo <> nullif(@Price, '') then isnull(p.PercentSupped, t.PercentSupped) 
-							 --  else t.PercentSupped
-        --                     end 
         ,t.DetailName      = nullif(@DetailNameF, '')
-        /*
+        
          -- параметры расчета себестоимости 
-        ,t.PercentSupped          = p.PercentSupped 
-        ,t.Margin                 = p.Margin
-        ,t.Discount               = p.Discount
-        ,t.Kurs                   = p.Kurs
-        ,t.ExtraKurs              = p.ExtraKurs
-        ,t.Commission             = p.Commission
-        ,t.Reliability            = p.Reliability */
+        ,t.PercentSupped   = coalesce(t.PercentSupped, p.PercentSupped, 0) 
+        ,t.Margin          = coalesce(t.Margin       , p.Margin       , 0)
+        ,t.Discount        = coalesce(t.Discount     , p.Discount     , 0)
+        ,t.Kurs            = coalesce(t.Kurs         , p.Kurs         , 0)
+        ,t.ExtraKurs       = coalesce(t.ExtraKurs    , p.ExtraKurs    , 0)
+        ,t.Commission      = coalesce(t.Commission   , p.Commission   , 0)
+        ,t.Reliability     = coalesce(t.Reliability  , p.Reliability  , 0)
+
+         -- cроки поставки клиента
+        ,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
+        ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
+        ,t.DeliveryRestToCustomer = p.OurDelivery-- Остаток срока до поставки клиенту
 
 	from tOrders t (updlock)
-   cross apply ( select top 1 *
+   outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
                   where p.Spid = @@spid
                     and p.Make      = @MakeLogo
                     and p.DetailNum = t.DetailNumber
                     and p.PriceLogo = @Price
                 ) as p
-/*
-   inner join tClients c with (nolock index=PK_tClients_ClientID)
-           on c.ClientID = t.ClientID 
-   inner join tSuppliers s with (nolock index=ao1)
-           on S.SuppliersID = c.SuppliersID
-   inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-           on pd.SuppliersID     = s.SuppliersID
-          and pd.DestinationLogo = @DestinationLogo  
-   inner join tProfilesCustomer pc with (nolock index=ao2)
-           on pc.ClientID           = c.ClientID
-          and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
-   where t.OrderID = @OrderID*/
+
+    outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
+         select top 1
+                pd.DestinationLogo, 
+                pd.Name DestinationName,
+   
+               -- pd.WeightKG,
+               -- pd.VolumeKG,
+               -- pd.ProfilesDeliveryID,
+               pd.Delivery-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+   
+               -- pc.Margin,
+               -- pc.Reliability,
+   
+               -- pd.VolumeKG_Rate1,
+               -- pd.VolumeKG_Rate2,
+               -- pd.VolumeKG_Rate3,
+               -- pd.VolumeKG_Rate4,
+               -- pd.Fragile
+   
+           from tProfilesCustomer pc with (nolock)
+           left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+                  on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+          where pc.ClientID = t.ClientID
+            and pd.DestinationLogo    = @DestinationLogo   
+        ) as pd
+  where t.OrderID = @OrderID
 
   -- сохранение данных на позиции/детали
   update p
@@ -108,7 +124,7 @@ as
                                when @NoAir = 1 then 'NOAIR'
                                else null
                              end
-        ,p.Fragile          = nullif(@Fragile, 0)
+        ,p.Fragile         = nullif(@Fragile, 0)
         
   OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
 	from tOrders t (nolock)
@@ -123,8 +139,15 @@ as
         (Spid, OrderID)
   Select @@spid, @OrderID
 
-  exec OrdersFinCalc 
-         @IsSave         = 1
+  exec OrdersFinCalc @IsSave = 1
+
+  --! расчет сроков дотавки
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock) 
+        (Spid, OrderID)
+  Select @@spid, @OrderID
+  
+  exec OrdersDeliveryTermCalc @IsSave = 1
 
   if @TargetStateID > 0
   begin
@@ -174,6 +197,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20241206', '9'
+exec setOV 'OrderUpdate', 'P', '20241212', '11'
 go
  

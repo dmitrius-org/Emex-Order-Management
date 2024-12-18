@@ -1,6 +1,5 @@
 .x-treelist-nav .x-treelist-item-text {
-    line-height: 35px;
-    
+    line-height: 35px; 
 }
 .x-treelist-nav .x-treelist-item-icon:before, .x-treelist-nav .x-treelist-item-tool:before, .x-treelist-nav .x-treelist-item-expander {
     line-height: 35px;
@@ -15,6 +14,11 @@
 .x-panel-body-default .logo-image  {
     background-color: #32404e;
 }
+
+.x-panel-body-default .logo-version  {
+    background-color: #32404e;
+    color: #32404e;
+} 
 
 /* .main-menu-detail {
     height: 100%;

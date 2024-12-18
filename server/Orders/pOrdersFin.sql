@@ -60,13 +60,14 @@ create table pOrdersFin
  ,IncomePrc        decimal(18, 2)   -- Доход в процентах	
  ,MarginF          decimal(18, 2)   -- Наценка	
  ,Profit           decimal(18, 2)   -- Рентабельность
+ ,ID               decimal(18, 2)   -- Произаольный идентификатор 
 )
 go
 grant all on pOrdersFin to public
 go
 create index ao1 on pOrdersFin(Spid, OrderID)
 go
-exec setOV 'pOrdersFin', 'U', '20240712', '1'
+exec setOV 'pOrdersFin', 'U', '20240712', '3'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pOrdersFin', @desc = 'Расчет финансовых показателей. Результат расчтеа фин. показателей'

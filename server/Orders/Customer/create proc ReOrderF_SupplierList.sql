@@ -28,6 +28,7 @@ Select
                     where p.spid      = @@SPid
                       and p.PriceLogo = o.PriceLogo
                       and p.Make      = o.MakeLogo
+                      and p.DetailNum = o.DetailNumber
                    )
  Union all
 select 
@@ -40,10 +41,11 @@ select
          when o.Available = -1 then 'под заказ'
          else cast(o.Available as varchar)
        end  as Name,
-       o.PriceRub
+       o.PriceRub as Price
   from tOrders t with (nolock index=ao1)
  inner join vFindByNumber o (nolock)
-         on o.MakeLogo = t.MakeLogo 
+         on o.MakeLogo  = t.MakeLogo 
+        and o.DetailNum = t.DetailNumber
  where t.OrderID =@OrderID
 ) p
 order by p.Price
@@ -60,4 +62,4 @@ go
 exec setOV 'ReOrderF_SupplierList', 'P', '20241206', '2'
 go
 
-exec ReOrderF_SupplierList @OrderID=167044
+exec ReOrderF_SupplierList @OrderID=167034

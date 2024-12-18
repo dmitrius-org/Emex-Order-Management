@@ -12,9 +12,6 @@
         <Projects Include="Scheduler\Scheduler.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Components\UniComponent\UniComponent.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -50,23 +47,14 @@
     <Target Name="Scheduler:Make">
         <MSBuild Projects="Scheduler\Scheduler.dproj" Targets="Make"/>
     </Target>
-    <Target Name="UniComponent">
-        <MSBuild Projects="Components\UniComponent\UniComponent.dproj"/>
-    </Target>
-    <Target Name="UniComponent:Clean">
-        <MSBuild Projects="Components\UniComponent\UniComponent.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="UniComponent:Make">
-        <MSBuild Projects="Components\UniComponent\UniComponent.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Customer;Manager;Scheduler;UniComponent"/>
+        <CallTarget Targets="Customer;Manager;Scheduler"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Customer:Clean;Manager:Clean;Scheduler:Clean;UniComponent:Clean"/>
+        <CallTarget Targets="Customer:Clean;Manager:Clean;Scheduler:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Customer:Make;Manager:Make;Scheduler:Make;UniComponent:Make"/>
+        <CallTarget Targets="Customer:Make;Manager:Make;Scheduler:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -16,6 +16,13 @@ as
 select o.OrderID
       ,o.Manufacturer
       ,o.DetailNumber
+      ,ltrim(rtrim(Replace( case 
+                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                              then p.DetailName
+                              else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
+                            end  
+                           ,o.[DetailNumber]  
+                           ,'')))    as DetailName
       ,o.DetailNumber + ' ' + ltrim(rtrim(Replace( case 
                                                      when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
                                                      then p.DetailName
@@ -41,6 +48,13 @@ select o.OrderID
 select o.OrderID
       ,m.Name
       ,o.ReplacementDetailNumber
+      ,ltrim(rtrim(Replace( case 
+                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                              then p.DetailName
+                              else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
+                            end  
+                           ,o.[DetailNumber]  
+                           ,'')))
       ,o.ReplacementDetailNumber + ' ' + ltrim(rtrim(Replace( case 
                                                                 when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
                                                                 then p.DetailName
@@ -71,7 +85,7 @@ return @r
 GO
 grant exec on ExportNomenklature to public
 go
-exec setOV 'ExportNomenklature', 'P', '20241115', '3'
+exec setOV 'ExportNomenklature', 'P', '20241218', '4'
 go
 
 exec ExportNomenklature @Invoice = '240126'

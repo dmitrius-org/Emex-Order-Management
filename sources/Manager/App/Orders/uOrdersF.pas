@@ -68,8 +68,6 @@ type
     edtVolumeKGF: TUniNumberEdit;
     UniLabel11: TUniLabel;
     UniLabel12: TUniLabel;
-    UniLabel13: TUniLabel;
-    edtMessage: TUniEdit;
     UniGroupBox9: TUniGroupBox;
     edtPrice: TUniEdit;
     edtMargin: TUniEdit;
@@ -107,18 +105,15 @@ type
     UniNativeImageList1: TUniNativeImageList;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
-    procedure edtLChange(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
     procedure btnYandexImagesClick(Sender: TObject);
     procedure btnExistClick(Sender: TObject);
     procedure btnZZAPClick(Sender: TObject);
     procedure btnEmExClick(Sender: TObject);
-    procedure edtVKGKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnNumberClick(Sender: TObject);
     procedure btnNumber2Click(Sender: TObject);
     procedure btnDestinationLogoClick(Sender: TObject);
     procedure cbPriceChange(Sender: TObject);
-    procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cbDestinationLogoChange(Sender: TObject);
     procedure btnOkToCancelClick(Sender: TObject);
     procedure btnOkToProcClick(Sender: TObject);
@@ -131,6 +126,11 @@ type
     procedure UniTimerTimer(Sender: TObject);
     procedure actProtocolExecute(Sender: TObject);
     procedure edtWeightKGFChange(Sender: TObject);
+    procedure edtLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edtVKGKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtVolumeKGFChange(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -208,9 +208,9 @@ type
     procedure SetEditDataRating(ARating: integer);
 
     /// <summary>
-    /// PriceCalc - расчет цены и срока поставки
+    /// OrdersFinCalc - расчет цены, финансовых показаьелей
     /// </summary>
-    procedure PriceCalc();
+    procedure OrdersFinCalc();
 
     /// <summary>
     /// SetIndicatorsStyle - Установка стилей для показателей: Показатели до изменения
@@ -284,9 +284,304 @@ end;
 
 { TOrderF }
 
+procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
+  Result: TStrings);
+begin
+   sql.Open(
+   '''
+     exec OrderF_PartDescription
+             @Number = :Number
+   ''',
+   ['Number'], [QueryString]);
+
+    sql.q.First;
+    while not sql.q.Eof do
+    begin
+      Result.Add( sql.q.FieldByName('Name_RUS').AsString );
+      sql.q.Next;
+    end;
+end;
+
+
+procedure TOrderF.edtLKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  edtVKG.Value := ( (edtL.Value * edtW.Value * edtH.Value) / 5000 );
+end;
+
+procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (KEY = 13) then //enter
+  begin
+     edtVolumeKGF.Value := edtVKG.Value;
+  end;
+end;
+
+procedure TOrderF.edtVolumeKGFChange(Sender: TObject);
+begin
+  OrdersFinCalc();
+  getPartRatingFromDB2;
+end;
+
 procedure TOrderF.edtWeightKGFChange(Sender: TObject);
 begin
-  WeightKGFStyle
+  WeightKGFStyle();
+  OrdersFinCalc();
+  getPartRatingFromDB2();
+end;
+
+procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = 13) then
+  begin
+    OrdersFinCalc();
+    getPartRatingFromDB2;
+  end;
+end;
+
+procedure TOrderF.GetPartFromEmex;
+var t: TSQLQueryThread;
+begin
+  try
+    sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
+
+    t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
+    t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
+    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+    t.Resume; // непосредственно ручной запуск потока
+
+    UniTimer.Enabled := True;
+  finally
+  end;
+end;
+
+procedure TOrderF.getPartRatingFromDB2;
+var Price: string;
+       js: string;
+        r: string;
+begin
+  logger.Info('getPartRatingFromDB2 begin');
+  logger.Info('FDetailNumber ' + FDetailNumber);
+  logger.Info('FPriceLogo ' + FPriceLogo);
+  logger.Info('FMakeLogo ' + FMakeLogo);
+
+  sql.Open('''
+           select top 1 *,
+                  case
+                    when p.Available = -1 then 'под заказ'
+                    else cast(p.Available as nvarchar)
+                  end as AvailableStr -- наличие детали на складе
+                 ,f.MarginF
+                 ,f.IncomePrc
+                 ,f.Profit
+             from pFindByNumber p with (nolock index= ao3)
+            inner join pOrdersFin f with (nolock index= ao1)
+                    on f.spid = @@spid
+                   and f.ID = p.ID
+            where p.spid      = @@spid
+              and p.Make      = :MakeLogo
+              and p.DetailNum = :DetailNum
+              and p.PriceLogo = :PriceLogo
+
+            order by p.PercentSupped desc
+           ''',
+           ['DetailNum', 'PriceLogo', 'MakeLogo'],
+           [FDetailNumber, FPriceLogo, FMakeLogo]);
+
+  if sql.Count>0 then
+  begin
+    FPrice2            := sql.F('Price').asfloat;
+    FMarginF2          := sql.F('MarginF').AsFloat;
+    FIncome2           := sql.F('IncomePrc').AsFloat;
+    FProfin2           := sql.F('Profit').AsFloat;
+    FQuantity2         := sql.F('Available').AsInteger;
+
+    edtCount2.Text     := FQuantity.ToString + '/' + sql.F('AvailableStr').AsString;
+    edtMargin2.Text    := FormatFloat('##0%', FMargin);
+    edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
+    edtProfit2.Text    := FormatFloat('##0%', FProfin2);
+    edtDelivery2.text  := sql.F('GuaranteedDay').AsString;
+    edtDeliveryClient2.Text:= sql.F('OurDelivery').AsString;
+
+    var t: Real; t:= SimpleRoundTo(sql.F('Price').Value*100/FPrice - 100, -2);
+    if t > 0 then r := '+'
+    else
+    if t = 0 then r := ''
+    else
+      r := '';
+
+    r := r + FloatToStr(t);
+
+    edtPrice2.Text     := FormatFloat('$###,##0.00', sql.F('Price').AsFloat) + ' ('+ r + '%)';
+    edtIncome2.Text    := FormatFloat('##0%', FIncome2);
+
+    SetEditDataStyle();
+    SetEditDataRating(sql.F('PercentSupped').AsInteger);
+
+    NotExists.Visible := false;
+    edtReliability2.Visible := true;
+  end
+  else
+  begin
+
+    edtCount2.Clear;
+    edtMargin2.Clear;
+    edtMarginF2.Clear;
+    edtProfit2.Clear;
+    edtPrice2.Clear  ;
+    edtIncome2.Clear ;
+
+    FPrice2   :=0;
+    FMarginF2 :=0;
+    FIncome2  :=0;
+    FProfin2  :=0;
+    FQuantity2:=0;
+
+    NotExists.Visible := True;
+    edtReliability2.Visible := False;
+
+    SetEditDataStyle();
+    SetEditDataRating(0);
+
+  end;
+
+  Price:=cbPrice.Value;
+  // список поставщиков
+  ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
+
+  cbPrice.Value:=Price;
+
+  logger.Info('getPartRatingFromDB2 end');
+end;
+
+procedure TOrderF.GooglePSE;
+begin
+  logger.info('GooglePSE');
+
+  if FGoogleKey = '' then
+  begin
+    with TStringList.Create() do
+    begin
+      LoadFromFile(UniServerModule.StartPath +  '\files\html\GoogleCSEKeyErr.html');
+      UniHTMLFrame1.HTML.Text := Text;
+      Free;
+    end;
+
+    exit ;
+  end;
+
+  UniHTMLFrame1.HTML.clear;
+
+  UniHTMLFrame1.HTML.Text := Format(
+   '''
+    <script async src="https://cse.google.com/cse.js?cx=%s"></script>
+    <div class="gcse-search" data-gname="search"></div>
+
+    <script>
+        // Функция для создания поискового запроса
+        function performSearch(brand, partNumber) {
+
+            // Получаем объект поиска
+            var searchControl = google.search.cse.element.getElement('search');
+            if (searchControl) {
+                console.log(searchControl);
+
+                searchControl.clearAllResults();
+
+                // Устанавливаем поисковый запрос
+                const searchQuery = brand + " " + partNumber;
+                searchControl.prefillQuery(searchQuery);
+                // Выполняем поиск
+                searchControl.execute();
+            };
+        };
+
+      // Ждем загрузки компонента Google Custom Search
+      function onGoogleSearchLoaded() {
+        console.log("Google Custom Search загружен");
+
+        performSearch("%s", "%s");
+
+      };
+
+      // Событие инициализации поиска Google Custom Search
+      window.__gcse = {
+        callback: onGoogleSearchLoaded
+      };
+
+    </script>
+
+    '''
+    , [FGoogleKey, FManufacturer, FDetailNumber]);
+end;
+
+procedure TOrderF.LoadDataPart;
+begin
+  ComboBoxFill(cbDestinationLogo,'''
+          SELECT distinct
+                 pd.[DestinationLogo] as id
+                ,pd.[Name]
+            FROM tOrders o (nolock)
+           inner join tProfilesCustomer pc with (nolock)
+                   on pc.ClientID = o.ClientID
+           inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+           where o.OrderID =
+        ''' + FID.ToString );
+
+  // начитываем данные с базы
+  case FAction of
+    acUpdate, acReportEdit, acUserAction, acDelete, acShow:
+    begin
+      DataLoad;
+
+      GooglePSE();
+
+      edtDetailNameF.SetFocus;
+    end
+  else
+    //
+  end;
+
+  SetBtnEnabled;
+end;
+
+function TOrderF.LoadNextPart: Boolean;
+begin
+  Result := False;
+
+  if not edtNextPart.Checked then Exit;
+
+  sql.open('''
+             Update #CounterPart
+                set Processed = 1
+              where OrderID   = :OrderID
+
+             Select top 1 OrderID
+               from #CounterPart (nolock)
+              where isnull(Processed, 0) = 0
+              order by N
+           ''',
+           ['OrderID'],
+           [FID]);
+
+  sql.q.first;
+  if sql.Q.RecordCount > 0 then
+  begin
+    Result := True;
+
+    ID := sql.Q.FieldByName('OrderID').AsInteger;
+
+    SetRating(0);
+
+    SetEditDataRating(0);
+
+    LoadDataPart;
+
+    GetPartFromEmex;
+  end;
 end;
 
 procedure TOrderF.actProtocolExecute(Sender: TObject);
@@ -314,9 +609,6 @@ begin
 end;
 
 procedure TOrderF.btnEmExClick(Sender: TObject);
-var
-  HeaderPanel: TUniPanel;
-  NewButton: TUniButton;
 begin
   setOpenUrl(Format('https://emexdwc.ae/Search.aspx?n=%s&d=$DLV$1', [FDetailNumber]));
 end;
@@ -343,20 +635,15 @@ end;
 
 procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
 begin
-  FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
-  FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
-
-  logger.Info('cbPrice.Value: ' + cbPrice.Value);
-  logger.Info('FMakeLogo:  ' + FMakeLogo);
-  logger.Info('FPriceLogo: ' + FPriceLogo);
-
-  PriceCalc();
+  OrdersFinCalc();
   getPartRatingFromDB2;
 end;
 
 procedure TOrderF.cbPriceChange(Sender: TObject);
 begin
-  PriceCalc();
+  FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
+  FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
+
   getPartRatingFromDB2;
 end;
 
@@ -369,6 +656,30 @@ procedure TOrderF.btnNumberClick(Sender: TObject);
 var js: string;
 begin
   btnNumber.JSInterface.JSCall('copyToClipboard', [FDetailNumber]);
+end;
+
+procedure TOrderF.OrdersFinCalc;
+begin
+  RetVal.Clear;
+
+  Sql.exec(
+  '''
+    exec SearchPriceCalc
+           @DestinationLogo=:DestinationLogo,
+           @DetailNum      =:DetailNum
+
+    exec OrderF_OrdersFinCalc
+           @OrderID  =:OrderID
+          ,@WeightKGF=:Weight
+          ,@VolumeKGF=:Volume
+
+  ''',
+  ['DestinationLogo', 'DetailNum', 'OrderID', 'Weight', 'Volume' {, 'PriceLogo', 'WeightGr', 'VolumeAdd', 'MakeLogo'}],
+  [cbDestinationLogo.Value,
+  FDetailNumber,
+  FID,
+  edtWeightKGF.Value,
+  edtVolumeKGF.Value{,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FMakeLogo}]);
 end;
 
 procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0); var sqltext: string;
@@ -414,16 +725,16 @@ begin
                                 ,@NoAir          = :NoAir
                                 ,@Price          = :Price
                                 ,@DestinationLogo=:DestinationLogo
-                                ,@Comment        =:Comment
                                 ,@TargetStateID  =:TargetStateID
                                 ,@MakeLogo       =:MakeLogo
                                 ,@ReplacementPrice = :ReplacementPrice
+
                      select @r as retcode
           ''';
 
           Sql.Open(sqltext,
                    ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
-                    'DestinationLogo', 'Fragile', 'NoAir', 'Comment', 'TargetStateID', 'ReplacementPrice'],
+                    'DestinationLogo', 'Fragile', 'NoAir', 'TargetStateID', 'ReplacementPrice'],
                    [edtWeightKGF.Value,
                     edtVolumeKGF.Value,
                     edtDetailNameF.Text,
@@ -433,7 +744,6 @@ begin
                     cbDestinationLogo.Value ,
                     cbFragile.Checked,
                     cbNoAir.Checked,
-                    edtMessage.Text,
                     ATargetStateID,
                     FPrice2
                     ]);
@@ -455,6 +765,154 @@ begin
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
+end;
+
+procedure TOrderF.SetAction(const Value: TFormAction);
+begin
+  FAction := Value;
+end;
+
+procedure TOrderF.SetBtnEnabled;
+begin
+  edtNextPart.Enabled := IsCounter;
+
+  if IsCounter then
+  begin
+    //
+  end;
+
+  btnOkToCancel.Enabled := (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
+  btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
+
+  btnOk.Enabled := True;
+end;
+
+procedure TOrderF.SetEditDataRating(ARating: integer);
+var r, js: string;
+begin
+    case ARating  of
+      0..9:
+        r:= 'star';
+      10..19:
+        r:= 'star10';
+      20..29:
+        r:= 'star20';
+      30..39:
+        r:= 'star30';
+      40..49:
+        r:= 'star40';
+      50..59:
+        r:= 'star50';
+      60..69:
+        r:= 'star60';
+      70..79:
+        r:= 'star70';
+      80..89:
+        r:= 'star80';
+      90..99:
+        r:= 'star90';
+      100:
+        r:= 'star100';
+    else
+      r:= 'star';
+    end;
+
+    js :=
+    '''
+    function setRatingVal2(AVal, APercent)
+    {
+     document.getElementById(AVal).checked = true;
+     document.getElementById("prc2").innerText = APercent + '%';
+    }
+    ''' +
+    'ajaxRequest(' + edtReliability2.JSName + ', ''rating2'', [setRatingVal2("' + r + '2", ' + ARating.ToString +')]);';
+
+    UniSession.JSCode(js);
+end;
+
+procedure TOrderF.SetEditDataStyle;
+  procedure setColor(aVal: Real; aVal2: Real; AEdit: TUniEdit);
+  begin
+      if aVal < 0 then
+          AEdit.Color := $008080FF
+      else
+      if aVal = 0 then
+          AEdit.Color := clWhite
+      else
+      if (aVal > 0 ) and (aVal < aVal2) then
+          AEdit.Color := clYellow
+      else
+          AEdit.Color := $0080FF80;
+  end;
+begin
+  setColor(FMarginF2,  FMarginF,  edtMarginF2);
+  setColor(FIncome2,   FIncome,   edtIncome2);
+  setColor(FProfin2,   FProfin,   edtProfit2);
+  setColor(FMarginF2,  FMarginF,  edtDelivery2);
+  setColor(FMarginF2,  FMarginF,  edtDeliveryClient2);
+  setColor(FQuantity2, FPriceQuantity, edtCount2);
+end;
+
+procedure TOrderF.SetIndicatorsStyle(AIncome: real);
+begin
+  if AIncome >= 0 then
+    edtMarginF.Color :=   $0080FF80
+  else
+    edtMarginF.Color :=   $008080FF;
+
+  edtProfit.Color         := edtMarginF.Color;
+  edtIncome.Color         := edtMarginF.Color;
+  edtDelivery.Color       := edtMarginF.Color;
+  edtDeliveryClient.Color := edtMarginF.Color;
+  edtCount.Color          := edtMarginF.Color;
+  edtReliability.Color    := edtMarginF.Color;
+end;
+
+procedure TOrderF.SetOpenUrl(AUrl: string);
+begin
+  UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
+end;
+
+procedure TOrderF.SetRating(ARating: integer);
+var r, js: string;
+begin
+    case ARating of
+      0..9:
+        r:= 'star';
+      10..19:
+        r:= 'star10';
+      20..29:
+        r:= 'star20';
+      30..39:
+        r:= 'star30';
+      40..49:
+        r:= 'star40';
+      50..59:
+        r:= 'star50';
+      60..69:
+        r:= 'star60';
+      70..79:
+        r:= 'star70';
+      80..89:
+        r:= 'star80';
+      90..99:
+        r:= 'star90';
+      100:
+        r:= 'star100';
+    else
+      r:= 'star';
+    end;
+
+    js := '''
+    function setRatingVal(AVal, APercent)
+    {
+       document.getElementById(AVal).checked = true;
+       document.getElementById("prc").innerText = APercent + '%';
+    }
+    '''  +
+    'ajaxRequest(' + edtReliability.JSName + ', "rating", [setRatingVal("' + r + '", '+ ARating.ToString +')]);';
+
+    UniSession.JSCode(js);
 end;
 
 procedure TOrderF.UniBitBtn1Click(Sender: TObject);
@@ -487,11 +945,10 @@ var Price: string;
 begin
   try
     Sql.Open('select 1 from #IsPart (nolock)', [],[]);
-    logger.Info('UniTimerTimer IsPart:' + Sql.Q.RecordCount.ToString);
 
     if Sql.Q.RecordCount > 0 then
     begin
-      PriceCalc();
+      OrdersFinCalc();
 
       getPartRatingFromDB2();
 
@@ -657,8 +1114,7 @@ begin
   ComboBoxFill(cbPrice,
   '''
     -- список поставщиков
-    exec OrderF_SupplierList
-               @OrderID =
+    exec OrderF_SupplierList @OrderID =
   ''' + FID.ToString);
 
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
@@ -685,7 +1141,7 @@ begin
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
-  edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
+ // edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
   edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
@@ -717,6 +1173,7 @@ begin
   edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
   edtDelivery2.text  := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
+  edtDeliveryClient2.Text:= UniMainModule.Query.FieldByName('DeliveryTermToCustomer').AsString;
   //
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
@@ -759,556 +1216,8 @@ begin
   WeightKGFStyle;
 end;
 
-procedure TOrderF.SetIndicatorsStyle(AIncome: real);
-begin
-  if AIncome >= 0 then
-    edtMarginF.Color :=   $0080FF80
-  else
-    edtMarginF.Color :=   $008080FF;
 
-  edtProfit.Color         := edtMarginF.Color;
-  edtIncome.Color         := edtMarginF.Color;
-  edtDelivery.Color       := edtMarginF.Color;
-  edtDeliveryClient.Color := edtMarginF.Color;
-  edtCount.Color          := edtMarginF.Color;
-  edtReliability.Color    := edtMarginF.Color;
-end;
-
-procedure TOrderF.SetEditDataStyle();
-  procedure setColor(aVal: Real; aVal2: Real; AEdit: TUniEdit);
-  begin
-      if aVal < 0 then
-          AEdit.Color := $008080FF
-      else
-      if aVal = 0 then
-          AEdit.Color := clWhite
-      else
-      if (aVal > 0 ) and (aVal < aVal2) then
-          AEdit.Color := clYellow
-      else
-          AEdit.Color := $0080FF80;
-  end;
-begin
-  setColor(FMarginF2,  FMarginF,  edtMarginF2);
-  setColor(FIncome2,   FIncome,   edtIncome2);
-  setColor(FProfin2,   FProfin,   edtProfit2);
-  setColor(FMarginF2,  FMarginF,  edtDelivery2);
-  setColor(FMarginF2,  FMarginF,  edtDeliveryClient2);
-  setColor(FQuantity2, FPriceQuantity, edtCount2);
-end;
-
-procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
-  Result: TStrings);
-begin
-   sql.Open(
-   '''
-    select distinct top 50
-           Name_RUS
-      from tPartDescription (nolock)
-     where Name_RUS LIKE '' + :Number + '%'
-   ''',
-   ['Number'], [QueryString]);
-
-    sql.q.First;
-    while not sql.q.Eof do
-    begin
-      Result.Add( sql.q.FieldByName('Name_RUS').AsString );
-      sql.q.Next;
-    end;
-end;
-
-procedure TOrderF.edtLChange(Sender: TObject);
-begin
-  edtVKG.Value := ( (edtL.Value * edtW.Value * edtH.Value) / 5000 );
-end;
-
-procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (KEY = 13) then //enter
-  begin
-     edtVolumeKGF.Value := edtVKG.Value;
-  end;
-end;
-
-procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (Key = 13) then
-  begin
-    PriceCalc();
-    getPartRatingFromDB2;
-  end;
-end;
-
-procedure TOrderF.getPartRatingFromDB2;  var Price: string;
-var js: string;
-     r: string;
-begin
-  logger.Info('getPartRatingFromDB2 begin');
-
-  sql.Open('''
-           select top 1 *,
-                  case
-                    when p.Available = -1 then 'под заказ'
-                    else cast(p.Available as nvarchar)
-                  end as AvailableStr -- наличие детали на складе
-                 ,f.MarginF
-                 ,f.IncomePrc
-                 ,f.Profit
-             from pFindByNumber p with (nolock index= ao3)
-            inner join pOrdersFin f with (nolock index= ao1)
-                    on f.spid = @@spid
-            where p.spid      = @@spid
-              and p.Make      = :MakeLogo
-              and p.DetailNum = :DetailNum
-              and p.PriceLogo = :PriceLogo
-
-            order by p.PercentSupped desc
-           ''',
-           ['DetailNum', 'PriceLogo', 'MakeLogo'],
-           [FDetailNumber, FPriceLogo, FMakeLogo]);
-
-  if sql.Q.RecordCount>0 then
-  begin
-    FPrice2            := sql.q.FieldByName('Price').asfloat;
-    FMarginF2          := sql.q.FieldByName('MarginF').AsFloat;
-    FIncome2           := sql.q.FieldByName('IncomePrc').AsFloat;
-    FProfin2           := sql.q.FieldByName('Profit').AsFloat;
-    FQuantity2         := sql.Q.FieldByName('Available').AsInteger;
-
-    edtCount2.Text     := FQuantity.ToString + '/' + sql.Q.FieldByName('AvailableStr').AsString;
-    edtMargin2.Text    := FormatFloat('##0%', FMargin);
-    edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
-    edtProfit2.Text    := FormatFloat('##0%', FProfin2);
-    edtDelivery2.text  := sql.Q.FieldByName('GuaranteedDay').AsString;
-
-    var t: Real; t:= SimpleRoundTo(sql.q.FieldByName('Price').Value*100/FPrice - 100, -2);
-    if t > 0 then r := '+'
-    else
-    if t = 0 then r := ''
-    else
-      r := '';
-
-    r := r + FloatToStr(t);
-
-    edtPrice2.Text     := FormatFloat('$###,##0.00', sql.q.FieldByName('Price').AsFloat) + ' ('+ r + '%)';
-    edtIncome2.Text    := FormatFloat('##0%', FIncome2);
-
-    SetEditDataStyle();
-    SetEditDataRating(sql.Q.FieldByName('PercentSupped').AsInteger);
-
-    NotExists.Visible := false;
-    edtReliability2.Visible := true;
-  end
-  else
-  begin
-
-    edtCount2.Clear;
-    edtMargin2.Clear;
-    edtMarginF2.Clear;
-    edtProfit2.Clear;
-    edtPrice2.Clear  ;
-    edtIncome2.Clear ;
-
-    FPrice2   :=0;
-    FMarginF2 :=0;
-    FIncome2  :=0;
-    FProfin2  :=0;
-    FQuantity2:=0;
-
-    NotExists.Visible := True;
-    edtReliability2.Visible := False;
-
-    SetEditDataStyle();
-    SetEditDataRating(0);
-
-  end;
-
-  Price:=cbPrice.Value;
-  // список поставщиков
-  ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
-
-  cbPrice.Value:=Price;
-
-  logger.Info('getPartRatingFromDB2 end');
-end;
-
-procedure TOrderF.SetRating(ARating: integer);
-var r, js: string;
-begin
-    case ARating of
-      0..9:
-        r:= 'star';
-      10..19:
-        r:= 'star10';
-      20..29:
-        r:= 'star20';
-      30..39:
-        r:= 'star30';
-      40..49:
-        r:= 'star40';
-      50..59:
-        r:= 'star50';
-      60..69:
-        r:= 'star60';
-      70..79:
-        r:= 'star70';
-      80..89:
-        r:= 'star80';
-      90..99:
-        r:= 'star90';
-      100:
-        r:= 'star100';
-    else
-      r:= 'star';
-    end;
-
-    js := '''
-    function setRatingVal(AVal, APercent)
-    {
-       document.getElementById(AVal).checked = true;
-       document.getElementById("prc").innerText = APercent + '%';
-    }
-    '''  +
-    'ajaxRequest(' + edtReliability.JSName + ', "rating", [setRatingVal("' + r + '", '+ ARating.ToString +')]);';
-
-    UniSession.JSCode(js);
-end;
-
-procedure TOrderF.SetEditDataRating(ARating: integer);
-var r, js: string;
-begin
-    case ARating  of
-      0..9:
-        r:= 'star';
-      10..19:
-        r:= 'star10';
-      20..29:
-        r:= 'star20';
-      30..39:
-        r:= 'star30';
-      40..49:
-        r:= 'star40';
-      50..59:
-        r:= 'star50';
-      60..69:
-        r:= 'star60';
-      70..79:
-        r:= 'star70';
-      80..89:
-        r:= 'star80';
-      90..99:
-        r:= 'star90';
-      100:
-        r:= 'star100';
-    else
-      r:= 'star';
-    end;
-
-    js :=
-    '''
-    function setRatingVal2(AVal, APercent)
-    {
-     document.getElementById(AVal).checked = true;
-     document.getElementById("prc2").innerText = APercent + '%';
-    }
-    ''' +
-    'ajaxRequest(' + edtReliability2.JSName + ', ''rating2'', [setRatingVal2("' + r + '2", ' + ARating.ToString +')]);';
-
-    UniSession.JSCode(js);
-end;
-
-procedure TOrderF.PriceCalc;
-begin
-  RetVal.Clear;
-
-  Sql.exec(
-  '''
-          delete pOrdersFin from pOrdersFin (rowlock) where spid = @@Spid
-          insert pOrdersFin
-                (Spid
-                ,OrderDate
-                ,ClientID
-                ,Price  -- продажа
-                ,PricePurchase
-                ,WeightKG
-                ,VolumeKG
-                ,WeightKGF
-                ,VolumeKGF
-                ,Taxes
-                ,Commission
-                ,Margin
-                ,ExtraKurs
-                ,PdWeightKG
-                ,PdVolumeKG
-                ,PriceCommission -- Комиссия от продажи
-                )
-          Select @@spid
-                ,cast(getdate() as date)   --o.OrderDate  -- чтобы курс брасля на текущую дату
-                ,p.ClientID
-                ,o.Price -- цена продажи в рублях c заказа
-                ,p.Price -- цена закупки в долларах из АПИ
-                ,isnull(o.WeightKG,  0)
-                ,isnull(o.VolumeKG , 0)
-                ,isnull(:WeightGr,  0)
-                ,isnull(:VolumeAdd, 0)
-                ,isnull(p.Taxes, c.Taxes)    -- Комиссия + Налоги
-                ,isnull(p.Commission, 0)/100 -- Комиссия за оплату  Comission ExtraKurs
-                ,isnull(p.Margin, 0)/100     -- Наценка             Margin
-                ,isnull(p.ExtraKurs, 0)/100  -- Комиссия на курс    ExtraKurs
-                ,pd.WeightKG                 -- Стоимость кг
-                ,pd.VolumeKG                 -- Стоимость vкг
-                ,o.CommissionAmount       -- Комиссия от продажи
-            from pFindByNumber p with (nolock index=ao2)
-           inner join tOrders o with (nolock index=ao1)
-                   on o.OrderID = :OrderID
-           inner join tClients c with (nolock index=ao1)
-                   on c.ClientID = o.ClientID
-           inner join tProfilesCustomer pc (nolock)
-                   on pc.ClientID = c.ClientID
-           inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
-                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-                  and pd.DestinationLogo = :DestinationLogo
-           where p.spid = @@spid
-             and p.Make            = :MakeLogo
-             and p.DetailNum       = :DetailNum
-             and p.PriceLogo       = :PriceLogo
-
-            exec OrdersFinCalc
-                   @IsSave   = 0,
-                   @IsFilled = 1
-
-  ''',
-  ['DestinationLogo', 'DetailNum', 'PriceLogo', 'WeightGr', 'VolumeAdd', 'OrderID', 'MakeLogo'],
-  [cbDestinationLogo.Value, FDetailNumber,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FID, FMakeLogo]);
-end;
-
-procedure TOrderF.SetAction(const Value: TFormAction);
-begin
-  FAction := Value;
-end;
-
-procedure TOrderF.SetBtnEnabled;
-begin
-  edtNextPart.Enabled := IsCounter;
-
-  if IsCounter then
-  begin
-    //
-  end;
-
-  btnOkToCancel.Enabled := (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
-  btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
-
-  btnOk.Enabled := True;
-end;
-
-procedure TOrderF.SetOpenUrl(AUrl: string);
-begin
-  UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
-end;
-
-procedure TOrderF.LoadDataPart;
-begin
-  ComboBoxFill(cbDestinationLogo,'''
-          SELECT distinct
-                 pd.[DestinationLogo] as id
-                ,pd.[Name]
-            FROM tOrders o (nolock)
-           inner join tProfilesCustomer pc with (nolock)
-                   on pc.ClientID = o.ClientID
-           inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-           where o.OrderID =
-        ''' + FID.ToString );
-
-  // начитываем данные с базы
-  case FAction of
-    acUpdate, acReportEdit, acUserAction, acDelete, acShow:
-    begin
-      DataLoad;
-
-      GooglePSE();
-
-      edtDetailNameF.SetFocus;
-    end
-  else
-    //
-  end;
-
-  SetBtnEnabled;
-end;
-
-procedure TOrderF.GetPartFromEmex;
-var t: TSQLQueryThread;
-begin
-  try
-    sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
-
-    t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
-    t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
-    t.Resume; // непосредственно ручной запуск потока
-
-    UniTimer.Enabled := True;
-  finally
-  end;
-end;
-
-function TOrderF.LoadNextPart:Boolean;
-begin
-  Result := False;
-
-  if not edtNextPart.Checked then Exit;
-
-  sql.open('''
-             Update #CounterPart
-                set Processed = 1
-              where OrderID   = :OrderID
-
-             Select top 1 OrderID
-               from #CounterPart (nolock)
-              where isnull(Processed, 0) = 0
-              order by N
-           ''',
-           ['OrderID'],
-           [FID]
-           );
-
-  sql.q.first;
-  if sql.Q.RecordCount > 0 then
-  begin
-    Result := True;
-
-    ID := sql.Q.FieldByName('OrderID').AsInteger;
-
-    SetRating(0);
-
-    SetEditDataRating(0);
-
-    LoadDataPart;
-
-    GetPartFromEmex;
-  end;
-end;
-
-procedure TOrderF.GooglePSE;
-begin
-  logger.info('GooglePSE');
-
-  logger.info(FManufacturer);
-  logger.info(FDetailNumber);
-
-  if FGoogleKey = '' then
-  begin
-    with TStringList.Create() do
-    begin
-      LoadFromFile(UniServerModule.StartPath +  '\files\html\GoogleCSEKeyErr.html');
-      UniHTMLFrame1.HTML.Text := Text;
-      Free;
-    end;
-
-    exit ;
-  end;
-
-  UniHTMLFrame1.HTML.clear;
-
-  UniHTMLFrame1.HTML.Text := Format(
-   '''
-    <script async src="https://cse.google.com/cse.js?cx=%s"></script>
-    <div class="gcse-search" data-gname="search"></div>
-
-    <script>
-        // Функция для создания поискового запроса
-        function performSearch(brand, partNumber) {
-
-            // Получаем объект поиска
-            var searchControl = google.search.cse.element.getElement('search');
-            if (searchControl) {
-                console.log(searchControl);
-
-                searchControl.clearAllResults();
-
-                // Устанавливаем поисковый запрос
-                const searchQuery = brand + " " + partNumber;
-                searchControl.prefillQuery(searchQuery);
-                // Выполняем поиск
-                searchControl.execute();
-            };
-        };
-
-      // Ждем загрузки компонента Google Custom Search
-      function onGoogleSearchLoaded() {
-        console.log("Google Custom Search загружен");
-
-        performSearch("%s", "%s");
-
-      };
-
-      // Событие инициализации поиска Google Custom Search
-      window.__gcse = {
-        callback: onGoogleSearchLoaded
-      };
-
-    </script>
-
-    '''
-    , [FGoogleKey, FManufacturer, FDetailNumber]);
-end;
 
 end.
-
-
-
-
-
-procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
-  Result: TStrings);
-begin
-
-end;
-
-procedure TOrderF.edtLChange(Sender: TObject);
-begin
-
-end;
-
-procedure TOrderF.edtVKGKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-
-end;
-
-procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-
-end;
-
-procedure TOrderF.GetPartFromEmex;
-begin
-
-end;
-
-procedure TOrderF.getPartRatingFromDB2;
-begin
-
-end;
-
-procedure TOrderF.GooglePSE;
-begin
-
-end;
-
-procedure TOrderF.LoadDataPart;
-begin
-
-end;
-
-function TOrderF.LoadNextPart: Boolean;
-begin
-
-end;
 
 

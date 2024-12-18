@@ -836,13 +836,55 @@ begin
     part:= FindByNumber.Create;
     part :=  APparts[i];
 
-    FSQL.Exec( '''
-                insert into pFindByNumber with (rowlock)
-                     (Spid,    ClientID, Available, bitOldNum, PercentSupped, PriceId, Region, Delivery, Make, DetailNum, PriceLogo, Price, PartNameRus, PartNameEng,  WeightGr,  MakeName,   Packing,  VolumeAdd,  GuaranteedDay, bitECO, bitWeightMeasured)
-               select @@spid, :ClientID, :Available,:bitOldNum,:PercentSupped,:PriceId,:Region,:Delivery,:Make,:DetailNum,:PriceLogo,:Price,:PartNameRus,:PartNameEng, :WeightGr, :MakeName,  :Packing, :VolumeAdd, :GuaranteedDay, :bitECO, :bitWeightMeasured
-              ''' ,
-             ['ClientID','Available','bitOldNum','PercentSupped','PriceId','Region','Delivery', 'Make', 'DetailNum', 'PriceLogo', 'Price', 'PartNameRus', 'PartNameEng','WeightGr','MakeName', 'Packing','VolumeAdd','GuaranteedDay', 'bitECO', 'bitWeightMeasured'],
-             [AClientID,
+    FSQL.Exec('''
+                exec FindByNumberInsert
+                      @ClientID           = :ClientID
+                     ,@Available          = :Available
+                     ,@bitOldNum          = :bitOldNum
+                     ,@PercentSupped      = :PercentSupped
+                     ,@PriceId            = :PriceId
+                     ,@Region             = :Region
+                     ,@Delivery           = :Delivery
+                     ,@Make               = :Make
+                     ,@DetailNum          = :DetailNum
+                     ,@PriceLogo          = :PriceLogo
+                     ,@Price              = :Price
+                     ,@PartNameRus        = :PartNameRus
+                     ,@PartNameEng        = :PartNameEng
+                     ,@WeightGr           = :WeightGr
+                     ,@MakeName           = :MakeName
+                     ,@Packing            = :Packing
+                     ,@bitECO             = :bitECO
+                     ,@bitWeightMeasured  = :bitWeightMeasured
+                     ,@VolumeAdd          = :VolumeAdd
+                     ,@GuaranteedDay      = :GuaranteedDay
+              ''',
+
+             [
+              'ClientID',
+              'Available',
+              'bitOldNum',
+              'PercentSupped',
+              'PriceId',
+              'Region',
+              'Delivery',
+              'Make',
+              'DetailNum',
+              'PriceLogo',
+              'Price',
+              'PartNameRus',
+              'PartNameEng',
+              'WeightGr',
+              'MakeName',
+              'Packing',
+              'VolumeAdd',
+              'GuaranteedDay',
+              'bitECO',
+              'bitWeightMeasured'
+              ],
+
+             [
+              AClientID,
               part.Available,
               part.bitOldNum,
               part.PercentSupped,

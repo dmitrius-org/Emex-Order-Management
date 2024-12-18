@@ -14,9 +14,8 @@ if OBJECT_ID('OrdersFinCalc') is not null
 */
 go
 create proc OrdersFinCalc
-              @IsSave       bit =  null,
-              @IsFilled     bit =  null
-             
+              @IsSave   bit = null,
+              @IsFilled bit = null            
 as
 declare @r int = 0
 
@@ -79,7 +78,7 @@ Update p
  cross apply ( select top 1 Value
                  from tCurrencyRate with (nolock index=ao2)
                 where NumCode = '840'
-  		          and OnDate <= p.OrderDate
+  		          and OnDate <= getdate()--p.OrderDate
   		        order by OnDate desc) c
  where p.Spid = @@Spid
  
@@ -182,8 +181,8 @@ begin
         ,o.Profit           = p.Profit     -- Рентабельность
         ,o.CommissionAmount = isnull(o.CommissionAmount, p.PriceCommission) -- Комиссия от продажи
 
-        ,o.Kurs             = p.Course
-        ,o.ExtraKurs        = p.ExtraKurs
+        --,o.Kurs             = p.Course     -- курс
+        --,o.ExtraKurs        = p.ExtraKurs
     from pOrdersFin p (nolock)
    inner join tOrders o with (updlock)
            on o.OrderID = p.OrderID
@@ -199,7 +198,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20241206', '5'
+exec setOV 'OrdersFinCalc', 'P', '20241212', '6'
 go
  
  

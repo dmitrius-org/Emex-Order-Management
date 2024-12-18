@@ -74,6 +74,12 @@ object ExportForm: TExportForm
             ReadOnly = True
           end
           item
+            FieldName = 'DetailName'
+            Title.Alignment = taCenter
+            Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080
+            Width = 300
+          end
+          item
             FieldName = 'DetailNumberDetailName'
             Title.Alignment = taCenter
             Title.Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080' + '#1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1076#1077#1090#1072#1083#1080
@@ -622,6 +628,10 @@ object ExportForm: TExportForm
       Origin = 'DetailNumber'
       ReadOnly = True
       Size = 32
+    end
+    object FDExportNomenclatureDetailName: TWideStringField
+      FieldName = 'DetailName'
+      Size = 256
     end
     object FDExportNomenclatureDetailNumberDetailName: TWideStringField
       FieldName = 'DetailNumberDetailName'

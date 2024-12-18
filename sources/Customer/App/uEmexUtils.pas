@@ -235,27 +235,29 @@ begin
     part:= FindByNumber.Create;
     part :=  APparts[i];
 
-    SQl.Exec( 'exec FindByNumberInsert'+
-              '  @ClientID           = :ClientID     '+
-              ' ,@Available          = :Available    '+
-              ' ,@bitOldNum          = :bitOldNum    '+
-              ' ,@PercentSupped      = :PercentSupped'+
-              ' ,@PriceId            = :PriceId      '+
-              ' ,@Region             = :Region       '+
-              ' ,@Delivery           = :Delivery     '+
-              ' ,@Make               = :Make         '+
-              ' ,@DetailNum          = :DetailNum    '+
-              ' ,@PriceLogo          = :PriceLogo    '+
-              ' ,@Price              = :Price        '+
-              ' ,@PartNameRus        = :PartNameRus  '+
-              ' ,@PartNameEng        = :PartNameEng  '+
-              ' ,@WeightGr           = :WeightGr     '+
-              ' ,@MakeName           = :MakeName     '+
-              ' ,@Packing            = :Packing      '+
-              ' ,@bitECO             = :bitECO       '+
-              ' ,@bitWeightMeasured  = :bitWeightMeasured '+
-              ' ,@VolumeAdd          = :VolumeAdd         '+
-              ' ,@GuaranteedDay      = :GuaranteedDay     ',
+    FSQL.Exec('''
+                exec FindByNumberInsert
+                      @ClientID           = :ClientID
+                     ,@Available          = :Available
+                     ,@bitOldNum          = :bitOldNum
+                     ,@PercentSupped      = :PercentSupped
+                     ,@PriceId            = :PriceId
+                     ,@Region             = :Region
+                     ,@Delivery           = :Delivery
+                     ,@Make               = :Make
+                     ,@DetailNum          = :DetailNum
+                     ,@PriceLogo          = :PriceLogo
+                     ,@Price              = :Price
+                     ,@PartNameRus        = :PartNameRus
+                     ,@PartNameEng        = :PartNameEng
+                     ,@WeightGr           = :WeightGr
+                     ,@MakeName           = :MakeName
+                     ,@Packing            = :Packing
+                     ,@bitECO             = :bitECO
+                     ,@bitWeightMeasured  = :bitWeightMeasured
+                     ,@VolumeAdd          = :VolumeAdd
+                     ,@GuaranteedDay      = :GuaranteedDay
+              ''',
 
              [
               'ClientID',

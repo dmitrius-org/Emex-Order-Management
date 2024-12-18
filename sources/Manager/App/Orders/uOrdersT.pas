@@ -1361,7 +1361,7 @@ begin
   logger.Info('TOrdersT.UniFrameCreate Begin');
 
   {$IFDEF Debug}
-  Grant.GrantTemplateCreate(self);
+    Grant.GrantTemplateCreate(self);
   {$ENDIF}
 
   Grant.SetGrant(self, actMain);
@@ -1370,7 +1370,6 @@ begin
 
   actSelect.Caption   := '';
   actUnSelect.Caption := '';
-
   edtUpdDate.Text     := '';
 
   FilterStatusCreate;
@@ -1592,7 +1591,7 @@ end;
 
 procedure tMarks.DeleteInDB();
 begin
-  Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
+  Sql.Exec('exec MarksDelete @Type = 3 ', [], [])
 end;
 
 procedure tMarks.Clear;

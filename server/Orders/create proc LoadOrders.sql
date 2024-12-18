@@ -42,7 +42,7 @@ as
 
   declare @ID as ID
 
-  insert tOrders
+  insert tOrders with (rowlock)
         (ClientID
         ,SuppliersID
         ,Manufacturer

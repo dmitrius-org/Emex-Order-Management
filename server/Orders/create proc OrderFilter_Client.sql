@@ -24,7 +24,7 @@ as
  exit_:
  return @r
 go
-grant exec on OrderFilter_Client to public
+grant execute on OrderFilter_Client to public
 go
 exec setOV 'OrderFilter_Client', 'P', '20241020', '1'
 go

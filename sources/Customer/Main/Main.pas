@@ -11,7 +11,7 @@ uses
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
 
   ,uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
-  ,uBalanceTotalT;
+  ,uBalanceTotalT, uVersion;
 
 type
   TMainForm = class(TUniForm)
@@ -50,6 +50,8 @@ type
     LogoLabel: TUniLabel;
     btnExit: TUniSpeedButton;
     tsBalance: TUniTabSheet;
+    pnlInfo: TUniContainerPanel;
+    lblVersion: TUniLabel;
     procedure UniFormShow(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
@@ -85,6 +87,8 @@ type
     procedure SetMainMenuMicroName;
 
     procedure ProfileMenuAdd();
+
+    procedure Version();
   public
 
   end;
@@ -316,6 +320,13 @@ begin
   SetMainMenuMicroName;
 
   pcMain.ActivePageIndex := 0;
+
+  Version;
+end;
+
+procedure TMainForm.Version;
+begin
+  lblVersion.Caption := ProductVersion;
 end;
 
 initialization

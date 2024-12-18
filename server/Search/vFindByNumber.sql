@@ -62,7 +62,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
   from pFindByNumber p with (nolock index=ao2)
   left join tSettings st with (nolock index=ao2)
          on st.Brief = 'PercentSupped'
- where p.Spid             = @@spid
+ where p.Spid        = @@spid
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
    and not exists (select 1

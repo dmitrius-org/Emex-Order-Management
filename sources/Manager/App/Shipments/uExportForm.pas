@@ -96,6 +96,7 @@ type
     WideStringField12: TWideStringField;
     WideStringField13: TWideStringField;
     FDExportNomenclatureClientBrief: TWideStringField;
+    FDExportNomenclatureDetailName: TWideStringField;
     procedure GridNomenclatureCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
     procedure actExportNomenklatureExecute(Sender: TObject);

@@ -62,7 +62,8 @@ uses
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm},
-  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas';
+  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas',
+  uVersion in '..\Common\CommonApp\uVersion.pas';
 
 {$R *.res}
 

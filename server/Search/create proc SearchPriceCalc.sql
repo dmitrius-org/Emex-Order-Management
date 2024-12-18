@@ -107,7 +107,7 @@ group by p.DetailNum , p.Make
 --order by pp.WeightKGF desc, pp.VolumeKGf desc
 
 -- расчет цены
-insert #Price
+insert #Price with (rowlock)
 	  (ID        
       ,Brand        
       ,DetailNum	  
@@ -178,7 +178,7 @@ select p.ID,
        pd.VolumeKG,
        pd.DestinationLogo,
 	   pd.ProfilesDeliveryID,
-	   pd.Delivery,
+	   isnull(pd.Delivery, 0),
 	   p.GuaranteedDay,
        isnull(pp.FragileSign, 0),
        isnull(pd.Fragile, 0)
@@ -191,7 +191,7 @@ select p.ID,
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
       select top 1
              pd.DestinationLogo, 
-             pd.Name,
+             pd.Name as DestinationName,
 
              pd.WeightKG,
              pd.VolumeKG,
@@ -272,7 +272,7 @@ Update f
 
 -- расчет ближайшей дата вылета
 delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
-insert pDeliveryDate 
+insert pDeliveryDate with (rowlock)
       (Spid, ID, OrderDate, ProfilesDeliveryID, Delivery)
 select @@SPID, 
        ID, 
@@ -297,5 +297,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20240709', '8'
+exec setOV 'SearchPriceCalc', 'P', '20241212', '9'
 go

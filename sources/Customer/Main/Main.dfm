@@ -63,7 +63,7 @@ object MainForm: TMainForm
           Width = 616
           Height = 511
           Hint = ''
-          ActivePage = tsOrder
+          ActivePage = tbS
           Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False
@@ -140,7 +140,7 @@ object MainForm: TMainForm
           Left = 0
           Top = 41
           Width = 300
-          Height = 476
+          Height = 452
           Hint = ''
           Margins.Left = 0
           Margins.Top = 0
@@ -3745,6 +3745,34 @@ object MainForm: TMainForm
             LayoutConfig.ComponentCls = 'logo-btn-exit'
             LayoutConfig.IgnorePosition = False
             TabOrder = 3
+          end
+        end
+        object pnlInfo: TUniContainerPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 496
+          Width = 294
+          Height = 18
+          Hint = ''
+          ParentColor = False
+          Align = alBottom
+          TabOrder = 3
+          Layout = 'hbox'
+          LayoutAttribs.Align = 'top'
+          LayoutAttribs.Pack = 'center'
+          LayoutConfig.ComponentCls = 'logo-version'
+          LayoutConfig.Region = 'center'
+          object lblVersion: TUniLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 51
+            Height = 13
+            Hint = ''
+            Alignment = taCenter
+            Caption = 'lblVersion'
+            Align = alClient
+            TabOrder = 1
           end
         end
       end

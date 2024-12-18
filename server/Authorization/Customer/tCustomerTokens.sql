@@ -24,7 +24,7 @@ begin
     grant all on system.tCustomerTokens to ServiceUser;
 end
 go
-exec setOV 'tCustomerTokens', 'U', '20240101', '0'
+exec setOV 'tCustomerTokens', 'U', '20240101', '0', 'System'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'system.tCustomerTokens', @desc = 'Tokens'

@@ -2,31 +2,51 @@ if OBJECT_ID('setOV') is not null
   drop proc setOV
 go
 create proc setOV
+        
         @ObjectName nvarchar(256), 
 		@Type       nvarchar(256),
         @ObjectDate nvarchar(256),
-        @Version    nvarchar(256)
+        @Version    nvarchar(256),
+        @Schema     nvarchar(30) = null 
 		
 AS
 begin
   SET NOCOUNT ON;
 
-  if OBJECT_ID(@ObjectName, @Type) is null
-  begin
+  declare @ObjectNameS nvarchar(256)
 
-    delete tObjectVersion from tObjectVersion (rowlock) where ObjectName=@ObjectName and [Type]=@Type
+  set @ObjectNameS = @ObjectName
+
+  if isnull(@Schema, '') <> ''
+  begin
+    set @ObjectNameS = @Schema + '.' + @ObjectName
+  end
+
+  if OBJECT_ID(@ObjectNameS, @Type) is null
+  begin
+      --delete System.tObjectVersion from System.tObjectVersion (rowlock) where ObjectName=@ObjectName and [Type]=@Type
+      goto exit_
+  end
+
+  if exists (select 1
+               from System.tObjectVersion (nolock)
+              where [ObjectName] = @ObjectName
+                and [Type]       = @Type
+                and [ObjectDate] = @ObjectDate
+                and [Version]    = @Version
+            )
+  begin
     goto exit_
   end
 
-
   if not exists (select 1
-                   from tObjectVersion (nolock)
+                   from System.tObjectVersion (nolock)
 				  where ObjectName = @ObjectName
 				    and [Type]     = @Type
 				)
   begin
     --
-    insert tObjectVersion
+    insert System.tObjectVersion with (rowlock)
 	      (ObjectName
 		  ,ObjectDate
 		  ,[Type]
@@ -37,17 +57,17 @@ begin
 	      ,@ObjectDate
 		  ,@Type
 		  ,@Version
-		  ,GetDate()
-		  ,GetDate()    
+		  ,SYSDATETIME()
+		  ,SYSDATETIME()    
   end
   else
   begin
     --
-    Update tObjectVersion
+    Update System.tObjectVersion
 	   set ObjectDate = @ObjectDate
 	      ,[Version]  = @Version
-		  ,UpdDatetime= GetDate()
-	  from tObjectVersion (updlock)
+		  ,UpdDatetime= SYSDATETIME()
+	  from System.tObjectVersion (updlock)
 	 where ObjectName = @ObjectName
 	   and [Type]     = @Type
   end
@@ -117,4 +137,4 @@ end
 go
 grant all on setOV to public
 go
-exec setOV 'setOV', 'P', '20240307', '1'
+exec setOV 'setOV', 'P', '20240101', '1'
