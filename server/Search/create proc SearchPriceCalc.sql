@@ -79,7 +79,8 @@ declare  @Price  table
         ,MakeLogo    nvarchar(40)
         ,WeightKGF   float
 		,VolumeKGf   float
-        ,FragileSign bit);
+        ,FragileSign bit
+        ,DetailName  nvarchar(256));
 
 insert @Num (DetailNum, Make)
 select distinct p.DetailNum, p.Make
@@ -92,13 +93,15 @@ insert @Price
 		MakeLogo, 
 		WeightKGF, 
 		VolumeKGf,
-        FragileSign)
+        FragileSign,
+        DetailName)
 select top 1 
        p.DetailNum,
 	   p.Make,
 	   max(pp.WeightKGF),
 	   max(pp.VolumeKGf),
-       max( cast(isnull(pp.Fragile, 0) as int))
+       max( cast(isnull(pp.Fragile, 0) as int)),
+       max(pp.DetailNameF)
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
@@ -141,7 +144,7 @@ select p.ID,
        p.MakeName, 
        p.DetailNum, 
 	   p.Price,
-	   p.DetailNum, 
+	   isnull(pp.DetailName, p.PartNameRus), -- DetailName
 	   p.PriceLogo,
 	   1, 
 	   p.Packing, 
@@ -265,6 +268,7 @@ Update f
       ,f.DestinationLogo = p.DestinationLogo
 	  ,f.WeightGr	     = p.WeightKG   
 	  ,f.VolumeAdd       = p.VolumeKG   
+      ,f.PartNameRus     = p.DetailName
   from #Price p (nolock)
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
@@ -285,7 +289,7 @@ exec DeliveryDateCalc
 
 Update f 
    set f.OurDelivery    = f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery
-      ,f.OurDeliverySTR = cast(f.GuaranteedDay as nvarchar) + ' + ' + cast(DATEDIFF(dd, p.OrderDate, p.DeliveryDate) as nvarchar) + ' + ' + cast(p.Delivery as nvarchar) + ' = ' + Cast(f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery as nvarchar)
+      ,f.OurDeliverySTR = cast(f.GuaranteedDay as nvarchar) + ' + ' + cast(DATEDIFF(dd, p.OrderDate, p.DeliveryDate) as nvarchar) + ' + ' + cast(p.Delivery as nvarchar) + ' = ' + Cast(f.GuaranteedDay + DATEDIFF(dd, p.OrderDate, p.DeliveryDate) + p.Delivery as nvarchar)      
   from pDeliveryDate p with (nolock index=ao1)
  inner join pFindByNumber f with (updlock index=ao1)
          on f.Spid = @@Spid
@@ -297,5 +301,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20241212', '9'
+exec setOV 'SearchPriceCalc', 'P', '20241218', '10'
 go

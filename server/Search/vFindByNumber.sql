@@ -4,12 +4,7 @@ go
 /* **********************************************************						
 vFindByNumber - получение списка найденных деталей
 
-
-
-поиск детали по номеру
-
-Выходные параметры:
-
+pFindByNumber:
 Available     – наличие детали на складе
 bitOldNum     – признак УСТАРЕВШИЙ НОМЕР
 PercentSupped – процент поставки
@@ -52,10 +47,6 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
          then cast(p.Available as int)
          else null
        end  Available,
-       --case 
-       --  when p.Available = -1 then 'под заказ'
-       --  else cast(p.Available as nvarchar)
-       --end as AvailableStr,-- наличие детали на складе
        p.PriceLogo,
        p.DestinationLogo,
        p.Packing

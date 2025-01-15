@@ -1,7 +1,7 @@
 object BalanceAddF: TBalanceAddF
   Left = 0
   Top = 0
-  ClientHeight = 312
+  ClientHeight = 333
   ClientWidth = 603
   Caption = #1055#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1091':'
   OnShow = UniFormShow
@@ -12,14 +12,13 @@ object BalanceAddF: TBalanceAddF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 265
+    Top = 286
     Width = 597
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 1
     Caption = ''
-    ExplicitTop = 276
     DesignSize = (
       597
       44)
@@ -50,17 +49,15 @@ object BalanceAddF: TBalanceAddF
     Left = 0
     Top = 0
     Width = 603
-    Height = 262
+    Height = 283
     Hint = ''
     ActivePage = tabCommon
     TabBarVisible = False
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 273
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitHeight = 245
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -96,6 +93,7 @@ object BalanceAddF: TBalanceAddF
           TabOrder = 2
           EmptyText = #1057#1091#1084#1084#1072' '
           DecimalSeparator = ','
+          OnKeyPress = edtAmountKeyPress
         end
         object edtComment: TUniMemo
           Left = 128
@@ -183,11 +181,10 @@ object BalanceAddF: TBalanceAddF
       ParentAlignmentControl = False
       Caption = #1040#1091#1076#1080#1090
       LayoutConfig.Width = '100'
-      ExplicitHeight = 245
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
-        Top = 151
+        Top = 172
         Width = 589
         Height = 80
         Hint = ''
@@ -196,7 +193,6 @@ object BalanceAddF: TBalanceAddF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 0
-        ExplicitTop = 162
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15

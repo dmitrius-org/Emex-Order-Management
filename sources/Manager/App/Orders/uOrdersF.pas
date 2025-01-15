@@ -75,7 +75,6 @@ type
     edtIncome: TUniEdit;
     edtProfit: TUniEdit;
     edtDelivery: TUniEdit;
-    edtDeliveryClient: TUniEdit;
     edtCount: TUniEdit;
     edtReliabilityGroup: TUniFieldContainer;
     edtReliability: TUniHTMLFrame;
@@ -88,7 +87,6 @@ type
     edtReliabilityGroup2: TUniFieldContainer;
     edtReliability2: TUniHTMLFrame;
     edtDelivery2: TUniEdit;
-    edtDeliveryClient2: TUniEdit;
     edtCount2: TUniEdit;
     cbDestinationLogo: TUniFSComboBox;
     btnOkToCancel: TUniBitBtn;
@@ -168,6 +166,12 @@ type
     /// <value>FGoogleKey - ключ к программируемой поисковой системы google</value>
     FGoogleKey : string;
 
+    FDeliveryTermSupplier,
+    FDeliveryDaysReserve,
+    FDeliveryTermFromSupplierProfile,
+    FDeliveryTermFromCustomerProfile,
+    FPassedDayInWork: Integer;
+
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
@@ -189,6 +193,8 @@ type
     procedure GooglePSE();
 
     procedure WeightKGFStyle();
+
+    procedure SetDeliveryHint();
   public
     { Public declarations }
 
@@ -252,7 +258,6 @@ function OrderF: TOrderF;
 begin
   Result := TOrderF(UniMainModule.GetFormInstance(TOrderF));
 end;
-
 
 
 { TSQLQueryThread }
@@ -402,10 +407,38 @@ begin
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
     edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
-    edtDelivery2.text  := sql.F('GuaranteedDay').AsString;
-    edtDeliveryClient2.Text:= sql.F('OurDelivery').AsString;
 
-    var t: Real; t:= SimpleRoundTo(sql.F('Price').Value*100/FPrice - 100, -2);
+    var DeliveryTermSupplier : Integer := sql.F('GuaranteedDay').AsInteger;
+  //  Срок поставки:
+    edtDelivery2.Text   := FPassedDayInWork.ToString + ' + ' +      // дней в обработке
+                        DeliveryTermSupplier.ToString + ' + ' +     // Срок поставщика из API
+                        FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
+                        FDeliveryTermFromSupplierProfile.ToString + // Доставка
+                        ' = ' +
+                        (
+                          FPassedDayInWork +               // дней в обработке
+                          DeliveryTermSupplier+            // Срок поставщика из API
+                          FDeliveryDaysReserve+            // Запас до вылета
+                          FDeliveryTermFromSupplierProfile // Доставка
+                        ).ToString +
+
+                        ' (' +
+                        IfThen(FPassedDayInWork+
+                               DeliveryTermSupplier+
+                               FDeliveryDaysReserve+
+                               FDeliveryTermFromSupplierProfile-
+                               FDeliveryTermFromCustomerProfile > 0, '+', '') +
+
+                        (
+                          FPassedDayInWork +                // дней в обработке
+                          DeliveryTermSupplier+             // Срок поставщика из API
+                          FDeliveryDaysReserve+             // Запас до вылета
+                          FDeliveryTermFromSupplierProfile- // Доставка
+                          FDeliveryTermFromCustomerProfile
+                        ).ToString +
+                        ')';
+
+    var t: Real := SimpleRoundTo(sql.F('Price').Value*100/FPrice - 100, -2);
     if t > 0 then r := '+'
     else
     if t = 0 then r := ''
@@ -787,6 +820,24 @@ begin
   btnOk.Enabled := True;
 end;
 
+procedure TOrderF.SetDeliveryHint;
+var
+  HintText: string;
+begin
+  HintText := HintText + FPassedDayInWork.ToString + ' - дней до взятия в работу' + #10;
+  HintText := HintText + FDeliveryTermSupplier.ToString + ' - срок поставщика из прайса' + #10;
+  HintText := HintText + FDeliveryDaysReserve.ToString +  ' - дней запаса до вылета' + #10;
+  HintText := HintText + FDeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
+  HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
+  if FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
+    HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
+  else
+    HintText := HintText + '+' + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
+  HintText := HintText + FDeliveryTermFromCustomerProfile.ToString + ' - cрок клиента из профиля';
+
+  edtDelivery.Hint := HintText;
+end;
+
 procedure TOrderF.SetEditDataRating(ARating: integer);
 var r, js: string;
 begin
@@ -849,7 +900,6 @@ begin
   setColor(FIncome2,   FIncome,   edtIncome2);
   setColor(FProfin2,   FProfin,   edtProfit2);
   setColor(FMarginF2,  FMarginF,  edtDelivery2);
-  setColor(FMarginF2,  FMarginF,  edtDeliveryClient2);
   setColor(FQuantity2, FPriceQuantity, edtCount2);
 end;
 
@@ -863,7 +913,6 @@ begin
   edtProfit.Color         := edtMarginF.Color;
   edtIncome.Color         := edtMarginF.Color;
   edtDelivery.Color       := edtMarginF.Color;
-  edtDeliveryClient.Color := edtMarginF.Color;
   edtCount.Color          := edtMarginF.Color;
   edtReliability.Color    := edtMarginF.Color;
 end;
@@ -1062,7 +1111,6 @@ begin
   end;
 end;
 
-
 procedure TOrderF.DataLoad;
 var js: string;
 begin
@@ -1074,7 +1122,7 @@ begin
              ,v.VolumeKG
              ,v.WeightKGF
              ,v.VolumeKGF
-             ,v.DetailName as DetailName
+             ,v.DetailName
              ,v.DetailNumber
              ,v.NoAir
              ,v.Fragile
@@ -1097,22 +1145,31 @@ begin
              ,v.StatusID
              ,v.MakeLogo
              ,v.PercentSupped -- вероятность доставки
+
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
+             ,v.DeliveryTermSupplier -- Срок до поступления поставщику (срок из прайса)
+             ,v.DeliveryDaysReserve
+             ,v.DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
+             ,v.DeliveryTermFromCustomerProfile
+
              ,v.OrderUniqueCount
              ,v.DeliveryTermToCustomer
              ,isnull((select count(*)
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
+             ,datediff(day, v.OrderDate, isnull(v.DateInWork, getdate())) PassedDayInWork  -- прошло дней с момента заказа
+
          from vOrders v
         where v.OrderID = :OrderID
+
   ''';
+
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.Open;
 
-  ComboBoxFill(cbPrice,
-  '''
+  ComboBoxFill(cbPrice, '''
     -- список поставщиков
     exec OrderF_SupplierList @OrderID =
   ''' + FID.ToString);
@@ -1129,7 +1186,7 @@ begin
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
-  FPercentSupped     :=  UniMainModule.Query.FieldByName('PercentSupped').AsInteger;
+  FPercentSupped     := UniMainModule.Query.FieldByName('PercentSupped').AsInteger;
 
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
@@ -1141,7 +1198,6 @@ begin
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
- // edtMessage.Text    := UniMainModule.Query.FieldByName('Comment').AsString;
   edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
@@ -1149,32 +1205,67 @@ begin
   edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
-  edtDelivery.Text   := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
-  edtDelivery.Hint   := 'Плановая дата поступления поставщику: ' + UniMainModule.Query.FieldByName('DeliveryPlanDateSupplier').AsString;
-  edtDeliveryClient.Text :=  UniMainModule.Query.FieldByName('DeliveryTermToCustomer').AsString;
+
+  FPassedDayInWork := UniMainModule.Query.FieldByName('PassedDayInWork').asInteger;        // дней в обработке
+  FDeliveryTermSupplier := UniMainModule.Query.FieldByName('DeliveryTermSupplier').asInteger;   // Срок поставщика из прайса
+  FDeliveryDaysReserve :=  UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
+  FDeliveryTermFromSupplierProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromSupplierProfile').asInteger; // Доставка
+  FDeliveryTermFromCustomerProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromCustomerProfile').asInteger; // Доставка
+
+  //  Срок поставки:
+  var HintText: string;
+
+  edtDelivery.Text   := FPassedDayInWork.ToString + ' + ' +         // дней в обработке
+                        FDeliveryTermSupplier.ToString + ' + ' +    // Срок поставщика из прайса
+                        FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
+                        FDeliveryTermFromSupplierProfile.ToString + // Доставка
+                        ' = ' +
+                        (
+                          FPassedDayInWork +         // дней в обработке
+                          FDeliveryTermSupplier+     // Срок поставщика из прайса
+                          FDeliveryDaysReserve+      // Запас до вылета
+                          FDeliveryTermFromSupplierProfile // Доставка
+                        ).ToString +
+
+                        ' (' +
+                        IfThen(FPassedDayInWork+
+                               FDeliveryTermSupplier+
+                               FDeliveryDaysReserve+
+                               FDeliveryTermFromSupplierProfile-
+                               FDeliveryTermFromCustomerProfile > 0, '+', '') +
+
+                        (
+                          FPassedDayInWork +         // дней в обработке
+                          FDeliveryTermSupplier+     // Срок поставщика из прайса
+                          FDeliveryDaysReserve+      // Запас до вылета
+                          FDeliveryTermFromSupplierProfile- // Доставка
+                          FDeliveryTermFromCustomerProfile
+                        ).ToString +
+                        ')';
 
   FPrice             := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
-  //
   FMarginF           := UniMainModule.Query.FieldByName('MarginF').AsFloat;
   FIncome            := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
   FProfin            := UniMainModule.Query.FieldByName('Profit').AsFloat;
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
   FPriceQuantity     := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
-  //
-  FPrice2            := UniMainModule.Query.FieldByName('PricePurchase').AsFloat;
-  FMarginF2          := UniMainModule.Query.FieldByName('MarginF').AsFloat;
-  FIncome2           := UniMainModule.Query.FieldByName('IncomePrc').AsFloat;
-  FProfin2           := UniMainModule.Query.FieldByName('Profit').AsFloat;
-  FQuantity2         := UniMainModule.Query.FieldByName('PriceQuantity').AsInteger;
-  //
-  edtMargin2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Margin').AsFloat);
-  edtMarginF2.Text   := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
-  edtProfit2.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('Profit').AsFloat);
-  edtPrice2.Text     := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
-  edtIncome2.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
-  edtDelivery2.text  := UniMainModule.Query.FieldByName('DeliveryRestTermSupplier').AsString;
-  edtDeliveryClient2.Text:= UniMainModule.Query.FieldByName('DeliveryTermToCustomer').AsString;
-  //
+
+  FPrice2            := FPrice;
+  FMarginF2          := FMarginF;
+  FIncome2           := FIncome;
+  FProfin2           := FProfin;
+  FQuantity2         := FQuantity;
+
+  edtMargin2.Text    := edtMargin.Text;
+  edtMarginF2.Text   := edtMarginF.Text;
+  edtProfit2.Text    := edtProfit.Text;
+  edtPrice2.Text     := edtPrice.Text;
+  edtIncome2.Text    := edtIncome.Text;
+  edtDelivery2.text  := edtDelivery.Text;
+
+  SetDeliveryHint;
+
+
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
   SetEditDataStyle();

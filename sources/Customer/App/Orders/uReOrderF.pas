@@ -138,6 +138,7 @@ end;
 
 procedure TReOrder.btnOkClick(Sender: TObject);
 begin
+  RetVal.Clear;
   btnOk.Enabled := False;
   btnOk.ScreenMask.ShowMask('∆дите, операци€ выполн€етс€!');
 
@@ -146,7 +147,7 @@ begin
   if RetVal.Code = 0 then
   begin
     IsExistNext := LoadNextPart();
-  end;
+  end
 end;
 
 procedure TReOrder.cbDestinationLogoChange(Sender: TObject);
@@ -321,7 +322,10 @@ function TReOrder.LoadNextPart: Boolean;
 begin
   Result := False;
 
-  if not edtNextPart.Checked then Exit;
+  if not edtNextPart.Checked then
+  begin
+    Exit;
+  end;
 
   sql.open('''
              Update #CounterPart
@@ -340,14 +344,16 @@ begin
 
   if sql.count > 0 then
   begin
-    ID := sql.Q.FieldByName('OrderID').AsInteger;
+    ID := sql.f('OrderID').AsInteger;
 
     LoadDataPart;
 
     GetPartFromEmex;
 
     Result := True;
-  end;
+  end
+  else
+    btnOk.ScreenMask.HideMask;
 end;
 
 procedure TReOrder.SetBtnEnabled;

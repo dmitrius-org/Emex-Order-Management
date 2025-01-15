@@ -72,6 +72,7 @@ as
      set t.Price                  = p.PriceRub
         ,t.Amount                 = p.PriceRub * t.Quantity
         ,t.PricePurchase          = p.Price
+        ,t.PricePurchaseOrg       = p.Price
         ,t.AmountPurchase         = p.Price * t.Quantity
         ,t.AmountPurchaseF        = null
         ,t.PricePurchaseF         = null
@@ -104,9 +105,10 @@ as
         ,t.Discount               = p.Discount
         ,t.Commission             = p.Commission
         ,t.Reliability            = p.Reliability
+        ,t.CommissionAmount       = null
 
-       -- ,t.Kurs                   = p.Kurs     --сохраняем в OrdersFinCalc
-       -- ,t.ExtraKurs              = p.ExtraKurs--сохраняем в OrdersFinCalc
+        ,t.Kurs                   = p.Kurs     
+        ,t.ExtraKurs              = p.ExtraKurs
 
         ,t.DeliveredDateToSupplier = null
         ,t.DeliveryPlanDateSupplier= null
@@ -144,14 +146,6 @@ as
           on 1=1 
    where t.OrderID = @OrderID
 
-  -- расчет финнасовых показателей
-  delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
-  insert pOrdersFinIn with (rowlock) 
-        (Spid, OrderID)
-  Select @@spid, @OrderID
-
-  exec OrdersFinCalc @IsSave = 1
-
   delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
   insert pAccrualAction with (rowlock) 
         (Spid,   
@@ -169,7 +163,7 @@ as
          o.StatusID, 
          1,--New
          18,--ToReNew
-         cast(getdate() as date),
+         getdate(),
          'Перезаказано клиентом',
          1,
          9
@@ -183,9 +177,6 @@ as
   insert pOrdersFinIn with (rowlock)
         (Spid, OrderID)
   Select @@spid, @OrderID
-   -- from pAccrualAction (nolock)
-   --where Spid = @@Spid
-   --  and Retval = 0
   
   exec OrdersFinCalc @IsSave = 1
 
@@ -194,9 +185,6 @@ as
   insert pDeliveryTerm with (rowlock)
         (Spid, OrderID) 
   Select @@spid, @OrderID
-   -- from pAccrualAction (nolock)
-   --where Spid = @@Spid
-   --  and Retval = 0
   
   exec OrdersDeliveryTermCalc @IsSave = 1
  
@@ -207,6 +195,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20241206', '4'
+exec setOV 'CustomerReOrder', 'P', '20241218', '5'
 go
  

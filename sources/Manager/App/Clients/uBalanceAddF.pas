@@ -62,6 +62,7 @@ type
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
+    procedure edtAmountKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -269,6 +270,18 @@ begin
   edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
   edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
+end;
+
+procedure TBalanceAddF.edtAmountKeyPress(Sender: TObject; var Key: Char);
+begin
+//  logger.Info(Key);
+//  // Если нажата запятая, заменяем её на точку
+//  if Key = '.' then
+//  begin
+//    Key := ',';
+//  end;
+
+
 end;
 
 procedure TBalanceAddF.SetAction(const Value: TFormAction);

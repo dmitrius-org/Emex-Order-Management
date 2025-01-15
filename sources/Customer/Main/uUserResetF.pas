@@ -38,7 +38,7 @@ begin
 end;
 
 procedure TUserResetF.btnOkClick(Sender: TObject);
-var Gmail: TcfsGmail;
+var Gmail: TxtGmail;
 begin
 
   if (edtEmail.Text = '')then
@@ -95,7 +95,7 @@ begin
           '</body> '+
           '</html> ';
 
-        Gmail := TcfsGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
+        Gmail := TxtGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
         try
             try
               Gmail.Connect;

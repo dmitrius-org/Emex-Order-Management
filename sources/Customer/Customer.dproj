@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Customer.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -115,10 +115,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
-        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Build>3</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_DebugInformation>0</DCC_DebugInformation>
@@ -134,11 +134,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.1;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.10;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.1;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>8</VerInfo_Build>
+        <VerInfo_Build>10</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -247,6 +247,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.Mark.pas"/>
         <DCCReference Include="..\Common\CommonApp\uVersion.pas"/>
+        <DCCReference Include="App\Statistics\uStatisticOrders.pas">
+            <Form>StatisticOrders</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Statistics\uStatistics.pas">
+            <Form>StatisticsT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

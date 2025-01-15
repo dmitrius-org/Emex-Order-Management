@@ -76,7 +76,7 @@ begin
   Title := 'Emex Manager';
 
   {$IFDEF UNIGUI_VCL}
-  ExploreWeb('http://127.0.0.1:8077');
+  ExploreWeb('http://127.0.0.1:8087');
   {$ENDIF}
   MimeTable.AddMimeType('xlsm', 'application/vnd.ms-excel.sheet.macroEnabled.12');
 

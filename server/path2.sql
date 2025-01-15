@@ -12,7 +12,7 @@
 --SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = History.tBasket));
 --go
 
-alter table tOrders add PriceLogoOrg nvarchar(32)
+alter table tOrders add DateInWork datetime
 
 sp_who
 

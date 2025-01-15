@@ -120,7 +120,7 @@ begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
 
   {$IFDEF UNIGUI_VCL}
-  ExploreWeb('http://127.0.0.1:8079');
+  ExploreWeb('http://127.0.0.1:8089');
   {$ENDIF}
 
   // Teste com numeros de 01 a 12

@@ -127,27 +127,28 @@ object SearchF: TSearchF
           '      if (record.id !== 0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'     ' +
           '       metaData.tdCls = '#39'span-columns'#39';'#13#10'            metaData.td' +
           'Attr = '#39'colspan=6'#39';'#13#10'            '#13#10'            if (record.id == ' +
-          '1){'#13#10'                return '#39'<form method="post" action="">'#39'+'#13#10' ' +
-          '                      '#39'   <span class="makelogo-caret-down">'#39'+'#13#10 +
-          '                       '#39'        <a>'#39'+'#13#10'                       '#39' ' +
-          '       <button type="button" onclick="setMakelogo()" class="make' +
-          'logo-label" data-tabindex-value="none" tabindex="-1" data-tabind' +
-          'ex-counter="1">'#1048#1084#1077#1102#1090#1089#1103' '#1079#1072#1084#1077#1085#1099'</button>'#39'+'#13#10'                      ' +
-          ' '#39'        </a>'#39'+'#13#10'                       '#39'   </span>'#39'+'#13#10'        ' +
-          '               '#39'</form>'#39';'#13#10'            }            '#13#10'          ' +
-          '  else {'#13#10'                return '#39#39';'#13#10'            }'#13#10'        }'#13#10 +
-          '        return value;'#13#10'    };'#13#10'    '#13#10'    startCol += 1;'#13#10'    '#13#10' ' +
-          '   for (let i = startCol; i < 6; i++) {  '#13#10'        if (columns[i' +
-          '].widget) {'#13#10'            columns[i].onWidgetAttach = function(co' +
-          'lumn, widget, record) {'#13#10'                if (record.id !== 0) { ' +
-          ' // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    widget.element' +
-          '.up('#39'td'#39').addCls('#39'hide-column'#39');'#13#10'                }'#13#10'           ' +
-          ' };'#13#10'        } else {'#13#10'            columns[i].renderer = functio' +
-          'n(value, metaData, record) {'#13#10'                if (record.id !== ' +
-          '0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    metaData.' +
-          'tdCls = '#39'hide-column'#39';'#13#10'                    return '#39#39';'#13#10'        ' +
-          '        }            '#13#10'                return value;'#13#10'          ' +
-          '  };'#13#10'        }'#13#10'    }'#13#10'}'#13#10)
+          '1){'#13#10'                return `'#13#10'                       <form meth' +
+          'od="post" action="" id="makereplacement">'#13#10'                     ' +
+          '     <span class="makelogo-caret-down">'#13#10'                       ' +
+          '        <a>'#13#10'                               <button type="button' +
+          '" onclick="setMakelogo()" class="makelogo-label" data-tabindex-v' +
+          'alue="none" tabindex="-1" data-tabindex-counter="1">'#1048#1084#1077#1102#1090#1089#1103' '#1079#1072#1084#1077 +
+          #1085#1099'</button>'#13#10'                               </a>'#13#10'              ' +
+          '            </span>'#13#10'                       </form>'#13#10'           ' +
+          '     `;'#13#10'            }            '#13#10'            else {'#13#10'        ' +
+          '        return '#39#39';'#13#10'            }'#13#10'        }'#13#10'        return val' +
+          'ue;'#13#10'    };'#13#10'    '#13#10'    startCol += 1;'#13#10'    '#13#10'    for (let i = st' +
+          'artCol; i < 6; i++) {  '#13#10'        if (columns[i].widget) {'#13#10'     ' +
+          '       columns[i].onWidgetAttach = function(column, widget, reco' +
+          'rd) {'#13#10'                if (record.id !== 0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090#1100' '#1087#1077#1088 +
+          #1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    widget.element.up('#39'td'#39').addCls('#39 +
+          'hide-column'#39');'#13#10'                }'#13#10'            };'#13#10'        } els' +
+          'e {'#13#10'            columns[i].renderer = function(value, metaData,' +
+          ' record) {'#13#10'                if (record.id !== 0) {  // '#1055#1088#1086#1087#1091#1089#1090#1080#1090 +
+          #1100' '#1087#1077#1088#1074#1091#1102' '#1089#1090#1088#1086#1082#1091#13#10'                    metaData.tdCls = '#39'hide-colu' +
+          'mn'#39';'#13#10'                    return '#39#39';'#13#10'                }         ' +
+          '   '#13#10'                return value;'#13#10'            };'#13#10'        }'#13#10' ' +
+          '   }'#13#10'}'#13#10)
       ClientEvents.UniEvents.Strings = (
         
           'afterCreate=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.c' +
@@ -225,6 +226,7 @@ object SearchF: TSearchF
       OnDblClick = SearchGridDblClick
       OnCellContextClick = SearchGridCellContextClick
       OnDrawColumnCell = SearchGridDrawColumnCell
+      OnAfterLoad = SearchGridAfterLoad
       Columns = <
         item
           FieldName = 'MakeName'
@@ -568,7 +570,6 @@ object SearchF: TSearchF
         FieldLabelFont.OverrideDefaults = [ovFontHeight]
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '1'
-        DecimalPrecision = 1
         DecimalSeparator = ','
       end
       object VolumeSave: TUniButton

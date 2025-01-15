@@ -652,8 +652,8 @@ object OrderF: TOrderF
       object edtDelivery: TUniEdit
         Left = 579
         Top = 35
-        Width = 79
-        Hint = ''
+        Width = 174
+        Hint = '12'#13#10'12'
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
@@ -668,29 +668,10 @@ object OrderF: TOrderF
         ReadOnlyMode = urmNotEditable
         LayoutConfig.Padding = '1'
       end
-      object edtDeliveryClient: TUniEdit
-        Left = 657
-        Top = 35
-        Width = 79
-        Hint = ''
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Alignment = taCenter
-        Text = ''
-        TabOrder = 8
-        ReadOnly = True
-        FieldLabel = #1057#1088#1086#1082' '#1082#1083#1080#1077#1085#1090#1072
-        FieldLabelAlign = laTop
-        FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        ReadOnlyMode = urmNotEditable
-        LayoutConfig.Padding = '1'
-      end
       object edtCount: TUniEdit
-        Left = 739
+        Left = 756
         Top = 35
-        Width = 85
+        Width = 77
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
         Margins.Right = 0
@@ -698,7 +679,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 9
+        TabOrder = 8
         ReadOnly = True
         FieldLabel = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
         FieldLabelAlign = laTop
@@ -908,7 +889,7 @@ object OrderF: TOrderF
       object edtDelivery2: TUniEdit
         Left = 575
         Top = 22
-        Width = 79
+        Width = 174
         Hint = ''
         Margins.Top = 0
         Margins.Right = 0
@@ -924,29 +905,10 @@ object OrderF: TOrderF
         ReadOnlyMode = urmNotEditable
         LayoutConfig.Padding = '1'
       end
-      object edtDeliveryClient2: TUniEdit
-        Left = 657
-        Top = 23
-        Width = 79
-        Hint = ''
-        Margins.Top = 0
-        Margins.Right = 0
-        Margins.Bottom = 0
-        ShowHint = True
-        Alignment = taCenter
-        Text = ''
-        TabOrder = 8
-        ReadOnly = True
-        FieldLabel = #1057#1088#1086#1082' '#1082#1083#1080#1077#1085#1090#1072
-        FieldLabelAlign = laTop
-        FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        ReadOnlyMode = urmNotEditable
-        LayoutConfig.Padding = '1'
-      end
       object edtCount2: TUniEdit
-        Left = 739
+        Left = 756
         Top = 21
-        Width = 85
+        Width = 77
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
         Margins.Right = 0
@@ -954,7 +916,7 @@ object OrderF: TOrderF
         ShowHint = True
         Alignment = taCenter
         Text = ''
-        TabOrder = 9
+        TabOrder = 8
         ReadOnly = True
         FieldLabel = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
         FieldLabelAlign = laTop

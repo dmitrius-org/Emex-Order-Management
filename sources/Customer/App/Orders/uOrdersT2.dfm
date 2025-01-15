@@ -435,6 +435,14 @@
           Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
           Width = 300
           Sortable = True
+        end
+        item
+          FieldName = 'updDatetime'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1072#1090#1072' c'#1090#1072#1090#1091#1089#1072
+          Width = 148
+          ReadOnly = True
+          Sortable = True
         end>
     end
     object pFilter: TUniPanel

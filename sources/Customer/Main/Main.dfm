@@ -1,8 +1,8 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  ClientHeight = 572
-  ClientWidth = 922
+  ClientHeight = 500
+  ClientWidth = 800
   Caption = 'MainForm'
   OnShow = UniFormShow
   BorderStyle = bsNone
@@ -16,8 +16,8 @@ object MainForm: TMainForm
   object UniContainerPanel: TUniContainerPanel
     Left = 0
     Top = 0
-    Width = 922
-    Height = 572
+    Width = 800
+    Height = 500
     Hint = ''
     ParentColor = False
     Align = alClient
@@ -27,11 +27,13 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
+    ExplicitWidth = 922
+    ExplicitHeight = 572
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
-      Width = 922
-      Height = 572
+      Width = 800
+      Height = 500
       Hint = ''
       Align = alClient
       TabOrder = 1
@@ -40,11 +42,13 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'border'
+      ExplicitWidth = 922
+      ExplicitHeight = 572
       object UniPanelCentral: TUniPanel
         Left = 300
         Top = 55
-        Width = 622
-        Height = 517
+        Width = 500
+        Height = 445
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -56,24 +60,30 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
+        ExplicitWidth = 622
+        ExplicitHeight = 517
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 616
-          Height = 511
+          Width = 494
+          Height = 439
           Hint = ''
-          ActivePage = tbS
+          ActivePage = TabStatistics
           Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
           OnChange = pcMainChange
+          ExplicitWidth = 616
+          ExplicitHeight = 511
           object tbS: TUniTabSheet
             Hint = ''
             ImageIndex = 2
             Caption = #1055#1086#1080#1089#1082
+            ExplicitWidth = 608
+            ExplicitHeight = 483
           end
           object tsB: TUniTabSheet
             Hint = ''
@@ -81,6 +91,8 @@ object MainForm: TMainForm
             Caption = #1050#1086#1088#1079#1080#1085#1072
             OnBeforeActivate = tsBBeforeActivate
             OnBeforeFirstActivate = tsBBeforeFirstActivate
+            ExplicitWidth = 608
+            ExplicitHeight = 483
           end
           object tsOrder: TUniTabSheet
             Hint = ''
@@ -88,19 +100,33 @@ object MainForm: TMainForm
             Caption = #1047#1072#1082#1072#1079#1099
             OnBeforeActivate = tsOrderBeforeActivate
             OnBeforeFirstActivate = tsOrderBeforeFirstActivate
+            ExplicitWidth = 608
+            ExplicitHeight = 483
           end
           object tsBalance: TUniTabSheet
             Hint = ''
             ImageIndex = 9
             Caption = #1041#1072#1083#1072#1085#1089' '#1080' '#1054#1090#1075#1088#1091#1079#1082#1080
             OnBeforeFirstActivate = tsBalanceBeforeFirstActivate
+            ExplicitWidth = 608
+            ExplicitHeight = 483
+          end
+          object TabStatistics: TUniTabSheet
+            Hint = ''
+            ImageIndex = 10
+            Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
+            OnBeforeFirstActivate = TabStatisticsBeforeFirstActivate
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 616
+            ExplicitHeight = 511
           end
         end
       end
       object UniPanelTop: TUniPanel
         Left = 0
         Top = 0
-        Width = 922
+        Width = 800
         Height = 55
         Hint = ''
         Visible = False
@@ -109,8 +135,9 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
+        ExplicitWidth = 922
         object UniPanel: TUniPanel
-          Left = 562
+          Left = 440
           Top = 0
           Width = 360
           Height = 55
@@ -119,13 +146,14 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
+          ExplicitLeft = 562
         end
       end
       object MainMenuPanel: TUniPanel
         Left = 0
         Top = 55
         Width = 300
-        Height = 517
+        Height = 445
         Hint = ''
         Align = alLeft
         TabOrder = 3
@@ -135,12 +163,13 @@ object MainForm: TMainForm
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Region = 'west'
         LayoutConfig.DockWhenAligned = False
+        ExplicitHeight = 517
         object MainMenu: TUniTreeMenu
           AlignWithMargins = True
           Left = 0
           Top = 41
           Width = 300
-          Height = 452
+          Height = 380
           Hint = ''
           Margins.Left = 0
           Margins.Top = 0
@@ -152,23 +181,26 @@ object MainForm: TMainForm
           BodyRTL = False
           Align = alClient
           Items.NodeData = {
-            07050000000A5400580054007200650065004E006F0064006500270000000400
+            07060000000A5400580054007200650065004E006F0064006500270000000400
             00000400000004000000FFFFFFFF04000000000000000000000000010420002E
             002E002E000000290000000200000002000000FFFFFFFFFFFFFFFF0200000000
-            000000000000000000051F043E04380441043A0400002D000000000000000000
-            0000FFFFFFFFFFFFFFFF0000000000000000000000000000071A043E04400437
+            000000000000000001051F043E04380441043A0400002D000000000000000000
+            0000FFFFFFFFFFFFFFFF0000000000000000000000000001071A043E04400437
             0438043D04300400002B0000000300000003000000FFFFFFFFFFFFFFFF030000
-            000000000000000000000006170430043A04300437044B040000410000000900
-            000009000000FFFFFFFFFFFFFFFF090000000000000000000000000011110430
-            043B0430043D0441042000380420001E04420433044004430437043A043804}
+            000000000000000000000106170430043A04300437044B040000410000000900
+            000009000000FFFFFFFFFFFFFFFF090000000000000000000000000111110430
+            043B0430043D0441042000380420001E04420433044004430437043A04380400
+            00330000000A0000000A000000FFFFFFFFFFFFFFFF0A00000000000000000000
+            0000010A210442043004420438046300420438043A043004}
           Items.FontData = {
-            01050000001D000000000000000600000000080000FFF5FFFFFF000000000000
+            01060000001D000000000000000600000000080000FFF5FFFFFF000000000000
             53696D53756EFFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFF
-            FFFF00000000}
+            FFFF00000000FFFFFFFF00000000}
           Images = MainMenuImage
           MicroWidth = 50
           SelectOnExpander = True
           OnClick = MainMenuClick
+          ExplicitHeight = 452
         end
         object LogoPanel: TUniContainerPanel
           Left = 0
@@ -3750,7 +3782,7 @@ object MainForm: TMainForm
         object pnlInfo: TUniContainerPanel
           AlignWithMargins = True
           Left = 3
-          Top = 496
+          Top = 424
           Width = 294
           Height = 18
           Hint = ''
@@ -3762,6 +3794,7 @@ object MainForm: TMainForm
           LayoutAttribs.Pack = 'center'
           LayoutConfig.ComponentCls = 'logo-version'
           LayoutConfig.Region = 'center'
+          ExplicitTop = 496
           object lblVersion: TUniLabel
             AlignWithMargins = True
             Left = 3
@@ -3845,12 +3878,13 @@ object MainForm: TMainForm
     Left = 512
     Top = 166
     Images = {
-      0A000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
+      0B000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
       FFFFFF1F060900000075736572733B66613BFFFFFF1F060A0000007365617263
       683B66613BFFFFFF1F060D00000066696C652D746578743B66613BFFFFFF1F06
       08000000626172733B66613BFFFFFF1F061200000077696E646F772D636C6F73
       652D6F3B66613BFFFFFF1F0608000000757365723B66613BFFFFFF1F060A0000
       00756E6C6F636B3B66613BFFFFFF1F060C00000073657474696E67733B66613B
-      FFFFFF1F06070000007573643B66613B}
+      FFFFFF1F06070000007573643B66613BFFFFFF1F060E0000006C696E652D6368
+      6172743B66613B}
   end
 end

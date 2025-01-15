@@ -63,7 +63,9 @@ uses
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm},
   uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas',
-  uVersion in '..\Common\CommonApp\uVersion.pas';
+  uVersion in '..\Common\CommonApp\uVersion.pas',
+  uStatisticOrders in 'App\Statistics\uStatisticOrders.pas' {StatisticOrders: TUniFrame},
+  uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame};
 
 {$R *.res}
 

@@ -11,7 +11,7 @@ uses
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList
 
   ,uBasket, uSearch, uOrdersT2, Vcl.Imaging.jpeg, uniImage, uniSpeedButton
-  ,uBalanceTotalT, uVersion;
+  ,uBalanceTotalT, uVersion, uStatisticOrders, uStatistics;
 
 type
   TMainForm = class(TUniForm)
@@ -52,6 +52,7 @@ type
     tsBalance: TUniTabSheet;
     pnlInfo: TUniContainerPanel;
     lblVersion: TUniLabel;
+    TabStatistics: TUniTabSheet;
     procedure UniFormShow(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
@@ -66,6 +67,8 @@ type
     procedure btnBasketClick(Sender: TObject);
     procedure tsBalanceBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure pcMainChange(Sender: TObject);
+    procedure TabStatisticsBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
 
   private
     ///<summary>
@@ -77,6 +80,7 @@ type
     FBasketF :TBasketF;
     FOrdersT2:TOrdersT2;
     FBalance:TBalanceTotalT;
+    FStatistics:TStatisticsT;
     ///<summary>
     ///  FormJSNames - список форм
     ///</summary>
@@ -101,8 +105,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uUtils.Varriant,
-  uAuditUtils, uCommonType;
+  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uUtils.Varriant;
 
 function MainForm: TMainForm;
 begin
@@ -162,6 +165,8 @@ begin
   if Nd.Text = 'Заказы' then pcMain.ActivePageIndex := 2
   else
   if Nd.Text = 'Баланс и Отгрузки' then pcMain.ActivePageIndex := 3
+  else
+  if Nd.Text = 'Статиcтика' then pcMain.ActivePageIndex := 4
   else
   // под 999 меню профиль
   if (Nd.Tag = -999) and (Nd.Action <> nil)  then
@@ -237,6 +242,17 @@ begin
   end;
 
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
+end;
+
+procedure TMainForm.TabStatisticsBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+begin
+  if not Assigned(FStatistics) then
+  begin
+    FStatistics :=  TStatisticsT.Create(Self);
+    FStatistics.Align := alClient;
+    FStatistics.Parent := TabStatistics;
+  end;
 end;
 
 procedure TMainForm.tsBalanceBeforeFirstActivate(Sender: TObject;

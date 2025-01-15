@@ -3,7 +3,7 @@ if OBJECT_ID('ProtocolAdd') is not null
 /*
   ProtocolAdd - добавление протокола
 
-  pAccrualAction - входящий набор данных
+  pAccrualAction - Входящий/Исходящий набор данных
 */
 go
 create proc ProtocolAdd
@@ -67,19 +67,23 @@ as
 
   -- изменение состояния заказа
   Update o 
-     set o.StatusID = p.NewStateID
-        ,o.isCancel = case
-	                    when ns.Brief = 'InCancel' then 1
-						when act.Brief = 'ToReNew' then 0 -- вернуть в работу
-		                else o.isCancel 
-		              end
-	    ,o.Flag     = case
-	                    when ns.Brief = 'InCancel' then (isnull (o.flag, 0) | 4 /*Отказан*/) 
-                                                                        & ~8192 /*Перезаказан*/
-						when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
-					    else o.flag
-	                  end
+     set o.StatusID    = p.NewStateID
+        ,o.isCancel    = case
+	                       when ns.Brief = 'InCancel' then 1
+					       when act.Brief = 'ToReNew' then 0 -- вернуть в работу
+		                   else o.isCancel 
+		                 end
+	    ,o.Flag        = case
+	                       when ns.Brief = 'InCancel' then (isnull (o.flag, 0) | 4 /*Отказан*/) 
+                                                                              & ~8192 /*Перезаказан*/
+					       when act.Brief = 'ToReNew' then isnull (o.flag, 0) & ~4 -- признак "Отказан"
+					       else o.flag
+	                     end
         ,o.updDatetime = GetDate()
+        ,o.DateInWork  = case -- дата перевода в работу
+	                       when ns.Brief = 'InWork' then cast(getdate() as date)
+		                   else o.DateInWork
+		                 end
 	from @ID id
    inner join pAccrualAction p (nolock)
 	       on p.Spid     = @@spid
@@ -92,8 +96,6 @@ as
    inner join tNodes act (nolock)
            on act.NodeID = p.ActionID
 
-
-
   --! расчет статистики по заказам
   declare @Orders as ID
   insert @Orders (ID) select ObjectID from @ID
@@ -105,6 +107,6 @@ as
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20241122', '4';
+exec setOV 'ProtocolAdd', 'P', '20250110', '5';
 go
  

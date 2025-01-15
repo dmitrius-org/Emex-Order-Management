@@ -75,7 +75,7 @@ SELECT o.[OrderID]
 
  outer apply (
       select top 1 pd.DestinationLogo, pd.Name
-        from tProfilesCustomer pc with (nolock)
+        from tProfilesCustomer pc with (nolock index=ao2)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
        where pc.ClientID = c.ClientID
@@ -86,13 +86,13 @@ SELECT o.[OrderID]
                 end
      ) as pd
 
-  left join tMakes b (nolock)
+  left join tMakes b with (nolock index=ao2)
          on b.Code = o.ReplacementMakeLogo
 
   left join tPrice p with (nolock index=ao1)
          on p.PriceID = o.PriceID	
          
-  left join tShipments sh (nolock)
+  left join tShipments sh with (nolock index=ao2)
          on sh.Invoice = o.Invoice
 
  outer apply (
@@ -104,7 +104,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20241119', '31'
+exec setOV 'vCustomerOrders', 'V', '20250115', '32'
 go
 
 select * from vCustomerOrders  where ClientID =31

@@ -44,15 +44,16 @@ begin
     ,DeliveryTerm                    int            -- Срок доставки поставщику
 
     ,DeliveryDaysReserve             int            -- Дней запаса до вылета
-    ,DeliveryDaysReserve2            int            -- Дней запаса до вылета, рассчитывается если прошол срок DeliveryNextDate
+    ,DeliveryDaysReserve2            int            -- Дней запаса до вылета, рассчитывается если прошел срок DeliveryNextDate
     ,DeliveryNextDate                datetime       -- Ближайшая дата вылета
-    ,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate
+    ,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошел срок DeliveryNextDate
     ,DeliveryDateToCustomer          datetime       -- Дата поставки клиенту
     ,DeliveryTermToCustomer          int            -- Срок поставки клиенту
     ,DeliveryRestToCustomer          int            -- Остаток срока до поставки клиенту
 
     ,DateDeparture                   datetime       -- Добавить дату вылета 
     ,DaysInWork                      int            -- Дней в работе
+    ,DateInWork                      datetime       -- Дата перехода в работу
 
     ,ReplacementMakeLogo             nvarchar(32)   -- Бренд замены
     ,ReplacementDetailNumber         nvarchar(32)   -- Номер замены
@@ -147,13 +148,16 @@ exec dbo.sys_setTableDescription 'tOrders', 'Income'                            
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryPlanDateSupplier'          ,'Плановая дата поступления поставщику'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestTermSupplier'          ,'Остаток срока до поступления поставщику'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveredDateToSupplier'           ,'Доставлена поставщику'
-exec dbo.sys_setTableDescription 'tOrders', 'ProfilesDeliveryID'                ,'tSupplierDeliveryProfiles.ProfilesDeliveryID - ИД профиля управления выгрузкой'
+exec dbo.sys_setTableDescription 'tOrders', 'DeliveryTerm'                      ,'Срок доставки поставщику'
+
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDaysReserve'               ,'Дней запаса до вылета'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate'                  ,'Ближайшая дата вылета'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate2'                 ,'Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate'    
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDateToCustomer'            ,'Дата поставки клиенту'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryTermToCustomer'            ,'Срок поставки клиенту'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestToCustomer'            ,'Остаток срока до поставки клиенту'
+
+exec dbo.sys_setTableDescription 'tOrders', 'ProfilesDeliveryID'                ,'tSupplierDeliveryProfiles.ProfilesDeliveryID - ИД профиля управления выгрузкой'
 exec dbo.sys_setTableDescription 'tOrders', 'ReplacementMakeLogo'               ,'Бренд замены'
 exec dbo.sys_setTableDescription 'tOrders', 'ReplacementDetailNumber'           ,'Номер замены'
 exec dbo.sys_setTableDescription 'tOrders', 'ReplacementPrice'                  ,'Цена замены'

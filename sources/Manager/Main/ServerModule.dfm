@@ -4,6 +4,7 @@ object UniServerModule: TUniServerModule
   TempFolder = 'temp\'
   FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\1583\Framework\uniGUI'
   SessionTimeout = 86400000
+  Port = 8087
   Title = 'Managers'
   AjaxTimeout = 500000
   SuppressErrors = [errObjectNotFound]

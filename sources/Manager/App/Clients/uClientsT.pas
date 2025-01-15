@@ -180,8 +180,9 @@ end;
 
 procedure TClientsT.actEditExecute(Sender: TObject);
 begin
+  logger.Info(Grid.Columns.ColumnFromFieldName('ClientID').Field.Value);
   ClientsF.FormAction := TFormAction.acUpdate;
-  ClientsF.ID:=QueryClientID.AsInteger;
+  ClientsF.ID:=Grid.Columns.ColumnFromFieldName('ClientID').Field.Value;
   ClientsF.ShowModal(ClientCallBack);
 end;
 
@@ -229,7 +230,7 @@ begin
   if BalanceAddF.FormAction = acInsert then
   begin
     Query.RefreshRecord();
-    Grid.RefreshCurrentRow();
+    Grid.Refresh();
   end;
 end;
 
@@ -244,7 +245,8 @@ begin
   if ClientsF.FormAction = acUpdate then
   begin
     Query.RefreshRecord();
-    Grid.RefreshCurrentRow();
+
+    Grid.Refresh();
   end;
   if ClientsF.FormAction = acDelete then
   begin

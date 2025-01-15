@@ -913,12 +913,14 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           ShowSearch = True
+          ShowSelectButton = True
           Text = ''
           TabOrder = 19
           ClientEvents.ExtEvents.Strings = (
             
-              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
-              'oxSearch(sender, "id", "val");'#13#10'}')
+              'afterrender=function afterrender(sender, eOpts) {  '#13#10'initComboBo' +
+              'xSelectButtons(sender, "id");'#13#10'initComboBoxSearch(sender, "id", ' +
+              '"val");  '#13#10'}')
           EmptyText = #1050#1083#1080#1077#1085#1090
           ClearButton = True
           IconItems = <>
@@ -931,12 +933,14 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           ShowSearch = True
+          ShowSelectButton = True
           Text = ''
           TabOrder = 20
           ClientEvents.ExtEvents.Strings = (
             
-              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
-              'oxSearch(sender, "id", "val");'#13#10'}')
+              'afterrender=function afterrender(sender, eOpts) {  '#13#10'initComboBo' +
+              'xSelectButtons(sender, "id");'#13#10'initComboBoxSearch(sender, "id", ' +
+              '"val");  '#13#10'}')
           EmptyText = #1055#1088#1072#1081#1089
           ClearButton = True
           IconItems = <>

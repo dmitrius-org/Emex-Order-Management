@@ -89,6 +89,7 @@ type
     procedure QueryAfterOpen(DataSet: TDataSet);
     procedure QueryBeforeOpen(DataSet: TDataSet);
     procedure btnRefreshClick(Sender: TObject);
+    procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
 
 
   private
@@ -142,6 +143,7 @@ type
     /// MakeLogoGridShow - показать таблицу выбора замен
     /// </summary>
     procedure MakeLogoGridShow();
+
     /// <summary>
     /// MakeLogoGridHide - скрыть таблицу выбора замен
     /// </summary>
@@ -243,7 +245,13 @@ procedure TSearchF.GridRefresh();
 begin
   logger.Info('TSearchF.GridRefresh begin');
   // определение количества уникальных брендов
-  sql.Open('Select Count(distinct Make) from pFindByNumber (nolock) where Spid=@@Spid', [], [] );
+  sql.Open('''
+              DECLARE @Count INT;
+
+              SET @Count = dbo.GetReplacementCount();
+
+              SELECT @Count AS ReplacementCount;
+           ''', [], [] );
   FMakeCount := sql.Q.Fields[0].AsInteger;
 
   Query.Close;
@@ -253,8 +261,6 @@ begin
 
  // Query.ResourceOptions.CmdExecMode :=amNonBlocking;
   Query.Open;
-
-  AnalogLblVisible;
 
   logger.Info('TSearchF.GridRefresh end');
 end;
@@ -284,8 +290,6 @@ end;
 procedure TSearchF.MakeLogoGridHide;
 begin
   MakeLogoPanel.Visible := False;
-
-  AnalogLblVisible;
 end;
 
 procedure TSearchF.MakeLogoGridShow;
@@ -311,14 +315,31 @@ begin
   MakeLogoGridRefresh;
 
   MakeLogoPanel.Visible := True;
-
-  AnalogLblVisible;
 end;
 
 procedure TSearchF.AnalogLblVisible;
 begin
-  //logger.Info(FMakeCount.ToString);
-  //lblAnalog.Visible :=(not MakeLogoPanel.Visible) and (FMakeCount > 1) and (Query.RecordCount > 0);
+  if Query.RecordCount > 0 then
+  if FMakeCount > 1 then
+
+    UniSession.AddJS('''
+      var el = document.getElementById("makereplacement");
+        if (el) {
+            el.classList.remove("hide-column");
+        } else {
+            console.error("remove Элемент с идентификатором 'makereplacement' не найден.");
+        }
+    ''')
+  else
+    UniSession.AddJS('''
+      var el = document.getElementById("makereplacement");
+        if (el) {
+            el.classList.add("hide-column");
+        } else {
+            console.error("add Элемент с идентификатором 'makereplacement' не найден.");
+        }
+    ''')
+
 end;
 
 procedure TSearchF.PartSearch;
@@ -459,17 +480,17 @@ begin
             '  <i class="fa fa-caret-down fa-lg"></i>'+
             '</button>'+
             '</a></span>'+
-            '<span>' + Sender.AsString + ' </span>' +
+            '<span>' + Sender.AsString + '</span>' +
             '</form>';
   end
   else
-    Text := '<span>' + Sender.AsString + ' </span>';
+    Text := '<span>' + Sender.AsString + '</span>';
 end;
 
 procedure TSearchF.QueryOurDeliveryGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
-  Text := '<span>' + Query.FieldByName('OurDeliverySTR').AsString + ' </span>';
+  Text := '<span>' + Query.FieldByName('OurDeliverySTR').AsString + '</span>';
 end;
 
 procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string;
@@ -577,6 +598,11 @@ begin
   SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
   SearchGrid.Columns.ColumnFromFieldName('OurDelivery').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
   SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
+end;
+
+procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
+begin
+  AnalogLblVisible
 end;
 
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;

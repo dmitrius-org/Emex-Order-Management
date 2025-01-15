@@ -152,6 +152,18 @@ as
   if @TargetStateID > 0
   begin
       delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
+
+      Update p 
+         set p.Retval = 545 --Заказ в работе!
+	    from pAccrualAction p with (updlock index=ao2)
+       where p.Spid   = @@spid
+         and p.retval = 0
+         and exists ( select 1
+                       from tProtocol o with (nolock index=ao2)
+	                  where o.ObjectID   = p.ObjectID
+                        and o.NewStateID = 4 -- InWork В работе
+                    )
+
       insert pAccrualAction with (rowlock) 
             (Spid,   
              ObjectID,  
@@ -197,6 +209,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20241212', '11'
+exec setOV 'OrderUpdate', 'P', '20241218', '12'
 go
  

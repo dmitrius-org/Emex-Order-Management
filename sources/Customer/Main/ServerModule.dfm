@@ -3,7 +3,7 @@ object UniServerModule: TUniServerModule
   OnDestroy = UniGUIServerModuleDestroy
   TempFolder = 'temp\'
   FrameworkFilesRoot = 'C:\Program Files (x86)\FMSoft\Framework\uniGUI'
-  Port = 8079
+  Port = 8089
   Title = 'Customer'
   AjaxTimeout = 500000
   SuppressErrors = []
