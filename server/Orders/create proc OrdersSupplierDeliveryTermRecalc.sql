@@ -13,7 +13,7 @@ SET DATEFIRST 1 ;
 declare @r int = 0
 
 Update o
-   set o.DeliveryRestTermSupplier = o.DeliveryTerm - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки 
+   set o.DeliveryRestTermSupplier = o.DeliveryTerm - DATEDIFF(dd, isnull(o.ProcessingDate, o.OrderDate), getdate())  -- Остаток срока до поставки 
   from tOrders o (nolock)
  inner join tNodes n (nolock)
          on n.NodeID = o.StatusID
@@ -26,5 +26,5 @@ Update o
 go
   grant exec on OrdersSupplierDeliveryTermRecalc to public
 go
-exec setOV 'OrdersSupplierDeliveryTermRecalc', 'P', '20241011', '1'
+exec setOV 'OrdersSupplierDeliveryTermRecalc', 'P', '20250117', '2'
 go

@@ -22,5 +22,5 @@ END;
 go
 grant EXECUTE on GetReplacementCount to public
 go
-exec setOV 'GetReplacementCount', 'F', '20241212', '1'
+exec setOV 'GetReplacementCount', 'FN', '20241212', '1'
 go

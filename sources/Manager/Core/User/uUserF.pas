@@ -15,7 +15,7 @@ type
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
     fsCommon: TUniFieldSet;
-    UniFieldContainer1: TUniFieldContainer;
+    fcUserData: TUniFieldContainer;
     edtBrief: TUniEdit;
     edtName: TUniEdit;
     cbIsActive: TUniCheckBox;
@@ -35,7 +35,7 @@ type
     edtPass: TUniEdit;
     lblPass: TUniLabel;
     Email: TUniEdit;
-    UniLabel5: TUniLabel;
+    lblEmail: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

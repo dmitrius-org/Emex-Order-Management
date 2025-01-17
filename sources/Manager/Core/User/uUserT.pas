@@ -1,4 +1,4 @@
-unit uUserT;
+п»їunit uUserT;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, FireDAC.VCLUI.UpdateOptions, uCommonType, uniGUIForm;
+  uUserF, uGrant, FireDAC.VCLUI.UpdateOptions, uCommonType, uniGUIForm, uToast;
 
 type
   TUsersT = class(TUniFrame)
@@ -67,6 +67,8 @@ type
     UniToolButton7: TUniToolButton;
     actGroup: TAction;
     N10: TUniMenuItem;
+    actGrantCopy: TAction;
+    N11: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -84,6 +86,7 @@ type
     procedure UniFrameReady(Sender: TObject);
     procedure actLookupExecute(Sender: TObject);
     procedure actGroupExecute(Sender: TObject);
+    procedure actGrantCopyExecute(Sender: TObject);
   private
     FAction: Integer;
     procedure SetAction(const Value: Integer);
@@ -92,11 +95,11 @@ type
   public
     { Public declarations }
     /// <summary>
-    ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///  UserFCallBack - CallBack РѕР±СЂР°Р±РѕС‚С‡РёРє РґРµР№СЃС‚РІРёСЏ РЅР° С„РѕСЂРјРµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РґР°РЅРЅС‹С…
     ///</summary>
     procedure UserFCallBack(Sender: TComponent; AResult:Integer);
 
-    //используем тип Integer т.к. не можем происвоить значение TFormAction для лукап фрмы
+    //РёСЃРїРѕР»СЊР·СѓРµРј С‚РёРї Integer С‚.Рє. РЅРµ РјРѕР¶РµРј РїСЂРѕРёСЃРІРѕРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ TFormAction РґР»СЏ Р»СѓРєР°Рї С„СЂРјС‹
     property FormAction: Integer read FAction write SetAction;
   end;
 
@@ -125,6 +128,53 @@ begin
   UserF.FormAction := TFormAction.acUpdate;
   UserF.ID:=QueryUserID.AsInteger;
   UserF.ShowModal(UserFCallBack);
+end;
+
+procedure TUsersT.actGrantCopyExecute(Sender: TObject);
+var f: TLookupF;
+    sqltext: string;
+    I: Integer;
+begin
+  f := TLookupF.Create(UniApplication);
+  try
+    f.Caption := 'РџРѕР»СЊР·РѕРІР°С‚РµР»Рё';
+    f.FromName := 'TUsersT';
+
+    if f.ShowModal = mrOk then
+    begin
+       sqltext := '''
+         declare @R int = 0
+
+         exec @R=GrantCopy
+                   @UserID       = :UserID
+                  ,@SourceUserID = :SourceUserID
+
+         select @r as retcode
+       ''';
+
+      for I := 0 to f.ID.Count - 1 do
+      begin
+        Sql.Open(sqltext,
+                ['UserID','SourceUserID'],
+                [QueryUserID.AsInteger,
+                 f.ID.Strings[I].ToInteger]);
+      end;
+    end
+    else
+      Exit;
+
+    if RetVal.Code = 0 then
+    begin
+      ToastOK('РџСЂР°РІР° СѓСЃРїРµС€РЅРѕ СЃРєРѕРїРёСЂРѕРІР°РЅС‹!', UniSession);
+    end
+    else
+    begin
+      MessageDlg(RetVal.Message, mtError, [mbOK]);
+    end;
+
+  finally
+    f.Free
+  end;
 end;
 
 procedure TUsersT.actGrantExecute(Sender: TObject);

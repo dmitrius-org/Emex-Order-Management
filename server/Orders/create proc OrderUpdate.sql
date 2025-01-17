@@ -1,9 +1,4 @@
 drop proc if exists OrderUpdate
-/*
-  OrderUpdate - изменение данных по заказу/детали
-
-  -- 20.10.2023 - добавлен расчет финансовых показателей
-*/
 go
 create proc OrderUpdate
                @OrderID                 numeric(18,0)
@@ -13,19 +8,23 @@ create proc OrderUpdate
               ,@Fragile                 bit           = null 
               ,@NoAir                   bit           = null 
               
-              ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки 
-              --,@Comment                 nvarchar(1024)= null 
-              ,@TargetStateID           numeric(18,0) = null
+              ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки               
 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@MakeLogo                nvarchar(20)  = null -- Код производителя
-              ,@ReplacementPrice        float         = null -- новая цена              
+              ,@ReplacementPrice        float         = null -- новая цена   
               
+              ,@TargetStateID           numeric(18,0) = null
+/*
+  OrderUpdate - изменение данных по заказу/детали
+
+  -- 20.10.2023 - добавлен расчет финансовых показателей
+*/          
 as
-  declare @r             int = 0
-		 ,@Type          int
-		 ,@AuditID       numeric(18,0)
-         ,@AuditComment  nvarchar(2048)
+  declare @r            int = 0
+		 ,@Type         int
+		 ,@AuditID      numeric(18,0)
+         ,@AuditComment nvarchar(2048)
 
   declare @PriceID as table(PriceID numeric(18, 0))
 
@@ -54,7 +53,7 @@ as
 							                        else 0
                                                  end
         ,t.ReplacementPrice= case  
-		                       when t.PriceLogo <> nullif(@Price, '') and @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
+		                       when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> t.PricePurchase then @ReplacementPrice
 							   else t.ReplacementPrice
                              end
         ,t.DetailName      = nullif(@DetailNameF, '')
@@ -71,9 +70,11 @@ as
          -- cроки поставки клиента
         ,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
         ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
-        ,t.DeliveryRestToCustomer = p.OurDelivery-- Остаток срока до поставки клиенту
+        ,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
 
-	from tOrders t (updlock)
+        ,t.ProcessingDate         = cast(getdate() as date)
+
+	from tOrders t with (updlock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
                   where p.Spid = @@spid
@@ -86,49 +87,44 @@ as
          select top 1
                 pd.DestinationLogo, 
                 pd.Name DestinationName,
-   
-               -- pd.WeightKG,
-               -- pd.VolumeKG,
-               -- pd.ProfilesDeliveryID,
-               pd.Delivery-- Срок поставки клиента, для заказов из файла берем из профилей доставки
-   
-               -- pc.Margin,
-               -- pc.Reliability,
-   
-               -- pd.VolumeKG_Rate1,
-               -- pd.VolumeKG_Rate2,
-               -- pd.VolumeKG_Rate3,
-               -- pd.VolumeKG_Rate4,
-               -- pd.Fragile
-   
-           from tProfilesCustomer pc with (nolock)
+                -- pd.WeightKG,
+                -- pd.VolumeKG,
+                -- pd.ProfilesDeliveryID,
+                pd.Delivery-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+                -- pc.Margin,
+                -- pc.Reliability,
+                -- pd.VolumeKG_Rate1,
+                -- pd.VolumeKG_Rate2,
+                -- pd.VolumeKG_Rate3,
+                -- pd.VolumeKG_Rate4,
+                -- pd.Fragile
+           from tProfilesCustomer pc with (nolock index=ao2)
            left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-          where pc.ClientID = t.ClientID
-            and pd.DestinationLogo    = @DestinationLogo   
+          where pc.ClientID        = t.ClientID
+            and pd.DestinationLogo = @DestinationLogo   
         ) as pd
   where t.OrderID = @OrderID
 
   -- сохранение данных на позиции/детали
   update p
-     set p.DetailNameF	   = nullif(@DetailNameF, '')
-        ,p.WeightKGF	   = case 
-                               when isnull(@WeightKGF, 0) = 0 and p.WeightKG>0 then p.WeightKG
-                               else @WeightKGF
-                             end  
-        ,p.VolumeKGF	   = case 
-                               when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
-                               else @VolumeKGF
-                             end  
-        ,p.Restrictions    = case
-                               when @NoAir = 1 then 'NOAIR'
-                               else null
-                             end
-        ,p.Fragile         = nullif(@Fragile, 0)
-        
+     set p.DetailNameF	= nullif(@DetailNameF, '')
+        ,p.WeightKGF	= case 
+                            when isnull(@WeightKGF, 0) = 0 and p.WeightKG>0 then p.WeightKG
+                            else @WeightKGF
+                          end  
+        ,p.VolumeKGF	= case 
+                            when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
+                            else @VolumeKGF
+                          end  
+        ,p.Restrictions = case
+                            when @NoAir = 1 then 'NOAIR'
+                            else null
+                          end
+        ,p.Fragile      = nullif(@Fragile, 0) 
   OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
-	from tOrders t (nolock)
-   inner join tPrice p (updlock)
+	from tOrders t  with (nolock index=ao1)
+   inner join tPrice p with (updlock index=ao2)
            on p.DetailNum = t.DetailNumber
 		  and p.MakeLogo  = t.MakeLogo -- производитель
    where t.OrderID = @OrderID
@@ -139,7 +135,8 @@ as
         (Spid, OrderID)
   Select @@spid, @OrderID
 
-  exec OrdersFinCalc @IsSave = 1
+  exec OrdersFinCalc 
+         @IsSave = 1
 
   --! расчет сроков дотавки
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
@@ -202,13 +199,12 @@ as
         ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
         ,@Comment          = @AuditComment
   
-
   exit_:
   return @r
 
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20241218', '12'
+exec setOV 'OrderUpdate', 'P', '20250117', '13'
 go
  

@@ -1510,7 +1510,7 @@ object UsersT: TUsersT
   object ActionList: TUniActionList
     Tag = -1
     Left = 222
-    Top = 196
+    Top = 204
     object actAdd: TAction
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
@@ -1557,10 +1557,15 @@ object UsersT: TUsersT
       ImageIndex = 5
       OnExecute = actGroupExecute
     end
+    object actGrantCopy: TAction
+      Caption = #1053#1072#1089#1083#1077#1076#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072' '#1080' '#1087#1088#1072#1074
+      Hint = #1053#1072#1089#1083#1077#1076#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072' '#1080' '#1087#1088#1072#1074#1072' '#1089' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      OnExecute = actGrantCopyExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
-    Left = 218
+    Left = 226
     Top = 271
     object N9: TUniMenuItem
       Action = actLookup
@@ -1585,6 +1590,9 @@ object UsersT: TUsersT
     end
     object N7: TUniMenuItem
       Caption = '-'
+    end
+    object N11: TUniMenuItem
+      Action = actGrantCopy
     end
     object N10: TUniMenuItem
       Action = actGroup

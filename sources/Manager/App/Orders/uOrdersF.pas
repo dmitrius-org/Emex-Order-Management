@@ -1159,7 +1159,7 @@ begin
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
-             ,datediff(day, v.OrderDate, isnull(v.DateInWork, getdate())) PassedDayInWork  -- прошло дней с момента заказа
+             ,datediff(day, v.OrderDate, isnull(v.ProcessingDate, getdate())) PassedDayInWork  -- прошло дней с момента заказа
 
          from vOrders v
         where v.OrderID = :OrderID

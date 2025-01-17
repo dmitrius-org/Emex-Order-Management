@@ -105,7 +105,7 @@ if @IsSave = 1
     update o
        set o.DeliveryNextDate2        = p.DeliveryNextDate2   -- Следующая ближайшая дата вылета
 		  ,o.DeliveryDaysReserve2     = p.DeliveryDaysReserve -- Дней запаса до вылета
-          ,o.DeliveryRestTermSupplier = p.DeliveryTerm  - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки поставщику
+          ,o.DeliveryRestTermSupplier = p.DeliveryTerm  - DATEDIFF(dd, isnull(o.ProcessingDate, o.OrderDate), getdate())  -- Остаток срока до поставки поставщику
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 
@@ -118,6 +118,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalcNext to public
 go
-exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20240911', '4'
+exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20250117', '5'
 go
   

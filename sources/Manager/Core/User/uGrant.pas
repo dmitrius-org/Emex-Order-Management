@@ -1,4 +1,4 @@
-unit uGrant;
+п»їunit uGrant;
 
 interface
 
@@ -49,7 +49,7 @@ type
 
     { Private declarations }
     /// <summary>
-    ///  SetGrantFormName - Установка формы редактирования
+    ///  SetGrantFormName - РЈСЃС‚Р°РЅРѕРІРєР° С„РѕСЂРјС‹ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
     ///</summary>
     function SetGrantFormName(): string;
 
@@ -101,8 +101,8 @@ begin
                                   ' '+
                                   ' select @r as retcode ';
 
-  UniMainModule.Query.ParamByName('ObjectID').Value := FID; // пользователь или групп
-  UniMainModule.Query.ParamByName('ObjectType').Value := FObjectType;  // тип пользователя или группы
+  UniMainModule.Query.ParamByName('ObjectID').Value := FID; // РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РёР»Рё РіСЂСѓРїРї
+  UniMainModule.Query.ParamByName('ObjectType').Value := FObjectType;  // С‚РёРї РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РіСЂСѓРїРїС‹
 
   UniMainModule.Query.Open;
   RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
@@ -144,7 +144,7 @@ end;
 
 function TGrantF.SetGrantFormName: string;
 begin
-  if cbObjectType.Text = 'Клиенты' then
+  if cbObjectType.Text = 'РљР»РёРµРЅС‚С‹' then
   begin
     result := 'TGrantClientT';
   end;
@@ -160,8 +160,6 @@ begin
   Query.Open();
 
   ComboBoxFill(cbObjectType,   ' select Brief as name From tObjectType (nolock) where flag&4=4 order by ObjectTypeID ');
-
-
 end;
 
 end.

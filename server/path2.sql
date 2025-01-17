@@ -12,7 +12,7 @@
 --SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = History.tBasket));
 --go
 
-alter table tOrders add DateInWork datetime
+alter table tOrders add ProcessingDate datetime
 
 sp_who
 

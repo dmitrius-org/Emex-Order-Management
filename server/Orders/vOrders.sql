@@ -13,6 +13,7 @@ SELECT o.[OrderID]
       ,o.[ClientID]
       ,c.[Brief]         as ClientName
       ,o.[OrderDate]
+      ,o.[ProcessingDate]
       ,o.[PriceLogo]
       ,o.[OrderNum]
       ,o.[StatusID]
@@ -171,7 +172,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250115', '15'
+exec setOV 'vOrders', 'V', '20250117', '16'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

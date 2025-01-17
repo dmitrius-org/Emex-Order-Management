@@ -9,6 +9,7 @@ begin
     ,ClientID                        numeric(18,0)  not null -- Клиент
     ,SuppliersID                     numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
     ,OrderDate                       datetime       not null -- Дата заказа
+    ,ProcessingDate                  datetime       not null -- Дата обработки заказа
     ,OrderNum                        nvarchar(32)   -- Номер заказа
     ,StatusID                        numeric(18,0)  -- Статус
     ,isCancel                        bit            -- Отказ
@@ -80,7 +81,6 @@ begin
     ,FileDate                        datetime       -- Дата файла заказа
     ,ClientOrderNum                  int            -- Номер заказа клиента
 
-  
     -- блок фин. показателей  
     ,Margin                          money          -- Наценка из прайса
     ,Reliability                     money          -- Вероятность поставки
@@ -113,13 +113,15 @@ go
 exec setOV 'tOrders', 'U', '20240101', '0'
 go
 
-
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tOrders', @desc = 'Таблица Заказы'
+
 -- Описание полей
 exec dbo.sys_setTableDescription 'tOrders', 'OrderID'                           ,'Уникальный идентификатор '
 exec dbo.sys_setTableDescription 'tOrders', 'ClientID'                          ,'Идентификатор клиента tClients.ClientID'
 exec dbo.sys_setTableDescription 'tOrders', 'OrderDate'                         ,'Дата заказа'
+exec dbo.sys_setTableDescription 'tOrders', 'ProcessingDate'                    ,'Дата обработки заказа'
+
 exec dbo.sys_setTableDescription 'tOrders', 'PriceLogo'                         ,'Лого прайса клиента'
 exec dbo.sys_setTableDescription 'tOrders', 'CustomerPriceLogo'                 ,'Наименование прайса клиента по которым заказываются детали'
 exec dbo.sys_setTableDescription 'tOrders', 'OrderNum'                          ,'Номер заказа'
@@ -134,7 +136,7 @@ exec dbo.sys_setTableDescription 'tOrders', 'Quantity'                          
 exec dbo.sys_setTableDescription 'tOrders', 'Price'                             ,'Цена продажи'
 exec dbo.sys_setTableDescription 'tOrders', 'Amount'                            ,'Сумма продажи'
 exec dbo.sys_setTableDescription 'tOrders', 'PricePurchase'                     ,'Цена закупки с учетом скидки'
-exec dbo.sys_setTableDescription 'tOrders', 'PricePurchaseOrg'                  ,'Исходная уена закупки'
+exec dbo.sys_setTableDescription 'tOrders', 'PricePurchaseOrg'                  ,'Исходная цена закупки без учета скидки'
 exec dbo.sys_setTableDescription 'tOrders', 'AmountPurchase'                    ,'Сумма закупки'
 exec dbo.sys_setTableDescription 'tOrders', 'Discount'                          ,'Скидка поставщика на закупку товара'
 exec dbo.sys_setTableDescription 'tOrders', 'PricePurchaseF'                    ,'Цена закупки факт'
@@ -145,6 +147,7 @@ exec dbo.sys_setTableDescription 'tOrders', 'Margin'                            
 exec dbo.sys_setTableDescription 'tOrders', 'MarginF'                           ,'Наценка факт'
 exec dbo.sys_setTableDescription 'tOrders', 'Profit'                            ,'Рентабельность'
 exec dbo.sys_setTableDescription 'tOrders', 'Income'                            ,'Доход'
+
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryPlanDateSupplier'          ,'Плановая дата поступления поставщику'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestTermSupplier'          ,'Остаток срока до поступления поставщику'
 exec dbo.sys_setTableDescription 'tOrders', 'DeliveredDateToSupplier'           ,'Доставлена поставщику'
@@ -185,4 +188,3 @@ exec dbo.sys_setTableDescription 'tOrders', 'Taxes'                             
 exec dbo.sys_setTableDescription 'tOrders', 'WeightKGAmount'                    ,'Стоимость кг физического веса'
 exec dbo.sys_setTableDescription 'tOrders', 'VolumeKGAmount'                    ,'Стоимость кг объемного веса'
 exec dbo.sys_setTableDescription 'tOrders', 'PercentSupped'                     ,'Процент поставки'
-

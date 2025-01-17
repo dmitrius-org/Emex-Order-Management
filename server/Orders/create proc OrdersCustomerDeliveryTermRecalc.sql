@@ -50,7 +50,7 @@ Update o
 go
   grant exec on OrdersCustomerDeliveryTermRecalc to public
 go
-exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20241011', '1'
+exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250117', '2'
 go
   
 

@@ -63,7 +63,7 @@ object UserF: TUserF
     Font.Color = clBlack
     Font.Height = -12
     ParentFont = False
-    object UniFieldContainer1: TUniFieldContainer
+    object fcUserData: TUniFieldContainer
       Left = 2
       Top = 15
       Width = 592
@@ -209,7 +209,7 @@ object UserF: TUserF
         ClearButton = True
         InputType = 'email'
       end
-      object UniLabel5: TUniLabel
+      object lblEmail: TUniLabel
         Left = 25
         Top = 157
         Width = 36
