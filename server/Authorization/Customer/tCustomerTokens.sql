@@ -2,7 +2,7 @@ if OBJECT_ID('system.tCustomerTokens') is null
 --  drop table system.tCustomerTokens
 --go
 /* **********************************************************
-tCustomerTokens - Таблица протокола
+tCustomerTokens - Таблица 
 ********************************************************** */
 begin
 	create table system.tCustomerTokens
