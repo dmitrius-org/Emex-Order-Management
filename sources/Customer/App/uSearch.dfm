@@ -267,7 +267,7 @@ object SearchF: TSearchF
           Title.Caption = #1042#1077#1089
           Title.Font.Height = -13
           Width = 83
-          Editor = UniNumberEdit1
+          Editor = edtWeight
         end
         item
           FieldName = 'VolumeAdd'
@@ -404,23 +404,27 @@ object SearchF: TSearchF
         Caption = 'UniCheckBox1'
         TabOrder = 3
       end
-      object UniNumberEdit1: TUniNumberEdit
-        Left = 16
+      object edtWeight: TUniFormattedNumberEdit
+        Left = 15
         Top = 168
         Width = 121
         Hint = ''
+        FormattedInput.DefaultCurrencySign = False
         TabOrder = 4
         DecimalPrecision = 3
         DecimalSeparator = ','
+        ThousandSeparator = #160
       end
-      object edtVolumeAdd: TUniNumberEdit
-        Left = 16
-        Top = 196
+      object edtVolumeAdd: TUniFormattedNumberEdit
+        Left = 15
+        Top = 192
         Width = 121
         Hint = ''
+        FormattedInput.DefaultCurrencySign = False
         TabOrder = 5
         DecimalPrecision = 3
         DecimalSeparator = ','
+        ThousandSeparator = #160
       end
     end
     object MakeLogoPanel: TUniContainerPanel
@@ -483,8 +487,8 @@ object SearchF: TSearchF
       AlignWithMargins = True
       Left = 795
       Top = 56
-      Width = 115
-      Height = 156
+      Width = 126
+      Height = 169
       Hint = 
         '|('#1044#1083#1080#1085#1072' (1-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1064#1080#1088#1080#1085#1072' (2-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1042#1099#1089#1086#1090#1072' (3-'#1103' '#1075#1088#1072#1092#1072')) /' +
         ' 5000'#13#10#1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1086#1082#1088#1091#1075#1083#1103#1077#1084' '#1076#1086' '#1076#1077#1089#1103#1090#1099#1093' '
@@ -499,78 +503,62 @@ object SearchF: TSearchF
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
       TabOrder = 3
-      object edtL: TUniNumberEdit
-        AlignWithMargins = True
+      object edtL: TUniFormattedNumberEdit
         Left = 3
         Top = 15
-        Width = 86
+        Width = 121
         Hint = ''
         ShowHint = True
-        ParentFont = False
-        Font.Height = -13
-        TabOrder = 1
-        BlankValue = 0
-        FieldLabel = 'L'
-        FieldLabelWidth = 15
-        LayoutConfig.Padding = '0'
-        LayoutConfig.Margin = '1'
-        DecimalSeparator = ','
-        OnChange = edtLChange
-      end
-      object edtW: TUniNumberEdit
-        AlignWithMargins = True
-        Left = 3
-        Top = 38
-        Width = 86
-        Hint = ''
-        ShowHint = True
-        ParentFont = False
-        Font.Height = -13
+        FormattedInput.DefaultCurrencySign = False
         TabOrder = 2
-        BlankValue = 0
-        FieldLabel = 'W'
-        FieldLabelWidth = 15
-        LayoutConfig.Padding = '0'
-        LayoutConfig.Margin = '1'
+        FieldLabel = 'L'
+        FieldLabelWidth = 20
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnChange = edtLChange
       end
-      object edtH: TUniNumberEdit
-        AlignWithMargins = True
+      object edtW: TUniFormattedNumberEdit
         Left = 3
-        Top = 61
-        Width = 86
+        Top = 39
+        Width = 121
         Hint = ''
         ShowHint = True
-        ParentFont = False
-        Font.Height = -13
+        FormattedInput.DefaultCurrencySign = False
         TabOrder = 3
-        BlankValue = 0
-        FieldLabel = 'H'
-        FieldLabelWidth = 15
-        LayoutConfig.Padding = '0'
-        LayoutConfig.Margin = '1'
+        FieldLabel = 'W'
+        FieldLabelWidth = 20
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnChange = edtLChange
       end
-      object edtVKG: TUniNumberEdit
-        AlignWithMargins = True
+      object edtH: TUniFormattedNumberEdit
         Left = 3
-        Top = 89
-        Width = 86
+        Top = 63
+        Width = 121
         Hint = ''
         ShowHint = True
-        ParentFont = False
-        Font.Height = -13
+        FormattedInput.DefaultCurrencySign = False
         TabOrder = 4
-        ReadOnly = True
-        BlankValue = 0
+        FieldLabel = 'H'
+        FieldLabelWidth = 20
+        DecimalSeparator = ','
+        ThousandSeparator = #160
+        OnChange = edtLChange
+      end
+      object edtVKG: TUniFormattedNumberEdit
+        Left = 3
+        Top = 90
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        FormattedInput.DefaultCurrencySign = False
+        TabOrder = 5
         FieldLabel = 'VKG'
         FieldLabelWidth = 30
-        FieldLabelFont.OverrideDefaults = [ovFontHeight]
-        LayoutConfig.Padding = '0'
-        LayoutConfig.Margin = '1'
+        DecimalPrecision = 3
         DecimalSeparator = ','
+        ThousandSeparator = #160
+        OnChange = edtVKGChange
       end
       object VolumeSave: TUniButton
         AlignWithMargins = True
@@ -580,9 +568,10 @@ object SearchF: TSearchF
         Height = 25
         Hint = ''
         Margins.Top = 15
+        Enabled = False
         ShowHint = True
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-        TabOrder = 5
+        TabOrder = 1
         ScreenMask.ShowMessage = False
         ScreenMask.Color = clHighlight
         LayoutConfig.Margin = '3'
@@ -688,6 +677,7 @@ object SearchF: TSearchF
       FieldName = 'PriceRub'
       Origin = 'PriceRub'
       ReadOnly = True
+      DisplayFormat = '###,##0.00 '#8381
     end
     object QueryWeight: TCurrencyField
       FieldName = 'Weight'

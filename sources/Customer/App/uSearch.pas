@@ -12,7 +12,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
-  uniCheckBox, uniLabel, uniSpinEdit, uniGroupBox;
+  uniCheckBox, uniLabel, uniSpinEdit, uniGroupBox, Math;
 
 type
   TSearchF = class(TUniFrame)
@@ -47,19 +47,19 @@ type
     UniCheckBox1: TUniCheckBox;
     QueryOurDeliverySTR: TWideStringField;
     UpdateSQL: TFDUpdateSQL;
-    UniNumberEdit1: TUniNumberEdit;
     QueryPriceLogo: TWideStringField;
     QueryPacking: TIntegerField;
     VKGPanel: TUniGroupBox;
-    edtL: TUniNumberEdit;
-    edtW: TUniNumberEdit;
-    edtH: TUniNumberEdit;
-    edtVolumeAdd: TUniNumberEdit;
-    edtVKG: TUniNumberEdit;
     VolumeSave: TUniButton;
     QueryOurDelivery: TIntegerField;
     QueryAvailable: TIntegerField;
     btnRefresh: TUniButton;
+    edtWeight: TUniFormattedNumberEdit;
+    edtVolumeAdd: TUniFormattedNumberEdit;
+    edtL: TUniFormattedNumberEdit;
+    edtW: TUniFormattedNumberEdit;
+    edtH: TUniFormattedNumberEdit;
+    edtVKG: TUniFormattedNumberEdit;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -90,6 +90,7 @@ type
     procedure QueryBeforeOpen(DataSet: TDataSet);
     procedure btnRefreshClick(Sender: TObject);
     procedure SearchGridAfterLoad(Sender: TUniCustomDBGrid);
+    procedure edtVKGChange(Sender: TObject);
 
 
   private
@@ -228,6 +229,11 @@ begin
 //    Result.Add( qSearchHistory.FieldByName('DetailNum').AsString );
 //    qSearchHistory.Next;
 //  end;
+end;
+
+procedure TSearchF.edtVKGChange(Sender: TObject);
+begin
+  VolumeSave.Enabled := edtVKG.Value > 0;
 end;
 
 procedure TSearchF.QueryAfterOpen(DataSet: TDataSet);
@@ -654,7 +660,11 @@ begin
 
   if (EventName = 'VKGPanelLeft') then
   begin
-    logger.Info(Params.Values['VKGPanelLeft']);
+
+    edtL.Clear;
+    edtH.Clear;
+    edtW.Clear;
+    edtVKG.Clear;
 
     VKGPanel.Left :=  Params.Values['VKGPanelLeft'].ToInteger;
     VKGPanel.Visible := True;
@@ -785,7 +795,9 @@ end;
 
 procedure TSearchF.VolumeCalc;
 begin
-  edtVKG.Value := ( (edtL.Value * edtW.Value * edtH.Value) / 5000 );
+  edtVKG.Value := SimpleRoundTo(( (edtL.Value * edtW.Value * edtH.Value) / 5000 ), -3);
+
+  VolumeSave.Enabled := edtVKG.Value > 0;
 end;
 
 procedure TSearchF.VolumeSaveClick(Sender: TObject);
