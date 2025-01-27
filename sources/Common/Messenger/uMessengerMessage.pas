@@ -42,8 +42,7 @@ type
     procedure MessageTextChange(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure pnlContentChatContainerAjaxEvent(Sender: TComponent;
-      EventName: string; Params: TUniStrings);
+    procedure pnlContentChatContainerAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
     procedure UserStatusTimerTimer(Sender: TObject);
   private
     { Private declarations }
@@ -95,7 +94,6 @@ type
     /// </summary>
     /// <param name="AOrderID">ИД заказа</param>
     procedure LoadMessageByOrderID( AOrderID: integer ); overload;
-
 
     /// <summary>
     /// AddMessageToChat - Добавление сообщения форму чата
@@ -154,6 +152,7 @@ begin
 
   sql.Open('''
     declare @ChatID  numeric(18, 0)
+
     exec ChatsInsert
           @ChatID   = @ChatID out
          ,@OrderID  = :OrderID
@@ -190,6 +189,7 @@ begin
 
   sql.Open('''
     declare @MessageID numeric(18, 0)
+
     exec ChatsMessageInsert
            @ChatID   = :ChatID
           ,@OrderID  = :OrderID
@@ -223,12 +223,16 @@ begin
 
 end;
 
-
 procedure TMessage.MessageIsRead(MessageID: integer);
 begin
-  sql.ExecAsync(' exec ChatsMessageIsRead @MessageID = :MessageID', ['MessageID'], [MessageID])
-end;
+  sql.ExecAsync('exec ChatsMessageIsRead @MessageID = :MessageID',
+               ['MessageID'],
+               [MessageID]);
 
+  BroadcastMessage('ChatsMessageIsRead',
+                  [],
+                  []); // boIgnoreCurrentSession boClientOnly
+end;
 
 procedure TMessage.AddMessageToChat(
    MID: integer;

@@ -754,7 +754,7 @@ object OrdersT: TOrdersT
         object fStatus2: TUniCheckComboBox
           Left = 6
           Top = 33
-          Width = 310
+          Width = 306
           Hint = ''
           ShowHint = True
           Text = ''
@@ -909,7 +909,7 @@ object OrdersT: TOrdersT
         object fClient: TUniADCheckComboBox
           Left = 6
           Top = 75
-          Width = 207
+          Width = 203
           Hint = ''
           ShowHint = True
           ShowSearch = True

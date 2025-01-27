@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, uniGUIApplication,
   uniGUIClasses, uniGUIFrame, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
@@ -861,6 +861,9 @@ begin
     Query.Open();
 
     StateActionMenuCreate;
+
+    // пересчет количества непрочитанных сообщений (через websocket) на левой панели меню
+    BroadcastMessage('ChatsMessageIsRead', [], []);
 
   finally
     DoHideMask();

@@ -188,6 +188,7 @@ object Message: TMessage
           Align = alClient
           TabOrder = 1
           LayoutConfig.ComponentCls = 'message-list-container'
+          AllowDeselect = True
         end
       end
       object pnlSendContainer: TUniContainerPanel

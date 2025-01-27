@@ -9,6 +9,7 @@ object UniMainModule: TUniMainModule
   BrowserOptions = [boDisableMouseRightClick, boDisableChromeRefresh]
   MonitoredKeys.Keys = <>
   EnableSynchronousOperations = True
+  WebSocketConnection.Enabled = True
   ExtLocale = 'ru'
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
   Height = 351
@@ -31,7 +32,7 @@ object UniMainModule: TUniMainModule
     Top = 75
   end
   object FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink
-    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
+    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut]
     FileAppend = True
     FileColumns = [tiRefNo, tiTime, tiThreadID, tiClassName, tiObjID, tiMsgText]
     ShowTraces = False
@@ -44,7 +45,7 @@ object UniMainModule: TUniMainModule
     Top = 139
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
-    EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
+    EventKinds = [ekSQL, ekSQLVarIn, ekSQLVarOut]
     Left = 407
     Top = 17
   end

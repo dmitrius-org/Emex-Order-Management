@@ -12,12 +12,13 @@ type
     procedure UniFormShow(Sender: TObject);
   private
     FOrderID: Integer;
+    FChatID: Integer;
     { Private declarations }
   public
     { Public declarations }
 
-
     property OrderID: Integer read FOrderID write FOrderID;
+    property ChatID: Integer read FChatID write FChatID;
   end;
 
 function MessageF: TMessageF;
@@ -40,8 +41,9 @@ begin
    Message:= TMessage.Create(self);
    Message.Parent := self;
    Message.AppType := 1;
-   Message.OrderID := FOrderID;
 
+   Message.OrderID := FOrderID;
+   Message.ChatID := FChatID;
 end;
 
 end.

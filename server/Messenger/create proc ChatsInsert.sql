@@ -5,6 +5,7 @@ create proc ChatsInsert
 	         ,@OrderID  numeric(18, 0)
              ,@ClientID numeric(18, 0)
 	         ,@Flag     int
+             ,@Name     varchar(256) = null
 /*
   ChatsInsert -
 */           
@@ -14,24 +15,25 @@ as
          ,@MessageID numeric(18, 0)
 
   select @ChatID= ChatID
-    from tChats (nolock)
+    from tChats with (nolock index=ao3)
    where OrderID = @OrderID 
 
   if isnull(@ChatID, 0) = 0
   begin
-    insert tChats  with (rowlock)   
-           (
-            ClientID
-           ,OrderID
-           ,Flag
-           )
-    OUTPUT INSERTED.ChatID INTO @ID(ID)   
-    select @ClientID
-          ,@OrderID
-          ,@Flag         
-
-    select @ChatID = max(ID) 
-      from @ID
+      insert tChats with (rowlock)   
+             (
+              ClientID
+             ,OrderID
+             ,Flag
+             ,Name
+             )
+      OUTPUT INSERTED.ChatID INTO @ID(ID)   
+      select @ClientID
+            ,@OrderID
+            ,@Flag   
+            ,@Name
+      
+      select @ChatID = max(ID) from @ID
   end
 
   exit_:
@@ -40,7 +42,7 @@ as
 go
 grant exec on ChatsInsert to public
 go
-exec setOV 'ChatsInsert', 'P', '20241008', '1'
+exec setOV 'ChatsInsert', 'P', '20250127', '2'
 go
  
 

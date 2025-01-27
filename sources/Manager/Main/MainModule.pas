@@ -80,7 +80,6 @@ begin
   Result := TUniMainModule(UniApplication.UniMainModule)
 end;
 
-
 procedure TUniMainModule.AppVersion;
 begin
 end;

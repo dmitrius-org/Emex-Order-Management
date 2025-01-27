@@ -28,6 +28,7 @@ uses
   ServerModule in 'Main\ServerModule.pas' {UniServerModule: TUniGUIServerModule},
   MainModule in 'Main\MainModule.pas' {UniMainModule: TUniGUIMainModule},
   Main in 'Main\Main.pas' {MainForm: TUniForm},
+
   uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
   uGrant in 'Core\User\uGrant.pas' {GrantF: TUniForm},
   uGroupsT in 'Core\User\uGroupsT.pas' {GroupsT: TUniFrame},
@@ -118,7 +119,9 @@ uses
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame};
+  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
+  uChatsT in 'App\Messenger\uChatsT.pas' {ChatsT: TUniFrame},
+  uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas';
 
 {$R *.res}
 

@@ -26,6 +26,9 @@ Type
     constructor Create(AConnection: TFDConnection);
     destructor Destroy; override;
 
+    /// <summary>
+    /// Count - количество записей в выборке
+    /// </summary>
     property Count: integer read GetCount;
 
     /// <summary>
@@ -50,7 +53,6 @@ Type
     /// <param name="AParams">Массив списка наименований параметров</param>
     /// <param name="AArgs">Массив значений параметров</param>
     procedure ExecAsync(ASql: String; AParams: array of string; AArgs: array of variant);
-
 
     /// <summary>
     /// GetSetting - получение значния настройки

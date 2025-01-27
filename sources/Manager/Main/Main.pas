@@ -7,10 +7,10 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIRegClasses, uniGUIForm, uniGUIBaseClasses, uniButton,
   uniBitBtn, uniPanel, uniSplitter, uniLabel, uniImageList, uniTreeView,
-  uniTreeMenu, unimTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
+  uniTreeMenu, Vcl.Menus, uniMainMenu, uniPageControl, uniGUIFrame,
   uniWidgets, uniMenuButton, System.Actions, Vcl.ActnList, System.ImageList,
-  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg, uniSpeedButton, uniTimer
-  ;
+  Vcl.ImgList, uniImage, Vcl.Imaging.jpeg, uniSpeedButton, uniTimer,
+  uTreeMenuHelper;
 
 type
   TMainForm = class(TUniForm)
@@ -51,6 +51,8 @@ type
     procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
     procedure UniFormCreate(Sender: TObject);
     procedure actProfileExecute(Sender: TObject);
+    procedure UniFormBroadcastMessage(const Sender: TComponent;
+      const Msg: string; const Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -68,7 +70,12 @@ type
 
     function CreateImageIndex(filename: string): Integer;
 
-    function FindNodeByID(AID: Integer): TUniTreeNode;
+//    function FindNodeByID(AID: Integer): TUniTreeNode;
+
+    /// <summary>
+    ///  SetChatsMessageIsRead - установка количества непрочитанных сообщений на меню Уведомления
+    ///</summary>
+    procedure SetChatsMessageIsRead();
   public
     { Public declarations }
   end;
@@ -81,27 +88,42 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant, uUserProfile,
-  uCommonType;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant,
+  uUserProfile, uCommonType;
 
 function MainForm: TMainForm;
 begin
   Result := TMainForm(UniMainModule.GetFormInstance(TMainForm));
 end;
 
-function TMainForm.FindNodeByID(AID: Integer): TUniTreeNode;
-var i:integer;
+procedure TMainForm.UniFormBroadcastMessage(const Sender: TComponent;
+  const Msg: string; const Params: TUniStrings);
 begin
-  result:= nil;
-  for i:=0 to MainMenu.Items.Count-1 do
+  logger.Info('TMainForm.UniFormBroadcastMessage');
+  logger.Info(Msg);
+
+  // просталяем количество непрочитанных сообщений
+  if Msg = 'ChatsMessageIsRead' then
   begin
-    if MainMenu.Items[i].Tag = AID then
-    begin
-      result := MainMenu.Items.Item[i];
-      break;
-    end;
-  end;
+    SetChatsMessageIsRead();
+  end
+
 end;
+
+//function TMainForm.FindNodeByID(AID: Integer): TUniTreeNode;
+//var i:integer;
+//begin
+//  result:= nil;
+//  for i:=0 to MainMenu.Items.Count-1 do
+//  begin
+//    if MainMenu.Items[i].Tag = AID then
+//    begin
+//      result := MainMenu.Items.Item[i];
+//      break;
+//    end;
+//  end;
+//
+//end;
 
 procedure TMainForm.actEditPasExecute(Sender: TObject);
 begin
@@ -173,7 +195,7 @@ begin
       // сохраняем форму, которая будет открываться по клику на элементе меню
       FormNames.Values[c] :=  UniMainModule.Query.FieldByName('Name').Value;
 
-      Nd := FindNodeByID(PID);
+      Nd := MainMenu.FindNodeByID(PID);
 
       if (not Assigned(Nd)) and (PID > 0) then
       begin
@@ -192,10 +214,13 @@ begin
 
       Nd.Tag := ID;
 
+
       UniMainModule.Query.Next;
     end;
   except
+    //
   end;
+
 end;
 
 function TMainForm.CreateImageIndex(filename: string): Integer;
@@ -281,16 +306,14 @@ begin
         end;
       end
   end;// if Assigned(N) then
+
 end;
 
 
 procedure TMainForm.ProfileMenuAdd;
 begin
-//  Profile := MainMenu.Items.Add(Profile, 'О системе');// FindNodeByID(600);
-//  Profile.Tag := 600;
-//  Profile.ImageIndex := 2;
 
-  Profile := FindNodeByID(600);
+  Profile := MainMenu.FindNodeByID(600);
 
   if Assigned(Profile) then
   begin
@@ -315,10 +338,42 @@ begin
       ImageIndex := 16;
     end;
   end
+
+end;
+
+procedure TMainForm.SetChatsMessageIsRead;
+var ParentNode, CNT: Integer;
+    Node:TUniTreeNode;
+begin
+  Node :=  MainMenu.FindNodeByID(67);
+
+  if Assigned(Node) then
+  begin
+    ParentNode :=  Node.Id;
+
+    Sql.Open('''
+
+      Select count(*) CNT
+        from vUnreadMessages
+       where isnull(ClientID, 0) > 0
+         and flag&1=0 -- клиентское сообщение
+         and flag&2=0 -- не прочитано
+
+    ''', [], []);
+
+    CNT := Sql.f('CNT').asInteger;
+
+    if CNT = 0 then
+      MainMenu.Items[ParentNode].Text := 'Уведомления'
+    else
+      MainMenu.Items[ParentNode].Text := 'Уведомления <div class="badge-chats-count">' + CNT.ToString + '</div>';
+  end;
+
 end;
 
 procedure TMainForm.SetMainMenuMicroName;
 begin
+
   if MainMenu.Micro then
   begin
       MainMenu.Items[0].Text := 'Развернуть';
@@ -333,6 +388,7 @@ begin
   end;
 
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
+
 end;
 
 procedure TMainForm.TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -388,16 +444,18 @@ begin
 
   ProfileMenuAdd;
 
-  //Profile.MoveTo(nil, TUniNodeAttachMode.naAdd );
 
   if MainMenu.Items.Count > 1 then
   begin
     MainMenu.Selected := MainMenu.Items[1];
     {$IFDEF Debug}
-       MainMenu.Selected := MainMenu.Items[2];
+       MainMenu.Selected := MainMenu.Items[6];
     {$ENDIF}
     MainMenuClick(Sender);
   end;
+
+  SetChatsMessageIsRead();
+
 end;
 
 initialization

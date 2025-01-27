@@ -21,7 +21,10 @@ object UniServerModule: TUniServerModule
     'files/css/messenger.css'
     'files/css/messenger_style.css'
     ''
-    'files/tinyMCE5/tinymce.js')
+    'files/tinyMCE5/tinymce.js'
+    ''
+    'files/js/BadgeText.js'
+    '')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'
@@ -37,7 +40,7 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.FullSequenceLog = True
   ConnectionFailureRecovery.ErrorMessage = #1054#1096#1080#1073#1082#1072' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
   ConnectionFailureRecovery.RetryMessage = #1055#1086#1074#1090#1086#1088#1085#1072#1103' '#1087#1086#1087#1099#1090#1082#1072'...'
-  WebSocketServer.Enabled = False
+  WebSocketServer.AlwaysUseHTTP = True
   OnBeforeInit = UniGUIServerModuleBeforeInit
   Height = 239
   Width = 611

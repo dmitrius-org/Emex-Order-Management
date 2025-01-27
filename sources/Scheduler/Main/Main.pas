@@ -45,10 +45,8 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actEditPasExecute(Sender: TObject);
     procedure actinfoExecute(Sender: TObject);
-    procedure UniFormKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure UniFormBroadcastMessage(const Sender: TComponent;
-      const Msg: string; const Params: TUniStrings);
+    procedure UniFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure UniFormBroadcastMessage(const Sender: TComponent; const Msg: string; const Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
