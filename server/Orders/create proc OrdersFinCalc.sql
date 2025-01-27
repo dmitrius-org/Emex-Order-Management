@@ -47,7 +47,7 @@ begin
         ,o.OrderID
         ,o.OrderDate
         ,o.Price                  -- цена продажи в рублях
-        ,coalesce(nullif(o.PricePurchaseF, 0), o.ReplacementPrice, o.PricePurchase) -- цена закупки в долларах
+        ,coalesce(nullif(o.PricePurchaseF, 0), nullif(o.ReplacementPrice, 0), o.PricePurchase) -- цена закупки в долларах
         ,isnull(o.WeightKG,  0)
         ,isnull(o.VolumeKG , 0)
         ,isnull(p.WeightKGF, 0)

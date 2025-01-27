@@ -22,6 +22,8 @@ insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 200, 200, '
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 500, 500, 'Настройки системы',           'TInstrumentT',            0,   0,  '11' 
                                                                                                                                          
 insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 900, 900, 'Тех. панель',                 'TTexT',                   0,   0,  '' 
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 67,   67, 'Уведомления',                 'TChatsT',                 0,   0,  '22' 
+
 go
 update tMenu set Icon = '0' from tMenu where Name='TOrdersT'
 update tMenu set Icon = '1' from tMenu where Name='TGroupsT'
@@ -38,10 +40,11 @@ update tMenu set Icon = '11' from tMenu where Name='TInstrumentT'
 update tMenu set Icon = '12' from tMenu where Name='TPricesT'
 update tMenu set Icon = '13' from tMenu where Name='TClientsTypeT'
 update tMenu set Icon = '14' from tMenu where Name='THomeF'
+update tMenu set Icon = '22' from tMenu where Name='TChatsT'
 select * from tMenu
 select * from tMenu where Name = 'TConfluenceT'
 delete from tMenu where Name = 'TOrdersT.actGroupAction'
 delete from tMenu where Name = 'TOrdersT.actGroupDetailNameEdit'
 
 
-
+select * from tMenu where ParentID = 0
