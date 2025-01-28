@@ -441,7 +441,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Messenger\uMessengerF.pas">
-            <Form>MessageF</Form>
+            <Form>MessengerF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>

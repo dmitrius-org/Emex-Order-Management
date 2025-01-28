@@ -3,7 +3,7 @@ unit uMainVar;
 interface
 
 uses
-  uSqlUtils, uLogger, uCommonType, uniComboBox, UniFSCombobox;
+  uSqlUtils, uLogger, uCommonType, uniComboBox, UniFSCombobox, uUniADCheckComboBoxEx;
 
   function Sql: TSql;
 
@@ -15,6 +15,7 @@ uses
   procedure ComboBoxFill(AComboBox: TUniComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniCheckComboBox; ASQL: string); overload;
+  procedure ComboBoxFill(AComboBox: TUniADCheckComboBox; ASQL: string); overload;
 
 implementation
 
@@ -26,7 +27,7 @@ begin
   if not Assigned(MainModule.UniMainModule.ASql) then
     MainModule.UniMainModule.ASql := TSql.Create(MainModule.UniMainModule.FDConnection);
 
-  Result := MainModule.UniMainModule.ASql;
+  Result := UniMainModule.ASql;
 end;
 
 function RetVal: TRetVal;
@@ -104,4 +105,27 @@ begin
     EnableControls;
   end;
 end;
+
+procedure ComboBoxFill(AComboBox: TUniADCheckComboBox; ASQL: string);
+begin
+  Sql.Q.Close;
+  Sql.Open(ASQL, [], []);
+  with Sql.Q do
+  begin
+    DisableControls;
+    AComboBox.Clear;
+    AComboBox.Items.BeginUpdate;
+    First;
+    while not Eof do
+      begin
+        AComboBox.Items.AddObject( FieldByName('Name').AsString, Pointer(FieldByName('ID').AsInteger) );
+
+        //AComboBox.Items.AddPair(FieldByName('Name').AsString, FieldByName('ID').AsString);
+        Next;
+      end;
+    AComboBox.Items.EndUpdate;
+    EnableControls;
+  end;
+end;
+
 end.

@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Font.Color = clSilver
   Layout = 'fit'
   OnCreate = UniFormCreate
+  OnDestroy = UniFormDestroy
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     Left = 0
@@ -27,8 +28,6 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
-    ExplicitWidth = 922
-    ExplicitHeight = 572
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
@@ -42,8 +41,6 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'border'
-      ExplicitWidth = 922
-      ExplicitHeight = 572
       object UniPanelCentral: TUniPanel
         Left = 300
         Top = 55
@@ -60,8 +57,6 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 622
-        ExplicitHeight = 517
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 3
@@ -69,21 +64,17 @@ object MainForm: TMainForm
           Width = 494
           Height = 439
           Hint = ''
-          ActivePage = TabStatistics
+          ActivePage = tabChats
           Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
           OnChange = pcMainChange
-          ExplicitWidth = 616
-          ExplicitHeight = 511
           object tbS: TUniTabSheet
             Hint = ''
             ImageIndex = 2
             Caption = #1055#1086#1080#1089#1082
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsB: TUniTabSheet
             Hint = ''
@@ -91,8 +82,6 @@ object MainForm: TMainForm
             Caption = #1050#1086#1088#1079#1080#1085#1072
             OnBeforeActivate = tsBBeforeActivate
             OnBeforeFirstActivate = tsBBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsOrder: TUniTabSheet
             Hint = ''
@@ -100,26 +89,24 @@ object MainForm: TMainForm
             Caption = #1047#1072#1082#1072#1079#1099
             OnBeforeActivate = tsOrderBeforeActivate
             OnBeforeFirstActivate = tsOrderBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsBalance: TUniTabSheet
             Hint = ''
             ImageIndex = 9
             Caption = #1041#1072#1083#1072#1085#1089' '#1080' '#1054#1090#1075#1088#1091#1079#1082#1080
             OnBeforeFirstActivate = tsBalanceBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
+          end
+          object tabChats: TUniTabSheet
+            Hint = ''
+            ImageIndex = 11
+            Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+            OnBeforeFirstActivate = tabChatsBeforeFirstActivate
           end
           object TabStatistics: TUniTabSheet
             Hint = ''
             ImageIndex = 10
             Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
             OnBeforeFirstActivate = TabStatisticsBeforeFirstActivate
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 616
-            ExplicitHeight = 511
           end
         end
       end
@@ -135,7 +122,6 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
-        ExplicitWidth = 922
         object UniPanel: TUniPanel
           Left = 440
           Top = 0
@@ -146,7 +132,6 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
-          ExplicitLeft = 562
         end
       end
       object MainMenuPanel: TUniPanel
@@ -163,7 +148,6 @@ object MainForm: TMainForm
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Region = 'west'
         LayoutConfig.DockWhenAligned = False
-        ExplicitHeight = 517
         object MainMenu: TUniTreeMenu
           AlignWithMargins = True
           Left = 0
@@ -181,7 +165,7 @@ object MainForm: TMainForm
           BodyRTL = False
           Align = alClient
           Items.NodeData = {
-            07060000000A5400580054007200650065004E006F0064006500270000000400
+            07050000000A5400580054007200650065004E006F0064006500270000000400
             00000400000004000000FFFFFFFF04000000000000000000000000010420002E
             002E002E000000290000000200000002000000FFFFFFFFFFFFFFFF0200000000
             000000000000000001051F043E04380441043A0400002D000000000000000000
@@ -189,18 +173,15 @@ object MainForm: TMainForm
             0438043D04300400002B0000000300000003000000FFFFFFFFFFFFFFFF030000
             000000000000000000000106170430043A04300437044B040000410000000900
             000009000000FFFFFFFFFFFFFFFF090000000000000000000000000111110430
-            043B0430043D0441042000380420001E04420433044004430437043A04380400
-            00330000000A0000000A000000FFFFFFFFFFFFFFFF0A00000000000000000000
-            0000010A210442043004420438046300420438043A043004}
+            043B0430043D0441042000380420001E04420433044004430437043A043804}
           Items.FontData = {
-            01060000001D000000000000000600000000080000FFF5FFFFFF000000000000
+            01050000001D000000000000000600000000080000FFF5FFFFFF000000000000
             53696D53756EFFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFF
-            FFFF00000000FFFFFFFF00000000}
+            FFFF00000000}
           Images = MainMenuImage
           MicroWidth = 50
           SelectOnExpander = True
           OnClick = MainMenuClick
-          ExplicitHeight = 452
         end
         object LogoPanel: TUniContainerPanel
           Left = 0
@@ -3794,7 +3775,6 @@ object MainForm: TMainForm
           LayoutAttribs.Pack = 'center'
           LayoutConfig.ComponentCls = 'logo-version'
           LayoutConfig.Region = 'center'
-          ExplicitTop = 496
           object lblVersion: TUniLabel
             AlignWithMargins = True
             Left = 3
@@ -3811,26 +3791,6 @@ object MainForm: TMainForm
       end
     end
   end
-  object Menu: TUniMenuItems
-    Left = 409
-    Top = 92
-    object mnHome: TUniMenuItem
-      Caption = #1043#1083#1072#1074#1085#1072#1103
-      ImageIndex = 0
-    end
-    object mnUser: TUniMenuItem
-      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
-      ImageIndex = 2
-    end
-    object mnTasks: TUniMenuItem
-      Caption = #1047#1072#1076#1072#1095#1080
-      ImageIndex = 3
-    end
-    object mnSettings: TUniMenuItem
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-      ImageIndex = 1
-    end
-  end
   object ImageList: TUniNativeImageList
     Width = 48
     Height = 48
@@ -3840,19 +3800,6 @@ object MainForm: TMainForm
       06000000FFFFFF1F060400000075736572FFFFFF1F0604000000696E666FFFFF
       FF1F0606000000736561726368FFFFFF1F060400000063617274FFFFFF1F0604
       00000063617365FFFFFF1F06070000007573643B66613B}
-  end
-  object pmProfile: TUniPopupMenu
-    Left = 599
-    Top = 93
-    object N2: TUniMenuItem
-      Action = actEditPas
-    end
-    object N3: TUniMenuItem
-      Caption = '-'
-    end
-    object N1: TUniMenuItem
-      Action = actExit
-    end
   end
   object ActionList: TUniActionList
     Left = 673
@@ -3878,13 +3825,13 @@ object MainForm: TMainForm
     Left = 512
     Top = 166
     Images = {
-      0B000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
+      0C000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
       FFFFFF1F060900000075736572733B66613BFFFFFF1F060A0000007365617263
       683B66613BFFFFFF1F060D00000066696C652D746578743B66613BFFFFFF1F06
       08000000626172733B66613BFFFFFF1F061200000077696E646F772D636C6F73
       652D6F3B66613BFFFFFF1F0608000000757365723B66613BFFFFFF1F060A0000
       00756E6C6F636B3B66613BFFFFFF1F060C00000073657474696E67733B66613B
       FFFFFF1F06070000007573643B66613BFFFFFF1F060E0000006C696E652D6368
-      6172743B66613B}
+      6172743B66613BFFFFFF1F060C000000656E76656C6F70653B66613B}
   end
 end

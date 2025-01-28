@@ -33,6 +33,7 @@ uses
   uUtils in '..\Common\logger\uUtils.pas',
   uUtils.Varriant in '..\Common\Common\uUtils.Varriant.pas',
   uAuditUtils in '..\Common\CommonApp\uAuditUtils.pas',
+  uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   ServerModule in 'Main\ServerModule.pas' {UniServerModule: TUniGUIServerModule},
   MainModule in 'Main\MainModule.pas' {UniMainModule: TUniGUIMainModule},
   Main in 'Main\Main.pas' {MainForm: TUniForm},
@@ -56,16 +57,16 @@ uses
   uniGUI.Loading in '..\Common\Loading\uniGUI.Loading.pas',
   uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
-  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
+  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessengerF: TUniForm},
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
-  uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uReOrderF in 'App\Orders\uReOrderF.pas' {ReOrder: TUniForm},
   uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas',
   uVersion in '..\Common\CommonApp\uVersion.pas',
   uStatisticOrders in 'App\Statistics\uStatisticOrders.pas' {StatisticOrders: TUniFrame},
-  uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame};
+  uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
+  uChatsT in 'App\Messenger\uChatsT.pas' {ChatsT: TUniFrame};
 
 {$R *.res}
 

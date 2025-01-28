@@ -358,10 +358,10 @@ begin
                 if OBJECT_ID('tempdb..#CounterPart') is not null
                   drop table #CounterPart
 
-                 CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
-                                           ,N         int
-                                           ,Processed bit
-                                           );
+                CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
+                                          ,N         int
+                                          ,Processed bit
+                                          );
 
              ''' + SqlText
              , [], []);
@@ -372,8 +372,8 @@ end;
 
 procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
-   MessageF.OrderID := QueryOrderID.AsInteger;
-   MessageF.ShowModal();
+   MessengerF.OrderID := QueryOrderID.AsInteger;
+   MessengerF.ShowModal();
 end;
 
 procedure TOrdersT2.btnNotificationClick(Sender: TObject);

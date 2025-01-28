@@ -1321,8 +1321,8 @@ end;
 
 procedure TOrdersT.actSetCommentExecute(Sender: TObject);
 begin
-   MessageF.OrderID := QueryOrderID.AsInteger;
-   MessageF.ShowModal();
+   MessengerF.OrderID := QueryOrderID.AsInteger;
+   MessengerF.ShowModal();
 end;
 
 procedure TOrdersT.actUnselectExecute(Sender: TObject);

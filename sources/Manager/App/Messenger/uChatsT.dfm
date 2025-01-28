@@ -203,8 +203,13 @@ object ChatsT: TChatsT
     RowWidget.DestroyOnCollapse = False
     Exporter.Enabled = True
     Exporter.UseColumnRenderer = True
+    OnKeyDown = GridKeyDown
+    OnAjaxEvent = GridAjaxEvent
+    OnBodyDblClick = actMessagesExecute
     OnColumnSort = GridColumnSort
+    OnColumnMove = GridColumnMove
     OnCellContextClick = GridCellContextClick
+    OnColumnResize = GridColumnResize
     Columns = <
       item
         FieldName = 'ChatID'
@@ -280,6 +285,8 @@ object ChatsT: TChatsT
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
+    UpdateOptions.KeyFields = 'ChatID'
+    UpdateOptions.AutoIncFields = 'ChatID'
     SQL.Strings = (
       'DECLARE @Clients as ID;'
       ' '
@@ -364,7 +371,7 @@ object ChatsT: TChatsT
     Left = 102
     Top = 281
     object actMessages: TAction
-      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1077#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077
       ImageIndex = 3
       OnExecute = actMessagesExecute
     end

@@ -1687,7 +1687,7 @@ object OrdersT: TOrdersT
       OnExecute = actGridSettingDefaultExecute
     end
     object actSetComment: TAction
-      Caption = #1053#1072#1087#1080#1089#1072#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1091
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       Hint = #1053#1072#1087#1080#1089#1072#1090#1100' '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1082#1083#1080#1077#1085#1090#1091
       ImageIndex = 9
       OnExecute = actSetCommentExecute

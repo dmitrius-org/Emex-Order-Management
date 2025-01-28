@@ -13,7 +13,7 @@ uses
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, System.Actions, Vcl.ActnList,
   uniMainMenu, Vcl.Menus, uniImageList, System.ImageList, Vcl.ImgList,
-  uMessengerF, uCommonType, uniGUIApplication;
+  uMessengerF, uCommonType, uniGUIApplication, MainModule;
 
 type
   TChatsT = class(TUniFrame)
@@ -31,20 +31,9 @@ type
     qQueryStatusName: TStringField;
     qQueryClientName: TWideStringField;
     UniLabel1: TUniLabel;
-    fClient: TUniADCheckComboBox;
-    UniLabel3: TUniLabel;
     fStatus: TUniADCheckComboBox;
     edtSearch: TUniComboBox;
     qQueryUnReadMessages: TIntegerField;
-    ppMain: TUniPopupMenu;
-    N3: TUniMenuItem;
-    N1: TUniMenuItem;
-    N6: TUniMenuItem;
-    actMain: TUniActionList;
-    actMessages: TAction;
-    actRefresh: TAction;
-    UniImageList: TUniImageList;
-    UniImageListAdapter: TUniImageListAdapter;
     procedure UniFrameCreate(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -53,7 +42,6 @@ type
     procedure fCancelClick(Sender: TObject);
     procedure qQueryFlagGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure actRefreshExecute(Sender: TObject);
-    procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actMessagesExecute(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
@@ -103,7 +91,7 @@ end;
 procedure TChatsT.fCancelClick(Sender: TObject);
 begin
   edtSearch.Clear;
-  fClient.ClearSelection;
+
   fStatus.ClearSelection;
 
   GridOpen;
@@ -123,27 +111,20 @@ begin
   if Params.Count > 0 then
   begin
     if ((EventName = '_columnhide') or (EventName = '_columnshow')) then
-      GridExt.GridLayoutSave(self, Grid, Params, EventName);
+      GridExt.GridLayoutSave(UniMainModule.AUserID, self, Grid, Params, EventName);
   end;
-end;
-
-procedure TChatsT.GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
-begin
- // ACurrColumn := Column;
-
-  ppMain.Popup(X, Y, Grid);
 end;
 
 procedure TChatsT.GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
   NewIndex: Integer);
 begin
-  GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+  GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TChatsT.GridColumnResize(Sender: TUniBaseDBGridColumn;
   NewSize: Integer);
 begin
- GridExt.GridLayout(Self, Grid, tGridLayout.glSave);
+ GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glSave);
 end;
 
 procedure TChatsT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -173,7 +154,7 @@ begin
   try
     qQuery.Close();
 
-    qQuery.ParamByName('Clients').AsString := fClient.SelectedKeys;
+    qQuery.ParamByName('ClientID').AsInteger := UniMainModule.AUserID;
 
     qQuery.ParamByName('Status').AsString := fStatus.SelectedKeys;
 
@@ -194,7 +175,7 @@ begin
   t := '';
   if (qQueryUnReadMessages.AsInteger > 0) then
   begin
-    t := t + '<span class="grid-order-message" data-qtip="Имеется непрочитанное сообщение от клиента"><i class="fa fa-bell"></i></span> ';
+    t := t + '<span class="x-orders-message" data-qtip="Имеется непрочитанное сообщение"><i class="fa fa-bell"></i></span> ';
   end;
 
   Text := t;
@@ -202,24 +183,13 @@ end;
 
 procedure TChatsT.UniFrameCreate(Sender: TObject);
 begin
-
-  ComboBoxFill(fClient,'''
-    DECLARE @R table (ID numeric(18, 0), Brief varchar(256), Name varchar(256)) ;
-
-    insert @R
-    EXEC ChatsFilter_Client
-
-    SELECT ID, Brief as Name from @R;
-  ''');
-
-
   ComboBoxFill(fStatus,'''
     exec ChatsFilter_Status
   ''');
 
   GridExt.SortColumnCreate(Grid);
 
-  GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
+  GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glLoad);
 end;
 
 procedure TChatsT.UniFrameDestroy(Sender: TObject);

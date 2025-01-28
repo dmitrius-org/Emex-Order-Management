@@ -12,10 +12,9 @@ uses
 
 type
   TMessage = class(TUniFrame)
-    pnlContentChatContainer: TUniContainerPanel;
-    pnlContentChatContent: TUniContainerPanel;
-    pnlMessageList: TUniContainerPanel;
-    pnlChatHeader: TUniPanel;
+    ContentChatContainer: TUniContainerPanel;
+    ChatContent: TUniContainerPanel;
+    ChatMessages: TUniContainerPanel;
     pnlChatHeaderLeft: TUniPanel;
     pnlChatHheaderInfo: TUniContainerPanel;
     pnlChatHeaderTitle: TUniContainerPanel;
@@ -23,7 +22,7 @@ type
     lblChatTitleText: TUniLabel;
     lblChatHeaderUserStatus: TUniLabel;
     MessageEditor: TUniListBox;
-    pnlSendContainer: TUniContainerPanel;
+    ChatMessagesSend: TUniContainerPanel;
     pnlSendPanelContainer: TUniContainerPanel;
     pnlSendMessage: TUniContainerPanel;
     pnlTextAreaContent: TUniContainerPanel;
@@ -37,12 +36,13 @@ type
     btnRefresch: TUniSpeedButton;
     UniSpeedButton1: TUniSpeedButton;
     UserStatusTimer: TUniTimer;
+    ChatHeader: TUniContainerPanel;
     procedure UniFrameReady(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
     procedure MessageTextChange(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure pnlContentChatContainerAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure ContentChatContainerAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
     procedure UserStatusTimerTimer(Sender: TObject);
   private
     { Private declarations }
@@ -77,11 +77,24 @@ type
     /// SetUserStatus - Статус пользователя/клиента
     /// </summary>
     procedure SetUserStatus(AEvent: string; ClientID: integer; Status: string='');
+    procedure SetChatID(const Value: Integer);
   public
     { Public declarations }
 
+    /// <summary>
+    /// ClientInfo - Получение информации о клиенте
+    /// </summary>
     procedure ClientInfo();
+
+    /// <summary>
+    /// ChatsInfoByChatID - Получение информации о чате по идентификатору чата
+    /// </summary>
+    /// <param name="AChatID">ИД чата</param>
+    procedure ChatsInfoByChatID(AChatID: integer);
+
     procedure ChatInfo();
+
+    procedure ChatInfoByOrderID();
 
     /// <summary>
     /// LoadMessageByChatID - загрузка сообщений из БД
@@ -125,7 +138,7 @@ type
     /// <summary>
     ///  ChatID - ИД чата
     /// </summary>
-    property ChatID:  Integer read FChatID  write FChatID;
+    property ChatID:  Integer read FChatID  write SetChatID;
 
     /// <summary>
     ///  AppType - Тип приложения:
@@ -215,6 +228,8 @@ begin
                        FFlag,
                        MemoTextToHTML(MessageText),
                        Now());
+     //
+     //MessageEditor.ItemIndex := MessageEditor.Items.Count - 1;
 
      MessageText.Clear;
 
@@ -229,9 +244,7 @@ begin
                ['MessageID'],
                [MessageID]);
 
-  BroadcastMessage('ChatsMessageIsRead',
-                  [],
-                  []); // boIgnoreCurrentSession boClientOnly
+  BroadcastMessage('ChatsMessageIsRead', ['SID', UniSession.SessionID], []);
 end;
 
 procedure TMessage.AddMessageToChat(
@@ -283,6 +296,11 @@ begin
 end;
 
 procedure TMessage.ChatInfo;
+begin
+
+end;
+
+procedure TMessage.ChatInfoByOrderID;
 begin
 
   if FChatID <> 0 then Exit;
@@ -341,11 +359,51 @@ begin
 
 end;
 
+procedure TMessage.ChatsInfoByChatID(AChatID: integer);
+begin
+  sql.Open('''
+    exec ChatsInfoByChatID
+           @ChatID = :ChatID
+  ''',
+  ['ChatID'],
+  [AChatID]);
+
+  with sql.q do
+  begin
+    First;
+
+    while not EOF do
+    begin
+      FOrderID := FieldByName('OrderID').AsInteger;
+      FClientID := FieldByName('ClientID').AsInteger;
+
+      if FOrderID = 0 then
+      begin
+        lblChatTitleText.Caption := '' +
+
+        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
+      end
+      else
+      begin
+        lblChatTitleText.Caption := 'Заказ: ' + FOrderID.ToString +
+
+        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
+      end;
+
+      Next;
+    end;
+  end;
+end;
+
 procedure TMessage.LoadMessageByChatID(AChatID: integer);
 var
   i: integer;
   Message : string;
 begin
+  MessageText.Clear;
+
+  ChatsInfoByChatID(AChatID);
+
   MessageEditor.Clear;
 
   sql.Open('''
@@ -373,6 +431,13 @@ begin
 
       Next;
     end;
+
+    //MessageEditor.Selected[MessageEditor.Items.Count-1] := true;
+
+    // MessageEditor.JSInterface.JSCall('boundList.getSelectedNodes()['+inttostr(MessageEditor.Items.Count-1)+'].scrollIntoView', [True]);
+
+
+    MessageEditor.ItemIndex := MessageEditor.Items.Count - 1;
   end;
 end;
 
@@ -383,7 +448,7 @@ var
 begin
   MessageText.Clear;
 
-  ChatInfo;
+  ChatInfoByOrderID;
 
   ClientInfo;
 
@@ -440,7 +505,7 @@ begin
   btnSendEnabled;
 end;
 
-procedure TMessage.pnlContentChatContainerAjaxEvent(Sender: TComponent;
+procedure TMessage.ContentChatContainerAjaxEvent(Sender: TComponent;
   EventName: string; Params: TUniStrings);   var i:Integer;
   JSONObject: TJSONObject;
 begin
@@ -478,6 +543,14 @@ begin
     end;
 
   end;
+end;
+
+procedure TMessage.SetChatID(const Value: Integer);
+begin
+  FChatID := Value;
+  FOrderID := 0;
+
+  LoadMessageByChatID(FChatID);
 end;
 
 procedure TMessage.SetOrderID(const Value: Integer);
@@ -525,24 +598,16 @@ end;
 
 procedure TMessage.UniFrameDestroy(Sender: TObject);
 begin
-  UniMainModule.WS.FormUnRegister (pnlContentChatContainer.JSName);
+  UniMainModule.WS.FormUnRegister (ContentChatContainer.JSName);
 end;
 
 procedure TMessage.UniFrameReady(Sender: TObject);
 begin
   lblChatHeaderUserStatus.Caption := '';
 
-  if FOrderID= 0 then
-  begin
-    logger.Info(OrderID.ToString);
-    logger.Info(AppType.ToString);
-    AppType:=1;
-    OrderID  := 167120;
-  end;
-
   btnSendEnabled;
 
-  UniMainModule.WS.FormRegister (pnlContentChatContainer.JSName , 'websocket_message');
+  UniMainModule.WS.FormRegister (ContentChatContainer.JSName , 'websocket_message');
 end;
 
 initialization

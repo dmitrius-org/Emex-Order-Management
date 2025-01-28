@@ -70,8 +70,6 @@ type
 
     function CreateImageIndex(filename: string): Integer;
 
-//    function FindNodeByID(AID: Integer): TUniTreeNode;
-
     /// <summary>
     ///  SetChatsMessageIsRead - установка количества непрочитанных сообщений на меню Уведомления
     ///</summary>
@@ -105,25 +103,16 @@ begin
   // просталяем количество непрочитанных сообщений
   if Msg = 'ChatsMessageIsRead' then
   begin
-    SetChatsMessageIsRead();
+    if UniSession.SessionID = Params.Values['SID'] then
+      SetChatsMessageIsRead();
   end
-
+  else
+  if Msg = 'ChatsMessageUpdate' then
+  begin
+    if UniSession.SessionID = Params.Values['SID'] then
+      SetChatsMessageIsRead();
+  end
 end;
-
-//function TMainForm.FindNodeByID(AID: Integer): TUniTreeNode;
-//var i:integer;
-//begin
-//  result:= nil;
-//  for i:=0 to MainMenu.Items.Count-1 do
-//  begin
-//    if MainMenu.Items[i].Tag = AID then
-//    begin
-//      result := MainMenu.Items.Item[i];
-//      break;
-//    end;
-//  end;
-//
-//end;
 
 procedure TMainForm.actEditPasExecute(Sender: TObject);
 begin

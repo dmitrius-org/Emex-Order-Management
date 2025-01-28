@@ -8,19 +8,21 @@ uses
   uniGUIClasses, uniGUIForm;
 
 type
-  TMessageF = class(TUniForm)
+  TMessengerF = class(TUniForm)
     procedure UniFormShow(Sender: TObject);
   private
     FOrderID: Integer;
+    FChatID: Integer;
     { Private declarations }
   public
     { Public declarations }
 
 
     property OrderID: Integer read FOrderID write FOrderID;
+    property ChatID: Integer read FChatID write FChatID;
   end;
 
-function MessageF: TMessageF;
+function MessengerF: TMessengerF;
 
 implementation
 
@@ -29,19 +31,22 @@ implementation
 uses
   MainModule, uniGUIApplication, uMessengerMessage;
 
-function MessageF: TMessageF;
+function MessengerF: TMessengerF;
 begin
-  Result := TMessageF(UniMainModule.GetFormInstance(TMessageF));
+  Result := TMessengerF(UniMainModule.GetFormInstance(TMessengerF));
 end;
 
-procedure TMessageF.UniFormShow(Sender: TObject);
+procedure TMessengerF.UniFormShow(Sender: TObject);
 var Message: TMessage;
 begin
    Message:= TMessage.Create(self);
    Message.Parent := self;
    Message.AppType := 0;
-   Message.OrderID := FOrderID;
 
+   if FOrderID > 0 then
+     Message.OrderID := FOrderID
+   else
+     Message.ChatID := FChatID;
 end;
 
 end.

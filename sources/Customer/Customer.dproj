@@ -115,10 +115,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
-        <VerInfo_Build>3</VerInfo_Build>
+        <VerInfo_Build>5</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_DebugInformation>0</DCC_DebugInformation>
@@ -156,6 +156,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\logger\uUtils.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Varriant.pas"/>
         <DCCReference Include="..\Common\CommonApp\uAuditUtils.pas"/>
+        <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="Main\ServerModule.pas">
             <Form>UniServerModule</Form>
             <DesignClass>TUniGUIServerModule</DesignClass>
@@ -228,7 +229,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
         <DCCReference Include="App\Messenger\uMessengerF.pas">
-            <Form>MessageF</Form>
+            <Form>MessengerF</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
@@ -237,7 +238,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Common\CommonApp\uConstant.pas"/>
         <DCCReference Include="App\Orders\uReOrderF.pas">
@@ -254,6 +254,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="App\Statistics\uStatistics.pas">
             <Form>StatisticsT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Messenger\uChatsT.pas">
+            <Form>ChatsT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
@@ -1349,7 +1354,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1357,7 +1362,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1365,7 +1370,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1373,7 +1378,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>

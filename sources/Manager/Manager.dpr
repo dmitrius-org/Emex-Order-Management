@@ -28,7 +28,6 @@ uses
   ServerModule in 'Main\ServerModule.pas' {UniServerModule: TUniGUIServerModule},
   MainModule in 'Main\MainModule.pas' {UniMainModule: TUniGUIMainModule},
   Main in 'Main\Main.pas' {MainForm: TUniForm},
-
   uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
   uGrant in 'Core\User\uGrant.pas' {GrantF: TUniForm},
   uGroupsT in 'Core\User\uGroupsT.pas' {GroupsT: TUniFrame},
@@ -113,7 +112,7 @@ uses
   uBalanceTotalT in '..\Common\Balance\uBalanceTotalT.pas' {BalanceTotalT: TUniFrame},
   uUtils.Date in '..\Common\CommonApp\uUtils.Date.pas',
   uMessengerMessage in '..\Common\Messenger\uMessengerMessage.pas' {Message: TUniFrame},
-  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessageF: TUniForm},
+  uMessengerF in 'App\Messenger\uMessengerF.pas' {MessengerF: TUniForm},
   uUtils.WS in '..\Common\CommonApp\uUtils.WS.pas',
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
