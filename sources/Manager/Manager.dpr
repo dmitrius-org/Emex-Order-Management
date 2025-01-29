@@ -118,7 +118,8 @@ uses
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame};
+  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
+  uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas';
 
 {$R *.res}
 

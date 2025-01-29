@@ -183,113 +183,91 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uInstrumentStateT.pas">
             <Form>InstrumentStateT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\User\uGrantClient.pas">
             <Form>GrantClientT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uSettingsT.pas">
             <Form>SettingsT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uBalanceAddF.pas">
             <Form>BalanceAddF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uInstrument.pas">
             <Form>InstrumentT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uInstrumentF.pas">
             <Form>UnstrumentF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uBalanceT.pas">
             <Form>BalanceT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uRefusalsT.pas">
             <Form>RefusalsT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsT.pas">
             <Form>ShipmentsT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\uTexT.pas">
             <Form>TexT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uClientsT.pas">
             <Form>ClientsT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uUploadingRefusals.pas"/>
         <DCCReference Include="Core\User\uGroupF.pas">
             <Form>GroupF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uClientsF.pas">
             <Form>ClientsF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Prices\uPricesT.pas">
             <Form>PricesT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Suppliers\uSuppliersF.pas">
             <Form>SuppliersF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\User\uUserT.pas">
             <Form>UsersT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\User\uUserF.pas">
             <Form>UserF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uInstrumentActionT.pas">
             <Form>InstrumentActionT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\uHome.pas">
             <Form>HomeF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uOrdersF.pas">
             <Form>OrderF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Suppliers\uSuppliersT.pas">
             <Form>SuppliersT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uOrdersT.pas">
             <Form>OrdersT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\logger\TimeIntervals.pas"/>
@@ -330,48 +308,39 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\CommonApp\uToast.pas"/>
         <DCCReference Include="..\Scheduler\Task\uTask_F.pas">
             <Form>Task_F</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTask_T.pas">
             <Form>Task_T</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTaskUtils.pas"/>
         <DCCReference Include="App\Clients\uClientsTypeT.pas">
             <Form>ClientsTypeT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsProtocol_T.pas">
             <Form>ShipmentsProtocol_T</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTaskBat_F.pas">
             <Form>TaskBAT_F</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTaskSQL_F.pas">
             <Form>TaskSQL_F</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Scheduler\Task\uTaskProcedure_F.pas">
             <Form>TaskProcedure_F</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uGroupSetFragileSignF.pas">
             <Form>GroupSetFragileSignF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uGroupDetailNameEditF.pas">
             <Form>GroupDetailNameEditF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Confluence\uConfluenceT.pas">
@@ -380,7 +349,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uNodesF.pas">
             <Form>NodesF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uConstant.pas"/>
@@ -388,114 +356,92 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="App\Orders\uAccrualUtils.pas"/>
         <DCCReference Include="App\Common\uStatusForm.pas">
             <Form>StatusForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Confluence\uInstructionT.pas">
             <Form>InstructionT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Confluence\uInstructionDevT.pas">
             <Form>InstructionDevT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\DashBoard\PriceUpdate.pas">
             <Form>PriceUpdateT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\DashBoard\uDashBoardItem.pas">
             <Form>DashBoardItem</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\DashBoard\uDashBoard.pas">
             <Form>DashBoardFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\User\uGroups2T.pas">
             <Form>Groups2T</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uClientsType2T.pas">
             <Form>ClientType2T</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uPromptReliabilityEdit.pas">
             <Form>PromptReliabilityEdit</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uPromptMarginEdit.pas">
             <Form>PromptMarginEdit</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uExportForm.pas">
             <Form>ExportForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsEditF.pas">
             <Form>ShipmentsEditF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsReceiptStatusF.pas">
             <Form>ShipmentsReceivedStatusF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsTransporterDataF.pas">
             <Form>ShipmentsTransporterDataF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsReceiptDateF.pas">
             <Form>ShipmentsReceiptDateF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uOrdersProtocol_T.pas">
             <Form>OrdersProtocol_T</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsTransporterNumberF.pas">
             <Form>ShipmentsTransporterNumberF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.Controll.pas"/>
         <DCCReference Include="Core\User\uUserProfile.pas">
             <Form>UserProfile</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Clients\uBalanceTotalT_Wrapper.pas">
             <Form>BalanceTotalT_W</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Balance\uBalanceTotalT.pas">
             <Form>BalanceTotalT</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.Date.pas"/>
         <DCCReference Include="..\Common\Messenger\uMessengerMessage.pas">
             <Form>Message</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Messenger\uMessengerF.pas">
             <Form>MessageF</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.WS.pas"/>
@@ -504,14 +450,13 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Strings.pas"/>
         <DCCReference Include="App\Statistics\uStatisticCanceled.pas">
             <Form>StatisticCanceled</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Statistics\uStatisticBrand.pas">
             <Form>StatisticBrand</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

@@ -14,12 +14,15 @@ Select
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, coalesce(o.PricePurchaseF, o.PricePurchase, 0)) + ' | ' + 
+       convert(varchar, o.Quantity) + '/' + isnull(convert(varchar, p.Quantity), '-') + ' | ' + -- количество
        convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
        ,0 as Price
   from tOrders o (nolock)
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
+  left join tPrice p with (nolock index=ao1)
+         on p.PriceID = o.PriceID	
  where o.OrderID =@OrderID
    and not exists (select 1
                      from pFindByNumber p (nolock) 
@@ -33,6 +36,7 @@ select
        s.Brief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
+       convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' | ' + -- количество
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
                                                         when isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)) < p.GuaranteedDay 
                                                           then '(+' + convert(varchar, (p.GuaranteedDay - isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)))) + ')'
@@ -48,7 +52,7 @@ select
         and p.Make = o.MakeLogo
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
- where o.OrderID =@OrderID
+ where o.OrderID = @OrderID
  order by Price
 
   exit_:
@@ -57,7 +61,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20241211', '4'
+exec setOV 'OrderF_SupplierList', 'P', '20250129', '5'
 go
  
---exec OrderF_SupplierList @OrderID=178922
+exec OrderF_SupplierList @OrderID=178922

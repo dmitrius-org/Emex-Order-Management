@@ -41,6 +41,10 @@
         height: 14px;
 }
 
+.part-top-label {
+    text-align: right;
+    /* display: block; */
+}
 
 
 

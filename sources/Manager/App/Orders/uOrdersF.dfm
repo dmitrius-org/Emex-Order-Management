@@ -1,7 +1,7 @@
 object OrderF: TOrderF
   Left = 0
   Top = 0
-  ClientHeight = 803
+  ClientHeight = 806
   ClientWidth = 884
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
@@ -30,7 +30,7 @@ object OrderF: TOrderF
     Left = 0
     Top = 0
     Width = 884
-    Height = 334
+    Height = 337
     Hint = ''
     ShowHint = True
     ParentColor = False
@@ -38,7 +38,7 @@ object OrderF: TOrderF
     TabOrder = 0
     DesignSize = (
       884
-      334)
+      337)
     object lblWeightKGF: TUniLabel
       Left = 17
       Top = 102
@@ -974,7 +974,7 @@ object OrderF: TOrderF
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
-    Top = 334
+    Top = 337
     Width = 884
     Height = 37
     Hint = ''
@@ -1057,7 +1057,7 @@ object OrderF: TOrderF
   end
   object UniHTMLFrame1: TUniHTMLFrame
     Left = 0
-    Top = 371
+    Top = 374
     Width = 884
     Height = 432
     Hint = ''

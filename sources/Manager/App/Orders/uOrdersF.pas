@@ -14,7 +14,8 @@ uses
   UniFSCombobox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
-  System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList;
+  System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
+  uUniFSComboBoxHelper;
 
 type
 
@@ -169,6 +170,9 @@ type
     FDeliveryTermSupplier,
     FDeliveryDaysReserve,
     FDeliveryTermFromSupplierProfile,
+    /// <summary>
+    ///  FDeliveryTermFromCustomerProfile -  cрок клиента
+    ///</summary>
     FDeliveryTermFromCustomerProfile,
     FPassedDayInWork: Integer;
 
@@ -222,6 +226,16 @@ type
     /// SetIndicatorsStyle - Установка стилей для показателей: Показатели до изменения
     /// </summary>
     procedure SetIndicatorsStyle(AIncome: real);
+
+    /// <summary>
+    /// SetDeliveryStyle - Установка стилей для поля Срок доставки, до изменения
+    /// </summary>
+    procedure SetDeliveryStyle(aVal: Integer);
+
+    /// <summary>
+    /// SetEditDeliveryStyle - Установка стилей для поля: Срок доставки, после изменения
+    /// </summary>
+    procedure SetEditDeliveryStyle(aVal: Integer);
 
     /// <summary>
     /// PriceCalc - Установка стилей для показателей: Показатели после изменения
@@ -409,7 +423,15 @@ begin
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
 
     var DeliveryTermSupplier : Integer := sql.F('GuaranteedDay').AsInteger;
-  //  Срок поставки:
+
+    var DeliveryTermFromCustomerProfile: Integer;
+    DeliveryTermFromCustomerProfile :=
+    IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
+            DeliveryTermSupplier, //Для он-лайн заказов GuaranteedDay = DeliveryTerm as DeliveryTermSupplier-- Срок поставки поставщику
+            DeliveryTermFromCustomerProfile
+            );
+
+    //  Срок поставки:
     edtDelivery2.Text   := FPassedDayInWork.ToString + ' + ' +      // дней в обработке
                         DeliveryTermSupplier.ToString + ' + ' +     // Срок поставщика из API
                         FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
@@ -427,14 +449,14 @@ begin
                                DeliveryTermSupplier+
                                FDeliveryDaysReserve+
                                FDeliveryTermFromSupplierProfile-
-                               FDeliveryTermFromCustomerProfile > 0, '+', '') +
+                               DeliveryTermFromCustomerProfile > 0, '+', '') +
 
                         (
                           FPassedDayInWork +                // дней в обработке
                           DeliveryTermSupplier+             // Срок поставщика из API
                           FDeliveryDaysReserve+             // Запас до вылета
                           FDeliveryTermFromSupplierProfile- // Доставка
-                          FDeliveryTermFromCustomerProfile
+                          DeliveryTermFromCustomerProfile   // Срок клиента
                         ).ToString +
                         ')';
 
@@ -452,6 +474,12 @@ begin
 
     SetEditDataStyle();
     SetEditDataRating(sql.F('PercentSupped').AsInteger);
+
+    SetEditDeliveryStyle((FPassedDayInWork+
+                          FDeliveryTermSupplier+
+                          FDeliveryDaysReserve+
+                          FDeliveryTermFromSupplierProfile-
+                          DeliveryTermFromCustomerProfile));
 
     NotExists.Visible := false;
     edtReliability2.Visible := true;
@@ -508,7 +536,7 @@ begin
   UniHTMLFrame1.HTML.clear;
 
   UniHTMLFrame1.HTML.Text := Format(
-   '''
+  '''
     <script async src="https://cse.google.com/cse.js?cx=%s"></script>
     <div class="gcse-search" data-gname="search"></div>
 
@@ -546,13 +574,13 @@ begin
 
     </script>
 
-    '''
-    , [FGoogleKey, FManufacturer, FDetailNumber]);
+  ''', [FGoogleKey, FManufacturer, FDetailNumber]);
 end;
 
 procedure TOrderF.LoadDataPart;
 begin
-  ComboBoxFill(cbDestinationLogo,'''
+  cbDestinationLogo.FillFromSQL(
+  '''
           SELECT distinct
                  pd.[DestinationLogo] as id
                 ,pd.[Name]
@@ -562,7 +590,7 @@ begin
            inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                    on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
            where o.OrderID =
-        ''' + FID.ToString );
+  ''' + FID.ToString );
 
   // начитываем данные с базы
   case FAction of
@@ -829,13 +857,25 @@ begin
   HintText := HintText + FDeliveryDaysReserve.ToString +  ' - дней запаса до вылета' + #10;
   HintText := HintText + FDeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
   HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
+
   if FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
     HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
   else
     HintText := HintText + '+' + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
-  HintText := HintText + FDeliveryTermFromCustomerProfile.ToString + ' - cрок клиента из профиля';
+  HintText := HintText + FDeliveryTermFromCustomerProfile.ToString + ' - cрок клиента';
 
   edtDelivery.Hint := HintText;
+end;
+
+procedure TOrderF.SetDeliveryStyle(aVal: Integer);
+begin
+  if aVal < 0 then
+      edtDelivery.Color :=  $0080FF80
+  else
+  if aVal = 0 then
+      edtDelivery.Color := clWhite
+  else
+      edtDelivery.Color := $008080FF;
 end;
 
 procedure TOrderF.SetEditDataRating(ARating: integer);
@@ -901,6 +941,17 @@ begin
   setColor(FProfin2,   FProfin,   edtProfit2);
   setColor(FMarginF2,  FMarginF,  edtDelivery2);
   setColor(FQuantity2, FPriceQuantity, edtCount2);
+end;
+
+procedure TOrderF.SetEditDeliveryStyle(aVal: Integer);
+begin
+  if aVal < 0 then
+      edtDelivery2.Color :=  $0080FF80
+  else
+  if aVal = 0 then
+      edtDelivery2.Color := clWhite
+  else
+      edtDelivery2.Color := $008080FF;
 end;
 
 procedure TOrderF.SetIndicatorsStyle(AIncome: real);
@@ -1118,7 +1169,8 @@ begin
   UniMainModule.Query.SQL.Text := '''
        delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid
 
-       select v.WeightKG
+       select v.OrderDate
+             ,v.WeightKG
              ,v.VolumeKG
              ,v.WeightKGF
              ,v.VolumeKGF
@@ -1169,10 +1221,7 @@ begin
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.Open;
 
-  ComboBoxFill(cbPrice, '''
-    -- список поставщиков
-    exec OrderF_SupplierList @OrderID =
-  ''' + FID.ToString);
+  cbPrice.FillFromSQL('exec OrderF_SupplierList @OrderID =' + FID.ToString);
 
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
@@ -1209,8 +1258,13 @@ begin
   FPassedDayInWork := UniMainModule.Query.FieldByName('PassedDayInWork').asInteger;        // дней в обработке
   FDeliveryTermSupplier := UniMainModule.Query.FieldByName('DeliveryTermSupplier').asInteger;   // Срок поставщика из прайса
   FDeliveryDaysReserve :=  UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
+
   FDeliveryTermFromSupplierProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromSupplierProfile').asInteger; // Доставка
-  FDeliveryTermFromCustomerProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromCustomerProfile').asInteger; // Доставка
+
+  FDeliveryTermFromCustomerProfile :=
+  IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
+  FDeliveryTermSupplier, //Для он-лайн заказов GuaranteedDay = DeliveryTerm as DeliveryTermSupplier-- Срок поставки поставщику
+  UniMainModule.Query.FieldByName('DeliveryTermFromCustomerProfile').asInteger);
 
   //  Срок поставки:
   var HintText: string;
@@ -1268,9 +1322,18 @@ begin
 
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 
-  SetEditDataStyle();
+  SetDeliveryStyle((FPassedDayInWork+
+                    FDeliveryTermSupplier+
+                    FDeliveryDaysReserve+
+                    FDeliveryTermFromSupplierProfile-
+                    FDeliveryTermFromCustomerProfile));
 
-  Self.Caption:=UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
+  SetEditDataStyle;
+
+  edtDelivery2.Color := edtDelivery.Color;
+
+  Self.Caption:='Заказ от:' + UniMainModule.Query.FieldByName('OrderDate').AsString + ' ' +
+                UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
                 UniMainModule.Query.FieldByName('DetailName').AsString;
 
