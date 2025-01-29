@@ -12,6 +12,7 @@ begin
     ,UserID      numeric(18, 0) not null
 	,Message     nvarchar(512)
 	,Flag        int
+    ,DateRead    DateTime2 
 	,InDateTime  DateTime2 default sysdatetime()
 	);
 

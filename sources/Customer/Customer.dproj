@@ -262,6 +262,12 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="App\Messenger\uChatMessageF.pas">
+            <Form>ChatMessageF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\Common\uUniMemoHelper.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

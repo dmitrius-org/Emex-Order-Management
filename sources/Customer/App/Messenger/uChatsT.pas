@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,  uniGUIForm,
   uniGUIClasses, uniGUIFrame, uniBitBtn, uniDateTimePicker, uniEdit,
   uniMultiItem, uniComboBox, UniFSCombobox, uniLabel, uniButton,
   uniGUIBaseClasses, uniPanel, uniBasicGrid, uniDBGrid, FireDAC.Stan.Intf,
@@ -13,7 +13,7 @@ uses
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, System.Actions, Vcl.ActnList,
   uniMainMenu, Vcl.Menus, uniImageList, System.ImageList, Vcl.ImgList,
-  uMessengerF, uCommonType, uniGUIApplication, MainModule;
+  uMessengerF, uCommonType, uniGUIApplication, MainModule, uChatMessageF, uToast;
 
 type
   TChatsT = class(TUniFrame)
@@ -29,11 +29,11 @@ type
     qQueryInDateTime: TSQLTimeStampField;
     qQueryFlag: TIntegerField;
     qQueryStatusName: TStringField;
-    qQueryClientName: TWideStringField;
     UniLabel1: TUniLabel;
     fStatus: TUniADCheckComboBox;
     edtSearch: TUniComboBox;
     qQueryUnReadMessages: TIntegerField;
+    btnAddChat: TUniBitBtn;
     procedure UniFrameCreate(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -49,16 +49,22 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
+    procedure btnAddChatClick(Sender: TObject);
   private
     { Private declarations }
-  public
-    { Public declarations }
-
     /// <summary>
     /// GridOpen - получение данных с сервера
     /// </summary>
     procedure GridOpen; overload;
     procedure GridOpen(Key: Word); overload;
+
+  public
+    { Public declarations }
+
+    /// <summary>
+    ///  ChatMessageFCallBack - CallBack обработчик действия
+    ///</summary>
+    procedure ChatMessageFCallBack(Sender: TComponent; AResult:Integer);
   end;
 
 implementation
@@ -78,9 +84,32 @@ begin
   GridOpen;
 end;
 
+procedure TChatsT.btnAddChatClick(Sender: TObject);
+begin
+  ChatMessageF.FormAction := acInsert;
+  ChatMessageF.ShowModal(ChatMessageFCallBack);
+end;
+
 procedure TChatsT.btnGridStatisticOpenClick(Sender: TObject);
 begin
   GridOpen;
+end;
+
+procedure TChatsT.ChatMessageFCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+  try
+    if ChatMessageF.FormAction = acInsert then
+    begin
+
+      ToastOK('Сообщение успешно отправлено!', UniSession);
+
+      GridOpen;
+    end;
+  except
+    //on E: Exception do
+    //  logger.Info('TChatsT.ChatMessageFCallBack Ошибка: ' + e.Message);
+  end;
 end;
 
 procedure TChatsT.edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -149,8 +178,8 @@ end;
 
 procedure TChatsT.GridOpen;
 begin
-  ShowMask('Ждите, операция выполняется');
-  UniSession.Synchronize;
+  //ShowMask('Ждите, операция выполняется');
+  //UniSession.Synchronize();
   try
     qQuery.Close();
 
@@ -162,7 +191,7 @@ begin
 
     qQuery.Open();
 
-    BroadcastMessage('ChatsMessageUpdate', ['SID', UniSession.SessionID], []);
+    //BroadcastMessage('ChatsMessageUpdate', ['SID', UniSession.SessionID], []);
   finally
     HideMask();
     UniSession.Synchronize;

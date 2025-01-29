@@ -102,6 +102,22 @@ object ChatsT: TChatsT
       HideTrigger = True
       IconItems = <>
     end
+    object btnAddChat: TUniBitBtn
+      Left = 834
+      Top = 9
+      Width = 167
+      Height = 32
+      Hint = ''
+      ShowHint = True
+      ParentShowHint = False
+      Caption = 
+        '<div class="icon-btn-add-chat-container">'#10'  <i class="fas fa-env' +
+        'elope icon-btn-add-chat"></i> <span>'#1057#1086#1079#1076#1072#1090#1100' '#1086#1073#1088#1072#1097#1077#1085#1080#1077'</span>'#10'</d' +
+        'iv>'
+      TabOrder = 6
+      ImageIndex = 3
+      OnClick = btnAddChatClick
+    end
   end
   object Grid: TUniDBGrid
     Left = 0
@@ -152,7 +168,9 @@ object ChatsT: TChatsT
     Grouping.ShowValue = False
     LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
     LoadMask.Color = 13421772
-    EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+    EmptyText = 
+      '<div style="text-align: center;"><i class="fas fa-envelope-open"' +
+      '></i> '#1053#1077#1090' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1081'</div>'
     LayoutConfig.ComponentCls = 'grid-statistics'
     LayoutConfig.Height = '100'
     LayoutConfig.Width = '100'
@@ -188,23 +206,14 @@ object ChatsT: TChatsT
         FieldName = 'Flag'
         Title.Alignment = taCenter
         Title.Caption = ' '
-        Width = 64
+        Width = 33
       end
       item
         FieldName = 'Subject'
         Title.Alignment = taCenter
         Title.Caption = #1058#1077#1084#1072
         Title.Font.Height = -13
-        Width = 399
-        ReadOnly = True
-        Sortable = True
-      end
-      item
-        FieldName = 'ClientName'
-        Title.Alignment = taCenter
-        Title.Caption = #1050#1083#1080#1077#1085#1090
-        Title.Font.Height = -13
-        Width = 250
+        Width = 539
         ReadOnly = True
         Sortable = True
       end
@@ -213,7 +222,7 @@ object ChatsT: TChatsT
         Title.Alignment = taCenter
         Title.Caption = #1057#1086#1079#1076#1072#1085#1086
         Title.Font.Height = -13
-        Width = 158
+        Width = 165
         ReadOnly = True
         Sortable = True
       end
@@ -222,7 +231,7 @@ object ChatsT: TChatsT
         Title.Alignment = taCenter
         Title.Caption = #1057#1090#1072#1090#1091#1089
         Title.Font.Height = -13
-        Width = 200
+        Width = 184
         ReadOnly = True
         Sortable = True
       end>
@@ -301,10 +310,6 @@ object ChatsT: TChatsT
     end
     object qQueryStatusName: TStringField
       FieldName = 'StatusName'
-      Size = 256
-    end
-    object qQueryClientName: TWideStringField
-      FieldName = 'ClientName'
       Size = 256
     end
     object qQueryUnReadMessages: TIntegerField

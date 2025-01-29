@@ -16,11 +16,14 @@ as
          c.ClientID,
          cl.Brief as ClientName,
          c.OrderID,
+         convert(varchar, c.OrderID) as Number,
+
          case 
-           when c.Flag&2=2 then c.Name 
+           when isnull(c.OrderID, 0) = 0 then 
+           c.Name 
            else 'Заказ: ' + convert(varchar, c.OrderID)
          end as Subject,
-         convert(varchar, c.OrderID) as Number,
+         
          c.StatusID,
          case 
            when c.StatusID = 1 then 'Открытые'

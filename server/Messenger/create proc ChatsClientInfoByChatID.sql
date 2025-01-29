@@ -13,6 +13,7 @@ as
           ,cl.Brief ClientBrief
           ,cl.Name  ClientName
           ,c.OrderID 
+          ,c.Name   Subject
       from tChats c (nolock)
      inner join tClients cl (nolock)
              on cl.ClientID = c.ClientID

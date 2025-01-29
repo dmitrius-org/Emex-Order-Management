@@ -14,7 +14,8 @@ as
          
     
   Update tChatsMessage
-     set Flag = Flag | 2 -- 2 - Сообщение прочитано             
+     set Flag     = Flag | 2 -- 2 - Сообщение прочитано    
+        ,DateRead = sysdatetime()
    where MessageID = @MessageID
  
 
@@ -48,7 +49,7 @@ as
 go
 grant exec on ChatsMessageIsRead to public
 go
-exec setOV 'ChatsMessageIsRead', 'P', '20241008', '1'
+exec setOV 'ChatsMessageIsRead', 'P', '20250129', '2'
 go
  
 

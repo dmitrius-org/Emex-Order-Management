@@ -65,8 +65,6 @@ object Message: TMessage
         ScrollDirection = sdNone
         Layout = 'fit'
         LayoutConfig.ComponentCls = 'content-chat-dialog-content'
-        ExplicitTop = 3
-        ExplicitHeight = 424
         object MessageEditor: TUniListBox
           AlignWithMargins = True
           Left = 3
@@ -78,8 +76,6 @@ object Message: TMessage
           TabOrder = 1
           LayoutConfig.ComponentCls = 'message-list-container'
           LayoutConfig.DockWhenAligned = False
-          ExplicitTop = 33
-          ExplicitHeight = 388
         end
       end
       object ChatMessagesSend: TUniContainerPanel
@@ -258,9 +254,6 @@ object Message: TMessage
         Align = alTop
         TabOrder = 1
         LayoutConfig.ComponentCls = 'chat-header-container chat-header-scope '
-        ExplicitLeft = 3
-        ExplicitTop = 3
-        ExplicitWidth = 766
         object pnlChatHeaderLeft: TUniPanel
           Left = 0
           Top = 0
@@ -283,8 +276,6 @@ object Message: TMessage
             Align = alClient
             TabOrder = 1
             LayoutConfig.ComponentCls = 'chat-header-info'
-            ExplicitWidth = 705
-            ExplicitHeight = 28
             object pnlChatHeaderTitle: TUniContainerPanel
               AlignWithMargins = True
               Left = 3
@@ -296,10 +287,6 @@ object Message: TMessage
               Align = alClient
               TabOrder = 1
               LayoutConfig.ComponentCls = 'chat-header-title'
-              ExplicitLeft = 0
-              ExplicitTop = 0
-              ExplicitWidth = 705
-              ExplicitHeight = 28
               object pnlChatHeaderTitleContainer: TUniContainerPanel
                 Left = 0
                 Top = 0
@@ -347,9 +334,6 @@ object Message: TMessage
           ParentColor = False
           Align = alRight
           TabOrder = 2
-          ExplicitLeft = 635
-          ExplicitTop = 4
-          ExplicitHeight = 22
           object btnRefresch: TUniSpeedButton
             AlignWithMargins = True
             Left = 3
@@ -365,7 +349,6 @@ object Message: TMessage
             ParentColor = False
             IconAlign = iaCenter
             TabOrder = 1
-            ExplicitHeight = 16
           end
           object UniSpeedButton1: TUniSpeedButton
             AlignWithMargins = True
@@ -382,7 +365,6 @@ object Message: TMessage
             ParentColor = False
             IconAlign = iaCenter
             TabOrder = 2
-            ExplicitHeight = 16
           end
         end
       end

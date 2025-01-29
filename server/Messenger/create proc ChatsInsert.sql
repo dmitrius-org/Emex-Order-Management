@@ -2,10 +2,11 @@ drop proc if exists ChatsInsert
 go
 create proc ChatsInsert 
  	          @ChatID   numeric(18, 0) out
-	         ,@OrderID  numeric(18, 0)
+	         ,@OrderID  numeric(18, 0)=null
              ,@ClientID numeric(18, 0)
-	         ,@Flag     int
-             ,@Name     varchar(256) = null
+	         ,@Flag     int           = null
+             ,@Name     varchar(256)  = null
+
 /*
   ChatsInsert -
 */           
@@ -21,12 +22,11 @@ as
   if isnull(@ChatID, 0) = 0
   begin
       insert tChats with (rowlock)   
-             (
-              ClientID
-             ,OrderID
-             ,Flag
-             ,Name
-             )
+            (ClientID
+            ,OrderID
+            ,Flag
+            ,Name
+            )
       OUTPUT INSERTED.ChatID INTO @ID(ID)   
       select @ClientID
             ,@OrderID

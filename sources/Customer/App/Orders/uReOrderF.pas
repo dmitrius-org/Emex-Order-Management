@@ -55,7 +55,6 @@ type
     FPriceLogo: string;
     FManufacturer: string;
     FMakeLogo: string;
-   // FPrice: Real;
 
     procedure SetAction(const Value: TFormAction);
 

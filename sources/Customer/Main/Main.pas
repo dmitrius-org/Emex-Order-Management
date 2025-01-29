@@ -235,7 +235,7 @@ begin
     pcMain.ActivePageIndex := 2
   else if Nd.Text = 'Баланс и Отгрузки' then
     pcMain.ActivePageIndex := 3
-  else if Nd.Text = 'Уведомления' then
+  else if Nd.Tag =  5 {Уведомления} then
     pcMain.ActivePageIndex := 4
   else if Nd.Text = 'Статиcтика' then
     pcMain.ActivePageIndex := 5
@@ -401,11 +401,12 @@ begin
   begin
     ParentNode := Node.Id;
 
-    sql.Open(    '''      Select count(*) as CNT
+    sql.Open(
+    '''
+      Select count(*) as CNT
         from vUnreadMessages
        where ClientID = :ClientID
          and (Flag&1) > 0
-         and (Flag&2) = 0
 
     ''', ['ClientID'], [UniMainModule.AUserID]);
 

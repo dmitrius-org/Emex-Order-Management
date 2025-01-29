@@ -3,17 +3,17 @@ go
 create proc ChatsMessageInsert 
               @MessageID numeric(18, 0) out
  	         ,@ChatID   numeric(18, 0)
-	         ,@OrderID  numeric(18, 0)
              ,@UserID   numeric(18, 0)
 	         ,@Message  nvarchar(512)
 	         ,@Flag     int
 /*
-  ChatsMessageInsert -
+  ChatsMessageInsert - добавление сообщения в чат
 */           
 as
 
   declare @ID        as ID
          ,@Flag2     int
+         ,@OrderID  numeric(18, 0)
     
   insert into tChatsMessage with (rowlock)
         (     
@@ -26,7 +26,7 @@ as
   select @ChatID   
         ,@UserID   
         ,@Message  
-        ,@Flag     
+        ,isnull(@Flag, 0)     
 
   select @MessageID = max(ID) 
     from @ID
@@ -34,6 +34,13 @@ as
 
   if @MessageID > 0
   begin
+    Select @OrderID = OrderID 
+      from tChats (nolock)
+     where ChatID = @ChatID
+
+    if isnull(@OrderID, 0)=0
+      goto exit_
+
     if @Flag&1>0
     begin
       set @Flag2 = 32--32 - Сообщение от менеджера
@@ -54,7 +61,7 @@ as
 go
 grant exec on ChatsMessageInsert to public
 go
-exec setOV 'ChatsMessageInsert', 'P', '20241008', '1'
+exec setOV 'ChatsMessageInsert', 'P', '20250129', '2'
 go
  
 

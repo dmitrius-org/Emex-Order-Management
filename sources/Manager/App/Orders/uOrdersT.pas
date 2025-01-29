@@ -863,7 +863,7 @@ begin
     StateActionMenuCreate;
 
     // пересчет количества непрочитанных сообщений (через websocket) на левой панели меню
-    BroadcastMessage('ChatsMessageIsRead', [], []);
+    //BroadcastMessage('ChatsMessageIsRead', [], []);
 
   finally
     DoHideMask();

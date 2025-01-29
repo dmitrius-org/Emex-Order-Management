@@ -15,13 +15,14 @@ as
           ,cm.UserID
           ,cm.Message
           ,cm.InDateTime
-          
           ,u.Brief
           ,u.Name
           ,cm.Flag
       from tChatsMessage cm (nolock)
-     inner join tUser u (nolock)
+     left join tUser u (nolock)
              on u.UserID = cm.UserID
+            and cm.Flag&1 = 1
+
      where cm.ChatID = @ChatID
 
     order by cm.InDateTime
@@ -32,8 +33,11 @@ as
 go
 grant exec on ChatsMessageLoadByChatID to public
 go
-exec setOV 'ChatsMessageLoadByChatID', 'P', '20240813', '1'
+exec setOV 'ChatsMessageLoadByChatID', 'P', '20250128', '2'
 go
  
 
- exec ChatsMessageLoadByChatID @ChatID = ChatsMessageLoadByChatID
+ exec ChatsMessageLoadByChatID @ChatID = 772
+
+
+ select * from tChatsMessage

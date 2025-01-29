@@ -8,7 +8,7 @@ uses
   uniGUIClasses, uniGUIFrame, uniButton, uniMemo, uniBitBtn, uniSpeedButton,
   uniMultiItem, uniListBox, uniLabel, uniPanel, uniGUIBaseClasses, uSqlUtils,
   uniHTMLMemo, UniFSPopup, uniGUIApplication, uniStrUtils, System.JSON,
-  uniThreadTimer, uniTimer;
+  uniThreadTimer, uniTimer, uUniMemoHelper;
 
 type
   TMessage = class(TUniFrame)
@@ -57,8 +57,6 @@ type
     FFlag: Integer;
 
     procedure SetOrderID(const Value: Integer);
-
-    function MemoTextToHTML(Memo: TUniMemo): string;
 
     /// <summary>
     /// MessageIsRead - Установка признака прочитано на сообщении в базе данных
@@ -205,7 +203,6 @@ begin
 
     exec ChatsMessageInsert
            @ChatID   = :ChatID
-          ,@OrderID  = :OrderID
           ,@UserID   = :UserID
           ,@Message  = :Message
           ,@Flag     = :Flag
@@ -215,18 +212,17 @@ begin
           ,@MessageID as MessageID
 
   ''',
-  ['ChatID', 'OrderID', 'UserID', 'Message', 'Flag'],
+  ['ChatID', 'UserID', 'Message', 'Flag'],
   [FChatID,
-   FOrderID,
    UniMainModule.AUserID,
-   MemoTextToHTML(MessageText),
+   MessageText.ToHTML,
    FFlag]);
 
   if sql.Q.FieldByName('MessageID').AsInteger > 0 then
   begin
      AddMessageToChat (sql.Q.FieldByName('MessageID').AsInteger,
                        FFlag,
-                       MemoTextToHTML(MessageText),
+                       MessageText.ToHTML,
                        Now());
      //
      //MessageEditor.ItemIndex := MessageEditor.Items.Count - 1;
@@ -381,7 +377,8 @@ begin
       begin
         lblChatTitleText.Caption := '' +
 
-        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
+        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '') +
+        IfThen(FAppType=0, string(' Тема: ' + FieldByName('Subject').AsString), '');
       end
       else
       begin
@@ -477,27 +474,6 @@ begin
       Next;
     end;
   end;
-end;
-
-function TMessage.MemoTextToHTML(Memo: TUniMemo): string;
-var
-  i: Integer;
-  HTMLText: string;
-begin
-  HTMLText := '<p>';
-
-  // Перебираем строки в TUniMemo и оборачиваем их в теги <p>
-  for i := 0 to Memo.Lines.Count - 1 do
-  begin
-    if Memo.Lines[i].Length > 0  then
-      HTMLText := HTMLText + Memo.Lines[i] + '<br>';
-  end;
-
-  if i=1 then HTMLText := StringReplace(HTMLText, '<br>', '', []);
-
-  HTMLText := HTMLText + '</p>';
-
-  Result := HTMLText;
 end;
 
 procedure TMessage.MessageTextChange(Sender: TObject);

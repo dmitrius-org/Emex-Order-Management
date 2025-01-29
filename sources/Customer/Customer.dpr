@@ -66,7 +66,9 @@ uses
   uVersion in '..\Common\CommonApp\uVersion.pas',
   uStatisticOrders in 'App\Statistics\uStatisticOrders.pas' {StatisticOrders: TUniFrame},
   uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
-  uChatsT in 'App\Messenger\uChatsT.pas' {ChatsT: TUniFrame};
+  uChatsT in 'App\Messenger\uChatsT.pas' {ChatsT: TUniFrame},
+  uChatMessageF in 'App\Messenger\uChatMessageF.pas' {ChatMessageF: TUniForm},
+  uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas';
 
 {$R *.res}
 

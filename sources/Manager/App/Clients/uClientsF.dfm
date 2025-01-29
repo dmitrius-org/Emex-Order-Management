@@ -67,7 +67,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Align = alTop
         TabOrder = 0
-        ExplicitLeft = 3
         DesignSize = (
           1177
           348)

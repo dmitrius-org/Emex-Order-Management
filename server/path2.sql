@@ -30,6 +30,6 @@ sp_who
 --    ,ContactPerson        varchar(256) 
 
 
-
+alter table tChatsMessage add DateRead    DateTime2 
     --ALTER TABLE tClients 
     --alter column ContactPerson        varchar(256) 
