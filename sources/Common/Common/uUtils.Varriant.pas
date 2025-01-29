@@ -1,4 +1,4 @@
-unit uUtils.Varriant;
+﻿unit uUtils.Varriant;
 
 interface
 

@@ -1,4 +1,4 @@
-unit uUniMemoHelper;
+п»їunit uUniMemoHelper;
 
 interface
 
@@ -8,8 +8,8 @@ type
   TUniMemoHelper = class helper for TUniMemo
   public
     /// <summary>
-    /// ToHTML - оборачивает строки в TUniMemo в тег <p>, в конце каждой строки
-    ///  добавляется <br>
+    /// ToHTML - РѕР±РѕСЂР°С‡РёРІР°РµС‚ СЃС‚СЂРѕРєРё РІ TUniMemo РІ С‚РµРі <p>, РІ РєРѕРЅС†Рµ РєР°Р¶РґРѕР№ СЃС‚СЂРѕРєРё
+    ///  РґРѕР±Р°РІР»СЏРµС‚СЃСЏ <br>
     /// </summary>
     function ToHTML: string;
   end;
@@ -23,14 +23,14 @@ var
 begin
   HTMLText := '<p>';
 
-  // Перебираем строки в TUniMemo и оборачиваем их в теги <p>
+  // РџРµСЂРµР±РёСЂР°РµРј СЃС‚СЂРѕРєРё РІ TUniMemo Рё РѕР±РѕСЂР°С‡РёРІР°РµРј РёС… РІ С‚РµРіРё <p>
   for i := 0 to Lines.Count - 1 do
   begin
     if Lines[i].Length > 0 then
       HTMLText := HTMLText + Lines[i] + '<br>';
   end;
 
-  // Если в Memo всего одна строка, убираем <br>
+  // Р•СЃР»Рё РІ Memo РІСЃРµРіРѕ РѕРґРЅР° СЃС‚СЂРѕРєР°, СѓР±РёСЂР°РµРј <br>
   if Lines.Count = 1 then
     HTMLText := StringReplace(HTMLText, '<br>', '', []);
 

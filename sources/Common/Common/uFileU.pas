@@ -1,12 +1,12 @@
-unit uFileU;
+п»їunit uFileU;
 
 interface
 
 uses System.SysUtils, Vcl.Dialogs, System.StrUtils;
 
 /// <summary>
-///  GetFName - получение наименования файла. Если файл существует, то к
-///  наименованию добавляем порядковый номер
+///  GetFName - РїРѕР»СѓС‡РµРЅРёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ С„Р°Р№Р»Р°. Р•СЃР»Рё С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІСѓРµС‚, С‚Рѕ Рє
+///  РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ РґРѕР±Р°РІР»СЏРµРј РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ
 ///</summary>
 function GetFName(filename: string): string;
 
