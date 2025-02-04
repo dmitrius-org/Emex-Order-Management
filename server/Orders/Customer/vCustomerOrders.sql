@@ -38,7 +38,8 @@ SELECT o.[OrderID]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
-      ,o.[DeliveryRestTermSupplier]    -- Остаток срока до поступления поставщику	
+      ,nullif(od.[DeliveryPlanDateSupplier], o.[DeliveryPlanDateSupplier]) as DeliveryPlanDateSupplier2-- Плановая дата поступления поставщику после изменения
+      ,isnull(od.[DeliveryRestTermSupplier], o.[DeliveryRestTermSupplier]) as DeliveryRestTermSupplier-- Остаток срока до поступления поставщику	
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
       ,o.DeliveredDateToSupplier               -- Доставлена поставщику
       ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
@@ -64,6 +65,9 @@ SELECT o.[OrderID]
       ,o.[updDatetime]
       ,o.Flag
   FROM [tOrders] o (nolock)
+
+  left join vOrdersDelivery od  with (nolock index=PK_tOrdersDelivery_OrderID) -- актуальные сроки доставки поставщика
+         on od.OrderID = o.OrderID
  --inner join tUser u with (nolock index=ao1)
  --        on u.UserID = o.UserID
  inner join tNodes s with (nolock index=ao1)
@@ -104,7 +108,7 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250115', '32'
+exec setOV 'vCustomerOrders', 'V', '20250205', '33'
 go
 
 select * from vCustomerOrders  where ClientID =31

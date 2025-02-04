@@ -114,6 +114,8 @@ type
     actReOrder: TAction;
     N2: TUniMenuItem;
     QueryisCancel: TBooleanField;
+    QueryDeliveryPlanDateSupplier2: TSQLTimeStampField;
+    QueryDeliveryTermSupplier2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -148,6 +150,10 @@ type
     procedure UniFrameReady(Sender: TObject);
     procedure actCancelСonfirmExecute(Sender: TObject);
     procedure actReOrderExecute(Sender: TObject);
+    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -639,6 +645,28 @@ begin
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
             '</span><span class="x-delivery-next-date">' + QueryDeliveryNextDate2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryDeliveryPlanDateSupplierGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryPlanDateSupplier2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span> <span class="x-replacement-detail-number">' + QueryDeliveryPlanDateSupplier2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryDeliveryTermSupplierGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryTermSupplier2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span> <span class="x-replacement-detail-number">' + QueryDeliveryTermSupplier2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;

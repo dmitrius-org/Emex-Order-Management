@@ -853,9 +853,13 @@
       '      ,o.[WeightKGF]'
       '      ,o.[VolumeKGF]'
       '      ,o.[DeliveryPlanDateSupplier]'
+      '      ,o.[DeliveryPlanDateSupplier2]'
       
         '      ,o.[DeliveryTermSupplier]     -- '#1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1076#1077#1085#1080#1103' '#1087#1086#1089#1090#1074 +
         #1097#1080#1082#1091
+      
+        '      ,o.[DeliveryTermSupplier2]    -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' ' +
+        #1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
       
         '      ,o.[DeliveryRestTermSupplier] -- '#1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077 +
         #1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -1042,10 +1046,20 @@
       FieldName = 'DeliveryPlanDateSupplier'
       Origin = 'DeliveryPlanDateSupplier'
       ReadOnly = True
+      OnGetText = QueryDeliveryPlanDateSupplierGetText
+      DisplayFormat = 'dd.mm.yyyy'
+    end
+    object QueryDeliveryPlanDateSupplier2: TSQLTimeStampField
+      FieldName = 'DeliveryPlanDateSupplier2'
+      DisplayFormat = 'dd.mm.yyyy'
     end
     object QueryDeliveryTermSupplier: TIntegerField
       FieldName = 'DeliveryTermSupplier'
       ReadOnly = True
+      OnGetText = QueryDeliveryTermSupplierGetText
+    end
+    object QueryDeliveryTermSupplier2: TIntegerField
+      FieldName = 'DeliveryTermSupplier2'
     end
     object QueryDeliveryRestTermSupplier: TIntegerField
       FieldName = 'DeliveryRestTermSupplier'

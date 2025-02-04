@@ -1,4 +1,4 @@
-unit uReOrderF;
+п»їunit uReOrderF;
 
 interface
 
@@ -60,13 +60,13 @@ type
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
     procedure SetBtnEnabled;
 
     /// <summary>
-    /// OrderUpdate - Изменение информации по заказу
+    /// OrderUpdate - РР·РјРµРЅРµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё РїРѕ Р·Р°РєР°Р·Сѓ
     /// </summary>
     procedure OrderUpdate(ATargetStateID: integer = 0);
   public
@@ -78,22 +78,22 @@ type
     property IsCounter: Boolean read FIsCounter write FIsCounter;
 
     /// <summary>
-    /// LoadDataPart - загрузка данных по позиции из БД
+    /// LoadDataPart - Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РїРѕ РїРѕР·РёС†РёРё РёР· Р‘Р”
     /// </summary>
     procedure LoadDataPart();
 
     ///<summary>
-    ///  LoadPriceList - получение данных по детали из БД
+    ///  LoadPriceList - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РїРѕ РґРµС‚Р°Р»Рё РёР· Р‘Р”
     ///</summary>
     procedure LoadPriceList();
 
     ///<summary>
-    ///  GetPartFromEmex - поиск детали а emex в потоке
+    ///  GetPartFromEmex - РїРѕРёСЃРє РґРµС‚Р°Р»Рё Р° emex РІ РїРѕС‚РѕРєРµ
     ///</summary>
     procedure GetPartFromEmex();
 
     ///<summary>
-    ///  LoadNextPart - переход к следующей детали
+    ///  LoadNextPart - РїРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµР№ РґРµС‚Р°Р»Рё
     ///</summary>
     function LoadNextPart():Boolean;
   end;
@@ -140,7 +140,7 @@ procedure TReOrder.btnOkClick(Sender: TObject);
 begin
   RetVal.Clear;
   btnOk.Enabled := False;
-  btnOk.ScreenMask.ShowMask('Ждите, операция выполняется!');
+  btnOk.ScreenMask.ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ!');
 
   OrderUpdate();
 
@@ -187,13 +187,13 @@ begin
 
   ComboBoxFill(cbPrice,
   '''
-    -- список поставщиков
+    -- СЃРїРёСЃРѕРє РїРѕСЃС‚Р°РІС‰РёРєРѕРІ
     exec ReOrderF_SupplierList
                @OrderID =
   ''' + FID.ToString);
 
   cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
-  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
+  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // РЅР°РїСЂР°РІР»РµРЅРёРµ РѕС‚РіСЂСѓР·РєРё
 
   Self.Caption:=UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
@@ -209,9 +209,9 @@ begin
     sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
 
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, UniMainModule.AUserID, FDetailNumber, FPriceLogo);
-    t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
-    t.Resume; // непосредственно ручной запуск потока
+    t.FreeOnTerminate := True; // Р­РєР·РµРјРїР»СЏСЂ РґРѕР»Р¶РµРЅ СЃР°РјРѕ СѓРЅРёС‡С‚РѕР¶РёС‚СЊСЃСЏ РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ
+    t.Priority := tThreadPriority.tpNormal; // Р’С‹СЃС‚Р°РІР»СЏРµРј РїСЂРёРѕСЂРёС‚РµС‚ РїРѕС‚РѕРєР°
+    t.Resume; // РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ СЂСѓС‡РЅРѕР№ Р·Р°РїСѓСЃРє РїРѕС‚РѕРєР°
 
     UniTimer.Enabled := True;
   finally
@@ -232,7 +232,7 @@ begin
 
 
   Price:=cbPrice.Value;
-  // список поставщиков
+  // СЃРїРёСЃРѕРє РїРѕСЃС‚Р°РІС‰РёРєРѕРІ
   ComboBoxFill( cbPrice, ' exec ReOrderF_SupplierList @OrderID = ' + FID.ToString );
 
   cbPrice.Value:=Price;
@@ -282,7 +282,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    ToastOK('Изменение успешно выполнено!', unisession);
+    ToastOK('РР·РјРµРЅРµРЅРёРµ СѓСЃРїРµС€РЅРѕ РІС‹РїРѕР»РЅРµРЅРѕ!', unisession);
 
     if not edtNextPart.Checked then
       ModalResult:=mrOK;
@@ -307,7 +307,7 @@ begin
            where o.OrderID =
         ''' + FID.ToString );
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
     begin
