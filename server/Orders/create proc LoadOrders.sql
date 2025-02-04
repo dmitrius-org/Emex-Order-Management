@@ -164,7 +164,7 @@ as
                           end
 						 ,p.DetailPrice 
 			    ) p
-  -- - - -
+   -- - - -
     left join tPartDescription pd with (nolock index=ao2)     
            on pd.Make   = p.MakeLogo	
           and pd.Number = p.DetailNum 
@@ -181,7 +181,7 @@ as
                       where t.ClientID          = o.ClientID
                         and t.CustomerPriceLogo = o.PriceNum
                         and t.OrderNum          = o.OrderNum
-                        )
+                     )
 
   Update o
      set o.PricePurchase    = round(p.DetailPrice - (p.DetailPrice * (o.Discount / 100)), 2)-- Цена закупки с учетом скидки	
@@ -240,7 +240,14 @@ as
   insert pDeliveryTerm (Spid, OrderID)
   Select @@spid, ID
     from @ID
-  
+
+  exec OrdersSupplierDeliveryCalc @IsSave = 1
+
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm (Spid, OrderID)
+  Select @@spid, ID
+    from @ID
+
   exec OrdersDeliveryTermCalc @IsSave = 1
 
   --! Автоматический перевод в Проверено при загрузке заказа
@@ -260,6 +267,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20241011', '7'
+exec setOV 'LoadOrders', 'P', '20250204', '8'
 go
  

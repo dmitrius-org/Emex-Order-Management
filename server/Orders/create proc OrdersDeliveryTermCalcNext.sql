@@ -32,15 +32,15 @@ declare @r int = 0
 Update p
    set p.ClientID                  = o.ClientID
       ,p.ProfilesDeliveryID        = o.ProfilesDeliveryID	  
-	  ,p.DeliveryNextDate          = coalesce(o.DeliveryNextDate2, o.DeliveryNextDate) --, cast(GetDate() as date)
-	  ,p.DeliveryPlanDateSupplier  = o.DeliveryPlanDateSupplier-- Доставлена поставщику
+	  ,p.DeliveryNextDate          = coalesce(o.DeliveryNextDate2, o.DeliveryNextDate)
+	  ,p.DeliveryPlanDateSupplier  = coalesce(od.DeliveryPlanDateSupplier, o.DeliveryPlanDateSupplier)
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
 		and coalesce(o.DeliveryNextDate2, o.DeliveryNextDate, getdate()) < GetDate()
-        and isnull(o.Invoice, '') = '' --+Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, если у детали статус сменился на “Отгружена” (дополнительно проговорили по телефону, разобрались). Ставим дату которую получаем по API
-  left join tSupplierDeliveryProfiles pd (nolock)
-         on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
+        and isnull(o.Invoice, '') = '' 
+  left join vOrdersDelivery od 
+         on od.OrderID = o.OrderID    
  where p.Spid = @@Spid
 
 -- расчет ближайшей дата вылета
@@ -79,11 +79,12 @@ update p
    from pDeliveryTerm p (updlock)
   where p.Spid = @@spid
 
-
+/*Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, 
+если у детали статус сменился на “Отгружена”/ Ставим дату которую получаем по API*/
 Update s 
    set s.DeliveryNextDate  = o.OperDate
       ,s.DeliveryNextDate2 = o.OperDate
-      ,s.DeliveryPlanDateSupplier  = o.DeliveryPlanDateSupplier                   
+     -- ,s.DeliveryPlanDateSupplier  = o.DeliveryPlanDateSupplier                   
   from pDeliveryTerm s with (Updlock index=ao1)
  cross apply (select top 1 
                      p.OperDate
@@ -105,7 +106,6 @@ if @IsSave = 1
     update o
        set o.DeliveryNextDate2        = p.DeliveryNextDate2   -- Следующая ближайшая дата вылета
 		  ,o.DeliveryDaysReserve2     = p.DeliveryDaysReserve -- Дней запаса до вылета
-          ,o.DeliveryRestTermSupplier = p.DeliveryTerm  - DATEDIFF(dd, isnull(o.ProcessingDate, o.OrderDate), getdate())  -- Остаток срока до поставки поставщику
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 
@@ -118,6 +118,6 @@ if @IsSave = 1
 go
   grant exec on OrdersDeliveryTermCalcNext to public
 go
-exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20250117', '5'
+exec setOV 'OrdersDeliveryTermCalcNext', 'P', '20250204', '6'
 go
   

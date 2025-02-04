@@ -25,24 +25,22 @@ as
 		 ,@Type         int
 		 ,@AuditID      numeric(18,0)
          ,@AuditComment nvarchar(2048)
+         ,@DeliveryTermSupplier    int -- Срок доставки поставщику
+         ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
 
   declare @PriceID as table(PriceID numeric(18, 0))
 
-  select @Price            = case 
-                               when @Price = '' then null
-                               when @Price = '-1' then null
-                               else @Price
-                             end             
-        ,@MakeLogo         = case 
-                              when @MakeLogo = '' then null
-                              when @MakeLogo = '-1' then null
-                              else @MakeLogo
-                            end
-        ,@DestinationLogo = case 
-                              when @DestinationLogo = '' then null
-                              when @DestinationLogo = '-1' then null
-                              else @DestinationLogo
-                            end
+  select @DeliveryTermSupplier    = t.DeliveryTerm
+        ,@DeliveryTermSupplierNew = p.GuaranteedDay
+	from tOrders t with (nolock index=ao1)
+   outer apply ( select top 1 *
+                   from pFindByNumber p with (nolock index=ao3)
+                  where p.Spid = @@spid
+                    and p.Make      = @MakeLogo
+                    and p.DetailNum = t.DetailNumber
+                    and p.PriceLogo = @Price
+                ) as p
+  where t.OrderID = @OrderID
 
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
@@ -68,9 +66,9 @@ as
         ,t.Reliability     = coalesce(t.Reliability  , p.Reliability  , 0)
 
          -- cроки поставки клиента
-        ,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
-        ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
-        ,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
+        --,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
+        --,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
+        --,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
 
         ,t.ProcessingDate         = cast(getdate() as date)
 
@@ -87,17 +85,7 @@ as
          select top 1
                 pd.DestinationLogo, 
                 pd.Name DestinationName,
-                -- pd.WeightKG,
-                -- pd.VolumeKG,
-                -- pd.ProfilesDeliveryID,
                 pd.Delivery-- Срок поставки клиента, для заказов из файла берем из профилей доставки
-                -- pc.Margin,
-                -- pc.Reliability,
-                -- pd.VolumeKG_Rate1,
-                -- pd.VolumeKG_Rate2,
-                -- pd.VolumeKG_Rate3,
-                -- pd.VolumeKG_Rate4,
-                -- pd.Fragile
            from tProfilesCustomer pc with (nolock index=ao2)
            left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -138,14 +126,24 @@ as
   exec OrdersFinCalc 
          @IsSave = 1
 
-  --! расчет сроков дотавки
+  --! расчет сроков доставки
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm with (rowlock) 
-        (Spid, OrderID)
-  Select @@spid, @OrderID
+        (Spid, OrderID, DeliveryTerm) 
+  Select @@spid, 
+         @OrderID,
+         iif(@DeliveryTermSupplier <> @DeliveryTermSupplierNew, @DeliveryTermSupplierNew, null)
+  
+  exec OrdersSupplierDeliveryCalc @IsSave = 1
+
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock) 
+        (Spid, OrderID) 
+  Select @@spid, 
+         @OrderID
   
   exec OrdersDeliveryTermCalc @IsSave = 1
-
+  
   if @TargetStateID > 0
   begin
       delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
@@ -205,6 +203,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250117', '13'
+exec setOV 'OrderUpdate', 'P', '20250204', '14'
 go
  

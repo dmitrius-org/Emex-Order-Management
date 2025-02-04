@@ -69,21 +69,25 @@ SELECT o.[OrderID]
       ,o.[IncomePRC]
       
       ,o.[DeliveryPlanDateSupplier]             -- Плановая дата поступления поставщику
-      ,o.[DeliveryRestTermSupplier]             -- Остаток срока до поступления поставщику	
+      ,nullif(od.[DeliveryPlanDateSupplier], o.[DeliveryPlanDateSupplier]) as DeliveryPlanDateSupplier2-- Плановая дата поступления поставщику после изменения
+      ,isnull(od.[DeliveryRestTermSupplier], o.[DeliveryRestTermSupplier]) as DeliveryRestTermSupplier-- Остаток срока до поступления поставщику	
       ,o.[DeliveryTerm] as DeliveryTermSupplier -- Срок до поступления поставщику (срок из прайса)
+      ,nullif(od.DeliveryTermSupplier, o.[DeliveryTerm]) as DeliveryTermSupplier2 -- Срок доставки поставщику после изменения
       ,o.[DeliveredDateToSupplier]              -- Доставлена поставщику
       ,o.DeliveryDaysReserve                    -- Дней запаса до вылета	
       ,o.DeliveryDaysReserve2                   --
       ,o.DeliveryNextDate                       -- Ближайшая дата вылета
-      ,o.DeliveryNextDate2                      -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate	
-      ,pd.Delivery     as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
+      ,o.DeliveryNextDate2  -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate	
+      ,pd.Delivery as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
 
-      ,o.DeliveryDateToCustomer                 -- Дата поставки клиенту	
-      ,o.DeliveryTermToCustomer	                -- Срок поставки клиенту	
-      ,o.DeliveryRestToCustomer                 -- Остаток срока до поставки клиенту
+      ,o.DeliveryDateToCustomer                          -- Дата поставки клиенту	
+      ,cast(null as datetime) as DeliveryDateToCustomer2 -- Дата поставки клиенту после изменения
+      ,o.DeliveryTermToCustomer	                         -- Срок поставки клиенту	
+      ,cast(null as int) as DeliveryTermToCustomer2 -- Срок поставки клиенту после изменения
+      ,o.DeliveryRestToCustomer                             -- Остаток срока до поставки клиенту
       ,pd.DeliveryTermCustomer       as DeliveryTermFromCustomerProfile
       
-	  ,o.DateDeparture                          -- Дата вылета 
+	  ,o.DateDeparture        -- Дата вылета 
       ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
 	  ,o.DaysInWork                    -- Дней в работе  
       ,o.DateInWork                    -- Дата перехода в состояние "в работе" в emex
@@ -120,6 +124,9 @@ SELECT o.[OrderID]
 
  inner join tOrders o with (nolock index=ao2)
          on o.ClientID = ua.LinkID 
+
+  left join vOrdersDelivery od  with (nolock index=PK_tOrdersDelivery_OrderID) -- актуальные сроки доставки поставщика
+         on od.OrderID = o.OrderID
 
  inner join tUser u with (nolock index=ao1)
          on u.UserID = o.UserID
@@ -172,7 +179,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250117', '16'
+exec setOV 'vOrders', 'V', '20250204', '17'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

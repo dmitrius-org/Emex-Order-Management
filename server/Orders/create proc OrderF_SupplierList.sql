@@ -38,15 +38,25 @@ select
        '$' + convert(varchar, p.Price) + ' | ' + 
        convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' | ' + -- количество
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
-                                                        when isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)) < p.GuaranteedDay 
-                                                          then '(+' + convert(varchar, (p.GuaranteedDay - isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)))) + ')'
-                                                        when isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)) > p.GuaranteedDay 
-                                                          then '(' + convert(varchar, (p.GuaranteedDay - isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier)))) + ')'
-                                                        else ''
-                                                      end +' | ' + 
+                                                        when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
+                                                              p.GuaranteedDay  +                       -- Срок поставщика из API
+                                                              o.DeliveryDaysReserve +                  -- Запас до вылета
+                                                              o.DeliveryTermFromSupplierProfile-       -- Доставка
+                                                              iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
+                                                              ) > 0            
+                                                          then '(+' 
+                                                          else '(' 
+                                                      end +
+                                                             cast(((datediff(day, o.OrderDate, getdate()) + -- дней в обработке
+                                                              p.GuaranteedDay  +                            -- Срок поставщика из API
+                                                              o.DeliveryDaysReserve +                       -- Запас до вылета
+                                                              o.DeliveryTermFromSupplierProfile-            -- Доставка
+                                                              iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
+                                                              )) as varchar)     
+                                                      +') | ' + 
         convert(varchar, p.PercentSupped) + '%' as Name,
        p.Price
-  from tOrders o (nolock)
+  from vOrders o (nolock)
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
         and p.Make = o.MakeLogo
@@ -61,7 +71,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250129', '5'
+exec setOV 'OrderF_SupplierList', 'P', '20250204', '6'
 go
  
-exec OrderF_SupplierList @OrderID=178922
+exec OrderF_SupplierList @OrderID=183012

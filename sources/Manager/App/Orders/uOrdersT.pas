@@ -205,6 +205,10 @@ type
     edtOrderDate: TUniDateRangePicker;
     fClient: TUniADCheckComboBox;
     fPriceLogo: TUniADCheckComboBox;
+    QueryDeliveryPlanDateSupplier2: TSQLTimeStampField;
+    QueryDeliveryTermSupplier2: TIntegerField;
+    QueryDeliveryDateToCustomer2: TSQLTimeStampField;
+    QueryDeliveryTermToCustomer2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -248,6 +252,12 @@ type
     procedure actRequestClosedExecute(Sender: TObject);
     procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryDateDeliveryToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure QueryTermDeliveryToCustomerGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -961,13 +971,43 @@ end;
 procedure TOrdersT.QueryDateDeliveryToCustomerGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
+  if (not QueryDeliveryDateToCustomer2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-date-delivery-to-customer-arrow">&#10149;'+
+            '</span><span class="x-date-delivery-to-customer">' + QueryDeliveryDateToCustomer2.AsString + '</span>'; //
+  end
+  else
   if (not QueryReceiptDate.IsNull) then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-date-delivery-to-customer-arrow">&#10149;'+
-            '</span><span class="x-date-delivery-to-customer">' + QueryReceiptDate.AsString + '</span>'; // Ожидаемая дата поступления
+            '</span><span class="x-date-delivery-to-customer">' + QueryReceiptDate.AsString + '</span>'; // Ожидаемая дата поступления из tShipments
   end
   else
     Text := Sender.AsString; // Дата поставки клиенту
+end;
+
+procedure TOrdersT.QueryDeliveryPlanDateSupplierGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryPlanDateSupplier2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryPlanDateSupplier2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT.QueryDeliveryTermSupplierGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryTermSupplier2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryTermSupplier2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
 end;
 
 procedure TOrdersT.QueryDetailNumberGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -1083,6 +1123,18 @@ begin
   end;
 
   Text := t;
+end;
+
+procedure TOrdersT.QueryTermDeliveryToCustomerGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryTermToCustomer2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryTermToCustomer2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
 end;
 
 procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;

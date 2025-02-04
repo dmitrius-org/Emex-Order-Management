@@ -119,7 +119,8 @@ uses
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
-  uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas';
+  uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
+  uStringHelper in '..\Common\Common\uStringHelper.pas';
 
 {$R *.res}
 

@@ -377,9 +377,7 @@ begin
 end;
 
 procedure TOrderF.getPartRatingFromDB2;
-var Price: string;
-       js: string;
-        r: string;
+var Price, js, r, HintText: string;
 begin
   logger.Info('getPartRatingFromDB2 begin');
   logger.Info('FDetailNumber ' + FDetailNumber);
@@ -422,17 +420,17 @@ begin
     edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
 
-    var DeliveryTermSupplier : Integer := sql.F('GuaranteedDay').AsInteger;
+    var DeliveryTermSupplier: Integer := sql.F('GuaranteedDay').AsInteger;
 
     var DeliveryTermFromCustomerProfile: Integer;
     DeliveryTermFromCustomerProfile :=
-    IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
-            DeliveryTermSupplier, //Для он-лайн заказов GuaranteedDay = DeliveryTerm as DeliveryTermSupplier-- Срок поставки поставщику
-            DeliveryTermFromCustomerProfile
-            );
+         IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
+                 FDeliveryTermFromCustomerProfile, //sql.F('OurDelivery').AsInteger,
+                 FDeliveryTermFromCustomerProfile
+                );
 
     //  Срок поставки:
-    edtDelivery2.Text   := FPassedDayInWork.ToString + ' + ' +      // дней в обработке
+    edtDelivery2.Text:= FPassedDayInWork.ToString + ' + ' +         // дней в обработке
                         DeliveryTermSupplier.ToString + ' + ' +     // Срок поставщика из API
                         FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
                         FDeliveryTermFromSupplierProfile.ToString + // Доставка
@@ -481,6 +479,21 @@ begin
                           FDeliveryTermFromSupplierProfile-
                           DeliveryTermFromCustomerProfile));
 
+    // вплывающая подсказака
+    HintText := HintText + FPassedDayInWork.ToString      + ' - дней до взятия в работу' + #10;
+    HintText := HintText + FDeliveryTermSupplier.ToString + ' - срок поставщика из прайса' + #10;
+    HintText := HintText + FDeliveryDaysReserve.ToString  + ' - дней запаса до вылета' + #10;
+    HintText := HintText + FDeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
+    HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
+
+    if FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
+      HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
+    else
+      HintText := HintText + '+' + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
+    HintText := HintText + DeliveryTermFromCustomerProfile.ToString + ' - cрок клиента';
+
+    edtDelivery2.Hint := HintText;
+
     NotExists.Visible := false;
     edtReliability2.Visible := true;
   end
@@ -506,6 +519,7 @@ begin
     SetEditDataStyle();
     SetEditDataRating(0);
 
+    edtDelivery2.Hint := '';
   end;
 
   Price:=cbPrice.Value;
@@ -867,6 +881,8 @@ begin
   edtDelivery.Hint := HintText;
 end;
 
+
+
 procedure TOrderF.SetDeliveryStyle(aVal: Integer);
 begin
   if aVal < 0 then
@@ -1167,7 +1183,9 @@ var js: string;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := '''
-       delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid
+       delete pFindByNumber
+         from pFindByNumber (rowlock)
+        where spid = @@spid
 
        select v.OrderDate
              ,v.WeightKG
@@ -1206,12 +1224,12 @@ begin
              ,v.DeliveryTermFromCustomerProfile
 
              ,v.OrderUniqueCount
-             ,v.DeliveryTermToCustomer
+             ,v.DeliveryTermToCustomer -- срок клиента
              ,isnull((select count(*)
                         from tPartsStatistics ps (nolock)
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
-             ,datediff(day, v.OrderDate, isnull(v.ProcessingDate, getdate())) PassedDayInWork  -- прошло дней с момента заказа
+             ,datediff(day, v.OrderDate, getdate()) PassedDayInWork  -- прошло дней с момента заказа
 
          from vOrders v
         where v.OrderID = :OrderID
@@ -1261,13 +1279,20 @@ begin
 
   FDeliveryTermFromSupplierProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromSupplierProfile').asInteger; // Доставка
 
+  // !!! тут по идее можно оставить только DeliveryTermToCustomer
   FDeliveryTermFromCustomerProfile :=
   IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
-  FDeliveryTermSupplier, //Для он-лайн заказов GuaranteedDay = DeliveryTerm as DeliveryTermSupplier-- Срок поставки поставщику
+  UniMainModule.Query.FieldByName('DeliveryTermToCustomer').asInteger,
   UniMainModule.Query.FieldByName('DeliveryTermFromCustomerProfile').asInteger);
 
   //  Срок поставки:
   var HintText: string;
+
+  logger.info('FPassedDayInWork:' + FPassedDayInWork.ToString);
+  logger.info('FDeliveryTermSupplier:' + FDeliveryTermSupplier.ToString);
+  logger.info('FDeliveryDaysReserve:' + FDeliveryDaysReserve.ToString);
+  logger.info('FDeliveryTermFromSupplierProfile:' + FDeliveryTermFromSupplierProfile.ToString);
+  logger.info('FDeliveryTermFromCustomerProfile:' + FDeliveryTermFromCustomerProfile.ToString);
 
   edtDelivery.Text   := FPassedDayInWork.ToString + ' + ' +         // дней в обработке
                         FDeliveryTermSupplier.ToString + ' + ' +    // Срок поставщика из прайса

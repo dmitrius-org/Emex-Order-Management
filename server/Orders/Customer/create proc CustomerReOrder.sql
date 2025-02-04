@@ -146,6 +146,9 @@ as
           on 1=1 
    where t.OrderID = @OrderID
 
+
+  delete from tOrdersDelivery with (rowlock) where OrderID = @OrderID
+
   delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
   insert pAccrualAction with (rowlock) 
         (Spid,   
@@ -195,6 +198,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20241218', '5'
+exec setOV 'CustomerReOrder', 'P', '20250204', '6'
 go
  

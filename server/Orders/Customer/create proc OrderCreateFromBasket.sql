@@ -319,6 +319,14 @@ declare @r int = 0
   Select @@spid, OrderID
     from @ID
   
+  exec OrdersSupplierDeliveryCalc @IsSave = 1
+
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm  with (rowlock)
+        (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+  
   exec OrdersDeliveryTermCalc @IsSave = 1
 
 
@@ -336,6 +344,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20241101', '21'
+exec setOV 'OrderCreateFromBasket', 'P', '20250204', '22'
 go
  

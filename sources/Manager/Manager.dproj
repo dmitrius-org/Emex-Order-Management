@@ -457,6 +457,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
+        <DCCReference Include="..\Common\Common\uStringHelper.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
