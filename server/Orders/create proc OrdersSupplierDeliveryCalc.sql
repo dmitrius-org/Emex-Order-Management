@@ -56,7 +56,7 @@ begin
      where p.Spid = @@spid
        and o.DeliveryPlanDateSupplier is null
 
-    insert tOrdersDelivery with (rowlock)
+    insert tOrdersDeliverySupplier with (rowlock)
           (OrderID,
            DeliveryPlanDateSupplier,
            DeliveryTermSupplier,
@@ -68,7 +68,7 @@ begin
       from pDeliveryTerm p (nolock)
      where p.Spid = @@spid
        and not exists ( select 1
-                          from tOrdersDelivery o with (nolock index=PK_tOrdersDelivery_OrderID)
+                          from tOrdersDeliverySupplier o with (nolock index=PK_tOrdersDeliverySupplier_OrderID)
                          where o.OrderID = p.OrderID )
 
     update o
@@ -76,7 +76,7 @@ begin
           ,o.DeliveryTermSupplier     = p.DeliveryTerm 
           ,o.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
       from pDeliveryTerm p (nolock)
-     inner join tOrdersDelivery o with (updlock index=PK_tOrdersDelivery_OrderID)
+     inner join tOrdersDeliverySupplier o with (updlock index=PK_tOrdersDeliverySupplier_OrderID)
              on o.OrderID=p.OrderID 
      where p.Spid = @@spid
 

@@ -41,11 +41,12 @@ SELECT o.[OrderID]
       ,nullif(od.[DeliveryPlanDateSupplier], o.[DeliveryPlanDateSupplier]) as DeliveryPlanDateSupplier2-- Плановая дата поступления поставщику после изменения
       ,isnull(od.[DeliveryRestTermSupplier], o.[DeliveryRestTermSupplier]) as DeliveryRestTermSupplier-- Остаток срока до поступления поставщику	
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
+      ,nullif(od.DeliveryTermSupplier, o.[DeliveryTerm]) as DeliveryTermSupplier2 -- Срок доставки поставщику после изменения
       ,o.DeliveredDateToSupplier               -- Доставлена поставщику
       ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
-      ,o.DeliveryDaysReserve2                  --
+      ,nullif(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) as DeliveryDaysReserve2 --
       ,o.DeliveryNextDate                      -- Ближайшая дата вылета
-      ,o.DeliveryNextDate2                     -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate
+      ,nullif(o.DeliveryNextDate2, o.DeliveryNextDate) as DeliveryNextDate2-- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate
       ,o.DeliveryDateToCustomer                -- Дата поставки клиенту	
       ,o.DeliveryTermToCustomer	               -- Срок поставки клиенту	
       ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
@@ -66,7 +67,7 @@ SELECT o.[OrderID]
       ,o.Flag
   FROM [tOrders] o (nolock)
 
-  left join vOrdersDelivery od  with (nolock index=PK_tOrdersDelivery_OrderID) -- актуальные сроки доставки поставщика
+  left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
          on od.OrderID = o.OrderID
  --inner join tUser u with (nolock index=ao1)
  --        on u.UserID = o.UserID

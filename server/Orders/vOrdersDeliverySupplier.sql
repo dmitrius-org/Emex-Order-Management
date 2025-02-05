@@ -1,10 +1,10 @@
-if OBJECT_ID('vOrdersDelivery') is not null
-    drop view vOrdersDelivery
+if OBJECT_ID('vOrdersDeliverySupplier') is not null
+    drop view vOrdersDeliverySupplier
 go
 /* **********************************************************						
-vOrdersDelivery - 
+vOrdersDeliverySupplier - 
 ********************************************************** */
-create view vOrdersDelivery
+create view vOrdersDeliverySupplier
 as
 
 select o.OrderID
@@ -15,11 +15,11 @@ select o.OrderID
 
       --,o.DeliveryDateToCustomer
       --,o.DeliveryTermToCustomer
-  from tOrdersDelivery o
+  from tOrdersDeliverySupplier o
 
 go
-grant all on vOrdersDelivery to public
+grant all on vOrdersDeliverySupplier to public
 go
-exec setOV 'vOrdersDelivery', 'V', '20250204', '0'
+exec setOV 'vOrdersDeliverySupplier', 'V', '20250204', '0'
 go
-Select * from vOrdersDelivery
+Select * from vOrdersDeliverySupplier

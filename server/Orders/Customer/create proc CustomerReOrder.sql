@@ -96,7 +96,7 @@ as
          -- cроки поставки клиента
         ,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
         ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
-        ,t.DeliveryRestToCustomer = 0 -- Остаток срока до поставки клиенту
+        ,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
         ,t.DaysInWork             = 0
 
          -- параметры расчета себестоимости
@@ -112,7 +112,9 @@ as
 
         ,t.DeliveredDateToSupplier = null
         ,t.DeliveryPlanDateSupplier= null
-        ,t.DeliveryRestTermSupplier= null
+        ,t.DeliveryRestTermSupplier= p.GuaranteedDay
+        ,t.DeliveryTerm            = p.GuaranteedDay -- Срок доставки поставщику
+
         ,t.DeliveryDaysReserve     = null
         ,t.DeliveryDaysReserve2    = null
         ,t.DeliveryNextDate        = null
@@ -122,6 +124,7 @@ as
         ,t.ReplacementDetailNumber = null
         ,t.ReplacementPrice        = null
         ,t.PriceID                 = isnull(pp.PriceID, t.PriceID)
+        ,t.ProcessingDate          = null
  -- OUTPUT INSERTED. INTO @PriceID(PriceID)  
     from tOrders t with (updlock index=ao1)
    cross apply ( select top 1 *
@@ -147,7 +150,7 @@ as
    where t.OrderID = @OrderID
 
 
-  delete from tOrdersDelivery with (rowlock) where OrderID = @OrderID
+  delete from tOrdersDeliverySupplier with (rowlock) where OrderID = @OrderID
 
   delete pAccrualAction from pAccrualAction with (rowlock index=ao1) where spid = @@spid
   insert pAccrualAction with (rowlock) 
@@ -184,6 +187,13 @@ as
   exec OrdersFinCalc @IsSave = 1
 
   -- расчет сроков дотавки
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm  with (rowlock)
+        (Spid, OrderID)
+  Select @@spid, @OrderID
+  
+  exec OrdersSupplierDeliveryCalc @IsSave = 1
+
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm with (rowlock)
         (Spid, OrderID) 

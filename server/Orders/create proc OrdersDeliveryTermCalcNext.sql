@@ -22,12 +22,15 @@ drop proc if exists OrdersDeliveryTermCalcNext
 */
 go
 create proc OrdersDeliveryTermCalcNext
-              @IsSave bit =  null           
+              @IsSave   bit  =  null,   
+              @IsUpdate bit =  null    
 as
 SET NOCOUNT ON;
 SET DATEFIRST 1 ;  
 
 declare @r int = 0
+
+select @IsUpdate = isnull(@IsUpdate, 0)
 
 Update p
    set p.ClientID                  = o.ClientID
@@ -35,11 +38,12 @@ Update p
 	  ,p.DeliveryNextDate          = coalesce(o.DeliveryNextDate2, o.DeliveryNextDate)
 	  ,p.DeliveryPlanDateSupplier  = coalesce(od.DeliveryPlanDateSupplier, o.DeliveryPlanDateSupplier)
   from pDeliveryTerm p (updlock)
- inner join tOrders o (nolock)
+ inner join tOrders o with(nolock index=ao1)
          on o.OrderID = p.OrderID
-		and coalesce(o.DeliveryNextDate2, o.DeliveryNextDate, getdate()) < GetDate()
+		and (coalesce(o.DeliveryNextDate2, o.DeliveryNextDate, getdate()) < GetDate() 
+          or @IsUpdate = 1)
         and isnull(o.Invoice, '') = '' 
-  left join vOrdersDelivery od 
+  left join vOrdersDeliverySupplier od 
          on od.OrderID = o.OrderID    
  where p.Spid = @@Spid
 
@@ -49,7 +53,11 @@ insert pDeliveryDate
       (Spid, ID, OrderDate, ProfilesDeliveryID)
 select @@SPID, 
        OrderID, 
-       DeliveryNextDate, 
+       case 
+         when @IsUpdate=1 -- если вызвали зи формы изменения параметров заказа
+           then DeliveryPlanDateSupplier
+           else DeliveryNextDate -- если пересчитываем следующую дату вылета
+       end, 
        ProfilesDeliveryID
   from pDeliveryTerm (nolock)
  where Spid = @@Spid

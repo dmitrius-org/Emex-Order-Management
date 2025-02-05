@@ -142,7 +142,9 @@ as
   Select @@spid, 
          @OrderID
   
-  exec OrdersDeliveryTermCalc @IsSave = 1
+ -- exec OrdersDeliveryTermCalc @IsSave = 1
+  
+ exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
   
   if @TargetStateID > 0
   begin

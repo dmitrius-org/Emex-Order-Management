@@ -19,7 +19,7 @@ declare @r int = 0
 
 Update p
    set p.ClientID           = o.ClientID
-      ,p.OrderDate          = isnull(o.ProcessingDate, o.OrderDate)
+      ,p.OrderDate          = o.OrderDate
       ,p.PriceLogo          = o.PriceLogo
       ,p.ProfilesDeliveryID = o.ProfilesDeliveryID
       ,p.DeliveryTerm       = coalesce(p.DeliveryTerm, od.DeliveryTermSupplier, o.DeliveryTerm, 0) -- срок доставки поставщику
@@ -27,7 +27,7 @@ Update p
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
-  left join vOrdersDelivery od 
+  left join vOrdersDeliverySupplier od 
          on od.OrderID = o.OrderID 
  --inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
  --        on pd.ProfilesDeliveryID = o.ProfilesDeliveryID

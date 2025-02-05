@@ -24,7 +24,7 @@ Update o
 Update od
    set od.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), od.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
   from tOrders o (nolock)
- inner join tOrdersDelivery  od (updlock)
+ inner join tOrdersDeliverySupplier  od (updlock)
          on od.OrderID = o.OrderID
  inner join tNodes n (nolock)
          on n.NodeID = o.StatusID

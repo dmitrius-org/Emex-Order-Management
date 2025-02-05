@@ -75,9 +75,9 @@ SELECT o.[OrderID]
       ,nullif(od.DeliveryTermSupplier, o.[DeliveryTerm]) as DeliveryTermSupplier2 -- Срок доставки поставщику после изменения
       ,o.[DeliveredDateToSupplier]              -- Доставлена поставщику
       ,o.DeliveryDaysReserve                    -- Дней запаса до вылета	
-      ,o.DeliveryDaysReserve2                   --
+      ,nullif(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) as DeliveryDaysReserve2 --
       ,o.DeliveryNextDate                       -- Ближайшая дата вылета
-      ,o.DeliveryNextDate2  -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate	
+      ,nullif(o.DeliveryNextDate2, o.DeliveryNextDate) as DeliveryNextDate2  -- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate	
       ,pd.Delivery as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
 
       ,o.DeliveryDateToCustomer                          -- Дата поставки клиенту	
@@ -125,7 +125,7 @@ SELECT o.[OrderID]
  inner join tOrders o with (nolock index=ao2)
          on o.ClientID = ua.LinkID 
 
-  left join vOrdersDelivery od  with (nolock index=PK_tOrdersDelivery_OrderID) -- актуальные сроки доставки поставщика
+  left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
          on od.OrderID = o.OrderID
 
  inner join tUser u with (nolock index=ao1)
