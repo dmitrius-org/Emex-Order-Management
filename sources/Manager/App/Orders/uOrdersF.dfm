@@ -295,8 +295,8 @@ object OrderF: TOrderF
       TabOrder = 18
     end
     object UniBitBtn1: TUniBitBtn
-      Left = 846
-      Top = 128
+      Left = 845
+      Top = 187
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1083#1086#1075#1086
@@ -311,8 +311,8 @@ object OrderF: TOrderF
       OnClick = UniBitBtn1Click
     end
     object btnDestinationLogo: TUniBitBtn
-      Left = 846
-      Top = 100
+      Left = 845
+      Top = 159
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -449,8 +449,8 @@ object OrderF: TOrderF
       end
     end
     object UniLabel11: TUniLabel
-      Left = 383
-      Top = 104
+      Left = 382
+      Top = 163
       Width = 52
       Height = 13
       Hint = ''
@@ -459,8 +459,8 @@ object OrderF: TOrderF
       TabOrder = 11
     end
     object UniLabel12: TUniLabel
-      Left = 383
-      Top = 132
+      Left = 382
+      Top = 191
       Width = 62
       Height = 13
       Hint = ''
@@ -926,8 +926,8 @@ object OrderF: TOrderF
       end
     end
     object cbDestinationLogo: TUniFSComboBox
-      Left = 472
-      Top = 100
+      Left = 471
+      Top = 159
       Width = 368
       Hint = ''
       Enabled = False
@@ -955,8 +955,8 @@ object OrderF: TOrderF
       OnRemoteQuery = edtDetailNameFRemoteQuery
     end
     object cbPrice: TUniFSComboBox
-      Left = 472
-      Top = 128
+      Left = 471
+      Top = 187
       Width = 368
       Hint = ''
       Enabled = False
@@ -970,6 +970,134 @@ object OrderF: TOrderF
       IconItems = <>
       OnChange = cbPriceChange
       Value = '-1'
+    end
+    object lblKurs: TUniLabel
+      Left = 382
+      Top = 94
+      Width = 83
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      AutoSize = False
+      Caption = #1050#1091#1088#1089' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1082#1072#1079#1072
+      ParentFont = False
+      Font.Height = -9
+      TabOrder = 23
+    end
+    object edtKurs: TUniNumberEdit
+      Left = 471
+      Top = 94
+      Width = 94
+      Hint = ''
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 24
+      FieldLabelWidth = 50
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      DecimalSeparator = ','
+      OnKeyDown = edtLKeyDown
+    end
+    object lblCurKurs: TUniLabel
+      Left = 594
+      Top = 94
+      Width = 83
+      Height = 24
+      Hint = ''
+      ShowHint = True
+      AutoSize = False
+      Caption = #1050#1091#1088#1089' '#1085#1072' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      ParentFont = False
+      Font.Height = -9
+      TabOrder = 25
+    end
+    object edtCurKurs: TUniNumberEdit
+      Left = 680
+      Top = 94
+      Width = 94
+      Hint = ''
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 26
+      FieldLabelWidth = 50
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      DecimalSeparator = ','
+      OnKeyDown = edtLKeyDown
+    end
+    object edtCurExtraKurs: TUniNumberEdit
+      Left = 680
+      Top = 119
+      Width = 94
+      Hint = ''
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 27
+      FieldLabelWidth = 50
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      DecimalSeparator = ','
+      OnKeyDown = edtLKeyDown
+    end
+    object lblCurExtraKurs: TUniLabel
+      Left = 594
+      Top = 119
+      Width = 86
+      Height = 27
+      Hint = ''
+      ShowHint = True
+      AutoSize = False
+      Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1085#1072' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      ParentFont = False
+      Font.Height = -9
+      TabOrder = 28
+    end
+    object lblExtraKurs: TUniLabel
+      Left = 382
+      Top = 119
+      Width = 86
+      Height = 27
+      Hint = ''
+      ShowHint = True
+      AutoSize = False
+      Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1082#1072#1079#1072
+      ParentFont = False
+      Font.Height = -9
+      TabOrder = 29
+    end
+    object edtExtraKurs: TUniNumberEdit
+      Left = 471
+      Top = 119
+      Width = 94
+      Hint = ''
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      TabOrder = 30
+      FieldLabelWidth = 15
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      DecimalSeparator = ','
+      OnKeyDown = edtLKeyDown
     end
   end
   object UniContainerPanel1: TUniContainerPanel

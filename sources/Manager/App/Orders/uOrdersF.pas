@@ -102,6 +102,14 @@ type
     UniContainerPanel1: TUniContainerPanel;
     actProtocol: TAction;
     UniNativeImageList1: TUniNativeImageList;
+    lblKurs: TUniLabel;
+    edtKurs: TUniNumberEdit;
+    lblCurKurs: TUniLabel;
+    edtCurKurs: TUniNumberEdit;
+    edtCurExtraKurs: TUniNumberEdit;
+    lblCurExtraKurs: TUniLabel;
+    lblExtraKurs: TUniLabel;
+    edtExtraKurs: TUniNumberEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -789,7 +797,8 @@ begin
 
         if RetVal.Code = 0 then
         begin
-          sqltext :='''
+          sqltext :=
+          '''
                      declare @R      int
 
                      exec @r = OrderUpdate
@@ -1177,18 +1186,41 @@ begin
       end;
     end;
   end;
+
 end;
 
 procedure TOrderF.DataLoad;
 var js: string;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := '''
+  UniMainModule.Query.SQL.Text :=
+  '''
+       Declare @Kurs            money
+              ,@ExtraKurs       money
+              ,@CurKurs         money
+              ,@CurExtraKurs    money
+
+       select @Kurs         = o.Kurs
+             ,@ExtraKurs    = o.ExtraKurs
+             ,@CurExtraKurs = s.ExtraKurs
+         from tOrders o (nolock)
+        inner join tClients c with (nolock index=PK_tClients_ClientID)
+                on c.ClientID = o.ClientID
+        inner join tSuppliers s with (nolock index=ao1)
+                on S.SuppliersID = c.SuppliersID
+        where o.OrderID = :OrderID
+
+       select @CurKurs = dbo.GetCurrencyRate('840', null)
+
        delete pFindByNumber
          from pFindByNumber (rowlock)
         where spid = @@spid
 
-       select v.OrderDate
+       select @Kurs         as Kurs
+             ,@ExtraKurs    as ExtraKurs
+             ,@CurKurs      as CurKurs
+             ,@CurExtraKurs as CurExtraKurs
+             ,v.OrderDate
              ,v.WeightKG
              ,v.VolumeKG
              ,v.WeightKGF
@@ -1276,9 +1308,14 @@ begin
 
   FPassedDayInWork := UniMainModule.Query.FieldByName('PassedDayInWork').asInteger;        // дней в обработке
   FDeliveryTermSupplier := UniMainModule.Query.FieldByName('DeliveryTermSupplier').asInteger;   // Срок поставщика из прайса
-  FDeliveryDaysReserve :=  UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
+  FDeliveryDaysReserve  :=  UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
 
   FDeliveryTermFromSupplierProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromSupplierProfile').asInteger; // Доставка
+
+  edtKurs.Value        := UniMainModule.Query.FieldByName('Kurs').AsFloat;
+  edtExtraKurs.Value   := UniMainModule.Query.FieldByName('ExtraKurs').AsFloat;
+  edtCurKurs.Value     := UniMainModule.Query.FieldByName('CurKurs').AsFloat;
+  edtCurExtraKurs.Value:= UniMainModule.Query.FieldByName('CurExtraKurs').AsFloat;
 
   // !!! тут по идее можно оставить только DeliveryTermToCustomer
   FDeliveryTermFromCustomerProfile :=
@@ -1395,8 +1432,6 @@ begin
 
   WeightKGFStyle;
 end;
-
-
 
 end.
 

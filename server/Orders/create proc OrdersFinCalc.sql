@@ -180,9 +180,9 @@ begin
 		,o.IncomePrc        = p.IncomePrc  -- доход в процентах
         ,o.Profit           = p.Profit     -- Рентабельность
         ,o.CommissionAmount = isnull(o.CommissionAmount, p.PriceCommission) -- Комиссия от продажи
-
+        -- сохраняем при создании заказа
         --,o.Kurs             = p.Course     -- курс
-        --,o.ExtraKurs        = p.ExtraKurs
+        --,o.ExtraKurs        = p.ExtraKurs  -- 
     from pOrdersFin p (nolock)
    inner join tOrders o with (updlock)
            on o.OrderID = p.OrderID
@@ -198,7 +198,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20241212', '6'
+exec setOV 'OrdersFinCalc', 'P', '20250206', '1'
 go
  
  

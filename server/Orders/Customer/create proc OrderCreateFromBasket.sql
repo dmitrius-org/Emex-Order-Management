@@ -91,8 +91,8 @@ declare @r int = 0
          b.Make,
          b.DetailNum,
          b.PriceLogo
-    from tMarks m (nolock)
-   inner join tBasket b (nolock)
+    from tMarks m with (nolock index=pk_tMarks)
+   inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
     left join tPrice pp with (nolock index=ao3) 
            on pp.PriceLogo = b.PriceLogo 

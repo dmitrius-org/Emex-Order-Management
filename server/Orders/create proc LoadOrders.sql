@@ -70,7 +70,8 @@ as
         ,Commission
         ,ExtraKurs
         ,Fragile
-        --,Kurs
+        ,Kurs
+
         ,Taxes
         ,WeightKGAmount         -- Стоимость кг физического веса
         ,VolumeKGAmount   
@@ -111,6 +112,8 @@ as
         ,pc.Commission
         ,pc.ExtraKurs
         ,pc.Fragile
+        ,cr.Value
+
         ,c.Taxes
         ,pc.WeightKG            -- Стоимость кг физического веса
         ,pc.VolumeKG 
@@ -169,11 +172,17 @@ as
            on pd.Make   = p.MakeLogo	
           and pd.Number = p.DetailNum 
 
-  outer apply (select top 1 *
-                 from tPrices t (nolock) 
-                where t.Name = pc.UploadPriceName
-               ) as Prices
+   outer apply (select top 1 *
+                  from tPrices t (nolock) 
+                 where t.Name = pc.UploadPriceName
+                ) as Prices
 
+   cross apply ( select top 1 Value
+                   from tCurrencyRate with (nolock index=ao2)
+                  where NumCode = '840'
+                    and OnDate <= o.OrderDate
+                  order by OnDate desc
+                ) as cr
 
    where o.Spid = @@Spid
      and not exists (select 1 -- проверка на повторную загрузку
@@ -267,6 +276,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250204', '8'
+exec setOV 'LoadOrders', 'P', '20250206', '9'
 go
  
