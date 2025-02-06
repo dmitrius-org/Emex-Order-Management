@@ -64,7 +64,8 @@ uses
   uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas',
   uVersion in '..\Common\CommonApp\uVersion.pas',
   uStatisticOrders in 'App\Statistics\uStatisticOrders.pas' {StatisticOrders: TUniFrame},
-  uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame};
+  uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
+  LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm};
 
 {$R *.res}
 
