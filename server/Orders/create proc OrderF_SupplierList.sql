@@ -1,11 +1,10 @@
 drop proc if exists OrderF_SupplierList
-/*
-  OrderF_SupplierList - Список поставщиков
-*/
 go
 create proc OrderF_SupplierList
                @OrderID                 numeric(18,0)            
-              
+/*
+  OrderF_SupplierList - Список поставщиков
+*/           
 as
   declare @r int = 0
 

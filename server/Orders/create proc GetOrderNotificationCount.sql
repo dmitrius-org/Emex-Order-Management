@@ -17,7 +17,7 @@ declare @r int = 0
            on od.OrderID = o.OrderID
     where ua.UserID    = dbo.GetUserID()
       and ua.LinkType  = 7
-      and isnull(od.DeliveryRestTermSupplier, o.DeliveryRestToCustomer) <= 0 -- 
+      and isnull(od.DeliveryRestTermSupplier, o.DeliveryRestTermSupplier) <= 0 -- 
       and o.OrderDate >= '20250201'
 
     --and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
