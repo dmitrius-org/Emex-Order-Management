@@ -134,11 +134,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.11;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.1;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.12;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.1;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>11</VerInfo_Build>
+        <VerInfo_Build>12</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -175,10 +175,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="App\uBasket.pas">
             <Form>BasketF</Form>
             <DesignClass>TUniFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Main\LoginEditForm.pas">
-            <Form>LoginEditF</Form>
-            <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Main\InfoForm.pas">
             <Form>Info</Form>
@@ -1349,7 +1345,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1357,7 +1353,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1365,7 +1361,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1373,7 +1369,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>

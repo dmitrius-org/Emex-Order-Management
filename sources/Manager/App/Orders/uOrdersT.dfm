@@ -629,6 +629,7 @@ object OrdersT: TOrdersT
       TabOrder = 0
       ShowCaption = False
       Caption = 'pFilter'
+      AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       LayoutAttribs.Align = 'top'
       LayoutAttribs.Pack = 'start'
@@ -649,7 +650,7 @@ object OrdersT: TOrdersT
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        object UniLabel1: TUniLabel
+        object lblStatys: TUniLabel
           Left = 6
           Top = 14
           Width = 36
@@ -657,9 +658,9 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1057#1090#1072#1090#1091#1089':'
-          TabOrder = 1
+          TabOrder = 13
         end
-        object UniLabel2: TUniLabel
+        object lblPrice: TUniLabel
           Left = 219
           Top = 58
           Width = 36
@@ -667,9 +668,9 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1055#1088#1072#1081#1089':'
-          TabOrder = 10
+          TabOrder = 18
         end
-        object UniLabel3: TUniLabel
+        object lblClient: TUniLabel
           Left = 6
           Top = 58
           Width = 40
@@ -677,7 +678,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1050#1083#1080#1077#1085#1090':'
-          TabOrder = 9
+          TabOrder = 17
         end
         object fCancel: TUniBitBtn
           Left = 794
@@ -686,7 +687,7 @@ object OrdersT: TOrdersT
           Height = 24
           ShowHint = True
           Action = actFilterClear
-          TabOrder = 5
+          TabOrder = 9
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
@@ -696,7 +697,7 @@ object OrdersT: TOrdersT
           Height = 24
           ShowHint = True
           Action = actFilter
-          TabOrder = 17
+          TabOrder = 10
           IconPosition = ipButtonEdge
           ScreenMask.ShowMessage = False
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
@@ -710,13 +711,13 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 7
+          TabOrder = 2
           EmptyText = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
-        object UniLabel4: TUniLabel
+        object lblOrderNumber: TUniLabel
           Left = 527
           Top = 14
           Width = 76
@@ -724,9 +725,9 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072':'
-          TabOrder = 3
+          TabOrder = 15
         end
-        object UniLabel5: TUniLabel
+        object lblIsCancel: TUniLabel
           Left = 681
           Top = 58
           Width = 34
@@ -734,7 +735,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1054#1090#1082#1072#1079':'
-          TabOrder = 13
+          TabOrder = 21
         end
         object cbCancel: TUniComboBox
           Left = 681
@@ -748,7 +749,7 @@ object OrdersT: TOrdersT
             #1053#1077#1090
             #1044#1072)
           ItemIndex = 0
-          TabOrder = 16
+          TabOrder = 8
           EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
           IconItems = <>
@@ -757,11 +758,11 @@ object OrdersT: TOrdersT
         object fStatus2: TUniCheckComboBox
           Left = 6
           Top = 33
-          Width = 310
+          Width = 306
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 6
+          TabOrder = 0
           ClientEvents.UniEvents.Strings = (
             'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
             
@@ -796,7 +797,7 @@ object OrdersT: TOrdersT
           OnSelect = fStatus2Select
           OnKeyDown = fStatus2KeyDown
         end
-        object UniLabel6: TUniLabel
+        object lblDEtailNumber: TUniLabel
           Left = 478
           Top = 58
           Width = 78
@@ -804,9 +805,9 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080':'
-          TabOrder = 12
+          TabOrder = 20
         end
-        object UniLabel8: TUniLabel
+        object lblOrderDate: TUniLabel
           Left = 322
           Top = 14
           Width = 65
@@ -814,7 +815,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072':'
-          TabOrder = 2
+          TabOrder = 14
         end
         object edtUpdDate: TUniDateTimePicker
           Left = 322
@@ -825,12 +826,12 @@ object OrdersT: TOrdersT
           DateTime = 45257.000000000000000000
           DateFormat = 'dd/MM/yyyy'
           TimeFormat = 'HH:mm:ss'
-          TabOrder = 14
+          TabOrder = 6
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           OnKeyDown = fStatus2KeyDown
         end
-        object UniLabel10: TUniLabel
+        object lblUpdDate: TUniLabel
           Left = 322
           Top = 58
           Width = 97
@@ -838,7 +839,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1044#1072#1090#1072' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103':'
-          TabOrder = 11
+          TabOrder = 19
         end
         object edtInvoice: TUniEdit
           Left = 681
@@ -847,13 +848,13 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 8
+          TabOrder = 3
           EmptyText = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
           CheckChangeDelay = 200
           ClearButton = True
           OnKeyDown = fStatus2KeyDown
         end
-        object UniLabel11: TUniLabel
+        object lblInvoce: TUniLabel
           Left = 681
           Top = 14
           Width = 87
@@ -861,7 +862,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
-          TabOrder = 4
+          TabOrder = 16
         end
         object fDetailNum: TUniEdit
           Left = 478
@@ -870,7 +871,7 @@ object OrdersT: TOrdersT
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''
-          TabOrder = 15
+          TabOrder = 7
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
@@ -883,7 +884,7 @@ object OrdersT: TOrdersT
           Hint = ''
           ShowHint = True
           Text = 'edtOrderDate'
-          TabOrder = 18
+          TabOrder = 1
           Triggers = <
             item
               ButtonId = 0
@@ -912,13 +913,13 @@ object OrdersT: TOrdersT
         object fClient: TUniADCheckComboBox
           Left = 6
           Top = 75
-          Width = 207
+          Width = 203
           Hint = ''
           ShowHint = True
           ShowSearch = True
           ShowSelectButton = True
           Text = ''
-          TabOrder = 19
+          TabOrder = 4
           ClientEvents.ExtEvents.Strings = (
             
               'afterrender=function afterrender(sender, eOpts) {  '#13#10'initComboBo' +
@@ -938,7 +939,7 @@ object OrdersT: TOrdersT
           ShowSearch = True
           ShowSelectButton = True
           Text = ''
-          TabOrder = 20
+          TabOrder = 5
           ClientEvents.ExtEvents.Strings = (
             
               'afterrender=function afterrender(sender, eOpts) {  '#13#10'initComboBo' +
@@ -948,6 +949,32 @@ object OrdersT: TOrdersT
           ClearButton = True
           IconItems = <>
           OnKeyDown = fStatus2KeyDown
+        end
+        object btnNotification: TUniBitBtn
+          Left = 1098
+          Top = 75
+          Width = 127
+          Height = 24
+          Hint = ''
+          ShowHint = True
+          Caption = '<i class="order fa fa-bell"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+          TabOrder = 11
+          ClientEvents.UniEvents.Strings = (
+            
+              'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.styl' +
+              'e={'#39'overflow'#39': '#39'visible'#39'};'#13#10'  sender.action = '#39'badgetext'#39'; '#13#10'  s' +
+              'ender.plugins = ['#13#10'                        {'#13#10'                  ' +
+              '          ptype:'#39'badgetext'#39','#13#10'                            defaul' +
+              'tText: 12,'#13#10'                            textSize: 12,'#13#10'         ' +
+              '                   disableOpacity:1,'#13#10'                          ' +
+              '  disableBg: '#39'grey'#39','#13#10'                            enableBg: '#39'gre' +
+              'y'#39','#13#10'                            align:'#39'right'#39','#13#10'               ' +
+              '             top:-15'#13#10'                        }'#13#10'               ' +
+              '   ];'#13#10'}')
+          IconPosition = ipButtonEdge
+          LayoutConfig.Cls = 'order-notification-btn'
+          LayoutConfig.DockWhenAligned = False
+          OnClick = btnNotificationClick
         end
       end
     end
@@ -1144,18 +1171,6 @@ object OrdersT: TOrdersT
       Visible = True
       ShowHint = True
     end
-    object UniFSComboBox1: TUniFSComboBox
-      Left = 865
-      Top = 362
-      Width = 145
-      Hint = ''
-      ShowHint = True
-      Text = 'UniFSComboBox1'
-      TabOrder = 5
-      AnyMatch = True
-      IconItems = <>
-      Value = '-1'
-    end
   end
   object Query: TFDQuery
     AutoCalcFields = False
@@ -1281,6 +1296,8 @@ object OrdersT: TOrdersT
       '   !updDateTime'
       '   '
       '   !Invoice'
+      '   '
+      '   !Notifications'
       '               '
       '  order by  o.[OrderID]  '
       '   ')
@@ -1322,6 +1339,10 @@ object OrdersT: TOrdersT
       item
         Value = ''
         Name = 'INVOICE'
+      end
+      item
+        Value = Null
+        Name = 'NOTIFICATIONS'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc

@@ -70,8 +70,6 @@ as
         --,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
         --,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
 
-        ,t.ProcessingDate         = cast(getdate() as date)
-
 	from tOrders t with (updlock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -141,8 +139,6 @@ as
         (Spid, OrderID) 
   Select @@spid, 
          @OrderID
-  
- -- exec OrdersDeliveryTermCalc @IsSave = 1
   
  exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
   

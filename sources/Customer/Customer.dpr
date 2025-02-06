@@ -38,7 +38,6 @@ uses
   Main in 'Main\Main.pas' {MainForm: TUniForm},
   LoginForm in 'Main\LoginForm.pas' {LoginF: TUniLoginForm},
   uBasket in 'App\uBasket.pas' {BasketF: TUniFrame},
-  LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm},
   InfoForm in 'Main\InfoForm.pas' {Info: TUniForm},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uOrdersT2 in 'App\Orders\uOrdersT2.pas' {OrdersT2: TUniFrame},

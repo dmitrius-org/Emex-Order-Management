@@ -95,9 +95,9 @@ type
     QueryUserName: TWideStringField;
     pFilter: TUniPanel;
     gbFilter: TUniGroupBox;
-    UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
-    UniLabel3: TUniLabel;
+    lblStatys: TUniLabel;
+    lblPrice: TUniLabel;
+    lblClient: TUniLabel;
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     qStatus: TFDQuery;
@@ -111,7 +111,7 @@ type
     qClientName: TWideStringField;
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
-    UniLabel4: TUniLabel;
+    lblOrderNumber: TUniLabel;
     ppExecuteAction: TUniMenuItem;
     actExecuteAction: TAction;
     actExecuteActionEnabled: TAction;
@@ -121,7 +121,7 @@ type
     QueryFlag: TIntegerField;
     QueryOverPricing: TCurrencyField;
     QueryWarning: TWideStringField;
-    UniLabel5: TUniLabel;
+    lblIsCancel: TUniLabel;
     cbCancel: TUniComboBox;
     QueryReplacementMakeLogo: TWideStringField;
     QueryReplacementDetailNumber: TWideStringField;
@@ -146,7 +146,7 @@ type
     N12: TUniMenuItem;
     N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
-    UniLabel6: TUniLabel;
+    lblDEtailNumber: TUniLabel;
     QueryCustomerPriceLogo: TWideStringField;
     UniPanel3: TUniPanel;
     lblSelRowCunt: TUniLabel;
@@ -165,7 +165,7 @@ type
     QueryIncomePRC: TCurrencyField;
     actSetComment: TAction;
     N14: TUniMenuItem;
-    UniLabel8: TUniLabel;
+    lblOrderDate: TUniLabel;
     actGroupDetailNameEdit: TAction;
     N15: TUniMenuItem;
     N16: TUniMenuItem;
@@ -176,9 +176,9 @@ type
     UniLabel9: TUniLabel;
     lblOverVolume: TUniLabel;
     edtUpdDate: TUniDateTimePicker;
-    UniLabel10: TUniLabel;
+    lblUpdDate: TUniLabel;
     edtInvoice: TUniEdit;
-    UniLabel11: TUniLabel;
+    lblInvoce: TUniLabel;
     actGroupSetFragileSign: TAction;
     Fragile1: TUniMenuItem;
     QueryDeliveryNextDate2: TSQLTimeStampField;
@@ -201,7 +201,6 @@ type
     QueryDeliveryDaysReserve2: TIntegerField;
     QueryReceiptDate: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
-    UniFSComboBox1: TUniFSComboBox;
     edtOrderDate: TUniDateRangePicker;
     fClient: TUniADCheckComboBox;
     fPriceLogo: TUniADCheckComboBox;
@@ -209,6 +208,7 @@ type
     QueryDeliveryTermSupplier2: TIntegerField;
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;
     QueryDeliveryTermToCustomer2: TIntegerField;
+    btnNotification: TUniBitBtn;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -258,6 +258,7 @@ type
       DisplayText: Boolean);
     procedure QueryTermDeliveryToCustomerGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
+    procedure btnNotificationClick(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -271,6 +272,8 @@ type
 
     FProcessed: Integer;
     FTotal    : Integer;
+
+    FIsNotification: Boolean;
 
     /// <summary>
     /// GridOpen - получение данных с сервера
@@ -322,6 +325,22 @@ type
     procedure OrderSetCancellation();
     /// <summary>OrderSetRequestClosed - установка признака: Обращение закрыто</summary>
     procedure OrderSetRequestClosed();
+
+    /// <summary>
+    /// GetNotificationOrders - показать заказы с уведомлениями
+    /// </summary>
+    procedure GetNotificationOrders();
+
+    procedure SetNotificationIcon();
+
+    /// <summary>
+    /// SetNotificationCount - количество уведомлений
+    /// </summary>
+    procedure SetNotificationCount();
+
+    procedure SetMenuVisible(AVisible: boolean);overload;
+
+    procedure SetMenuVisible(); overload;
 
   public
     { Public declarations }
@@ -796,6 +815,20 @@ begin
   try
     Query.Close();
 
+    if FIsNotification then
+    begin
+        Query.MacroByName('Notifications').Value :=
+        '''
+          and o.DeliveryRestTermSupplier <= 0
+          and o.OrderDate >= '20250201'
+        ''';
+    end
+    else
+    begin
+      Query.MacroByName('Notifications').Value := '';
+      //Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
+    end;
+
     if FFilterTextStatus <> '' then
       FStatus := ' and StatusID in (' + FFilterTextStatus + ')'
     else
@@ -871,6 +904,8 @@ begin
     Query.Open();
 
     StateActionMenuCreate;
+
+    SetNotificationCount;
 
   finally
     DoHideMask();
@@ -953,6 +988,19 @@ begin
 
     lblOverVolume.Caption:= '0 V';
   end;
+end;
+
+procedure TOrdersT.GetNotificationOrders;
+begin
+ // btnCancel.Enabled := FIsNotification;
+  cbCancel.Enabled := FIsNotification;
+
+  FIsNotification := not FIsNotification;
+
+  if FIsNotification then
+    GridOpen;
+
+  SetMenuVisible(FIsNotification);
 end;
 
 procedure TOrdersT.ppMainPopup(Sender: TObject);
@@ -1315,6 +1363,51 @@ begin
    Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
 end;
 
+procedure TOrdersT.SetMenuVisible;
+begin
+  SetMenuVisible(FIsNotification);
+end;
+
+procedure TOrdersT.SetMenuVisible(AVisible: boolean);
+begin
+  if AVisible then
+  begin
+    UniSession.AddJS(
+      'var el = document.querySelector(".order.fa.fa-bell");' +
+      'if (el) { el.classList.add("icon-notification"); }' +
+      'else { console.error("Element with class fa fa-bell not found"); }'
+    );
+  end
+  else
+  begin
+    UniSession.AddJS(
+      'var el = document.querySelector(".order.fa.fa-bell");' +
+      'if (el) { el.classList.remove("icon-notification"); }' +
+      'else { console.error("Element with class fa fa-bell not found"); }'
+    );
+  end;
+
+  SetNotificationCount;
+end;
+
+procedure TOrdersT.SetNotificationCount;
+var
+  bJSName: string;
+begin
+  Sql.Open('exec GetOrderNotificationCount', [], []);
+
+  if Sql.Count > 0 then
+  begin
+     bJSName := btnNotification.JSName;
+     UniSession.AddJS(bJSName + '.setBadgeText(' + Sql.Q.FieldByName('NotificationCount').AsString +  ');');
+  end;
+end;
+
+procedure TOrdersT.SetNotificationIcon;
+begin
+  //
+end;
+
 procedure TOrdersT.DeliveryDaysReserveGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
@@ -1377,6 +1470,11 @@ end;
 procedure TOrdersT.actUnselectExecute(Sender: TObject);
 begin
   DeselectAll;
+end;
+
+procedure TOrdersT.btnNotificationClick(Sender: TObject);
+begin
+  GetNotificationOrders;
 end;
 
 procedure TOrdersT.SortColumn(const FieldName: string; Dir: Boolean);
@@ -1464,6 +1562,8 @@ begin
     // fClient.Text := 'egud@mail.ru';
     // fDetailNum.Text := '32008XJ';
   {$ENDIF}
+
+  SetNotificationCount;
 end;
 
 procedure TOrdersT.TimerProcessedShowTimer(Sender: TObject);

@@ -19,20 +19,25 @@ declare @r int = 0
 
 Update p
    set p.ClientID           = o.ClientID
-      ,p.OrderDate          = isnull(o.ProcessingDate, o.OrderDate)
+      ,p.OrderDate          = isnull(op.OperDate, cast(getdate() as date))
       ,p.PriceLogo          = o.PriceLogo
-      ,p.DeliveryTerm       = coalesce(p.DeliveryTerm, o.DeliveryTerm, 0) -- срок доставки поставщику
+      ,p.DeliveryTerm       = coalesce(od.DeliveryTermSupplier, p.DeliveryTerm, o.DeliveryTerm, 0) -- срок доставки поставщику
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID
+ left join vOrdersProtocolInWork op (nolock)
+         on op.OrderID=o.OrderID
+ left join tOrdersDeliverySupplier  od (updlock)
+         on od.OrderID = o.OrderID
  where p.Spid = @@Spid
 
 Update p
-   set p.DeliveryPlanDateSupplier = case -- плановая дата поступления поставщику
+   set p.DeliveryPlanDateSupplier = cast(
+                                    case -- плановая дата поступления поставщику
 	                                   when o.Flag&16>0 then DATEADD(dd, p.DeliveryTerm, p.OrderDate)
                                        when isnull(Prices.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(p.OrderDate, isnull(Prices.DeliveryTerm, 0), 1)
                                        else DATEADD(dd, isnull(Prices.DeliveryTerm, p.DeliveryTerm), p.OrderDate)
-                                    end
+                                    end as date)
   from pDeliveryTerm p (updlock)
  inner join tOrders o (nolock)
          on o.OrderID = p.OrderID

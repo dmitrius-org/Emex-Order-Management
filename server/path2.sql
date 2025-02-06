@@ -12,10 +12,10 @@
 --SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = History.tBasket));
 --go
 
-alter table tOrders add ProcessingDate datetime
+alter table tOrders drop column ProcessingDate 
 
-sp_who
-
+--sp_who
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1023, 1023, 'Изменить пароль для входа в личный кабинет',  'TClientsT.actPasswordReset', 40, 1
 --go
 --ALTER TABLE tAudit DROP CONSTRAINT DF__tAudit__InDateTi__5EDF0F2E;
 

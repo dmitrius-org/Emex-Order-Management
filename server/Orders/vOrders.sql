@@ -13,7 +13,6 @@ SELECT o.[OrderID]
       ,o.[ClientID]
       ,c.[Brief]         as ClientName
       ,o.[OrderDate]
-      ,o.[ProcessingDate]
       ,o.[PriceLogo]
       ,o.[OrderNum]
       ,o.[StatusID]

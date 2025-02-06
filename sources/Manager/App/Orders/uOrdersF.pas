@@ -383,6 +383,7 @@ begin
   logger.Info('FDetailNumber ' + FDetailNumber);
   logger.Info('FPriceLogo ' + FPriceLogo);
   logger.Info('FMakeLogo ' + FMakeLogo);
+  HintText := '';
 
   sql.Open('''
            select top 1 *,
@@ -430,11 +431,11 @@ begin
                 );
 
     //  Срок поставки:
-    edtDelivery2.Text:= FPassedDayInWork.ToString + ' + ' +         // дней в обработке
-                        DeliveryTermSupplier.ToString + ' + ' +     // Срок поставщика из API
-                        FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
+    edtDelivery2.Text:= FPassedDayInWork.ToString + '+' +         // дней в обработке
+                        DeliveryTermSupplier.ToString +'+' +     // Срок поставщика из API
+                        FDeliveryDaysReserve.ToString+ '+' +      // Запас до вылета
                         FDeliveryTermFromSupplierProfile.ToString + // Доставка
-                        ' = ' +
+                        '=' +
                         (
                           FPassedDayInWork +               // дней в обработке
                           DeliveryTermSupplier+            // Срок поставщика из API
@@ -442,7 +443,7 @@ begin
                           FDeliveryTermFromSupplierProfile // Доставка
                         ).ToString +
 
-                        ' (' +
+                        '(' +
                         IfThen(FPassedDayInWork+
                                DeliveryTermSupplier+
                                FDeliveryDaysReserve+
@@ -474,22 +475,22 @@ begin
     SetEditDataRating(sql.F('PercentSupped').AsInteger);
 
     SetEditDeliveryStyle((FPassedDayInWork+
-                          FDeliveryTermSupplier+
+                          DeliveryTermSupplier+
                           FDeliveryDaysReserve+
                           FDeliveryTermFromSupplierProfile-
                           DeliveryTermFromCustomerProfile));
 
     // вплывающая подсказака
     HintText := HintText + FPassedDayInWork.ToString      + ' - дней до взятия в работу' + #10;
-    HintText := HintText + FDeliveryTermSupplier.ToString + ' - срок поставщика из прайса' + #10;
+    HintText := HintText + DeliveryTermSupplier.ToString + ' - срок поставщика из прайса' + #10;
     HintText := HintText + FDeliveryDaysReserve.ToString  + ' - дней запаса до вылета' + #10;
     HintText := HintText + FDeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
-    HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
+    HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
 
-    if FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
-      HintText := HintText + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
+    if FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
+      HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
     else
-      HintText := HintText + '+' + (FPassedDayInWork + FDeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
+      HintText := HintText + '+' + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
     HintText := HintText + DeliveryTermFromCustomerProfile.ToString + ' - cрок клиента';
 
     edtDelivery2.Hint := HintText;
@@ -955,7 +956,7 @@ begin
   setColor(FMarginF2,  FMarginF,  edtMarginF2);
   setColor(FIncome2,   FIncome,   edtIncome2);
   setColor(FProfin2,   FProfin,   edtProfit2);
-  setColor(FMarginF2,  FMarginF,  edtDelivery2);
+ // setColor(FMarginF2,  FMarginF,  edtDelivery2);
   setColor(FQuantity2, FPriceQuantity, edtCount2);
 end;
 
@@ -1294,11 +1295,11 @@ begin
   logger.info('FDeliveryTermFromSupplierProfile:' + FDeliveryTermFromSupplierProfile.ToString);
   logger.info('FDeliveryTermFromCustomerProfile:' + FDeliveryTermFromCustomerProfile.ToString);
 
-  edtDelivery.Text   := FPassedDayInWork.ToString + ' + ' +         // дней в обработке
-                        FDeliveryTermSupplier.ToString + ' + ' +    // Срок поставщика из прайса
-                        FDeliveryDaysReserve.ToString+ ' + ' +      // Запас до вылета
+  edtDelivery.Text   := FPassedDayInWork.ToString + '+' +         // дней в обработке
+                        FDeliveryTermSupplier.ToString + '+' +    // Срок поставщика из прайса
+                        FDeliveryDaysReserve.ToString+ '+' +      // Запас до вылета
                         FDeliveryTermFromSupplierProfile.ToString + // Доставка
-                        ' = ' +
+                        '=' +
                         (
                           FPassedDayInWork +         // дней в обработке
                           FDeliveryTermSupplier+     // Срок поставщика из прайса
@@ -1306,7 +1307,7 @@ begin
                           FDeliveryTermFromSupplierProfile // Доставка
                         ).ToString +
 
-                        ' (' +
+                        '(' +
                         IfThen(FPassedDayInWork+
                                FDeliveryTermSupplier+
                                FDeliveryDaysReserve+

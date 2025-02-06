@@ -5,16 +5,16 @@ if OBJECT_ID('ClientUpdate') is not null
 */
 go
 create proc ClientUpdate
-              @ClientID             numeric(18,0)  --  
-             ,@Brief                nvarchar(256)  --
-             ,@Name	                nvarchar(512)  -- 
-			 ,@SuppliersID          numeric(18,0)=null--поставщик
-			 ,@IsActive             bit
-			 ,@Taxes                money
-             ,@ResponseType         int          -- Тип ответа
-             ,@NotificationMethod   int          -- Способ оповещения
-             ,@NotificationAddress  nvarchar(256)-- Адрес оповещения
-             ,@ClientTypeID	        int            = null
+              @ClientID               numeric(18,0)  --  
+             ,@Brief                  nvarchar(256)  --
+             ,@Name	                  nvarchar(512)  -- 
+			 ,@SuppliersID            numeric(18,0)=null--поставщик
+			 ,@IsActive               bit
+			 ,@Taxes                  money
+             ,@ResponseType           int          -- Тип ответа
+             ,@NotificationMethod     int          -- Способ оповещения
+             ,@NotificationAddress    nvarchar(256)-- Адрес оповещения
+             ,@ClientTypeID	          int            = null
              ,@StatusRequiringPayment varchar(256) = null
              ,@Email	              nvarchar(256)= null
              ,@Phone                  varchar(32)  = null
@@ -29,7 +29,18 @@ as
               where Brief     = @Brief
                 and ClientID <> @ClientID)
   begin
-    set @r = 100 -- 'Клиент с заданным наименование существует'
+    set @r = 100 -- 'Клиент с заданным наименованием существует'
+    goto exit_
+  end
+
+  if @Email is not null
+     and
+     exists (select 1 
+               from tClients (nolock)
+              where Email     = @Email
+                and ClientID <> @ClientID)
+  begin
+    set @r = 102 --В системе уже зарегистрирован клиент с заданной почтой!
     goto exit_
   end
 
@@ -49,19 +60,20 @@ as
              ) AS n;
 
 	    Update tClients
-		   set Brief               = @Brief
-		   	  ,Name                = @Name
-		      ,SuppliersID         = @SuppliersID
-		      ,IsActive            = @IsActive 
-			  ,updDatetime         = GetDate()
-			  ,Taxes               = @Taxes
-              ,ResponseType        = @ResponseType
-              ,NotificationMethod  = @NotificationMethod
-              ,NotificationAddress = @NotificationAddress
-              ,ClientTypeID        = @ClientTypeID
+		   set Brief                  = @Brief
+		   	  ,Name                   = @Name
+		      ,SuppliersID            = @SuppliersID
+		      ,IsActive               = @IsActive 
+			  ,updDatetime            = GetDate()
+			  ,Taxes                  = @Taxes
+              ,ResponseType           = @ResponseType
+              ,NotificationMethod     = @NotificationMethod
+              ,NotificationAddress    = @NotificationAddress
+              ,ClientTypeID           = @ClientTypeID
               ,StatusRequiringPayment = @StatusRequiringPayment
-              ,Phone                 = @Phone         
-              ,ContactPerson         = @ContactPerson 
+              ,Phone                  = @Phone         
+              ,ContactPerson          = @ContactPerson
+              ,Email                  = @Email
 		  from tClients with (rowlock index=PK_tClients_ClientID)
 	     where ClientID     = @ClientID 
 
@@ -104,5 +116,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20241117', '3'
+exec setOV 'ClientUpdate', 'P', '20240205', '4'
 go

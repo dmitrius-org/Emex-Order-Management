@@ -124,7 +124,6 @@ as
         ,t.ReplacementDetailNumber = null
         ,t.ReplacementPrice        = null
         ,t.PriceID                 = isnull(pp.PriceID, t.PriceID)
-        ,t.ProcessingDate          = null
  -- OUTPUT INSERTED. INTO @PriceID(PriceID)  
     from tOrders t with (updlock index=ao1)
    cross apply ( select top 1 *

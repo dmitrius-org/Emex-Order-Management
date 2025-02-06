@@ -338,3 +338,15 @@
     height: auto;
     vertical-align: top;
 }
+
+.icon-notification {
+    color: orange;
+    font-size: 16px;
+    animation: blink 1s infinite;
+}
+
+.order-notification-btn {
+    position: absolute;
+    right: 0;
+    float: right;
+}

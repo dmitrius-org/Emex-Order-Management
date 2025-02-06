@@ -65,7 +65,7 @@ SELECT o.[OrderID]
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,o.Flag
-  FROM [tOrders] o (nolock)
+  FROM [tOrders] o with (nolock index=ao2)
 
   left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
          on od.OrderID = o.OrderID

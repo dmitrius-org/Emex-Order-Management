@@ -12,8 +12,9 @@ as
 
   declare @r          int = 0
 
-  declare @ID as table (ID       numeric(18, 0), 
-                        ObjectID numeric(18, 0))
+  declare @ID as table (ID         numeric(18, 0), 
+                        ObjectID   numeric(18, 0),
+                        StateID    numeric(18, 0))
   
   Update p 
      set p.StateID = o.StatusID -- текущий статус
@@ -45,7 +46,7 @@ as
         ,Flag
         ,UserID      
         )
-  OUTPUT INSERTED.ProtocolID, INSERTED.ObjectID INTO @ID
+  OUTPUT INSERTED.ProtocolID, INSERTED.ObjectID, INSERTED.NewStateID INTO @ID
   Select p.ObjectID
         ,p.StateID
 		,p.NewStateID
@@ -95,6 +96,28 @@ as
            on ns.NodeID = p.NewStateID
    inner join tNodes act (nolock)
            on act.NodeID = p.ActionID
+
+
+  --! расчет сроков доставки
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock) 
+        (Spid, OrderID) 
+  Select @@spid, 
+         ObjectID
+    from @ID
+   where StateID = 4 --InWork
+  
+  exec OrdersSupplierDeliveryCalc @IsSave = 1
+
+  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock) 
+        (Spid, OrderID) 
+  Select @@spid, 
+         ObjectID
+    from @ID
+   where StateID = 4 --InWork
+  
+ exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
 
   --! расчет статистики по заказам
   declare @Orders as ID

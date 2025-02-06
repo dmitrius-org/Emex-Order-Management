@@ -1,17 +1,16 @@
-if OBJECT_ID('CustomerResetPassword') is not null
-    drop proc CustomerResetPassword
+if OBJECT_ID('ClientPasswordReset') is not null
+    drop proc ClientPasswordReset
 go
-create proc CustomerResetPassword
-			 @Hash      nvarchar(1024),
-			 @Password  nvarchar(64)
+create proc ClientPasswordReset
+			 @ClientID  numeric(18, 0)
+			,@Password  nvarchar(64)
 /*
-  CustomerResetPassword - сброс пароля
+  ClientPasswordReset - сброс пароля
                         - 
 */
 as
   declare @r           int = 0
          ,@AuditID     numeric(18, 0)
-		 ,@ClientID    numeric(18, 0)
 
   delete tRetMessage from tRetMessage with (rowlock index=ao1) where spid=@@spid
 
@@ -20,10 +19,6 @@ as
 	  select @r= 15 -- 
 	  goto exit_
   end
-
-  select @ClientID = u.ClientID 
-    from tClients u (nolock)
-   where u.[Hash] = @Hash
 
   if isnull(@ClientID, 0) > 0
   begin
@@ -51,7 +46,7 @@ exit_:
 
 return @r
 go
-grant exec on CustomerResetPassword to public
+grant exec on ClientPasswordReset to public
 go
-exec setOV 'CustomerResetPassword', 'P', '20240205', '1'
+exec setOV 'ClientPasswordReset', 'P', '20240205', '1'
 go

@@ -678,8 +678,8 @@
           Top = 35
           Width = 119
           Height = 24
+          Hint = #1047#1072#1087#1088#1086#1089#1080#1090#1100' '#1086#1090#1084#1077#1085#1091' '#1087#1086' '#1087#1086#1079#1080#1094#1080#1080
           ShowHint = True
-          Action = actCancelRequest
           Caption = '<i class="order fa fa-bell"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           Anchors = [akTop, akRight]
           TabOrder = 14

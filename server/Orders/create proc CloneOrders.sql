@@ -186,6 +186,20 @@ where p.Spid = @@SPID
   and p.N    = @N
 order by p.DetailNum
 
+-- сроки доставки поставщика
+insert tOrdersDeliverySupplier with (rowlock)
+       (OrderID,
+        DeliveryPlanDateSupplier,
+        DeliveryTermSupplier,
+        DeliveryRestTermSupplier)
+select  i.OrderID
+       ,ods.DeliveryPlanDateSupplier 
+       ,ods.DeliveryTermSupplier
+       ,ods.DeliveryRestTermSupplier
+ from @ID i
+inner join tOrdersDeliverySupplier ods (nolock)
+        on ods.OrderID = i.ParentID
+
 
 -- меняем данные по заказу, который был разбит на части
 Update o

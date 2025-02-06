@@ -13,7 +13,7 @@ SET DATEFIRST 1 ;
 declare @r int = 0
 
 Update o
-   set o.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), o.DeliveryPlanDateSupplier) -- Остаток срока до поставки --o.DeliveryTerm - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки. тут именно от o.OrderDate нужно считать
+   set o.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), o.DeliveryPlanDateSupplier) -- Остаток срока до поставки
   from tOrders o (updlock)
  inner join tNodes n (nolock)
          on n.NodeID = o.StatusID

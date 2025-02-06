@@ -458,6 +458,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Common\uStringHelper.pas"/>
+        <DCCReference Include="App\Clients\uClientPasswordResetF.pas">
+            <Form>ClientPasswordResetF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

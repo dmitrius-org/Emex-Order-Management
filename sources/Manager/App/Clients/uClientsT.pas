@@ -13,7 +13,7 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList,  Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, uCommonType, uUtils.Grid;
+  uUserF, uGrant, uCommonType, uUtils.Grid, uClientPasswordResetF;
 
 type
   TClientsT = class(TUniFrame)
@@ -80,6 +80,8 @@ type
     N12: TUniMenuItem;
     N13: TUniMenuItem;
     QueryRest: TCurrencyField;
+    actPasswordReset: TAction;
+    N14: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -105,6 +107,7 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
+    procedure actPasswordResetExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -210,6 +213,12 @@ begin
   end;
 
   (Self.Parent as TLookupF).ModalResult := mrOk;
+end;
+
+procedure TClientsT.actPasswordResetExecute(Sender: TObject);
+begin
+  ClientPasswordResetF.ClientID:=QueryClientID.AsInteger;
+  ClientPasswordResetF.ShowModal;
 end;
 
 procedure TClientsT.actRefreshAllExecute(Sender: TObject);

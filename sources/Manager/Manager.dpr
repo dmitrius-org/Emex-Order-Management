@@ -120,7 +120,8 @@ uses
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
   uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
-  uStringHelper in '..\Common\Common\uStringHelper.pas';
+  uStringHelper in '..\Common\Common\uStringHelper.pas',
+  uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm};
 
 {$R *.res}
 

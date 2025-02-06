@@ -15,7 +15,7 @@ begin
 	,Name	              nvarchar(512)  null     -- 
 	,Email                nvarchar(256)  null     -- 
 	,Password             nvarchar(256)  null     -- 
-
+    ,PasswordDate         DATETIME2      null     -- 
     ,Phone                varchar(32)
     ,ContactPerson        varchar(64) 
 

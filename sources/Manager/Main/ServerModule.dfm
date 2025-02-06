@@ -21,7 +21,8 @@ object UniServerModule: TUniServerModule
     'files/css/messenger.css'
     'files/css/messenger_style.css'
     ''
-    'files/tinyMCE5/tinymce.js')
+    'files/tinyMCE5/tinymce.js'
+    'files/js/BadgeText.js')
   ExtLocale = 'ru'
   SSL.SSLOptions.RootCertFile = 'root.pem'
   SSL.SSLOptions.CertFile = 'cert.pem'

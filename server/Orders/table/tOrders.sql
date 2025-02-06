@@ -9,7 +9,6 @@ begin
     ,ClientID                        numeric(18,0)  not null -- Клиент
     ,SuppliersID                     numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
     ,OrderDate                       datetime       not null -- Дата заказа
-    ,ProcessingDate                  datetime       not null -- Дата обработки заказа
     ,OrderNum                        nvarchar(32)   -- Номер заказа
     ,StatusID                        numeric(18,0)  -- Статус
     ,isCancel                        bit            -- Отказ
@@ -120,7 +119,6 @@ exec dbo.sys_setTableDescription @table = 'tOrders', @desc = 'Таблица З�
 exec dbo.sys_setTableDescription 'tOrders', 'OrderID'                           ,'Уникальный идентификатор '
 exec dbo.sys_setTableDescription 'tOrders', 'ClientID'                          ,'Идентификатор клиента tClients.ClientID'
 exec dbo.sys_setTableDescription 'tOrders', 'OrderDate'                         ,'Дата заказа'
-exec dbo.sys_setTableDescription 'tOrders', 'ProcessingDate'                    ,'Дата обработки заказа'
 
 exec dbo.sys_setTableDescription 'tOrders', 'PriceLogo'                         ,'Лого прайса клиента'
 exec dbo.sys_setTableDescription 'tOrders', 'CustomerPriceLogo'                 ,'Наименование прайса клиента по которым заказываются детали'
