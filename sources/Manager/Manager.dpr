@@ -36,7 +36,7 @@ uses
   uInstrumentStateT in 'Core\Instrument\uInstrumentStateT.pas' {InstrumentStateT: TUniFrame},
   uGrantClient in 'Core\User\uGrantClient.pas' {GrantClientT: TUniFrame},
   uSettingsT in 'Core\Instrument\uSettingsT.pas' {SettingsT: TUniFrame},
-  uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
+  uEmployeeParametersF in 'Core\User\uEmployeeParametersF.pas' {EmployeeParametersF: TUniForm},
   uInstrument in 'Core\Instrument\uInstrument.pas' {InstrumentT: TUniFrame},
   uInstrumentF in 'Core\Instrument\uInstrumentF.pas' {UnstrumentF: TUniForm},
   uBalanceT in 'App\Clients\uBalanceT.pas' {BalanceT: TUniForm},
@@ -118,10 +118,13 @@ uses
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
+  uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame},
   uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
   uStringHelper in '..\Common\Common\uStringHelper.pas',
-  uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm};
+  uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm},
+  uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
+  uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
+  uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm};
 
 {$R *.res}
 

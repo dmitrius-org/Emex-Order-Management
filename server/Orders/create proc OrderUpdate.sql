@@ -194,6 +194,9 @@ as
         ,@ObjectTypeID     = 3
         ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
         ,@Comment          = @AuditComment
+
+  exec EmployeeOrdersProcessed
+         @OrderID = @OrderID                      
   
   exit_:
   return @r
@@ -201,6 +204,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250204', '14'
+exec setOV 'OrderUpdate', 'P', '20250204', '15'
 go
  

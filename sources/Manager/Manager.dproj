@@ -193,8 +193,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>SettingsT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Clients\uBalanceAddF.pas">
-            <Form>BalanceAddF</Form>
+        <DCCReference Include="Core\User\uEmployeeParametersF.pas">
+            <Form>EmployeeParametersF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="Core\Instrument\uInstrument.pas">
@@ -452,14 +452,29 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>StatisticCanceled</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Statistics\uStatisticBrand.pas">
-            <Form>StatisticBrand</Form>
+        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT.pas">
+            <Form>EmployeeOrdersProcessedT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Common\uStringHelper.pas"/>
         <DCCReference Include="App\Clients\uClientPasswordResetF.pas">
             <Form>ClientPasswordResetF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Clients\uBalanceAddF.pas">
+            <Form>BalanceAddF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Statistics\uStatisticBrand.pas">
+            <Form>StatisticBrand</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas">
+            <Form>EmployeeOrdersProcessedT_Wrapper</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>

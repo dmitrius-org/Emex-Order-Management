@@ -55,6 +55,7 @@ insert tRetCode (RetCode, Message) select 333, 'Действие с заданн
 insert tRetCode (RetCode, Message) select 450, 'Сотрудник с заданным наименованием существует!'
 insert tRetCode (RetCode, Message) select 451, 'Удаление запрещено, сотрудник связан с клиентом!'
 insert tRetCode (RetCode, Message) select 452, 'Необходимо заполнить поле менеджер!'
+insert tRetCode (RetCode, Message) select 453, 'Параметры существуют!'
 
 -- tOrders 500 - 600
 insert tRetCode (RetCode, Message) select 500, 'Отсутствуют объекты для выполнения операции!'

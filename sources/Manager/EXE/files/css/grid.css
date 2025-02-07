@@ -350,3 +350,19 @@
     right: 0;
     float: right;
 }
+
+.grid-employee-orders-processed .ToExcel{
+    background-image:url("/files/img/ToExcel16.png") !important; 
+    width:24px !important;
+    height:24px !important;
+}
+
+.grid-employee-orders-processed-export-excel{
+    background-color: #dff0d8;
+}
+
+/* Перенос строки в заголовке таблицы */
+.grid-employee-orders-processed .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}

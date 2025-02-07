@@ -207,6 +207,18 @@ type
     procedure WeightKGFStyle();
 
     procedure SetDeliveryHint();
+
+    /// <summary>
+    ///  SetOrderCountLabel - Установка количества оставщихся деталей в обработке. BadgeText
+    ///</summary>
+    procedure SetOrderCountLabel();
+
+    function GetOrderCount: Integer;
+
+    /// <summary>
+    ///  OrderCount - Количество деталей в обработке
+    ///</summary>
+    property OrderCount: Integer read GetOrderCount;
   public
     { Public declarations }
 
@@ -366,6 +378,23 @@ begin
     OrdersFinCalc();
     getPartRatingFromDB2;
   end;
+end;
+
+function TOrderF.GetOrderCount: Integer;
+begin
+  sql.Open(
+  '''
+    declare @CNT as Int = 0
+
+    if OBJECT_ID('tempdb..#CounterPart') is not null
+      select @CNT = Count(1)
+        from #CounterPart (nolock)
+       where isnull(Processed, 0) = 0
+
+    select @CNT as CNT
+  ''', [], []);
+
+  Result := sql.F('CNT').asInteger;
 end;
 
 procedure TOrderF.GetPartFromEmex;
@@ -654,9 +683,9 @@ begin
   sql.q.first;
   if sql.Q.RecordCount > 0 then
   begin
-    Result := True;
-
     ID := sql.Q.FieldByName('OrderID').AsInteger;
+
+    if ID > 0 then Result := True;
 
     SetRating(0);
 
@@ -868,8 +897,11 @@ begin
 
   btnOkToCancel.Enabled := (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
   btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
+  btnOk.Enabled := IsExistNext;
 
-  btnOk.Enabled := True;
+  //btnOk.Enabled := True;
+
+  SetOrderCountLabel;
 end;
 
 procedure TOrderF.SetDeliveryHint;
@@ -999,6 +1031,12 @@ begin
   UniSession.BrowserWindow(AUrl, 0, 0, '_blank');
 end;
 
+procedure TOrderF.SetOrderCountLabel;
+begin
+  if IsCounter then
+    UniSession.AddJS(Self.JSInterface.JSName + '.setBadgeText("' + 'Позиций в работе:  '+ OrderCount.ToString +  ' ");');
+end;
+
 procedure TOrderF.SetRating(ARating: integer);
 var r, js: string;
 begin
@@ -1063,7 +1101,11 @@ procedure TOrderF.UniFormShow(Sender: TObject);
 begin
   FGoogleKey := Sql.GetSetting('GoogleProgrammableSearchEngineKey');
 
-  LoadDataPart;
+  if FIsCounter then
+    UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.show();')
+  else
+    UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.hide();');
+   LoadDataPart;
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);

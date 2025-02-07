@@ -13,7 +13,9 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, FireDAC.VCLUI.UpdateOptions, uCommonType, uniGUIForm, uToast;
+  uUserF, uGrant, FireDAC.VCLUI.UpdateOptions, uCommonType, uniGUIForm, uToast,
+  uEmployeeParametersF, uEmployeeOrdersProcessedT_Wrapper,
+  uEmployeeOrdersProcessedT;
 
 type
   TUsersT = class(TUniFrame)
@@ -69,6 +71,11 @@ type
     N10: TUniMenuItem;
     actGrantCopy: TAction;
     N11: TUniMenuItem;
+    actEmployeeParameters: TAction;
+    N12: TUniMenuItem;
+    N14: TUniMenuItem;
+    actEmployeeOrdersProcessed: TAction;
+    N13: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -87,6 +94,8 @@ type
     procedure actLookupExecute(Sender: TObject);
     procedure actGroupExecute(Sender: TObject);
     procedure actGrantCopyExecute(Sender: TObject);
+    procedure actEmployeeParametersExecute(Sender: TObject);
+    procedure actEmployeeOrdersProcessedExecute(Sender: TObject);
   private
     FAction: Integer;
     procedure SetAction(const Value: Integer);
@@ -214,6 +223,19 @@ begin
   end;
 
  (Self.Parent as TLookupF).ModalResult := mrOk;
+end;
+
+procedure TUsersT.actEmployeeOrdersProcessedExecute(Sender: TObject);
+begin
+  EmployeeOrdersProcessedT_Wrapper.EmployeeID := QueryUserID.AsInteger;
+  EmployeeOrdersProcessedT_Wrapper.ShowModal();
+end;
+
+procedure TUsersT.actEmployeeParametersExecute(Sender: TObject);
+begin
+  EmployeeParametersF.ID :=QueryUserID.AsInteger;
+  EmployeeParametersF.FormAction := TFormAction.acUpdate;
+  EmployeeParametersF.ShowModal;
 end;
 
 procedure TUsersT.actRefreshAllExecute(Sender: TObject);

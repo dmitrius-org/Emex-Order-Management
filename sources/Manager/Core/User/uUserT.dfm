@@ -1562,6 +1562,15 @@ object UsersT: TUsersT
       Hint = #1053#1072#1089#1083#1077#1076#1086#1074#1072#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072' '#1080' '#1087#1088#1072#1074#1072' '#1089' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       OnExecute = actGrantCopyExecute
     end
+    object actEmployeeParameters: TAction
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
+      Hint = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
+      OnExecute = actEmployeeParametersExecute
+    end
+    object actEmployeeOrdersProcessed: TAction
+      Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
+      OnExecute = actEmployeeOrdersProcessedExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -1591,14 +1600,23 @@ object UsersT: TUsersT
     object N7: TUniMenuItem
       Caption = '-'
     end
-    object N11: TUniMenuItem
-      Action = actGrantCopy
+    object N8: TUniMenuItem
+      Action = actGrant
     end
     object N10: TUniMenuItem
       Action = actGroup
     end
-    object N8: TUniMenuItem
-      Action = actGrant
+    object N11: TUniMenuItem
+      Action = actGrantCopy
+    end
+    object N12: TUniMenuItem
+      Caption = '-'
+    end
+    object N13: TUniMenuItem
+      Action = actEmployeeOrdersProcessed
+    end
+    object N14: TUniMenuItem
+      Action = actEmployeeParameters
     end
   end
   object ImageList16: TUniImageList

@@ -8,6 +8,19 @@ object OrderF: TOrderF
   OldCreateOrder = False
   ShowHint = True
   MonitoredKeys.Keys = <>
+  ClientEvents.UniEvents.Strings = (
+    
+      'window.beforeInit=function window.beforeInit(sender, config)'#13#10'{'#13 +
+      #10'      config.style={'#39'overflow'#39': '#39'visible'#39'};'#13#10'      sender.actio' +
+      'n = '#39'badgetext'#39';'#13#10'      sender.plugins = ['#13#10'                    ' +
+      '        {'#13#10'                                ptype:'#39'badgetext'#39','#13#10' ' +
+      '                               defaultText: '#39#39','#13#10'               ' +
+      '                 textSize: 16,'#13#10'                                ' +
+      'disableOpacity:1,'#13#10'                                disableBg: '#39'#' +
+      '157fcc'#39','#13#10'                                enableBg: '#39'#157fcc'#39','#13#10 +
+      '                                align:'#39'right'#39','#13#10'                ' +
+      '                top:-25'#13#10'                            }'#13#10'        ' +
+      '              ];'#13#10'}')
   LayoutConfig.Cls = 'x-header-orderf'
   Images = UniNativeImageList1
   ToolButtons = <
