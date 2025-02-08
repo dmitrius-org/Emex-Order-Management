@@ -32,8 +32,8 @@ type
     QueryProcessed: TIntegerField;
     QueryIncorrect: TIntegerField;
     QueryConfirmed: TIntegerField;
-    QueryAmountSum: TFloatField;
-    QueryAmountSumAll: TFloatField;
+    QueryConfirmedSum: TFloatField;
+    QueryProcessedSumAll: TFloatField;
     QueryProcessedSum: TFloatField;
     QueryIncorrectSum: TFloatField;
     procedure UniFrameCreate(Sender: TObject);

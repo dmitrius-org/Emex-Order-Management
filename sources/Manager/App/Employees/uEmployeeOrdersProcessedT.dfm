@@ -21,6 +21,7 @@ object EmployeeOrdersProcessedT: TEmployeeOrdersProcessedT
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'north'
+    ExplicitTop = 19
     object btnGridStatisticOpen: TUniButton
       Left = 526
       Top = 27
@@ -211,27 +212,27 @@ object EmployeeOrdersProcessedT: TEmployeeOrdersProcessedT
         Width = 100
       end
       item
-        FieldName = 'AmountSum'
-        Title.Alignment = taCenter
-        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1085#1072#1075#1088#1072#1078#1076#1077#1085#1080#1103' '#1089' '#1084#1086#1084#1077#1085#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1089#1073#1088#1086#1089#1072
-        Width = 120
-      end
-      item
-        FieldName = 'AmountSumAll'
-        Title.Alignment = taCenter
-        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1085#1072#1075#1088#1072#1078#1076#1077#1085#1080#1103' '#1079#1072' '#1074#1089#1102' '#1080#1089#1090#1086#1088#1080#1102
-        Width = 120
-      end
-      item
         FieldName = 'ProcessedSum'
         Title.Alignment = taCenter
-        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1077#1088#1085#1086' '#1086#1073#1088#1072#1073#1086#1090#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082
+        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1085#1072#1075#1088#1072#1078#1076#1077#1085#1080#1103' '#1089' '#1084#1086#1084#1077#1085#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1089#1073#1088#1086#1089#1072
         Width = 120
       end
       item
         FieldName = 'IncorrectSum'
         Title.Alignment = taCenter
         Title.Caption = #1057#1091#1084#1084#1072' '#1085#1077#1074#1077#1088#1085#1086' '#1086#1073#1088#1072#1073#1086#1090#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082
+        Width = 120
+      end
+      item
+        FieldName = 'ConfirmedSum'
+        Title.Alignment = taCenter
+        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1077#1088#1085#1086' '#1086#1073#1088#1072#1073#1086#1090#1072#1085#1085#1099#1093' '#1089#1090#1088#1086#1082
+        Width = 120
+      end
+      item
+        FieldName = 'ProcessedSumAll'
+        Title.Alignment = taCenter
+        Title.Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1085#1072#1075#1088#1072#1078#1076#1077#1085#1080#1103' '#1079#1072' '#1074#1089#1102' '#1080#1089#1090#1086#1088#1080#1102
         Width = 120
       end>
   end
@@ -303,23 +304,23 @@ object EmployeeOrdersProcessedT: TEmployeeOrdersProcessedT
     object QueryProcessed: TIntegerField
       FieldName = 'Processed'
     end
+    object QueryProcessedSum: TFloatField
+      FieldName = 'ProcessedSum'
+    end
     object QueryIncorrect: TIntegerField
       FieldName = 'Incorrect'
+    end
+    object QueryIncorrectSum: TFloatField
+      FieldName = 'IncorrectSum'
     end
     object QueryConfirmed: TIntegerField
       FieldName = 'Confirmed'
     end
-    object QueryAmountSum: TFloatField
-      FieldName = 'AmountSum'
+    object QueryConfirmedSum: TFloatField
+      FieldName = 'ConfirmedSum'
     end
-    object QueryAmountSumAll: TFloatField
-      FieldName = 'AmountSumAll'
-    end
-    object QueryProcessedSum: TFloatField
-      FieldName = 'ProcessedSum'
-    end
-    object QueryIncorrectSum: TFloatField
-      FieldName = 'IncorrectSum'
+    object QueryProcessedSumAll: TFloatField
+      FieldName = 'ProcessedSumAll'
     end
   end
 end
