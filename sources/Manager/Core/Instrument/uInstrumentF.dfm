@@ -1,7 +1,7 @@
 object UnstrumentF: TUnstrumentF
   Left = 0
   Top = 0
-  ClientHeight = 365
+  ClientHeight = 408
   ClientWidth = 704
   Caption = #1048#1085#1089#1090#1088#1091#1084#1077#1085#1090
   OnShow = UniFormShow
@@ -11,20 +11,19 @@ object UnstrumentF: TUnstrumentF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 318
+    Top = 361
     Width = 698
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 317
-    ExplicitWidth = 694
+    ExplicitTop = 338
     DesignSize = (
       698
       44)
     object btnOk: TUniBitBtn
-      Left = 552
+      Left = 606
       Top = 10
       Width = 85
       Height = 25
@@ -33,10 +32,9 @@ object UnstrumentF: TUnstrumentF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 548
     end
     object btnCancel: TUniBitBtn
-      Left = 466
+      Left = 517
       Top = 10
       Width = 81
       Height = 25
@@ -45,7 +43,6 @@ object UnstrumentF: TUnstrumentF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 462
     end
   end
   object fsCommon: TUniFieldSet
@@ -53,20 +50,18 @@ object UnstrumentF: TUnstrumentF
     Left = 3
     Top = 3
     Width = 698
-    Height = 252
+    Height = 295
     Hint = ''
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     FieldLabelWidth = 0
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 6
-    ExplicitTop = 6
-    ExplicitWidth = 770
-    ExplicitHeight = 299
+    ExplicitHeight = 272
     object fInstrumentType: TUniFieldContainer
-      Left = 2
-      Top = 15
-      Width = 694
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 688
       Height = 30
       Hint = ''
       ParentColor = False
@@ -103,9 +98,10 @@ object UnstrumentF: TUnstrumentF
       end
     end
     object fBrief: TUniFieldContainer
-      Left = 2
-      Top = 45
-      Width = 694
+      AlignWithMargins = True
+      Left = 5
+      Top = 54
+      Width = 688
       Height = 53
       Hint = ''
       Visible = False
@@ -113,15 +109,14 @@ object UnstrumentF: TUnstrumentF
       Align = alTop
       TabOrder = 1
       Layout = 'fit'
-      ExplicitWidth = 690
       DesignSize = (
-        694
+        688
         53)
       object edtBrief: TUniEdit
         AlignWithMargins = True
         Left = 145
         Top = 4
-        Width = 469
+        Width = 463
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
@@ -129,13 +124,12 @@ object UnstrumentF: TUnstrumentF
         ClearButton = True
         FieldLabel = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077
         FieldLabelWidth = 150
-        ExplicitWidth = 465
       end
       object edtName: TUniEdit
         AlignWithMargins = True
         Left = 145
         Top = 29
-        Width = 469
+        Width = 463
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
@@ -143,14 +137,14 @@ object UnstrumentF: TUnstrumentF
         ClearButton = True
         FieldLabel = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         FieldLabelWidth = 150
-        ExplicitWidth = 465
       end
     end
     object fState: TUniFieldContainer
-      Left = 2
-      Top = 98
-      Width = 694
-      Height = 53
+      AlignWithMargins = True
+      Left = 5
+      Top = 113
+      Width = 688
+      Height = 50
       Hint = ''
       Visible = False
       ParentColor = False
@@ -186,9 +180,10 @@ object UnstrumentF: TUnstrumentF
       end
     end
     object fObjectType: TUniFieldContainer
-      Left = 2
-      Top = 151
-      Width = 694
+      AlignWithMargins = True
+      Left = 5
+      Top = 169
+      Width = 688
       Height = 30
       Hint = ''
       Visible = False
@@ -215,10 +210,11 @@ object UnstrumentF: TUnstrumentF
       end
     end
     object fNode: TUniFieldContainer
-      Left = 2
-      Top = 181
-      Width = 694
-      Height = 63
+      AlignWithMargins = True
+      Left = 5
+      Top = 205
+      Width = 688
+      Height = 85
       Hint = ''
       Visible = False
       ParentColor = False
@@ -239,6 +235,7 @@ object UnstrumentF: TUnstrumentF
         ClearButton = True
         TabOrder = 1
         Color = clWindow
+        LayoutConfig.Padding = '1 0 0 0'
         FieldLabel = #1044#1077#1081#1089#1090#1074#1080#1077
         FieldLabelWidth = 150
         OnChange = lkpNodeChange
@@ -257,16 +254,38 @@ object UnstrumentF: TUnstrumentF
         ClearButton = True
         TabOrder = 2
         Color = clWindow
+        LayoutConfig.Padding = '4 0 0 0'
         FieldLabel = #1062#1077#1083#1077#1074#1086#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077
         FieldLabelWidth = 150
         OnChange = lkpNodeChange
+      end
+      object cbIsCancel: TUniCheckBox
+        AlignWithMargins = True
+        Left = 322
+        Top = 61
+        Width = 179
+        Height = 17
+        Hint = ''
+        Caption = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1086#1090#1082#1072#1076' '#1076#1077#1081#1089#1090#1074#1080#1103
+        TabOrder = 4
+        FieldLabelWidth = 150
+      end
+      object edtN: TUniSpinEdit
+        Left = 145
+        Top = 61
+        Width = 121
+        Hint = ''
+        TabOrder = 3
+        LayoutConfig.Padding = '1 0 0 0'
+        FieldLabel = #1053#1086#1084#1077#1088
+        FieldLabelWidth = 150
       end
     end
   end
   object fsAudit: TUniFieldSet
     AlignWithMargins = True
     Left = 3
-    Top = 261
+    Top = 304
     Width = 698
     Height = 51
     Hint = ''
@@ -275,8 +294,7 @@ object UnstrumentF: TUnstrumentF
     Align = alBottom
     LayoutConfig.Region = 'south'
     TabOrder = 2
-    ExplicitTop = 260
-    ExplicitWidth = 694
+    ExplicitTop = 281
     object UniFieldContainer2: TUniFieldContainer
       Left = 2
       Top = 15
@@ -286,7 +304,6 @@ object UnstrumentF: TUnstrumentF
       ParentColor = False
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 690
       object edtID: TUniEdit
         AlignWithMargins = True
         Left = 141
@@ -448,8 +465,8 @@ object UnstrumentF: TUnstrumentF
       #9'and n.Type    = 0  --0 - '#1089#1086#1089#1090#1086#1103#1085#1080#1077
       ' where m.InstrumentID = :InstrumentID '
       '   and isnull( m.ActionID, 0)     = 0')
-    Left = 37
-    Top = 192
+    Left = 29
+    Top = 152
     ParamData = <
       item
         Name = 'INSTRUMENTID'
@@ -459,6 +476,6 @@ object UnstrumentF: TUnstrumentF
   object dsTargerState: TDataSource
     DataSet = qTargerState
     Left = 93
-    Top = 194
+    Top = 178
   end
 end

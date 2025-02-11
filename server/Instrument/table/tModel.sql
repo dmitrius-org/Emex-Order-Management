@@ -11,6 +11,7 @@ begin
 	,TargetStateID     numeric(18,0)           -- ИД состояния
 	,InstrumentTypeID  numeric(18,0)  not null -- типы объект tInstrumentType.InstrumentTypeID 
 	,Flag              int                     -- Флаги
+    ,Number            int
 	--
 	,UserID            numeric(18,0) default dbo.GetUserID()
 	,inDatetime        datetime      default GetDate()      --

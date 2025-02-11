@@ -1,4 +1,4 @@
-unit uInstrumentF;
+п»їunit uInstrumentF;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   uniDBLookupComboBox, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniSpinEdit;
 
 type
   TUnstrumentF = class(TUniForm)
@@ -51,6 +51,8 @@ type
     lkpTargerState: TUniDBLookupComboBox;
     qTargerState: TFDQuery;
     dsTargerState: TDataSource;
+    cbIsCancel: TUniCheckBox;
+    edtN: TUniSpinEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -65,15 +67,17 @@ type
     FPID: Integer;
     FIType: Integer;
     FSID: Integer;
+    FFlag: Integer;
+
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
 
@@ -81,7 +85,7 @@ type
   public
     { Public declarations }
     /// <summary>
-    /// FormAction - тип действия над формой. acInsert, acUpdate ...
+    /// FormAction - С‚РёРї РґРµР№СЃС‚РІРёСЏ РЅР°Рґ С„РѕСЂРјРѕР№. acInsert, acUpdate ...
     /// </summary>
     property FormAction: TFormAction read FAction write SetAction;
 
@@ -165,31 +169,38 @@ begin
         else
           flag := 0;
 
+        if cbIsCancel.Checked then
+          flag := flag + Integer(tInstrumentFlag.isCanceled);
+
+
         Sql.Q.Close;
-        sqltext :=' declare @R      int                      '+
-                  '        ,@ModelID numeric(18, 0)          '+
-                  ''+
-                  ' exec @r = ModelCreate                    '+
-                  '             @ModelID      = @ModelID out '+
-                  '            ,@InstrumentID = :InstrumentID'+
-                  '            ,@StateID      = :StateID     '+
-                  '            ,@ActionID     = :ActionID    '+
-                  '            ,@TargetStateID= :TargetStateID        '+
-                  '            ,@InstrumentTypeID = :InstrumentTypeID '+
-                  '            ,@Flag         = :Flag                 '+
-                  ''+
-                  ' select @r as retcode  ' +
-                  '       ,@ModelID as ID '+
-                  ' ';
+        sqltext :='''
+          declare @R       int
+                 ,@ModelID numeric(18, 0)
+
+          exec @r = ModelCreate
+                      @ModelID      = @ModelID out
+                     ,@InstrumentID = :InstrumentID
+                     ,@StateID      = :StateID
+                     ,@ActionID     = :ActionID
+                     ,@TargetStateID= :TargetStateID
+                     ,@InstrumentTypeID = :InstrumentTypeID
+                     ,@Flag         = :Flag
+                     ,@Number       = :Number
+
+          select @r as retcode
+                ,@ModelID as ID
+       ''';
 
         Sql.Open(sqltext,
-                 ['InstrumentID','StateID','ActionID', 'InstrumentTypeID', 'Flag', 'TargetStateID'],
+                 ['InstrumentID','StateID','ActionID', 'InstrumentTypeID', 'Flag', 'TargetStateID', 'Number'],
                  [FPID,
                   VarToInt(lkpState.KeyValue),
                   VarToInt(lkpNode.KeyValue),
                   lkpInstType.KeyValue,
                   flag,
-                  VarToInt(lkpTargerState.KeyValue)]);
+                  VarToInt(lkpTargerState.KeyValue),
+                  edtN.Value]);
       end;
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -202,16 +213,17 @@ begin
       begin
         Sql.Q.Close;
         flag := 0;
-        sqltext :=' declare @R      int                           '+
-                  '                                               '+
-                  ' exec @r = InstrumentUpdate                    '+
-                  '             @InstrumentID  = :InstrumentID    '+
-                  '            ,@Brief         = :Brief           '+
-                  '            ,@Name          = :Name            '+
-                  '            ,@ObjectTypeID  = :ObjectTypeID    '+
-                  '            ,@Flag          = :Flag            '+
-                  ' select @r as retcode      '+
-                  ' ';
+        sqltext :='''
+                   declare @R      int
+
+                   exec @r = InstrumentUpdate
+                               @InstrumentID  = :InstrumentID
+                              ,@Brief         = :Brief
+                              ,@Name          = :Name
+                              ,@ObjectTypeID  = :ObjectTypeID
+                              ,@Flag          = :Flag
+                   select @r as retcode
+                  ''';
 
         Sql.Open(sqltext,
                   ['Brief','Name','InstrumentID', 'ObjectTypeID', 'Flag'],
@@ -228,30 +240,37 @@ begin
         else
           flag := 0;
 
+        if cbIsCancel.Checked then
+          flag := flag + Integer(tInstrumentFlag.isCanceled);
+
         Sql.Q.Close;
-        sqltext :=' declare @R      int                           '+
-                  '                                               '+
-                  ' exec @r = ModelUpdate                         '+
-                  '             @ModelID      = :ModelID          '+
-                  //'            ,@InstrumentID = :InstrumentID'+
-                  '            ,@StateID      = :StateID     '+
-                  '            ,@ActionID     = :ActionID    '+
-                  '            ,@TargetStateID= :TargetStateID        '+
-                  '            ,@InstrumentTypeID = :InstrumentTypeID '+
-                  '            ,@Flag         = :Flag                 '+
-                  ''+
-                  ' select @r as retcode  ' +
-                  ' ';
+        sqltext :=
+        '''
+           declare @R      int
+
+           exec @r = ModelUpdate
+                       @ModelID      = :ModelID
+                      ,@InstrumentID = null
+                      ,@StateID      = :StateID
+                      ,@ActionID     = :ActionID
+                      ,@TargetStateID= :TargetStateID
+                      ,@InstrumentTypeID = :InstrumentTypeID
+                      ,@Flag         = :Flag
+                      ,@Number       = :Number
+
+           select @r as retcode
+        ''';
 
         Sql.Open(sqltext,
-                 ['ModelID','StateID','ActionID', 'InstrumentTypeID', 'Flag', 'TargetStateID'],
+                 ['ModelID','StateID','ActionID', 'InstrumentTypeID', 'Flag', 'TargetStateID', 'Number'],
                  [FID,
                  // FPID,
                   VarToInt(lkpState.KeyValue),
                   VarToInt(lkpNode.KeyValue),
                   lkpInstType.KeyValue,
                   flag,
-                  VarToInt(lkpTargerState.KeyValue)]);
+                  VarToInt(lkpTargerState.KeyValue),
+                  edtN.Value]);
       end;
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
     end;
@@ -306,14 +325,12 @@ begin
     acInsert, acReportCreate, acUpdate, acReportEdit:
     begin
 
-
       if lkpInstType.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [' + lkpInstType.FieldLabel + '] обязателен к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [' + lkpInstType.FieldLabel + '] РѕР±СЏР·Р°С‚РµР»РµРЅ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
         Exit();
       end;
-
 
       if not lkpInstType.IsBlank then
       case(lkpInstType.KeyValue)  of
@@ -322,13 +339,13 @@ begin
           if edtBrief.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [РЎРѕРєСЂР°С‰РµРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
           else if edtName.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [РќР°РёРјРµРЅРѕРІР°РЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
         end;
@@ -337,19 +354,19 @@ begin
           if edtBrief.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [РЎРѕРєСЂР°С‰РµРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
           else if edtName.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [РќР°РёРјРµРЅРѕРІР°РЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
           else if lkpObject.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [' + lkpObject.FieldLabel + '] обязателено к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [' + lkpObject.FieldLabel + '] РѕР±СЏР·Р°С‚РµР»РµРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end;
         end;
@@ -358,7 +375,7 @@ begin
           if lkpState.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле [Состояние] обязательно к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ [РЎРѕСЃС‚РѕСЏРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
 
@@ -368,26 +385,28 @@ begin
           if lkpNode.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле  [' + lkpNode.FieldLabel + '] обязательнo к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ  [' + lkpNode.FieldLabel + '] РѕР±СЏР·Р°С‚РµР»СЊРЅo Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
           else
           if lkpTargerState.IsBlank then
           begin
             RetVal.Code := 1;
-            RetVal.Message := 'Поле  [' + lkpTargerState.FieldLabel + '] обязательнo к заполнению!';
+            RetVal.Message := 'РџРѕР»Рµ  [' + lkpTargerState.FieldLabel + '] РѕР±СЏР·Р°С‚РµР»СЊРЅo Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
             Exit();
           end
         end;
       end;
     end;
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 end;
 
 procedure TUnstrumentF.DataLoad;
 begin
+  FFlag := 0;
+
   UniMainModule.Query.Close;
   if IType in [1,2,3,4,5] then
   begin
@@ -402,17 +421,21 @@ begin
     lkpObject.KeyValue  := UniMainModule.Query.FieldValues['ObjectTypeID'];
   end;
 
-  if IType in [6, 7] then
+  if IType in [6, 7] then // СЃРѕСЃС‚РѕСЏРЅРёСЏ Рё РґРµР№СЃС‚РІРёСЏ
   begin
     UniMainModule.Query.SQL.Text := ' select * FROM [tModel] (nolock) where ModelID = :ModelID ';
     UniMainModule.Query.ParamByName('ModelID').Value := FID;
     UniMainModule.Query.Open;
 
-    cbIsStart.Checked   := ((UniMainModule.Query.FieldByName('Flag').AsInteger and Integer(tInstrumentFlag.isStartState)) > 0); //  1 - начальное состояние
+    FFlag := UniMainModule.Query.FieldByName('Flag').AsInteger;
+
+    cbIsStart.Checked   := ((FFlag and Integer(tInstrumentFlag.isStartState)) > 0);
+    cbIsCancel.Checked  := ((FFlag and Integer(tInstrumentFlag.isCanceled)) > 0);
 
     lkpInstType.KeyValue:= UniMainModule.Query.FieldValues['InstrumentTypeID'];
     lkpState.KeyValue   := UniMainModule.Query.FieldValues['StateID'];
     lkpNode.KeyValue    := UniMainModule.Query.FieldValues['ActionID'];
+    edtN.Value          := UniMainModule.Query.FieldByName('Number').AsInteger;
   end;
 
 
@@ -425,7 +448,7 @@ begin
     lkpTargerState.KeyValue:= UniMainModule.Query.FieldValues['TargetStateID'];
   end;
 
-  // аудит
+  // Р°СѓРґРёС‚
   edtID.Text          := UniMainModule.Query.FieldByName('UserID').AsString;
   edtInDate.DateTime  := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime := UniMainModule.Query.FieldValues['updDatetime'];
@@ -455,11 +478,11 @@ end;
 
 procedure TUnstrumentF.SetControlVisible;
 begin
-  fBrief.Visible := False;
+  fBrief.Visible      := False;
   fObjectType.Visible := False;
-  fState.Visible  := False;
-  fNode.Visible  := False;
-  //logger.Info(lkpInstType.KeyValue);
+  fState.Visible      := False;
+  fNode.Visible       := False;
+
   try
     //if not lkpInstType.IsBlank then
     case vartoint((lkpInstType.KeyValue))  of
@@ -503,8 +526,8 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      Self.Caption := 'Добавление объекта';
-      btnOk.Caption := ' Добавить';
+      Self.Caption := 'Р”РѕР±Р°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р°';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
       edtInDate.Text := '';
       edtUpdDate.Text := '';
 
@@ -512,23 +535,23 @@ begin
     end;
     acUpdate, acReportEdit, acUserAction:
     begin
-      btnOk.Caption := ' Сохранить';
-      Self.Caption := 'Изменение объекта';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
+      Self.Caption := 'РР·РјРµРЅРµРЅРёРµ РѕР±СЉРµРєС‚Р°';
 
       qInstrumentType.ParamByName('Filters').Value := '';
     end;
     acDelete:
     begin
-      btnOk.Caption := ' Удалить';
-      Self.Caption := 'Удаление объекта';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
+      Self.Caption := 'РЈРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚Р°';
     end;
     acShow:
     begin
-      btnOk.Caption := ' Закрыть';
-      Self.Caption := 'Просмотр объекта';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
+      Self.Caption := 'РџСЂРѕСЃРјРѕС‚СЂ РѕР±СЉРµРєС‚Р°';
     end
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
   qInstrumentType.Open;
@@ -549,7 +572,7 @@ begin
 //      qTargerState.Open;
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;

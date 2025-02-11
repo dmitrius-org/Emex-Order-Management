@@ -103,7 +103,7 @@ uses
   uShipmentsEditF in 'App\Shipments\uShipmentsEditF.pas' {ShipmentsEditF: TUniForm},
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
-  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
+  uOrdersNewDeliveryDateF in 'App\Orders\uOrdersNewDeliveryDateF.pas' {OrdersNewDeliveryDateF: TUniForm},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
   uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas',
@@ -124,7 +124,8 @@ uses
   uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm},
   uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
-  uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm};
+  uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
+  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm};
 
 {$R *.res}
 

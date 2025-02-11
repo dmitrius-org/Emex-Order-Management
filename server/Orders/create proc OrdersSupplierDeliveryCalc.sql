@@ -18,16 +18,16 @@ SET DATEFIRST 1 ;
 declare @r int = 0
 
 Update p
-   set p.ClientID           = o.ClientID
-      ,p.OrderDate          = isnull(op.OperDate, cast(getdate() as date))
-      ,p.PriceLogo          = o.PriceLogo
-      ,p.DeliveryTerm       = coalesce(od.DeliveryTermSupplier, p.DeliveryTerm, o.DeliveryTerm, 0) -- срок доставки поставщику
-  from pDeliveryTerm p (updlock)
- inner join tOrders o (nolock)
+   set p.ClientID     = o.ClientID
+      ,p.OrderDate    = coalesce(p.OrderDate, op.OperDate, cast(getdate() as date))
+      ,p.PriceLogo    = o.PriceLogo
+      ,p.DeliveryTerm = coalesce(p.DeliveryTerm, od.DeliveryTermSupplier, o.DeliveryTerm, 0) -- срок доставки поставщику
+  from pDeliveryTerm p with (updlock)
+ inner join tOrders o with (nolock)
          on o.OrderID = p.OrderID
- left join vOrdersProtocolInWork op (nolock)
+  left join vOrdersProtocolInWork op with (nolock)
          on op.OrderID=o.OrderID
- left join tOrdersDeliverySupplier  od (updlock)
+  left join tOrdersDeliverySupplier  od with (nolock)
          on od.OrderID = o.OrderID
  where p.Spid = @@Spid
 
@@ -38,11 +38,11 @@ Update p
                                        when isnull(Prices.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(p.OrderDate, isnull(Prices.DeliveryTerm, 0), 1)
                                        else DATEADD(dd, isnull(Prices.DeliveryTerm, p.DeliveryTerm), p.OrderDate)
                                     end as date)
-  from pDeliveryTerm p (updlock)
- inner join tOrders o (nolock)
+  from pDeliveryTerm p with (updlock)
+ inner join tOrders o with (nolock)
          on o.OrderID = p.OrderID
  outer apply (select top 1 *
-                from tPrices t (nolock) 
+                from tPrices t with (nolock) 
                where t.Name = o.PriceLogo
               ) as Prices
 
@@ -61,29 +61,30 @@ begin
      where p.Spid = @@spid
        and o.DeliveryPlanDateSupplier is null
 
-    insert tOrdersDeliverySupplier with (rowlock)
-          (OrderID,
-           DeliveryPlanDateSupplier,
-           DeliveryTermSupplier,
-           DeliveryRestTermSupplier)
-   select  p.OrderID
-          ,p.DeliveryPlanDateSupplier 
-          ,p.DeliveryTerm
-          ,DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
-      from pDeliveryTerm p (nolock)
-     where p.Spid = @@spid
-       and not exists ( select 1
-                          from tOrdersDeliverySupplier o with (nolock index=PK_tOrdersDeliverySupplier_OrderID)
-                         where o.OrderID = p.OrderID )
+  update o
+     set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier 
+        ,o.DeliveryTermSupplier     = p.DeliveryTerm 
+        ,o.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
+    from pDeliveryTerm p (nolock)
+   inner join tOrdersDeliverySupplier o with (updlock index=PK_tOrdersDeliverySupplier_OrderID)
+           on o.OrderID=p.OrderID 
+   where p.Spid = @@spid
 
-    update o
-       set o.DeliveryPlanDateSupplier = p.DeliveryPlanDateSupplier 
-          ,o.DeliveryTermSupplier     = p.DeliveryTerm 
-          ,o.DeliveryRestTermSupplier = DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
-      from pDeliveryTerm p (nolock)
-     inner join tOrdersDeliverySupplier o with (updlock index=PK_tOrdersDeliverySupplier_OrderID)
-             on o.OrderID=p.OrderID 
-     where p.Spid = @@spid
+
+  insert tOrdersDeliverySupplier with (rowlock)
+        (OrderID,
+         DeliveryPlanDateSupplier,
+         DeliveryTermSupplier,
+         DeliveryRestTermSupplier)
+  select p.OrderID
+        ,p.DeliveryPlanDateSupplier 
+        ,p.DeliveryTerm
+        ,DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
+    from pDeliveryTerm p with (nolock)
+   where p.Spid = @@spid
+     and not exists ( select 1
+                        from tOrdersDeliverySupplier o with (nolock index=PK_tOrdersDeliverySupplier_OrderID)
+                       where o.OrderID = p.OrderID )
 
 end
 
@@ -93,5 +94,5 @@ return @r
 go
   grant exec on OrdersSupplierDeliveryCalc to public
 go
-exec setOV 'OrdersSupplierDeliveryCalc', 'P', '20250204', '0'
+exec setOV 'OrdersSupplierDeliveryCalc', 'P', '20250210', '1'
 go

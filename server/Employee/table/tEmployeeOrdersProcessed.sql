@@ -11,7 +11,7 @@ begin
     ,InDateIime    datetime      
     );
 
-    create unique index ao1 on tEmployeeOrdersProcessed(OrderID);
+    create index ao1 on tEmployeeOrdersProcessed(OrderID);
 
     create index ao2 on tEmployeeOrdersProcessed(EmployeeID);
 end

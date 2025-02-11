@@ -20,7 +20,8 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
-  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx;
+  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx,
+  uOrdersNewDeliveryDateF;
 
 type
   tMarks = class
@@ -544,8 +545,38 @@ begin
 end;
 
 procedure TOrdersT.ActionExecute(ActionID: Integer);
+var Action: string;
+    DateValue: TDateTime;
 begin
   logger.Info('TOrdersT.ActionExecute Begin');
+
+  Sql.Open('''
+    delete from #ActionParams;
+    insert #ActionParams (ActionID)
+    select :NodeID
+
+    -- таблица для возврата количества обработанных записей
+    delete from #ProcessedRecords;
+
+    select Brief
+      from tNodes with (nolock index=ao1)
+     where NodeID = :NodeID;
+  ''', ['NodeID'], [ActionID]);
+
+  Action := Sql.F('Brief').AsString;
+
+  if Action = 'SetNewDeliveryDate'then
+  begin
+    logger.Info('TOrdersT.ActionExecute 1 SetNewDeliveryDate');
+
+    OrdersNewDeliveryDateF.FormAction := acUpdate;
+    OrdersNewDeliveryDateF.ID := ActionID;
+    OrdersNewDeliveryDateF.ShowModal;
+
+    if OrdersNewDeliveryDateF.ModalResult <> mrOk then Exit;
+
+    //FAccrual.ShowProgress := True;
+  end;
 
   DoShowMask;
 
@@ -555,15 +586,9 @@ begin
   FProcessed:= 0;
   FTotal    := 0;
 
-  Sql.exec('''
-    -- таблица для возврата количества обработанных записей
-    delete from #ProcessedRecords
-
-  ''', [], []);
-
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
-    logger.Info('TOrdersT.ActionExecute 1');
+    logger.Info('TOrdersT.ActionExecute 2');
     Sql.exec(' insert #ProcessedRecords with (rowlock) (Processed, Total) select 0, 0 ', [], []);
     FAccrual.ShowProgress := True;
   end;
@@ -1433,7 +1458,8 @@ begin
   ppExecute.Items.Clear;
   ppExecuteAction.Clear;
 
-  Sql.Open('Select distinct ActionID, ActionName from vMarkOrderStateAction', [], []);
+  Sql.Open(' exec GetMarkOrderStateAction ', [], []);
+
   if Sql.Q.RecordCount > 0 then
   begin
     Sql.Q.First;

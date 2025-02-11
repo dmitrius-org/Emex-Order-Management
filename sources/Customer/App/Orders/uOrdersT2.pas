@@ -483,10 +483,9 @@ begin
   begin
       Query.MacroByName('IsNotification').Value :=
       '''
-        -- and o.[Flag] & 4 /*отказан*/ > 0
-        and o.[IsCancel] = 1
-        and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
-        and o.[Flag] & 8192 /*Перезаказан*/= 0
+        inner join vCustomerOrderNotificationFilter cl
+                on cl.OrderID  = o.OrderID
+               and cl.ClientID = o.ClientID
       ''';
   end
   else

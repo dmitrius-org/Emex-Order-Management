@@ -214,8 +214,8 @@ begin
   Emex.InsertPartToBasketByPartDelete;
 end;
 
-
 { TAccrual }
+
 function TAccrual.ActionExecute(ActionID: integer): integer;
 var t: TAccrualThread;
 begin
@@ -236,17 +236,18 @@ begin
       begin
         logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: ДА');
         Sql.Open('''
-                    Select 1
-                      from vOrdersWarningList
-                     where ActionBrief = 'ToInWork'
-                 ''', [], []);
+          Select 1
+            from vOrdersWarningList
+           where ActionBrief = 'ToInWork'
+        ''', [], []);
+
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
           case (MessageDlg('По некоторым позициям имеются замечания, данные детали будут перенесены в состояние "Отказан"', mtConfirmation, mbYesNo))  of
             mrYes:
             begin
-                Sql.Exec('exec ActionObjectCancel ', [], []);
+                Sql.Exec(' exec ActionObjectCancel ', [], []);
             end;
             mrNo:
             begin
@@ -263,6 +264,7 @@ begin
              from vOrdersWarningList
             where ActionBrief = 'ToInWork'
         ''', [], []);
+
         if Sql.Q.RecordCount > 0 then
         begin
           Sql.Q.Close;
@@ -344,9 +346,11 @@ begin
       if FRetVal.Code = 0 then
       begin
         Query.Close;
-        Query.SQL.Text := ' declare @R int        '+
-                          ' exec @r = ProtocolRollBackCheck  '+
-                          ' select @r as retcode  ';
+        Query.SQL.Text := '''
+          declare @R int
+             exec @r = ProtocolRollBackCheck
+          select @r as retcode
+        ''';
         Query.Open;
         FRetVal.Code := Query.FieldByName('retcode').Value;
       end;
@@ -354,16 +358,17 @@ begin
       // выполнение процедуры настроенной на модели состояния под действием
       if FRetVal.Code = 0 then
       begin
-        Sql.Open('Select distinct a.Number, p.ActionID, a.MetodRollback, a.MetodType '+
-                  '  from pAccrualAction p (nolock)    '+
-                  ' inner join vActionMetod a          '+
-                  '         on a.ActionID  =p.ActionID '+
-                  '        and a.MetodType =0                   '+
-                  '        and isnull(a.MetodRollback, '''') <> '''' '+
-                  ' where p.Spid = @@spid '+
-                  '   and p.Retval = 0    '+
-                  ' order by a.Number     ',
-                 [],[]);
+        Sql.Open('''
+          Select distinct a.Number, p.ActionID, a.MetodRollback, a.MetodType
+            from pAccrualAction p (nolock)
+           inner join vActionMetod a
+                   on a.ActionID  =p.ActionID
+                  and a.MetodType =0
+                  and isnull(a.MetodRollback, '') <> ''
+           where p.Spid = @@spid
+             and p.Retval = 0
+           order by a.Number
+        ''', [],[]);
 
         logger.Info('Проверка наличия настроенной под действием процедур: ' + (Sql.Q.RecordCount > 0).ToString(True));
         if Sql.Q.RecordCount > 0 then
@@ -388,7 +393,12 @@ begin
       end;
 
       // проверка наличия серверных ошибок
-      Sql.Open(' select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0 ', [], []);
+      Sql.Open('''
+        select 1
+          from pAccrualAction p with (nolock)
+         where p.Spid = @@spid
+           and p.Retval <> 0
+      ''', [], []);
       ServerErr := Sql.Q.RecordCount;
 
       if (FRetVal.Code = 0) and (ServerErr = 0) then
@@ -490,7 +500,13 @@ begin
 
       qActionMetod.Connection := FAccrual.FConnection;
       qActionMetod.Close;
-      qActionMetod.Open('Select distinct ord, ActionID, StateID from pAccrualAction (nolock) where spid = @@spid and retval = 0 order by ord', [], []);
+      qActionMetod.Open('''
+        Select distinct ord, ActionID, StateID
+          from pAccrualAction with (nolock)
+         where spid = @@spid
+           and retval = 0
+         order by ord
+      ''', [], []);
       qActionMetod.First;
 
       logger.Info('TAccrualThread.Execute ActionMetod Begin');
@@ -498,13 +514,14 @@ begin
       begin
 
         qMetod.Close;
-        qMetod.SQL.Text :=
-                  'Select distinct Number, ActionID, Metod, MetodType '+
-                  '  from vActionMetod '+
-                  ' where ActionID  =:ActionID '+
-                  '   and StateID   =:StateID '+
-                  '   and MetodType =:MetodType '+
-                  ' order by Number';
+        qMetod.SQL.Text := '''
+          Select distinct Number, ActionID, Metod, MetodType
+            from vActionMetod
+           where ActionID  =:ActionID
+             and StateID   =:StateID
+             and MetodType =:MetodType
+         order by Number
+        ''';
 
         logger.Info('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
         qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;

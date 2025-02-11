@@ -73,4 +73,5 @@ insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'Automa
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToСonfirm',                 'Подтвердить'	                            ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToReceived',                'Получено'	                            ,0   ,''                  ,''
 insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'ToIssuedClient',            'Выдано клиенту'	                        ,0   ,''                  ,''
+insert tNodes (Flag, Type, Brief, Name, EID, EBrief, EName) select 1, 1, 'SetNewDeliveryDate',        'Установить новый срок поставки'	        ,0   ,''                  ,''
 --*/

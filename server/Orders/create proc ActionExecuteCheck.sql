@@ -11,14 +11,13 @@ as
   declare @r          int = 0        
 		 ,@NodeBrief  nvarchar(256)
 
-
   -- отбор объектов к выполнению действия
-  Delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-  Delete pMovement from pMovement (rowlock) where spid = @@spid
+  Delete pAccrualAction from pAccrualAction with (rowlock) where spid = @@spid
+  Delete pMovement from pMovement with (rowlock) where spid = @@spid
 
   -- проверки
   if not exists (select 1
-                   from tMarks (nolock)
+                   from tMarks with (nolock index=pk_tMarks)
 				  where Spid = @@spid
 				    and Type = 3)
   begin
@@ -33,7 +32,7 @@ as
   if @NodeBrief = 'InBasket'
   begin
       if not exists (select 1
-	                      from tSettings (nolock)
+	                      from tSettings with (nolock index=ao2)
 		                 where Brief = 'CoeffMaxAgree')
       begin
 	      set @r = 502 -- 'Отсутствует настройка [CoeffMaxAgree] Максимальный коэффициент превышения цены продажи для клиента над ценой!'
@@ -41,7 +40,7 @@ as
       end
 
       if not exists (select 1
-	                      from tSettings (nolock)
+	                      from tSettings with (nolock index=ao2)
 		                 where Brief = 'CoeffMaxAgree'
 			               and val = '')
       begin
@@ -66,7 +65,7 @@ as
  -- end
 
   --
-  insert into pAccrualAction
+  insert into pAccrualAction with (rowlock)
         (Spid,
 		 ObjectID,
 		 ActionID,
@@ -79,16 +78,16 @@ as
 		 o.StatusID, -- текущее состояние
 		 mo.TargetStateID,
 		 1
-    from tMarks m (nolock)
-   inner join tOrders o (nolock)
+    from tMarks m with (nolock index=pk_tMarks)
+   inner join tOrders o with (nolock index=ao1)
            on o.OrderID = m.ID
-   inner join tModel mo (nolock)
+   inner join tModel mo with (nolock)
 	       on mo.StateID = o.StatusID
 		  and mo.ActionID= @ActionID
   where m.Spid = @@spid
 	and m.Type = 3
 
-  insert into pAccrualAction -- если размещаем заказ необходимо докинуть все детали в статусе "В корзине", т.к апи emex формирует заказ на основе всей корзины
+  insert into pAccrualAction with (rowlock) -- если размещаем заказ необходимо докинуть все детали в статусе "В корзине", т.к апи emex формирует заказ на основе всей корзины
         (Spid,
 		 ObjectID,
 		 ActionID,
@@ -101,26 +100,26 @@ as
 		 o.StatusID, -- текущее состояние
 		 p.NewStateID,
 		 2
-    from pAccrualAction p (nolock) 
-   inner join tNodes n (nolock)
+    from pAccrualAction p with (nolock) 
+   inner join tNodes n with (nolock)
            on n.Brief     = 'InWork'	-- В работе
 		  and n.NodeID    = p.NewStateID
-   inner join tOrders op (nolock)
+   inner join tOrders op with (nolock)
            on op.OrderID  = p.ObjectID 
-   inner join tClients cp (nolock)
+   inner join tClients cp with (nolock)
            on cp.ClientID = op.ClientID
 
 
-   inner join tClients c (nolock)
+   inner join tClients c with (nolock)
            on c.SuppliersID = cp.SuppliersID
-   inner join tOrders o (nolock)
+   inner join tOrders o with (nolock)
            on o.ClientID    = c.ClientID
-   inner join tNodes n2 (nolock)
+   inner join tNodes n2 with (nolock)
            on n2.NodeID     = o.StatusID
 		  and n2.Brief      = 'InBasket'-- В корзине
   where p.Spid = @@spid 
     and not exists (select 1
-	                  from pAccrualAction pp (nolock)
+	                  from pAccrualAction pp with (nolock)
 					 where pp.Spid     = @@spid
 					   and pp.ObjectID = o.OrderID)
 
@@ -158,8 +157,8 @@ as
      
                     ELSE p.RetVal -- Если ошибок нет, оставляем текущее значение
                   END
-    FROM pAccrualAction p (NOLOCK)
-   INNER JOIN tNodes n2 (NOLOCK)
+    FROM pAccrualAction p with (NOLOCK)
+   INNER JOIN tNodes n2 with (NOLOCK)
            ON n2.NodeID = p.NewStateID
           AND n2.Brief in ('InChecked', 'InBasket')
    INNER JOIN vOrders o 
@@ -169,13 +168,13 @@ as
 
                          
   if exists (select count(distinct cp.SuppliersID)
-               from pAccrualAction p (nolock)
-              inner join tNodes n2 (nolock)
+               from pAccrualAction p with (nolock)
+              inner join tNodes n2 with (nolock)
                       on n2.NodeID = p.NewStateID
 	                 and n2.Brief = 'InWork'	-- В корзине
-              inner join tOrders o (nolock)
+              inner join tOrders o with (nolock)
                       on o.OrderID = p.ObjectID
-              inner join tClients cp (nolock)
+              inner join tClients cp with (nolock)
                       on cp.ClientID = o.ClientID
 	          where p.Spid = @@spid
 			 Having count(distinct cp.SuppliersID)  > 1
@@ -188,7 +187,7 @@ as
   --
   Update pAccrualAction
      set RetVal = 501 -- 'Не удалось определить целевое состояние!'
-    from pAccrualAction p (nolock)
+    from pAccrualAction p with (updlock)
    where p.Spid = @@SPID
      and isnull(p.NewStateID, 0) = 0
 
@@ -199,11 +198,11 @@ as
 					when isnull(o.CustomerSubId, '') = '' then 514 -- 'Необходимо заполнить обязательное поле "CustomerSubId"!'
 					else 0
                   end
-    from pAccrualAction p (nolock)
-   inner join tNodes n2 (nolock)
+    from pAccrualAction p with (updlock)
+   inner join tNodes n2 with (nolock)
            on n2.NodeID = p.ActionID
 		  and n2.Brief <> 'ToCancel'	-- Отказать
-   inner join tOrders o(nolock)
+   inner join tOrders o with (nolock)
            on o.OrderID = p.ObjectID
    where p.Spid   = @@SPID
      and p.RetVal = 0
@@ -213,33 +212,33 @@ as
 	                when isnull(pd.DestinationLogo, '') = '' then 518 -- 'Необходимо заполнить обязательное поле "DestinationLogo"!'
 					else RetVal
                   end
-    from pAccrualAction p (nolock)
-   inner join tNodes n2 (nolock)
+    from pAccrualAction p with (updlock)
+   inner join tNodes n2 with (nolock)
            on n2.NodeID = p.ActionID
 		  and n2.Brief  = 'ToBasket' -- Добавить к корзину
-   inner join tOrders o(nolock)
+   inner join tOrders o with (nolock)
            on o.OrderID = p.ObjectID
- inner join tProfilesCustomer pc (nolock)
-         on pc.ClientPriceLogo = o.CustomerPriceLogo
- inner join tSupplierDeliveryProfiles pd (nolock)
-         on pd.ProfilesDeliveryID =  isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
+   inner join tProfilesCustomer pc with (nolock)
+           on pc.ClientPriceLogo = o.CustomerPriceLogo
+   inner join tSupplierDeliveryProfiles pd with (nolock)
+           on pd.ProfilesDeliveryID =  isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
    where p.Spid   = @@SPID
      and p.RetVal = 0
 
 
   Update pAccrualAction
      set RetVal =  538 -- 'Ошибка выполнения действия, по позиции выгружен отказ!'
-    from pAccrualAction p (nolock)
-   inner join tNodes n (nolock)
+    from pAccrualAction p with (updlock)
+   inner join tNodes n with (nolock)
            on n.NodeID = p.ActionID
 		  and n.Brief  = 'ToReNew'
-   inner join tOrders o(nolock)
+   inner join tOrders o with (nolock)
            on o.OrderID  = p.ObjectID
           and o.StatusID = 12 -- отказан
    where p.Spid   = @@SPID
      and p.RetVal = 0
      and exists (select 1
-                    from tUnloadRefusals up (nolock)
+                    from tUnloadRefusals up with (nolock)
                    where up.ClientID     = o.ClientID
                      and up.DetailNumber = o.DetailNumber 
                      and up.Reference    = o.Reference
@@ -249,7 +248,7 @@ as
 	
 
    if exists (select 1
-                from pAccrualAction (nolock)
+                from pAccrualAction with (nolock)
                where Spid   = @@SPID
                  and RetVal <> 0)
      set @r = 506 -- 'Ошибка!'

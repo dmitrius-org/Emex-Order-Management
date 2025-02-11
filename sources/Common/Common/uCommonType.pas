@@ -73,9 +73,12 @@ Type
     erInformation
    ,erNotInformation
   );
-
+  /// <summary> tInstrumentFlag - Флаги дерева модели состояния </summary>
   tInstrumentFlag = (
+  /// <summary> 1 - Начальное состояние </summary>
     isStartState   = 1           //начальное состояние
+    /// <summary> 2 - Разрешить откад действия </summary>
+  ,isCanceled      = 2
   );
 
   /// <summary> tInstrumentType - тип элемента инструментов/моделей

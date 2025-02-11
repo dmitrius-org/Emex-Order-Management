@@ -11,6 +11,7 @@ create proc ModelUpdate
              ,@TargetStateID    numeric(18,0) = null
              ,@InstrumentTypeID numeric(18,0) --тип объекта/инструмента
              ,@Flag             int 
+             ,@Number           int = null
 /*
 @InstrumentTypeID
  1 - 'StateModels',   'Модель состояния', ''
@@ -50,6 +51,7 @@ UPDATE [dbo].[tModel]
       ,[InstrumentTypeID] = @InstrumentTypeID
       ,[Flag]             = @Flag
       ,[updDatetime]      = getdate()
+      ,Number             = @Number
  WHERE ModelID = @ModelID
 
  exit_:
@@ -57,5 +59,5 @@ UPDATE [dbo].[tModel]
 go
 grant execute on ModelUpdate to public
 go
-exec setOV 'ModelUpdate', 'P', '20240101', '0'
+exec setOV 'ModelUpdate', 'P', '20250210', '1'
 go

@@ -158,7 +158,6 @@ begin
         raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка!' {+#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message});
       end;
       on E : Exception do
-//        UniSession.AddJS('alert("'+E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message + '")')
         raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
     end;
 
@@ -174,11 +173,20 @@ begin
   '''
       -- таблица для возврата количества обработанных записей
       if OBJECT_ID('tempdb..#ProcessedRecords') is not null
-          drop table #ProcessedRecords
+          drop table #ProcessedRecords;
 
       CREATE TABLE #ProcessedRecords (
                    Processed  int
                   ,Total      int
+      );
+
+      -- таблица для параметров действия
+      if OBJECT_ID('tempdb..#ActionParams') is not null
+          drop table #ActionParams;
+
+      CREATE TABLE #ActionParams (
+                   ActionID   numeric(18, 0)
+                  ,DateValue  datetime -- произвольная дата
       );
   ''');
 end;

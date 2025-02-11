@@ -1,4 +1,4 @@
-drop proc if exists ChatsInsert
+              drop proc if exists ChatsInsert
 go
 create proc ChatsInsert 
  	          @ChatID   numeric(18, 0) out

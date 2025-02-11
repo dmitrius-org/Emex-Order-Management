@@ -49,7 +49,7 @@ object NodesF: TNodesF
     Left = 3
     Top = 3
     Width = 604
-    Height = 199
+    Height = 235
     Hint = ''
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     Align = alTop
@@ -58,14 +58,14 @@ object NodesF: TNodesF
       Left = 2
       Top = 15
       Width = 600
-      Height = 181
+      Height = 217
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
       DesignSize = (
         600
-        181)
+        217)
       object edtBrief: TUniEdit
         Left = 150
         Top = 70

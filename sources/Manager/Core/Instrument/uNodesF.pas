@@ -1,4 +1,4 @@
-unit uNodesF;
+п»їunit uNodesF;
 
 interface
 
@@ -35,12 +35,12 @@ type
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
-    ///  DataLoad - получение данных с сервера, для отображения на форме
+    ///  DataLoad - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°, РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° С„РѕСЂРјРµ
     ///</summary>
     procedure DataLoad();
 
     /// <summary>
-    ///  DataCheck - проверка заполнения обязательных полей
+    ///  DataCheck - РїСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С… РїРѕР»РµР№
     ///</summary>
     procedure DataCheck();
   public
@@ -180,7 +180,7 @@ begin
       if edtBrief.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [РЎРѕРєСЂР°С‰РµРЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
 
         logger.Info(RetVal.Message);
         Exit();
@@ -188,13 +188,13 @@ begin
       else if edtName.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [РќР°РёРјРµРЅРѕРІР°РЅРёРµ] РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
         Exit();
       end
       else if edtType.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Тип] обязателено к заполнению!';
+        RetVal.Message := 'РџРѕР»Рµ [РўРёРї] РѕР±СЏР·Р°С‚РµР»РµРЅРѕ Рє Р·Р°РїРѕР»РЅРµРЅРёСЋ!';
         Exit();
       end;
     end;
@@ -232,19 +232,19 @@ begin
   case FAction of
     acInsert, acReportCreate:
     begin
-      btnOk.Caption := ' Добавить';
+      btnOk.Caption := ' Р”РѕР±Р°РІРёС‚СЊ';
     end;
     acUpdate, acReportEdit, acUserAction:
-      btnOk.Caption := ' Сохранить';
+      btnOk.Caption := ' РЎРѕС…СЂР°РЅРёС‚СЊ';
     acDelete:
-      btnOk.Caption := ' Удалить';
+      btnOk.Caption := ' РЈРґР°Р»РёС‚СЊ';
     acShow:
-      btnOk.Caption := ' Закрыть';
+      btnOk.Caption := ' Р—Р°РєСЂС‹С‚СЊ';
   else
-    btnOk.Caption := ' Выполнить';
+    btnOk.Caption := ' Р’С‹РїРѕР»РЅРёС‚СЊ';
   end;
 
-  // начитываем данные с базы
+  // РЅР°С‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ СЃ Р±Р°Р·С‹
   case FAction of
     acUpdate, acReportEdit, acUserAction, acDelete, acShow:
       DataLoad;

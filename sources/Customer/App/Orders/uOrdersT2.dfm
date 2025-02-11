@@ -886,6 +886,7 @@
       '      ,o.Comment2'
       '      ,o.isCancel'
       '  FROM vCustomerOrders o'
+      '  !IsNotification'
       ' where o.ClientID = :ClientID'
       
         '   and ((:OrderNum = '#39#39') or (o.OrderNum like '#39'%'#39' + isnull(nullif' +
@@ -900,7 +901,7 @@
       '   '
       '      !Comment2'
       '      '
-      '      !IsNotification'
+      '      '
       '   '
       ' order by o.[OrderID] desc'
       '   ')
@@ -926,6 +927,10 @@
       end>
     MacroData = <
       item
+        Value = Null
+        Name = 'ISNOTIFICATION'
+      end
+      item
         Value = ''
         Name = 'STATUS'
       end
@@ -940,10 +945,6 @@
       item
         Value = Null
         Name = 'COMMENT2'
-      end
-      item
-        Value = Null
-        Name = 'ISNOTIFICATION'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc

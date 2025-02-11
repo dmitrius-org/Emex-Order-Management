@@ -40,7 +40,7 @@ Update p
 
 -- расчет ближайшей дата вылета
 delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
-insert pDeliveryDate 
+insert pDeliveryDate with (rowlock)
       (Spid, ID, OrderDate, ProfilesDeliveryID)
 select @@SPID, 
        OrderID, 

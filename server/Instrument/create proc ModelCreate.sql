@@ -11,6 +11,7 @@ create proc ModelCreate
              ,@TargetStateID    numeric(18,0) = null
              ,@InstrumentTypeID numeric(18,0) --тип объекта/инструмента
              ,@Flag             int 
+             ,@Number           int = null
 /*
 @InstrumentTypeID
  1 - 'StateModels',   'Модель состояния', ''
@@ -50,14 +51,16 @@ as
              ,[ActionID]
              ,[TargetStateID]
              ,[InstrumentTypeID]
-             ,[Flag])
+             ,[Flag]
+             ,Number)
        OUTPUT INSERTED.ModelID  INTO @ID
        select @InstrumentID    
              ,@StateID         
              ,@ActionID 
              ,@TargetStateID
              ,@InstrumentTypeID
-             ,@Flag          
+             ,@Flag  
+             ,@Number
 
   Select @ModelID = ID from @ID
 
@@ -66,5 +69,5 @@ as
 go
 grant execute on ModelCreate to public
 go
-exec setOV 'ModelCreate', 'P', '20240101', '0'
+exec setOV 'ModelCreate', 'P', '20250210', '1'
 go
