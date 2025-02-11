@@ -2,12 +2,12 @@ drop proc if exists ChatsMessageInsert
 go
 create proc ChatsMessageInsert 
               @MessageID numeric(18, 0) out
- 	         ,@ChatID   numeric(18, 0)
+             ,@ChatID   numeric(18, 0)
              ,@UserID   numeric(18, 0)
-	         ,@Message  nvarchar(512)
-	         ,@Flag     int
+             ,@Message  nvarchar(512)
+             ,@Flag     int
 /*
-  ChatsMessageInsert - добавление сообщения в чат
+  ChatsMessageInsert - РґРѕР±Р°РІР»РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ РІ С‡Р°С‚
 */           
 as
 
@@ -17,20 +17,19 @@ as
     
   insert into tChatsMessage with (rowlock)
         (     
-         ChatID              
-        ,UserID          
-  	    ,[Message]         
-  	    ,Flag              
+         [ChatID]
+        ,[UserID]
+        ,[Message]
+        ,Flag
          ) 
-  OUTPUT INSERTED.MessageID INTO @ID(ID)    
+  OUTPUT INSERTED.MessageID INTO @ID(ID)
   select @ChatID   
         ,@UserID   
         ,@Message  
-        ,isnull(@Flag, 0)     
+        ,isnull(@Flag, 0)
 
   select @MessageID = max(ID) 
     from @ID
-
 
   if @MessageID > 0
   begin
@@ -43,11 +42,11 @@ as
 
     if @Flag&1>0
     begin
-      set @Flag2 = 32--32 - Сообщение от менеджера
+      set @Flag2 = 32--32 - РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ РјРµРЅРµРґР¶РµСЂР°
     end
     else
     begin
-      set @Flag2 = 2048-- 2048 - Сообщение от клиента
+      set @Flag2 = 2048-- 2048 - РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚ РєР»РёРµРЅС‚Р°
     end
 
     Update tOrders
@@ -65,4 +64,4 @@ exec setOV 'ChatsMessageInsert', 'P', '20250129', '2'
 go
  
 
- --exec ChatsMessageInsert @ChatID = 1
+--exec ChatsMessageInsert @ChatID = 1

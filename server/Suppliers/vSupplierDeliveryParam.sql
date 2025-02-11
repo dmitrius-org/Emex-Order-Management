@@ -1,16 +1,16 @@
 if OBJECT_ID('vSupplierDeliveryParam') is not null
     drop view vSupplierDeliveryParam
 go
-/* **********************************************************						
+/* **********************************************************
 vSupplierDeliveryParam - 
 ********************************************************** */
 create view vSupplierDeliveryParam
 as
 
 select s.SuppliersID  
-      ,sd.ProfilesDeliveryID -- ссылка на профиль доставки
+      ,sd.ProfilesDeliveryID -- СЃСЃС‹Р»РєР° РЅР° РїСЂРѕС„РёР»СЊ РґРѕСЃС‚Р°РІРєРё
       ,sd.DestinationLogo
-      ,sd.Delivery as DestinationDeliveryTerm -- срок доставки по направлению
+      ,sd.Delivery as DestinationDeliveryTerm -- СЃСЂРѕРє РґРѕСЃС‚Р°РІРєРё РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ
   from tSuppliers s with (nolock index=ao1)
   left join tSupplierDeliveryProfiles sd with (nolock index=ao1)
          on sd.SuppliersID = s.SuppliersID   

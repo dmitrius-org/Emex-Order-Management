@@ -1,14 +1,14 @@
 if OBJECT_ID('vOrdersDeliverySupplier') is not null
     drop view vOrdersDeliverySupplier
 go
-/* **********************************************************						
+/* **********************************************************
 vOrdersDeliverySupplier - 
 ********************************************************** */
 create view vOrdersDeliverySupplier
 as
 
 select o.OrderID
-      ,o.ProfilesDeliveryID -- ссылка на профиль доставки
+      ,o.ProfilesDeliveryID -- СЃСЃС‹Р»РєР° РЅР° РїСЂРѕС„РёР»СЊ РґРѕСЃС‚Р°РІРєРё
       ,o.ClientID
       ,coalesce(od.DeliveryPlanDateSupplier, o.DeliveryPlanDateSupplier) as DeliveryPlanDateSupplier     
       ,coalesce(od.DeliveryTermSupplier,     o.DeliveryTerm)             as DeliveryTermSupplier
