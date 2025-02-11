@@ -8,13 +8,14 @@ uses
   uniGUIClasses, uniGUIFrame, uniButton, uniMemo, uniBitBtn, uniSpeedButton,
   uniMultiItem, uniListBox, uniLabel, uniPanel, uniGUIBaseClasses, uSqlUtils,
   uniHTMLMemo, UniFSPopup, uniGUIApplication, uniStrUtils, System.JSON,
-  uniThreadTimer, uniTimer, uUniMemoHelper;
+  uniThreadTimer, uniTimer;
 
 type
   TMessage = class(TUniFrame)
-    ContentChatContainer: TUniContainerPanel;
-    ChatContent: TUniContainerPanel;
-    ChatMessages: TUniContainerPanel;
+    pnlContentChatContainer: TUniContainerPanel;
+    pnlContentChatContent: TUniContainerPanel;
+    pnlMessageList: TUniContainerPanel;
+    pnlChatHeader: TUniPanel;
     pnlChatHeaderLeft: TUniPanel;
     pnlChatHheaderInfo: TUniContainerPanel;
     pnlChatHeaderTitle: TUniContainerPanel;
@@ -22,7 +23,7 @@ type
     lblChatTitleText: TUniLabel;
     lblChatHeaderUserStatus: TUniLabel;
     MessageEditor: TUniListBox;
-    ChatMessagesSend: TUniContainerPanel;
+    pnlSendContainer: TUniContainerPanel;
     pnlSendPanelContainer: TUniContainerPanel;
     pnlSendMessage: TUniContainerPanel;
     pnlTextAreaContent: TUniContainerPanel;
@@ -36,13 +37,13 @@ type
     btnRefresch: TUniSpeedButton;
     UniSpeedButton1: TUniSpeedButton;
     UserStatusTimer: TUniTimer;
-    ChatHeader: TUniContainerPanel;
     procedure UniFrameReady(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
     procedure MessageTextChange(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure ContentChatContainerAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure pnlContentChatContainerAjaxEvent(Sender: TComponent;
+      EventName: string; Params: TUniStrings);
     procedure UserStatusTimerTimer(Sender: TObject);
   private
     { Private declarations }
@@ -57,6 +58,8 @@ type
     FFlag: Integer;
 
     procedure SetOrderID(const Value: Integer);
+
+    function MemoTextToHTML(Memo: TUniMemo): string;
 
     /// <summary>
     /// MessageIsRead - Установка признака прочитано на сообщении в базе данных
@@ -75,24 +78,11 @@ type
     /// SetUserStatus - Статус пользователя/клиента
     /// </summary>
     procedure SetUserStatus(AEvent: string; ClientID: integer; Status: string='');
-    procedure SetChatID(const Value: Integer);
   public
     { Public declarations }
 
-    /// <summary>
-    /// ClientInfo - Получение информации о клиенте
-    /// </summary>
     procedure ClientInfo();
-
-    /// <summary>
-    /// ChatsInfoByChatID - Получение информации о чате по идентификатору чата
-    /// </summary>
-    /// <param name="AChatID">ИД чата</param>
-    procedure ChatsInfoByChatID(AChatID: integer);
-
     procedure ChatInfo();
-
-    procedure ChatInfoByOrderID();
 
     /// <summary>
     /// LoadMessageByChatID - загрузка сообщений из БД
@@ -105,6 +95,7 @@ type
     /// </summary>
     /// <param name="AOrderID">ИД заказа</param>
     procedure LoadMessageByOrderID( AOrderID: integer ); overload;
+
 
     /// <summary>
     /// AddMessageToChat - Добавление сообщения форму чата
@@ -136,7 +127,7 @@ type
     /// <summary>
     ///  ChatID - ИД чата
     /// </summary>
-    property ChatID:  Integer read FChatID  write SetChatID;
+    property ChatID:  Integer read FChatID  write FChatID;
 
     /// <summary>
     ///  AppType - Тип приложения:
@@ -163,7 +154,6 @@ begin
 
   sql.Open('''
     declare @ChatID  numeric(18, 0)
-
     exec ChatsInsert
           @ChatID   = @ChatID out
          ,@OrderID  = :OrderID
@@ -200,9 +190,9 @@ begin
 
   sql.Open('''
     declare @MessageID numeric(18, 0)
-
     exec ChatsMessageInsert
            @ChatID   = :ChatID
+          ,@OrderID  = :OrderID
           ,@UserID   = :UserID
           ,@Message  = :Message
           ,@Flag     = :Flag
@@ -212,20 +202,19 @@ begin
           ,@MessageID as MessageID
 
   ''',
-  ['ChatID', 'UserID', 'Message', 'Flag'],
+  ['ChatID', 'OrderID', 'UserID', 'Message', 'Flag'],
   [FChatID,
+   FOrderID,
    UniMainModule.AUserID,
-   MessageText.ToHTML,
+   MemoTextToHTML(MessageText),
    FFlag]);
 
   if sql.Q.FieldByName('MessageID').AsInteger > 0 then
   begin
      AddMessageToChat (sql.Q.FieldByName('MessageID').AsInteger,
                        FFlag,
-                       MessageText.ToHTML,
+                       MemoTextToHTML(MessageText),
                        Now());
-     //
-     //MessageEditor.ItemIndex := MessageEditor.Items.Count - 1;
 
      MessageText.Clear;
 
@@ -234,14 +223,12 @@ begin
 
 end;
 
+
 procedure TMessage.MessageIsRead(MessageID: integer);
 begin
-  sql.ExecAsync('exec ChatsMessageIsRead @MessageID = :MessageID',
-               ['MessageID'],
-               [MessageID]);
-
-  BroadcastMessage('ChatsMessageIsRead', ['SID', UniSession.SessionID], []);
+  sql.ExecAsync(' exec ChatsMessageIsRead @MessageID = :MessageID', ['MessageID'], [MessageID])
 end;
+
 
 procedure TMessage.AddMessageToChat(
    MID: integer;
@@ -292,11 +279,6 @@ begin
 end;
 
 procedure TMessage.ChatInfo;
-begin
-
-end;
-
-procedure TMessage.ChatInfoByOrderID;
 begin
 
   if FChatID <> 0 then Exit;
@@ -355,52 +337,11 @@ begin
 
 end;
 
-procedure TMessage.ChatsInfoByChatID(AChatID: integer);
-begin
-  sql.Open('''
-    exec ChatsInfoByChatID
-           @ChatID = :ChatID
-  ''',
-  ['ChatID'],
-  [AChatID]);
-
-  with sql.q do
-  begin
-    First;
-
-    while not EOF do
-    begin
-      FOrderID := FieldByName('OrderID').AsInteger;
-      FClientID := FieldByName('ClientID').AsInteger;
-
-      if FOrderID = 0 then
-      begin
-        lblChatTitleText.Caption := '' +
-
-        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '') +
-        IfThen(FAppType=0, string(' Тема: ' + FieldByName('Subject').AsString), '');
-      end
-      else
-      begin
-        lblChatTitleText.Caption := 'Заказ: ' + FOrderID.ToString +
-
-        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
-      end;
-
-      Next;
-    end;
-  end;
-end;
-
 procedure TMessage.LoadMessageByChatID(AChatID: integer);
 var
   i: integer;
   Message : string;
 begin
-  MessageText.Clear;
-
-  ChatsInfoByChatID(AChatID);
-
   MessageEditor.Clear;
 
   sql.Open('''
@@ -428,13 +369,6 @@ begin
 
       Next;
     end;
-
-    //MessageEditor.Selected[MessageEditor.Items.Count-1] := true;
-
-    // MessageEditor.JSInterface.JSCall('boundList.getSelectedNodes()['+inttostr(MessageEditor.Items.Count-1)+'].scrollIntoView', [True]);
-
-
-    MessageEditor.ItemIndex := MessageEditor.Items.Count - 1;
   end;
 end;
 
@@ -445,7 +379,7 @@ var
 begin
   MessageText.Clear;
 
-  ChatInfoByOrderID;
+  ChatInfo;
 
   ClientInfo;
 
@@ -476,12 +410,33 @@ begin
   end;
 end;
 
+function TMessage.MemoTextToHTML(Memo: TUniMemo): string;
+var
+  i: Integer;
+  HTMLText: string;
+begin
+  HTMLText := '<p>';
+
+  // Перебираем строки в TUniMemo и оборачиваем их в теги <p>
+  for i := 0 to Memo.Lines.Count - 1 do
+  begin
+    if Memo.Lines[i].Length > 0  then
+      HTMLText := HTMLText + Memo.Lines[i] + '<br>';
+  end;
+
+  if i=1 then HTMLText := StringReplace(HTMLText, '<br>', '', []);
+
+  HTMLText := HTMLText + '</p>';
+
+  Result := HTMLText;
+end;
+
 procedure TMessage.MessageTextChange(Sender: TObject);
 begin
   btnSendEnabled;
 end;
 
-procedure TMessage.ContentChatContainerAjaxEvent(Sender: TComponent;
+procedure TMessage.pnlContentChatContainerAjaxEvent(Sender: TComponent;
   EventName: string; Params: TUniStrings);   var i:Integer;
   JSONObject: TJSONObject;
 begin
@@ -519,14 +474,6 @@ begin
     end;
 
   end;
-end;
-
-procedure TMessage.SetChatID(const Value: Integer);
-begin
-  FChatID := Value;
-  FOrderID := 0;
-
-  LoadMessageByChatID(FChatID);
 end;
 
 procedure TMessage.SetOrderID(const Value: Integer);
@@ -574,16 +521,24 @@ end;
 
 procedure TMessage.UniFrameDestroy(Sender: TObject);
 begin
-  UniMainModule.WS.FormUnRegister (ContentChatContainer.JSName);
+  UniMainModule.WS.FormUnRegister (pnlContentChatContainer.JSName);
 end;
 
 procedure TMessage.UniFrameReady(Sender: TObject);
 begin
   lblChatHeaderUserStatus.Caption := '';
 
+  if FOrderID= 0 then
+  begin
+    logger.Info(OrderID.ToString);
+    logger.Info(AppType.ToString);
+    AppType:=1;
+    OrderID  := 167120;
+  end;
+
   btnSendEnabled;
 
-  UniMainModule.WS.FormRegister (ContentChatContainer.JSName , 'websocket_message');
+  UniMainModule.WS.FormRegister (pnlContentChatContainer.JSName , 'websocket_message');
 end;
 
 initialization

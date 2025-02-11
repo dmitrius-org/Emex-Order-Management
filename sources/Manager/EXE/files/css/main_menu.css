@@ -1,7 +1,7 @@
-.x-treelist-nav .x-treelist-item-text {
+.main-menu .x-treelist-nav .x-treelist-item-text {
     line-height: 35px;
 }
-.x-treelist-nav .x-treelist-item-icon:before, .x-treelist-nav .x-treelist-item-tool:before, .x-treelist-nav .x-treelist-item-expander {
+.main-menu .x-treelist-nav .x-treelist-item-icon:before, .x-treelist-nav .x-treelist-item-tool:before, .x-treelist-nav .x-treelist-item-expander {
     line-height: 35px;
 }
 
@@ -41,11 +41,26 @@
         height: 14px;
 }
 
-.part-top-label {
-    text-align: right;
-    /* display: block; */
+.main-menu .x-treelist-nav .x-treelist-item-text {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #f0f0f0; Цвет фона для всего контейнера */
+    /* padding: 10px; */
+    white-space: nowrap; /* Запрещает перенос строки */
 }
 
-
-
+.badge-chats-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Ширина прямоугольника */
+    height: 25px; /* Высота прямоугольника */
+    background-color: #1E90FF; /* Цвет фона для числа */
+    color: white; /* Цвет текста */
+    border-radius: 5px; /* Округлые углы */
+    text-align: center;
+    font-size: 14px;
+}
 
