@@ -170,18 +170,10 @@
       OnColumnActionClick = GridColumnActionClick
       Columns = <
         item
-          ActionColumn.Enabled = True
-          ActionColumn.Buttons = <
-            item
-              Action = actShowMessage
-              ButtonId = 0
-              Hint = #1057#1086#1086#1073#1097#1077#1085#1080#1103
-              ImageIndex = 3
-            end>
           FieldName = 'UnreadMessagesCount'
           Title.Caption = ' '
           Width = 26
-          Alignment = taCenter
+          Alignment = taLeftJustify
           ReadOnly = True
           Hint = #1044#1077#1081#1089#1090#1074#1080#1103
         end
@@ -1147,6 +1139,7 @@
     object QueryUnreadMessagesCount: TIntegerField
       FieldName = 'UnreadMessagesCount'
       ReadOnly = True
+      OnGetText = QueryUnreadMessagesCountGetText
     end
     object QueryComment2: TStringField
       FieldName = 'Comment2'

@@ -35,8 +35,8 @@ Update p
    set p.DeliveryPlanDateSupplier = cast(
                                     case -- плановая дата поступления поставщику
 	                                   when o.Flag&16>0 then DATEADD(dd, p.DeliveryTerm, p.OrderDate)
-                                       when isnull(Prices.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(p.OrderDate, isnull(Prices.DeliveryTerm, 0), 1)
-                                       else DATEADD(dd, isnull(Prices.DeliveryTerm, p.DeliveryTerm), p.OrderDate)
+                                       when isnull(Prices.InWorkingDays, 0) = 1 /*срок в рабочих днях*/ then dbo.AddDaysAndWeekends(p.OrderDate, p.DeliveryTerm, 1)
+                                       else DATEADD(dd, p.DeliveryTerm, p.OrderDate)
                                     end as date)
   from pDeliveryTerm p with (updlock)
  inner join tOrders o with (nolock)

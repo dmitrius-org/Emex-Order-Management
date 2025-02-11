@@ -65,7 +65,8 @@ uses
   uVersion in '..\Common\CommonApp\uVersion.pas',
   uStatisticOrders in 'App\Statistics\uStatisticOrders.pas' {StatisticOrders: TUniFrame},
   uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
-  LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm};
+  LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm},
+  uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas';
 
 {$R *.res}
 

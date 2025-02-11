@@ -34,5 +34,5 @@ exec setOV 'vUserAccess', 'V', '20240101', '0'
 go
  
 -- Описание таблицы
---exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
+--exec dbo.sys_setTableDescription @table = 'vUserAccess', @desc = 'Права на объекты учет'
 

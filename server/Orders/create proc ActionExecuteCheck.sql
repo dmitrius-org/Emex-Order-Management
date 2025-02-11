@@ -161,7 +161,7 @@ as
    INNER JOIN tNodes n2 with (NOLOCK)
            ON n2.NodeID = p.NewStateID
           AND n2.Brief in ('InChecked', 'InBasket')
-   INNER JOIN vOrders o 
+   INNER JOIN vOrders o --(nolock) нужно выпилить vOrders
            ON o.OrderID = p.ObjectID
    WHERE p.Spid = @@SPID
      AND p.RetVal = 0;

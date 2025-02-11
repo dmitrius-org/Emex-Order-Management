@@ -364,7 +364,7 @@ begin
 
     PriceCalc;
 
-    logger.Info('TSearchF.PartSearch расчитали цены');
+    logger.Info('TSearchF.PartSearch расcчитали цены');
 
     GridRefresh();
 

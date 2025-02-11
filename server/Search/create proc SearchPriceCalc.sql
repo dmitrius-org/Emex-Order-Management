@@ -95,7 +95,7 @@ insert @Price
 		VolumeKGf,
         FragileSign,
         DetailName)
-select top 1 
+select --top 1 
        p.DetailNum,
 	   p.Make,
 	   max(pp.WeightKGF),

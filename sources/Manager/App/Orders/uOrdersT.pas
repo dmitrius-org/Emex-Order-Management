@@ -343,6 +343,8 @@ type
 
     procedure SetMenuVisible(); overload;
 
+    procedure MessageCallBack(Sender: TComponent; AResult: Integer);
+
   public
     { Public declarations }
     /// <summary>
@@ -842,16 +844,19 @@ begin
 
     if FIsNotification then
     begin
-        Query.MacroByName('Notifications').Value :=
+        Query.MacroByName('Form').Value :=
         '''
-          and o.DeliveryRestTermSupplier <= 0
-          and o.OrderDate >= '20250201'
+           vOrderNotificationFilter onf
+         inner join [vOrders] o
+                 on o.OrderID = onf.OrderID
         ''';
     end
     else
     begin
-      Query.MacroByName('Notifications').Value := '';
-      //Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
+        Query.MacroByName('Form').Value :=
+        '''
+           [vOrders] o
+        ''';
     end;
 
     if FFilterTextStatus <> '' then
@@ -987,6 +992,17 @@ begin
   end;
 end;
 
+procedure TOrdersT.MessageCallBack(Sender: TComponent;   AResult: Integer);
+begin
+  try
+     Query.RefreshRecord(False) ;
+     Grid.RefreshCurrentRow();
+  except
+    on E: Exception do
+      logger.Info('TOrdersT.MessageCallBack Ошибка: ' + e.Message);
+  end;
+end;
+
 procedure TOrdersT.GetMarksInfo;
 begin
   lblSelRowCunt.Caption := 'Выделено строк: ' + Grid.SelectedRows.Count.ToString + '  ';
@@ -1053,7 +1069,7 @@ begin
   if (not QueryReceiptDate.IsNull) then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-date-delivery-to-customer-arrow">&#10149;'+
-            '</span><span class="x-date-delivery-to-customer">' + QueryReceiptDate.AsString + '</span>'; // Ожидаемая дата поступления из tShipments
+            '</span><span class="x-date-delivery-to-customer">' + QueryReceiptDate.AsString + '</span>';
   end
   else
     Text := Sender.AsString; // Дата поставки клиенту
@@ -1490,7 +1506,7 @@ end;
 procedure TOrdersT.actSetCommentExecute(Sender: TObject);
 begin
    MessageF.OrderID := QueryOrderID.AsInteger;
-   MessageF.ShowModal();
+   MessageF.ShowModal(MessageCallBack);
 end;
 
 procedure TOrdersT.actUnselectExecute(Sender: TObject);

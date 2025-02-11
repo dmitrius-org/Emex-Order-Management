@@ -39,30 +39,20 @@ select p.DeliveryNextDate DeliveryNextDateP,
  where p.spid = @@Spid
 
  --*/
- update tOrders
- set DeliveryNextDate2 = null, DeliveryDaysReserve2 = null
-  from tOrders
- where OrderID = 136695
+ --update tOrders
+ --set DeliveryNextDate2 = null, DeliveryDaysReserve2 = null
+ -- from tOrders
+ --where OrderID = 136695
  
 
   -- расчет сроков дотавки
  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
  insert pDeliveryTerm (Spid, OrderID)
- Select distinct @@spid, 136695
+ Select distinct @@spid, 186522
   -- from pMovement (nolock)
   --where Spid = @@SPID
   
- exec OrdersDeliveryTermCalcNext @IsSave = 1
-
-
- select 
- DeliveryDaysReserve
-,DeliveryNextDate
-,DeliveryDaysReserve2
-,DeliveryNextDate2
-,*
- from tOrders
- where OrderID = 136695
+ exec OrdersSupplierDeliveryCalc @IsSave = 1
 
 
 

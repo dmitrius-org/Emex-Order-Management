@@ -80,9 +80,9 @@ SELECT o.[OrderID]
       ,pd.Delivery as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
 
       ,o.DeliveryDateToCustomer                          -- Дата поставки клиенту	
-      ,cast(null as datetime) as DeliveryDateToCustomer2 -- Дата поставки клиенту после изменения
+      ,nullif(oс.DeliveryDateToCustomer, o.DeliveryDateToCustomer) as DeliveryDateToCustomer2 -- Дата поставки клиенту после изменения
       ,o.DeliveryTermToCustomer	                         -- Срок поставки клиенту	
-      ,cast(null as int) as DeliveryTermToCustomer2 -- Срок поставки клиенту после изменения
+      ,nullif(oс.DeliveryTermToCustomer, o.DeliveryTermToCustomer) as DeliveryTermToCustomer2 -- Срок поставки клиенту после изменения
       ,o.DeliveryRestToCustomer                             -- Остаток срока до поставки клиенту
       ,pd.DeliveryTermCustomer       as DeliveryTermFromCustomerProfile
       
@@ -126,6 +126,9 @@ SELECT o.[OrderID]
 
   left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
          on od.OrderID = o.OrderID
+
+  left join vOrdersDeliveryCustomer oс  with (nolock index=PK_tOrdersDeliveryCustomer_OrderID) -- актуальные сроки доставки клиента
+         on oс.OrderID = o.OrderID
 
  inner join tUser u with (nolock index=ao1)
          on u.UserID = o.UserID
@@ -178,7 +181,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250204', '17'
+exec setOV 'vOrders', 'V', '20250211', '18'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

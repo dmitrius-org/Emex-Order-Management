@@ -19,8 +19,8 @@ as
          convert(varchar, c.OrderID) as Number,
 
          case 
-           when isnull(c.OrderID, 0) = 0 
-           then c.Name 
+           when isnull(c.OrderID, 0) = 0 then 
+           c.Name 
            else 'Заказ: ' + convert(varchar, c.OrderID)
          end as Subject,
          

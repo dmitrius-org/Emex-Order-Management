@@ -396,3 +396,27 @@
     font-size: 16px;
     animation: blink 1s infinite;
 }
+
+.grid-order .mail-envelope::before {
+    font-family: 'FontAwesome'; 
+    font-style: normal; /* Убираем курсив */
+    content: '\f0e0'; 
+    color: #337AB7; 
+    cursor: pointer;
+
+}
+
+.grid-order .mail-envelope-o::before {
+    font-family: 'FontAwesome'; 
+    font-style: normal; 
+    content: '\f003'; 
+    color: #337AB7; 
+    cursor: pointer;
+}
+
+.mail-envelope + sup {
+    position: relative;
+    vertical-align: baseline;
+    /* font-size: 0.7em; При необходимости уменьшить размер */
+    top: -0.7em; /* Подстройка вертикального смещения */
+}

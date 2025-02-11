@@ -154,6 +154,8 @@ type
       var Text: string; DisplayText: Boolean);
     procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure QueryUnreadMessagesCountGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -208,6 +210,8 @@ type
     procedure ReOrderCallBack(Sender: TComponent; AResult:Integer);
 
     procedure OrdersFCallBack;
+
+    procedure MessageCallBack(Sender: TComponent; AResult: Integer);
 
   public
     { Public declarations }
@@ -379,23 +383,12 @@ end;
 procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
    MessageF.OrderID := QueryOrderID.AsInteger;
-   MessageF.ShowModal();
+   MessageF.ShowModal(MessageCallBack);
 end;
 
 procedure TOrdersT2.btnNotificationClick(Sender: TObject);
 begin
   GetNotificationOrders;
-
-//  if FISNotification then
-//  begin
-//    UniSession.AddJS(btnNotification.JSName +'.badgeEl.setStyle({'+quotedstr('color')+' : '+quotedstr('orange')+'});');
-//
-//  end
-//  else
-//  begin
-//
-//    UniSession.AddJS(btnNotification.JSName +'.badgeEl.setStyle({'+quotedstr('color')+' : '+quotedstr('white')+'});');
-//  end;
 end;
 
 procedure TOrdersT2.DoHideMask;
@@ -560,6 +553,17 @@ begin
   Marks.Select;
 end;
 
+procedure TOrdersT2.MessageCallBack(Sender: TComponent; AResult: Integer);
+begin
+  try
+     Query.RefreshRecord(False) ;
+     Grid.RefreshCurrentRow();
+  except
+    on E: Exception do
+      logger.Info('TOrdersT.MessageCallBack Ошибка: ' + e.Message);
+  end;
+end;
+
 procedure TOrdersT2.CancelConfirm;
 begin
   Marks.SaveMarksToDB;
@@ -687,10 +691,10 @@ begin
   t := '';
 
   // Сообщение от менеджера
-  if (Sender.AsInteger and 32) > 0 then
-  begin
-    t := t + '<span class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></span> ';
-  end;
+//  if (Sender.AsInteger and 32) > 0 then
+//  begin
+//    t := t + '<span class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></span> ';
+//  end;
 
   // запрошен отказ по детали
   if (Sender.AsInteger and 64) > 0 then
@@ -717,6 +721,17 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT2.QueryUnreadMessagesCountGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if QueryUnreadMessagesCount.Value > 0 then
+    Text := '<i class="mail-envelope"></i><sup> ' + QueryUnreadMessagesCount.Value.ToString + '</sup>'
+  else
+    Text := '<i class="mail-envelope-o"></i>';
+
+  Text:= '<button type="button" onclick="showEmail()" style="border: 0; background: none;"> '+ Text + '</button>';
+end;
+
 procedure TOrdersT2.GetNotificationOrders;
 begin
   btnCancel.Enabled := FIsNotification;
@@ -731,7 +746,6 @@ end;
 
 procedure TOrdersT2.SetMenuVisible(AVisible: boolean); var bJSName: string;
 begin
-
   if AVisible then
   begin
     UniMainModule.BrowserOptions := [boDisableMouseRightClick];
@@ -757,7 +771,6 @@ begin
   end;
 
   SetNotificationCount;
-
 end;
 
 procedure TOrdersT2.SetMenuVisible;
@@ -781,21 +794,11 @@ end;
 
 procedure TOrdersT2.SetNotificationIcon;
 begin
-//  if FIsNotification then
-//  begin
-//    btnNotification.Caption:=   order-notification-btn
-//  end
-//  else
-//  begin
-//
-//  end;
-
 end;
 
 procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  logger.Info(EventName);
   if (EventName = '_columnhide') then
   begin
       Sql.Exec('''
@@ -824,6 +827,11 @@ begin
             [self.ClassName +'.' + Grid.Name,
              Grid.Columns[Params['column'].Value.ToInteger].FieldName,
              UniMainModule.AUserID]);
+  end
+  else
+  if (EventName = 'showEmail') then
+  begin
+    actShowMessageExecute(Self);
   end
 end;
 
@@ -949,7 +957,7 @@ begin
   Marks := tMarks.Create(Grid);
   Marks.Clear;
 
-  //GetMarksInfo;
+  UniSession.JSCode( ' showEmail = function() {  ajaxRequest(' + Grid.JSName    + ', "showEmail", []); } ;');
 
   logger.Info('UniFrameCreate End');
 end;

@@ -986,7 +986,7 @@ object OrderF: TOrderF
     end
     object lblKurs: TUniLabel
       Left = 382
-      Top = 94
+      Top = 98
       Width = 83
       Height = 13
       Hint = ''
@@ -1111,6 +1111,17 @@ object OrderF: TOrderF
       LayoutConfig.Margin = '0'
       DecimalSeparator = ','
       OnKeyDown = edtLKeyDown
+    end
+    object btnMessage: TUniButton
+      Left = 777
+      Top = 94
+      Width = 91
+      Height = 25
+      Hint = ''
+      ShowHint = True
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
+      TabOrder = 31
+      OnClick = btnMessageClick
     end
   end
   object UniContainerPanel1: TUniContainerPanel

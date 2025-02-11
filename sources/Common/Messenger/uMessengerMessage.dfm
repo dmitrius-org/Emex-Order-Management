@@ -3,7 +3,7 @@ object Message: TMessage
   Left = 0
   Top = 0
   Width = 778
-  Height = 480
+  Height = 652
   Margins.Left = 0
   Margins.Top = 0
   Margins.Right = 0
@@ -22,7 +22,7 @@ object Message: TMessage
     Left = 0
     Top = 0
     Width = 778
-    Height = 480
+    Height = 652
     Hint = ''
     Margins.Left = 0
     Margins.Top = 0
@@ -37,11 +37,12 @@ object Message: TMessage
       'content-chat-background-container content-chat-container messeng' +
       'er-scope'
     OnAjaxEvent = ContentChatContainerAjaxEvent
+    ExplicitHeight = 480
     object ChatContent: TUniContainerPanel
       Left = 0
       Top = 0
       Width = 778
-      Height = 480
+      Height = 652
       Hint = ''
       Margins.Left = 0
       Margins.Top = 0
@@ -52,12 +53,13 @@ object Message: TMessage
       TabOrder = 0
       ScrollDirection = sdNone
       LayoutConfig.Cls = 'content-chat-content'
+      ExplicitHeight = 480
       object ChatMessages: TUniContainerPanel
         AlignWithMargins = True
         Left = 3
         Top = 63
         Width = 772
-        Height = 364
+        Height = 536
         Hint = ''
         ParentColor = False
         Align = alClient
@@ -65,23 +67,25 @@ object Message: TMessage
         ScrollDirection = sdNone
         Layout = 'fit'
         LayoutConfig.ComponentCls = 'content-chat-dialog-content'
+        ExplicitHeight = 364
         object MessageEditor: TUniListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 766
-          Height = 358
+          Height = 530
           Hint = ''
           Align = alClient
           TabOrder = 1
           LayoutConfig.ComponentCls = 'message-list-container'
           LayoutConfig.DockWhenAligned = False
+          ExplicitHeight = 358
         end
       end
       object ChatMessagesSend: TUniContainerPanel
         AlignWithMargins = True
         Left = 0
-        Top = 430
+        Top = 602
         Width = 778
         Height = 50
         Hint = ''
@@ -94,6 +98,7 @@ object Message: TMessage
         TabOrder = 3
         Layout = 'fit'
         LayoutConfig.ComponentCls = 'chat-textarea-container'
+        ExplicitTop = 430
         object pnlSendPanelContainer: TUniContainerPanel
           AlignWithMargins = True
           Left = 0

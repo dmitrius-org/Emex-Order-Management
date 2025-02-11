@@ -21,7 +21,7 @@ as
            when isnull(c.OrderID, 0) = 0 then c.Name 
            else 'Заказ: ' + convert(varchar, c.OrderID)
          end as Subject,
-
+         
          c.StatusID,
          case 
            when c.StatusID = 1 then 'Открытые'

@@ -1276,7 +1276,7 @@ object OrdersT: TOrdersT
       '      ,o.[PercentSupped]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
       '      ,o.[OrderDetailSubId]'
-      '  FROM [vOrders] o'
+      '  FROM !Form  '
       ' where 1=1'
       '          '
       '   !Status'
@@ -1295,15 +1295,17 @@ object OrdersT: TOrdersT
       '   '
       '   !updDateTime'
       '   '
-      '   !Invoice'
-      '   '
-      '   !Notifications'
+      '   !Invoice      '
       '               '
       '  order by  o.[OrderID]  '
       '   ')
     Left = 575
     Top = 254
     MacroData = <
+      item
+        Value = Null
+        Name = 'FORM'
+      end
       item
         Value = ''
         Name = 'STATUS'
@@ -1339,10 +1341,6 @@ object OrdersT: TOrdersT
       item
         Value = ''
         Name = 'INVOICE'
-      end
-      item
-        Value = Null
-        Name = 'NOTIFICATIONS'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc

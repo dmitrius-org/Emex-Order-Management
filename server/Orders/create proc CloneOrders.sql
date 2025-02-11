@@ -200,6 +200,20 @@ select  i.OrderID
 inner join tOrdersDeliverySupplier ods (nolock)
         on ods.OrderID = i.ParentID
 
+-- сроки доставки поставщика
+insert tOrdersDeliveryCustomer with (rowlock)
+       (OrderID,
+        DeliveryTermToCustomer,
+        DeliveryDateToCustomer,
+        DeliveryRestToCustomer)
+select  i.OrderID
+       ,ods.DeliveryTermToCustomer 
+       ,ods.DeliveryDateToCustomer
+       ,ods.DeliveryRestToCustomer
+ from @ID i
+inner join tOrdersDeliveryCustomer ods (nolock)
+        on ods.OrderID = i.ParentID
+
 
 -- меняем данные по заказу, который был разбит на части
 Update o
@@ -251,6 +265,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20241004', '1'
+exec setOV 'CloneOrders', 'P', '20250211', '2'
 go
  

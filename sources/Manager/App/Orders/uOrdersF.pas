@@ -15,7 +15,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
-  uUniFSComboBoxHelper;
+  uUniFSComboBoxHelper, uMessengerF;
 
 type
 
@@ -110,6 +110,7 @@ type
     lblCurExtraKurs: TUniLabel;
     lblExtraKurs: TUniLabel;
     edtExtraKurs: TUniNumberEdit;
+    btnMessage: TUniButton;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -138,6 +139,7 @@ type
     procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure edtVolumeKGFChange(Sender: TObject);
+    procedure btnMessageClick(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -734,6 +736,12 @@ end;
 procedure TOrderF.btnGoogleImagesClick(Sender: TObject);
 begin
   setOpenUrl(Format('https://www.google.com/search?igu=1&tbm=isch&q=%s+%s', [FManufacturer, FDetailNumber]));
+end;
+
+procedure TOrderF.btnMessageClick(Sender: TObject);
+begin
+   MessageF.OrderID := Fid;
+   MessageF.ShowModal();
 end;
 
 procedure TOrderF.btnYandexImagesClick(Sender: TObject);
