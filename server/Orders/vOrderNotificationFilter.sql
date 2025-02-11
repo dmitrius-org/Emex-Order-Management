@@ -9,7 +9,7 @@ as
 
   select o.OrderID
     from vUserAccess ua 
-   inner join tOrders o with (nolock index=ao2)
+   inner join tOrders o with (nolock)-- index=ao2)
          on o.ClientID = ua.LinkID         
     left join tOrdersDeliverySupplier od with (nolock index=PK_tOrdersDeliverySupplier_OrderID)
            on od.OrderID = o.OrderID
@@ -25,13 +25,11 @@ as
           or (o.[Flag] & 2048 /*Сообщение от клиента*/> 0)
         
           )
-
-      
-
-    
+ 
 go
 grant all on vOrderNotificationFilter to public
- 
+go
+exec setOV 'vOrderNotificationFilter', 'V', '20250206', '0'
 
 select * 
 from vOrderNotificationFilter
