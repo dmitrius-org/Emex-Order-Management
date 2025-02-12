@@ -60,7 +60,7 @@ as
 go
 grant exec on ChatsMessageInsert to public
 go
-exec setOV 'ChatsMessageInsert', 'P', '20250129', '2'
+exec setOV 'ChatsMessageInsert', 'P', '20250211', '3'
 go
  
 

@@ -30,27 +30,34 @@ SELECT o.[OrderID]
       ,o.[Price]
       ,o.[Amount]
       ,o.[PricePurchase] -- используем в форме редактирования
-      --,o.[AmountPurchase]
-      --,o.[PricePurchaseF]
-      --,o.[AmountPurchaseF]
       ,o.[WeightKG]
       ,o.[VolumeKG]
       ,p.[WeightKGF]
       ,p.[VolumeKGF]
+      --
       ,o.[DeliveryPlanDateSupplier]    -- Плановая дата поступления поставщику
       ,nullif(od.[DeliveryPlanDateSupplier], o.[DeliveryPlanDateSupplier]) as DeliveryPlanDateSupplier2-- Плановая дата поступления поставщику после изменения
+      -- 
       ,isnull(od.[DeliveryRestTermSupplier], o.[DeliveryRestTermSupplier]) as DeliveryRestTermSupplier-- Остаток срока до поступления поставщику	
+      --
       ,o.DeliveryTerm as DeliveryTermSupplier  -- Срок до поступления поставщику
       ,nullif(od.DeliveryTermSupplier, o.[DeliveryTerm]) as DeliveryTermSupplier2 -- Срок доставки поставщику после изменения
+      --
       ,o.DeliveredDateToSupplier               -- Доставлена поставщику
+      --
       ,o.DeliveryDaysReserve                   -- Дней запаса до вылета	
       ,nullif(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) as DeliveryDaysReserve2 --
+      --
       ,o.DeliveryNextDate                      -- Ближайшая дата вылета
       ,nullif(o.DeliveryNextDate2, o.DeliveryNextDate) as DeliveryNextDate2-- Ближайшая дата вылета, рассчитывается если прошёл срок DeliveryNextDate
+      --
       ,o.DeliveryDateToCustomer                -- Дата поставки клиенту	
+      ,nullif(oc.DeliveryDateToCustomer, o.DeliveryDateToCustomer) as DeliveryDateToCustomer2 --
       ,o.DeliveryTermToCustomer	               -- Срок поставки клиенту	
+      ,nullif(oc.DeliveryTermToCustomer, o.DeliveryTermToCustomer) as DeliveryTermToCustomer2 --
       ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
-	  ,o.OverPricing                           -- превышение
+	 
+     ,o.OverPricing                           -- превышение
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
@@ -67,10 +74,12 @@ SELECT o.[OrderID]
       ,o.Flag
   FROM [tOrders] o with (nolock index=ao2)
 
-  left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
+  left join vOrdersDeliverySupplier od  
          on od.OrderID = o.OrderID
- --inner join tUser u with (nolock index=ao1)
- --        on u.UserID = o.UserID
+
+  left join vOrdersDeliveryCustomer oc  
+         on oc.OrderID = o.OrderID
+
  inner join tNodes s with (nolock index=ao1)
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 
@@ -112,4 +121,4 @@ go
 exec setOV 'vCustomerOrders', 'V', '20250205', '33'
 go
 
-select * from vCustomerOrders  where ClientID =31
+select * from vCustomerOrders  where ClientID =57

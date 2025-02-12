@@ -21,7 +21,7 @@ as
 go
 grant select on vUnreadManagerMessages to public
 go
-exec setOV 'vUnreadManagerMessages', 'V', '20241023', '1'
+exec setOV 'vUnreadManagerMessages', 'V', '20250211', '2'
 go
 
 

@@ -145,7 +145,9 @@
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = 13421772
       Images = UniImageList
-      EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
+      EmptyText = 
+        '<div style="text-align: center;"><i class="fas fa-exclamation"><' +
+        '/i> '#1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ... </div>'
       LayoutConfig.ComponentCls = 'grid-order'
       LayoutConfig.Height = '100'
       LayoutConfig.Width = '100'
@@ -172,7 +174,7 @@
         item
           FieldName = 'UnreadMessagesCount'
           Title.Caption = ' '
-          Width = 26
+          Width = 43
           Alignment = taLeftJustify
           ReadOnly = True
           Hint = #1044#1077#1081#1089#1090#1074#1080#1103
@@ -860,8 +862,10 @@
       '      ,o.[DeliveryDaysReserve2]'
       '      ,o.[DeliveryNextDate]'
       '      ,o.[DeliveryNextDate2]    '
-      '      ,o.[DeliveryDateToCustomer]'
+      '      ,o.[DeliveryDateToCustomer] '
+      '      ,o.[DeliveryDateToCustomer2]'
       '      ,o.[DeliveryTermToCustomer]'
+      '      ,o.[DeliveryTermToCustomer2]'
       '      ,o.[DeliveryRestToCustomer]'
       '      ,o.[inDatetime]'
       '      ,o.[updDatetime]      '
@@ -1062,6 +1066,7 @@
       FieldName = 'DeliveredDateToSupplier'
       Origin = 'DeliveredDateToSupplier'
       ReadOnly = True
+      DisplayFormat = 'dd.mm.yyyy'
     end
     object QueryDeliveryDaysReserve2: TIntegerField
       FieldName = 'DeliveryDaysReserve2'
@@ -1072,21 +1077,32 @@
       Origin = 'DeliveryNextDate'
       ReadOnly = True
       OnGetText = QueryDeliveryNextDateGetText
+      DisplayFormat = 'dd.mm.yyyy'
     end
     object QueryDeliveryNextDate2: TSQLTimeStampField
       FieldName = 'DeliveryNextDate2'
       ReadOnly = True
+      DisplayFormat = 'dd.mm.yyyy'
     end
     object QueryDeliveryDateToCustomer: TSQLTimeStampField
       FieldName = 'DeliveryDateToCustomer'
       Origin = 'DeliveryDateToCustomer'
       ReadOnly = True
       OnGetText = QueryDeliveryDateToCustomerGetText
+      DisplayFormat = 'dd.mm.yyyy'
+    end
+    object QueryDeliveryDateToCustomer2: TSQLTimeStampField
+      FieldName = 'DeliveryDateToCustomer2'
+      DisplayFormat = 'dd.mm.yyyy'
     end
     object QueryDeliveryTermToCustomer: TIntegerField
       FieldName = 'DeliveryTermToCustomer'
       Origin = 'DeliveryTermToCustomer'
       ReadOnly = True
+      OnGetText = QueryDeliveryTermToCustomerGetText
+    end
+    object QueryDeliveryTermToCustomer2: TIntegerField
+      FieldName = 'DeliveryTermToCustomer2'
     end
     object QueryDeliveryRestToCustomer: TIntegerField
       FieldName = 'DeliveryRestToCustomer'

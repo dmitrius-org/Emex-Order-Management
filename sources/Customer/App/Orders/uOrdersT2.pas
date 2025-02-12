@@ -116,6 +116,8 @@ type
     QueryisCancel: TBooleanField;
     QueryDeliveryPlanDateSupplier2: TSQLTimeStampField;
     QueryDeliveryTermSupplier2: TIntegerField;
+    QueryDeliveryDateToCustomer2: TSQLTimeStampField;
+    QueryDeliveryTermToCustomer2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -156,6 +158,8 @@ type
       DisplayText: Boolean);
     procedure QueryUnreadMessagesCountGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure QueryDeliveryTermToCustomerGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -372,7 +376,6 @@ begin
                                            ,N         int
                                            ,Processed bit
                                            );
-
              ''' + SqlText
              , [], []);
 
@@ -631,10 +634,17 @@ end;
 procedure TOrdersT2.QueryDeliveryDateToCustomerGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
+
+  if (not QueryDeliveryDateToCustomer2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
+            '</span><span class="x-receipt-date">' + QueryDeliveryDateToCustomer2.AsString + '</span>'; //
+  end
+  else
   if (not QueryReceiptDate.IsNull) then
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;'+
-            '</span><span class="x-receipt-date">' + QueryReceiptDate.AsString + '</span>'; // Ожидаемая дата поступления
+            '</span><span class="x-receipt-date">' + QueryReceiptDate.AsString + '</span>';
   end
   else
     Text := Sender.AsString; // Дата поставки клиенту
@@ -669,7 +679,19 @@ procedure TOrdersT2.QueryDeliveryTermSupplierGetText(Sender: TField;
 begin
   if (not QueryDeliveryTermSupplier2.IsNull) then
   begin
-    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-replacement-detail-number-arrow">&#10149;</span> <span class="x-replacement-detail-number">' + QueryDeliveryTermSupplier2.AsString + '</span>';
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-receipt-date-arrow">&#10149;</span> <span class="x-replacement-detail-number">' + QueryDeliveryTermSupplier2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT2.QueryDeliveryTermToCustomerGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryTermToCustomer2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryTermToCustomer2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;
@@ -729,7 +751,7 @@ begin
   else
     Text := '<i class="mail-envelope-o"></i>';
 
-  Text:= '<button type="button" onclick="showEmail()" style="border: 0; background: none;"> '+ Text + '</button>';
+  Text:= '<button type="button" onclick="showEmail(' + QueryOrderID.AsString + ')" style="border: 0; background: none;"> '+ Text + '</button>';
 end;
 
 procedure TOrdersT2.GetNotificationOrders;
@@ -763,7 +785,6 @@ begin
     UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true; }');
 
     UniSession.AddJS(
-
       'var el = document.querySelector(".order.fa.fa-bell");' +
       'if (el) { el.classList.remove("icon-notification"); }' +
       'else { console.error("Element with class fa fa-bell not found"); }'
@@ -799,6 +820,7 @@ end;
 procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
+  logger.Info('EventName: ' + EventName);
   if (EventName = '_columnhide') then
   begin
       Sql.Exec('''
@@ -831,7 +853,9 @@ begin
   else
   if (EventName = 'showEmail') then
   begin
-    actShowMessageExecute(Self);
+    //actShowMessageExecute(Self);
+    MessageF.OrderID := Params.Values['P1'].ToInteger;
+    MessageF.ShowModal(MessageCallBack);
   end
 end;
 
@@ -957,7 +981,7 @@ begin
   Marks := tMarks.Create(Grid);
   Marks.Clear;
 
-  UniSession.JSCode( ' showEmail = function() {  ajaxRequest(' + Grid.JSName    + ', "showEmail", []); } ;');
+  UniSession.JSCode( ' showEmail = function(AVal) {  ajaxRequest(' + Grid.JSName    + ', "showEmail", ["P1=" + AVal]); } ;');
 
   logger.Info('UniFrameCreate End');
 end;
