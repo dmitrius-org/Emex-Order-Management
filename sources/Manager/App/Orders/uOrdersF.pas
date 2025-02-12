@@ -1302,7 +1302,7 @@ begin
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.DeliveryTermSupplier -- Срок до поступления поставщику (срок из прайса)
-             ,v.DeliveryDaysReserve
+             ,isnull(v.DeliveryDaysReserve2, v.DeliveryDaysReserve) as DeliveryDaysReserve
              ,v.DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
              ,v.DeliveryTermFromCustomerProfile
 

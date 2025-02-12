@@ -118,6 +118,7 @@ type
     QueryDeliveryTermSupplier2: TIntegerField;
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;
     QueryDeliveryTermToCustomer2: TIntegerField;
+    QueryAllMessageCount: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -743,14 +744,15 @@ begin
     Text := Sender.AsString;
 end;
 
-procedure TOrdersT2.QueryUnreadMessagesCountGetText(Sender: TField;
-  var Text: string; DisplayText: Boolean);
+procedure TOrdersT2.QueryUnreadMessagesCountGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   if QueryUnreadMessagesCount.Value > 0 then
-    Text := '<i class="mail-envelope"></i><sup> ' + QueryUnreadMessagesCount.Value.ToString + '</sup>'
+    Text := '<i class="mail-envelope"></i>'
   else
     Text := '<i class="mail-envelope-o"></i>';
 
+  if QueryAllMessageCount.Value > 0 then
+    Text := Text +'<sup> ' + QueryAllMessageCount.Value.ToString + '</sup>';
   Text:= '<button type="button" onclick="showEmail(' + QueryOrderID.AsString + ')" style="border: 0; background: none;"> '+ Text + '</button>';
 end;
 

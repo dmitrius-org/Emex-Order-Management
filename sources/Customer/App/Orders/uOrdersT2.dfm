@@ -879,6 +879,7 @@
       
         '      ,o.UnreadMessagesCount -- '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1077#1087#1088#1086#1095#1080#1090#1072#1085#1085#1099#1093' '#1089#1086#1086#1073#1097#1077#1085 +
         #1080#1081' '
+      '      ,o.AllMessageCount'
       '      ,o.Comment2'
       '      ,o.isCancel'
       '  FROM vCustomerOrders o'
@@ -1151,6 +1152,9 @@
       FieldName = 'OrderDetailSubId'
       ReadOnly = True
       Size = 32
+    end
+    object QueryAllMessageCount: TIntegerField
+      FieldName = 'AllMessageCount'
     end
     object QueryUnreadMessagesCount: TIntegerField
       FieldName = 'UnreadMessagesCount'

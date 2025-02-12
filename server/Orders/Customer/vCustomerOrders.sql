@@ -57,7 +57,7 @@ SELECT o.[OrderID]
       ,nullif(oc.DeliveryTermToCustomer, o.DeliveryTermToCustomer) as DeliveryTermToCustomer2 --
       ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
 	 
-     ,o.OverPricing                           -- превышение
+     ,o.OverPricing                            -- превышение
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
@@ -68,6 +68,7 @@ SELECT o.[OrderID]
       ,o.OrderDetailSubId
       ,o.Comment2
       ,um.UnreadMessagesCount
+      ,um.AllMessageCount
 
       ,o.[inDatetime]
       ,o.[updDatetime]
@@ -110,9 +111,16 @@ SELECT o.[OrderID]
          on sh.Invoice = o.Invoice
 
  outer apply (
-              select count(*) as UnreadMessagesCount
-                from vUnreadManagerMessages um 
-               where um.OrderID = o.OrderID
+              select count(*) AllMessageCount
+                    ,sum(case 
+                             when cm.Flag&2 = 0 then 1
+                             else 0
+                         end) UnreadMessagesCount
+                from tChats ct with (nolock index=ao3)
+               inner join tChatsMessage cm with (nolock index=ao2)
+                       on cm.ChatID = ct.ChatID
+                      and cm.Flag&1 = 1
+               where ct.OrderID = o.OrderID
               ) as um
   
 go
