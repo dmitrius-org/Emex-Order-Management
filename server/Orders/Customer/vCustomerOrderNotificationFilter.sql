@@ -3,7 +3,6 @@ drop view if exists vCustomerOrderNotificationFilter
   vCustomerOrderNotificationFilter -
 */
 go
-
 create view vCustomerOrderNotificationFilter
 as
 
@@ -19,10 +18,5 @@ as
 go
 grant all on vCustomerOrderNotificationFilter to public
 go
-exec setOV 'vCustomerOrderNotificationFilter', 'V', '20250211', '0'
-
-select * 
-from vCustomerOrderNotificationFilter
-where ClientID = 57
-
+exec setOV 'vCustomerOrderNotificationFilter', 'V', '20250211', '1'
 

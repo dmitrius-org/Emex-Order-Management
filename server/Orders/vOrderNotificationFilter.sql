@@ -1,10 +1,9 @@
 drop view if exists vOrderNotificationFilter
+go
+create view vOrderNotificationFilter
 /*
   vOrderNotificationFilter -
 */
-go
-
-create view vOrderNotificationFilter
 as
 
   select o.OrderID
@@ -30,9 +29,4 @@ go
 grant all on vOrderNotificationFilter to public
 go
 exec setOV 'vOrderNotificationFilter', 'V', '20250206', '0'
-
-select * 
-from vOrderNotificationFilter
---where ClientID = 57
-
-
+go

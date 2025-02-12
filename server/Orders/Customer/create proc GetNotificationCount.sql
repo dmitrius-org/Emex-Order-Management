@@ -25,10 +25,5 @@ declare @r int = 0
 GO
 grant exec on GetNotificationCount to public
 go
-exec setOV 'GetNotificationCount', 'P', '20250211', '2'
+exec setOV 'GetNotificationCount', 'P', '20250211', '3'
 go
- 
-
-
-
-

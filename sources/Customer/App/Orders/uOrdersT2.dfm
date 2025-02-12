@@ -138,7 +138,7 @@
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
-      WebOptions.PageSize = 150
+      WebOptions.PageSize = 500
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.WaitData = True

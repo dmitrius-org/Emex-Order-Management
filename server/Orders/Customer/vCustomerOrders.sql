@@ -118,7 +118,5 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250205', '33'
+exec setOV 'vCustomerOrders', 'V', '20250212', '35'
 go
-
-select * from vCustomerOrders  where ClientID =57

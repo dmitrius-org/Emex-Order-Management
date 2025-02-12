@@ -5,12 +5,6 @@ if OBJECT_ID('vMarkOrderStateAction') is not null
 
 
 
-
-    insert tMenu
-    select * from testdb.dbo.tMenu where Name='TOrdersT.actExecuteActionRollback'
-
-  insert tGrant
-    select * from tGrant where MenuID =  918
-
-
-actExecuteActionRollback
+update tCustomerGridOptions
+ set Width=45
+where [Column]='UnreadMessagesCount'

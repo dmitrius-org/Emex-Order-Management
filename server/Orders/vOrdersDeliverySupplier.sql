@@ -23,4 +23,3 @@ grant all on vOrdersDeliverySupplier to public
 go
 exec setOV 'vOrdersDeliverySupplier', 'V', '20250211', '1'
 go
-Select * from vOrdersDeliverySupplier

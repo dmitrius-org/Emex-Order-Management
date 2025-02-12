@@ -403,7 +403,7 @@
     content: '\f0e0'; 
     color: #337AB7; 
     cursor: pointer;
-
+    font-size: 1.2em;
 }
 
 .grid-order .mail-envelope-o::before {
@@ -412,6 +412,7 @@
     content: '\f003'; 
     color: #337AB7; 
     cursor: pointer;
+    font-size: 1.2em;
 }
 
 .mail-envelope + sup {

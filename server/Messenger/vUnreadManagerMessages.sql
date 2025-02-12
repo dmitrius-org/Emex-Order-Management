@@ -21,8 +21,5 @@ as
 go
 grant select on vUnreadManagerMessages to public
 go
-exec setOV 'vUnreadManagerMessages', 'V', '20250211', '2'
+exec setOV 'vUnreadManagerMessages', 'V', '20250211', '3'
 go
-
-
-select * from vUnreadManagerMessages  where ClientID =31

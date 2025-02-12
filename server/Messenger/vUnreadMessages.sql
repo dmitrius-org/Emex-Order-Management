@@ -19,7 +19,3 @@ grant select on vUnreadMessages to public
 go
 exec setOV 'vUnreadMessages', 'V', '20250127', '1'
 go
-
-Select *
-  from vUnreadMessages
- where isnull(ClientID, 0) > 0
