@@ -24,7 +24,7 @@ as
      and m.Type = 3
 
   delete pAuditInsert from pAuditInsert (rowlock) where spid=@@spid
-  insert pAuditInsert
+  insert pAuditInsert with (rowlock)
         (Spid
         ,ObjectID
         ,ObjectTypeID

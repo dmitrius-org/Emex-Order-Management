@@ -71,7 +71,7 @@
 .grid-order .x-replacement-price{
      line-height: 0.0;  
      color: #c45b41; 
-     text-align: left 
+     text-align: left;
 }
 
 .grid-order .StatusIcons{
@@ -230,7 +230,6 @@
     font-weight: 900; /* Убедитесь, что шрифт соответствует стилю иконки */
     animation: spin 2s infinite linear; /* Анимация для эффекта вращения */
     color: #449c29; 
-    /* Установите нужный цвет */
 }
 
 .fa-pulse {
@@ -363,6 +362,13 @@
 
 /* Перенос строки в заголовке таблицы */
 .grid-employee-orders-processed .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+
+/* Перенос строки в заголовке таблицы */
+.grid-box .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;
 }

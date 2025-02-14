@@ -19,7 +19,8 @@ uses
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
-  uniDateTimePicker, uniGridExporters, uniMenuButton;
+  uniDateTimePicker, uniGridExporters, uniMenuButton, uConstant,
+  uShipmentsBoxesT_Wrapper;
 
 
 
@@ -146,13 +147,16 @@ type
     N16: TUniMenuItem;
     QueryDeliverySumF: TCurrencyField;
     QueryAmountF: TCurrencyField;
+    edtTransporterNumber: TUniEdit;
+    UniLabel1: TUniLabel;
+    actShipmentsBoxes: TAction;
+    N17: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure GridSelectionChange(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure GridCellClick(Column: TUniDBGridColumn);
     procedure ppMainPopup(Sender: TObject);
     procedure actFilterExecute(Sender: TObject);
     procedure actFilterClearExecute(Sender: TObject);
@@ -178,6 +182,7 @@ type
     procedure fSupplierSelect(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
     procedure actDataEditExecute(Sender: TObject);
+    procedure actShipmentsBoxesExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -265,8 +270,9 @@ end;
 procedure TShipmentsT.actFilterClearExecute(Sender: TObject);
 begin
   edtInvoice.Clear;
-  fShipmentsDate.Text := '';
+  fShipmentsDate.DateTime := nulldate;
   fSupplier.Clear;
+  edtTransporterNumber.Clear;
   GridOpen();
 end;
 
@@ -334,6 +340,12 @@ begin
   ShipmentsTransporterNumberF.ID:=QueryShipmentsID.AsInteger;
 
   ShipmentsTransporterNumberF.ShowModal(ShipmentsTransporterNumberFCallBack);
+end;
+
+procedure TShipmentsT.actShipmentsBoxesExecute(Sender: TObject);
+begin
+  ShipmentsBoxesT_Wrapper.TransporterNumber:=QueryTransporterNumber.Value;
+  ShipmentsBoxesT_Wrapper.ShowModal;
 end;
 
 procedure TShipmentsT.DoHideMask;
@@ -433,19 +445,24 @@ begin
     Query.Close();
 
     if edtInvoice.Text <> '' then
-      Query.MacroByName('Invoice').Value := ' and Invoice like ''%'   + edtInvoice.Text + '%'''
+      Query.MacroByName('Invoice').Value := ' and s.Invoice like ''%'   + edtInvoice.Text + '%'''
     else
       Query.MacroByName('Invoice').Value := '';
 
+    if edtTransporterNumber.Text <> '' then
+      Query.MacroByName('TransporterNumber').Value := ' and s.TransporterNumber like ''%'   + edtTransporterNumber.Text + '%'''
+    else
+      Query.MacroByName('TransporterNumber').Value := '';
+
     // поставщик
-    if FFilterTextSupplier <> '' then FSupplier := ' and SuppliersID in (' + FFilterTextSupplier + ')'
+    if FFilterTextSupplier <> '' then FSupplier := ' and s.SuppliersID in (' + FFilterTextSupplier + ')'
     else
       FSupplier := '';
 
     Query.MacroByName('Supplier').Value    := FSupplier;
 
     if (fShipmentsDate.Text <> '') and (fShipmentsDate.Text <> '30.12.1899') then
-      Query.MacroByName('ShipmentsDate').Value := ' and cast(ShipmentsDate as date) = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
+      Query.MacroByName('ShipmentsDate').Value := ' and cast(s.ShipmentsDate as date) = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
     else
       Query.MacroByName('ShipmentsDate').Value := '';
 
@@ -481,6 +498,9 @@ begin
   actSetTransporterNumber.Enabled := (actSetTransporterNumber.Tag=1) and (Query.RecordCount>0);
 
   actSetReceiptDate.Enabled := (actSetReceiptDate.Tag=1) and (Query.RecordCount>0);
+
+  actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and (not QueryTransporterNumber.IsNull);
+
 end;
 
 procedure TShipmentsT.QueryReceiptDateGetText(Sender: TField; var Text: string;
@@ -503,11 +523,6 @@ begin
     if ((EventName = '_columnhide') or (EventName = '_columnshow')) then
       GridExt.GridLayoutSave(self, Grid, Params, EventName);
   end;
-end;
-
-procedure TShipmentsT.GridCellClick(Column: TUniDBGridColumn);
-begin
-//  ACurrColumn := Column;
 end;
 
 procedure TShipmentsT.GridCellContextClick(Column: TUniDBGridColumn; X,Y: Integer);

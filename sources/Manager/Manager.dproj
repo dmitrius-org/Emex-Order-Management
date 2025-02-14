@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Manager.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -455,8 +455,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>StatisticCanceled</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT.pas">
-            <Form>EmployeeOrdersProcessedT</Form>
+        <DCCReference Include="App\Shipments\uShipmentsBoxesT.pas">
+            <Form>ShipmentsBoxesT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
@@ -476,8 +476,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas">
-            <Form>EmployeeOrdersProcessedT_Wrapper</Form>
+        <DCCReference Include="App\Shipments\uShipmentsBoxesT_Wrapper.pas">
+            <Form>ShipmentsBoxesT_Wrapper</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
@@ -488,6 +488,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniMemoHelper.pas"/>
         <DCCReference Include="..\Common\Common\uTreeMenuHelper.pas"/>
+        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas">
+            <Form>EmployeeOrdersProcessedT_Wrapper</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT.pas">
+            <Form>EmployeeOrdersProcessedT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

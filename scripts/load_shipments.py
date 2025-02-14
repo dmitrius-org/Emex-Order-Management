@@ -26,7 +26,7 @@ else:
 
 
 # Статусы доставок транспортной компании
-directory=r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\ADQ\\Log\\'
+directory=r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\\ADQ\\Log\\'
 # directory = config["LoadPath"]["ShipmentsFile"] 
 
 file_list = os.listdir(directory)  # определить список всех файлов

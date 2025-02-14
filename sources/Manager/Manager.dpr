@@ -118,16 +118,18 @@ uses
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame},
+  uShipmentsBoxesT in 'App\Shipments\uShipmentsBoxesT.pas' {ShipmentsBoxesT: TUniFrame},
   uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
   uStringHelper in '..\Common\Common\uStringHelper.pas',
   uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm},
   uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
-  uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
+  uShipmentsBoxesT_Wrapper in 'App\Shipments\uShipmentsBoxesT_Wrapper.pas' {ShipmentsBoxesT_Wrapper: TUniForm},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
-  uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas';
+  uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas',
+  uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
+  uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame};
 
 {$R *.res}
 

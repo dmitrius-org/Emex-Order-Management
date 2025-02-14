@@ -1588,6 +1588,8 @@ begin
 
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
 
+
+//  Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
   logger.Info('TOrdersT.UniFrameCreate End');
 end;
 

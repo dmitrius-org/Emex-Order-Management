@@ -20,6 +20,7 @@ SELECT o.[OrderID]
       ,o.[isCancel]
 	  ,o.[MakeLogo]
       ,o.[Manufacturer]
+      ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
       ,o.[DetailNumber]
       ,ltrim(rtrim(Replace( case 
                   when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
@@ -93,7 +94,6 @@ SELECT o.[OrderID]
 	  ,o.OverPricing                   -- превышение
 	  ,o.Warning                       -- предупреждение/замечания
       ,o.Comment                       -- 
-	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementMakeLogo           -- бренд замены
 	  ,o.ReplacementDetailNumber       -- номер замены
 	  ,o.ReplacementPrice              -- Изменение цены

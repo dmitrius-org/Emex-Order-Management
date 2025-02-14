@@ -39,7 +39,7 @@ select
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
                                                         when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                       -- Срок поставщика из API
-                                                              o.DeliveryDaysReserve +                  -- Запас до вылета
+                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                  -- Запас до вылета
                                                               o.DeliveryTermFromSupplierProfile-       -- Доставка
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               ) > 0            
@@ -48,7 +48,7 @@ select
                                                       end +
                                                              cast(((datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                            -- Срок поставщика из API
-                                                              o.DeliveryDaysReserve +                       -- Запас до вылета
+                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                       -- Запас до вылета
                                                               o.DeliveryTermFromSupplierProfile-            -- Доставка
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               )) as varchar)     
