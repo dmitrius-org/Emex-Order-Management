@@ -19,8 +19,6 @@ uses
 type
   TShipmentsBoxesT = class(TUniFrame)
     UniPanel3: TUniPanel;
-    btnGridStatisticOpen: TUniButton;
-    fCancel: TUniBitBtn;
     Source: TDataSource;
     Query: TFDQuery;
     Grid: TUniDBGrid;

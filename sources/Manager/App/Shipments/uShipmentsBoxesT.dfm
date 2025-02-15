@@ -13,6 +13,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     Width = 1301
     Height = 64
     Hint = ''
+    Visible = False
     Align = alTop
     TabOrder = 0
     ShowCaption = False
@@ -20,29 +21,6 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 1193
-    object btnGridStatisticOpen: TUniButton
-      Left = 526
-      Top = 27
-      Width = 100
-      Height = 25
-      Hint = ''
-      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
-      TabOrder = 1
-      OnClick = btnGridStatisticOpenClick
-    end
-    object fCancel: TUniBitBtn
-      Left = 632
-      Top = 27
-      Width = 100
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      ParentShowHint = False
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-      TabOrder = 2
-      ImageIndex = 3
-    end
   end
   object Grid: TUniDBGrid
     Left = 0

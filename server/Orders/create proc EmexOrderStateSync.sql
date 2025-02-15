@@ -313,6 +313,11 @@ DEALLOCATE my_cur
 	                                  then SUBSTRING(StateText, CHARINDEX('#', StateText) +1, CHARINDEX(',', StateText) - CHARINDEX('#', StateText)-1 )
                                       else o.Invoice
                                     end
+       ,o.Box                 = case 
+	                                  when CHARINDEX('box:', p.StateText) > 0 
+	                                  then SUBSTRING(p.StateText, CHARINDEX('box:', p.StateText) + LEN('box:'), LEN(p.StateText))
+                                      else o.Box
+                                    end
        ,o.DeliveredDateToSupplier = case -- Доставлена поставщику
                                       when n.Brief  in ('ReceivedOnStock' /*Получено на склад*/
 									                   ,'ReadyToSend'     /*Готово к выдаче*/)
@@ -397,6 +402,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20241004', '8'
+exec setOV 'EmexOrderStateSync', 'P', '20250215', '9'
 go
  
