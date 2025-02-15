@@ -151,6 +151,7 @@ type
     UniLabel1: TUniLabel;
     actShipmentsBoxes: TAction;
     N17: TUniMenuItem;
+    QueryFlag: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -183,6 +184,8 @@ type
     procedure UniFrameReady(Sender: TObject);
     procedure actDataEditExecute(Sender: TObject);
     procedure actShipmentsBoxesExecute(Sender: TObject);
+    procedure QueryFlagGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
 
   private
     { Private declarations }
@@ -501,6 +504,20 @@ begin
 
   actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and (not QueryTransporterNumber.IsNull);
 
+end;
+
+procedure TShipmentsT.QueryFlagGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+var t: string;
+begin
+  t := '';
+
+  if (Sender.AsInteger and 1) > 0 then
+  begin
+    t := t + '<span class="" data-qtip="Загружена информаци о коробках"><i class="shipments-box"></i></span> ';
+  end;
+
+  Text := t;
 end;
 
 procedure TShipmentsT.QueryReceiptDateGetText(Sender: TField; var Text: string;

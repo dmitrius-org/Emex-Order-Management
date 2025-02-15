@@ -163,6 +163,12 @@ object ShipmentsT: TShipmentsT
           Sortable = True
         end
         item
+          FieldName = 'Flag'
+          Title.Caption = ' '
+          Width = 64
+          Alignment = taLeftJustify
+        end
+        item
           FieldName = 'StatusName'
           Title.Alignment = taCenter
           Title.Caption = #1057#1090#1072#1090#1091#1089
@@ -767,7 +773,7 @@ object ShipmentsT: TShipmentsT
         '      ,s.SupplierDiffVolumeWeigh     -- '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099 +
         #1081' '#1080' '#1074#1077#1089' '#1092#1080#1079' '#1092#1072#1082#1090' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       '      ,s.SupplierAmount '
-      '      -- '#1089#1095#1080#1090#1072#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1091' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ''
       
         '      ,s.TransporterWeightKG         -- '#1087#1086#1083#1077' "'#1074#1077#1089' '#1092#1080#1079' '#1087#1086' '#1076#1072#1085#1085#1099#1084' ' +
         #1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072'"'
@@ -779,7 +785,7 @@ object ShipmentsT: TShipmentsT
         #1081' '#1080' '#1074#1077#1089' '#1092#1080#1079' '#1092#1072#1082#1090' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
       '      ,s.TransporterAmount '
       '      ,s.TransporterNumber'
-      '      -- '#1089#1095#1080#1090#1072#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1091' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+      ''
       '      ,s.WeightKGAmount'
       '      ,s.VolumeKGAmount'
       '      '
@@ -787,9 +793,10 @@ object ShipmentsT: TShipmentsT
       '      ,s.SupplierBrief               -- '#1087#1086#1089#1090#1072#1074#1097#1080#1082
       '      ,s.StatusName'
       '      ,s.DeliverySumF'
+      '      ,s.Flag'
       ''
-      '   FROM vShipments s '
-      '  Where 1=1'
+      '  FROM vShipments s '
+      ' Where 1=1'
       '  '
       '   !TransporterNumber'
       '  '
@@ -827,6 +834,10 @@ object ShipmentsT: TShipmentsT
       ProviderFlags = [pfInWhere, pfInKey]
       Precision = 18
       Size = 0
+    end
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
+      OnGetText = QueryFlagGetText
     end
     object QueryShipmentsDate: TSQLTimeStampField
       FieldName = 'ShipmentsDate'

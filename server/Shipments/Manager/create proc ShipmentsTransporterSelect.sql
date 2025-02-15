@@ -93,10 +93,8 @@ as
       --,t.ImageLinks    
         ,1
     from tShipmentsBoxes t (nolock)
-   where t.TransporterNumber in ('qbow198c'--@TransporterNumber
-   ,'qbow197c'
-   )
-
+   where --t.TransporterNumber = @TransporterNumber
+  t.BoxNumber  in  (101376929, 101376932, 101376934)
   insert #r
         (N
         ,BoxNumber
@@ -145,46 +143,27 @@ as
         ,o.OrderDetailSubId 
         ,o.CustomerSubId 
         ,2
-    from #r r
-   inner join tOrders o (nolock)
+    from #r r with (nolock)
+   inner join tOrders o with (nolock index=ao4)
            on o.box = r.BoxNumber
-   inner join tClients c (nolock)
+   inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = o.ClientID
-
     left join tMakes b with (nolock index=ao2) -- брент замены
            on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
-
     left join tPrice p with (nolock index=ao1)
            on p.PriceID = o.PriceID	
 
-
-  --Update r
-  --   set r.OrderID = o.OrderID
-  --      ,r.ClientName = c.Brief--Клиент
-  --      ,r.Manufacturer = isnull(b.Name, o.Manufacturer) --Производитель
-  --  from #r r
-  -- inner join tOrders o (nolock)
-  --         on o.box = r.BoxNumber
-  -- inner join tClients c (nolock)
-  --         on c.ClientID = o.ClientID
-
-  --  left join tMakes b with (nolock index=ao2) -- брент замены
-  --         on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
-
-
---		Номер детали	Наименование детали	Производитель замены	Номер детали замены	Количество	Цена закупки руб	Сумма закупки руб	Вес Физический Факт	Вес Физический Факт Сумма
    Update r
-      set r.SupplierPhysicalWeight = r2.SupplierPhysicalWeight
-         ,r.TransporterPhysicalWeight = r2.TransporterPhysicalWeight
-         ,r.SupplierVolumetricWeight = r2.SupplierVolumetricWeight
+      set r.SupplierPhysicalWeight      = r2.SupplierPhysicalWeight
+         ,r.TransporterPhysicalWeight   = r2.TransporterPhysicalWeight
+         ,r.SupplierVolumetricWeight    = r2.SupplierVolumetricWeight
          ,r.TransporterVolumetricWeight = r2.TransporterVolumetricWeight
-     from #r r
-    inner join #r r2
+     from #r r with (updlock)
+    inner join #r r2 with (nolock)
             on r2.BoxNumber = r.BoxNumber
            and r2.Type      = 1
    where r.n    = 1
      and r.Type = 2
-
 
    select 
           r.N
@@ -215,9 +194,6 @@ as
          ,r.CustomerSubId--SubID	
          ,r.Reference--reference	
         --Фото коробки
-                            
-        
- 
         --,SupplierWidth              
         --,TransporterWidth           
         --,SupplierLength             
@@ -226,7 +202,6 @@ as
         --,TransporterHeight          
         --,ImageLinks        
     from #r r (nolock)
-
    where r.Type = 2
    order by TransporterNumber
 

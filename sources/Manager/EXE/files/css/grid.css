@@ -372,3 +372,12 @@
     white-space: normal;
     text-align: center;
 }
+
+.grid-shipments .shipments-box::before {
+    font-family: 'FontAwesome'; 
+    font-style: normal; /* Убираем курсив */
+    content: '\f16b';  /*fa-dropbox*/
+    color: orange; 
+    /* cursor: pointer; */
+    font-size: 1.2em;
+}

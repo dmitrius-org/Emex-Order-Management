@@ -69,6 +69,7 @@ begin
     ,Comment                         nvarchar(512)  -- Комментарий
     ,Comment2                        varchar(128)   -- Комментарий клиента
     ,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
+    ,Box                             numeric(18, 0) -- Коробка
     ,OverPricing                     money          -- Превышение Цены
 
     ,DestinationLogo                 nvarchar(20)   -- Направление отгрузки
@@ -92,7 +93,7 @@ begin
     ,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG
     ,VolumeKGAmount                  money          -- Стоимость кг объемного веса   tSupplierDeliveryProfiles.VolumeKG
     ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
-    ,PercentSupped                   int            -- процент поставки
+    ,PercentSupped                   int            -- процент поставки    
     --   
     ,ID                              numeric(18,0)  -- техническое поле 
     ,UserID                          numeric(18,0) default dbo.GetUserID()
@@ -105,6 +106,8 @@ begin
     create index ao2 on tOrders(ClientID, OrderNum);
 
     create index ao3 on tOrders(Invoice);
+
+    create index ao4 on tOrders(Box);
 end
 go
 grant select on tOrders to public
@@ -174,6 +177,7 @@ exec dbo.sys_setTableDescription 'tOrders', 'CustomerSubId'                     
 exec dbo.sys_setTableDescription 'tOrders', 'Reference'                         ,'Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти'
 exec dbo.sys_setTableDescription 'tOrders', 'ParentID'                          ,'Родительский идентификатор заказа. Проставляется при дроблении заказа.'
 exec dbo.sys_setTableDescription 'tOrders', 'Invoice'                           ,'Инвойс, номер отправки'
+exec dbo.sys_setTableDescription 'tOrders', 'Box'                               ,'Коробка'
 exec dbo.sys_setTableDescription 'tOrders', 'FileDate'                          ,'Дата файла'
 exec dbo.sys_setTableDescription 'tOrders', 'DestinationLogo'                   ,'Направление отгрузки'
 exec dbo.sys_setTableDescription 'tOrders', 'CommissionAmount'                  ,'Комиссия от продажи. Рассчитывается в момент создания заказа и не меняется'

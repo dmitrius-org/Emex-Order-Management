@@ -49,6 +49,10 @@ SELECT s.ShipmentsID
       ,sp.Brief     SupplierBrief
       ,s.SuppliersID
       ,s.DeliverySumF
+      ,case
+         when isnull(sb.ShipmentsBoxesID, 0) > 0 then 1
+         else 0
+       end Flag
   FROM tShipments s (nolock)
   left join tSuppliers sp (nolock)
          on sp.SuppliersID=s.SuppliersID
@@ -59,41 +63,21 @@ SELECT s.ShipmentsID
  --inner join tUser u with (nolock index=ao1)
  --        on u.UserID = o.UserID
 
- left join tNodes st with (nolock index=ao1)
-        on st.NodeID = s.[StatusID]
-       and st.Type   = 0 -- состояние/статус
+  left join tNodes st with (nolock index=ao1)
+         on st.NodeID = s.[StatusID]
+        and st.Type   = 0 -- состояние/статус
 
- --inner join tModel m with (nolock)
- --        on m.StateID = s.NodeID
- --       and m.ActionID= 0 -- только состояния
- --inner join tInstrument i with (nolock index=ao1)
- --        on i.InstrumentID = m.InstrumentID
-	--	and i.ObjectTypeID = 3
-
- --inner join tClients c with (nolock index=ao1)
- --        on c.ClientID = o.ClientID
-
- --left join tProfilesCustomer pc with (nolock)
- --        on pc.ClientID        = c.ClientID
- --       and pc.ClientPriceLogo = o.CustomerPriceLogo
- -- left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
- --        on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-
- -- left join tMakes b with (nolock index=ao2) -- брент замены
- --        on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
-
- -- left join tPrice p with (nolock index=ao1)
- --        on p.PriceID = o.PriceID		 
-
- --where ua.UserID    = dbo.GetUserID()
- --  and ua.LinkType  = 7
+  outer apply ( select top 1 *
+                  from tShipmentsBoxes sb (nolock)
+                 where sb.TransporterNumber = s.TransporterNumber
+               ) as sb
 go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20240927', '4'
+exec setOV 'vShipments', 'V', '20250215', '5'
 go
 -- Описание таблицы
---exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
-
+--exec dbo.sys_setTableDescription @table = 'vShipments', @desc = 'Отгрузки'
+go
 select  * from vShipments where Invoice = '241002'

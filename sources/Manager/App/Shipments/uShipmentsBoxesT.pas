@@ -12,7 +12,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, uniDBPivotGrid, uCommonType,
-  uniGUIApplication
+  uniGUIApplication, uLogger, uUtils.Varriant
 
   ;
 
@@ -66,6 +66,16 @@ type
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
   private
     FTransporterNumber: String;
+
+    FGroupFieldValue: Integer;
+
+
+    FTransporterPhysicalWeight: Real;
+    FTransporterVolumetricWeight: Real;
+    FWeightKGS: Real;
+    FVolumeKGS: Real;
+
+
     procedure SetTransporterNumber(const Value: String);
     { Private declarations }
   public
@@ -147,28 +157,34 @@ end;
 
 procedure TShipmentsBoxesT.GridColumnSummary(Column: TUniDBGridColumn; GroupFieldValue: Variant);
 begin
+  //logger.Info('GridColumnSummary: ' + Column.FieldName);
+
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+
+    FWeightKGS:=Column.AuxValue;
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+
+    FVolumeKGS:=Column.AuxValue;
   end
   else
   if SameText(Column.FieldName, 'SupplierPhysicalWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
@@ -177,16 +193,18 @@ begin
   if SameText(Column.FieldName, 'TransporterPhysicalWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+
+    FTransporterPhysicalWeight:=Column.AuxValue;
   end
   else
   if SameText(Column.FieldName, 'SupplierVolumetricWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
@@ -195,43 +213,40 @@ begin
   if SameText(Column.FieldName, 'TransporterVolumetricWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
+    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
     Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
-  end
-  else
-  if SameText(Column.FieldName, 'WeightL') then
-  begin
-    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
 
-    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-//    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    FTransporterVolumetricWeight := Column.AuxValue;
   end
-  else
-  if SameText(Column.FieldName, 'VolumeL') then
-  begin
-    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0;
-
-    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-//    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
-  end
-
+//  else
+//  if SameText(Column.FieldName, 'WeightL') then
+//  begin
+//    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
+//    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+//
+//    //Column.AuxValue + Column.Field.AsFloat;
+//  end
+//  else
+//  if SameText(Column.FieldName, 'VolumeL') then
+//  begin
+//    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
+//    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+//
+//    //Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
+//  end
 end;
 
 procedure TShipmentsBoxesT.GridColumnSummaryResult(Column: TUniDBGridColumn;
   GroupFieldValue: Variant; Attribs: TUniCellAttribs; var Result: string);
-var
-  I : Real;
+var I: Real;
 begin
+  //logger.Info('GridColumnSummaryResult: ' + Column.FieldName);
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
     I:=Column.AuxValue;
     Result:=FormatFloat('###,##0.000 кг', I);
-    //Attribs.Font.Style:=[fsBold];
-    //Attribs.Font.Color:=clGreen;
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then
@@ -266,8 +281,10 @@ begin
   else
   if SameText(Column.FieldName, 'WeightL') then
   begin
-    I:=Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValues[1] -
-       Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[1];
+    I:=FTransporterPhysicalWeight - FWeightKGS;
+
+    //VarToDouble(Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValue) -
+    //Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValue;
 
     if i > 0 then
     begin
@@ -279,15 +296,13 @@ begin
       Result:=FormatFloat('##0.000 кг', I);
       Attribs.Color   := $8ec9a6;
     end;
-   // Attribs.Font.Style:=[fsBold];
-   //Attribs.Font.Color:=clGreen;
-
   end
   else
   if SameText(Column.FieldName, 'VolumeL') then
   begin
-    I:=Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValues[1] -
-       Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[1];
+    I:=FTransporterVolumetricWeight - FVolumeKGS;
+//    Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValue -
+//       Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValue;
 
     if i > 0 then
     begin
@@ -299,9 +314,12 @@ begin
       Result:=FormatFloat('##0.000 кг', I);
       Attribs.Color   := $8ec9a6;
     end;
-    //Attribs.Font.Style:=[fsBold];
   end;
 
+
+
+//  FTransporterPhysicalWeight:=0;
+//  FWeightKGS:=0;
   Column.AuxValue:=NULL;
 end;
 
@@ -429,6 +447,8 @@ begin
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
+
+//  Query.AddIndex('BoxNumberIx', 'BoxNumber', '', []);
 end;
 
 initialization
