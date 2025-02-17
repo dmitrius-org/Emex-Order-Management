@@ -71,12 +71,17 @@ as
 		 ActionID,
 		 StateID,
 		 NewStateID,
+         Flag,
 		 sgn)
   Select @@Spid,
          o.OrderID ,
 		 @ActionID,
 		 o.StatusID, -- текущее состояние
 		 mo.TargetStateID,
+         case 
+           when @ActionID = 40 then 2
+           else 0
+         end,
 		 1
     from tMarks m with (nolock index=pk_tMarks)
    inner join tOrders o with (nolock index=ao1)

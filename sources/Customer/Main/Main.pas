@@ -264,6 +264,8 @@ begin
     FBalance.Align := alClient;
     FBalance.Parent := tsBalance;
     FBalance.ClientID := UniMainModule.AUserID;
+
+    FBalance.PlanShipmentsShow := sql.GetSetting('PlanShipmentsShow'); //Показывать плановые оттрузки
   end;
 
   FBalance.GridRefresh;

@@ -71,6 +71,7 @@ type
     procedure actLegendExecute(Sender: TObject);
   private
     FClientID: Integer;
+    FPlanShipmentsShow: Boolean;
     { Private declarations }
     procedure ShipmentReportPrint();
     procedure ShipmentReportToExcel(FQuery: TFDQuery; const FileName: string);
@@ -83,6 +84,8 @@ type
     procedure ShipmentsTotalDetailRefresh;
 
     property ClientID: Integer  read FClientID write SetClientID;
+
+    property PlanShipmentsShow: Boolean read FPlanShipmentsShow write FPlanShipmentsShow;
   end;
 
 implementation
@@ -188,7 +191,6 @@ begin
   MemoryStream := TMemoryStream.Create;
 
   try
-
     excelTemplate := Sql.GetSetting('TemplateClientsShipments');
 
     ExcelFile.Open(excelTemplate);  // Загружаем шаблон Excel
@@ -258,6 +260,8 @@ procedure TBalanceTotalT.ShipmentsTotalDetailRefresh;
 begin
   qShipments.Close;
   qShipments.ParamByName('ClientID').AsInteger := FClientID;
+  qShipments.ParamByName('IsPlan').AsBoolean:= FPlanShipmentsShow;
+
   qShipments.Open;
 end;
 

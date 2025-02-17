@@ -109,3 +109,6 @@ insert tRetCode (RetCode, Message) select 600, 'Прайслист с задан
 
 -- tBasket 701 - 800
 insert tRetCode (RetCode, Message) select 701, 'Имеются позиции по которым необходимо обновить цену!'
+insert tRetCode (RetCode, Message) select 702, 'Пожалуйста заполните поле "Описание"!'
+insert tRetCode (RetCode, Message) select 703, 'Пожалуйста заполните поле "Вес"!'
+insert tRetCode (RetCode, Message) select 704, 'Пожалуйста заполните поле "Объём"!'

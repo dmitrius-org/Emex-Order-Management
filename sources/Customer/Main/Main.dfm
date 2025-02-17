@@ -27,8 +27,6 @@ object MainForm: TMainForm
     Layout = 'fit'
     LayoutAttribs.Padding = '25'
     LayoutConfig.BodyPadding = '25'
-    ExplicitWidth = 922
-    ExplicitHeight = 572
     object UniPanelParent: TUniPanel
       Left = 0
       Top = 0
@@ -42,8 +40,6 @@ object MainForm: TMainForm
       AlignmentControl = uniAlignmentClient
       ParentAlignmentControl = False
       Layout = 'border'
-      ExplicitWidth = 922
-      ExplicitHeight = 572
       object UniPanelCentral: TUniPanel
         Left = 300
         Top = 55
@@ -60,8 +56,6 @@ object MainForm: TMainForm
         Layout = 'fit'
         LayoutConfig.IgnorePosition = False
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 622
-        ExplicitHeight = 517
         object pcMain: TUniPageControl
           AlignWithMargins = True
           Left = 3
@@ -76,14 +70,10 @@ object MainForm: TMainForm
           LayoutConfig.DockWhenAligned = False
           TabOrder = 1
           OnChange = pcMainChange
-          ExplicitWidth = 616
-          ExplicitHeight = 511
           object tbS: TUniTabSheet
             Hint = ''
             ImageIndex = 2
             Caption = #1055#1086#1080#1089#1082
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsB: TUniTabSheet
             Hint = ''
@@ -91,8 +81,6 @@ object MainForm: TMainForm
             Caption = #1050#1086#1088#1079#1080#1085#1072
             OnBeforeActivate = tsBBeforeActivate
             OnBeforeFirstActivate = tsBBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsOrder: TUniTabSheet
             Hint = ''
@@ -100,26 +88,18 @@ object MainForm: TMainForm
             Caption = #1047#1072#1082#1072#1079#1099
             OnBeforeActivate = tsOrderBeforeActivate
             OnBeforeFirstActivate = tsOrderBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object tsBalance: TUniTabSheet
             Hint = ''
             ImageIndex = 9
             Caption = #1041#1072#1083#1072#1085#1089' '#1080' '#1054#1090#1075#1088#1091#1079#1082#1080
             OnBeforeFirstActivate = tsBalanceBeforeFirstActivate
-            ExplicitWidth = 608
-            ExplicitHeight = 483
           end
           object TabStatistics: TUniTabSheet
             Hint = ''
             ImageIndex = 10
             Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
             OnBeforeFirstActivate = TabStatisticsBeforeFirstActivate
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 616
-            ExplicitHeight = 511
           end
         end
       end
@@ -135,7 +115,6 @@ object MainForm: TMainForm
         BorderStyle = ubsNone
         Caption = ''
         LayoutConfig.Region = 'north'
-        ExplicitWidth = 922
         object UniPanel: TUniPanel
           Left = 440
           Top = 0
@@ -146,7 +125,6 @@ object MainForm: TMainForm
           TabOrder = 1
           BorderStyle = ubsNone
           Caption = ''
-          ExplicitLeft = 562
         end
       end
       object MainMenuPanel: TUniPanel
@@ -163,7 +141,6 @@ object MainForm: TMainForm
         LayoutAttribs.Pack = 'start'
         LayoutConfig.Region = 'west'
         LayoutConfig.DockWhenAligned = False
-        ExplicitHeight = 517
         object MainMenu: TUniTreeMenu
           AlignWithMargins = True
           Left = 0
@@ -200,7 +177,6 @@ object MainForm: TMainForm
           MicroWidth = 50
           SelectOnExpander = True
           OnClick = MainMenuClick
-          ExplicitHeight = 452
         end
         object LogoPanel: TUniContainerPanel
           Left = 0
@@ -3794,7 +3770,6 @@ object MainForm: TMainForm
           LayoutAttribs.Pack = 'center'
           LayoutConfig.ComponentCls = 'logo-version'
           LayoutConfig.Region = 'center'
-          ExplicitTop = 496
           object lblVersion: TUniLabel
             AlignWithMargins = True
             Left = 3

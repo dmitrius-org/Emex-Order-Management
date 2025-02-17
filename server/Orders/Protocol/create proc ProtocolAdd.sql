@@ -27,7 +27,6 @@ as
     and p.retval = 0
     and isnull(p.StateID, 0) = 0
 
-/*  есть действия которые не меняют состояние
   Update p 
      set p.Retval = 539
         ,p.Message= 'Объект уже находится в текущем статусе!'
@@ -37,8 +36,8 @@ as
           and o.StatusID = p.NewStateID 
   where p.Spid   = @@spid
     and p.retval = 0
-  --*/
-
+    and isnull(p.Flag, 0)&2=0 
+    
   insert into tProtocol with (rowlock)
         (ObjectID    
         ,StateID 

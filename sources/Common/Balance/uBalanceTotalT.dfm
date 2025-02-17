@@ -517,7 +517,9 @@ object BalanceTotalT: TBalanceTotalT
     UpdateOptions.CheckUpdatable = False
     UpdateOptions.AutoCommitUpdates = True
     SQL.Strings = (
-      'exec BalanceShipmentsCalc @ClientID = :ClientID'
+      'exec BalanceShipmentsCalc'
+      '       @ClientID = :ClientID,'
+      '       @IsPlan   = :IsPlan'
       ''
       ''
       'select * '
@@ -532,6 +534,10 @@ object BalanceTotalT: TBalanceTotalT
         DataType = ftInteger
         ParamType = ptInput
         Value = Null
+      end
+      item
+        Name = 'ISPLAN'
+        ParamType = ptInput
       end>
     object FMTBCDField1: TFMTBCDField
       AutoGenerateValue = arAutoInc

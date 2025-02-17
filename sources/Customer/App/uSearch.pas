@@ -82,10 +82,8 @@ type
     procedure QueryPercentSuppedGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure edtLChange(Sender: TObject);
     procedure VolumeSaveClick(Sender: TObject);
-    procedure QueryOurDeliveryGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryAvailableGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
+    procedure QueryOurDeliveryGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryAvailableGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryAfterOpen(DataSet: TDataSet);
     procedure QueryBeforeOpen(DataSet: TDataSet);
     procedure btnRefreshClick(Sender: TObject);
@@ -123,6 +121,10 @@ type
     /// PartToBasket - добавление детали в корзину
     /// </summary>
     procedure PartToBasket();
+    /// <summary>
+    /// CheckPartToBasket - проверки пори добавлении детали в корзину
+    /// </summary>
+//    procedure CheckPartToBasket();
     /// <summary>
     /// PriceCalc - расчет цены и срока поставки
     /// </summary>
@@ -185,6 +187,10 @@ begin
 
   PartSearch;
 end;
+
+//procedure TSearchF.CheckPartToBasket;
+//begin
+//end;
 
 procedure TSearchF.PriceCalc;
 begin
