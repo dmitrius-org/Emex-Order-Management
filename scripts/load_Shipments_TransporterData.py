@@ -1,5 +1,6 @@
 from asyncio.windows_events import NULL
 import os, fnmatch
+import shutil
 import pandas as pd
 from loguru import logger
 import configparser  # импортируем библиотеку для чтения конфигов
@@ -44,7 +45,7 @@ def load_shipments_detail(sql: Sql, data, batchsize=500):
     """    
     for i in range(0, len(data), batchsize):
         batch = data[i: i+batchsize].values.tolist()        
-        logger.info(batch)        
+        # logger.info(batch)        
         cursor.executemany(query, batch)
 
     cursor.execute("exec ShipmentsTransporterFill @IsSave = 1")
@@ -67,13 +68,13 @@ else:
 
 
 # Статусы доставок транспортной компании
-directory=r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\\ADQ\\Shipping Data'
+directory=r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\\ADQ\\Shipping Data\\'
 # directory = config["LoadPath"]["ShipmentsFile"] 
 
 file_list = os.listdir(directory)  # определить список всех файлов
 # Обрабатываем каждый файл в директории
 for file in file_list:
-    if fnmatch.fnmatch(file, "qbow198c.txt"):  # Проверяем, соответствует ли файл шаблону qbow197c qbow200c
+    if fnmatch.fnmatch(file, "*.txt") and "boxes" not in file:
         logger.info(f'Начало обработки файла {file}')
         processed = False
         try:
@@ -117,6 +118,17 @@ for file in file_list:
             # logger.info(f'Данные после разделения:\n{df}')
             
             load_shipments_detail(sql, data=df, batchsize=500)
+            
+            dst = directory + 'Archive'
+            
+            # logger.info(dst)
+            # logger.info(file)
+            # logger.info(directory)
+                       
+            if not os.path.isdir(dst):
+                os.mkdir(dst)
+            shutil.move(os.path.join(directory, file), os.path.join(dst, file))     
+                   
             logger.info(f'Завершение обработки файла {file}')
 
             processed = True

@@ -2,9 +2,9 @@ from asyncio.windows_events import NULL
 import os, fnmatch, re
 import pandas as pd
 from loguru import logger
-import configparser  # импортируем библиотеку для чтения конфигов
-from dataTest import Sql
-
+import configparser
+from data import Sql
+import shutil
 
 
 """
@@ -40,7 +40,6 @@ def load_boxes_detail(sql: Sql, data, batchsize=500):
     """
     for i in range(0, len(data), batchsize):
         batch = data[i: i+batchsize].values.tolist()
-        logger.info(batch)
         cursor.executemany(query, batch)
 
     cursor.execute("exec ShipmentsBoxesFill @IsSave = 1")
@@ -48,9 +47,9 @@ def load_boxes_detail(sql: Sql, data, batchsize=500):
     return True
 
 config = configparser.ConfigParser()
-config.read("settingstest.ini")
+config.read("settings.ini")
 
-logger.add(config["Log"]["LogFile"] + 'load_Boxes_Data.log', level='DEBUG', rotation="1 MB")
+logger.add(config["Log"]["LogFile"] + 'load_Shipments_BoxesData.log', level='DEBUG', rotation="1 MB")
 logger.info('Начало импорта')
 
 sql = Sql()
@@ -59,24 +58,22 @@ if sql.connection:
 else:
     exit()
 
-# Статусы доставок транспортной компании
-directory=r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\\ADQ\\Shipping Data'
-# directory = config["LoadPath"]["ShipmentsFile"] 
+# directory = config["LoadPath"]["ShippingDataFile"] 
+directory = r'C:\\Users\\Администратор\\Мой диск\\Booster\\Shipping\\ADQ\\Shipping Data\\'
 
 file_list = os.listdir(directory)  # определить список всех файлов
 # Обрабатываем каждый файл в директории
 for file in file_list:
-    logger.info(f'Начало обработки файла {file}') 
-    if fnmatch.fnmatch(file, "qbow197c_boxes.txt"):  # Проверяем, соответствует ли файл шаблону qbow198c_boxes qbow200c
+    # logger.info(f'Начало обработки файла {file}') 
+    if fnmatch.fnmatch(file, "*_boxes.txt"):  # Проверяем, соответствует ли файл шаблону qbow198c_boxes qbow200c
         logger.info(f'Начало обработки файла {file}')
         try:
             df = pd.read_csv(os.path.join(directory, file), delimiter=",", header=None, quotechar='"', skipinitialspace=True)
-            # logger.info(f'Завершение обработки файла\n{df}')
             # Обработка данных
             df = df.fillna("")
+            
             # df = df.applymap(lambda x: x.strip('"').strip() if isinstance(x, str) else x)
             df = df.apply(lambda col: col.str.strip('"').str.strip() if col.dtype == "object" else col)
-            logger.info(f'Убрали кавычки\n{df}')
             
             def split_values(value):
                 match = re.match(r"(\d+\.\d+)\s*\(\s*(\d+\.\d+)\s*\)", value)
@@ -88,16 +85,29 @@ for file in file_list:
             df[[6, 'TransporterWidth']] = df[6].apply(lambda x: pd.Series(split_values(x)))            
             df[[7, 'TransporterLength']] = df[7].apply(lambda x: pd.Series(split_values(x)))     
             df[[8, 'TransporterHeight']] = df[8].apply(lambda x: pd.Series(split_values(x)))  
-            
-            logger.info(f'Завершение обработки файла\n{df}')
-            logger.info(f'Завершение обработки файла\n{df['TransporterWidth']}')
-            
+                      
             
             # Разделение ссылок на изображения
             # df[9] = df[9].str.split(' ')
             # df = df.explode(9)
+            
+            df = df.replace('Не указано', None)
+            df = df.replace('', None)
 
             load_boxes_detail(sql, data=df, batchsize=500)
+            
+            # переносим файл в архив
+
+            dst = directory + 'Archive'
+            
+            # logger.info(dst)
+            # logger.info(file)
+            # logger.info(directory)
+            
+            if not os.path.isdir(dst):
+                os.mkdir(dst)
+            shutil.move(os.path.join(directory, file), os.path.join(dst, file))
+                        
             logger.info(f'Завершение обработки файла\n{file}')
 
         except BaseException as err:

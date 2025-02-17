@@ -133,8 +133,8 @@ as
         ,b.Name  
         ,nullif(o.ReplacementDetailNumber, '')
         ,o.Quantity
-        ,o.PricePurchaseF
-        ,o.AmountPurchaseF
+        ,o.Price
+        ,o.Amount
         ,isnull(p.[WeightKGF],o.[WeightKG])
         ,isnull(p.[VolumeKGF],o.[VolumeKG])
         ,isnull(p.[WeightKGF],o.[WeightKG])*o.Quantity

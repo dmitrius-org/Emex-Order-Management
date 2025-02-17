@@ -167,6 +167,7 @@ object ShipmentsT: TShipmentsT
           Title.Caption = ' '
           Width = 64
           Alignment = taLeftJustify
+          ReadOnly = True
         end
         item
           FieldName = 'StatusName'
