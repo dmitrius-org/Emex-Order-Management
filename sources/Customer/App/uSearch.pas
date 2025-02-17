@@ -121,10 +121,7 @@ type
     /// PartToBasket - добавление детали в корзину
     /// </summary>
     procedure PartToBasket();
-    /// <summary>
-    /// CheckPartToBasket - проверки пори добавлении детали в корзину
-    /// </summary>
-//    procedure CheckPartToBasket();
+
     /// <summary>
     /// PriceCalc - расчет цены и срока поставки
     /// </summary>
@@ -188,10 +185,6 @@ begin
   PartSearch;
 end;
 
-//procedure TSearchF.CheckPartToBasket;
-//begin
-//end;
-
 procedure TSearchF.PriceCalc;
 begin
   logger.Info('TSearchF.PriceCalc begin');
@@ -200,7 +193,7 @@ begin
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
           ['DestinationLogo',
            'DetailNum'],
-          [FDestinationLogo, FDetailNum ]);
+          [FDestinationLogo, FDetailNum]);
   logger.Info('TSearchF.PriceCalc end');
 end;
 
@@ -638,32 +631,56 @@ begin
       UniSession.Synchronize();
     end;
     logger.Info('TSearchF.SearchGridAjaxEvent setDestLogo end ');
-  end;
-
+  end
+  else
   if EventName = 'MakeLogoGridShow' then
   begin
     MakeLogoGridShow;
-  end;
-
+  end
+  else
   if EventName = 'MakeLogoPanelVisibleFalse' then
   begin
     MakeLogoGridHide();
-  end;
-
+  end
+  else
   if EventName = 'VKGPanelVisibleFalse' then
   begin
     VKGPanel.Visible := False;
-  end;
-
+  end
+  else
   if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
   begin
-    Query.Post;
+    if Params.ValueFromIndex[8].ToInteger = 2 then // поле описание
+    begin
+      sql.Exec('''
+        exec FindByNumberUpdate_PartNameRus
+              @PartNameRus=:PartNameRus
+      ''', ['PartNameRus'], [Params.ValueFromIndex[5]]);
+    end;
 
-    PriceCalc();
+    if Params.ValueFromIndex[8].ToInteger = 3 then // поле вес
+    begin
+      sql.Exec('''
+        exec FindByNumberUpdate_WeightGr
+              @WeightGr=:WeightGr
+      ''', ['WeightGr'], [Params.ValueFromIndex[5]]);
 
-    GridRefresh();
-  end;
+      PriceCalc();
+      GridRefresh();
+    end;
 
+    if Params.ValueFromIndex[8].ToInteger = 4 then // поле объем
+    begin
+      sql.Exec('''
+        exec FindByNumberUpdate_VolumeAdd
+              @VolumeAdd=:VolumeAdd
+      ''', ['VolumeAdd'], [Params.ValueFromIndex[5]]);
+
+      PriceCalc();
+      GridRefresh();
+    end;
+  end
+  else
   if (EventName = 'VKGPanelLeft') then
   begin
 

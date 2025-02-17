@@ -144,7 +144,10 @@ select p.ID,
        p.MakeName, 
        p.DetailNum, 
 	   p.Price,
-	   isnull(pp.DetailName, p.PartNameRus), -- DetailName
+       case
+         when (p.flag&65536)>0 then p.PartNameRus -- 65536 - Наименование изменен клиентом
+	     else isnull(pp.DetailName, p.PartNameRus) 
+       end,-- DetailName
 	   p.PriceLogo,
 	   1, 
 	   p.Packing, 
@@ -301,5 +304,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20241218', '10'
+exec setOV 'SearchPriceCalc', 'P', '20250217', '11'
 go

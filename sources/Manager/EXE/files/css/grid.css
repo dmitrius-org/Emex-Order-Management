@@ -381,3 +381,13 @@
     /* cursor: pointer; */
     font-size: 1.2em;
 }
+
+
+.grid-box .x-grid-group-hd {
+    border-width: 2px 0 0 0px;
+    border-style: solid;
+    border-color: #cfcfcf;
+    padding: 7px 4px;
+    background: #fff;
+    cursor: pointer;
+}

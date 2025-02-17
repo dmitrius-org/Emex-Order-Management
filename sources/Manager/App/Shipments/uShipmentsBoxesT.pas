@@ -157,8 +157,6 @@ end;
 
 procedure TShipmentsBoxesT.GridColumnSummary(Column: TUniDBGridColumn; GroupFieldValue: Variant);
 begin
-  //logger.Info('GridColumnSummary: ' + Column.FieldName);
-
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
@@ -236,6 +234,11 @@ begin
 //
 //    //Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
 //  end
+  else
+  if SameText(Column.FieldName, 'BoxNumber') then
+  begin
+    Column.AuxValue:=Column.Field.AsString;
+  end
 end;
 
 procedure TShipmentsBoxesT.GridColumnSummaryResult(Column: TUniDBGridColumn;
@@ -314,12 +317,13 @@ begin
       Result:=FormatFloat('##0.000 кг', I);
       Attribs.Color   := $8ec9a6;
     end;
+  end
+  else
+  if SameText(Column.FieldName, 'BoxNumber') then
+  begin
+    Result := Column.AuxValue;
   end;
 
-
-
-//  FTransporterPhysicalWeight:=0;
-//  FWeightKGS:=0;
   Column.AuxValue:=NULL;
 end;
 
@@ -333,7 +337,6 @@ begin
     I:=Column.AuxValues[1];
     Result:=FormatFloat('###,##0.000 кг', I);
     Attribs.Font.Style:=[fsBold];
-    //Attribs.Font.Color:=clGray;
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then

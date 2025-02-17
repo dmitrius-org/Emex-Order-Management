@@ -63,7 +63,6 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     Grouping.FieldCaption = #1050#1086#1088#1086#1073#1082#1072
     Grouping.Enabled = True
     Grouping.Collapsible = True
-    Grouping.ShowGroupable = True
     LoadMask.Message = 'Loading data...'
     LayoutConfig.Cls = 'grid-box'
     Align = alClient

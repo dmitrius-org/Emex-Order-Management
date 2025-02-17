@@ -120,6 +120,9 @@ object SearchF: TSearchF
           'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13 +
           #10'    ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
         
+          'edit=function edit(editor, context, eOpts)'#13#10'{'#13#10'  console.log(edi' +
+          'tor);'#13#10'  console.log(context);'#13#10'  console.log(eOpts);   '#13#10'}'
+        
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
           'e, oldColumns, eOpts) {'#13#10'    var startCol = 0; // zero based'#13#10'  ' +
           '  '#13#10'    // '#1059#1089#1090#1072#1085#1072#1074#1083#1080#1074#1072#1077#1084' '#1088#1077#1085#1076#1077#1088#1077#1088' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1081' '#1082#1086#1083#1086#1085#1082#1080#13#10'    column' +
@@ -830,14 +833,7 @@ object SearchF: TSearchF
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
     ModifySQL.Strings = (
-      'Update pFindByNumber'
-      '       set VolumeAdd =  isnull(:NEW_VolumeAdd, VolumeAdd)'
-      '            ,WeightGr=  isnull(:NEW_Weight, WeightGr)'
-      
-        '            ,Flag            =  isnull(flag, 0) | 512 -- '#1042#1077#1089' '#1080#1079#1084 +
-        #1077#1085#1077#1085' '#1082#1083#1080#1077#1085#1090#1086#1084
-      '            ,PartNameRus = isnull(:NEW_PartNameRus, PartNameRus)'
-      '  where spid = @@spid')
+      'select 1')
     DeleteSQL.Strings = (
       
         'Delete tBasket from tBasket (rowlock) where BasketID=:OLD_Basket' +
