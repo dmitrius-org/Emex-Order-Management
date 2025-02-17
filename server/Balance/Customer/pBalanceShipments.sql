@@ -25,6 +25,7 @@ create table pBalanceShipments
 ,ReceiptDate2        datetime       --
 
 ,IsCalc              bit            --
+,Flag                int            -- дополнительные принаки 
 )
 go
 create unique index ao1 on pBalanceShipments(ID)
@@ -33,7 +34,7 @@ create index ao2 on pBalanceShipments(Spid, ClientID)
 go
 grant all on pBalanceShipments to public
 go
-exec setOV 'pBalanceShipments', 'U', '20240918', '0'
+exec setOV 'pBalanceShipments', 'U', '20250217', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pBalanceShipments', @desc = ''

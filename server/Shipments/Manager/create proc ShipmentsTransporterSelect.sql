@@ -93,8 +93,8 @@ as
       --,t.ImageLinks    
         ,1
     from tShipmentsBoxes t (nolock)
-   where --t.TransporterNumber = @TransporterNumber
-  t.BoxNumber  in  (101376929, 101376932, 101376934)
+   where t.TransporterNumber = @TransporterNumber
+ -- t.BoxNumber  in  (101376929, 101376932, 101376934)
   insert #r
         (N
         ,BoxNumber

@@ -52,7 +52,7 @@ object Task_F: TTask_F
     Width = 897
     Height = 445
     Hint = ''
-    ActivePage = TaskPage
+    ActivePage = MainSheet
     Align = alClient
     TabOrder = 1
     object MainSheet: TUniTabSheet
@@ -232,7 +232,7 @@ object Task_F: TTask_F
               Top = 3
               Width = 91
               Hint = ''
-              DateTime = 0.413358877318387400
+              DateTime = 0.010416666666666670
               DateFormat = 'dd/MM/yyyy'
               TimeFormat = 'HH:mm:ss'
               Kind = tUniTime

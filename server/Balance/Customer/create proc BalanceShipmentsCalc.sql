@@ -20,6 +20,7 @@ as
     from pBalanceShipments with (rowlock index=ao2)
    where Spid = @@spid
 
+  -- Заказы по которым есть поставка 
   insert pBalanceShipments with (rowlock)
         (Spid,
          ClientID, 
@@ -62,15 +63,52 @@ as
    where n.SearchID in ( 
                         
                          4 --На пути в РФ
-                        ,5 -- 'Готовим к выдаче' 
+                        ,5 --Готовим к выдаче' 
                         ,6 -- Задержан
                         ,7 -- 'Выдано клиенту'
                          )
 
   group by cast(s.ShipmentsDate as date), n.SearchID, n.SearchBrief, o.Invoice
 
-  --select * from tNodes
 
+
+  -- добавим заказы для плановых оплат
+  insert pBalanceShipments with (rowlock)
+        (Spid,
+         ClientID, 
+         StatusID,
+         StatusName,
+         OperDate,
+         OrderType,
+         OrderSum,
+         Invoice,
+         OperDateS, -- поле для сортировки
+         ReceiptDate,
+         ReceiptDate2,
+         Flag
+         )
+  select @@spid
+        ,@ClientID
+        ,n.SearchID
+        ,n.SearchBrief
+        ,cast(ods.DeliveryPlanDateSupplier as date) -- OperDate
+        ,max(o.DestinationName) -- OperDateS
+        ,sum(o.Amount)
+        ,o.Invoice
+        ,max(ods.DeliveryPlanDateSupplier)-- OperDateS
+        ,cast(ods.DeliveryPlanDateSupplier as date)
+        ,cast(ods.DeliveryPlanDateSupplier as date)
+        ,1
+    from tOrders o with (nolock index =ao2)
+  inner join tNodes n with (nolock)
+          on o.StatusID = n.NodeID
+  inner join vOrdersDeliverySupplier ods 
+          on ods.OrderID =  o.OrderID
+   where o.ClientID = @ClientID
+     and isnull(Invoice, '')   = ''
+     and isnull(o.isCancel, 0) = 0
+   group by cast(ods.DeliveryPlanDateSupplier as date), n.SearchID, n.SearchBrief, o.Invoice
+--*/
 
  -- order by max(pr.OperDates)
 --
@@ -103,7 +141,7 @@ as
   -- from pBalanceTotal p 
   --where p.Spid     = @@Spid
   --  and p.StatusID > 0
-
+  -- добавим оплаты
   insert pBalanceShipments with (rowlock)
         (Spid,
          ClientID, 
@@ -127,8 +165,14 @@ as
 
   -- select * from tProperty -- Баланс
   Update t
-     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceShipments p (nolock) where p.spid = @@spid and p.OperDateS <= t.OperDateS ), 0) -
-                       isnull(( select sum(p.PaySum)   from pBalanceShipments p (nolock) where p.spid = @@spid and p.OperDateS <= t.OperDateS), 0)
+     set BalanceSum = (isnull(( select sum(p.OrderSum) 
+                                  from pBalanceShipments p (nolock) 
+                                 where p.spid = @@spid 
+                                   and p.OperDateS <= t.OperDateS ), 0) -
+                       isnull(( select sum(p.PaySum)   
+                                  from pBalanceShipments p (nolock) 
+                                 where p.spid = @@spid 
+                                   and p.OperDateS <= t.OperDateS), 0)
                        ) * -1  
     from pBalanceShipments t (updlock)
    where t.Spid     = @@Spid
@@ -139,6 +183,6 @@ return @r
 go
 grant exec on BalanceShipmentsCalc to public
 go
-exec setOV 'BalanceShipmentsCalc', 'P', '20240917', '2'
+exec setOV 'BalanceShipmentsCalc', 'P', '20250217', '3'
 go
 

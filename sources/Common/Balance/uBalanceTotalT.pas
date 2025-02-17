@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, System.Actions, Vcl.ActnList, uniMainMenu, uniImageList,
   System.ImageList, Vcl.ImgList, uniGridExporters, uniButton,
-  VCL.FlexCel.Core, FlexCel.XlsAdapter;
+  VCL.FlexCel.Core, FlexCel.XlsAdapter, uStatusForm;
 
 type
   TBalanceTotalT = class(TUniFrame)
@@ -55,6 +55,10 @@ type
     actShippmentReportPrint: TAction;
     qShipmentsReceiptDate: TSQLTimeStampField;
     qShipmentsReceiptDate2: TSQLTimeStampField;
+    qShipmentsFlag: TIntegerField;
+    actLegend: TAction;
+    QuerySep: TStringField;
+    qShipmentsSep: TStringField;
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actShippmentReportPrintExecute(Sender: TObject);
@@ -62,6 +66,9 @@ type
       ButtonId: Integer);
     procedure qShipmentsReceiptDateGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure ShipmentsGridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure actLegendExecute(Sender: TObject);
   private
     FClientID: Integer;
     { Private declarations }
@@ -86,6 +93,15 @@ uses
 {$R *.dfm}
 
 { TBalanceTotalT }
+
+procedure TBalanceTotalT.actLegendExecute(Sender: TObject);
+var StatusForm: TStatusForm;
+begin
+    StatusForm := TStatusForm.Create(UniSession.UniApplication);
+    StatusForm.StatusFile := UniServerModule.StartPath + '\files\html\ShipmentsBalanceStatus.html';
+
+    StatusForm.ShowModal();
+end;
 
 procedure TBalanceTotalT.actRefreshAllExecute(Sender: TObject);
 begin
@@ -227,6 +243,15 @@ procedure TBalanceTotalT.ShipmentsGridColumnActionClick(
   Column: TUniDBGridColumn; ButtonId: Integer);
 begin
  // не удалять !!!
+end;
+
+procedure TBalanceTotalT.ShipmentsGridDrawColumnCell(Sender: TObject; ACol,
+  ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+begin
+  if (qShipments.FieldByName('Flag').AsInteger and 1) > 0 then
+  begin
+    Attribs.Color:= rgb(208, 230, 222);
+  end
 end;
 
 procedure TBalanceTotalT.ShipmentsTotalDetailRefresh;

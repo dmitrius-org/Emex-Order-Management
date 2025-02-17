@@ -57,6 +57,7 @@ object TaskBAT_F: TTaskBAT_F
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     ClearButton = True
+    OnDblClick = edtpathDblClick
   end
   object UniLabel2: TUniLabel
     Left = 19
@@ -125,7 +126,7 @@ object TaskBAT_F: TTaskBAT_F
     Connection = UniMainModule.FDConnection
     SQL.Strings = (
       '')
-    Left = 554
-    Top = 42
+    Left = 474
+    Top = 26
   end
 end

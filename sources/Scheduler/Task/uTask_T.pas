@@ -67,6 +67,8 @@ type
     qTDetailComment: TStringField;
     qTDetailFlag: TIntegerField;
     qTaskFlag: TIntegerField;
+    actTaskEnabled: TAction;
+    actTaskEnabled1: TUniMenuItem;
     procedure actAddExecute(Sender: TObject);
     procedure GridTasksCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actEditExecute(Sender: TObject);
@@ -83,6 +85,7 @@ type
       Shift: TShiftState);
     procedure qTaskFlagGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure actTaskEnabledExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -96,9 +99,11 @@ type
     procedure DataRefresh();
     procedure DataDetailRefresh();
 
-    procedure SetTaskEnabledStatus(); overload;
+    procedure SetTasksEnabledStatus(); overload;
     //procedure SetTaskEnabledStatus(AIsEnabled: boolean); overload;
 
+
+    procedure SetTasksEnabledLabel();
 
     procedure SetTaskEnabledLabel();
   public
@@ -165,11 +170,29 @@ begin
   else
     Audit.Add(TObjectType.otTask, 0, acOff, 'Выключение планировщика');
 
-  SetTaskEnabledStatus;
+  SetTasksEnabledStatus;
 
   BroadcastMessage('TaskEnabled',
                   ['Enabled', IsActive],
                   [boIgnoreCurrentSession]); //  boClientOnly
+end;
+
+procedure TTask_T.actTaskEnabledExecute(Sender: TObject);
+var sqltext: string;
+begin
+  sqltext :='''
+    declare @R      int
+
+    exec @r = TaskEnabled
+                @TaskID   = :TaskID
+               ,@IsActive = :IsActive
+
+    select @r as retcode
+  ''';
+  Sql.Open(sqltext, ['TaskID', 'IsActive'], [qTaskTaskID.AsInteger, Not qTaskIsActive.Value]);
+
+  qTask.RefreshRecord(False);
+  GridTasks.RefreshCurrentRow();
 end;
 
 procedure TTask_T.actViewExecute(Sender: TObject);
@@ -222,7 +245,9 @@ end;
 
 procedure TTask_T.PopupMenuPopup(Sender: TObject);
 begin
-  SetTaskEnabledStatus;
+  SetTasksEnabledStatus;
+
+  SetTaskEnabledLabel;
 end;
 
 procedure TTask_T.qTaskFlagGetText(Sender: TField; var Text: string;
@@ -236,7 +261,7 @@ begin
     Text := '';
 end;
 
-procedure TTask_T.SetTaskEnabledLabel();
+procedure TTask_T.SetTasksEnabledLabel();
 begin
   if IsActive then
   begin
@@ -250,18 +275,30 @@ begin
   end;
 end;
 
+procedure TTask_T.SetTaskEnabledLabel;
+begin
+  if qTaskIsActive.Value then
+  begin
+    actTaskEnabled.Caption:= 'Отключить задание';
+  end
+  else
+  begin
+    actTaskEnabled.Caption:= 'Включить задание';
+  end;
+end;
+
 procedure TTask_T.SetTaskEnabledStatus(AIsEnabled: boolean);
 begin
 	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
 
   IsActive := AIsEnabled;
 
-  SetTaskEnabledLabel();
+  SetTasksEnabledLabel();
 
   logger.Info('TTask_T.SetTaskEnabledStatus End');
 end;
 
-procedure TTask_T.SetTaskEnabledStatus;
+procedure TTask_T.SetTasksEnabledStatus;
 begin
 	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
 
@@ -269,7 +306,7 @@ begin
 
   IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
 
-  SetTaskEnabledLabel();
+  SetTasksEnabledLabel();
 
   logger.Info('TTask_T.SetTaskEnabledStatus End');
 end;
@@ -310,7 +347,7 @@ end;
 
 procedure TTask_T.UniFrameReady(Sender: TObject);
 begin
-  SetTaskEnabledStatus
+  SetTasksEnabledStatus;
 end;
 
 procedure TTask_T.UserFCallBack(Sender: TComponent; AResult: Integer);

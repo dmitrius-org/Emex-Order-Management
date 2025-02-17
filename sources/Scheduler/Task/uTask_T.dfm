@@ -2065,6 +2065,10 @@ object Task_T: TTask_T
       ImageIndex = 4
       OnExecute = actTaskActiveExecute
     end
+    object actTaskEnabled: TAction
+      Caption = #1042#1082#1083#1102#1095#1077#1085#1080#1077'/'#1074#1099#1082#1083#1102#1095#1077#1085#1080#1077' '#1079#1072#1076#1072#1085#1080#1103
+      OnExecute = actTaskEnabledExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -2085,6 +2089,9 @@ object Task_T: TTask_T
     end
     object N5: TUniMenuItem
       Caption = '-'
+    end
+    object actTaskEnabled1: TUniMenuItem
+      Action = actTaskEnabled
     end
     object N7: TUniMenuItem
       Action = actDateExecClear

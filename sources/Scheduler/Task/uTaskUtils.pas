@@ -262,7 +262,7 @@ TaskErr: Boolean;
          // следующая дата выполнения
          //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
 
-         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено: ' + act.FieldByName('Comment').AsString);
        except
          on E: Exception do
          begin
@@ -302,7 +302,7 @@ TaskErr: Boolean;
              raise Exception.Create(Msg);
          end;
 
-         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено: ' + act.FieldByName('Comment').AsString);
 
        except
          on E: Exception do
@@ -337,7 +337,7 @@ TaskErr: Boolean;
 
          // следующая дата выполнения
          //Qry.Connection.ExecSQL('exec TaskDateExecCalc @TaskID = :1, @Message = :2', [TaskID, '']);
-         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено:' + act.FieldByName('Comment').AsString);
+         AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия завершено: ' + act.FieldByName('Comment').AsString);
        except
          on E: Exception do
          begin
@@ -368,7 +368,7 @@ begin
         qry.First;
         for i := 0 to qry.RecordCount-1 do
         begin
-            Logger.Info('TMTask.Execute Задача:' + qry.FieldByName('TaskBrief').AsString);
+            Logger.Info('TMTask.Execute Задача: ' + qry.FieldByName('TaskBrief').AsString);
 
             TaskID:= qry.FieldByName('TaskID').AsInteger;
             TaskErr := false;
@@ -395,7 +395,7 @@ begin
                 begin
                     M := act.FieldByName('Method').AsString; Msg := '';
 
-                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия:' + act.FieldByName('Comment').AsString);
+                    AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, 'Выполнение действия: ' + act.FieldByName('Comment').AsString);
 
                     case act.FieldByName('TaskType').AsInteger of
                       Integer(tTaskType.ttProc):  // внутренняя процедура

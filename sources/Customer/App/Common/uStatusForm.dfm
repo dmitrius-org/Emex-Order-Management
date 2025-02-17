@@ -1,0 +1,29 @@
+object StatusForm: TStatusForm
+  Left = 0
+  Top = 0
+  ClientHeight = 295
+  ClientWidth = 465
+  Caption = #1057#1090#1072#1090#1091#1089#1099
+  OnShow = UniFormShow
+  BorderStyle = bsDialog
+  OldCreateOrder = False
+  MonitoredKeys.Keys = <>
+  TextHeight = 15
+  object edt1: TUniHTMLFrame
+    AlignWithMargins = True
+    Left = 10
+    Top = 3
+    Width = 445
+    Height = 289
+    Hint = ''
+    Margins.Left = 10
+    Margins.Right = 10
+    ShowHint = True
+    ParentShowHint = False
+    Align = alClient
+    ExplicitLeft = -56
+    ExplicitTop = -119
+    ExplicitWidth = 678
+    ExplicitHeight = 459
+  end
+end

@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Customer.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -259,6 +259,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\Common\uUniMemoHelper.pas"/>
+        <DCCReference Include="App\Common\uStatusForm.pas">
+            <Form>StatusForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

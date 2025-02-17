@@ -1,7 +1,7 @@
 object TaskSQL_F: TTaskSQL_F
   Left = 0
   Top = 0
-  ClientHeight = 457
+  ClientHeight = 548
   ClientWidth = 869
   Caption = 'TaskSQL_F'
   OnShow = UniFormShow
@@ -10,20 +10,18 @@ object TaskSQL_F: TTaskSQL_F
   MonitoredKeys.Keys = <>
   DesignSize = (
     869
-    457)
+    548)
   TextHeight = 15
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 419
+    Top = 510
     Width = 863
     Height = 35
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 517
-    ExplicitWidth = 919
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 775
@@ -36,7 +34,6 @@ object TaskSQL_F: TTaskSQL_F
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 831
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -49,7 +46,6 @@ object TaskSQL_F: TTaskSQL_F
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 744
     end
   end
   object edtIsActive: TUniCheckBox
@@ -73,7 +69,6 @@ object TaskSQL_F: TTaskSQL_F
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     ClearButton = True
-    ExplicitWidth = 814
   end
   object UniLabel1: TUniLabel
     Left = 8
@@ -106,13 +101,11 @@ object TaskSQL_F: TTaskSQL_F
     Left = 8
     Top = 112
     Width = 853
-    Height = 301
+    Height = 392
     Hint = ''
     Language = 'SQL'
     Font.Name = 'Courier New'
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 909
-    ExplicitHeight = 399
   end
   object DataSource: TDataSource
     DataSet = FDQuery

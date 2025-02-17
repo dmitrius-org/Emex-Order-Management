@@ -31,6 +31,7 @@ type
     procedure UniFormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure edtpathDblClick(Sender: TObject);
   private
     FAction: TFormAction;
     FID: Integer;
@@ -90,7 +91,6 @@ begin
                 '                                     '+
                 ' exec @r = TaskActionAdd             '+
                 '             @ID       = @ID    out  '+
-                '            ,@TaskID   = :TaskID     '+
                 '            ,@Number   = :Number     '+
                 '            ,@Comment  = :Comment    '+
                 '            ,@TaskType = 1           '+
@@ -101,9 +101,8 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['TaskID','Number','Comment', 'Field', 'IsActive'],
-               [null,
-                edtNumber.Text,
+               ['Number','Comment', 'Field', 'IsActive'],
+               [edtNumber.Text,
                 edtComment.Text,
                 edtpath.Text,
                 edtIsActive.Checked
@@ -177,12 +176,12 @@ begin
       if edtNumber.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Номер] обязательн к заполнению!'; Exit();
+        RetVal.Message := 'Поле [Номер] обязательно к заполнению!'; Exit();
       end
       else if edtComment.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Описание] обязательна к заполнению!'; Exit();
+        RetVal.Message := 'Поле [Описание] обязательно к заполнению!'; Exit();
       end;
     end;
   end;
@@ -204,6 +203,13 @@ begin
   edtpath.Text       :=  UniMainModule.Query.FieldByName('Field').Value;
 end;
 
+procedure TTaskBAT_F.edtpathDblClick(Sender: TObject);
+begin
+// if FileOpenDialog.Execute then
+//    if FileExists(FileOpenDialog.FileName) then
+//        edtpath.Text := FileOpenDialog.FileName;
+end;
+
 procedure TTaskBAT_F.SetAction(const Value: TFormAction);
 begin
   FAction := Value;
@@ -216,11 +222,7 @@ begin
 end;
 
 procedure TTaskBAT_F.UniFormShow(Sender: TObject);
-//var frmAH: TTaskActionHead;
 begin
-
-  //frmAH := TTaskActionHead.Create(HeadPanel);
-
   case FAction of
     acInsert, acReportCreate:
     begin

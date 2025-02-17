@@ -5,7 +5,7 @@ drop proc if exists TaskActionAdd
 go
 create proc TaskActionAdd
                @ID               numeric(18,0)  out 
-              ,@TaskID           nvarchar(60)   = null
+              ,@TaskID           numeric(18,0)  = null
               ,@Number           int 
               ,@Comment          nvarchar(255)  
               ,@TaskType         int

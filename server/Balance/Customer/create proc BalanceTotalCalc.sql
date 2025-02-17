@@ -44,14 +44,13 @@ as
      set OperDate = cast(getdate() as date)
    where Spid     = @@Spid
 
-
-
   if not exists (select 1 
                    from STRING_SPLIT(@StatusRequiringPayment, ';')
                 )
       Update pBalanceTotal
-         set IsCalc    = 1
+         set IsCalc   = 1
        where Spid     = @@Spid
+         and StatusID<>0
   else
       Update p
          set p.IsCalc    = 1
@@ -59,6 +58,7 @@ as
        inner join STRING_SPLIT(@StatusRequiringPayment, ';') AS s
                on s.value = p.StatusID
        where p.Spid     = @@Spid
+         and p.StatusID<>0
     
 
   Update pBalanceTotal
@@ -92,20 +92,29 @@ as
    where Spid     = @@Spid
      and StatusID = 0
 
-
   -- Баланс
   Update t
      set BalanceSum = (
-                       isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
+                       isnull(( select sum(p.OrderSum) 
+                                  from pBalanceTotal p (nolock) 
+                                 where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
                        isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0)
                        )  * -1
     from pBalanceTotal t (updlock)
    where t.Spid     = @@Spid
-     and t.isCalc  = 1
+     and t.isCalc   = 1
+     and t.StatusID <> 0
 
   Update t
-     set BalanceSum = (isnull(( select sum(p.OrderSum) from pBalanceTotal p (nolock) where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID ), 0) - 
-                       isnull(( select sum(p.PaySum)   from pBalanceTotal p (nolock) where p.spid = @@spid), 0))  * -1
+     set BalanceSum = (isnull(( select sum(p.OrderSum) 
+                                  from pBalanceTotal p (nolock) 
+                                 where p.spid = @@spid and p.isCalc  = 1 and p.StatusID >= t.StatusID 
+                              ), 0) - 
+                       isnull(( select sum(p.PaySum)   
+                                  from pBalanceTotal p (nolock)
+                                 where p.spid = @@spid
+                               ), 0)
+                       )  * -1
     from pBalanceTotal t (updlock)
    where t.Spid     = @@Spid
      and t.StatusID = 0
@@ -114,6 +123,6 @@ return @r
 go
 grant exec on BalanceTotalCalc to public
 go
-exec setOV 'BalanceTotalCalc', 'P', '20240917', '3'
+exec setOV 'BalanceTotalCalc', 'P', '20250217', '4'
 go
 

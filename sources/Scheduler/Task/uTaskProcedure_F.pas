@@ -176,12 +176,12 @@ begin
       if edtNumber.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Номер] обязательн к заполнению!'; Exit();
+        RetVal.Message := 'Поле [Номер] обязательно к заполнению!'; Exit();
       end
       else if edtComment.IsBlank then
       begin
         RetVal.Code := 1;
-        RetVal.Message := 'Поле [Описание] обязательна к заполнению!'; Exit();
+        RetVal.Message := 'Поле [Описание] обязательно к заполнению!'; Exit();
       end;
     end;
   end;
