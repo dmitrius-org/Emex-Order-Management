@@ -19,7 +19,7 @@ Update pFindByNumber
 exit_:
 return @RetVal    
 go
-grant all on FindByNumberUpdate_VolumeAdd to public
+grant exec on FindByNumberUpdate_VolumeAdd to public
 go
 exec setOV 'FindByNumberUpdate_VolumeAdd', 'P', '20250217', '0'
 go

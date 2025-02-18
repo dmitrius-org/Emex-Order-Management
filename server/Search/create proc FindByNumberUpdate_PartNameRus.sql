@@ -18,7 +18,7 @@ Update pFindByNumber
 exit_:
 return @RetVal    
 go
-grant all on FindByNumberUpdate_PartNameRus to public
+grant exec on FindByNumberUpdate_PartNameRus to public
 go
 exec setOV 'FindByNumberUpdate_PartNameRus', 'P', '20250217', '0'
 go

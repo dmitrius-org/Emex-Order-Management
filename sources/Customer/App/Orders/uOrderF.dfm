@@ -84,10 +84,10 @@ object OrderF: TOrderF
     object lblRowCount: TUniLabel
       Left = 169
       Top = 66
-      Width = 59
+      Width = 90
       Height = 21
       Hint = ''
-      Caption = 'lblCount'
+      Caption = 'lblRowCount'
       ParentFont = False
       Font.Height = -16
       TabOrder = 6
@@ -95,10 +95,10 @@ object OrderF: TOrderF
     object lblSum: TUniLabel
       Left = 398
       Top = 22
-      Width = 59
+      Width = 49
       Height = 21
       Hint = ''
-      Caption = 'lblCount'
+      Caption = 'lblSum'
       ParentFont = False
       Font.Height = -16
       TabOrder = 4
@@ -106,10 +106,10 @@ object OrderF: TOrderF
     object lblW: TUniLabel
       Left = 398
       Top = 66
-      Width = 59
+      Width = 32
       Height = 21
       Hint = ''
-      Caption = 'lblCount'
+      Caption = 'lblW'
       ParentFont = False
       Font.Height = -16
       TabOrder = 8
@@ -117,10 +117,10 @@ object OrderF: TOrderF
   end
   object btnCancel: TUniBitBtn
     AlignWithMargins = True
-    Left = 360
-    Top = 136
+    Left = 354
+    Top = 127
     Width = 81
-    Height = 27
+    Height = 35
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -132,10 +132,10 @@ object OrderF: TOrderF
   end
   object btnOk: TUniBitBtn
     AlignWithMargins = True
-    Left = 447
-    Top = 136
-    Width = 82
-    Height = 27
+    Left = 441
+    Top = 127
+    Width = 103
+    Height = 35
     Hint = ''
     Margins.Right = 30
     ShowHint = True

@@ -100,7 +100,7 @@ end;
 procedure TOrderF.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select * from vBasketOrderCount';
+  UniMainModule.Query.SQL.Text := ' select * from vBasketOrderCount ';
   UniMainModule.Query.Open;
 
   isPosExist :=   UniMainModule.Query.FieldByName('DetailCount').AsInteger > 0;

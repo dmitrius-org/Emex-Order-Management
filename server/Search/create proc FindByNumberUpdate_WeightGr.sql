@@ -18,7 +18,7 @@ Update pFindByNumber
 exit_:
 return @RetVal    
 go
-grant all on FindByNumberUpdate_WeightGr to public
+grant exec on FindByNumberUpdate_WeightGr to public
 go
 exec setOV 'FindByNumberUpdate_WeightGr', 'P', '20250217', '0'
 go
