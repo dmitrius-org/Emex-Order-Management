@@ -776,9 +776,8 @@ begin
     UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return false; }');
 
     UniSession.AddJS(
-      'var el = document.querySelector(".order.fa.fa-bell");' +
-      'if (el) { el.classList.add("icon-notification"); }' +
-      'else { console.error("Element with class fa fa-bell not found"); }'
+      'var el = document.querySelector(".icon-notification");' +
+      'if (el) { el.classList.add("color"); }'
     );
   end
   else
@@ -787,9 +786,8 @@ begin
     UniSession.AddJS('document.oncontextmenu = document.body.oncontextmenu = function () { return true; }');
 
     UniSession.AddJS(
-      'var el = document.querySelector(".order.fa.fa-bell");' +
-      'if (el) { el.classList.remove("icon-notification"); }' +
-      'else { console.error("Element with class fa fa-bell not found"); }'
+      'var el = document.querySelector(".icon-notification");' +
+      'if (el) { el.classList.remove("color"); }'
     );
   end;
 

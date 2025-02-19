@@ -12,7 +12,7 @@ declare @r int = 0
 
 select isnull(sum(t.Quantity * t.PriceRub), 0) Amount    -- Сумма
       ,Count(*)                                Cnt	     -- Количество
-      ,isnull(Sum(WeightKG), 0)           WeightKG  -- Вес
+      ,isnull(Sum(t.Quantity * WeightKG), 0)   WeightKG  -- Вес
   from tBasket t (nolock)
  where t.ClientID  = @ClientID
 
@@ -23,7 +23,7 @@ select isnull(sum(t.Quantity * t.PriceRub), 0) Amount    -- Сумма
 GO
 grant exec on BasketData to public
 go
-exec setOV 'BasketData', 'P', '20240404', '1'
+exec setOV 'BasketData', 'P', '20250219', '2'
 go
 
 exec BasketData @ClientID=31

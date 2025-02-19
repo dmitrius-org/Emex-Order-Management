@@ -111,9 +111,9 @@ select 'Заказы, которые не удалось разбить на ч�
  where OrderID is null
 
 
---delete
---  from tMovement 
--- where OrderID is null
+delete
+  from tMovement 
+ where OrderID is null
 
 -- заказы, которых нет в emex
 Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference,  n.Brief, n.Name, *
@@ -137,6 +137,7 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
                    ,8	--Send
 				   ,9	--NotAvailable
                     )
+           --     and p.Quantity < 0
   order by p.OrderDate 
 /* -- исправление
 delete p

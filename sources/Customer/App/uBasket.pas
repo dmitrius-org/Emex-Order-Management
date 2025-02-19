@@ -100,8 +100,6 @@ type
 
     Marks: TMarks;
 
-    procedure GetAgregateDate();
-
     /// <summary>
     /// PartPriceRefresh - обновление цены для выбранной позиции в корзине
     /// </summary>
@@ -115,6 +113,8 @@ type
   public
     { Public declarations }
     procedure GridRefresh;
+
+    procedure GetAgregateData();
 
   end;
 
@@ -177,7 +177,7 @@ procedure TBasketF.btnDeleteBasketClick(Sender: TObject);
 begin
   Query.Delete;
 
-  GetAgregateDate;
+  GetAgregateData;
 end;
 
 
@@ -202,7 +202,7 @@ begin
 
   Grid.Columns.ColumnFromFieldName('IsUpdating').Visible := Query.FieldByName('IsUpdatingExists').Value > 0;
 
-  GetAgregateDate;
+  GetAgregateData;
 end;
 
 procedure TBasketF.GridSelectionChange(Sender: TObject);
@@ -231,7 +231,7 @@ begin
   end;
 end;
 
-procedure TBasketF.GetAgregateDate;
+procedure TBasketF.GetAgregateData;
 begin
   RetVal.Clear;
   Sql.Open('exec BasketData @ClientID = :ClientID',
@@ -239,7 +239,7 @@ begin
           [UniMainModule.AUserID]);
 
   edtOrderAmount.Text := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('Amount').Value);
-  edtWeight.Text := Sql.Q.FieldByName('WeightKG').AsString;
+  edtWeight.Text := FormatFloat('###,##0.000 кг', Sql.Q.FieldByName('WeightKG').Value);
   edtCount.Text  := Sql.Q.FieldByName('Cnt').AsString;
 end;
 
@@ -249,13 +249,14 @@ begin
     JSCallDefer('getSelectionModel().selectAll', [], 100 );
 end;
 
-procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string;
-  Params: TUniStrings);
+procedure TBasketF.GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
 begin
   if (EventName = 'edit') and (Query.State  in [dsEdit, dsInsert] ) then
   begin
     Query.Post;
-    Query.Refresh
+    Query.Refresh;
+
+    GetAgregateData();
   end;
 end;
 
