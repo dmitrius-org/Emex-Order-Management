@@ -81,8 +81,8 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant, uUserProfile,
-  uCommonType;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant,
+  uUserProfile, uCommonType;
 
 function MainForm: TMainForm;
 begin
@@ -394,7 +394,7 @@ begin
   begin
     MainMenu.Selected := MainMenu.Items[1];
     {$IFDEF Debug}
-       MainMenu.Selected := MainMenu.Items[4];
+       MainMenu.Selected := MainMenu.Items[2];
     {$ENDIF}
     MainMenuClick(Sender);
   end;

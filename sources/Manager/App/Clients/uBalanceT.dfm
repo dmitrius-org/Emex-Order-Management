@@ -32,14 +32,14 @@ object BalanceT: TBalanceT
         '('#39'gridexporter'#39');'#13#10'    '#13#10'  var exporterCfg = new Object({'#13#10'     ' +
         '       type: "xlsx",'#13#10'            mimeType: "application/vnd.ope' +
         'nxmlformats-officedocument.spreadsheetml.sheet",'#13#10'            ti' +
-        'tle: '#39#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091#39','#13#10'            fileName: "Export.xlsx"'#13#10' ' +
-        '       }); '#13#10#13#10'  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!' +
-        'toolbar.exportBtn) {'#13#10'     toolbar.exportBtn = toolbar.insert('#13#10 +
-        '       0, '#13#10'       //{ xtype: '#39'tbseparator'#39' }'#13#10'       {xtype: '#39'b' +
-        'utton'#39', text: '#39#39', tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handler: functi' +
-        'on() {'#13#10'          sender.saveDocumentAs(exporterCfg);'#13#10'       }}' +
-        #13#10'     );'#13#10'     toolbar.exportBtn.setIconCls('#39'ToExcel'#39');// icon.' +
-        '..     '#13#10'  }  '#13#10'}'
+        'tle: '#39#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091#39','#13#10'            fileName: "'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090 +
+        #1091'.xlsx"'#13#10'        }); '#13#10#13#10'  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080 +
+        #1080#13#10'  if (!toolbar.exportBtn) {'#13#10'     toolbar.exportBtn = toolbar' +
+        '.insert('#13#10'       0, '#13#10'       //{ xtype: '#39'tbseparator'#39' }'#13#10'       ' +
+        '{xtype: '#39'button'#39', text: '#39#39', tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handl' +
+        'er: function() {'#13#10'          sender.saveDocumentAs(exporterCfg);'#13 +
+        #10'       }}'#13#10'     );'#13#10'     toolbar.exportBtn.setIconCls('#39'ToExcel'#39 +
+        ');// icon...     '#13#10'  }  '#13#10'}'
       
         'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
         'pyToClipboard = str => {'#13#10'        const el = document.createElem' +

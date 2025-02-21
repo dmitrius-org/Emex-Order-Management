@@ -744,11 +744,11 @@ object OrdersT: TOrdersT
           Height = 23
           Hint = ''
           ShowHint = True
-          Text = 'cbCancel'
+          Text = ''
           Items.Strings = (
             #1053#1077#1090
-            #1044#1072)
-          ItemIndex = 0
+            #1044#1072
+            #1047#1072#1087#1088#1086#1096#1077#1085' '#1086#1090#1082#1072#1079)
           TabOrder = 8
           EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
@@ -1295,7 +1295,9 @@ object OrdersT: TOrdersT
       '   '
       '   !updDateTime'
       '   '
-      '   !Invoice      '
+      '   !Invoice   '
+      '   '
+      '   !Flags   '
       '               '
       '  order by  o.[OrderID]  '
       '   ')
@@ -1341,6 +1343,10 @@ object OrdersT: TOrdersT
       item
         Value = ''
         Name = 'INVOICE'
+      end
+      item
+        Value = Null
+        Name = 'FLAGS'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -1698,7 +1704,7 @@ object OrdersT: TOrdersT
     end
     object actProtocol: TAction
       Category = 'Grid'
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1079#1072#1082#1072#1079#1072
       Hint = #1055#1088#1086#1090#1086#1082#1086#1083
       ImageIndex = 4
       OnExecute = actProtocolExecute
@@ -1762,6 +1768,18 @@ object OrdersT: TOrdersT
       Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': '#1054#1073#1088#1072#1097#1077#1085#1080#1077' '#1079#1072#1082#1088#1099#1090#1086
       OnExecute = actRequestClosedExecute
     end
+    object actRequestOpen: TAction
+      Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': '#1054#1073#1088#1072#1097#1077#1085#1080#1077' '#1086#1090#1082#1088#1099#1090#1086
+      OnExecute = actRequestOpenExecute
+    end
+    object actPartProtocol: TAction
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1077#1090#1072#1083#1080
+      OnExecute = actPartProtocolExecute
+    end
+    object actSupplierSpecifyDeliveryTime: TAction
+      Caption = #1059#1090#1086#1095#1085#1080#1090#1100' '#1089#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080
+      OnExecute = actSupplierSpecifyDeliveryTimeExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -1779,8 +1797,14 @@ object OrdersT: TOrdersT
     object N12: TUniMenuItem
       Action = actEdit
     end
+    object N13: TUniMenuItem
+      Action = actSupplierSpecifyDeliveryTime
+    end
     object N8: TUniMenuItem
       Action = actCancellation
+    end
+    object N10: TUniMenuItem
+      Action = actRequestOpen
     end
     object N9: TUniMenuItem
       Action = actRequestClosed
@@ -1802,6 +1826,9 @@ object OrdersT: TOrdersT
     end
     object N2: TUniMenuItem
       Action = actProtocol
+    end
+    object actPartProtocol1: TUniMenuItem
+      Action = actPartProtocol
     end
     object N4: TUniMenuItem
       Caption = '-'

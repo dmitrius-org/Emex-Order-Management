@@ -28,7 +28,7 @@ as
          ,@DeliveryTermSupplier    int -- Срок доставки поставщику
          ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
 
-  declare @PriceID as table(PriceID numeric(18, 0))
+  declare @PriceID ID
 
   select @DeliveryTermSupplier    = t.DeliveryTerm
         ,@DeliveryTermSupplierNew = p.GuaranteedDay
@@ -108,12 +108,15 @@ as
                             else null
                           end
         ,p.Fragile      = nullif(@Fragile, 0) 
-  OUTPUT INSERTED.PriceID INTO @PriceID(PriceID)  
+        ,p.updDatetime  = getdate()
+  OUTPUT INSERTED.PriceID INTO @PriceID(ID)  
 	from tOrders t  with (nolock index=ao1)
    inner join tPrice p with (updlock index=ao2)
            on p.DetailNum = t.DetailNumber
 		  and p.MakeLogo  = t.MakeLogo -- производитель
    where t.OrderID = @OrderID
+
+  exec PartHistoryInsertByPartID @Prices = @PriceID
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
@@ -204,6 +207,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250204', '15'
+exec setOV 'OrderUpdate', 'P', '20250220', '16'
 go
  

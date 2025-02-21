@@ -101,6 +101,7 @@ insert tRetCode (RetCode, Message) select 542, 'Наименование сод�
 insert tRetCode (RetCode, Message) select 543, 'Наименование содержит только пробелы!'
 insert tRetCode (RetCode, Message) select 544, 'Вес Физический из прайса = 0, и Вес Физический Факт пустой или равен 0!'
 insert tRetCode (RetCode, Message) select 545, 'Заказ в работе!'
+insert tRetCode (RetCode, Message) select 546, 'Запрос существует!'
 --
 
 -- tPrices - Прайслисты автозапчастей

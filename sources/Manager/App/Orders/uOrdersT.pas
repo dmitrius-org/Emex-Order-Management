@@ -21,7 +21,7 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
   UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx,
-  uOrdersNewDeliveryDateF;
+  uOrdersNewDeliveryDateF, uPartProtocol_T;
 
 type
   tMarks = class
@@ -210,6 +210,12 @@ type
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;
     QueryDeliveryTermToCustomer2: TIntegerField;
     btnNotification: TUniBitBtn;
+    actRequestOpen: TAction;
+    N10: TUniMenuItem;
+    actPartProtocol: TAction;
+    actPartProtocol1: TUniMenuItem;
+    actSupplierSpecifyDeliveryTime: TAction;
+    N13: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -260,6 +266,9 @@ type
     procedure QueryTermDeliveryToCustomerGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
     procedure btnNotificationClick(Sender: TObject);
+    procedure actRequestOpenExecute(Sender: TObject);
+    procedure actPartProtocolExecute(Sender: TObject);
+    procedure actSupplierSpecifyDeliveryTimeExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -326,6 +335,10 @@ type
     procedure OrderSetCancellation();
     /// <summary>OrderSetRequestClosed - установка признака: Обращение закрыто</summary>
     procedure OrderSetRequestClosed();
+    /// <summary>OrderSetRequestOpen - установка признака: Обращение открыто</summary>
+    procedure OrderSetRequestOpen();
+    /// <summary>SupplierSpecifyDeliveryTime - уточнить срок поставки у поставщика</summary>
+    procedure SupplierSpecifyDeliveryTime();
 
     /// <summary>
     /// GetNotificationOrders - показать заказы с уведомлениями
@@ -410,6 +423,31 @@ begin
   logger.Info('OrderSetRequestClosed:') ;
 
   Sql.Exec(' exec OrderSetRequestClosed  ', [], []);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+  var ServerErr:integer;
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+
+    Marks.DataRefresh;
+    ToastOK ('Операция успешно выполнена!', UniSession);
+    //OrdersMessageFCallBack(self, mrOk)
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
+end;
+
+procedure TOrdersT.OrderSetRequestOpen;
+begin
+  logger.Info('OrderSetRequestClosed:') ;
+
+  Sql.Exec(' exec OrderSetRequestOpen ', [], []);
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
@@ -716,6 +754,12 @@ begin
   end;
 end;
 
+procedure TOrdersT.actPartProtocolExecute(Sender: TObject);
+begin
+  PartProtocol_T.ID:= Integer(QueryOrderID.Value);
+  PartProtocol_T.ShowModal;
+end;
+
 procedure TOrdersT.actProtocolExecute(Sender: TObject);
 begin
   OrdersProtocol_T.ID:= Integer(QueryOrderID.Value);
@@ -734,6 +778,19 @@ begin
     begin
       case Res of
         mrYes : OrderSetRequestClosed;
+        mrNo  : Exit;
+      end;
+    end
+  );
+end;
+
+procedure TOrdersT.actRequestOpenExecute(Sender: TObject);
+begin
+  MessageDlg('Вы действительно хотите проставить признак "Обращение открыто"? ' , mtConfirmation, mbYesNo,
+    procedure(Sender: TComponent; Res: Integer)
+    begin
+      case Res of
+        mrYes : OrderSetRequestOpen;
         mrNo  : Exit;
       end;
     end
@@ -836,6 +893,7 @@ end;
 
 procedure TOrdersT.GridOpen;
 var FStatus :string;
+    FilterIsCancel: Integer;
 begin
   logger.Info('TOrdersT.GridOpen Begin');
   DoShowMask;
@@ -910,12 +968,28 @@ begin
     else
       Query.MacroByName('DetailNum').Value := '';
 
-    if cbCancel.ItemIndex > -1 then
+    if cbCancel.ItemIndex in [0, 1] then
       Query.MacroByName('isCancel').Value := ' and o.isCancel = ' + cbCancel.ItemIndex.ToString
     else
       Query.MacroByName('isCancel').Value := '';
 
-      logger.Info(datetostr( edtOrderDate.DateStart) );
+    Query.MacroByName('Flags').Value := '';
+
+    if cbCancel.ItemIndex in [2] then // Запрошен отказ
+    begin
+
+      FilterIsCancel := sql.GetSetting('ShowOrdersWithFilterIsCancel', 0);
+
+      if FilterIsCancel = 0 then
+        Query.MacroByName('Flags').Value := ' and (o.Flag & 64 > 0 or o.Flag & 128 > 0)'
+      else
+      if FilterIsCancel = 1 then
+        Query.MacroByName('Flags').Value := ' and o.Flag & 128 > 0'
+      else
+      if FilterIsCancel = 2 then
+        Query.MacroByName('Flags').Value := ' and o.Flag & 64 > 0';
+    end;
+
     if (edtOrderDate.DateStart <> NullDate) and (edtOrderDate.DateEnd <> NullDate) then
       Query.MacroByName('OrderDate').Value := ' and o.OrderDate between ''' + FormatDateTime('yyyymmdd', edtOrderDate.DateStart) + ''' and ''' + FormatDateTime('yyyymmdd', edtOrderDate.DateEnd) + ''''
     else
@@ -1034,7 +1108,7 @@ end;
 procedure TOrdersT.GetNotificationOrders;
 begin
  // btnCancel.Enabled := FIsNotification;
-  cbCancel.Enabled := FIsNotification;
+  //cbCancel.Enabled := FIsNotification;
 
   FIsNotification := not FIsNotification;
 
@@ -1054,7 +1128,11 @@ begin
   actExecuteActionEnabled.Enabled  := (actExecuteActionEnabled.Tag = 1) and (Marks.Count > 0);
   actExecuteActionRollback.Enabled := (actExecuteActionRollback.Tag= 1) and (Marks.Count > 0);
 
-  actCancellation.Enabled :=  (actCancellation.Tag = 1) and (Marks.Count > 0);
+  actCancellation.Enabled := (actCancellation.Tag = 1) and (Marks.Count > 0);
+  actRequestOpen.Enabled  := (actRequestOpen.Tag = 1) and  (marks.Count > 0);
+  actRequestClosed.Enabled:= (actRequestClosed.Tag = 1) and(marks.Count > 0);
+
+  actSupplierSpecifyDeliveryTime.Enabled:= (actSupplierSpecifyDeliveryTime.Tag = 1) and(marks.Count = 1);
 end;
 
 procedure TOrdersT.QueryDateDeliveryToCustomerGetText(Sender: TField;
@@ -1175,37 +1253,35 @@ begin
  // logger.Info('QueryFlagGetText: ');
   t := '';
   //Сообщение от менеджера клиенту
-//  if (Sender.AsInteger and 32) > 0 then
-//  begin
-//    t := t + '<div class="grid-order-message" data-qtip="Сообщение клиенту"><i class="fa fa-exclamation-triangle"></i></div> ';
-//  end;
-
+  if (Sender.AsInteger and 32) > 0 then
+  begin
+    t := t + '<span class="grid-order-message" data-qtip="Отправлено сообщение клиенту"><i class="fa fa-exclamation-triangle"></i></span> ';
+  end;
   //Сообщение от клиента
   if (Sender.AsInteger and 2048) > 0 then
   begin
     t := t + '<span class="grid-order-message" data-qtip="Имеется непрочитанное сообщение от клиента"><i class="fa fa-bell"></i></span> ';
   end;
-
   if (Sender.AsInteger and 64) > 0 then
   begin
     t := t + '<span class="grid-order-request-cancellation" data-qtip="Клиент запросил отказ по детали"><i class="fa fa-question-circle"></i></span> ';
   end;
-
   if (Sender.AsInteger and 128) > 0 then
   begin
     t := t + '<span class="grid-order-cancellation" data-qtip="Запрошен отказ"><i class="fa fa-ban"></i></span> ';
   end;
-
   if (Sender.AsInteger and 512) > 0 then
   begin
     t := t + '<span class="grid-order-balance-scale" data-qtip="Клиент изменил вес детали"><i class="fa fa-balance-scale"></i></span> ';
   end;
-
   if (Sender.AsInteger and 1024) > 0 then
   begin
-    t := t + '<span class="grid-order-request-check" data-qtip="Обращение закрыто"><i class="fa fa-check"></i></span> ';
+    t := t + '<span class="grid-order-request-close" data-qtip="Обращение закрыто"><i class="fa fa-check"></i></span> ';
   end;
-
+  if (Sender.AsInteger and 131072) > 0 then
+  begin
+    t := t + '<span class="grid-order-request-open" data-qtip="Обращение открыто"><i class="fa fa-exclamation"></i></span> ';
+  end;
   if Query.FieldByName('Fragile').AsBoolean then
   begin
     t := t + '<span class="grid-order-fragile" data-qtip="Fragile - Хрупкий товар"><i class="fa fa-fragile"></i></span> ';
@@ -1498,6 +1574,35 @@ begin
   end;
 end;
 
+procedure TOrdersT.SupplierSpecifyDeliveryTime;
+begin
+  logger.Info('SupplierSpecifyDeliveryTime:') ;
+
+  Sql.Exec(' exec SupplierSpecifyDeliveryTime ', [], []);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('''
+    select 1
+      from pAccrualAction with (nolock index=ao2)
+     where Spid = @@spid
+       and Retval <> 0
+  ''', [], []);
+
+  var ServerErr:integer;
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+    Marks.DataRefresh;
+    ToastOK ('Операция успешно выполнена!', UniSession);
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
+end;
+
 procedure TOrdersT.actSelectExecute(Sender: TObject);
 begin
   SelectAll;
@@ -1507,6 +1612,19 @@ procedure TOrdersT.actSetCommentExecute(Sender: TObject);
 begin
    MessageF.OrderID := QueryOrderID.AsInteger;
    MessageF.ShowModal(MessageCallBack);
+end;
+
+procedure TOrdersT.actSupplierSpecifyDeliveryTimeExecute(Sender: TObject);
+begin
+  MessageDlg('Вы действительно хотите создать запрос на уточнение срока поставки"? ' , mtConfirmation, mbYesNo,
+    procedure(Sender: TComponent; Res: Integer)
+    begin
+      case Res of
+        mrYes : SupplierSpecifyDeliveryTime;
+        mrNo  : Exit;
+      end;
+    end
+  );
 end;
 
 procedure TOrdersT.actUnselectExecute(Sender: TObject);

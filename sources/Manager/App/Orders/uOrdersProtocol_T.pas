@@ -10,7 +10,8 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
-  uniLabel, uniMultiItem, uniComboBox, uniButton, uniPanel;
+  uniLabel, uniMultiItem, uniComboBox, uniButton, uniPanel, uniImageList,
+  System.ImageList, Vcl.ImgList;
 
 type
   TOrdersProtocol_T = class(TUniForm)
@@ -55,6 +56,9 @@ type
     property ID: integer read FID write SetID;
   end;
 
+/// <summary>
+/// OrdersProtocol_T - протокол изменения заказа
+/// </summary>
 function OrdersProtocol_T: TOrdersProtocol_T;
 
 implementation

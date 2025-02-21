@@ -41,9 +41,8 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     ClientEvents.UniEvents.Strings = (
       
         'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-        'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-        #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-        'n the ToolBar, number 10, hide him'#13#10#13#10'}'
+        'r.getDockedItems()[1]; '#13#10'  toolbar.items.getAt(10).hide(); '#13#10'  t' +
+        'oolbar.items.getAt(9).hide(); '#13#10'}'
       
         'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
         'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -72,6 +71,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     Summary.GrandTotal = True
     Summary.GrandTotalAlign = taTop
     OnKeyDown = GridKeyDown
+    OnAjaxEvent = GridAjaxEvent
     OnColumnSort = GridColumnSort
     OnColumnMove = GridColumnMove
     OnCellContextClick = GridCellContextClick

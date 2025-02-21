@@ -169,10 +169,17 @@
 }
 
 /* Иконка: Обращение закрыто */
-.grid-order-request-check {
+.grid-order-request-close{
     overflow: visible;
     width: 100%;
     color: hwb(101 3% 34%);
+}
+
+/* Иконка: Обращение открыто */
+.grid-order-request-open {
+    overflow: visible;
+    width: 100%;
+    color: hsl(41, 100%, 50%);
 }
 
 /* таблица пользователи*/
@@ -390,4 +397,16 @@
     padding: 7px 4px;
     background: #fff;
     cursor: pointer;
+}
+
+/* Перенос строки в заголовке таблицы */
+.grid-part-protocol .x-column-header-inner .x-column-header-text {
+    white-space: normal;
+    text-align: center;
+}
+
+.ToExcel{
+    background-image:url("/files/img/ToExcel16.png") !important; 
+    width:24px !important;
+    height:24px !important;
 }

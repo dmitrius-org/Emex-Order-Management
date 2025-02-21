@@ -21,7 +21,7 @@ Insert tInstrument ( PID, Brief, Name, InstrumentTypeID) Select  2, 'Orders', '�
 
 declare @ID numeric(18, 0)
 select @ID = InstrumentID from tInstrument where brief = 'Orders'
-
+insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType, Properties) select @ID, 'ShowOrdersWithFilterIsCancel', 'Типы заказов при фильтре "Запрошен отказ"', '0=Все;1=Признак: Запрошен отказ;2=Признак:Клиент запросил отказ по детали;', '0', 0, 'Все;Признак: Запрошен отказ;Признак:Клиент запросил отказ по детали;'
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'OrdersGridRowCount', 'Количество строк на странице таблицы заказов', '', '500', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'TemplateOrderRefusals', 'Шаблон Excel для экспорта отказов', '', '', 0
 insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, 'UploadingRefusalsCatalog', 'Папка для сохранения файлов отказов', '', '', 0
@@ -98,7 +98,7 @@ insert tSettings (GroupID, Brief, Name, Comment, Val, SettingType) select @ID, '
 /*
 delete
   from tSettings 
- where brief in ('PlanShipmentsShow')
+ where brief in ('ShowOrdersWithFilterIsCancel')
 */
 
 

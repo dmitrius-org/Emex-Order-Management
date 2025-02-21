@@ -104,7 +104,7 @@ uses
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
   uOrdersNewDeliveryDateF in 'App\Orders\uOrdersNewDeliveryDateF.pas' {OrdersNewDeliveryDateF: TUniForm},
-  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
+  uPartProtocol_T in 'App\Orders\uPartProtocol_T.pas' {PartProtocol_T: TUniForm},
   uShipmentsTransporterNumberF in 'App\Shipments\uShipmentsTransporterNumberF.pas' {ShipmentsTransporterNumberF: TUniForm},
   uUtils.Controll in '..\Common\CommonApp\uUtils.Controll.pas',
   uUserProfile in 'Core\User\uUserProfile.pas' {UserProfile: TUniForm},
@@ -129,7 +129,8 @@ uses
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
   uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas',
   uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
-  uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame};
+  uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame},
+  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm};
 
 {$R *.res}
 

@@ -64,6 +64,8 @@ type
     procedure QueryTransporterPhysicalWeightGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     FTransporterNumber: String;
 
@@ -126,6 +128,16 @@ procedure TShipmentsBoxesT.GridAfterLoad(Sender: TUniCustomDBGrid);
 begin
   if Query.RecordCount > 25 then
        grid.JSInterface.JSCall('view.features[0].collapseAll', []);
+end;
+
+procedure TShipmentsBoxesT.GridAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if Params.Count > 0 then
+  begin
+    if ((EventName = '_columnhide') or (EventName = '_columnshow')) then
+      GridExt.GridLayoutSave(self, Grid, Params, EventName);
+  end;
 end;
 
 procedure TShipmentsBoxesT.GridCellContextClick(Column: TUniDBGridColumn; X,
