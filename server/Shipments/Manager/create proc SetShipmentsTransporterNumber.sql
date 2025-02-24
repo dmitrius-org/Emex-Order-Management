@@ -23,7 +23,7 @@ as
   end
 
   update t
-     set t.TransporterNumber	   = nullif(@TransporterNumber, '')
+     set t.TransporterNumber	   = nullif(rtrim(ltrim(@TransporterNumber)), '')
 	from tShipments t (updlock)
    where t.ShipmentsID = @ShipmentsID
   

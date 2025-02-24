@@ -9,7 +9,8 @@ as
 
 declare @ID as ID
 
-insert tShipmentsStatus (
+insert tShipmentsStatus 
+      (
        Date
       ,Number
       ,Name
@@ -31,7 +32,7 @@ select p.Date
  insert pShipmentsProtocol 
        (Spid, ShipmentsID, StateID, Message, ord)
  select @@Spid, s.ShipmentsID, s.StatusID, 'Синхранизация статусов с транспортной компанией', 0
-   from tShipments s (updlock)
+   from tShipments s (nolock)
   where isnull(s.StatusID, 0) <> 24 --	Received	Готовим к выдаче в РФ
 
  exec ShipmentsStatusSync
@@ -39,5 +40,5 @@ select p.Date
 go
 grant execute on ShipmentsStatusLoad to public
 go
-exec setOV 'ShipmentsStatusLoad', 'P', '20240916', '2'
+exec setOV 'ShipmentsStatusLoad', 'P', '20250223', '3'
 go
