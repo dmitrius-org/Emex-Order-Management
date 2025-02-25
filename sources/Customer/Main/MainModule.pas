@@ -26,6 +26,7 @@ type
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
+    procedure FDConnectionAfterConnect(Sender: TObject);
   private
     { Private declarations }
 
@@ -113,6 +114,21 @@ begin
     result:=FDConnection.Connected;
     UniServerModule.Logger.AddLog('TUniMainModule.dbConnect', 'End');
   end;
+end;
+
+procedure TUniMainModule.FDConnectionAfterConnect(Sender: TObject);
+begin
+  FDConnection.ExecSQL(
+  '''
+    if OBJECT_ID('tempdb..#OrderPage') is not null
+      drop table #OrderPage
+
+    CREATE TABLE #OrderPage
+      (
+          OrderID  numeric(18,0)
+         ,Page     int
+      );
+  ''');
 end;
 
 function TUniMainModule.CustomerAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;

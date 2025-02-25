@@ -16,7 +16,8 @@ uses
   uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
   System.Generics.Collections, System.MaskUtils, uniDateTimePicker,
-  uUniDateRangePicker, uConstant, uToast, uReOrderF, uUtils.Mark;
+  uUniDateRangePicker, uConstant, uToast, uReOrderF, uUtils.Mark,
+  uUniADCheckComboBoxEx, uUniADCheckComboBoxHelper, uniSpinEdit;
 
 
 type
@@ -60,8 +61,6 @@ type
     UniLabel1: TUniLabel;
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
-    qStatus: TFDQuery;
-    dsStatus: TDataSource;
     QueryStatusName: TWideStringField;
     QueryStatusID: TFMTBCDField;
     QueryFlag: TIntegerField;
@@ -78,16 +77,11 @@ type
     actSelect: TAction;
     actUnselect: TAction;
     QueryDetailName: TWideStringField;
-    fStatus2: TUniCheckComboBox;
     pnlGridSelectedCount: TUniPanel;
     UniLabel6: TUniLabel;
     fDetailNum: TUniEdit;
-    UniPanel3: TUniPanel;
-    lblSelRowCunt: TUniLabel;
-    UniPanel4: TUniPanel;
-    lblSelRowSum: TUniLabel;
-    UniPanel5: TUniPanel;
-    lblSelRowSum2: TUniLabel;
+    pnlPageL: TUniPanel;
+    pnlPageR: TUniPanel;
     QueryComment: TWideStringField;
     QueryDeliveryRestToCustomer: TIntegerField;
     QueryDeliveryRestTermSupplier: TIntegerField;
@@ -119,6 +113,17 @@ type
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;
     QueryDeliveryTermToCustomer2: TIntegerField;
     QueryAllMessageCount: TIntegerField;
+    fStatus2: TUniADCheckComboBox;
+    btnLast: TUniButton;
+    btnNext: TUniButton;
+    btnPrevious: TUniButton;
+    btnFirst: TUniButton;
+    UniLabel3: TUniLabel;
+    lblAllCount: TUniLabel;
+    pnlPage: TUniPanel;
+    UniContainerPanel1: TUniContainerPanel;
+    UniContainerPanel2: TUniContainerPanel;
+    edtPage: TUniSpinEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -135,8 +140,6 @@ type
     procedure actFilterClearExecute(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
-    procedure fStatus2Select(Sender: TObject);
-    procedure fPriceLogoSelect(Sender: TObject);
     procedure cbCancelSelect(Sender: TObject);
     procedure actShowMessageExecute(Sender: TObject);
     procedure actCancelRequestExecute(Sender: TObject);
@@ -161,15 +164,20 @@ type
       DisplayText: Boolean);
     procedure QueryDeliveryTermToCustomerGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
+    procedure btnNextClick(Sender: TObject);
+    procedure btnLastClick(Sender: TObject);
+    procedure btnFirstClick(Sender: TObject);
+    procedure btnPreviousClick(Sender: TObject);
+    procedure edtPageKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     FAction: tFormaction;
 
     FFilterTextStatus: string;
-    FFilterTextPriceLogo: string;
-    FFilterTextClient: string;
-
     FIsNotification: Boolean;
+
+//    FAllPage: Integer;
 
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
@@ -189,8 +197,6 @@ type
     procedure DoHideMask();
 
     procedure SortColumn(const FieldName: string; Dir: Boolean);
-
-    procedure FilterStatusCreate();
 
     /// <summary>
     /// GetNotificationOrders - показать заказы с уведомлениями
@@ -225,6 +231,9 @@ type
     /// GridRefresh - загрузка данных из БД
     /// </summary>
     procedure GridRefresh;
+
+    procedure Page();
+    procedure PageNavigation();
 
     procedure SetMenuVisible(AVisible: boolean);overload;
 
@@ -290,19 +299,19 @@ begin
   fStatus2.ClearSelection;
 
   FFilterTextStatus := '';
-  FFilterTextPriceLogo := '';
-  FFilterTextClient := '';
-
   fOrderDate.ClearDateRange;
   fDetailNum.Clear;
 
   edtComment2.Clear;
 
+  Page;
   GridRefresh();
 end;
 
 procedure TOrdersT2.actFilterExecute(Sender: TObject);
 begin
+  Page();
+
   GridRefresh();
 end;
 
@@ -380,7 +389,6 @@ begin
              ''' + SqlText
              , [], []);
 
-//  end;
   ReOrder.ShowModal(ReOrderCallBack);
 end;
 
@@ -388,6 +396,26 @@ procedure TOrdersT2.actShowMessageExecute(Sender: TObject);
 begin
    MessageF.OrderID := QueryOrderID.AsInteger;
    MessageF.ShowModal(MessageCallBack);
+end;
+
+procedure TOrdersT2.btnFirstClick(Sender: TObject);
+begin
+  edtPage.Value := edtPage.MinValue;
+  GridRefresh;
+end;
+
+procedure TOrdersT2.btnLastClick(Sender: TObject);
+begin
+  edtPage.Value := edtPage.MaxValue;
+  GridRefresh;
+end;
+
+procedure TOrdersT2.btnNextClick(Sender: TObject);
+begin
+  edtPage.Value := edtPage.Value + 1;
+  if edtPage.Value > edtPage.MaxValue then edtPage.Value :=edtPage.MaxValue;
+
+  GridRefresh;
 end;
 
 procedure TOrdersT2.btnNotificationClick(Sender: TObject);
@@ -405,67 +433,98 @@ begin
   UniSession.Synchronize;
 end;
 
-procedure TOrdersT2.FilterStatusCreate;
+procedure TOrdersT2.edtPageKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
 begin
-  qStatus.Open(); // используется в фильтре Статус
-
-  fStatus2.Clear;
-  qStatus.First;
-  while not qStatus.Eof do
+  if ((KEY)=VK_RETURN) then
   begin
-    fStatus2.Items.AddObject( qStatus.FieldByName('Name').AsString, Pointer(qStatus.FieldByName('NodeID').AsInteger) );
-    qStatus.Next;
+    GridRefresh;
   end;
-
-  fStatus2.Refresh;
 end;
 
-procedure TOrdersT2.fPriceLogoSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
+procedure TOrdersT2.Page;
 begin
-  s:= '';
-  FFilterTextPriceLogo := '';
+  logger.Info('TOrdersT2.Page begin');
 
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
+  sql.Open(
+  '''
+    DECLARE @Status as ID
+
+    if :Status <> ''
+      INSERT INTO @Status (ID)
+      SELECT CAST(value AS NUMERIC(18, 0))
+        FROM STRING_SPLIT(:Status, ',');
+
+    exec CustomerOrdersPage
+           @ClientID        = :ClientID
+          ,@Status          = @Status
+          ,@DetailNum       = :DetailNum
+          ,@Comment2        = :Comment2
+          ,@OrderDateStart  = :OrderDateStart
+          ,@OrderDateEnd    = :OrderDateEnd
+          ,@isCancel        = :isCancel
+          ,@IsNotification  = :IsNotification
+          ,@PageSize        = :PageSize
+
+    select
+          -- Page,
+           max(Page) over() as MaxPage,
+           min(Page) over() as MinPage
+      from #OrderPage with (nolock)
+     --group by Page
+     --order by Page
+  ''',
+  ['ClientID', 'Status', 'DetailNum', 'Comment2', 'OrderDateStart', 'OrderDateEnd', 'isCancel', 'IsNotification', 'PageSize'],
+  [UniMainModule.AUserID,
+   fStatus2.SelectedKeys,
+   fDetailNum.Text,
+   edtComment2.Text,
+   fOrderDate.DateStart,
+   fOrderDate.DateEnd,
+   cbCancel.ItemIndex,
+   FIsNotification,
+   Grid.WebOptions.PageSize
+  ]);
+
+
+  // Grid.WebOptions.
+ // FAllPage := sql.F('PageCount').AsInteger;
+
+  if sql.Count > 0 then
   begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + '''' + string((Sender as TUniCheckComboBox).Items[i]) +''',';
-    end;
+    edtPage.MinValue := sql.F('MinPage').AsInteger;
+    edtPage.MaxValue := sql.F('MaxPage').AsInteger;
+
+    edtPage.Enabled := edtPage.MaxValue > 1;
+    edtPage.Value   := edtPage.MinValue;
+
+    lblAllCount.Text := ' из ' + edtPage.MaxValue.ToString;
+  end
+  else
+  begin
+    edtPage.MinValue := 0;
+    edtPage.MaxValue := 0;
+
+    edtPage.Enabled := edtPage.MaxValue > 0;
+    edtPage.Value   := 0;
+
+    lblAllCount.Text := ' из 0';
   end;
 
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
+  PageNavigation;
 
-  FFilterTextPriceLogo := s;
-  GridRefresh;
-  logger.Info('FFilterTextPriceLogo: ' + FFilterTextPriceLogo) ;
+  logger.Info('TOrdersT2.Page end');
 end;
 
-procedure TOrdersT2.fStatus2Select(Sender: TObject);
-var
-  s: String;
-  i: Integer;
+procedure TOrdersT2.PageNavigation;
 begin
-  s:= '';
-  FFilterTextStatus := '';
+  edtPage.Enabled := edtPage.MaxValue > 0;
 
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +','; //+(Sender as TUniCheckComboBox).Items[i]+#10;
-    end;
-  end;
+  btnNext.Enabled := edtPage.Value < edtPage.MaxValue;
+  btnPrevious.Enabled := edtPage.Value > edtPage.MinValue;
 
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextStatus := s;
-  GridRefresh;
-  logger.Info('FFilterTextStatus: ' + FFilterTextStatus);
+  btnLast.Enabled := edtPage.Value <> edtPage.MaxValue;
+  btnFirst.Enabled := edtPage.Value <> edtPage.MinValue;
 end;
 
 procedure TOrdersT2.GridRefresh;
@@ -474,81 +533,15 @@ var FClient:string;
     FPriceLogo :string;
 begin
   logger.Info('GridOpen Begin');
+
   Query.Close();
-
-  if FIsNotification then
-  begin
-      Query.MacroByName('IsNotification').Value :=
-      '''
-        inner join vCustomerOrderNotificationFilter cl
-                on cl.OrderID  = o.OrderID
-               and cl.ClientID = o.ClientID
-      ''';
-  end
-  else
-  begin
-    Query.MacroByName('IsNotification').Value := '';
-    Query.ParamByName('isCancel').Value := cbCancel.ItemIndex;
-  end;
-
-  if FFilterTextStatus <> '' then
-    FStatus := ' and StatusID in (' + FFilterTextStatus + ')'
-  else
-    FStatus := '';
-
-  if FFilterTextClient <> '' then FClient := ' and ClientID in (' + FFilterTextClient + ')'
-  else
-    FClient := '';
-
-  if FStatus <> '' then
-  begin
-    Grid.Refresh;
-    Grid.WebOptions.Paged := True;
-    Grid.WebOptions.PageSize:=1000000;
-  end
-  else
-  begin
-    Grid.WebOptions.Paged := True;
-    Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
-  end;
-
-  if (fOrderDate.DateStart <> NullDate) and (fOrderDate.DateEnd <> NullDate) then
-  begin
-    Query.MacroByName('OrderDate').Value := ' and o.OrderDate between '''   + FormatDateTime('yyyymmdd', fOrderDate.DateStart) + ''' and '''  +
-                                              FormatDateTime('yyyymmdd', fOrderDate.DateEnd) + ''''
-  end
-  else
-  begin
-    Query.MacroByName('OrderDate').Value := '';
-  end;
-
-  Query.MacroByName('Status').Value :=  FStatus;
-
-  if fDetailNum.Text <> '' then
-    if string(fDetailNum.Text)[1] = '!' then
-    begin
-      Query.MacroByName('DetailNum').Value := ' and o.OrderDetailSubId = :DetailNum';
-      Query.ParamByName('DetailNum').AsString := Trim(fDetailNum.Text);
-    end
-    else
-    begin
-      Query.MacroByName('DetailNum').Value := ' and (o.DetailNumber like ''%'   + Trim(fDetailNum.Text) + '%''' +
-                                              '   or o.ReplacementDetailNumber like ''%'   + Trim(fDetailNum.Text) + '%'')'
-    end
-  else
-    Query.MacroByName('DetailNum').Value := '';
-
-  // комментарий
-  if edtComment2.Text <> '' then
-    Query.MacroByName('Comment2').Value := ' and o.Comment2 like ''%' + edtComment2.Text + '%'''
-  else
-    Query.MacroByName('Comment2').Value := '';
-
-  Query.ParamByName('ClientID').Value := UniMainModule.AUserID; //  AUserID- туту ид клиента
+  Query.ParamByName('Page').AsInteger := edtPage.Value;
   Query.Open();
 
+  SetNotificationCount();
 
-  SetNotificationCount;
+  PageNavigation();
+
   logger.Info('GridOpen End');
 end;
 
@@ -632,6 +625,14 @@ begin
   end;
 end;
 
+procedure TOrdersT2.btnPreviousClick(Sender: TObject);
+begin
+  edtPage.Value := edtPage.Value - 1;
+  if edtPage.Value < edtPage.MaxValue then edtPage.Value :=edtPage.MinValue;
+
+  GridRefresh;
+end;
+
 procedure TOrdersT2.QueryDeliveryDateToCustomerGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
@@ -713,12 +714,6 @@ var t: string;
 begin
   t := '';
 
-  // Сообщение от менеджера
-//  if (Sender.AsInteger and 32) > 0 then
-//  begin
-//    t := t + '<span class="x-orders-message" data-qtip="Имеется непрочитанное сообщение от менеджера"><i class="fa fa-bell"></i></span> ';
-//  end;
-
   // запрошен отказ по детали
   if (Sender.AsInteger and 64) > 0 then
   begin
@@ -763,6 +758,7 @@ begin
 
   FIsNotification := not FIsNotification;
 
+  Page;
   GridRefresh;
 
   SetMenuVisible(FIsNotification);
@@ -897,7 +893,7 @@ end;
 
 procedure TOrdersT2.cbCancelSelect(Sender: TObject);
 begin
-  GridRefresh;
+//  GridRefresh;
 end;
 
 procedure TOrdersT2.SortColumn(const FieldName: string; Dir: Boolean);
@@ -937,13 +933,21 @@ var
   IndexnameAsc : string;
   IndexnameDes : string;
 begin
-  Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
+  Grid.WebOptions.PageSize := sql.GetSetting('CustomerOrdersGridRowCount', 100);
 
   actSelect.Caption := '';
   actUnSelect.Caption := '';
   fOrderDate.Text     := '';
 
-  FilterStatusCreate;
+  fStatus2.FillFromSQL('''
+    DECLARE @R table (NodeID numeric(18, 0), Name varchar(256)) ;
+
+    insert @R
+    exec OrderFilter_Status
+
+    SELECT NodeID as ID, Name from @R;
+  '''
+  );
 
   // индексы для сортировки
     // индексы для сортировки
@@ -953,7 +957,6 @@ begin
   begin
     for I := 0 to Query.FieldCount-1 do
     begin
-
       IndexnameAsc := Query.Fields[I].FieldName+'_index_asc';
       IndexnameDes := Query.Fields[I].FieldName+'_index_des';
 
@@ -997,7 +1000,9 @@ begin
 
   SetNotificationIcon();
 
-  SetNotificationCount;
+  SetNotificationCount();
+
+  PageNavigation();
 
   UniSession.AddJS('Ext.getCmp("' + N2.JSId + '").addCls("menu-item-ok");');
   UniSession.AddJS('Ext.getCmp("' + N1.JSId + '").addCls("menu-item-cancel");');

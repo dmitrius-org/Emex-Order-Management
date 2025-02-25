@@ -67,7 +67,8 @@ uses
   uStatistics in 'App\Statistics\uStatistics.pas' {StatisticsT: TUniFrame},
   LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm},
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
-  uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm};
+  uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
+  uUniADCheckComboBoxHelper in '..\Common\Common\uUniADCheckComboBoxHelper.pas';
 
 {$R *.res}
 

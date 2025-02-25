@@ -133,7 +133,6 @@ var FQueryTMP:TFDQuery;
 begin
   FQueryTMP := TFDQuery.Create(nil);
   FQueryTMP.Connection := FConnection;
-
   FQueryTMP.SQL.Text := ASql;
   if Length(AParams) > 0 then
     Prepare(FQueryTMP, AParams, AArgs);

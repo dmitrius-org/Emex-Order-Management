@@ -122,8 +122,13 @@
       ClientEvents.UniEvents.Strings = (
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(9).hide(); '#13#10'  too' +
-          'lbar.items.getAt(10).hide(); '#13#10'}'
+          'r.getDockedItems()[1];'#13#10#13#10'  toolbar.items.getAt(0).hide(); '#13#10'  t' +
+          'oolbar.items.getAt(1).hide(); '#13#10'  toolbar.items.getAt(2).hide();' +
+          ' '#13#10'  toolbar.items.getAt(3).hide(); '#13#10'  toolbar.items.getAt(4).h' +
+          'ide(); '#13#10'  toolbar.items.getAt(5).hide(); '#13#10'  toolbar.items.getA' +
+          't(6).hide(); '#13#10'  toolbar.items.getAt(7).hide(); '#13#10'  toolbar.item' +
+          's.getAt(8).hide(); '#13#10'  toolbar.items.getAt(9).hide(); '#13#10'  toolba' +
+          'r.items.getAt(10).hide();   '#13#10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -133,12 +138,12 @@
           'dy.removeChild(el);'#13#10'    };'#13#10'         '#13#10'}'
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}')
+          'g)'#13#10'{'#13#10'  config.displayInfo=false;'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
-      WebOptions.PageSize = 500
+      WebOptions.PageSize = 100
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.WaitData = True
@@ -487,7 +492,7 @@
           ShowHint = True
           Action = actFilterClear
           Caption = '<i class="fa fa-times red"></i> '#1054#1095#1080#1089#1090#1080#1090#1100
-          TabOrder = 8
+          TabOrder = 7
         end
         object fOk: TUniBitBtn
           Left = 1095
@@ -497,7 +502,7 @@
           ShowHint = True
           Action = actFilter
           Caption = '<i class="fa fa-filter"></i> '#1055#1088#1080#1084#1077#1085#1080#1090#1100
-          TabOrder = 9
+          TabOrder = 8
           IconPosition = ipButtonEdge
         end
         object UniLabel5: TUniLabel
@@ -520,50 +525,10 @@
           Items.Strings = (
             #1053#1077#1090
             #1044#1072)
-          TabOrder = 7
+          TabOrder = 6
           ClearButton = True
           IconItems = <>
           OnSelect = cbCancelSelect
-        end
-        object fStatus2: TUniCheckComboBox
-          Left = 17
-          Top = 35
-          Width = 288
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 5
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-            end>
-          Images = UniImageList
-          HideTrigger = True
-          HideDefaultTrigger = False
-          IconItems = <>
-          OnSelect = fStatus2Select
         end
         object UniLabel6: TUniLabel
           Left = 513
@@ -582,7 +547,7 @@
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 6
+          TabOrder = 5
           EmptyText = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           CheckChangeDelay = 200
           ClearButton = True
@@ -606,7 +571,7 @@
           ShowHint = True
           Action = actCancelRequest
           Anchors = [akTop, akRight]
-          TabOrder = 10
+          TabOrder = 9
         end
         object edtComment2: TUniEdit
           Left = 690
@@ -615,7 +580,7 @@
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 11
+          TabOrder = 10
           EmptyText = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
           CheckChangeDelay = 200
           ClearButton = True
@@ -628,7 +593,7 @@
           Hint = ''
           ShowHint = True
           Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081':'
-          TabOrder = 12
+          TabOrder = 11
         end
         object fOrderDate: TUniDateRangePicker
           Left = 311
@@ -637,7 +602,7 @@
           Hint = ''
           ShowHint = True
           Text = 'fOrderDate'
-          TabOrder = 13
+          TabOrder = 12
           EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
           Triggers = <
             item
@@ -676,7 +641,7 @@
           ShowHint = True
           Caption = '<i class="icon-notification"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           Anchors = [akTop, akRight]
-          TabOrder = 14
+          TabOrder = 13
           ClientEvents.UniEvents.Strings = (
             
               'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'  config.styl' +
@@ -692,101 +657,240 @@
           LayoutConfig.ComponentCls = 'order-notification-btn'
           OnClick = btnNotificationClick
         end
+        object fStatus2: TUniADCheckComboBox
+          Left = 17
+          Top = 35
+          Width = 288
+          Hint = ''
+          ShowHint = True
+          ShowSearch = True
+          ShowSelectButton = True
+          Text = ''
+          TabOrder = 14
+          ClientEvents.ExtEvents.Strings = (
+            
+              'afterrender=function afterrender(sender, eOpts) {  '#13#10'  initCombo' +
+              'BoxSelectButtons(sender, "id");'#13#10'  initComboBoxSearch(sender, "i' +
+              'd", "val");  '#13#10'}')
+          ClearButton = True
+          IconItems = <>
+        end
       end
     end
     object pnlGridSelectedCount: TUniPanel
       AlignWithMargins = True
       Left = 29
       Top = 420
-      Width = 500
-      Height = 50
+      Width = 353
+      Height = 40
       Hint = ''
       Margins.Right = 50
-      Visible = False
       ShowHint = True
       ParentShowHint = False
       TabOrder = 3
       BorderStyle = ubsNone
+      Alignment = taLeftJustify
       ShowCaption = False
       Caption = ''
-      Layout = 'column'
-      LayoutAttribs.Columns = 3
+      Layout = 'hbox'
+      LayoutConfig.Padding = '2'
       LayoutConfig.Width = '100'
-      LayoutConfig.ColumnWidth = 300.000000000000000000
-      object UniPanel3: TUniPanel
+      object pnlPageL: TUniPanel
         Left = 0
         Top = 0
-        Width = 189
-        Height = 50
+        Width = 73
+        Height = 40
         Hint = ''
         ShowHint = True
-        Align = alLeft
         TabOrder = 0
         BorderStyle = ubsNone
         ShowCaption = False
-        Caption = 'UniPanel3'
-        object lblSelRowCunt: TUniLabel
+        Caption = 'pnlPageL'
+        object btnPrevious: TUniButton
           AlignWithMargins = True
-          Left = 3
-          Top = 17
-          Width = 92
-          Height = 13
+          Left = 40
+          Top = 5
+          Width = 30
+          Height = 30
           Hint = ''
+          Margins.Top = 5
+          Margins.Bottom = 5
           ShowHint = True
-          Caption = #1042#1099#1076#1077#1083#1077#1085#1086' '#1089#1090#1088#1086#1082': '
-          ParentColor = False
-          Color = clBtnFace
+          Caption = '<'
+          Align = alRight
+          TabStop = False
+          TabOrder = 2
+          LayoutConfig.Padding = '1'
+          LayoutConfig.Margin = '1'
+          OnClick = btnPreviousClick
+          ExplicitLeft = 0
+        end
+        object btnFirst: TUniButton
+          AlignWithMargins = True
+          Left = 4
+          Top = 5
+          Width = 30
+          Height = 30
+          Hint = ''
+          Margins.Top = 5
+          Margins.Bottom = 5
+          ShowHint = True
+          Caption = '<<'
+          Align = alRight
+          TabStop = False
           TabOrder = 1
+          LayoutConfig.Padding = '1'
+          LayoutConfig.Margin = '1'
+          OnClick = btnFirstClick
+          ExplicitLeft = -6
         end
       end
-      object UniPanel4: TUniPanel
-        Left = 189
-        Top = 0
-        Width = 182
-        Height = 50
+      object pnlPage: TUniPanel
+        Left = 75
+        Top = 3
+        Width = 193
+        Height = 40
         Hint = ''
         ShowHint = True
-        Align = alClient
-        TabOrder = 2
-        BorderStyle = ubsNone
-        ShowCaption = False
-        Caption = 'UniPanel3'
-        object lblSelRowSum: TUniLabel
-          AlignWithMargins = True
-          Left = 6
-          Top = 17
-          Width = 73
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = #1057#1091#1084#1084#1072' '#1089#1090#1088#1086#1082': '
-          ParentColor = False
-          Color = clBtnFace
-          TabOrder = 1
-        end
-      end
-      object UniPanel5: TUniPanel
-        Left = 371
-        Top = 0
-        Width = 129
-        Height = 50
-        Hint = ''
-        ShowHint = True
-        Align = alRight
         TabOrder = 3
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel3'
-        object lblSelRowSum2: TUniLabel
+        Layout = 'column'
+        LayoutAttribs.Columns = 3
+        LayoutConfig.Cls = 'order-page'
+        object UniContainerPanel1: TUniContainerPanel
           AlignWithMargins = True
-          Left = 6
-          Top = 17
-          Width = 6
-          Height = 13
+          Left = 3
+          Top = 3
+          Width = 70
+          Height = 34
           Hint = ''
           ShowHint = True
-          Caption = ': '
+          ParentColor = False
+          Align = alLeft
           TabOrder = 1
+          object UniLabel3: TUniLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 10
+            Width = 56
+            Height = 17
+            Hint = ''
+            Margins.Top = 10
+            Margins.Bottom = 8
+            ShowHint = True
+            Alignment = taCenter
+            Caption = #1057#1090#1088#1072#1085#1080#1094#1072
+            Align = alClient
+            ParentFont = False
+            Font.Height = -13
+            ParentColor = False
+            Color = clBtnFace
+            TabOrder = 1
+            LayoutConfig.Margin = '1'
+          end
+        end
+        object edtPage: TUniSpinEdit
+          AlignWithMargins = True
+          Left = 79
+          Top = 8
+          Width = 55
+          Height = 24
+          Hint = ''
+          Margins.Top = 8
+          Margins.Bottom = 8
+          ShowHint = True
+          TabOrder = 3
+          Align = alClient
+          Alignment = taCenter
+          LayoutConfig.Height = '100%'
+          OnKeyDown = edtPageKeyDown
+          ExplicitWidth = 82
+        end
+        object UniContainerPanel2: TUniContainerPanel
+          AlignWithMargins = True
+          Left = 140
+          Top = 3
+          Width = 50
+          Height = 34
+          Hint = ''
+          ShowHint = True
+          ParentColor = False
+          Align = alRight
+          TabOrder = 2
+          ExplicitLeft = 165
+          object lblAllCount: TUniLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 10
+            Width = 24
+            Height = 17
+            Hint = ''
+            Margins.Top = 10
+            Margins.Bottom = 8
+            ShowHint = True
+            Alignment = taCenter
+            Caption = #1080#1079' 0'
+            Align = alClient
+            ParentFont = False
+            Font.Height = -13
+            ParentColor = False
+            Color = clBtnFace
+            TabOrder = 1
+            LayoutConfig.Margin = '1'
+            ExplicitLeft = 0
+          end
+        end
+      end
+      object pnlPageR: TUniPanel
+        Left = 278
+        Top = 0
+        Width = 73
+        Height = 40
+        Hint = ''
+        ShowHint = True
+        TabOrder = 2
+        BorderStyle = ubsNone
+        ShowCaption = False
+        Caption = 'UniPanel3'
+        object btnLast: TUniButton
+          AlignWithMargins = True
+          Left = 40
+          Top = 5
+          Width = 30
+          Height = 30
+          Hint = ''
+          Margins.Top = 5
+          Margins.Bottom = 5
+          ShowHint = True
+          Caption = '>>'
+          Align = alRight
+          TabStop = False
+          TabOrder = 1
+          LayoutConfig.Padding = '1'
+          LayoutConfig.Margin = '1'
+          OnClick = btnLastClick
+          ExplicitLeft = 51
+        end
+        object btnNext: TUniButton
+          AlignWithMargins = True
+          Left = 4
+          Top = 5
+          Width = 30
+          Height = 30
+          Hint = ''
+          Margins.Top = 5
+          Margins.Bottom = 5
+          ShowHint = True
+          Caption = '>'
+          Align = alRight
+          TabStop = False
+          TabOrder = 2
+          LayoutConfig.Padding = '1'
+          LayoutConfig.Margin = '1'
+          OnClick = btnNextClick
+          ExplicitLeft = 15
         end
       end
     end
@@ -830,118 +934,15 @@
     UpdateOptions.AutoIncFields = 'OrderID'
     UpdateObject = UpdateSQL
     SQL.Strings = (
-      'SELECT o.[OrderID]'
-      '      ,o.[OrderDate]'
-      '      ,o.[PriceLogo]'
-      '      ,o.[OrderNum]'
-      '      ,o.[StatusID]'
-      '      ,o.[StatusName]'
-      '      ,o.[Manufacturer]'
-      '      ,o.[DetailNumber]'
-      '      ,o.[DetailName]'
-      '      ,o.[Quantity]'
-      '      ,o.[Price]'
-      '      ,o.[Amount]'
-      '      ,o.[WeightKG]'
-      '      ,o.[VolumeKG]'
-      '      ,o.[WeightKGF]'
-      '      ,o.[VolumeKGF]'
-      '      ,o.[DeliveryPlanDateSupplier]'
-      '      ,o.[DeliveryPlanDateSupplier2]'
-      
-        '      ,o.[DeliveryTermSupplier]     -- '#1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1076#1077#1085#1080#1103' '#1087#1086#1089#1090#1074 +
-        #1097#1080#1082#1091
-      
-        '      ,o.[DeliveryTermSupplier2]    -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' ' +
-        #1087#1086#1089#1083#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
-      
-        '      ,o.[DeliveryRestTermSupplier] -- '#1054#1089#1090#1072#1090#1086#1082' '#1089#1088#1086#1082#1072' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077 +
-        #1085#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      '      ,o.[DeliveredDateToSupplier]'
-      '      ,o.[DeliveryDaysReserve]'
-      '      ,o.[DeliveryDaysReserve2]'
-      '      ,o.[DeliveryNextDate]'
-      '      ,o.[DeliveryNextDate2]    '
-      '      ,o.[DeliveryDateToCustomer] '
-      '      ,o.[DeliveryDateToCustomer2]'
-      '      ,o.[DeliveryTermToCustomer]'
-      '      ,o.[DeliveryTermToCustomer2]'
-      '      ,o.[DeliveryRestToCustomer]'
-      '      ,o.[inDatetime]'
-      '      ,o.[updDatetime]      '
-      '      ,o.[Comment]'
-      '      ,o.[ReplacementDetailNumber]'
-      '      ,o.[ReplacementManufacturer]    '
-      '      ,o.[DestinationName]'
-      '      ,o.[Flag]'
-      '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
-      '      ,o.[OrderDetailSubId]  '
-      
-        '      ,o.UnreadMessagesCount -- '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1077#1087#1088#1086#1095#1080#1090#1072#1085#1085#1099#1093' '#1089#1086#1086#1073#1097#1077#1085 +
-        #1080#1081' '
-      '      ,o.AllMessageCount'
-      '      ,o.Comment2'
-      '      ,o.isCancel'
-      '  FROM vCustomerOrders o'
-      '  !IsNotification'
-      ' where o.ClientID = :ClientID'
-      
-        '   and ((:OrderNum = '#39#39') or (o.OrderNum like '#39'%'#39' + isnull(nullif' +
-        '(:OrderNum, '#39#39'), o.OrderNum) + '#39'%'#39'))'
-      '   and o.isCancel = isnull(nullif(:isCancel, -1), o.isCancel)'
-      ' '
-      '      !Status  '
-      '     '
-      '      !DetailNum    '
-      '   '
-      '      !OrderDate'
-      '   '
-      '      !Comment2'
-      '      '
-      '      '
-      '   '
-      ' order by o.[OrderID] desc'
-      '   ')
+      'exec CustomerOrdersSelect @Page = :Page')
     Left = 575
     Top = 255
     ParamData = <
       item
-        Name = 'CLIENTID'
-        ParamType = ptInput
-        Value = Null
-      end
-      item
-        Name = 'ORDERNUM'
-        DataType = ftString
-        ParamType = ptInput
-        Value = Null
-      end
-      item
-        Name = 'ISCANCEL'
+        Name = 'PAGE'
         DataType = ftInteger
         ParamType = ptInput
         Value = Null
-      end>
-    MacroData = <
-      item
-        Value = Null
-        Name = 'ISNOTIFICATION'
-      end
-      item
-        Value = ''
-        Name = 'STATUS'
-      end
-      item
-        Value = Null
-        Name = 'DETAILNUM'
-      end
-      item
-        Value = Null
-        Name = 'ORDERDATE'
-      end
-      item
-        Value = Null
-        Name = 'COMMENT2'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -1247,30 +1248,6 @@
       ' WHERE OrderID = :OrderID')
     Left = 498
     Top = 255
-  end
-  object qStatus: TFDQuery
-    AutoCalcFields = False
-    Connection = UniMainModule.FDConnection
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
-    UpdateOptions.UpdateChangedFields = False
-    UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
-    UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.CheckUpdatable = False
-    SQL.Strings = (
-      ' exec OrderFilter_Status ')
-    Left = 575
-    Top = 316
-  end
-  object dsStatus: TDataSource
-    DataSet = qStatus
-    Left = 649
-    Top = 315
   end
   object UniImageListAdapter: TUniImageListAdapter
     UniImageList = UniImageList

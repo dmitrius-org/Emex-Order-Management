@@ -10,9 +10,6 @@ Coordinates=668,938,40,36
 [UniImageList]
 Coordinates=367,243,90,36
 
-[UniPanel3]
-Coordinates=584,938,74,36
-
 [DataSource]
 Coordinates=0,0,82,36
 
@@ -33,9 +30,6 @@ Coordinates=367,573,125,36
 
 [QueryReceiptDate]
 Coordinates=367,628,120,36
-
-[UniPanel5]
-Coordinates=333,938,74,36
 
 [cbCancel]
 Coordinates=255,938,68,36
@@ -83,14 +77,11 @@ Visible=True
 [QueryDeliveryTermToCustomer]
 Coordinates=586,331,196,36
 
-[UniPanel4]
-Coordinates=987,892,74,36
-
 [UniLabel2]
 Coordinates=904,892,73,36
 
 [Query]
-Coordinates=10,10,155,872
+Coordinates=10,10,155,1004
 
 [QueryOrderDate]
 Coordinates=586,496,109,36
@@ -149,17 +140,11 @@ Coordinates=410,892,72,36
 [QueryReplacementDetailNumber]
 Coordinates=820,56,204,36
 
-[lblSelRowSum2]
-Coordinates=295,892,105,36
-
 [QueryQuantity]
 Coordinates=820,166,97,36
 
 [fisBlock]
 Coordinates=226,892,59,36
-
-[fStatus2]
-Coordinates=154,892,62,36
 
 [UniLabel5]
 Coordinates=71,892,73,36
@@ -179,17 +164,11 @@ Coordinates=820,551,119,36
 [QueryStatusName]
 Coordinates=820,606,120,36
 
-[UniMainModule.qSetting]
-Coordinates=395,10,155,58
-
 [QueryDeliveryNextDate2]
 Coordinates=820,661,157,36
 
 [UpdateSQL]
 Coordinates=820,716,81,36
-
-[lblSelRowCunt]
-Coordinates=1060,10,99,36
 
 [QueryDeliveryRestToCustomer]
 Coordinates=820,826,193,36
@@ -206,14 +185,8 @@ Coordinates=820,991,128,36
 [actFilterClear]
 Coordinates=820,1046,92,36
 
-[qStatus]
-Coordinates=327,10,58,58
-
 [Grid]
 Coordinates=955,10,40,36
-
-[UniMainModule.Query]
-Coordinates=175,10,142,58
 
 [QueryWeightKGF]
 Coordinates=701,1135,116,36
@@ -251,9 +224,6 @@ Coordinates=1062,166,74,36
 [actMain]
 Coordinates=1062,221,60,36
 
-[lblSelRowSum]
-Coordinates=779,10,98,36
-
 [actUnselect]
 Coordinates=1062,331,82,36
 
@@ -269,15 +239,64 @@ Coordinates=1062,496,40,36
 [QueryPriceLogo]
 Coordinates=1062,551,107,36
 
-[dsStatus]
-Coordinates=27,891,65,36
-
 [ppMain]
 Coordinates=1062,606,57,36
 
 []
-Coordinates=1062,661,91,36
+Coordinates=184,430,109,36
 
 [actCancelСonfirm]
-Coordinates=562,1135,133,36
+Coordinates=562,1135,117,36
+
+[QueryAllMessageCount]
+Coordinates=184,155,150,36
+
+[QueryisCancel]
+Coordinates=184,210,99,36
+
+[QueryDeliveryTermSupplier2]
+Coordinates=184,265,181,36
+
+[fStatus2]
+Coordinates=184,320,62,36
+
+[QueryDeliveryPlanDateSupplier2]
+Coordinates=345,1,204,36
+
+[UniMainModule.Query]
+Coordinates=184,1,142,58
+
+[UniMainModule.qSetting]
+Coordinates=184,78,155,58
+
+[QueryDeliveryDateToCustomer2]
+Coordinates=345,188,201,36
+
+[QueryDeliveryTermToCustomer2]
+Coordinates=345,320,204,36
+
+[btnLast]
+Coordinates=184,375,57,36
+
+[UniLabel3]
+Coordinates=184,595,73,36
+
+[btnNext]
+Coordinates=184,650,59,36
+
+[btnFirst]
+Coordinates=184,705,58,36
+
+[lblAllCount]
+Coordinates=184,760,77,36
+Visible=True
+
+[pnlPageL]
+Coordinates=584,938,62,36
+
+[pnlPageR]
+Coordinates=987,892,74,36
+
+[btnPrevious]
+Coordinates=184,540,83,36
 

@@ -1,12 +1,19 @@
 if OBJECT_ID('vCustomerOrders') is not null
     drop view vCustomerOrders
 go
+if OBJECT_ID('CustomerOrdersSelect') is not null
+    drop proc CustomerOrdersSelect
+go
 /* **********************************************************						
-vCustomerOrders - список заказов
+CustomerOrdersSelect - список заказов
 ********************************************************** */
 
-create view vCustomerOrders
+create proc CustomerOrdersSelect
+              @Page            int = null
 as
+SET NOCOUNT ON; 
+select @Page = isnull(@Page, 1)
+
 SELECT o.[OrderID]
       ,o.[ClientID]
       ,c.[Brief]         as ClientName
@@ -73,15 +80,16 @@ SELECT o.[OrderID]
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,o.Flag
-  FROM [tOrders] o with (nolock index=ao2)
-
+  FROM #OrderPage op with (nolock)
+ inner join [tOrders] o with (nolock index=ao2)
+         on o.OrderID = op.OrderID
   left join vOrdersDeliverySupplier od  
          on od.OrderID = o.OrderID
 
   left join vOrdersDeliveryCustomer oc  
          on oc.OrderID = o.OrderID
 
- inner join tNodes s with (nolock index=ao1)
+  left join tNodes s with (nolock index=ao1)
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 
  
@@ -89,17 +97,17 @@ SELECT o.[OrderID]
          on c.ClientID = o.ClientID
 
  outer apply (
-      select top 1 pd.DestinationLogo, pd.Name
-        from tProfilesCustomer pc with (nolock index=ao2)
-        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-       where pc.ClientID = c.ClientID
-         and pd.DestinationLogo    = o.DestinationLogo
-       order by case 
-                  when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
-                  else 555
-                end
-     ) as pd
+               select top 1 pd.DestinationLogo, pd.Name
+                 from tProfilesCustomer pc with (nolock index=ao2)
+                 left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+                        on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+                where pc.ClientID = c.ClientID
+                  and pd.DestinationLogo    = o.DestinationLogo
+                order by case 
+                           when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
+                           else 555
+                         end
+              ) as pd
 
   left join tMakes b with (nolock index=ao2)
          on b.Code = o.ReplacementMakeLogo
@@ -122,9 +130,11 @@ SELECT o.[OrderID]
                       and cm.Flag&1 = 1
                where ct.OrderID = o.OrderID
               ) as um
-  
+
+ where op.Page = @Page 
+ order by op.OrderID desc 
 go
-grant select on vCustomerOrders to public
+grant exec on CustomerOrdersSelect to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250212', '35'
+exec setOV 'CustomerOrdersSelect', 'P', '20250224', '0'
 go

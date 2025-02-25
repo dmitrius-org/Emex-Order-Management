@@ -35,6 +35,7 @@ object UniMainModule: TUniMainModule
       'MonitorBy=Remote')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
+    AfterConnect = FDConnectionAfterConnect
     Left = 41
     Top = 13
   end
