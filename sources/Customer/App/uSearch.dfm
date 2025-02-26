@@ -610,9 +610,9 @@ object SearchF: TSearchF
     SQL.Strings = (
       'Select *'
       '  from vFindByNumber'
-      ' where MakeName        = :MakeName '
-      '   and DetailNum       = :DetailNum'
-      '   and DestinationLogo = :DestinationLogo  '
+      ' where MakeName  = :MakeName '
+      '   and DetailNum = :DetailNum'
+      '   and ProfilesCustomerID = :ProfilesCustomerID  '
       '   '
       'order by N  '
       ''
@@ -631,10 +631,8 @@ object SearchF: TSearchF
         ParamType = ptInput
       end
       item
-        Name = 'DESTINATIONLOGO'
-        DataType = ftString
+        Name = 'PROFILESCUSTOMERID'
         ParamType = ptInput
-        Value = Null
       end>
     object QueryID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -759,19 +757,18 @@ object SearchF: TSearchF
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
     SQL.Strings = (
-      'select '
-      '       p.MakeName,'
+      'select p.MakeName,'
       '       p.DetailNum,'
       '       p.PartNameRus,'
       
-        '       min(p.PriceRub) PriceRub        -- '#1094#1077#1085#1072' '#1076#1077#1090#1072#1083#1080', '#1087#1086#1082#1072#1079#1072#1074#1072#1077 +
-        #1084#1072#1103' '#1085#1072' '#1089#1072#1081#1090#1077'     '
+        '       min(p.PriceRub) PriceRub -- '#1094#1077#1085#1072' '#1076#1077#1090#1072#1083#1080', '#1087#1086#1082#1072#1079#1072#1074#1072#1077#1084#1072#1103' '#1085#1072' ' +
+        #1089#1072#1081#1090#1077'     '
       '  from vFindByNumber p '
       ' where 1=1 --p.MakeName       <> :MakeName '
-      '   and p.DestinationLogo = :DestinationLogo  '
-      ' group by p.MakeName, p.DetailNum, p.PartNameRus'
-      '  '
-      '  '
+      '   and p.ProfilesCustomerID = :ProfilesCustomerID  '
+      ' group by p.MakeName, '
+      '          p.DetailNum, '
+      '          p.PartNameRus'
       ' order by case'
       '            when p.DetailNum = :DetailNum then 1'
       '            else 2'
@@ -780,7 +777,6 @@ object SearchF: TSearchF
       '            when p.MakeName = :MakeName then 1'
       '            else 2'
       '          end '
-      '          '
       '         ,PriceRub'
       ''
       '')
@@ -788,14 +784,16 @@ object SearchF: TSearchF
     Top = 359
     ParamData = <
       item
-        Name = 'DESTINATIONLOGO'
-        DataType = ftString
+        Name = 'PROFILESCUSTOMERID'
+        DataType = ftInteger
         ParamType = ptInput
         Value = Null
       end
       item
         Name = 'DETAILNUM'
+        DataType = ftString
         ParamType = ptInput
+        Value = Null
       end
       item
         Name = 'MAKENAME'
@@ -841,8 +839,8 @@ object SearchF: TSearchF
     FetchRowSQL.Strings = (
       'select *'
       '  from pFindByNumber (nolock)'
-      'where spid = @@spid'
-      '    and ID   = :ID')
+      ' where spid = @@spid'
+      '   and ID   = :ID')
     Left = 497
     Top = 254
   end

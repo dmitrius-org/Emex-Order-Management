@@ -78,6 +78,7 @@ INSERT INTO [tOrders] with (rowlock)
       ,FileDate      
       ,DestinationLogo
       ,DestinationName
+      ,ProfilesCustomerID
       ,Commission-- Комиссия от продажи	 
       ,ClientOrderNum
       ,CommissionAmount
@@ -159,6 +160,7 @@ select o.ClientID
       ,o.FileDate      
       ,o.DestinationLogo
       ,o.DestinationName
+      ,o.ProfilesCustomerID
       ,o.Commission-- Комиссия от продажи	
       ,o.ClientOrderNum
       ,o.CommissionAmount
@@ -265,6 +267,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20250211', '2'
+exec setOV 'CloneOrders', 'P', '20250226', '3'
 go
  

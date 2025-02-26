@@ -12,3 +12,9 @@ alter table tSettings add Properties varchar(256)
 --inner join tProtocol p 
 --       on p.ObjectID = o.OrderID
 --      and p.NewStateID = 8 
+
+alter table tBasket add ProfilesCustomerID  numeric(18, 0)  
+alter table tOrders add ProfilesCustomerID  numeric(18, 0)  
+alter table pFindByNumber add ProfilesCustomerID  numeric(18, 0)  
+
+tProfilesCustomer

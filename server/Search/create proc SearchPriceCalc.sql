@@ -5,8 +5,8 @@ go
   SearchPriceCalc - расчет цены 
 -------------------------------------------------------- */
 create proc SearchPriceCalc
-              @DestinationLogo	nvarchar(20),
-			  @DetailNum        nvarchar(40)
+              @ProfilesCustomerID  numeric(18, 0)  
+			 ,@DetailNum           nvarchar(40)
 as
 set nocount on;
 
@@ -40,10 +40,8 @@ create table #Price
       ,TMarg               float          -- номинал наценки на товар
       ,TFinPrice           float
       ,Term                int            -- срок доставки
-      ,TFinPriceKurs       money
-
-      ,DestinationLogo     nvarchar(10)
-
+      ,TFinPriceKurs       money      
+       --
       ,Margin		       float
       ,Kurs		           float
       ,ExtraKurs           float
@@ -53,7 +51,9 @@ create table #Price
       ,PDWeightKG	       float
       ,PDVolumeKG          float
        -- данные с профиля поставщика
+      ,ProfilesCustomerID  numeric(18, 0)  
       ,ProfilesDeliveryID  numeric(18, 0)
+      ,DestinationLogo     nvarchar(10)
       ,Delivery            int
       ,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
       ,FragileSign         bit    default 0-- признак Хрункий на детали
@@ -122,7 +122,6 @@ insert #Price with (rowlock)
 	  ,WeightKG 
 	  ,VolumeKG 
       ,TPrice  
-
       ,Margin	
       ,Reliability
       ,Kurs	
@@ -134,6 +133,8 @@ insert #Price with (rowlock)
       ,PDVolumeKG      
       ,DestinationLogo
 	  ,ProfilesDeliveryID
+      ,ProfilesCustomerID
+
 	  ,Delivery -- дополнительный срок поставки с поставщика
 	  ,GuaranteedDay
       ,FragileSign
@@ -155,7 +156,6 @@ select p.ID,
          when (p.flag&512)>0 then p.WeightGr -- 512 - Вес изменен клиентом
 	     else isnull(pp.WeightKGF,p.WeightGr)
        end,
-
        case
          when (p.flag&512)>0 then p.VolumeAdd-- 512 - Вес изменен клиентом
 	     else isnull(pp.VolumeKGf,p.VolumeAdd) 
@@ -168,7 +168,6 @@ select p.ID,
          else 1
        end,
 	   p.Price,
-
        pd.Margin,
        pd.Reliability,
        @Kurs, 
@@ -183,12 +182,13 @@ select p.ID,
        pd.VolumeKG,
        pd.DestinationLogo,
 	   pd.ProfilesDeliveryID,
+       @ProfilesCustomerID,
 	   isnull(pd.Delivery, 0),
 	   p.GuaranteedDay,
        isnull(pp.FragileSign, 0),
        isnull(pd.Fragile, 0)
   from pFindByNumber p with (nolock index=ao1)
- inner join tClients c  with (nolock index=ao1)
+ inner join tClients c  with (nolock index=PK_tClients_ClientID)
          on c.ClientID = p.ClientID 
  inner join tSuppliers s  with (nolock index=ao1)
          on S.SuppliersID = c.SuppliersID
@@ -212,11 +212,10 @@ select p.ID,
              pd.VolumeKG_Rate4,
              pd.Fragile
 
-        from tProfilesCustomer pc with (nolock)
+        from tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-       where pc.ClientID = c.ClientID
-         and pd.DestinationLogo    = @DestinationLogo   
+       where pc.ProfilesCustomerID = @ProfilesCustomerID
      ) as pd
 
  left join @Price pp
@@ -236,16 +235,14 @@ Update #Price
                   else WeightKG * (PDWeightKG) + (VolumeKG-WeightKG) * (PDVolumeKG)
               end
     
- --Вычисляем номинал цены детали со скидкой: TDetPrice = DetailPrice - DetailPrice*Discount
+--Вычисляем номинал цены детали со скидкой: TDetPrice = DetailPrice - DetailPrice*Discount
 Update #Price set TDetPrice = DetailPrice- DetailPrice * (Discount/100)
  
-Update #Price set TCom = TDetPrice * (Commission/100)
-    
- -- Вычисляем номинал наценки на товар: TMarg = TDetPrice*Margin
+Update #Price set TCom = TDetPrice * (Commission/100)    
+-- Вычисляем номинал наценки на товар: TMarg = TDetPrice*Margin
 Update #Price set TMarg = TDetPrice* (Margin/100)
 
 Update #Price set TFinPrice = (TDetPrice + TDel + TMarg + TCom)
-
 --Если у детали установлен пункт Fragile, считать ее сразу с этой наценкой
 --Например, если мы ставим галочку во Fragile, то к себестоимости детали добавляется 3%
 Update #Price 
@@ -257,20 +254,22 @@ Update #Price set TFinPriceKurs  = TFinPrice * (Kurs + (Kurs * (isnull(ExtraKurs
 Update #Price set FinalPrice = TFinPriceKurs
 	  
 Update f 
-   set f.PriceRub        = CEILING(p.FinalPrice)
+   set f.PriceRub           = CEILING(p.FinalPrice)
+                            
+      ,f.Margin             = p.Margin
+      ,f.Discount           = p.Discount
+      ,f.Kurs               = p.Kurs
+      ,f.ExtraKurs          = p.ExtraKurs
+      ,f.Commission         = p.Commission
+      ,f.Reliability        = p.Reliability
+      ,f.Fragile            = p.Fragile
+                            
+      ,f.DestinationLogo    = p.DestinationLogo
+	  ,f.WeightGr	        = p.WeightKG   
+	  ,f.VolumeAdd          = p.VolumeKG   
+      ,f.PartNameRus        = p.DetailName
 
-      ,f.Margin          = p.Margin
-      ,f.Discount        = p.Discount
-      ,f.Kurs            = p.Kurs
-      ,f.ExtraKurs       = p.ExtraKurs
-      ,f.Commission      = p.Commission
-      ,f.Reliability     = p.Reliability
-      ,f.Fragile         = p.Fragile
-
-      ,f.DestinationLogo = p.DestinationLogo
-	  ,f.WeightGr	     = p.WeightKG   
-	  ,f.VolumeAdd       = p.VolumeKG   
-      ,f.PartNameRus     = p.DetailName
+      ,f.ProfilesCustomerID = p.ProfilesCustomerID
   from #Price p (nolock)
  inner join pFindByNumber f (updlock)
          on f.Spid = @@Spid
@@ -303,5 +302,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250225', '12'
+exec setOV 'SearchPriceCalc', 'P', '20250226', '13'
 go

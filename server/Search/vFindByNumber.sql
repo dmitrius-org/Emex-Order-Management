@@ -49,6 +49,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
        end  Available,
        p.PriceLogo,
        p.DestinationLogo,
+       p.ProfilesCustomerID,
        p.Packing
   from pFindByNumber p with (nolock index=ao2)
   left join tSettings st with (nolock index=ao2)
@@ -64,6 +65,6 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20241119', '11'
+exec setOV 'vFindByNumber', 'V', '20250226', '12'
 go
-
+select * from vFindByNumber

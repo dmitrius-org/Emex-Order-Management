@@ -253,4 +253,4 @@ return @RetVal
 go
 grant all on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20240701', '2'
+exec setOV 'DetailPriceCalc', 'P', '20250226', '3'

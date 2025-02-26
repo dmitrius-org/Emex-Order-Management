@@ -214,7 +214,6 @@ type
     procedure UniFormCreate(Sender: TObject);
     procedure ProfilesCustomerGridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
-    procedure pmProfilesCustomerPopup(Sender: TObject);
     procedure actMarginEditExecute(Sender: TObject);
     procedure actReliabilityEditExecute(Sender: TObject);
     procedure qManagerObjectTypeGetText(Sender: TField; var Text: string;
@@ -374,6 +373,7 @@ begin
       sqltext :='''
                  declare @R      int
                         ,@ClientID numeric(18, 0)
+
                  exec @r = ClientInsert
                              @ClientID  = @ClientID out
                             ,@Brief     = :Brief
@@ -390,7 +390,7 @@ begin
                             ,@ContactPerson       = :ContactPerson
 
                  select @r as retcode
-                 ''';
+      ''';
 
       Sql.Open(sqltext,
                ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType',
@@ -419,22 +419,22 @@ begin
                   declare @R      int
 
                   exec @r = ClientUpdate
-                             @ClientID      = :ClientID
-                            ,@Brief         = :Brief
-                            ,@Name          = :Name
-                            ,@IsActive      = :IsActive
-                            ,@SuppliersID   = :SuppliersID
-                            ,@Taxes         = :Taxes
-                            ,@ResponseType  = :ResponseType
-                            ,@NotificationMethod  = :NotificationMethod
-                            ,@NotificationAddress = :NotificationAddress
-                            ,@ClientTypeID	      = :ClientTypeID
-                            ,@StatusRequiringPayment=:StatusRequiringPayment
-                            ,@Email	              = :Email
-                            ,@Phone	              = :Phone
-                            ,@ContactPerson       = :ContactPerson
+                             @ClientID              = :ClientID
+                            ,@Brief                 = :Brief
+                            ,@Name                  = :Name
+                            ,@IsActive              = :IsActive
+                            ,@SuppliersID           = :SuppliersID
+                            ,@Taxes                 = :Taxes
+                            ,@ResponseType          = :ResponseType
+                            ,@NotificationMethod    = :NotificationMethod
+                            ,@NotificationAddress   = :NotificationAddress
+                            ,@ClientTypeID	        = :ClientTypeID
+                            ,@StatusRequiringPayment= :StatusRequiringPayment
+                            ,@Email	                = :Email
+                            ,@Phone	                = :Phone
+                            ,@ContactPerson         = :ContactPerson
                  select @r as retcode
-                ''';
+      ''';
 
       Sql.Open(sqltext,
                ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes',
@@ -502,22 +502,23 @@ end;
 procedure TClientsF.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' exec OrderFileFormat_load ' +
-                                  '       @ClientID = :ClientID' +
-                                  '      ,@Direction= 0' +
-                                  ''+
-                                  ' exec EmployeeReliationload ' +
-                                  '       @ClientID = :ClientID' +
-                                  '      ,@Direction= 0' +
-                                  ''+
-                                  ' exec ProfilesCustomerLoad ' +
-                                  '       @ClientID = :ClientID' +
-                                  '      ,@Direction= 0' +
-                                  '' +
-                                  ' select *  '+
-                                  '   from vClientEdit  '+
-                                  '  where ClientID = :ClientID '+
-                                  ' ';
+  UniMainModule.Query.SQL.Text := '''
+     exec OrderFileFormat_load
+            @ClientID = :ClientID
+           ,@Direction= 0
+
+    exec EmployeeReliationload
+           @ClientID = :ClientID
+          ,@Direction= 0
+
+    exec ProfilesCustomerLoad
+           @ClientID = :ClientID
+          ,@Direction= 0
+
+   select *
+     from vClientEdit
+    where ClientID = :ClientID
+  ''';
   UniMainModule.Query.ParamByName('ClientID').Value := FID;
   UniMainModule.Query.Open;
 
@@ -533,12 +534,12 @@ begin
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
   cbStatusRequiringPayment.Text  := UniMainModule.Query.FieldByName('StatusRequiringPayment').AsString;
-  edtEmail.Text  := UniMainModule.Query.FieldByName('Email').AsString;
-  edtPhone.Text  := UniMainModule.Query.FieldByName('Phone').AsString;
-  edtContactPerson.Text  := UniMainModule.Query.FieldByName('ContactPerson').AsString;
+  edtEmail.Text        := UniMainModule.Query.FieldByName('Email').AsString;
+  edtPhone.Text        := UniMainModule.Query.FieldByName('Phone').AsString;
+  edtContactPerson.Text:= UniMainModule.Query.FieldByName('ContactPerson').AsString;
 
   //
-  cbClientType.Value :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
+  cbClientType.Value   :=  UniMainModule.Query.FieldByName('ClientTypeID').AsString;
 
   ManagerGridRefresh;
 end;
@@ -599,12 +600,6 @@ end;
 procedure TClientsF.pmManagerPopup(Sender: TObject);
 begin
   ManagerEditEnabled;
-end;
-
-procedure TClientsF.pmProfilesCustomerPopup(Sender: TObject);
-begin
-//  actMarginEdit.Enabled := ProfilesCustomerGrid.SelectedRows.Count > 0;
-//  actReliabilityEdit.Enabled := ProfilesCustomerGrid.SelectedRows.Count > 0;
 end;
 
 procedure TClientsF.PriceProfilesGridRefresh;

@@ -298,7 +298,6 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
-        ExplicitTop = 3
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -340,8 +339,6 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
-        ExplicitTop = 54
-        ExplicitHeight = 326
         object Grid: TUniDBGrid
           Left = 0
           Top = 0
@@ -585,14 +582,6 @@ object SuppliersF: TSuppliersF
         ' '
       'end'
       ''
-      'if exists (select 1'
-      '             from pSupplierDeliveryProfiles (nolock)'
-      '            where Spid            = @@spid'
-      '              and DestinationLogo = @DestinationLogo)'
-      'begin'
-      '   RAISERROR ('#39'C'#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39', 16, 1); '
-      'end'
-      ''
       'INSERT INTO pSupplierDeliveryProfiles'
       '        (SuppliersID, '
       '         Name, '
@@ -682,21 +671,22 @@ object SuppliersF: TSuppliersF
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (
-      'declare @R                 numeric(18, 0)'
+      'declare @R      numeric(18, 0)'
+      '       ,@RetMsg nvarchar(256)'
       ''
-      '/*'
-      'select @DestinationLogo = :NEW_DestinationLogo'
+      'exec @R =SupplierDeliveryProfilesDetele'
+      '              @ID  = :ID'
       ''
-      'if isnull(@DestinationLogo, '#39#39') = '#39#39
+      'if isnull(@R, 0) > 0'
       'begin'
-      
-        ' RAISERROR ('#39#1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1083#1077' '#1089#1087#1086#1089#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1080#39', 16, 1);' +
-        ' '
-      'end*/'
+      '   select @RetMsg = dbo.GetRetMsg(@R)'
       ''
-      
-        'delete pSupplierDeliveryProfiles  from pSupplierDeliveryProfiles' +
-        ' (rowlock) where ID = :ID')
+      '   RAISERROR (@RetMsg , 16, 1); '
+      'end'
+      ''
+      'delete pSupplierDeliveryProfiles  '
+      '  from pSupplierDeliveryProfiles (rowlock) '
+      ' where ID = :ID')
     FetchRowSQL.Strings = (
       'select *'
       '  from pSupplierDeliveryProfiles (nolock)'

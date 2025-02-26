@@ -94,7 +94,7 @@ type
   private
     { Private declarations }
 
-    FDestinationLogo: string;
+    FProfilesCustomerID: Integer;
     FDestinationStr: string;
 
     FMakeName: string;
@@ -192,9 +192,13 @@ begin
   logger.Info('TSearchF.PriceCalc begin');
   RetVal.Clear;
 
-  Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
-          ['DestinationLogo', 'DetailNum'],
-          [FDestinationLogo,   FDetailNum]);
+  Sql.exec('''
+    exec SearchPriceCalc
+           @ProfilesCustomerID=:ProfilesCustomerID,
+           @DetailNum         =:DetailNum
+  ''',
+  ['ProfilesCustomerID', 'DetailNum'],
+  [FProfilesCustomerID,   FDetailNum]);
   logger.Info('TSearchF.PriceCalc end');
 end;
 
@@ -261,7 +265,7 @@ begin
   FMakeCount := sql.Q.Fields[0].AsInteger;
 
   Query.Close;
-  Query.ParamByName('DestinationLogo').Value := FDestinationLogo;
+  Query.ParamByName('ProfilesCustomerID').Value := FProfilesCustomerID;
   Query.ParamByName('MakeName').Value        := FMakeName;
   Query.ParamByName('DetailNum').Value       := FDetailNum;
 
@@ -287,9 +291,9 @@ end;
 procedure TSearchF.MakeLogoGridRefresh;
 begin
   qMakeLogo.Close;
-  qMakeLogo.ParamByName('DestinationLogo').Value := FDestinationLogo;
-  qMakeLogo.ParamByName('MakeName').Value  := FMakeName;
-  qMakeLogo.ParamByName('DetailNum').Value := FDetailNum;
+  qMakeLogo.ParamByName('ProfilesCustomerID').AsInteger := FProfilesCustomerID;
+  qMakeLogo.ParamByName('MakeName').AsString  := FMakeName;
+  qMakeLogo.ParamByName('DetailNum').AsString := FDetailNum;
   qMakeLogo.Open;
 end;
 
@@ -468,7 +472,7 @@ begin
   begin
     FDestinationStr := FDestinationStr +
     '   <label class="radio-control" data-qtip="' + sql.Q.FieldByName('ImageHelp').AsString + '">' +
-    '       <input type="radio" value="' + sql.Q.FieldByName('DestinationLogo').AsString + '" onchange="setDestLogo(value)" /> ' +
+    '       <input type="radio" value="' + sql.Q.FieldByName('ProfilesCustomerID').AsString + '" onchange="setDestLogo(value)" /> ' +
     '       <span class="radio-input">' + sql.Q.FieldByName('Image').AsString + '</span> ' +
     '   </label>';
     sql.Q.Next; 
@@ -476,7 +480,9 @@ begin
   
   FDestinationStr := FDestinationStr + '</div>' + '</form>';
 
-  FDestinationStr := StringReplace(FDestinationStr, FDestinationLogo + '"',  FDestinationLogo + '" checked', []);
+  FDestinationStr := StringReplace(FDestinationStr,
+                                   FProfilesCustomerID.ToString + '"',
+                                   FProfilesCustomerID.ToString + '" checked', []);
 end;
 
 procedure TSearchF.QueryMakeNameGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -623,7 +629,7 @@ begin
     ShowMask('Поиск...');
     UniSession.Synchronize();
     try
-      FDestinationLogo := Params.Values['P1'];
+      FProfilesCustomerID := Params.Values['P1'].ToInteger;
       DestinationLogo;
 
       PriceCalc();
@@ -798,13 +804,16 @@ end;
 
 procedure TSearchF.UniFrameReady(Sender: TObject);
 begin
-  sql.Open(' Select top 1 DestinationLogo  '+
-           '   from vDestinationLogo '+
-           '   where ClientID = :ClientID  '+
-           '   order by DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+  sql.Open('''
+   Select top 1 ProfilesCustomerID
+     from vDestinationLogo
+    where ClientID = :ClientID
+    order by DestinationLogo
+  ''',
+  ['ClientID'], [UniMainModule.AUserID]);
 
   if sql.Q.RecordCount > 0 then
-    FDestinationLogo := sql.Q.FieldByName('DestinationLogo').AsString; 
+    FProfilesCustomerID := sql.Q.FieldByName('ProfilesCustomerID').AsInteger;
 
   DestinationLogo;
 

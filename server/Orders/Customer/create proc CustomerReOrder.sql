@@ -6,11 +6,10 @@ drop proc if exists CustomerReOrder
 */
 go
 create proc CustomerReOrder
-               @OrderID         numeric(18,0)                            
-              ,@PriceLogo       nvarchar(64)  
-              ,@MakeLogo        nvarchar(64)
-              ,@DestinationLogo    nvarchar(20)
-              
+               @OrderID            numeric(18,0)                            
+              ,@PriceLogo          nvarchar(64)  
+              ,@MakeLogo           nvarchar(64)
+              ,@ProfilesCustomerID numeric(18,0)   
 as
   declare @r             int = 0
 
@@ -88,9 +87,10 @@ as
         ,t.EmexOrderID            = null
         ,t.OrderDetailSubId       = null
         ,t.Comment                = null
-        ,t.DestinationLogo        = @DestinationLogo
+        ,t.DestinationLogo        = pd.DestinationLogo
         ,t.DestinationName        = pd.Name
         ,t.ProfilesDeliveryID     = pc.ProfilesDeliveryID
+        ,t.ProfilesCustomerID     = pc.ProfilesCustomerID
         ,t.WeightKGAmount         = pd.WeightKG  
         ,t.VolumeKGAmount         = pd.VolumeKG 
          -- cроки поставки клиента
@@ -138,16 +138,13 @@ as
            on c.ClientID = t.ClientID 
    inner join tSuppliers s with (nolock index=ao1)
            on S.SuppliersID = c.SuppliersID
-   inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-           on pd.SuppliersID     = s.SuppliersID
-          and pd.DestinationLogo = @DestinationLogo  
-   inner join tProfilesCustomer pc with (nolock index=ao2)
-           on pc.ClientID           = c.ClientID
-          and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+   inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
+           on pc.ProfilesCustomerID = @ProfilesCustomerID
+   inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
+           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
    left join @P pp
           on 1=1 
    where t.OrderID = @OrderID
-
 
   delete from tOrdersDeliverySupplier with (rowlock) where OrderID = @OrderID
   delete from tOrdersDeliveryCustomer with (rowlock) where OrderID = @OrderID
@@ -208,6 +205,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20250211', '7'
+exec setOV 'CustomerReOrder', 'P', '20250226', '8'
 go
  

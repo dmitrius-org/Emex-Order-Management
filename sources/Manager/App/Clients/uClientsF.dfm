@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabHome
+    ActivePage = pcSuppliers
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -67,7 +67,6 @@ object ClientsF: TClientsF
         ParentColor = False
         Align = alTop
         TabOrder = 0
-        ExplicitLeft = 3
         DesignSize = (
           1177
           348)
@@ -1096,7 +1095,7 @@ object ClientsF: TClientsF
       'select * '
       '  from vOrderFileFormat c'
       ' where c.ClientID = :ClientID')
-    Left = 712
+    Left = 736
     Top = 128
     ParamData = <
       item
@@ -1195,8 +1194,8 @@ object ClientsF: TClientsF
   end
   object DataSource: TDataSource
     DataSet = Query
-    Left = 645
-    Top = 190
+    Left = 733
+    Top = 182
   end
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
@@ -1287,7 +1286,7 @@ object ClientsF: TClientsF
       'SELECT *'
       '  FROM vOrderFileFormat'
       ' WHERE ID = :ID')
-    Left = 642
+    Left = 626
     Top = 130
   end
   object ImageList16: TUniImageList
@@ -1671,8 +1670,8 @@ object ClientsF: TClientsF
   end
   object dsManagerList: TDataSource
     DataSet = qManagerList
-    Left = 984
-    Top = 196
+    Left = 992
+    Top = 188
   end
   object qManagerList: TFDQuery
     Connection = UniMainModule.FDConnection
@@ -1681,14 +1680,17 @@ object ClientsF: TClientsF
     UpdateOptions.EnableInsert = False
     UpdateOptions.EnableUpdate = False
     SQL.Strings = (
-      'Select c.UserID as EmployeeID, c.Name as Brief'
+      'Select c.UserID as EmployeeID, '
+      '       c.Name   as Brief'
       '  from tUser c (nolock)'
-      ' where not exists (select 1'
+      ' where not exists ('
+      '                   select 1'
       '                     from pClientReliation p (nolock)'
       '                    where p.Spid     = @@spid'
       '                      and p.LinkID   = c.UserID'
-      '                      and p.LinkType = 5)')
-    Left = 987
+      '                      and p.LinkType = 5'
+      '                   )')
+    Left = 995
     Top = 135
     object qManagerListClientID: TFMTBCDField
       FieldName = 'EmployeeID'
@@ -1718,7 +1720,7 @@ object ClientsF: TClientsF
     SQL.Strings = (
       'select * '
       '  from vClientEmployeeReliation ')
-    Left = 895
+    Left = 903
     Top = 133
     object qManagerObjectType: TIntegerField
       FieldName = 'ObjectType'
@@ -1856,8 +1858,8 @@ object ClientsF: TClientsF
       '  left join tDelimiter d (nolock)'
       '         on d.DelimiterID = p.UploadDelimiterID'
       ' where p.Spid = @@Spid')
-    Left = 744
-    Top = 276
+    Left = 736
+    Top = 260
     object qProfilesCustomerSpid: TIntegerField
       FieldName = 'Spid'
       Origin = 'Spid'
@@ -1945,8 +1947,8 @@ object ClientsF: TClientsF
   end
   object dsProfilesCustomer: TDataSource
     DataSet = qProfilesCustomer
-    Left = 742
-    Top = 330
+    Left = 734
+    Top = 314
   end
   object uProfilesCustomer: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
@@ -2121,7 +2123,7 @@ object ClientsF: TClientsF
       '         on d.DelimiterID = p.UploadDelimiterID'
       ' where p.ID = :ID')
     Left = 627
-    Top = 274
+    Top = 258
   end
   object qProfilesDeliveryList: TFDQuery
     Connection = UniMainModule.FDConnection
@@ -2135,8 +2137,8 @@ object ClientsF: TClientsF
       'select ProfilesDeliveryID, Name as DestinationName '
       '  from tSupplierDeliveryProfiles (nolock)'
       ' where SuppliersID = :SuppliersID')
-    Left = 873
-    Top = 272
+    Left = 609
+    Top = 408
     ParamData = <
       item
         Name = 'SUPPLIERSID'
@@ -2152,7 +2154,7 @@ object ClientsF: TClientsF
     object qProfilesDeliveryListDestinationName: TWideStringField
       DisplayWidth = 60
       FieldName = 'DestinationName'
-      Origin = 'DestinationLogo'
+      Origin = 'DestinationName'
       Required = True
       Size = 60
     end
@@ -2170,8 +2172,8 @@ object ClientsF: TClientsF
       '      ,[Brief]'
       '      ,[Name]'
       '  FROM [tDelimiter] (Nolock)')
-    Left = 985
-    Top = 273
+    Left = 897
+    Top = 385
     object qDelimiterListDelimiterID: TFDAutoIncField
       FieldName = 'DelimiterID'
       Origin = 'DelimiterID'
@@ -2184,17 +2186,16 @@ object ClientsF: TClientsF
   end
   object dsProfilesDeliveryList: TDataSource
     DataSet = qProfilesDeliveryList
-    Left = 868
-    Top = 327
+    Left = 740
+    Top = 407
   end
   object dsDelimiterList: TDataSource
     DataSet = qDelimiterList
-    Left = 975
-    Top = 347
+    Left = 991
+    Top = 387
   end
   object pmProfilesCustomer: TUniPopupMenu
     Images = ImageList16
-    OnPopup = pmProfilesCustomerPopup
     Left = 297
     Top = 128
     object N6: TUniMenuItem

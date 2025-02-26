@@ -9,7 +9,7 @@ uses
   UniFSCombobox, uniGUIBaseClasses, uniLabel, uniButton, uniBitBtn, uniCheckBox,
   uniPanel, Data.DB, FireDAC.Comp.Client, FireDAC.DApt, FireDAC.Comp.DataSet,
   uEmexUtils, uniTimer, System.Actions, Vcl.ActnList, uniMainMenu, uniImageList,
-  uToast;
+  uToast, uUniFSComboBoxHelper;
 
 type
   TSQLQueryThread = class(TThread)
@@ -152,8 +152,8 @@ end;
 
 procedure TReOrder.cbDestinationLogoChange(Sender: TObject);
 begin
-  FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
-  FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
+  FMakeLogo := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
+  FPriceLogo:= cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
   LoadPriceList;
 end;
@@ -172,6 +172,7 @@ begin
              ,v.Manufacturer
              ,v.MakeLogo
              ,v.DestinationLogo
+             ,v.ProfilesCustomerID
              --,v.PricePurchase
              --,v.Price
          from vCustomerOrders v
@@ -193,7 +194,7 @@ begin
   ''' + FID.ToString);
 
   cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
-  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
+  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки
 
   Self.Caption:=UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
                 UniMainModule.Query.FieldByName('DetailNumber').AsString+ ' ' +
@@ -220,15 +221,13 @@ end;
 
 procedure TReOrder.LoadPriceList;  var Price: string;
 begin
-  sql.Exec(
-          '''
-           exec SearchPriceCalc
-                  @DestinationLogo = :DestinationLogo,
-                  @DetailNum       = :DetailNum
-
-         ''',
-         ['DestinationLogo', 'DetailNum'],
-         [cbDestinationLogo.Value, FDetailNumber]);
+  sql.Exec('''
+    exec SearchPriceCalc
+           @ProfilesCustomerID = :ProfilesCustomerID,
+           @DetailNum = :DetailNum
+ ''',
+ ['ProfilesCustomerID', 'DetailNum'],
+ [cbDestinationLogo.Value.ToInteger, FDetailNumber]);
 
 
   Price:=cbPrice.Value;
@@ -254,23 +253,23 @@ begin
         if RetVal.Code = 0 then
         begin
           sqltext :='''
-                     declare @R      int
+            declare @R      int
 
-                     exec @r = CustomerReOrder
-                                 @OrderID        = :OrderID
-                                ,@PriceLogo      = :PriceLogo
-                                ,@MakeLogo       = :MakeLogo
-                                ,@DestinationLogo= :DestinationLogo
+            exec @r = CustomerReOrder
+                        @OrderID   = :OrderID
+                       ,@PriceLogo = :PriceLogo
+                       ,@MakeLogo  = :MakeLogo
+                       ,@ProfilesCustomerID = :ProfilesCustomerID
 
-                     select @r as retcode
+            select @r as retcode
           ''';
 
           Sql.Open(sqltext,
-                   ['OrderID', 'PriceLogo', 'MakeLogo', 'DestinationLogo'],
+                   ['OrderID', 'PriceLogo', 'MakeLogo', 'ProfilesCustomerID'],
                    [FID,
                     FPriceLogo,
                     FMakeLogo,
-                    cbDestinationLogo.Value
+                    cbDestinationLogo.Value.ToInteger
                     ]);
 
           RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -295,17 +294,19 @@ end;
 
 procedure TReOrder.LoadDataPart;
 begin
-  ComboBoxFill(cbDestinationLogo,'''
-          SELECT distinct
-                 pd.[DestinationLogo] as id
-                ,pd.[Name]
-            FROM tOrders o (nolock)
-           inner join tProfilesCustomer pc with (nolock)
-                   on pc.ClientID = o.ClientID
-           inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-           where o.OrderID =
-        ''' + FID.ToString );
+  // способы доставки
+  cbDestinationLogo.FillFromSQL('''
+    SELECT distinct
+           pc.ProfilesCustomerID as ID
+          ,pd.[Name]
+      FROM tOrders o (nolock)
+     inner join tProfilesCustomer pc with (nolock)
+             on pc.ClientID = o.ClientID
+            and isnull(pc.isActive, 0) = 1
+     inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
+             on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+     where o.OrderID =
+  ''' + FID.ToString );
 
   // начитываем данные с базы
   case FAction of
@@ -360,10 +361,6 @@ procedure TReOrder.SetBtnEnabled;
 begin
   edtNextPart.Enabled := IsCounter;
 
-//  if IsCounter then
-//  begin
-//    //
-//  end;
   btnOk.ScreenMask.HideMask;
   btnOk.Enabled := True;
 end;

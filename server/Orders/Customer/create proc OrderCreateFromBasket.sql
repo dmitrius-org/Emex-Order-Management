@@ -174,6 +174,7 @@ declare @r int = 0
         ,VolumeKG
         ,DestinationLogo
         ,DestinationName
+        ,ProfilesCustomerID
         ,PercentSupped
         ,Margin
         ,Discount
@@ -227,6 +228,7 @@ declare @r int = 0
          end                     -- Вес Объемный из прайса
         ,b.DestinationLogo
         ,pd.Name                 -- DestinationName
+        ,b.ProfilesCustomerID
         ,b.PercentSupped         -- процент поставки
          --
         ,b.Margin                -- Наценка из прайса
@@ -258,21 +260,14 @@ declare @r int = 0
            on c.ClientID = b.ClientID 
    inner join tSuppliers s with (nolock index=ao1)
            on S.SuppliersID = c.SuppliersID
-   inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-           on pd.SuppliersID     = s.SuppliersID
-          and pd.DestinationLogo = b.DestinationLogo    
-   inner join tProfilesCustomer pc with (nolock index=ao2)
-           on pc.ClientID           = c.ClientID
-          and pc.ProfilesDeliveryID = pd.ProfilesDeliveryID
+   inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
+           on pc.ProfilesCustomerID = b.ProfilesCustomerID
+   inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
+           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
    inner join @P p
            on p.BasketID = b.BasketID
-
    where m.spid = @@spid   
      and m.Type = 6--Корзина
-
-     select * from tProfilesCustomer where ClientID=3
-
-      select * from tBasket where ClientID=3
 
   -- Протокол
   declare @ToNew numeric(18, 0)
@@ -348,6 +343,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250204', '22'
+exec setOV 'OrderCreateFromBasket', 'P', '20250226', '23'
 go
  
