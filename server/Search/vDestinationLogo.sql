@@ -3,15 +3,12 @@ if OBJECT_ID('vDestinationLogo') is not null
 go
 /* **********************************************************						
 vDestinationLogo - получение способов доставки
-
-
-
 ********************************************************** */
-
 create view vDestinationLogo
 as 
 
-Select c.ClientID 
+Select distinct 
+       c.ClientID 
       ,sp.DestinationLogo 
       ,sp.Image
       ,sp.ImageHelp

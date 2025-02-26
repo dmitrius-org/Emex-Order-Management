@@ -107,7 +107,10 @@ type
     /// </summary>
     FInfoButton: Boolean;
 
-    ACurrColumn: TUniDBGridColumn;  //текущая колонка
+    /// <summary>
+    /// ACurrColumn - текущая колонка
+    /// </summary>
+    ACurrColumn: TUniDBGridColumn;
 
     /// <summary>
     /// PartSearch - поиск детали по номеру
@@ -159,7 +162,6 @@ type
 
     procedure VolumeCalc();
 
-
   public
     { Public declarations }
   end;
@@ -191,9 +193,8 @@ begin
   RetVal.Clear;
 
   Sql.exec('exec SearchPriceCalc @DestinationLogo=:DestinationLogo, @DetailNum = :DetailNum',
-          ['DestinationLogo',
-           'DetailNum'],
-          [FDestinationLogo, FDetailNum]);
+          ['DestinationLogo', 'DetailNum'],
+          [FDestinationLogo,   FDetailNum]);
   logger.Info('TSearchF.PriceCalc end');
 end;
 
@@ -451,10 +452,14 @@ end;
 procedure TSearchF.DestinationLogo; var i: Integer;
 begin
   logger.Info('TSearchF.DestinationLogo begin');
-  sql.Open(' Select *  '+
-           '   from vDestinationLogo  '+
-           '  where ClientID = :ClientID   '+
-           '  order by DestinationLogo  ', ['ClientID'], [UniMainModule.AUserID]);
+  sql.Open('''
+     Select *
+       from vDestinationLogo
+      where ClientID = :ClientID
+      order by DestinationLogo
+   ''',
+   ['ClientID'],
+   [UniMainModule.AUserID]);
            
   FDestinationStr := '<form id="frmDestLogo" method="post" action=""> ' +
                      '<div class="radio-form">';
@@ -492,14 +497,12 @@ begin
     Text := '<span>' + Sender.AsString + '</span>';
 end;
 
-procedure TSearchF.QueryOurDeliveryGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
+procedure TSearchF.QueryOurDeliveryGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   Text := '<span>' + Query.FieldByName('OurDeliverySTR').AsString + '</span>';
 end;
 
-procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string;
-  DisplayText: Boolean);
+procedure TSearchF.QueryPercentSuppedGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 begin
   Text := '''
             <span class="" data-qtip="Прайс: PriceLogo <br> Количество в упаковке: Packing">

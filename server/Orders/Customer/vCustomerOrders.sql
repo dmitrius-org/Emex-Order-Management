@@ -73,18 +73,10 @@ SELECT o.[OrderID]
       ,o.[inDatetime]
       ,o.[updDatetime]
       ,o.Flag
-  FROM [tOrders] o with (nolock index=ao2)
-
-  left join vOrdersDeliverySupplier od  
-         on od.OrderID = o.OrderID
-
-  left join vOrdersDeliveryCustomer oc  
-         on oc.OrderID = o.OrderID
-
+  FROM tOrders o with (nolock index=ao2)
  inner join tNodes s with (nolock index=ao1)
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 
- 
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
 
@@ -99,7 +91,13 @@ SELECT o.[OrderID]
                   when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
                   else 555
                 end
-     ) as pd
+      ) as pd
+
+  left join vOrdersDeliverySupplier od  
+         on od.OrderID = o.OrderID
+
+  left join vOrdersDeliveryCustomer oc  
+         on oc.OrderID = o.OrderID
 
   left join tMakes b with (nolock index=ao2)
          on b.Code = o.ReplacementMakeLogo

@@ -1,8 +1,6 @@
 drop proc if exists CustomerOrdersPage
 /*
   CustomerOrdersPage - 
-
-
 */
 go
 create proc CustomerOrdersPage
@@ -31,12 +29,14 @@ as
   select o.OrderID
         ,(ROW_NUMBER() OVER (ORDER BY o.ClientID, o.OrderID desc) - 1) / @PageSize + 1 AS PageNumber
     from tOrders o with (nolock index=ao2)
+
     left JOIN @Status c
            ON o.StatusID = c.ID
 
     left join vCustomerOrderNotificationFilter cl
            on cl.OrderID  = o.OrderID
           and cl.ClientID = o.ClientID
+
    where o.ClientID = @ClientID
      and (NOT EXISTS (SELECT 1 FROM @Status) OR c.ID IS NOT NULL)
 
@@ -58,6 +58,11 @@ as
      and ( @IsNotification = 0 or
           (@IsNotification = 1 and cl.OrderID is not null)
          )
+
+     and (
+          (o.ClientID in (4, 9) and o.OrderDate >= '20250206')
+        or o.ClientID not in (4, 9)
+         ) 
  -- order by o.OrderID desc
 
   exit_:

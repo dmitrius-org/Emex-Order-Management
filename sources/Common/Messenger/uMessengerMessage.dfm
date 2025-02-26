@@ -37,7 +37,6 @@ object Message: TMessage
       'content-chat-background-container content-chat-container messeng' +
       'er-scope'
     OnAjaxEvent = ContentChatContainerAjaxEvent
-    ExplicitHeight = 480
     object ChatContent: TUniContainerPanel
       Left = 0
       Top = 0
@@ -53,7 +52,6 @@ object Message: TMessage
       TabOrder = 0
       ScrollDirection = sdNone
       LayoutConfig.Cls = 'content-chat-content'
-      ExplicitHeight = 480
       object ChatMessages: TUniContainerPanel
         AlignWithMargins = True
         Left = 3
@@ -67,7 +65,6 @@ object Message: TMessage
         ScrollDirection = sdNone
         Layout = 'fit'
         LayoutConfig.ComponentCls = 'content-chat-dialog-content'
-        ExplicitHeight = 364
         object MessageEditor: TUniListBox
           AlignWithMargins = True
           Left = 3
@@ -77,9 +74,10 @@ object Message: TMessage
           Hint = ''
           Align = alClient
           TabOrder = 1
+          MultiSelect = True
           LayoutConfig.ComponentCls = 'message-list-container'
           LayoutConfig.DockWhenAligned = False
-          ExplicitHeight = 358
+          SelectionMode = smSimple
         end
       end
       object ChatMessagesSend: TUniContainerPanel
@@ -98,7 +96,6 @@ object Message: TMessage
         TabOrder = 3
         Layout = 'fit'
         LayoutConfig.ComponentCls = 'chat-textarea-container'
-        ExplicitTop = 430
         object pnlSendPanelContainer: TUniContainerPanel
           AlignWithMargins = True
           Left = 0

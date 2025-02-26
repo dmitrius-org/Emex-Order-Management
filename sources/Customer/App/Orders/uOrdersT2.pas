@@ -77,7 +77,7 @@ type
     actSelect: TAction;
     actUnselect: TAction;
     QueryDetailName: TWideStringField;
-    pnlGridSelectedCount: TUniPanel;
+    pnlGridInfo: TUniPanel;
     UniLabel6: TUniLabel;
     fDetailNum: TUniEdit;
     pnlPageL: TUniPanel;
@@ -124,6 +124,9 @@ type
     UniContainerPanel1: TUniContainerPanel;
     UniContainerPanel2: TUniContainerPanel;
     edtPage: TUniSpinEdit;
+    pnlInfo: TUniContainerPanel;
+    lblRow: TUniLabel;
+    pnlNavigation: TUniContainerPanel;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -148,28 +151,21 @@ type
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure QueryDeliveryDateToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
-    procedure GridColumnActionClick(Column: TUniDBGridColumn;
-      ButtonId: Integer);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure GridColumnActionClick(Column: TUniDBGridColumn; ButtonId: Integer);
     procedure btnNotificationClick(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
     procedure actCancelСonfirmExecute(Sender: TObject);
     procedure actReOrderExecute(Sender: TObject);
-    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
-    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryUnreadMessagesCountGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryDeliveryTermToCustomerGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryUnreadMessagesCountGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryTermToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure btnNextClick(Sender: TObject);
     procedure btnLastClick(Sender: TObject);
     procedure btnFirstClick(Sender: TObject);
     procedure btnPreviousClick(Sender: TObject);
-    procedure edtPageKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure edtPageKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -177,7 +173,7 @@ type
     FFilterTextStatus: string;
     FIsNotification: Boolean;
 
-//    FAllPage: Integer;
+    FAllPage: Integer;
 
     ACurrColumn: TUniDBGridColumn;  //текущая колонка
 
@@ -270,7 +266,6 @@ begin
   Marks.SaveMarksToDB;
 
   Sql.Exec(' exec CustomerOrderCancelRequest  ', [], []);
-
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
@@ -380,7 +375,7 @@ begin
 
     sql.Exec('''
                 if OBJECT_ID('tempdb..#CounterPart') is not null
-                  drop table #CounterPart
+                  drop table #CounterPart;
 
                  CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
                                            ,N         int
@@ -467,12 +462,10 @@ begin
           ,@PageSize        = :PageSize
 
     select
-          -- Page,
-           max(Page) over() as MaxPage,
-           min(Page) over() as MinPage
+           count(OrderID)  as AllRow,
+           max(Page) as MaxPage,
+           min(Page) as MinPage
       from #OrderPage with (nolock)
-     --group by Page
-     --order by Page
   ''',
   ['ClientID', 'Status', 'DetailNum', 'Comment2', 'OrderDateStart', 'OrderDateEnd', 'isCancel', 'IsNotification', 'PageSize'],
   [UniMainModule.AUserID,
@@ -486,9 +479,7 @@ begin
    Grid.WebOptions.PageSize
   ]);
 
-
-  // Grid.WebOptions.
- // FAllPage := sql.F('PageCount').AsInteger;
+  FAllPage := sql.F('AllRow').AsInteger;
 
   if sql.Count > 0 then
   begin
@@ -541,6 +532,14 @@ begin
   SetNotificationCount();
 
   PageNavigation();
+
+  if edtPage.Value = 0 then
+    lblRow.Text := ''
+  else
+    lblRow.Text:= Format('Отображаются записи с %d по %d, всего %d',
+    [(edtPage.Value-1) * Grid.WebOptions.PageSize + 1,
+     (edtPage.Value-1) * Grid.WebOptions.PageSize + Query.RecordCount,
+     FAllPage]);
 
   logger.Info('GridOpen End');
 end;
@@ -984,9 +983,9 @@ begin
   Marks := tMarks.Create(Grid);
   Marks.Clear;
 
-  UniSession.JSCode( ' showEmail = function(AVal) {  ajaxRequest(' + Grid.JSName    + ', "showEmail", ["P1=" + AVal]); } ;');
+  UniSession.JSCode(' showEmail = function(AVal) {  ajaxRequest(' + Grid.JSName    + ', "showEmail", ["P1=" + AVal]); } ;');
 
-  logger.Info('UniFrameCreate End');
+  logger.Info('TOrdersT2.UniFrameCreate End');
 end;
 
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);

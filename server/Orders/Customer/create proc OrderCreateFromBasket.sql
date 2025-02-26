@@ -13,7 +13,7 @@ declare @r int = 0
        ,@ClientOrderNum int -- сквозной номер заказа клиента
 
   select @StatusID = NodeID
-    from tNodes (nolock)
+    from tNodes with (nolock index=ao2)
    where Brief = 'New' --'Preparation'
 
   if isnull(@StatusID, 0) = 0
@@ -23,8 +23,8 @@ declare @r int = 0
   end    
 
   select @ClientID = max(b.ClientID)
-    from tMarks m (nolock)
-   inner join tBasket b (nolock)
+    from tMarks m with (nolock index=pk_tMarks)
+   inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
    where m.spid = @@spid   
      and m.Type = 6--Корзина
@@ -37,7 +37,7 @@ declare @r int = 0
   end
 
   if exists (Select 1
-               from tClients (nolock)
+               from tClients with (nolock index=PK_tClients_ClientID)
               where ClientID = @ClientID
                 and isnull(SuppliersID, 0) = 0)
   begin
@@ -51,7 +51,7 @@ declare @r int = 0
         ,@OrderNum = @OrderNum out
 
   if exists (Select 1
-               from tOrders (nolock)
+               from tOrders with (nolock index=ao2)
               where ClientID = @ClientID
                 and OrderNum = @OrderNum)
   begin
@@ -60,7 +60,7 @@ declare @r int = 0
   end
   
   select @ClientOrderNum = max(ClientOrderNum)
-    from tOrders (nolock)
+    from tOrders with (nolock index=ao2)
    where ClientID = @ClientID  
 
   declare @P table -- тут детали которые сужествуют в нашей базе
@@ -269,6 +269,10 @@ declare @r int = 0
 
    where m.spid = @@spid   
      and m.Type = 6--Корзина
+
+     select * from tProfilesCustomer where ClientID=3
+
+      select * from tBasket where ClientID=3
 
   -- Протокол
   declare @ToNew numeric(18, 0)

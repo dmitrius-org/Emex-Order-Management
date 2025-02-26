@@ -292,7 +292,6 @@ procedure TMainForm.tsOrderBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
   FOrdersT2.SetMenuVisible;
-  FOrdersT2.GridRefresh;
 end;
 
 procedure TMainForm.tsOrderBeforeFirstActivate(Sender: TObject;
@@ -303,6 +302,9 @@ begin
     FOrdersT2 :=  TOrdersT2.Create(Self);
     FOrdersT2.Align := alClient;
     FOrdersT2.Parent := tsOrder;
+
+    FOrdersT2.Page;
+    FOrdersT2.GridRefresh;
   end;
 end;
 

@@ -63,7 +63,7 @@ object MainForm: TMainForm
           Width = 494
           Height = 439
           Hint = ''
-          ActivePage = TabStatistics
+          ActivePage = tsOrder
           Images = MainMenuImage
           Align = alClient
           LayoutConfig.IgnorePosition = False

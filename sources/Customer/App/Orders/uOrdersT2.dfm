@@ -140,7 +140,7 @@
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
           'g)'#13#10'{'#13#10'  config.displayInfo=false;'#13#10'}')
       HeaderTitleAlign = taCenter
-      PagingBarAuxControl = pnlGridSelectedCount
+      PagingBarAuxControl = pnlGridInfo
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgMultiSelect, dgAutoRefreshRow, dgDontShowSelected]
       WebOptions.PageSize = 100
@@ -677,11 +677,11 @@
         end
       end
     end
-    object pnlGridSelectedCount: TUniPanel
+    object pnlGridInfo: TUniPanel
       AlignWithMargins = True
-      Left = 29
-      Top = 420
-      Width = 353
+      Left = 253
+      Top = 414
+      Width = 988
       Height = 40
       Hint = ''
       Margins.Right = 50
@@ -695,202 +695,257 @@
       Layout = 'hbox'
       LayoutConfig.Padding = '2'
       LayoutConfig.Width = '100'
-      object pnlPageL: TUniPanel
-        Left = 0
-        Top = 0
-        Width = 73
-        Height = 40
-        Hint = ''
-        ShowHint = True
-        TabOrder = 0
-        BorderStyle = ubsNone
-        ShowCaption = False
-        Caption = 'pnlPageL'
-        object btnPrevious: TUniButton
-          AlignWithMargins = True
-          Left = 40
-          Top = 5
-          Width = 30
-          Height = 30
-          Hint = ''
-          Margins.Top = 5
-          Margins.Bottom = 5
-          ShowHint = True
-          Caption = '<'
-          Align = alRight
-          TabStop = False
-          TabOrder = 2
-          LayoutConfig.Padding = '1'
-          LayoutConfig.Margin = '1'
-          OnClick = btnPreviousClick
-          ExplicitLeft = 0
-        end
-        object btnFirst: TUniButton
-          AlignWithMargins = True
-          Left = 4
-          Top = 5
-          Width = 30
-          Height = 30
-          Hint = ''
-          Margins.Top = 5
-          Margins.Bottom = 5
-          ShowHint = True
-          Caption = '<<'
-          Align = alRight
-          TabStop = False
-          TabOrder = 1
-          LayoutConfig.Padding = '1'
-          LayoutConfig.Margin = '1'
-          OnClick = btnFirstClick
-          ExplicitLeft = -6
-        end
-      end
-      object pnlPage: TUniPanel
-        Left = 75
+      object pnlInfo: TUniContainerPanel
+        AlignWithMargins = True
+        Left = 3
         Top = 3
-        Width = 193
-        Height = 40
+        Width = 623
+        Height = 34
         Hint = ''
         ShowHint = True
-        TabOrder = 3
-        BorderStyle = ubsNone
-        ShowCaption = False
-        Caption = 'UniPanel3'
-        Layout = 'column'
-        LayoutAttribs.Columns = 3
-        LayoutConfig.Cls = 'order-page'
-        object UniContainerPanel1: TUniContainerPanel
+        ParentColor = False
+        Align = alClient
+        TabOrder = 1
+        ExplicitWidth = 0
+        object lblRow: TUniLabel
           AlignWithMargins = True
           Left = 3
-          Top = 3
-          Width = 70
-          Height = 34
+          Top = 10
+          Width = 56
+          Height = 17
           Hint = ''
-          ShowHint = True
-          ParentColor = False
-          Align = alLeft
-          TabOrder = 1
-          object UniLabel3: TUniLabel
-            AlignWithMargins = True
-            Left = 3
-            Top = 10
-            Width = 56
-            Height = 17
-            Hint = ''
-            Margins.Top = 10
-            Margins.Bottom = 8
-            ShowHint = True
-            Alignment = taCenter
-            Caption = #1057#1090#1088#1072#1085#1080#1094#1072
-            Align = alClient
-            ParentFont = False
-            Font.Height = -13
-            ParentColor = False
-            Color = clBtnFace
-            TabOrder = 1
-            LayoutConfig.Margin = '1'
-          end
-        end
-        object edtPage: TUniSpinEdit
-          AlignWithMargins = True
-          Left = 79
-          Top = 8
-          Width = 55
-          Height = 24
-          Hint = ''
-          Margins.Top = 8
+          Margins.Top = 10
           Margins.Bottom = 8
           ShowHint = True
-          TabOrder = 3
+          Alignment = taRightJustify
+          Caption = #1057#1090#1088#1072#1085#1080#1094#1072
           Align = alClient
-          Alignment = taCenter
-          LayoutConfig.Height = '100%'
-          OnKeyDown = edtPageKeyDown
-          ExplicitWidth = 82
+          ParentFont = False
+          Font.Height = -13
+          ParentColor = False
+          Color = clBtnFace
+          TabOrder = 1
+          LayoutConfig.Margin = '1'
+          ExplicitLeft = 35
         end
-        object UniContainerPanel2: TUniContainerPanel
-          AlignWithMargins = True
-          Left = 140
-          Top = 3
-          Width = 50
+      end
+      object pnlNavigation: TUniContainerPanel
+        AlignWithMargins = True
+        Left = 632
+        Top = 3
+        Width = 353
+        Height = 34
+        Hint = ''
+        ShowHint = True
+        ParentColor = False
+        Align = alRight
+        TabOrder = 2
+        object pnlPageR: TUniPanel
+          Left = 280
+          Top = 0
+          Width = 73
           Height = 34
           Hint = ''
           ShowHint = True
-          ParentColor = False
           Align = alRight
-          TabOrder = 2
-          ExplicitLeft = 165
-          object lblAllCount: TUniLabel
+          TabOrder = 1
+          BorderStyle = ubsNone
+          ShowCaption = False
+          Caption = 'UniPanel3'
+          ExplicitLeft = 249
+          object btnLast: TUniButton
             AlignWithMargins = True
-            Left = 3
-            Top = 10
-            Width = 24
-            Height = 17
+            Left = 40
+            Top = 5
+            Width = 30
+            Height = 24
             Hint = ''
-            Margins.Top = 10
-            Margins.Bottom = 8
+            Margins.Top = 5
+            Margins.Bottom = 5
             ShowHint = True
-            Alignment = taCenter
-            Caption = #1080#1079' 0'
-            Align = alClient
-            ParentFont = False
-            Font.Height = -13
-            ParentColor = False
-            Color = clBtnFace
+            Caption = '>>'
+            Align = alRight
+            TabStop = False
             TabOrder = 1
+            LayoutConfig.Padding = '1'
             LayoutConfig.Margin = '1'
-            ExplicitLeft = 0
+            OnClick = btnLastClick
+            ExplicitHeight = 30
+          end
+          object btnNext: TUniButton
+            AlignWithMargins = True
+            Left = 4
+            Top = 5
+            Width = 30
+            Height = 24
+            Hint = ''
+            Margins.Top = 5
+            Margins.Bottom = 5
+            ShowHint = True
+            Caption = '>'
+            Align = alRight
+            TabStop = False
+            TabOrder = 2
+            LayoutConfig.Padding = '1'
+            LayoutConfig.Margin = '1'
+            OnClick = btnNextClick
+            ExplicitHeight = 30
           end
         end
-      end
-      object pnlPageR: TUniPanel
-        Left = 278
-        Top = 0
-        Width = 73
-        Height = 40
-        Hint = ''
-        ShowHint = True
-        TabOrder = 2
-        BorderStyle = ubsNone
-        ShowCaption = False
-        Caption = 'UniPanel3'
-        object btnLast: TUniButton
-          AlignWithMargins = True
-          Left = 40
-          Top = 5
-          Width = 30
-          Height = 30
+        object pnlPageL: TUniPanel
+          Left = 0
+          Top = 0
+          Width = 73
+          Height = 34
           Hint = ''
-          Margins.Top = 5
-          Margins.Bottom = 5
           ShowHint = True
-          Caption = '>>'
-          Align = alRight
-          TabStop = False
-          TabOrder = 1
-          LayoutConfig.Padding = '1'
-          LayoutConfig.Margin = '1'
-          OnClick = btnLastClick
-          ExplicitLeft = 51
-        end
-        object btnNext: TUniButton
-          AlignWithMargins = True
-          Left = 4
-          Top = 5
-          Width = 30
-          Height = 30
-          Hint = ''
-          Margins.Top = 5
-          Margins.Bottom = 5
-          ShowHint = True
-          Caption = '>'
-          Align = alRight
-          TabStop = False
+          Align = alLeft
           TabOrder = 2
-          LayoutConfig.Padding = '1'
-          LayoutConfig.Margin = '1'
-          OnClick = btnNextClick
-          ExplicitLeft = 15
+          BorderStyle = ubsNone
+          ShowCaption = False
+          Caption = 'pnlPageL'
+          ExplicitLeft = 722
+          ExplicitHeight = 40
+          object btnPrevious: TUniButton
+            AlignWithMargins = True
+            Left = 40
+            Top = 5
+            Width = 30
+            Height = 24
+            Hint = ''
+            Margins.Top = 5
+            Margins.Bottom = 5
+            ShowHint = True
+            Caption = '<'
+            Align = alRight
+            TabStop = False
+            TabOrder = 2
+            LayoutConfig.Padding = '1'
+            LayoutConfig.Margin = '1'
+            OnClick = btnPreviousClick
+            ExplicitHeight = 30
+          end
+          object btnFirst: TUniButton
+            AlignWithMargins = True
+            Left = 4
+            Top = 5
+            Width = 30
+            Height = 24
+            Hint = ''
+            Margins.Top = 5
+            Margins.Bottom = 5
+            ShowHint = True
+            Caption = '<<'
+            Align = alRight
+            TabStop = False
+            TabOrder = 1
+            LayoutConfig.Padding = '1'
+            LayoutConfig.Margin = '1'
+            OnClick = btnFirstClick
+            ExplicitHeight = 30
+          end
+        end
+        object pnlPage: TUniPanel
+          Left = 73
+          Top = 0
+          Width = 207
+          Height = 34
+          Hint = ''
+          ShowHint = True
+          Align = alClient
+          TabOrder = 3
+          BorderStyle = ubsNone
+          ShowCaption = False
+          Caption = 'UniPanel3'
+          Layout = 'column'
+          LayoutAttribs.Columns = 3
+          LayoutConfig.Cls = 'order-page'
+          ExplicitLeft = 795
+          ExplicitWidth = 193
+          ExplicitHeight = 40
+          object UniContainerPanel1: TUniContainerPanel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 70
+            Height = 28
+            Hint = ''
+            ShowHint = True
+            ParentColor = False
+            Align = alLeft
+            TabOrder = 1
+            ExplicitHeight = 34
+            object UniLabel3: TUniLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 10
+              Width = 56
+              Height = 17
+              Hint = ''
+              Margins.Top = 10
+              Margins.Bottom = 8
+              ShowHint = True
+              Alignment = taCenter
+              Caption = #1057#1090#1088#1072#1085#1080#1094#1072
+              Align = alClient
+              ParentFont = False
+              Font.Height = -13
+              ParentColor = False
+              Color = clBtnFace
+              TabOrder = 1
+              LayoutConfig.Margin = '1'
+            end
+          end
+          object edtPage: TUniSpinEdit
+            AlignWithMargins = True
+            Left = 79
+            Top = 8
+            Width = 69
+            Hint = ''
+            Margins.Top = 8
+            Margins.Bottom = 8
+            ShowHint = True
+            TabOrder = 3
+            Align = alClient
+            Alignment = taCenter
+            LayoutConfig.Height = '100%'
+            OnKeyDown = edtPageKeyDown
+            ExplicitWidth = 74
+          end
+          object UniContainerPanel2: TUniContainerPanel
+            AlignWithMargins = True
+            Left = 154
+            Top = 3
+            Width = 50
+            Height = 28
+            Hint = ''
+            ShowHint = True
+            ParentColor = False
+            Align = alRight
+            TabOrder = 2
+            ExplicitLeft = 140
+            ExplicitHeight = 34
+            object lblAllCount: TUniLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 10
+              Width = 24
+              Height = 17
+              Hint = ''
+              Margins.Top = 10
+              Margins.Bottom = 8
+              ShowHint = True
+              Alignment = taCenter
+              Caption = #1080#1079' 0'
+              Align = alClient
+              ParentFont = False
+              Font.Height = -13
+              ParentColor = False
+              Color = clBtnFace
+              TabOrder = 1
+              LayoutConfig.Margin = '1'
+            end
+          end
         end
       end
     end

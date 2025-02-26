@@ -562,6 +562,7 @@ end;
 
 procedure TMessage.UniFrameCreate(Sender: TObject);
 var f: TStringList;
+   js:string;
 begin
   f :=TStringList.Create;
   try
@@ -570,6 +571,22 @@ begin
   finally
     f.Free;
   end;
+
+  // фуекция для копирования текста сообщения
+  js := '''
+    copyText = function(button) {
+
+      var textElement = button.closest('.message-default-content-container').querySelector('.message-default-content-text p');
+      var text = textElement.innerText || textElement.textContent;
+
+      navigator.clipboard.writeText(text).then(() => {
+          button.innerHTML = "✔"; // Меняем иконку на галочку
+          setTimeout(() => button.innerHTML = "&#xf0ea;", 1500); // Возвращаем иконку копирования
+      }).catch(err => console.error('Ошибка копирования:', err));
+
+    } ;
+  ''';
+  UniSession.JSCode(js);
 end;
 
 procedure TMessage.UniFrameDestroy(Sender: TObject);

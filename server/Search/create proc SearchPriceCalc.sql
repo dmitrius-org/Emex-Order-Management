@@ -19,49 +19,48 @@ select @Kurs = dbo.GetCurrencyRate('840', null)
 
 if OBJECT_ID('tempdb..#Price') is not null drop table #Price
 create table #Price 
-(
- ID                  numeric(18,0)  --  
-,Brand               varchar(60)    --
-,DetailNum	         varchar(30)    -- Номер детали 
-,DetailPrice         float          -- Цена
-,FinalPrice          float          -- Цена
-,DetailName	         varchar(255)   -- Название
-,PriceLogo           varchar(30)    -- Название прайса 
-,Quantity            int            -- Количество
-,PackQuantity        int            -- Количество в упаковке
+      (
+       ID                  numeric(18,0)  --  
+      ,Brand               varchar(60)    --
+      ,DetailNum	       varchar(30)    -- Номер детали 
+      ,DetailPrice         float          -- Цена
+      ,FinalPrice          float          -- Цена
+      ,DetailName	       varchar(255)   -- Название
+      ,PriceLogo           varchar(30)    -- Название прайса 
+      ,Quantity            int            -- Количество
+      ,PackQuantity        int            -- Количество в упаковке
 
-,WeightKG            float          -- Вес физический кг 
-,VolumeKG            float          -- Вес объемный кг  
+      ,WeightKG            float          -- Вес физический кг 
+      ,VolumeKG            float          -- Вес объемный кг  
 
-,TPrice              float          -- тип цены, например: MOSA, MOSC, KIRG
-,TDel                float          -- номинал стоимости за доставку
-,TDetPrice           float          -- номинал цены детали со скидкой
-,TCom                float          -- номинал комиссии 
-,TMarg               float          -- номинал наценки на товар
-,TFinPrice           float
-,Term                int            -- срок доставки
-,TFinPriceKurs       money
+      ,TPrice              float          -- тип цены, например: MOSA, MOSC, KIRG
+      ,TDel                float          -- номинал стоимости за доставку
+      ,TDetPrice           float          -- номинал цены детали со скидкой
+      ,TCom                float          -- номинал комиссии 
+      ,TMarg               float          -- номинал наценки на товар
+      ,TFinPrice           float
+      ,Term                int            -- срок доставки
+      ,TFinPriceKurs       money
 
-,DestinationLogo     nvarchar(10)
+      ,DestinationLogo     nvarchar(10)
 
-,Margin		         float
-,Kurs		         float
-,ExtraKurs           float
-,Commission	         float  -- Комиссия эквайера
-,Discount	         float  -- Скидка
-,Reliability         float  -- Вероятность поставки
-,PDWeightKG	         float
-,PDVolumeKG          float
+      ,Margin		       float
+      ,Kurs		           float
+      ,ExtraKurs           float
+      ,Commission	       float  -- Комиссия эквайера
+      ,Discount	           float  -- Скидка
+      ,Reliability         float  -- Вероятность поставки
+      ,PDWeightKG	       float
+      ,PDVolumeKG          float
+       -- данные с профиля поставщика
+      ,ProfilesDeliveryID  numeric(18, 0)
+      ,Delivery            int
+      ,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
+      ,FragileSign         bit    default 0-- признак Хрункий на детали
+      ,Fragile             float  default 0-- величина процента с направления доставки 
 
- -- данные с профиля поставщика
-,ProfilesDeliveryID  numeric(18, 0)
-,Delivery            int
-,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
-,FragileSign         bit    default 0-- признак Хрункий на детали
-,Fragile             float  default 0-- величина процента с направления доставки 
-
-,RetVal              int
-)
+      ,RetVal              int
+      )
 
 -- для получения даных с таблицы tPrice
 declare @Num as table
@@ -69,9 +68,9 @@ declare @Num as table
        ,Make      nvarchar(40));
 
 Update p
-   set p.WeightGr  = isnull((Select max(pp.WeightGr)  from pFindByNumber pp (nolock) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
-      ,p.VolumeAdd = isnull((Select max(pp.VolumeAdd) from pFindByNumber pp (nolock) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
-  from pFindByNumber p (nolock)
+   set p.WeightGr  = isnull((Select max(pp.WeightGr)  from pFindByNumber pp with (nolock index=ao3) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
+      ,p.VolumeAdd = isnull((Select max(pp.VolumeAdd) from pFindByNumber pp with (nolock index=ao3) where pp.Spid = @@Spid and pp.make = p.Make and pp.DetailNum = p.DetailNum), 0)  
+  from pFindByNumber p with (updlock index=ao1)
  where p.Spid = @@Spid
 
 declare  @Price  table
@@ -160,14 +159,14 @@ select p.ID,
        case
          when (p.flag&512)>0 then p.VolumeAdd-- 512 - Вес изменен клиентом
 	     else isnull(pp.VolumeKGf,p.VolumeAdd) 
-       end	   
-           * case --коэффициенты [VolumeKG]
-               when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
-               when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
-               when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
-               when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
-               else 1
-             end,
+       end *	   
+       case --коэффициенты [VolumeKG]
+         when isnull(p.VolumeAdd, 0) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
+         when isnull(p.VolumeAdd, 0) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
+         when isnull(p.VolumeAdd, 0) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
+         when isnull(p.VolumeAdd, 0) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
+         else 1
+       end,
 	   p.Price,
 
        pd.Margin,
@@ -304,5 +303,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250217', '11'
+exec setOV 'SearchPriceCalc', 'P', '20250225', '12'
 go

@@ -587,3 +587,32 @@ left: -4px;
   background-color: var(--im-textarea__background-color_send-button);
   box-shadow: unset;
 } 
+
+.copy-button {
+  position: absolute;
+  top: 5px;
+  font-family: "FontAwesome";
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none; /* Скрыта по умолчанию */
+}
+
+/* Если сообщение от себя (--self), кнопка слева */
+.message-base-wrap.--self .copy-button {
+  left: 5px;
+}
+
+/* Если сообщение от оппонента (--opponent), кнопка справа */
+.message-base-wrap.--opponent .copy-button {
+  right: 5px;
+}
+
+/* Показываем кнопку при наведении */
+.message-default-content-container:hover .copy-button {
+  display: block;
+}
