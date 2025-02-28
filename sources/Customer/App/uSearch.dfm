@@ -255,6 +255,7 @@ object SearchF: TSearchF
           Menu.ColumnHideable = False
         end
         item
+          ShowToolTip = True
           FieldName = 'PartNameRus'
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -711,6 +712,10 @@ object SearchF: TSearchF
     object QueryAvailable: TIntegerField
       FieldName = 'Available'
       OnGetText = QueryAvailableGetText
+    end
+    object QueryMakeLogo: TWideStringField
+      FieldName = 'MakeLogo'
+      Size = 30
     end
   end
   object qSearchHistory: TFDQuery

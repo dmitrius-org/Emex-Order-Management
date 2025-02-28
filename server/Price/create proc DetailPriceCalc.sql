@@ -151,6 +151,7 @@ select-- top 200000
 		                                     when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
 											 else isnull(t.Restrictions, '')
                                            end
+         and isnull(t.NLA, 0) = 0
 
  where pc.Brief =  @ProfileName
 
@@ -253,4 +254,4 @@ return @RetVal
 go
 grant all on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20250226', '3'
+exec setOV 'DetailPriceCalc', 'P', '20250228', '4'

@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = pcSuppliers
+    ActivePage = tabPriceProfiles
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -2032,65 +2032,30 @@ object ClientsF: TClientsF
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
     ModifySQL.Strings = (
-      'declare @R                  numeric(18, 0)'
-      '       ,@Brief              nvarchar(60)'
-      '       ,@ProfilesDeliveryID numeric(18, 0)'
       ''
-      'select @Brief              = :NEW_Brief'
-      '      ,@ProfilesDeliveryID = :NEW_ProfilesDeliveryID'
+      'declare @R      numeric(18, 0)'
+      '       ,@RetMsg nvarchar(256)'
       ''
-      'if isnull(@Brief, '#39#39') = '#39#39
+      'exec @R = ClientDeliveryProfilesUpdate  '
+      '      @ID                  = :ID'
+      '     ,@Brief               = :NEW_Brief'
+      '     ,@ProfilesDeliveryID  = :NEW_ProfilesDeliveryID'
+      '     ,@Margin              = :NEW_Margin'
+      '     ,@Reliability         = :NEW_Reliability'
+      '     ,@UploadFolder        = :NEW_UploadFolder'
+      '     ,@UploadPriceName     = :NEW_UploadPriceName'
+      '     ,@UploadFileName      = :NEW_UploadFileName'
+      '     ,@isActive            = :NEW_isActive'
+      '     ,@ClientPriceLogo     = :NEW_ClientPriceLogo'
+      '     ,@UploadDelimiterID   = :NEW_UploadDelimiterID'
+      '     ,@DeliveryTermCustomer= :NEW_DeliveryTermCustomer'
+      ''
+      'if isnull(@R, 0) > 0'
       'begin'
-      
-        ' RAISERROR ('#39#1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1083#1077' ['#1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103']'#39', ' +
-        '16, 1); '
-      'end'
+      '   select @RetMsg = dbo.GetRetMsg(@R)'
       ''
-      'if isnull(@ProfilesDeliveryID, 0) = 0'
-      'begin'
-      
-        ' RAISERROR ('#39#1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1083#1077' ['#1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080']'#39', 16, 1' +
-        '); '
-      'end'
-      ''
-      ''
-      'if exists (select 1'
-      '             from [pProfilesCustomer](nolock)'
-      '            where Spid            = @@spid'
-      '              and Brief           = @Brief'
-      '              and ID             <> :ID'
-      ')'
-      'begin'
-      '   RAISERROR ('#39#1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103' '#1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39', 16, 1); '
-      'end'
-      ''
-      'if exists (select 1'
-      '             from [pProfilesCustomer](nolock)'
-      '            where Spid            = @@spid'
-      '              and Brief           = @Brief'
-      '              and ProfilesDeliveryID = @ProfilesDeliveryID'
-      '              and ID             <> :ID'
-      ')'
-      'begin'
-      
-        '   RAISERROR ('#39#1057#1086#1095#1077#1090#1072#1085#1080#1077' "'#1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103'/'#1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080'" ' +
-        #1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39', 16, 1); '
-      'end'
-      ''
-      'Update pProfilesCustomer'
-      '   set'
-      '       [Brief]               = @Brief'
-      '      ,[ProfilesDeliveryID]  = @ProfilesDeliveryID'
-      '      ,[Margin]              = :NEW_Margin'
-      '      ,[Reliability]         = :NEW_Reliability'
-      '      ,[UploadFolder]        = :NEW_UploadFolder'
-      '      ,[UploadPriceName]     = :NEW_UploadPriceName'
-      '      ,[UploadFileName]      = :NEW_UploadFileName'
-      '      ,[isActive]            = :NEW_isActive'
-      '      ,[ClientPriceLogo]     = :NEW_ClientPriceLogo'
-      '      ,[UploadDelimiterID]   = :NEW_UploadDelimiterID'
-      '      ,[DeliveryTermCustomer]= :NEW_DeliveryTermCustomer'
-      'where ID=:ID')
+      '   RAISERROR (@RetMsg , 16, 1); '
+      'end')
     DeleteSQL.Strings = (
       '/*'
       'declare @R numeric(18, 0)'

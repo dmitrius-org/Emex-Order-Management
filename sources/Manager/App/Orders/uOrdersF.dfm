@@ -339,20 +339,10 @@ object OrderF: TOrderF
       ImageIndex = 2
       OnClick = btnDestinationLogoClick
     end
-    object cbFragile: TUniCheckBox
-      Left = 195
-      Top = 182
-      Width = 66
-      Height = 17
-      Hint = ''
-      ShowHint = True
-      Caption = 'Fragile'
-      TabOrder = 20
-    end
     object cbNoAir: TUniCheckBox
-      Left = 117
+      Left = 116
       Top = 182
-      Width = 60
+      Width = 50
       Height = 17
       Hint = ''
       ShowHint = True
@@ -1122,6 +1112,26 @@ object OrderF: TOrderF
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       TabOrder = 31
       OnClick = btnMessageClick
+    end
+    object cbFragile: TUniCheckBox
+      Left = 166
+      Top = 182
+      Width = 61
+      Height = 17
+      Hint = #1046#1088#1091#1087#1082#1080#1081
+      ShowHint = True
+      Caption = 'Fragile'
+      TabOrder = 20
+    end
+    object cbNLA: TUniCheckBox
+      Left = 222
+      Top = 182
+      Width = 42
+      Height = 17
+      Hint = 'No longer available ('#1041#1086#1083#1077#1077' '#1085#1077#1076#1086#1089#1090#1091#1087#1085#1086')'
+      ShowHint = True
+      Caption = 'NLA'
+      TabOrder = 32
     end
   end
   object UniContainerPanel1: TUniContainerPanel

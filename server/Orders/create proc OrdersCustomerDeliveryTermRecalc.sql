@@ -19,17 +19,8 @@ Update o
 	  ,o.DeliveryRestToCustomer    = pc.DeliveryTermCustomer  -- Остаток срока до поставки клиенту
 	  ,o.DaysInWork                = 0
   from tOrders o (nolock)
-
- outer apply (  select top 1 
-                       pc.DeliveryTermCustomer
-                  from tProfilesCustomer pc with (nolock index=ao2)
-                 --inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
-                 --        on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-                 --inner join tSuppliers s with (nolock index=ao1)
-                 --        on s.SuppliersID = pd.SuppliersID 
-                 where pc.ProfilesDeliveryID = o.ProfilesDeliveryID
-               --  order by pc.ProfilesCustomerID
-                 ) pc
+ inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
+         on pc.ProfilesCustomerID = o.ProfilesCustomerID
  where o.DeliveryTermToCustomer is null
 
 
@@ -50,7 +41,7 @@ Update o
 go
   grant exec on OrdersCustomerDeliveryTermRecalc to public
 go
-exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250117', '2'
+exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250227', '3'
 go
   
 

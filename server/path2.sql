@@ -4,7 +4,7 @@ insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1033, 1033, 'Протокол 
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1034, 1034, 'Уточнить срок поставки',  'TOrdersT.actSupplierSpecifyDeliveryTime', 20, 1
 --alter table tOrders add Box numeric(18, 0)
 
-alter table tSettings add Properties varchar(256)
+--alter table tSettings add Properties varchar(256)
 
 --Update o
 --   set o.box = SUBSTRING(p.Comment, CHARINDEX('box:', p.Comment) + LEN('box:'), LEN(p.Comment))
@@ -16,5 +16,26 @@ alter table tSettings add Properties varchar(256)
 alter table tBasket add ProfilesCustomerID  numeric(18, 0)  
 alter table tOrders add ProfilesCustomerID  numeric(18, 0)  
 alter table pFindByNumber add ProfilesCustomerID  numeric(18, 0)  
+alter table tPrice add NLA  bit            -- No longer available или Более недоступно
+alter table History.tPartsHistory add NLA  bit     
 
-tProfilesCustomer
+drop index ao1 on tSupplierDeliveryProfiles
+create index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
+
+
+Update o
+set o.ProfilesCustomerID = pc.ProfilesCustomerID
+  from tOrders o
+  inner join tProfilesCustomer pc on  pc.ProfilesDeliveryID = o.ProfilesDeliveryID
+ where isnull(o.ProfilesCustomerID, 0)= 0
+
+
+ --Select o.DestinationLogo, o.ProfilesDeliveryID, *
+ -- from tOrders o
+ --where isnull(o.ProfilesCustomerID, 0)= 0
+ --order by OrderDate desc
+
+ --select * from tNodes where NodeID=12
+ --select * 
+ --from tSupplierDeliveryProfiles
+ --where ProfilesDeliveryID = 7

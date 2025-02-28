@@ -298,7 +298,7 @@ begin
   cbDestinationLogo.FillFromSQL('''
     SELECT distinct
            pc.ProfilesCustomerID as ID
-          ,pd.[Name]
+          ,pc.Brief Name
       FROM tOrders o (nolock)
      inner join tProfilesCustomer pc with (nolock)
              on pc.ClientID = o.ClientID

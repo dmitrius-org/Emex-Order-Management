@@ -31,7 +31,7 @@ begin
     ,Fragile             float                  -- Наценка за страховку
 	);
 
-	create unique index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
+	create index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
 
 	create unique index ao2 on tSupplierDeliveryProfiles(ProfilesDeliveryID);
 

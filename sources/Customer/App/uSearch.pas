@@ -60,6 +60,7 @@ type
     edtW: TUniFormattedNumberEdit;
     edtH: TUniFormattedNumberEdit;
     edtVKG: TUniFormattedNumberEdit;
+    QueryMakeLogo: TWideStringField;
     procedure SearchGridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure UniFrameCreate(Sender: TObject);
     procedure btnAddBasketClick(Sender: TObject);
@@ -156,7 +157,8 @@ type
     procedure AnalogLblVisible();
 
     /// <summary>
-    /// DestinationLogo - формирование способов доставки для клиента
+    /// DestinationLogo - формирование способов доставки для клиента. Заполняет
+    ///  поле "Доставка"
     /// </summary>
     procedure DestinationLogo();
 
@@ -190,6 +192,8 @@ end;
 procedure TSearchF.PriceCalc;
 begin
   logger.Info('TSearchF.PriceCalc begin');
+  logger.Info('TSearchF.PriceCalc FProfilesCustomerID: ' + FProfilesCustomerID.ToString);
+  logger.Info('TSearchF.PriceCalc FDetailNum: ' + FDetailNum);
   RetVal.Clear;
 
   Sql.exec('''
@@ -254,6 +258,9 @@ end;
 procedure TSearchF.GridRefresh();
 begin
   logger.Info('TSearchF.GridRefresh begin');
+  logger.Info('FProfilesCustomerID: ' + FProfilesCustomerID.ToString);
+  logger.Info('FMakeName: ' + FMakeName);
+  logger.Info('FDetailNum: ' + FDetailNum);
   // определение количества уникальных брендов
   sql.Open('''
               DECLARE @Count INT;
@@ -397,14 +404,15 @@ procedure TSearchF.SetMakeName;
 begin
   logger.Info('TSearchF.SetMakeName begin');
   sql.Open('''
-           select top 1 pp.DetailNum, pp.MakeName
-             from pFindByNumber pp with (nolock index=ao2)
-            where pp.Spid = @@spid
+           select top 1 p.DetailNum, p.MakeName
+             from pFindByNumber p with (nolock index=ao2)
+            where p.Spid = @@spid
+              and p.Flag&2=0  -- 2=No longer available Более недоступно
             order by case
-                       when pp.DetailNum = :DetailNum then 0
+                       when p.DetailNum = :DetailNum then 0
                        else 2
                      end
-                    ,pp.ID
+                    ,p.ID
            ''', ['DetailNum'] , [Trim(edtSearch.Text)]);
 
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
@@ -496,11 +504,13 @@ begin
             '  <i class="fa fa-caret-down fa-lg"></i>'+
             '</button>'+
             '</a></span>'+
-            '<span>' + Sender.AsString + '</span>' +
+            '<span data-qtip="hint">' + Sender.AsString + '</span>' +
             '</form>';
   end
   else
-    Text := '<span>' + Sender.AsString + '</span>';
+    Text := '<span data-qtip="hint">' + Sender.AsString + '</span>';
+
+  Text := Text.Replace('hint', QueryMakeName.Value + ' (' + QueryMakeLogo.Value + ')');
 end;
 
 procedure TSearchF.QueryOurDeliveryGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -626,11 +636,14 @@ begin
 
   if EventName = 'setDestLogo' then
   begin
+    logger.Info('TSearchF.SearchGridAjaxEvent setDestLogo begin ');
     ShowMask('Поиск...');
     UniSession.Synchronize();
     try
+      logger.Info('setDestLogo FProfilesCustomerID: ' + Params.Values['P1']);
       FProfilesCustomerID := Params.Values['P1'].ToInteger;
-      DestinationLogo;
+
+      DestinationLogo;  // тут переделать через js
 
       PriceCalc();
 

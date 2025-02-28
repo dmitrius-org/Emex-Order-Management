@@ -227,7 +227,7 @@ Select i.OrderID
          on p.ObjectID=i.ParentID
  order by p.ProtocolID
 
-
+ /*
 delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
 insert pAccrualAction  with (rowlock)
       (Spid   
@@ -244,7 +244,7 @@ select @@Spid
       ,10
 from @ID i
 inner join tOrders o (nolock) 
-        on o.OrderID = i.OrderID
+        on o.OrderID = i.OrderID*/
 
 exec ProtocolAdd
 

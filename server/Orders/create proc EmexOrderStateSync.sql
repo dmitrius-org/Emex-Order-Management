@@ -239,7 +239,7 @@ DEALLOCATE my_cur
 
  Update p
     set p.Retval     = 1 
-       ,p.Message   = 'Не синхранизируем'
+       ,p.Message   = 'Не синхронизируем'
    from pAccrualAction p (updlock)
   inner join pMovement m (nolock)
           on m.spid    = @@spid
@@ -402,6 +402,6 @@ DEALLOCATE my_cur
 go
 grant exec on EmexOrderStateSync to public
 go
-exec setOV 'EmexOrderStateSync', 'P', '20250215', '9'
+exec setOV 'EmexOrderStateSync', 'P', '20250215', '10'
 go
  

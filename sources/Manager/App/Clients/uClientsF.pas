@@ -647,12 +647,12 @@ end;
 procedure TClientsF.tabPriceProfilesBeforeActivate(Sender: TObject;
   var AllowActivate: Boolean);
 begin
-  actPriceProfilesAdd.Enabled := cbClientType.Value = '3';
+ // actPriceProfilesAdd.Enabled := cbClientType.Value = '3';
 //  actPriceProfilesEdit.Enabled := cbClientType.Value = '3';
-  actPriceProfilesDelete.Enabled := cbClientType.Value = '3';
+ // actPriceProfilesDelete.Enabled := cbClientType.Value = '3';
 //
 //  ProfilesCustomerGrid.ReadOnly :=  cbClientType.Value <> '3';
-  qProfilesCustomerProfilesDeliveryName.ReadOnly := cbClientType.Value <> '3';
+ // qProfilesCustomerProfilesDeliveryName.ReadOnly := cbClientType.Value <> '3';
  // qProfilesCustomerProfilesDeliveryID.ReadOnly := cbClientType.Value <> '3';
 end;
 

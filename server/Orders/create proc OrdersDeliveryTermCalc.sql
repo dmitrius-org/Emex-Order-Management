@@ -29,13 +29,6 @@ Update p
          on o.OrderID = p.OrderID
   left join vOrdersDeliverySupplier od 
          on od.OrderID = o.OrderID 
- --inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
- --        on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
- --outer apply (select top 1 *
- --               from tPrices t (nolock) 
- --              where t.Name = o.PriceLogo
- --             ) as Prices
-
  where p.Spid = @@Spid
 
 -- расчет ближайшей дата вылета

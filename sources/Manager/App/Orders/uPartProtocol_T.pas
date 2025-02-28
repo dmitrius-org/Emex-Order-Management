@@ -32,6 +32,7 @@ type
     ProtocolQueryFragile: TBooleanField;
     ProtocolQueryUserName: TStringField;
     ProtocolQueryupdDateTime: TSQLTimeStampField;
+    ProtocolQueryNLA: TBooleanField;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure UniFormShow(Sender: TObject);

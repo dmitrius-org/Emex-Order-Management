@@ -26,8 +26,3 @@ grant all on vDestinationLogo to public
 go
 exec setOV 'vDestinationLogo', 'V', '20250226', '3'
 go
-
-
-select * 
-  from vDestinationLogo
- order by ClientID, DestinationLogo

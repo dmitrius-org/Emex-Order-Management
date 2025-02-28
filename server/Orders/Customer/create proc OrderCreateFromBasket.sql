@@ -214,7 +214,7 @@ declare @r int = 0
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
         ,b.PriceLogo             -- PriceLogoOrg
-        ,pd.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
+        ,sdp.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
         ,b.Make                  -- Бренд
         ,b.PartNameRus           -- наименование детали
@@ -226,8 +226,8 @@ declare @r int = 0
            when b.VolumeKG = 0 then b.WeightKG
            else b.VolumeKG
          end                     -- Вес Объемный из прайса
-        ,b.DestinationLogo
-        ,pd.Name                 -- DestinationName
+        ,sdp.DestinationLogo
+        ,sdp.Name                 -- DestinationName
         ,b.ProfilesCustomerID
         ,b.PercentSupped         -- процент поставки
          --
@@ -245,8 +245,8 @@ declare @r int = 0
         ,b.BasketID              -- CustomerSubId
         ,p.PriceID               -- tPrice.PriceID
         ,b.BasketID              -- ID
-        ,pd.WeightKG             
-        ,pd.VolumeKG          
+        ,sdp.WeightKG             
+        ,sdp.VolumeKG          
          -- cроки поставки клиента
         ,b.OurDelivery           -- Срок поставки клиенту
         ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
@@ -262,8 +262,8 @@ declare @r int = 0
            on S.SuppliersID = c.SuppliersID
    inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
            on pc.ProfilesCustomerID = b.ProfilesCustomerID
-   inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
-           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+   inner join tSupplierDeliveryProfiles sdp with (nolock index=ao2)
+           on sdp.ProfilesDeliveryID = pc.ProfilesDeliveryID
    inner join @P p
            on p.BasketID = b.BasketID
    where m.spid = @@spid   

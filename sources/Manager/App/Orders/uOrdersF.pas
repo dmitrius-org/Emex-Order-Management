@@ -111,6 +111,7 @@ type
     lblExtraKurs: TUniLabel;
     edtExtraKurs: TUniNumberEdit;
     btnMessage: TUniButton;
+    cbNLA: TUniCheckBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -636,11 +637,12 @@ begin
   cbDestinationLogo.FillFromSQL(
   '''
           SELECT distinct
-                 pd.[DestinationLogo] as id
-                ,pd.[Name]
+                 pc.[ProfilesCustomerID] as ID
+                ,pc.[Brief] as Name
             FROM tOrders o (nolock)
            inner join tProfilesCustomer pc with (nolock)
                    on pc.ClientID = o.ClientID
+                  and pc.IsActive = 1
            inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                    on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
            where o.OrderID =
@@ -786,8 +788,8 @@ begin
   Sql.exec(
   '''
     exec SearchPriceCalc
-           @DestinationLogo=:DestinationLogo,
-           @DetailNum      =:DetailNum
+           @ProfilesCustomerID=:ProfilesCustomerID,
+           @DetailNum         =:DetailNum
 
     exec OrderF_OrdersFinCalc
            @OrderID  =:OrderID
@@ -795,8 +797,8 @@ begin
           ,@VolumeKGF=:Volume
 
   ''',
-  ['DestinationLogo', 'DetailNum', 'OrderID', 'Weight', 'Volume' {, 'PriceLogo', 'WeightGr', 'VolumeAdd', 'MakeLogo'}],
-  [cbDestinationLogo.Value,
+  ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume' {, 'PriceLogo', 'WeightGr', 'VolumeAdd', 'MakeLogo'}],
+  [cbDestinationLogo.Value.ToInteger,
   FDetailNumber,
   FID,
   edtWeightKGF.Value,
@@ -846,28 +848,31 @@ begin
                                 ,@Fragile        = :Fragile
                                 ,@NoAir          = :NoAir
                                 ,@Price          = :Price
-                                ,@DestinationLogo=:DestinationLogo
+                                ,@ProfilesCustomerID=:ProfilesCustomerID
                                 ,@TargetStateID  =:TargetStateID
                                 ,@MakeLogo       =:MakeLogo
                                 ,@ReplacementPrice = :ReplacementPrice
+                                ,@NLA              = :NLA
 
                      select @r as retcode
           ''';
 
           Sql.Open(sqltext,
                    ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
-                    'DestinationLogo', 'Fragile', 'NoAir', 'TargetStateID', 'ReplacementPrice'],
+                    'ProfilesCustomerID', 'Fragile', 'NoAir', 'TargetStateID',
+                    'ReplacementPrice', 'NLA'],
                    [edtWeightKGF.Value,
                     edtVolumeKGF.Value,
                     edtDetailNameF.Text,
                     FID,
                     FPriceLogo,
                     FMakeLogo,
-                    cbDestinationLogo.Value ,
+                    cbDestinationLogo.Value.ToInteger,
                     cbFragile.Checked,
                     cbNoAir.Checked,
                     ATargetStateID,
-                    FPrice2
+                    FPrice2,
+                    cbNLA.Checked //-- No longer available Более недоступно
                     ]);
 
           RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -1279,9 +1284,10 @@ begin
              ,v.DetailNumber
              ,v.NoAir
              ,v.Fragile
+             ,v.NLA
              ,v.PriceLogo
              ,v.Manufacturer
-             ,v.DestinationLogo
+             ,v.ProfilesCustomerID --DestinationLogo
              ,v.SuppliersID
              ,v.PriceID
              ,v.ClientID
@@ -1344,10 +1350,11 @@ begin
   edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
   cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
-  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('DestinationLogo').AsString; // направление отгрузки
+  cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
+  cbNLA.Checked    := UniMainModule.Query.FieldByName('NLA').AsBoolean;
   edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);

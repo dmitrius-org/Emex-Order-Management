@@ -99,7 +99,8 @@ SELECT o.[OrderID]
 	  ,o.ReplacementPrice              -- Изменение цены
 	  ,o.CustomerPriceLogo             -- Наименование прайса заказа от клиента
 	  ,isnull(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo     -- Направление отгрузки
-      ,coalesce(pd.Name, o.DestinationName, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
+      ,coalesce(o.DestinationName, pd.Name, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки    
+      ,coalesce(o.ProfilesCustomerID, pd.ProfilesCustomerID) ProfilesCustomerID
       ,o.Invoice                       -- номер инвойса
       ,o.FileDate                      -- Дата файла
       ,o.[UserID]
@@ -117,6 +118,7 @@ SELECT o.[OrderID]
               else 0
             end as bit)         as NoAir
       ,p.Fragile -- признак: хрупкий
+      ,p.NLA -- No longer available или Более недоступно
       ,o.OrderDetailSubId
 	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState
   FROM vUserAccess ua 
@@ -151,16 +153,18 @@ SELECT o.[OrderID]
       select top 1 pd.DestinationLogo, 
                    pd.Name, 
                    pd.Delivery,
-                   pc.DeliveryTermCustomer
+                   pc.DeliveryTermCustomer,
+                   pc.ProfilesCustomerID
         from tProfilesCustomer pc with (nolock index=ao2)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-       where pc.ClientID = c.ClientID
-         and pd.DestinationLogo    = o.DestinationLogo
-       order by case 
-                  when pc.ClientPriceLogo = o.CustomerPriceLogo  then 1
-                  else 555
-                end
+          and (pc.ProfilesCustomerID = o.ProfilesCustomerID 
+            or pd.DestinationLogo    = o.DestinationLogo)
+        order by case
+                   when pc.ProfilesCustomerID = o.ProfilesCustomerID  then 1
+                   when pc.ClientPriceLogo = o.CustomerPriceLogo  then 2
+                   else 555
+                 end
      ) as pd
 
   left join tMakes b with (nolock index=ao2) -- брент замены
@@ -181,7 +185,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250211', '18'
+exec setOV 'vOrders', 'V', '20250227', '19'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

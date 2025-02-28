@@ -84,6 +84,7 @@ as
         ,DeliveryDateToCustomer -- Дата поставки клиенту	
         ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
         ,DaysInWork
+        ,ProfilesCustomerID
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
@@ -126,6 +127,7 @@ as
         ,iif(pc.DeliveryTermCustomer is not null, cast( dateadd(dd, pc.DeliveryTermCustomer, getdate()) as date ), null)-- Дата поставки клиенту	
         ,pc.DeliveryTermCustomer           -- Остаток срока до поставки клиенту
         ,0
+        ,pc.ProfilesCustomerID
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
@@ -143,7 +145,8 @@ as
                        pd.VolumeKG,
                        pd.Fragile,
                        pd.Name as DestinationName,
-                       pc.DeliveryTermCustomer
+                       pc.DeliveryTermCustomer,
+                       pc.ProfilesCustomerID
                   from tProfilesCustomer pc with (nolock index=ao2)
                  inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
                          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
@@ -276,6 +279,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250206', '9'
+exec setOV 'LoadOrders', 'P', '20250227', '10'
 go
  

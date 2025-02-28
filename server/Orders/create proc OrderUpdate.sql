@@ -6,9 +6,10 @@ create proc OrderUpdate
               ,@WeightKGF               float         = null -- Вес Физический факт	
               ,@VolumeKGF               float         = null -- Вес Объемный факт
               ,@Fragile                 bit           = null 
-              ,@NoAir                   bit           = null 
+              ,@NoAir                   bit           = null
+              ,@NLA                     bit           = null -- No longer available Более недоступно
               
-              ,@DestinationLogo         nvarchar(64)  = null -- Направление отгрузки               
+              ,@ProfilesCustomerID      numeric(18,0)              
 
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@MakeLogo                nvarchar(20)  = null -- Код производителя
@@ -28,8 +29,6 @@ as
          ,@DeliveryTermSupplier    int -- Срок доставки поставщику
          ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
 
-  declare @PriceID ID
-
   select @DeliveryTermSupplier    = t.DeliveryTerm
         ,@DeliveryTermSupplierNew = p.GuaranteedDay
 	from tOrders t with (nolock index=ao1)
@@ -44,7 +43,7 @@ as
 
   update t
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
-        ,t.DestinationLogo = isnull(@DestinationLogo, t.DestinationLogo)
+        ,t.DestinationLogo = pd.DestinationLogo
         ,t.DestinationName = pd.DestinationName
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
@@ -88,10 +87,38 @@ as
            left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                   on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
           where pc.ClientID        = t.ClientID
-            and pd.DestinationLogo = @DestinationLogo   
+            and pc.ProfilesCustomerID = @ProfilesCustomerID   
         ) as pd
   where t.OrderID = @OrderID
+ 
+  if OBJECT_ID('tempdb..#PartsUpdate') is not null
+    drop table #PartsUpdate
+  CREATE TABLE #PartsUpdate
+  (
+  	 DetailNum	       varchar(40)    -- Номер детали 
+    ,MakeLogo          varchar(30)    -- Зашифрованное название бренда
+  	,Brand             varchar(60)    -- Бренд
+  	,DetailName        varchar(256)   -- Наименование детали 
+  	,WeightKG          float          -- Вес физический кг 
+  	,VolumeKG          float          -- Вес объемный кг  
+  	,Restrictions      varchar(30)    -- Ограничения
+    ,Fragile	       bit
+    ,NLA               bit            -- No longer available или Более недоступно
+    ,UpdDatetime       datetime
 
+  	--,DetailNumOld	   varchar(40)    -- Номер детали 
+    --,MakeLogoOld       varchar(30)    -- Зашифрованное название бренда
+  	--,BrandOld          varchar(60)    -- Бренд
+  	,DetailNameOld     varchar(256)   -- Наименование детали 
+  	,WeightKGOld       float          -- Вес физический кг 
+  	,VolumeKGOld       float          -- Вес объемный кг  
+  	,RestrictionsOld   varchar(30)    -- Ограничения
+    ,FragileOld	       bit
+    ,NLAOld            bit            -- No longer available или Более недоступно
+    ,InDatetime        datetime
+  );
+
+  delete from #PartsUpdate
   -- сохранение данных на позиции/детали
   update p
      set p.DetailNameF	= nullif(@DetailNameF, '')
@@ -108,15 +135,56 @@ as
                             else null
                           end
         ,p.Fragile      = nullif(@Fragile, 0) 
-        ,p.updDatetime  = getdate()
-  OUTPUT INSERTED.PriceID INTO @PriceID(ID)  
+        ,p.NLA          = nullif(@NLA, 0)  
+        ,p.updDatetime  = getdate()  
+        
+  OUTPUT 
+         INSERTED.DetailNum
+        ,INSERTED.MakeLogo
+        ,INSERTED.Brand
+        ,INSERTED.DetailNameF
+        ,INSERTED.WeightKGF
+        ,INSERTED.VolumeKGF
+        ,INSERTED.Restrictions
+        ,INSERTED.Fragile
+        ,INSERTED.NLA
+        ,INSERTED.updDatetime
+
+        ,Deleted.DetailNameF
+        ,Deleted.WeightKGF
+        ,Deleted.VolumeKGF
+        ,Deleted.Restrictions
+        ,Deleted.Fragile
+        ,Deleted.NLA
+        ,Deleted.InDatetime
+    INTO #PartsUpdate(
+         DetailNum	   
+        ,MakeLogo      
+        ,Brand         
+        ,DetailName    
+        ,WeightKG      
+        ,VolumeKG      
+        ,Restrictions  
+        ,Fragile	   
+        ,NLA  
+        ,UpdDatetime 
+       
+        ,DetailNameOld    
+        ,WeightKGOld      
+        ,VolumeKGOld      
+        ,RestrictionsOld  
+        ,FragileOld	      
+        ,NLAOld 
+        ,InDatetime
+        )  
+
 	from tOrders t  with (nolock index=ao1)
    inner join tPrice p with (updlock index=ao2)
            on p.DetailNum = t.DetailNumber
 		  and p.MakeLogo  = t.MakeLogo -- производитель
    where t.OrderID = @OrderID
 
-  exec PartHistoryInsertByPartID @Prices = @PriceID
+  exec PartHistoryInsert
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
@@ -207,6 +275,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250220', '16'
+exec setOV 'OrderUpdate', 'P', '20250227', '17'
 go
  

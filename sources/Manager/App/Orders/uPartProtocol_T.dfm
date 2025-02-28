@@ -76,7 +76,6 @@ object PartProtocol_T: TPartProtocol_T
     LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
     LoadMask.Color = clActiveCaption
     EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-    ForceFit = True
     LayoutConfig.Cls = 'grid-part-protocol'
     LayoutConfig.Height = '100'
     LayoutConfig.Width = '100'
@@ -158,6 +157,12 @@ object PartProtocol_T: TPartProtocol_T
         Width = 98
         ReadOnly = True
         Sortable = True
+      end
+      item
+        FieldName = 'NLA'
+        Title.Caption = 'NLA'
+        Width = 34
+        Hint = 'No longer available '#1080#1083#1080' '#1041#1086#1083#1077#1077' '#1085#1077#1076#1086#1089#1090#1091#1087#1085#1086
       end
       item
         FieldName = 'UserName'
@@ -245,6 +250,9 @@ object PartProtocol_T: TPartProtocol_T
     end
     object ProtocolQueryupdDateTime: TSQLTimeStampField
       FieldName = 'updDateTime'
+    end
+    object ProtocolQueryNLA: TBooleanField
+      FieldName = 'NLA'
     end
   end
   object actMain: TUniActionList

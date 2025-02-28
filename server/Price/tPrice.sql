@@ -23,6 +23,7 @@ begin
 	,WeightKGF         float          -- Вес физический кг 
 	,VolumeKGf         float          -- Вес объемный кг  
 	,Restrictions      nvarchar(30)   -- Ограничения
+    ,NLA               bit            -- No longer available или Более недоступно
 	--
 	,inDatetime        datetime default GetDate()      --
 	,updDatetime       datetime default GetDate()      --

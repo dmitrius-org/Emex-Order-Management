@@ -137,11 +137,12 @@ declare @r int = 0
      and p.ID   = @PartID
 	 and not exists (select 1
 	                   from tBasket t with (nolock index=PK_tBasket_BasketID)
-					  where t.ClientID        = @ClientID
-                        and t.Make            = p.Make
-					    and t.DetailNum       = p.DetailNum
-						and t.PriceLogo       = p.PriceLogo
-                        and t.DestinationLogo = p.DestinationLogo)
+					  where t.ClientID           = @ClientID
+                        and t.Make               = p.Make
+					    and t.DetailNum          = p.DetailNum
+						and t.PriceLogo          = p.PriceLogo
+                        and t.ProfilesCustomerID = p.ProfilesCustomerID -- способов доставки с одним номером может быть несколько, поэтому проверяем по ИД
+                     )
                        
   exit_:
 
@@ -149,5 +150,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20250226', '13'
+exec setOV 'PartToBasket', 'P', '20250226', '14'
 go

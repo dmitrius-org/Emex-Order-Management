@@ -31,8 +31,8 @@ as
                                      & ~2 --нет цены
                                      & ~16384-- Несоответствие упаковке
                                      & ~32768-- Нет в наличии
-      
-
+                                     & ~262144-- Измените метод отправки
+       
 
 		 --,o.updDatetime      = GetDate()
 	 from pAccrualAction p (nolock)
@@ -106,5 +106,5 @@ as
 go
 grant exec on ProtocolRollBack to public
 go
-exec setOV 'ProtocolRollBack', 'P', '20240704', '1'
+exec setOV 'ProtocolRollBack', 'P', '20250228', '2'
 go

@@ -1391,6 +1391,11 @@ begin
   if (Query.FieldByName('Flag').AsInteger and 32768) > 0 then // Нет в наличии
   begin
     Attribs.Color:=rgb(255,255,0);
+  end
+  else
+  if (Query.FieldByName('Flag').AsInteger and 262144) > 0 then // Измените метод отправки
+  begin
+    Attribs.Color:=rgb(200,94,108) ;
   end;
 
   if (Query.FieldByName('IsCancel').AsBoolean) then // отказан

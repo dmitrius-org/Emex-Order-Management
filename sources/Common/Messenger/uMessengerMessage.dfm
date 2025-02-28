@@ -77,7 +77,6 @@ object Message: TMessage
           MultiSelect = True
           LayoutConfig.ComponentCls = 'message-list-container'
           LayoutConfig.DockWhenAligned = False
-          SelectionMode = smSimple
         end
       end
       object ChatMessagesSend: TUniContainerPanel

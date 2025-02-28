@@ -102,6 +102,8 @@ delete p
    and isnull(p.VolumeKGf  , '') = ''
    and isnull(p.DetailNameF, '') = ''
    and isnull(p.Restrictions, '') = ''
+  -- and isnull(p.Fragile, 0) = 0
+   and isnull(p.NLA, 0) = 0
    and not exists (select 1
                      from @ID t
 					where t.ID = p.PriceID)	
@@ -114,38 +116,43 @@ declare @P as table (
        ,WeightKGF    float
        ,VolumeKGf    float   
        ,DetailNameF	 nvarchar(1024)
-       ,Fragile   	 bit 	
+       ,Fragile   	 bit 
+       ,NLA       	 bit 
        )
 
 insert @P 
-      (PriceID, WeightKGF, VolumeKGf, DetailNameF, Fragile)  
+      (PriceID, WeightKGF, VolumeKGf, DetailNameF, Fragile, NLA)  
 select t.ID
       ,pp.WeightKGF
 	  ,pp.VolumeKGf
       ,pp.DetailNameF
       ,pp.Fragile
+      ,pp.NLA
   from @ID as t
  cross apply (select top 1
                      pr.WeightKGF, 
                      pr.VolumeKGf,
                      pr.PriceID,
                      pr.DetailNameF,
-                     pr.Fragile
+                     pr.Fragile,
+                     pr.NLA
                 from tPrice pr with (nolock index=ao2) 
                where pr.DetailNum = t.DetailNum
 	             and pr.MakeLogo  = t.MakeLogo
                  and ( isnull(pr.WeightKGF, 0) > 0
-                    or isnull(pr.VolumeKGf, 0) > 0 )
-               order by isnull(pr.WeightKGF, 0) desc , isnull(pr.Fragile, 0) desc
+                    or isnull(pr.VolumeKGf, 0) > 0 
+                    or isnull(pr.NLA, 0)       > 0)
+               order by isnull(pr.WeightKGF, 0) desc , isnull(pr.Fragile, 0), isnull(pr.NLA, 0) desc
              ) as pp
 
 
 ---
 update t
-   set t.WeightKGF = p.WeightKGF
-	  ,t.VolumeKGf = p.VolumeKGf    
+   set t.WeightKGF   = p.WeightKGF
+	  ,t.VolumeKGf   = p.VolumeKGf    
       ,t.DetailNameF = p.DetailNameF
-      ,t.Fragile = p.Fragile
+      ,t.Fragile     = p.Fragile
+      ,t.NLA         = p.NLA
   from @P as p
  inner join tPrice t with (updlock index=ao1) 
          on t.PriceID = p.PriceID
@@ -168,8 +175,7 @@ Update p
 -- сохранение сведений об обновлении прайса
 if not exists (select 1
                  from tProfilesPrice (nolock)
-                where PriceName = @PriceLogo
-		       )
+                where PriceName = @PriceLogo)
 begin
   insert tProfilesPrice with (rowlock)
         (isActive, PriceName, UpdateDate)
@@ -187,4 +193,4 @@ exit_:
 go
 grant execute on PriceUpdate to public
 go
-exec setOV 'PriceUpdate', 'P', '20241020', '3'
+exec setOV 'PriceUpdate', 'P', '20250228', '4'

@@ -83,10 +83,11 @@ Select @@spid
         from tProfilesCustomer pc with (nolock)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                 on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-        where pc.ClientID = c.ClientID
-          and pd.DestinationLogo    = p.DestinationLogo   
+        where pc.ClientID           = c.ClientID
+          and pc.ProfilesCustomerID = p.ProfilesCustomerID   
         ) as pd
   where p.spid = @@spid
+    and p.Flag&2=0  -- 2=No longer available Более недоступно
 
   exec OrdersFinCalc
          @IsSave   = 0,
@@ -107,8 +108,8 @@ Update p
           from tProfilesCustomer pc with (nolock)
           left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
                  on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-         where pc.ClientID        = o.ClientID
-           and pd.DestinationLogo = p.DestinationLogo   
+         where pc.ClientID           = o.ClientID
+           and pc.ProfilesCustomerID = p.ProfilesCustomerID   
         ) as pd
  where o.OrderID   = @OrderID
    and o.Flag&16=0
@@ -118,7 +119,7 @@ Update p
 go
   grant exec on OrderF_OrdersFinCalc to public
 go
-exec setOV 'OrderF_OrdersFinCalc', 'P', '20241206', '6'
+exec setOV 'OrderF_OrdersFinCalc', 'P', '20250227', '7'
 go
  
  

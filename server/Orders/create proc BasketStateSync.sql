@@ -96,10 +96,12 @@ as
  Update o
     set 
 	    o.flag            = case
-                              when p.WarnCode = -1 then isnull (o.flag, 0) | 1  -- превышение цены
-                              when p.WarnCode = -2 then isnull (o.flag, 0) | 2  -- нет цены
-                              when p.WarnCode = -4 then isnull (o.flag, 0) | 16384 -- Несоответствие упаковке
-                              when p.WarnCode = -5 then isnull (o.flag, 0) | 32768 -- Нет в наличии
+                              when p.WarnCode = -1 then isnull (o.flag, 0) | 1       -- превышение цены
+                              when p.WarnCode = -2 then isnull (o.flag, 0) | 2       -- нет цены
+                              when p.WarnCode = -4 then isnull (o.flag, 0) | 16384   -- Несоответствие упаковке
+                              when p.WarnCode = -5 then isnull (o.flag, 0) | 32768   -- Нет в наличии
+                              when p.WarnCode = 99 then isnull (o.flag, 0) | 262144  -- Измените метод отправки
+                              
 	                          else o.flag
 	                        end
        ,o.updDatetime = GetDate()
