@@ -257,7 +257,14 @@ as
       exec ProtocolAdd
   end
 
-  select @AuditComment =  'Изменение DetailNameF:' + nullif(@DetailNameF, '') + ', WeightKGF:' + cast(@WeightKGF as nvarchar) + ', VolumeKGF:' + cast(@VolumeKGF as nvarchar) 
+  select @AuditComment =  'Изменение названия: ' + isnull(DetailNameOld,'') + ' -> '+ isnull(DetailName,'') +  '<br>' + 
+                          'Изменение физического веса: ' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ' -> '+ cast(isnull(WeightKG, 0.00) as varchar) + '<br>' +
+                          'Изменение объемного веса: ' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ' -> '+ cast(isnull(VolumeKG, 0.00) as varchar) + '<br>' +
+                          'Restrictions: ' +  isnull(RestrictionsOLD,'') + ' -> '+ isnull(Restrictions,'') + '<br>' +
+                          'Fragile: '+ cast(isnull(FragileOLD, 0) as varchar) + ' -> '+ cast(isnull(Fragile, 0) as varchar) + '<br>' +
+                          'NLA: ' + cast(isnull(NLAOLD, 0) as varchar) + ' -> '+ cast(isnull(NLA, 0) as varchar) 
+    from #PartsUpdate pu (nolock)
+
   -- аудит
   exec AuditInsert
          @AuditID          = @AuditID out         
@@ -275,6 +282,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250227', '17'
+exec setOV 'OrderUpdate', 'P', '20250301', '18'
 go
  

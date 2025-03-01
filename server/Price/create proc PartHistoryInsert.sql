@@ -1,6 +1,3 @@
-if OBJECT_ID('PartHistoryInsertByPartID') is not null
-  drop proc PartHistoryInsertByPartID
-go
 if OBJECT_ID('PartHistoryInsert') is not null
   drop proc PartHistoryInsert
 go

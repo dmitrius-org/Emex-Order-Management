@@ -2,6 +2,7 @@
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1031, 1031, 'Проставить признак: Обращение открыто',  'TOrdersT.actRequestOpen', 20, 1
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1033, 1033, 'Протокол детали',  'TOrdersT.actPartProtocol', 20, 1
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1034, 1034, 'Уточнить срок поставки',  'TOrdersT.actSupplierSpecifyDeliveryTime', 20, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1035, 1035, 'Изменить пароль для входа в личный кабинет',  'TClientsT.actPasswordReset', 40, 1
 --alter table tOrders add Box numeric(18, 0)
 
 --alter table tSettings add Properties varchar(256)
