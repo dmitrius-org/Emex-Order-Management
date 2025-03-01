@@ -45,6 +45,7 @@ as
      set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
         ,t.DestinationLogo = pd.DestinationLogo
         ,t.DestinationName = pd.DestinationName
+        ,t.ProfilesCustomerID = @ProfilesCustomerID
 		,t.Flag            = isnull(t.Flag, 0) | case  
 		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                        else 0
@@ -257,12 +258,12 @@ as
       exec ProtocolAdd
   end
 
-  select @AuditComment =  'Изменение названия: ' + isnull(DetailNameOld,'') + ' -> '+ isnull(DetailName,'') +  '<br>' + 
-                          'Изменение физического веса: ' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ' -> '+ cast(isnull(WeightKG, 0.00) as varchar) + '<br>' +
-                          'Изменение объемного веса: ' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ' -> '+ cast(isnull(VolumeKG, 0.00) as varchar) + '<br>' +
-                          'Restrictions: ' +  isnull(RestrictionsOLD,'') + ' -> '+ isnull(Restrictions,'') + '<br>' +
-                          'Fragile: '+ cast(isnull(FragileOLD, 0) as varchar) + ' -> '+ cast(isnull(Fragile, 0) as varchar) + '<br>' +
-                          'NLA: ' + cast(isnull(NLAOLD, 0) as varchar) + ' -> '+ cast(isnull(NLA, 0) as varchar) 
+  select @AuditComment =  'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>' + 
+                          'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>' +
+                          'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>' +
+                          'Restrictions: ''' +  isnull(RestrictionsOLD,'') + ''' -> '''+ isnull(Restrictions,'') + '''<br>' +
+                          'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>' +
+                          'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +''''
     from #PartsUpdate pu (nolock)
 
   -- аудит
