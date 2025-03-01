@@ -50,6 +50,12 @@ as
    inner join tOrders o with (nolock index =ao2)
            on o.ClientID = @ClientID
           and o.StatusID = n.NodeID
+
+          and (
+               (o.ClientID in (4, 9) and o.OrderDate >= '20250206')
+             or o.ClientID not in (4, 9)
+              ) 
+
    --       and isnull(Invoice, '') <> ''
    inner join tShipments s (nolock)
            on s.Invoice = o.Invoice
@@ -107,6 +113,11 @@ as
      where o.ClientID = @ClientID
        and isnull(Invoice, '')   = ''
        and isnull(o.isCancel, 0) = 0
+
+       and (
+             (o.ClientID in (4, 9) and o.OrderDate >= '20250206')
+           or o.ClientID not in (4, 9)
+           ) 
      group by cast(o.OrderDate as date), cast(ods.DeliveryPlanDateSupplier as date), n.SearchID, n.SearchBrief, o.Invoice
 --*/
 
