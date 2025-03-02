@@ -12,9 +12,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, uniDBPivotGrid, uCommonType,
-  uniGUIApplication, uLogger, uUtils.Varriant
-
-  ;
+  uniGUIApplication, uLogger, uUtils.Varriant;
 
 type
   TShipmentsBoxesT = class(TUniFrame)
@@ -50,35 +48,27 @@ type
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure btnGridStatisticOpenClick(Sender: TObject);
-    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
-      NewIndex: Integer);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
-    procedure GridColumnSummary(Column: TUniDBGridColumn;
-      GroupFieldValue: Variant);
-    procedure GridColumnSummaryResult(Column: TUniDBGridColumn;
-      GroupFieldValue: Variant; Attribs: TUniCellAttribs; var Result: string);
-    procedure GridColumnSummaryTotal(Column: TUniDBGridColumn;
-      Attribs: TUniCellAttribs; var Result: string);
-    procedure QueryTransporterPhysicalWeightGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
+    procedure GridColumnSummary(Column: TUniDBGridColumn; GroupFieldValue: Variant);
+    procedure GridColumnSummaryResult(Column: TUniDBGridColumn; GroupFieldValue: Variant; Attribs: TUniCellAttribs; var Result: string);
+    procedure GridColumnSummaryTotal(Column: TUniDBGridColumn; Attribs: TUniCellAttribs; var Result: string);
+    procedure QueryTransporterPhysicalWeightGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
-    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
+    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
   private
     FTransporterNumber: String;
-
     FGroupFieldValue: Integer;
-
-
     FTransporterPhysicalWeight: Real;
     FTransporterVolumetricWeight: Real;
     FWeightKGS: Real;
     FVolumeKGS: Real;
+    FInvoice: String;
 
-
-    procedure SetTransporterNumber(const Value: String);
     { Private declarations }
   public
     { Public declarations }
@@ -89,7 +79,8 @@ type
     procedure GridOpen; overload;
     procedure GridOpen(Key: Word); overload;
 
-    property TransporterNumber: String read FTransporterNumber write SetTransporterNumber;
+    property TransporterNumber: String read FTransporterNumber write FTransporterNumber;
+    property Invoice: String read FInvoice write FInvoice;
   end;
 
 implementation
@@ -115,13 +106,6 @@ begin
   begin
     GridOpen;
   end;
-end;
-
-procedure TShipmentsBoxesT.SetTransporterNumber(const Value: String);
-begin
-  FTransporterNumber := Value;
-
-  GridOpen;
 end;
 
 procedure TShipmentsBoxesT.GridAfterLoad(Sender: TUniCustomDBGrid);
@@ -257,7 +241,6 @@ procedure TShipmentsBoxesT.GridColumnSummaryResult(Column: TUniDBGridColumn;
   GroupFieldValue: Variant; Attribs: TUniCellAttribs; var Result: string);
 var I: Real;
 begin
-  //logger.Info('GridColumnSummaryResult: ' + Column.FieldName);
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
     I:=Column.AuxValue;
@@ -423,6 +406,14 @@ begin
   end
 end;
 
+procedure TShipmentsBoxesT.GridDrawColumnCell(Sender: TObject; ACol,
+  ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+begin
+//x-grid-item-alt
+ /// logger.Info('ARow ' + ARow.ToString);
+ // logger.Info('Column ' + Column.FieldName);
+end;
+
 procedure TShipmentsBoxesT.GridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -442,6 +433,8 @@ begin
   try
     Query.Close();
     Query.ParamByName('TransporterNumber').AsString := FTransporterNumber;
+    Query.ParamByName('Invoice').AsString := FInvoice;
+
     Query.Open();
   finally
     HideMask();
@@ -464,6 +457,8 @@ begin
   GridExt.SortColumnCreate(Grid);
 
 //  Query.AddIndex('BoxNumberIx', 'BoxNumber', '', []);
+//with Grid.JSInterface do
+//    JSCall('getView().setConfig', [JSObject(['stripeRows', True])]);
 end;
 
 initialization

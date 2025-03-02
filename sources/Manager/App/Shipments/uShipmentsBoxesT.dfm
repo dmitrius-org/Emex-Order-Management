@@ -64,6 +64,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     Grouping.Collapsible = True
     LoadMask.Message = 'Loading data...'
     LayoutConfig.Cls = 'grid-box'
+    TrackOver = False
     Align = alClient
     TabOrder = 1
     Summary.Align = taTop
@@ -75,6 +76,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     OnColumnSort = GridColumnSort
     OnColumnMove = GridColumnMove
     OnCellContextClick = GridCellContextClick
+    OnDrawColumnCell = GridDrawColumnCell
     OnColumnResize = GridColumnResize
     OnColumnSummary = GridColumnSummary
     OnColumnSummaryResult = GridColumnSummaryResult
@@ -252,7 +254,8 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     UpdateOptions.CheckUpdatable = False
     SQL.Strings = (
       'exec ShipmentsTransporterSelect'
-      '       @TransporterNumber = :TransporterNumber      '
+      '       @TransporterNumber = :TransporterNumber     '
+      '      ,@Invoice           = :Invoice  '
       ''
       ' '
       ''
@@ -264,6 +267,12 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     ParamData = <
       item
         Name = 'TRANSPORTERNUMBER'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'INVOICE'
         DataType = ftString
         ParamType = ptInput
         Value = Null

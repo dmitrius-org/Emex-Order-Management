@@ -213,8 +213,6 @@ type
 
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
-    procedure FilterStatusCreate();
-    procedure FilterPriceLogoCreate();
     procedure FilterSupplierCreate();
 
     procedure ShipmentsTransporterNumberFCallBack(Sender: TComponent; AResult:Integer);
@@ -276,6 +274,7 @@ begin
   fShipmentsDate.DateTime := nulldate;
   fSupplier.Clear;
   edtTransporterNumber.Clear;
+
   GridOpen();
 end;
 
@@ -347,6 +346,7 @@ end;
 
 procedure TShipmentsT.actShipmentsBoxesExecute(Sender: TObject);
 begin
+  ShipmentsBoxesT_Wrapper.Invoice:=QueryInvoice.Value;
   ShipmentsBoxesT_Wrapper.TransporterNumber:=QueryTransporterNumber.Value;
   ShipmentsBoxesT_Wrapper.ShowModal;
 end;
@@ -402,17 +402,6 @@ begin
   fSupplier.Refresh;
 end;
 
-procedure TShipmentsT.FilterPriceLogoCreate;
-begin
-
-end;
-
-procedure TShipmentsT.FilterStatusCreate;
-begin
-
-end;
-
-
 procedure TShipmentsT.fSupplierSelect(Sender: TObject);
 var
   s: String;
@@ -452,8 +441,8 @@ begin
     else
       Query.MacroByName('Invoice').Value := '';
 
-    if edtTransporterNumber.Text <> '' then
-      Query.MacroByName('TransporterNumber').Value := ' and s.TransporterNumber like ''%'   + edtTransporterNumber.Text + '%'''
+    if Trim(edtTransporterNumber.Text) <> '' then
+      Query.MacroByName('TransporterNumber').Value := ' and s.TransporterNumber like ''%'   + Trim(edtTransporterNumber.Text) + '%'''
     else
       Query.MacroByName('TransporterNumber').Value := '';
 

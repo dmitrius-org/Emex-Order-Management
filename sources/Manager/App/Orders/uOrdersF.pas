@@ -232,16 +232,16 @@ type
     property IsCounter: Boolean read FIsCounter write FIsCounter;
 
     ///<summary>
-    ///  getPartRatingFromDB2 - получение данных по детали после изменения данных
+    ///  GetPartDataFromBase - получение данных по детали после изменения данных
     ///</summary>
-    procedure getPartRatingFromDB2();
+    procedure GetPartDataFromBase();
 
     procedure SetRating(ARating: integer);
 
     procedure SetEditDataRating(ARating: integer);
 
     /// <summary>
-    /// OrdersFinCalc - расчет цены, финансовых показаьелей
+    /// OrdersFinCalc - расчет цены, финансовых показателей
     /// </summary>
     procedure OrdersFinCalc();
 
@@ -363,14 +363,14 @@ end;
 procedure TOrderF.edtVolumeKGFChange(Sender: TObject);
 begin
   OrdersFinCalc();
-  getPartRatingFromDB2;
+  GetPartDataFromBase;
 end;
 
 procedure TOrderF.edtWeightKGFChange(Sender: TObject);
 begin
   WeightKGFStyle();
   OrdersFinCalc();
-  getPartRatingFromDB2();
+  GetPartDataFromBase();
 end;
 
 procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
@@ -379,7 +379,7 @@ begin
   if (Key = 13) then
   begin
     OrdersFinCalc();
-    getPartRatingFromDB2;
+    GetPartDataFromBase;
   end;
 end;
 
@@ -416,8 +416,9 @@ begin
   end;
 end;
 
-procedure TOrderF.getPartRatingFromDB2;
+procedure TOrderF.GetPartDataFromBase;
 var Price, js, r, HintText: string;
+    DeliveryTermFromSupplierProfile: Integer;
 begin
   logger.Info('getPartRatingFromDB2 begin');
   logger.Info('FDetailNumber ' + FDetailNumber);
@@ -434,10 +435,15 @@ begin
                  ,f.MarginF
                  ,f.IncomePrc
                  ,f.Profit
+                 ,s.Delivery as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
              from pFindByNumber p with (nolock index= ao3)
             inner join pOrdersFin f with (nolock index= ao1)
                     on f.spid = @@spid
                    and f.ID = p.ID
+            inner join tProfilesCustomer c (nolock)
+                    on c.ProfilesCustomerID = p.ProfilesCustomerID
+            inner join tSupplierDeliveryProfiles s
+                    on s.ProfilesDeliveryID = c.ProfilesDeliveryID
             where p.spid      = @@spid
               and p.Make      = :MakeLogo
               and p.DetailNum = :DetailNum
@@ -462,7 +468,7 @@ begin
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
 
     var DeliveryTermSupplier: Integer := sql.F('GuaranteedDay').AsInteger;
-
+    DeliveryTermFromSupplierProfile := sql.F('DeliveryTermFromSupplierProfile').AsInteger;
     var DeliveryTermFromCustomerProfile: Integer;
     DeliveryTermFromCustomerProfile :=
          IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
@@ -474,27 +480,27 @@ begin
     edtDelivery2.Text:= FPassedDayInWork.ToString + '+' +         // дней в обработке
                         DeliveryTermSupplier.ToString +'+' +     // Срок поставщика из API
                         FDeliveryDaysReserve.ToString+ '+' +      // Запас до вылета
-                        FDeliveryTermFromSupplierProfile.ToString + // Доставка
+                        DeliveryTermFromSupplierProfile.ToString + // Доставка
                         '=' +
                         (
                           FPassedDayInWork +               // дней в обработке
                           DeliveryTermSupplier+            // Срок поставщика из API
                           FDeliveryDaysReserve+            // Запас до вылета
-                          FDeliveryTermFromSupplierProfile // Доставка
+                          DeliveryTermFromSupplierProfile // Доставка
                         ).ToString +
 
                         '(' +
                         IfThen(FPassedDayInWork+
                                DeliveryTermSupplier+
                                FDeliveryDaysReserve+
-                               FDeliveryTermFromSupplierProfile-
+                               DeliveryTermFromSupplierProfile-
                                DeliveryTermFromCustomerProfile > 0, '+', '') +
 
                         (
                           FPassedDayInWork +                // дней в обработке
                           DeliveryTermSupplier+             // Срок поставщика из API
                           FDeliveryDaysReserve+             // Запас до вылета
-                          FDeliveryTermFromSupplierProfile- // Доставка
+                          DeliveryTermFromSupplierProfile- // Доставка
                           DeliveryTermFromCustomerProfile   // Срок клиента
                         ).ToString +
                         ')';
@@ -517,20 +523,20 @@ begin
     SetEditDeliveryStyle((FPassedDayInWork+
                           DeliveryTermSupplier+
                           FDeliveryDaysReserve+
-                          FDeliveryTermFromSupplierProfile-
+                          DeliveryTermFromSupplierProfile-
                           DeliveryTermFromCustomerProfile));
 
     // вплывающая подсказака
     HintText := HintText + FPassedDayInWork.ToString      + ' - дней до взятия в работу' + #10;
     HintText := HintText + DeliveryTermSupplier.ToString + ' - срок поставщика из прайса' + #10;
     HintText := HintText + FDeliveryDaysReserve.ToString  + ' - дней запаса до вылета' + #10;
-    HintText := HintText + FDeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
-    HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
+    HintText := HintText + DeliveryTermFromSupplierProfile.ToString + ' - доставка' + #10;
+    HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + DeliveryTermFromSupplierProfile).ToString + ' - срок доставки клиенту' + #10;
 
-    if FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
-      HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
+    if FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + DeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile < 0 then
+      HintText := HintText + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + DeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней в запасе'+ #10+#13
     else
-      HintText := HintText + '+' + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + FDeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
+      HintText := HintText + '+' + (FPassedDayInWork + DeliveryTermSupplier + FDeliveryDaysReserve + DeliveryTermFromSupplierProfile - FDeliveryTermFromCustomerProfile).ToString + ' - дней позже'+ #10+#13;
     HintText := HintText + DeliveryTermFromCustomerProfile.ToString + ' - cрок клиента';
 
     edtDelivery2.Hint := HintText;
@@ -759,7 +765,8 @@ end;
 procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
 begin
   OrdersFinCalc();
-  getPartRatingFromDB2;
+
+  GetPartDataFromBase;
 end;
 
 procedure TOrderF.cbPriceChange(Sender: TObject);
@@ -767,7 +774,7 @@ begin
   FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
   FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
-  getPartRatingFromDB2;
+  GetPartDataFromBase;
 end;
 
 procedure TOrderF.btnNumber2Click(Sender: TObject);
@@ -795,7 +802,6 @@ begin
            @OrderID  =:OrderID
           ,@WeightKGF=:Weight
           ,@VolumeKGF=:Volume
-
   ''',
   ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume' {, 'PriceLogo', 'WeightGr', 'VolumeAdd', 'MakeLogo'}],
   [cbDestinationLogo.Value.ToInteger,
@@ -816,7 +822,6 @@ begin
     case FAction of
       acUpdate:
       begin
-
         // если заказа в корзине, нужно его удалить
         if (FStatusID = 3)	{InBasket	В корзине}  and (ATargetStateID = 12) then
         begin
@@ -1131,7 +1136,7 @@ begin
     begin
       OrdersFinCalc();
 
-      getPartRatingFromDB2();
+      GetPartDataFromBase();
 
       UniTimer.Enabled := False;
     end;

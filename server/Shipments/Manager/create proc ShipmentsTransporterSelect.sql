@@ -6,7 +6,8 @@ drop proc if exists ShipmentsTransporterSelect
 */
 go
 create proc ShipmentsTransporterSelect
-              @TransporterNumber           varchar(64)
+              @TransporterNumber varchar(64)
+             ,@Invoice           varchar(64)
 as
   set nocount on;
   declare @r        int = 0
@@ -76,7 +77,7 @@ as
   select
          t.ShipmentsBoxesID           
         ,t.TransporterNumber          
-        ,t.Invoice                    
+        ,@Invoice --t.Invoice                    
         ,t.BoxNumber     
       
         ,t.SupplierPhysicalWeight        --
@@ -94,6 +95,9 @@ as
         ,1
     from tShipmentsBoxes t (nolock)
    where t.TransporterNumber = @TransporterNumber
+   --select * from tShipmentsBoxes
+
+   
  -- t.BoxNumber  in  (101376929, 101376932, 101376934)
   insert #r
         (N
@@ -144,8 +148,9 @@ as
         ,o.CustomerSubId 
         ,2
     from #r r with (nolock)
-   inner join tOrders o with (nolock index=ao4)
-           on o.box = r.BoxNumber
+   inner join tOrders o with (nolock index=ao3)
+           on o.Invoice = r.Invoice
+          and o.box = r.BoxNumber          
    inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = o.ClientID
     left join tMakes b with (nolock index=ao2) -- брент замены
@@ -169,7 +174,7 @@ as
           r.N
          ,r.ShipmentsBoxesID
          ,r.TransporterNumber
-         --,r.Invoice
+         ,r.Invoice
          ,r.BoxNumber--Коробка	
          ,r.ClientName--Клиент	
          ,r.Manufacturer--Производитель	
@@ -210,8 +215,8 @@ as
 go
 grant exec on ShipmentsTransporterSelect to public
 go
-exec setOV 'ShipmentsTransporterSelect', 'P', '20250213', '0'
+exec setOV 'ShipmentsTransporterSelect', 'P', '20250301', '1'
 go
 
-exec ShipmentsTransporterSelect @TransporterNumber= ''
+exec ShipmentsTransporterSelect @TransporterNumber= 'QBOW202C', @Invoice = '249567'
  

@@ -425,7 +425,7 @@ object ShipmentsT: TShipmentsT
         LayoutConfig.Width = '0'
         TabOrder = 1
         object fCancel: TUniBitBtn
-          Left = 630
+          Left = 773
           Top = 35
           Width = 128
           Height = 24
@@ -435,7 +435,7 @@ object ShipmentsT: TShipmentsT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 764
+          Left = 630
           Top = 35
           Width = 137
           Height = 24

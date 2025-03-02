@@ -12,10 +12,13 @@ type
     procedure UniFormShow(Sender: TObject);
   private
     FTransporterNumber: String;
+    FInvoice: String;
     { Private declarations }
   public
     { Public declarations }
     property TransporterNumber: String read FTransporterNumber write FTransporterNumber;
+    property Invoice: String read FInvoice write FInvoice;
+
   end;
 
 function ShipmentsBoxesT_Wrapper: TShipmentsBoxesT_Wrapper;
@@ -37,7 +40,10 @@ var Boxes: TShipmentsBoxesT;
 begin
    Boxes:= TShipmentsBoxesT.Create(self);
    Boxes.Parent := self;
+   Boxes.Invoice := FInvoice;
    Boxes.TransporterNumber := FTransporterNumber;
+
+   Boxes.GridOpen;
 end;
 
 end.
