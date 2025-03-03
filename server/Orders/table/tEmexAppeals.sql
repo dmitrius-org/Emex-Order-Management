@@ -21,8 +21,9 @@ begin
     --,DetailID              varchar(32)    -- ID Детали
     --,Reference             varchar(32)    -- Reference
     --,Quantity              int            -- Количество деталей    
-    ,StatusID              int              -- Cтатус обращения в emex:0 - открыто, 1 - в ожидании, 2 - закрыто
+    ,StatusID              int              -- Cтатус обращения в emex: 0 - открыто, 1 - в ожидании, 2 - закрыто
     ,Number                varchar(32)    -- Номер обращения в emex
+    ,Message               varchar(max)
     ,InDateTime            datetime       -- Дата протокола с временем
     ,UpdDateTime           datetime       -- Дата последнего обновления протокола с временем
      --

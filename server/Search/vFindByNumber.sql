@@ -55,7 +55,7 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
   left join tSettings st with (nolock index=ao2)
          on st.Brief = 'PercentSupped'
  where p.Spid        = @@spid
-   and p.Flag&2=0  -- 2=No longer available Более недоступно
+   and p.Flag&2 = 0  -- 2=No longer available Более недоступно
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
    and not exists (select 1

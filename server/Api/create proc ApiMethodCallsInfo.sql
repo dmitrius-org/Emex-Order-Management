@@ -10,8 +10,8 @@ as
   declare @r int
 
   select @R         = 0
-
-  MERGE INTO tApiMethodCalls AS target
+  
+  MERGE INTO tApiMethodCalls WITH (HOLDLOCK) AS target
   USING (SELECT @ClientID   AS ClientID, 
                 @MethodName AS MethodName) AS source
      ON target.ClientID = source.ClientID 
@@ -26,7 +26,24 @@ as
   --  FROM tApiMethodCalls (nolock)
   -- WHERE ClientID = @ClientID 
   --   AND MethodName = @MethodName;
-  WAITFOR DELAY '00:00:5'
+ -- BEGIN TRANSACTION;
+    -- Попытка обновления существующей записи
+    --UPDATE tApiMethodCalls WITH (ROWLOCK)
+    --   SET CallCount = CallCount + 1
+    -- WHERE ClientID = @ClientID
+    --   AND MethodName = @MethodName;
+
+    ---- Если запись не была обновлена (не существует), выполняем вставку
+    --IF @@ROWCOUNT = 0
+    --BEGIN
+    --    INSERT INTO tApiMethodCalls WITH (ROWLOCK)
+    --           (ClientID, MethodName, CallCount)
+    --    VALUES (@ClientID, @MethodName, 1);
+    --END
+
+ -- WAITFOR DELAY '00:00:5'
+  
+   -- COMMIT TRANSACTION;
 exit_:
 return @r
 go

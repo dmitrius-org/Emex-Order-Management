@@ -24,25 +24,25 @@ GuaranteedDay – гарантированный срок поставки де�
 -------------------------------------------------------- */
 create proc FindByNumberInsert
                @ClientID                numeric(18, 0)
-              ,@Available               nvarchar(128) 
-              ,@bitOldNum               bit           
-              ,@PercentSupped           int           
-              ,@PriceId                 int           
-              ,@Region                  nvarchar(256) 
-              ,@Delivery                int           
-              ,@Make                    nvarchar(10)  
-              ,@DetailNum               nvarchar(64)  
-              ,@PriceLogo               nvarchar(64)  
-              ,@Price                   money               
-              ,@PartNameRus             nvarchar(256) 
-              ,@PartNameEng             nvarchar(256) 
-              ,@WeightGr                money         
-              ,@MakeName                nvarchar(64)  
-              ,@Packing                 int           
-              ,@bitECO                  bit           
-              ,@bitWeightMeasured       bit           
-              ,@VolumeAdd               money         
-              ,@GuaranteedDay           nvarchar(64)        
+              ,@Available               nvarchar(128) = null
+              ,@bitOldNum               bit           = null
+              ,@PercentSupped           int           = null
+              ,@PriceId                 int           = null
+              ,@Region                  nvarchar(256) = null
+              ,@Delivery                int           = null
+              ,@Make                    nvarchar(10)  = null
+              ,@DetailNum               nvarchar(64)  = null
+              ,@PriceLogo               nvarchar(64)  = null
+              ,@Price                   money         = null      
+              ,@PartNameRus             nvarchar(256) = null
+              ,@PartNameEng             nvarchar(256) = null
+              ,@WeightGr                money         = null
+              ,@MakeName                nvarchar(64)  = null
+              ,@Packing                 int           = null
+              ,@bitECO                  bit           = null
+              ,@bitWeightMeasured       bit           = null
+              ,@VolumeAdd               money         = null
+              ,@GuaranteedDay           nvarchar(64)  = null      
 as
 set nocount on;
 
@@ -88,7 +88,7 @@ select  @@Spid
        ,@Price  
        ,@PartNameRus      
        ,@PartNameEng      
-       ,@WeightGr / 1000         
+       ,isnull(@WeightGr, 0) / 1000         
        ,@MakeName         
        ,@Packing   
        ,@VolumeAdd        
