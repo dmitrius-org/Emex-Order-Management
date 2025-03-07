@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Manager.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -145,8 +145,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Build>13</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.13;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.6;Comments=</VerInfo_Keys>
+        <VerInfo_Build>14</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.14;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.6;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <ItemGroup>
@@ -266,8 +266,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>OrderF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Suppliers\uSuppliersT.pas">
-            <Form>SuppliersT</Form>
+        <DCCReference Include="App\Common\BaseForm\uBaseT.pas">
+            <Form>BaseT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Orders\uOrdersT.pas">
@@ -503,6 +503,17 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>OrdersProtocol_T</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\Common\uUniADCheckComboBoxHelper.pas"/>
+        <DCCReference Include="App\Suppliers\uSuppliersT.pas">
+            <Form>SuppliersT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Exceptions\uExceptionsT.pas">
+            <Form>ExceptionsT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">

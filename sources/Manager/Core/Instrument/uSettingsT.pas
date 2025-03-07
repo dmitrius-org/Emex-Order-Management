@@ -22,12 +22,12 @@ type
     actEdit: TAction;
     actRefreshAll: TAction;
     QuerySettingsID: TFMTBCDField;
-    QueryBrief: TWideStringField;
-    QueryName: TWideStringField;
-    QueryComment: TWideStringField;
-    QueryVal: TWideStringField;
     QuerySettingType: TIntegerField;
     UpdateSQL: TFDUpdateSQL;
+    QueryBrief: TStringField;
+    QueryComment: TStringField;
+    QueryName: TStringField;
+    Queryval: TStringField;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

@@ -91,19 +91,22 @@ as
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
  where p.Spid   = @@SPID
-   
+  
 
  Update o
-    set 
-	    o.flag            = case
-                              when p.WarnCode = -1 then isnull (o.flag, 0) | 1       -- превышение цены
-                              when p.WarnCode = -2 then isnull (o.flag, 0) | 2       -- нет цены
-                              when p.WarnCode = -4 then isnull (o.flag, 0) | 16384   -- Несоответствие упаковке
-                              when p.WarnCode = -5 then isnull (o.flag, 0) | 32768   -- Нет в наличии
-                              when p.WarnCode = 99 then isnull (o.flag, 0) | 262144  -- Измените метод отправки
-                              
-	                          else o.flag
-	                        end
+    set o.flag = o.Flag & ~1      -- превышение цены
+                        & ~2      --нет цены
+                        & ~16384  -- Несоответствие упаковке
+                        & ~32768  -- Нет в наличии
+                        & ~262144 -- Измените метод отправки         
+                        |case
+                          when p.WarnCode = -1 then 1       -- превышение цены
+                          when p.WarnCode = -2 then 2       -- нет цены
+                          when p.WarnCode = -4 then 16384   -- Несоответствие упаковке
+                          when p.WarnCode = -5 then 32768   -- Нет в наличии
+                          when p.WarnCode = 99 then 262144  -- Измените метод отправки
+	                      else 0
+	                    end
        ,o.updDatetime = GetDate()
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
@@ -142,6 +145,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20241119', '4'
+exec setOV 'BasketStateSync', 'P', '20250305', '4'
 go
  

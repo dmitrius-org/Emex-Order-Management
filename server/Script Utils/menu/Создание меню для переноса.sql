@@ -3,8 +3,8 @@ select 'insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select '
 from tmenu
 --where ParentID=30
 order by N 
-
-
+select * from tmenu
+where ParentID=0
 --delete
 --  from tMenu  
 --where name in 

@@ -21,7 +21,7 @@ select @DateBegin = isnull(@DateBegin, '19000101')
   insert @Orders 
         (OrderID)
   SELECT distinct o.OrderID
-    FROM tOrders o WITH (NOLOCK INDEX = ao2)
+    FROM tOrders o WITH (NOLOCK)-- INDEX = ao2)
     LEFT JOIN @Clients c
            ON o.ClientID = c.ID
     -- поставщик из заказа
@@ -32,7 +32,7 @@ select @DateBegin = isnull(@DateBegin, '19000101')
            ON (@PricesFCan = 0 and pа.Name = o.PriceLogo )
            or (@PricesFCan = 1 and pа.Name <> o.PriceLogo)
    WHERE o.OrderDate BETWEEN @DateBegin AND @DateEnd
-    -- AND o.isCancel = 1
+     --AND o.isCancel = 1
      AND (NOT EXISTS (SELECT 1 FROM @Clients) OR c.ID IS NOT NULL)
      AND (NOT EXISTS (SELECT 1 FROM @Prices)  OR p.Name IS NOT NULL)
      AND (NOT EXISTS (SELECT 1 FROM @PricesF) OR pа.Name IS NOT NULL);
@@ -45,11 +45,15 @@ select
       ,Amount
       ,QuantityCancel
       ,AmountCancel
-      ,case
-         when QuantityCancel = 0 then 0.00
-         when Quantity > 0 and Quantity = QuantityCancel then 100.00
-         else ((QuantityCancel * 100.00 / Quantity)) 
-       end PrcCancel
+      ,QuantityCancelEmex
+      ,AmountCancelEmex
+      ,QuantityCancelManager
+      ,AmountCancelManger
+      ,round(cast(case
+                    when QuantityCancel = 0 then 0.00
+                    when Quantity > 0 and Quantity = QuantityCancel then 100.00
+                    else ((QuantityCancel * 100.00 / Quantity)) 
+                  end as float), 2) PrcCancel
  from (
       select 
              o.OrderDate
@@ -57,18 +61,37 @@ select
             ,sum(o.Amount)   Amount
             ,sum(case when o.isCancel = 1 then o.Quantity else 0 end)   QuantityCancel
             ,sum(case when o.isCancel = 1 then o.Amount else 0  end)    AmountCancel
+
+            ,sum(case when o.isCancel = 1 and p.UserID = 1 /* autotask */ then o.Quantity else 0 end)   QuantityCancelEmex
+            ,sum(case when o.isCancel = 1 and p.UserID = 1 /* autotask */ then o.Amount else 0  end)    AmountCancelEmex
+
+            ,sum(case when o.isCancel = 1 and p.UserID <> 1 /* autotask */ then o.Quantity else 0 end)   QuantityCancelManager
+            ,sum(case when o.isCancel = 1 and p.UserID <> 1 /* autotask */ then o.Amount else 0  end)    AmountCancelManger
+
+
         from @Orders os
        inner join tOrders o with (nolock index=ao1)
-               on o.OrderID = os.OrderID  
+               on o.OrderID = os.OrderID 
+               
+       outer apply (select top 1 p.UserID
+                      from tProtocol p (nolock)
+                     inner join tNodes n (nolock)
+                             on n.NodeID = p.NewStateID
+                            and n.SearchBrief = 'Отказ'
+                     where p.ObjectID = o.OrderID
+                     order by p.ProtocolID desc
+                   ) as p
+
+      left join tUser u (nolock)
+              on u.UserID = p.UserID
        group by o.OrderDate
       ) as o
-order by o.OrderDate desc
+order by o.OrderDate
 
 
 go
 grant exec on StatisticCancelledCalc to public
 go
-exec setOV 'StatisticCancelledCalc', 'P', '20241121', '2'
+exec setOV 'StatisticCancelledCalc', 'P', '20250305', '3'
 go
  
-exec StatisticCancelledCalc

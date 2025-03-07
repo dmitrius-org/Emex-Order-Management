@@ -67,6 +67,10 @@ as
                                inner join tOrders o (nolock)
                                        on o.ClientID = @ClientID
                                       and o.StatusID = n.NodeID
+                                      and (
+                                            (o.ClientID in (4, 9) and o.OrderDate >= '20250206')
+                                            or o.ClientID not in (4, 9)
+                                            ) 
                                where n.SearchID <> 8 
                               ), 0)
    where Spid     = @@Spid
@@ -78,6 +82,10 @@ as
                                inner join tOrders o (nolock)
                                        on o.ClientID = @ClientID
                                       and o.StatusID = n.NodeID
+                                      and (
+                                            (o.ClientID in (4, 9) and o.OrderDate >= '20250206')
+                                            or o.ClientID not in (4, 9)
+                                            ) 
                                where n.SearchID = p.StatusID
                               ), 0)
    from pBalanceTotal p (updlock)

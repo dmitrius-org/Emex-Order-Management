@@ -19,8 +19,8 @@ DELETE FROM #PartsUpdate
 ;WITH CTE AS (
     SELECT *,
            ROW_NUMBER() OVER (PARTITION BY 
-               DetailNum, MakeLogo, Brand, DetailName, WeightKG, VolumeKG, Restrictions, Fragile, NLA,
-               /*DetailNumOld, MakeLogoOld, BrandOld,*/ DetailNameOld, WeightKGOld, VolumeKGOld, RestrictionsOld, FragileOld, NLAOld
+               DetailNum, MakeLogo, Brand--, DetailName, WeightKG, VolumeKG, Restrictions, Fragile, NLA,
+               /*DetailNumOld, MakeLogoOld, BrandOld, DetailNameOld, WeightKGOld, VolumeKGOld, RestrictionsOld, FragileOld, NLAOld*/
                ORDER BY (SELECT NULL)) AS rn
     FROM #PartsUpdate
 )

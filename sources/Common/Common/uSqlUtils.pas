@@ -55,7 +55,7 @@ Type
     /// <summary>
     /// GetSetting - получение значния настройки
     /// </summary>
-    function GetSetting(ASetting: String): Variant; overload;
+    function GetSetting(ASetting: String): String; overload;
     function GetSetting(ASetting: String; ADefValue: String): String; overload;
     function GetSetting(ASetting: String; ADefValue: Double): Double; overload;
     function GetSetting(ASetting: String; ADefValue: Boolean): Boolean; overload;
@@ -70,7 +70,7 @@ implementation
 
 { TSql }
 
-function TSql.GetSetting(ASetting: String): Variant;
+function TSql.GetSetting(ASetting: String): String;
 var Query: TFDQuery;
 begin
   Query :=TFDQuery.Create(nil);
@@ -79,9 +79,14 @@ begin
   Try
     Query.Connection := FConnection;
     Query.Close;
-    Query.SQL.Text:= 'SELECT isnull((SELECT Val FROM [tSettings] (Nolock) WHERE Brief = :ASetting), '''') as val';
+    Query.SQL.Text:= '''
+      SELECT isnull((SELECT top 1 ltrim(rtrim(Val))
+                       FROM [tSettings] with (Nolock index=ao2)
+                      WHERE Brief = :ASetting), '') as val
+    ''';
     Query.ParamByName('ASetting').Value := ASetting;
     Query.Open();
+
     result:= Query.FieldByName('Val').Value;
     Query.Close;
   Finally
@@ -101,6 +106,20 @@ var v: Variant;
 begin
   v := GetSetting(ASetting);
   result:= VarToBoolDef(v, ADefValue);
+end;
+
+function TSql.GetSetting(ASetting: String; ADefValue: Integer): Integer;
+var v: Variant;
+begin
+  v := GetSetting(ASetting);
+  result:= VarToIntDef(v, ADefValue);
+end;
+
+function TSql.GetSetting(ASetting, ADefValue: String): String;
+var v: Variant;
+begin
+  v := GetSetting(ASetting);
+  result:= VarToStrDef(v, ADefValue);
 end;
 
 function TSql.Q: TFDQuery;
@@ -226,20 +245,6 @@ begin
 
     FQuery.Connection :=FConnection;
   end;
-end;
-
-function TSql.GetSetting(ASetting: String; ADefValue: Integer): Integer;
-var v: Variant;
-begin
-  v := GetSetting(ASetting);
-  result:= VarToIntDef(v, ADefValue);
-end;
-
-function TSql.GetSetting(ASetting, ADefValue: String): String;
-var v: Variant;
-begin
-  v := GetSetting(ASetting);
-  result:= VarToStrDef(v, ADefValue);
 end;
 
 end.

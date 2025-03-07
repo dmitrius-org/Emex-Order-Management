@@ -123,8 +123,6 @@ uses
 procedure TProcExec.Call(MethodName: string);
 var m: TMethod;
 begin
-
-
   try
      m.Code := Self.MethodAddress(MethodName); //find method code
      m.Data := pointer(Self); //store pointer to object instance
@@ -193,7 +191,7 @@ procedure TProcExec.InsertPartToBasketByPartFromMark; var R: Integer;
 begin
   logger.Info('TProcExec.InsertPartToBasketByPartFromMark Begin ');
 
-  R := Emex.InsertPartToBasketByPart;
+  R := Emex.InsertPartToBasketByMarks;
   logger.Info('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString);
 
   if R > 0 then
@@ -203,7 +201,7 @@ begin
     Emex.SQl.Exec('exec BasketStateSync select 0');
 
     // Удаление деталей из корзины которые не смогли смапить с заказами на нашей стороне
-    Emex.InsertPartToBasketCancel();
+    Emex.InsertPartToBasketCancelByMarks();
   end;
 
   logger.Info('TProcExec.InsertPartToBasketByPartFromMark End ');
@@ -211,7 +209,7 @@ end;
 
 procedure TProcExec.InsertPartToBasketByPartRollBack;
 begin
-  Emex.InsertPartToBasketByPartDelete;
+  Emex.InsertPartToBasketRollbackByMarks;
 end;
 
 { TAccrual }

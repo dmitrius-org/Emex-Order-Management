@@ -121,6 +121,9 @@ SELECT o.[OrderID]
       ,p.NLA -- No longer available или Более недоступно
       ,o.OrderDetailSubId
 	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState
+      ,o.BasketId
+      ,o.Reference
+      ,o.CustomerSubID
   FROM vUserAccess ua 
 
  inner join tOrders o with (nolock index=ao2)
@@ -185,7 +188,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250227', '19'
+exec setOV 'vOrders', 'V', '20250305', '21'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

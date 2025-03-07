@@ -6,24 +6,24 @@ begin
 	create table tNodes
 	(
 	 NodeID            numeric(18,0)  identity --  
-	,Brief             nvarchar(32)   not null --
-	,Name              nvarchar(64)   not null --
+	,Brief             nvarchar(32)   not null -- Сокращение
+	,Name              nvarchar(64)   not null -- Наименование
 	,Comment           nvarchar(512)  null     --
-	,Flag              int            default 0--
+	,Flag              int            default 0-- Дополнительные признаки
 	,ColorID           nvarchar(32)   null     -- 
 	,Type              int -- 0 - состояние 
 						   -- 1 - действие
-	,EID               int --  
-	,EBrief            nvarchar(32) --not null  --
-	,EName             nvarchar(64) --not null  --
+	,EID               int                      -- Идентификатор Emex 
+	,EBrief            nvarchar(32) --not null  -- Сокращение Emex
+	,EName             nvarchar(64) --not null  -- Наименование Emex
 
 	,SID               int --  
 	,SBrief            nvarchar(32) --not null  --
 	,SName             nvarchar(64) --not null  --
 
-    ,SearchID          int -- 
-    ,SearchBrief       nvarchar(32) --not null  --
-    ,SearchName        nvarchar(64) --not null  --
+    ,SearchID          int                      --            
+    ,SearchBrief       nvarchar(32) --not null  -- Сокращение для Search
+    ,SearchName        nvarchar(64) --not null  -- Наименование для Search
 
     ,N                 int -- используется для указания порядка вывода строки 
     );

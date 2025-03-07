@@ -1,8 +1,8 @@
-object SuppliersT: TSuppliersT
+object BaseT: TBaseT
   Left = 0
   Top = 0
-  Width = 1027
-  Height = 502
+  Width = 1163
+  Height = 399
   OnCreate = UniFrameCreate
   Layout = 'fit'
   LayoutConfig.Width = '0'
@@ -84,7 +84,7 @@ object SuppliersT: TSuppliersT
   object UniPanel: TUniPanel
     Left = 0
     Top = 0
-    Width = 1027
+    Width = 1163
     Height = 72
     Hint = ''
     Margins.Bottom = 0
@@ -102,58 +102,30 @@ object SuppliersT: TSuppliersT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    object ToolBar: TUniToolBar
-      Left = 0
-      Top = 0
-      Width = 1027
-      Height = 72
+    ExplicitWidth = 1027
+    object UniPanel3: TUniPanel
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 1157
+      Height = 71
       Hint = ''
       ShowHint = True
-      ButtonHeight = 60
-      ButtonWidth = 90
-      Images = ImageList32
-      ShowCaptions = True
-      LayoutConfig.IgnorePosition = False
-      LayoutConfig.DockWhenAligned = False
-      Align = alClient
+      Align = alTop
       TabOrder = 1
-      ParentColor = False
-      Color = clBtnFace
-      OverflowHandler = ohMenu
-      object UniToolButton1: TUniToolButton
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        ShowHint = True
-        Action = actAdd
-        ImageIndex = 1
-        TabOrder = 1
-      end
-      object UniToolButton2: TUniToolButton
-        AlignWithMargins = True
-        Left = 99
-        Top = 3
-        ShowHint = True
-        Action = actEdit
-        ImageIndex = 3
-        TabOrder = 2
-      end
-      object UniToolButton4: TUniToolButton
-        AlignWithMargins = True
-        Left = 195
-        Top = 3
-        ShowHint = True
-        Action = actDelete
-        ImageIndex = 0
-        TabOrder = 3
-      end
+      ShowCaption = False
+      Caption = 'UniPanel1'
+      LayoutAttribs.Align = 'top'
+      LayoutConfig.Width = '0'
+      LayoutConfig.Region = 'north'
+      ExplicitTop = 1
     end
   end
   object UniPanel2: TUniPanel
     Left = 0
     Top = 72
-    Width = 1027
-    Height = 430
+    Width = 1163
+    Height = 327
     Hint = ''
     ShowHint = True
     Align = alClient
@@ -166,15 +138,41 @@ object SuppliersT: TSuppliersT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
+    ExplicitWidth = 1027
+    ExplicitHeight = 430
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 1027
-      Height = 430
+      Width = 1163
+      Height = 327
       Hint = ''
       ShowHint = True
       BodyRTL = False
+      ClientEvents.ExtEvents.Strings = (
+        
+          'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
+          'mn.dataIndex >= 0) {'#13#10'    ajaxRequest(this, '#39'_columnhide'#39', ["col' +
+          'umn=" + column.dataIndex, "hidden=" + column.hidden]);'#13#10'  }'#13#10'}'
+        
+          'columnshow=function columnshow(ct, column, eOpts)'#13#10'{'#13#10'  ajaxRequ' +
+          'est(this, '#39'_columnshow'#39', ["column=" + column.dataIndex, "hidden=' +
+          '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
+        
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(10).hide(); '#13#10'  to' +
+          'olbar.items.getAt(9).hide(); '#13#10#13#10'  sender.addPlugin('#39'gridexporte' +
+          'r'#39');'#13#10'    '#13#10'  var exporterCfg = new Object({'#13#10'            type: ' +
+          '"xlsx",'#13#10'            mimeType: "application/vnd.openxmlformats-o' +
+          'fficedocument.spreadsheetml.sheet",'#13#10'            title: '#39#1048#1089#1090#1086#1088#1080#1103 +
+          ' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1080#39','#13#10'            fileName: "'#1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1076#1077 +
+          #1090#1072#1083#1080'.xlsx"'#13#10'        }); '#13#10#13#10'  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075 +
+          #1072#1094#1080#1080#13#10'  if (!toolbar.exportBtn) {'#13#10'     toolbar.exportBtn = tool' +
+          'bar.insert('#13#10'       0, '#13#10'       //{ xtype: '#39'tbseparator'#39' }'#13#10'    ' +
+          '   {xtype: '#39'button'#39', text: '#39#39', tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', ha' +
+          'ndler: function() {'#13#10'          sender.saveDocumentAs(exporterCfg' +
+          ');'#13#10'       }}'#13#10'     );'#13#10'     toolbar.exportBtn.setIconCls('#39'ToExc' +
+          'el'#39');// icon...     '#13#10'  }  '#13#10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -184,10 +182,8 @@ object SuppliersT: TSuppliersT
           'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
           't.body.removeChild(el);'#13#10'    };'#13#10'}'
         
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
       RowEditor = True
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
@@ -206,54 +202,13 @@ object SuppliersT: TSuppliersT
       ParentColor = False
       Color = clBtnFace
       OnKeyDown = GridKeyDown
+      OnAjaxEvent = GridAjaxEvent
+      OnColumnSort = GridColumnSort
+      OnColumnMove = GridColumnMove
       OnClearFilters = GridClearFilters
       OnCellContextClick = GridCellContextClick
+      OnColumnResize = GridColumnResize
       OnColumnFilter = GridColumnFilter
-      Columns = <
-        item
-          FieldName = 'SuppliersID'
-          Title.Alignment = taCenter
-          Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
-          Width = 134
-          ReadOnly = True
-        end
-        item
-          FieldName = 'Brief'
-          Title.Alignment = taCenter
-          Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-          Width = 718
-        end
-        item
-          FieldName = 'Name'
-          Title.Alignment = taCenter
-          Title.Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-          Width = 200
-          Visible = False
-        end
-        item
-          FieldName = 'UserID'
-          Title.Alignment = taCenter
-          Title.Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-          Width = 118
-          Visible = False
-          ReadOnly = True
-        end
-        item
-          FieldName = 'inDatetime'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-          Width = 208
-          Visible = False
-          ReadOnly = True
-        end
-        item
-          FieldName = 'updDatetime'
-          Title.Alignment = taCenter
-          Title.Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
-          Width = 208
-          Visible = False
-          ReadOnly = True
-        end>
     end
   end
   object Query: TFDQuery
@@ -271,58 +226,25 @@ object SuppliersT: TSuppliersT
     UpdateOptions.AutoIncFields = 'SuppliersID'
     UpdateObject = UpdateSQL
     SQL.Strings = (
-      'SELECT [SuppliersID]'
-      '      ,[Brief]'
-      '      ,[Name]'
-      '      ,[PriceName]'
-      '      ,[UserID]'
-      '      ,[inDatetime]'
-      '      ,[updDatetime]'
-      '  FROM [dbo].[tSuppliers] (nolock)')
+      ''
+      'DECLARE @Type as ID'
+      ' '
+      'if :Types <> '#39#39'    '
+      '  INSERT INTO @Type (ID)'
+      '  SELECT CAST(value AS NUMERIC(18, 0))'
+      '    FROM STRING_SPLIT(:Types, '#39','#39');'
+      '    '
+      '                        '
+      ' exec dbo.ExceptionsSelect            '
+      '            @Type = @Type  '
+      '')
     Left = 686
-    Top = 102
-    object QuerySuppliersID: TFMTBCDField
-      AutoGenerateValue = arAutoInc
-      FieldName = 'SuppliersID'
-      Origin = 'SuppliersID'
-      ProviderFlags = [pfInWhere, pfInKey]
-      ReadOnly = True
-      Precision = 18
-      Size = 0
-    end
-    object QueryBrief: TWideStringField
-      FieldName = 'Brief'
-      Origin = 'Brief'
-      Required = True
-      Size = 256
-    end
-    object QueryName: TWideStringField
-      FieldName = 'Name'
-      Origin = 'Name'
-      Size = 512
-    end
-    object QueryPriceName: TWideStringField
-      FieldName = 'PriceName'
-      Origin = 'PriceName'
-      Size = 32
-    end
-    object QueryUserID: TFMTBCDField
-      FieldName = 'UserID'
-      Origin = 'UserID'
-      ReadOnly = True
-      Precision = 18
-      Size = 0
-    end
-    object QueryinDatetime: TSQLTimeStampField
-      FieldName = 'inDatetime'
-      Origin = 'inDatetime'
-      ReadOnly = True
-    end
-    object QueryupdDatetime: TSQLTimeStampField
-      FieldName = 'updDatetime'
-      Origin = 'updDatetime'
-      ReadOnly = True
-    end
+    Top = 118
+    ParamData = <
+      item
+        Name = 'TYPES'
+        ParamType = ptInput
+      end>
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1405,23 +1327,20 @@ object SuppliersT: TSuppliersT
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 1
-      OnExecute = actAddExecute
     end
     object actEdit: TAction
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 3
-      OnExecute = actEditExecute
     end
     object actDelete: TAction
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 0
-      OnExecute = actDeleteExecute
     end
     object actRefreshAll: TAction
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
-      Hint = #1055#1086#1083#1085#1086#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1090#1072#1073#1083#1080#1094#1099
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
       OnExecute = actRefreshAllExecute
     end
   end
@@ -1722,107 +1641,7 @@ object SuppliersT: TSuppliersT
   end
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
-    InsertSQL.Strings = (
-      '/*'
-      'declare @R numeric(18, 0)'
-      ''
-      'if exists (select 1'
-      '             from tSuppliers (nolock)'
-      '            where Brief     = :NEW_Brief'
-      '              and PriceName = :NEW_PriceName)'
-      'begin'
-      
-        '   select @r = 200 --'#39#1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1089' '#1079#1072#1076#1072#1085#1085#1099#1084' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1072#1081#1089 +
-        #1086#1084' '#1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39
-      'end'
-      ''
-      'if @R > 0'
-      'begin'
-      ' declare @M nvarchar(1024)'
-      ' set @M = dbo.GetRetMsg(@R)'
-      ''
-      ' RAISERROR (@M, 16, 1); '
-      'end'
-      ''
-      ''
-      ''
-      ''
-      'INSERT INTO tSuppliers'
-      '       (Brief, Name, PriceName)'
-      'VALUES (:NEW_Brief, :NEW_Name, :NEW_PriceName);'
-      ''
-      'SELECT SCOPE_IDENTITY() AS SuppliersID'
-      '--*/')
-    ModifySQL.Strings = (
-      '/*'
-      'declare @R numeric(18, 0)'
-      ''
-      'if exists (select 1'
-      '             from tSuppliers (nolock)'
-      '            where SuppliersID <> :OLD_SuppliersID'
-      '              and Brief        = :NEW_Brief'
-      '              and PriceName    = :NEW_PriceName)'
-      'begin'
-      
-        '   select @r = 200 --'#39#1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1089' '#1079#1072#1076#1072#1085#1085#1099#1084' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1072#1081#1089 +
-        #1086#1084' '#1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39
-      'end'
-      ''
-      'if @R > 0'
-      'begin'
-      ' declare @M nvarchar(1024)'
-      ' set @M = dbo.GetRetMsg(@R)'
-      ''
-      ' RAISERROR (@M, 16, 1); '
-      'end'
-      ''
-      ''
-      'UPDATE tSuppliers'
-      '   SET Brief       = :NEW_Brief, '
-      '       Name        = :NEW_Name, '
-      '       PriceName   = :NEW_PriceName, '
-      '       updDatetime = getDate()'
-      ' WHERE SuppliersID = :OLD_SuppliersID;'
-      ' '
-      'SELECT SuppliersID'
-      '  FROM tSuppliers (nolock)'
-      ' WHERE SuppliersID = :SuppliersID'
-      '---*/')
-    DeleteSQL.Strings = (
-      '/*'
-      'declare @R numeric(18, 0)'
-      ''
-      'if exists (select 1'
-      '             from tSuppliers (nolock)'
-      '            where SuppliersID <> :OLD_SuppliersID'
-      '              and Brief        = :NEW_Brief'
-      '              and PriceName    = :NEW_PriceName)'
-      'begin'
-      
-        '   select @r = 7 --'#39#1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1089' '#1079#1072#1076#1072#1085#1085#1099#1084' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1072#1081#1089#1086#1084 +
-        ' '#1089#1091#1097#1077#1089#1090#1074#1091#1077#1090'!'#39
-      'end'
-      ''
-      'if @R > 0'
-      'begin'
-      ' declare @M nvarchar(1024)'
-      ' set @M = dbo.GetRetMsg(@R)'
-      ''
-      ' RAISERROR (@M, 16, 1); '
-      'end'
-      ''
-      ''
-      ''
-      'DELETE FROM dbo.tSuppliers'
-      ' WHERE SuppliersID = :OLD_SuppliersID'
-      '--*/')
-    FetchRowSQL.Strings = (
-      
-        'SELECT SuppliersID, Brief, Name, PriceName, UserID, inDatetime, ' +
-        'updDatetime'
-      '  FROM dbo.tSuppliers (nolock)'
-      ' WHERE SuppliersID = :SuppliersID')
-    Left = 794
-    Top = 101
+    Left = 754
+    Top = 117
   end
 end

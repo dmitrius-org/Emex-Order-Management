@@ -54,7 +54,7 @@ uses
   uInstrumentActionT in 'Core\Instrument\uInstrumentActionT.pas' {InstrumentActionT: TUniFrame},
   uHome in 'App\uHome.pas' {HomeF: TUniFrame},
   uOrdersF in 'App\Orders\uOrdersF.pas' {OrderF: TUniForm},
-  uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
+  uBaseT in 'App\Common\BaseForm\uBaseT.pas' {BaseT: TUniFrame},
   uOrdersT in 'App\Orders\uOrdersT.pas' {OrdersT: TUniFrame},
   TimeIntervals in '..\Common\logger\TimeIntervals.pas',
   uLogger in '..\Common\logger\uLogger.pas',
@@ -130,7 +130,10 @@ uses
   uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas',
   uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
   uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame},
-  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm};
+  uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
+  uUniADCheckComboBoxHelper in '..\Common\Common\uUniADCheckComboBoxHelper.pas',
+  uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
+  uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame};
 
 {$R *.res}
 

@@ -53,11 +53,6 @@ uses System.SysUtils, System.Classes,
       procedure FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongInt = 0);
 
       /// <summary>
-      /// FillBasketDetails - Вспомогательная процедура для заполнения pBasketDetails данными корзины из emex
-      /// </summary>
-      procedure FillBasketDetails(ABasket: ArrayOfBasketDetails_v2; ASupplier: Integer = 0);
-
-      /// <summary>
       /// DeleteBasketDetails - Удаление детали из корзины
       /// </summary>
       procedure DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer = 0);
@@ -76,7 +71,7 @@ uses System.SysUtils, System.Classes,
       /// <summary>
       /// TestConnect - тестовый метод для проверки работоспособности сервисов emex.
       /// </summary>
-      /// <returns>Возвращает тестовую стоку с текущим временем</returns>
+      /// <returns>Возвращает тестовую строку с текущим временем</returns>
       function TestConnect(): string;
 
       /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
@@ -97,18 +92,26 @@ uses System.SysUtils, System.Classes,
       function getCustomerByClient(AClientID: Integer): Customer;
 
       /// <summary>
-      /// InsertPartToBasketByPart - Помещение запчастей в корзину
+      /// InsertPartToBasketByMarks - Помещение запчастей в корзину
       /// </summary>
       /// <returns> число строк, добавленных в корзину</returns>
-      function InsertPartToBasketByPart(): integer;
+      function InsertPartToBasketByMarks(): integer;
 
       /// <summary>
-      /// InsertPartToBasketByPartDelete -  Удаление запчастей из корзины. Вызывается при откате действия добавить в корзину.
+      /// InsertPartToBasketRollbackByMarks -  Удаление запчастей из корзины. Вызывается при откате действия добавить в корзину.
       /// </summary>
       /// <returns>Ошибки пишем в pAccrualAction</returns>
-      procedure InsertPartToBasketByPartDelete();
+      procedure InsertPartToBasketRollbackByMarks();
 
-      procedure InsertPartToBasketCancel();
+      /// <summary>
+      /// InsertPartToBasketCancelByMarks -  Удаление запчастей из корзины при ошибке добавления или при ошибках мапинга
+      /// </summary>
+      procedure InsertPartToBasketCancelByMarks();
+
+      /// <summary>GetBasketDetailsByMarks - получение корзины.
+      /// </summary>
+      /// <returns>Результат пишется в pBasketDetails</returns>
+      procedure GetBasketDetailsByMarks();
 
       /// <summary>
       /// DeleteFromBasketByBasketID - Удаление детали из корзины.
@@ -122,10 +125,17 @@ uses System.SysUtils, System.Classes,
       /// <param name="AOrderID">идентификатор заказа</param>
       function DeleteFromBasketByOrderID(AOrderID: Integer): integer;
 
-      /// <summary>GetBasketDetailsByMarks - получение корзины.
-      /// Результат пишется в pBasketDetails
+      /// <summary>
+      /// InsertFromBasketByOrderID -  Добавление детали в корзину по идентификатору заказа
       /// </summary>
-      procedure GetBasketDetailsByMarks();
+      /// <param name="AOrderID">идентификатор заказа</param>
+      function InsertFromBasketByOrderID(AOrderID: Integer): Int64;
+
+      /// <summary>
+      /// GetBasketDetailsByOrderID - получение корзины.
+      /// </summary>
+      /// <returns>Результат ArrayOfBasketDetails_v2</returns>
+      function GetBasketDetailsBySuppliersID(ASuppliersID: Integer):ArrayOfBasketDetails_v2;
 
       /// <summary>
       /// CreateOrder - создание заказа клиента по данным корзины. Заказ создается по всем позициям в корзине
@@ -154,6 +164,21 @@ uses System.SysUtils, System.Classes,
       /// <summary>MovementInWorkByMarks Просмотр движения по статусу 'В работе' </summary>
       /// <returns>Результат пишется в pMovement </returns
       procedure MovementInWorkByMarks();
+
+      /// <summary>
+      /// FillBasketDetails - Вспомогательная процедура для заполнения pBasketDetails данными корзины из emex
+      /// </summary>
+      procedure FillBasketDetails(ABasket: ArrayOfBasketDetails_v2; ASupplier: Integer = 0); overload;
+
+      /// <summary>
+      /// FillBasketDetails - Вспомогательная процедура для заполнения pBasketDetails данными корзины из emex
+      /// </summary>
+      procedure FillBasketDetails(ABasket: BasketDetails_v2; ASupplier: Integer = 0); overload;
+
+
+
+       /// <summary>UpdateBasketDetails- редактирование запчастей в корзине </summary>
+      //function UpdateBasketDetails(Apart: BasketDetails; ASupplier: Integer):string;
 
   end;
 
@@ -186,7 +211,7 @@ begin
   end;
 
   // Код языка, на котором будут возвращаться сообщения об ошибках - EN (по умолчанию) или RU
-  FLang := FSQl.GetSetting('EmexServiceSoapLang', 'EN');
+  FLang := FSQl.GetSetting('EmexServiceSoapLang', 'RU');
 
   FUrl := FSQl.GetSetting('EmexServiceSoapUrl');
 
@@ -232,18 +257,18 @@ begin
 
     FSQl.Exec('exec EmexCreateOrderBasketCheck', [], []);
     FQuery.Open(' select * '+
-             '   from pBasketDetails with (nolock index=ao1) '+
-             '  where Spid   = @@spid '+
-             '    and RetVal > 0      ');
+                '   from pBasketDetails with (nolock index=ao1) '+
+                '  where Spid   = @@spid '+
+                '    and RetVal > 0      ');
 
     if FQuery.RecordCount > 0 then
     begin
         DeleteBasketDetails(FQuery, Supplier.ToInteger);
 
         FSQl.Open(' select 1 '+
-                 '   from pBasketDetails with (nolock index=ao1) '+
-                 '  where Spid   = @@spid '+
-                 '    and RetVal = 537    ', [],[]);
+                  '   from pBasketDetails with (nolock index=ao1) '+
+                  '  where Spid   = @@spid '+
+                  '    and RetVal = 537    ', [],[]);
 
         if FSQl.Q.RecordCount > 0 then // если имеются ошибки удаления, то оста
         begin
@@ -364,7 +389,7 @@ end;
 
 function TEmex.DeleteFromBasketByOrderID(AOrderID: Integer): integer;
 var part: BasketDetails;
-    outBasket: ArrayOfBasketDetails;
+    InBasket: ArrayOfBasketDetails;
 begin
   logger.Info('TEmex.DeleteFromBasketByOrderID Begin');
   result:=0;
@@ -376,7 +401,7 @@ begin
 
   if FQuery.RecordCount > 0 then
   begin
-    SetLength(outBasket, 1);
+    SetLength(InBasket, 1);
 
     part:= BasketDetails.Create;
 
@@ -387,9 +412,9 @@ begin
       part.BasketId := FQuery.FieldByName('BasketId').AsLargeInt;
       part.Date_add:= TXSDateTime.Create;
 
-      outBasket[0]:= part;
+      InBasket[0]:= part;
 
-      result:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SuppliersID').AsLargeInt), outBasket);
+      result:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SuppliersID').AsLargeInt), InBasket);
 
       if result <> 1 then
       begin
@@ -518,7 +543,86 @@ begin
   Result :=FSQl;
 end;
 
-function TEmex.InsertPartToBasketByPart: integer;
+function TEmex.InsertFromBasketByOrderID(AOrderID: Integer): Int64;
+var part: partstobasket;
+    InBasket: ArrayOfPartstobasket;
+    OutBasket: ArrayOfBasketChangeResult;
+begin
+    logger.Info('TEmex.InsertPartToBasketByMarks Begin');
+    Result := 0;
+    begin
+      logger.Info('TEmex.InsertPartToBasketByMarks AOrderID: ' + AOrderID.ToString);
+      FQuery.Close;
+      FQuery.SQL.Text:='Select distinct * '+
+                       '  from vInsertPartToBasketByOrder '+
+                       ' where OrderID=:OrderID    ';
+      FQuery.ParamByName('OrderID').AsInteger := AOrderID;
+      FQuery.Open;
+
+      if FQuery.RecordCount > 0 then
+      begin
+        FQuery.First;
+
+        SetLength(inBasket, 1);
+
+        part := partstobasket.Create;
+        // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
+        part.Reference       := FQuery.FieldByName('Reference').AsString;
+        part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);  //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
+        part.UploadedPrice   := FQuery.FieldByName('PricePurchase').AsFloat;  //цена, заданная клиентом
+        part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
+        part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
+        part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
+        part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
+        part.MakeLogo        := FQuery.FieldByName('MakeLogo').AsString;;   // – лого бренда
+        part.DetailNum       := FQuery.FieldByName('DetailNumber').AsString;// – номер детали
+        part.PriceLogo       := FQuery.FieldByName('PriceLogo').AsString;   // – лого прайслиста
+        part.Quantity        := FQuery.FieldByName('Quantity').AsInteger;   // – количество
+        part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
+        part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
+        part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
+        part.CustomerSubId   := FQuery.FieldByName('CustomerSubID').Value;  // – идентификатор запчасти клиента
+        part.TransportPack   := '';    // – тип упаковки (WOOD – требуется деревянная обрешетка, CARTON := '' – отправка в картонной коробке)
+        part.DetailWeight    := FQuery.FieldByName('WeightKG').Value; //  – вес детали в кг
+        part.EmExWeight      := FQuery.FieldByName('WeightKG').Value; //  – последнее изменение веса датали, сделанное  на нашем складе
+        part.DestinationLogo := FQuery.FieldByName('DestinationLogo').AsString; // – тип отгрузки (EMEW – авиа, CNTE – контейнер)
+        part.CustomerStickerData:= '';
+
+        InBasket[0]:= part;
+
+        logger.Info('Emex.InsertPartToBasket_v2 Begin');
+
+        OutBasket:=Emex.InsertPartToBasket_v2(getCustomer( FQuery.FieldByName('SuppliersID').AsInteger ), InBasket,  FUrl);
+
+        if OutBasket[0].BasketId > 0 then
+        begin
+          Result := OutBasket[0].BasketId;
+
+          FSQL.exec('''
+            Update tOrders
+               set Warning = :Warning
+                  ,BasketId= :BasketId
+             where OrderID = :OrderID
+          ''',
+          ['OrderID',
+           'Warning',
+           'BasketId'],
+          [AOrderID,
+           OutBasket[0].WarnText,
+           Result]);
+
+          logger.Info('Emex.InsertPartToBasket_v2 End');
+          SetLength(InBasket, 0);
+        end;
+
+        FreeAndNil(part);
+      end;
+    end;
+
+    logger.Info('TEmex.InsertPartToBasketByMarks End');
+end;
+
+function TEmex.InsertPartToBasketByMarks: integer;
 var part: partstobasket;
     outBasket: ArrayOfPartstobasket;
     I, RCount, r:  Integer;
@@ -526,7 +630,7 @@ var part: partstobasket;
   Suppliers : TStringList;
     Supplier: string;
 begin
-    logger.Info('TEmex.InsertPartToBasketByPart Begin');
+    logger.Info('TEmex.InsertPartToBasketByMarks Begin');
     R :=0;
 
     // Получаем список поставщиков
@@ -535,7 +639,7 @@ begin
     // Цикл по поставщикам
     for Supplier in Suppliers do
     begin
-      logger.Info('TEmex.InsertPartToBasketByPart Supplier:' + Supplier);
+      logger.Info('TEmex.InsertPartToBasketByMarks Supplier:' + Supplier);
       FQuery.Close;
       FQuery.SQL.Text:='Select distinct * '+
                        '  from vInsertPartToBasketByPart p '+
@@ -547,7 +651,7 @@ begin
       if RCount > 0 then
       begin
         FQuery.First;
-        logger.Info('TEmex.InsertPartToBasketByPart RecordCount ' + FQuery.RecordCount.ToString);
+        logger.Info('TEmex.InsertPartToBasketByMarks RecordCount ' + FQuery.RecordCount.ToString);
 
         for I := 0 to FQuery.RecordCount - 1 do
         begin
@@ -607,17 +711,17 @@ begin
     FreeAndNil(Suppliers);
 
     Result := R;
-    logger.Info('TEmex.InsertPartToBasketByPart End');
+    logger.Info('TEmex.InsertPartToBasketByMarks End');
 end;
 
-procedure TEmex.InsertPartToBasketByPartDelete;
+procedure TEmex.InsertPartToBasketRollbackByMarks;
 var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
     OrderID: Integer;
     I, RCount, R: Integer;
     dat: TXSDateTime;
 begin
-  logger.Info('TEmex.InsertPartToBasketByPartDelete Begin');
+  logger.Info('TEmex.InsertPartToBasketRollbackByMarks Begin');
   try
 
     FQuery.Close;
@@ -650,7 +754,7 @@ begin
 
         outBasket[0]:= part;
 
-        logger.Info('TEmex.InsertPartToBasketByPartDelete DeleteFromBasket: ' +  part.BasketId.ToString);
+        logger.Info('TEmex.InsertPartToBasketRollbackByMarks DeleteFromBasket: ' +  part.BasketId.ToString);
 
         R:=Emex.DeleteFromBasket(getCustomerByClient(FQuery.FieldByName('ClientID').AsInteger), outBasket);
 
@@ -666,8 +770,8 @@ begin
         end
         else
         begin
-          logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Количество удаленных товаров: ' +  R.ToString);
-          logger.Info('TEmex.InsertPartToBasketByPartDelete 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
+          logger.Info('TEmex.InsertPartToBasketRollbackByMarks 505 Количество удаленных товаров: ' +  R.ToString);
+          logger.Info('TEmex.InsertPartToBasketRollbackByMarks 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
         end;
 
         FQuery.Next;
@@ -682,7 +786,7 @@ begin
 
       if Assigned(part) then part.Destroy;
 
-      logger.Info('TEmex.InsertPartToBasketByPartDelete error: ' + e.Message);
+      logger.Info('TEmex.InsertPartToBasketRollbackByMarks error: ' + e.Message);
 
       FSQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID=:OrderID',
               ['OrderID','Message'],[OrderID, e.Message]);
@@ -692,16 +796,16 @@ begin
     end;
   end;
 
-  logger.Info('TEmex.InsertPartToBasketByPartDelete End');
+  logger.Info('TEmex.InsertPartToBasketRollbackByMarks End');
 end;
 
-procedure TEmex.InsertPartToBasketCancel;
+procedure TEmex.InsertPartToBasketCancelByMarks;
 var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
     I, RCount, R: Integer;
     dat: TXSDateTime;
 begin
-  logger.Info('TEmex.InsertPartToBasketCancel Begin');
+  logger.Info('TEmex.InsertPartToBasketCancelByMarks Begin');
   try
 
     FQuery.Close;
@@ -732,13 +836,13 @@ begin
 
         outBasket[0]:= part;
 
-        logger.Info('TEmex.InsertPartToBasketCancel DeleteFromBasket: ' + part.BasketId.ToString);
+        logger.Info('TEmex.InsertPartToBasketCancelByMarksInsertPartToBasketCancel DeleteFromBasket: ' + part.BasketId.ToString);
 
         R:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SupplierID').AsInteger), outBasket);
 
         if R <> 1 then
         begin
-          logger.Info('TEmex.InsertPartToBasketCancel Количество удаленных товаров: ' +  R.ToString);
+          logger.Info('TEmex.InsertPartToBasketCancelByMarks Количество удаленных товаров: ' +  R.ToString);
         end;
 
         FQuery.Next;
@@ -751,11 +855,11 @@ begin
     begin
       if Assigned(part) then part.Destroy;
 
-      logger.Info('TEmex.InsertPartToBasketCancel Error: ' + e.Message);
+      logger.Info('TEmex.InsertPartToBasketCancelByMarks Error: ' + e.Message);
     end;
   end;
 
-  logger.Info('TEmex.InsertPartToBasketCancel End');
+  logger.Info('TEmex.InsertPartToBasketCancelByMarks End');
 end;
 
 function TEmex.Login(AAccount: Integer): String;
@@ -777,65 +881,63 @@ end;
 
 procedure TEmex.FillBasketDetails(ABasket: ArrayOfBasketDetails_v2; ASupplier: Integer = 0);
 var I: Integer;
-    part    : BasketDetails_v2;
 begin
   FSQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
 
   for I := 0 to Length(ABasket)-1 do
     begin
-      part:= BasketDetails_v2.Create;
-      part:= ABasket[i];
-
-      FSQL.Exec('''
-                insert into pBasketDetails with (rowlock)
-                      (Spid, BasketId, MakeLogo, DetailNum, PriceLogo, Price, Quantity, Comments, DetailWeight, EmExWeight, DestinationLogo, UploadedPrice, CoeffMaxAgree, CustomerSubId, Reference, SupplierID
-                      ,WarnCode
-                      ,WarnText
-                      ,AvailableQuantity
-                       )
-                select @@spid, :BasketId,:MakeLogo,:DetailNum,:PriceLogo,:Price, :Quantity, :Comments, :DetailWeight, :EmExWeight, :DestinationLogo, :UploadedPrice, :CoeffMaxAgree, :CustomerSubId, :Reference, :SupplierID
-                      ,:WarnCode
-                      ,:WarnText
-                      ,:AvailableQuantity
-               ''',
-               ['BasketId','MakeLogo','DetailNum','PriceLogo','Price','Quantity', 'Comments', 'DetailWeight', 'EmExWeight', 'DestinationLogo', 'UploadedPrice', 'CoeffMaxAgree', 'CustomerSubId', 'Reference', 'SupplierID'
-               ,'WarnCode'
-               ,'WarnText'
-               ,'AvailableQuantity'],
-               [part.BasketId,
-                part.MakeLogo,
-                part.DetailNum,
-                part.PriceLogo,
-                part.Price,
-                part.Quantity,
-                part.Comments,
-                part.DetailWeight,
-                part.EmExWeight,
-                part.DestinationLogo,
-                part.UploadedPrice,
-                part.CoeffMaxAgree,
-                part.CustomerSubId,
-                part.Reference,
-                ASupplier,
-                part.WarnCode,
-                part.WarnText,
-                part.AvailableQuantity]
-               );
-
-      freeandnil(part);
+      FillBasketDetails(ABasket[i], ASupplier);
     end;
 end;
 
+procedure TEmex.FillBasketDetails(ABasket: BasketDetails_v2; ASupplier: Integer);
+begin
+  FSQL.Exec('''
+      insert into pBasketDetails with (rowlock)
+            (Spid, BasketId, MakeLogo, DetailNum, PriceLogo, Price, Quantity, Comments, DetailWeight, EmExWeight, DestinationLogo, UploadedPrice, CoeffMaxAgree, CustomerSubId, Reference, SupplierID
+            ,WarnCode
+            ,WarnText
+            ,AvailableQuantity
+             )
+      select @@spid, :BasketId,:MakeLogo,:DetailNum,:PriceLogo,:Price, :Quantity, :Comments, :DetailWeight, :EmExWeight, :DestinationLogo, :UploadedPrice, :CoeffMaxAgree, :CustomerSubId, :Reference, :SupplierID
+            ,:WarnCode
+            ,:WarnText
+            ,:AvailableQuantity
+     ''',
+     ['BasketId','MakeLogo','DetailNum','PriceLogo','Price','Quantity',
+     'Comments', 'DetailWeight', 'EmExWeight', 'DestinationLogo',
+     'UploadedPrice', 'CoeffMaxAgree', 'CustomerSubId', 'Reference',
+     'SupplierID'
+     ,'WarnCode'
+     ,'WarnText'
+     ,'AvailableQuantity'],
+     [ABasket.BasketId,
+      ABasket.MakeLogo,
+      ABasket.DetailNum,
+      ABasket.PriceLogo,
+      ABasket.Price,
+      ABasket.Quantity,
+      ABasket.Comments,
+      ABasket.DetailWeight,
+      ABasket.EmExWeight,
+      ABasket.DestinationLogo,
+      ABasket.UploadedPrice,
+      ABasket.CoeffMaxAgree,
+      ABasket.CustomerSubId,
+      ABasket.Reference,
+      ASupplier,
+      ABasket.WarnCode,
+      ABasket.WarnText,
+      ABasket.AvailableQuantity]
+     );
+end;
+
 procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongInt = 0);
-var part: FindByNumber;
-    I: Integer;
+var I: Integer;
 begin
   FSQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
-    part:= FindByNumber.Create;
-    part :=  APparts[i];
-
     FSQL.Exec('''
                 exec FindByNumberInsert
                       @ClientID           = :ClientID
@@ -859,9 +961,7 @@ begin
                      ,@VolumeAdd          = :VolumeAdd
                      ,@GuaranteedDay      = :GuaranteedDay
               ''',
-
-             [
-              'ClientID',
+             ['ClientID',
               'Available',
               'bitOldNum',
               'PercentSupped',
@@ -880,33 +980,29 @@ begin
               'VolumeAdd',
               'GuaranteedDay',
               'bitECO',
-              'bitWeightMeasured'
-              ],
+              'bitWeightMeasured'],
 
-             [
-              AClientID,
-              part.Available,
-              part.bitOldNum,
-              part.PercentSupped,
-              part.PriceId,
-              part.Region,
-              part.Delivery,
-              part.Make,
-              part.DetailNum,
-              part.PriceLogo,
-              part.Price,
-              part.PartNameRus,
-              part.PartNameEng,
-              part.WeightGr,
-              part.MakeName,
-              part.Packing,
-              part.VolumeAdd,
-              part.GuaranteedDay,
-              part.bitECO,
-              part.bitWeightMeasured
+             [AClientID,
+              APparts[i].Available,
+              APparts[i].bitOldNum,
+              APparts[i].PercentSupped,
+              APparts[i].PriceId,
+              APparts[i].Region,
+              APparts[i].Delivery,
+              APparts[i].Make,
+              APparts[i].DetailNum,
+              APparts[i].PriceLogo,
+              APparts[i].Price,
+              APparts[i].PartNameRus,
+              APparts[i].PartNameEng,
+              APparts[i].WeightGr,
+              APparts[i].MakeName,
+              APparts[i].Packing,
+              APparts[i].VolumeAdd,
+              APparts[i].GuaranteedDay,
+              APparts[i].bitECO,
+              APparts[i].bitWeightMeasured
               ]);
-
-    freeandnil(part);
   end;
 end;
 
@@ -1066,15 +1162,11 @@ end;
 procedure TEmex.GetBasketDetailsByMarks;
 var Basket : ArrayOfBasketDetails_v2;
     part   : BasketDetails;
-          i: Integer;
 
   Suppliers: TStringList;
    Supplier: string;
-
 begin
-  logger.Info('TEmex.GetBasketDetails Begin');
-
-  FQuery.ExecSQL('delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [],[]);
+  logger.Info('TEmex.GetBasketDetailsByMarks Begin');
 
   // Получаем список поставщиков/личный кабинет emex
   Suppliers := ForSupplier();
@@ -1088,12 +1180,43 @@ begin
     freeandnil(Suppliers);
   end;
 
-  logger.Info('TEmex.GetBasketDetails End');
+  logger.Info('TEmex.GetBasketDetailsByMarks End');
+end;
+
+Function TEmex.GetBasketDetailsBySuppliersID(ASuppliersID: Integer):ArrayOfBasketDetails_v2;
+begin
+  logger.Info('TEmex.GetBasketDetailsBySuppliersID Begin');
+
+  Result:=Emex.GetBasketDetails_v2(getCustomer(ASuppliersID), FLang);
+
+  logger.Info('TEmex.GetBasketDetailsBySuppliersID End');
 end;
 
 function TEmex.TestConnect: string;
 begin
   result := Emex.TEST;
 end;
+//
+//function TEmex.UpdateBasketDetails(Apart: BasketDetails; ASupplier: Integer):string;
+//var inBasket: ArrayOfBasketDetails;
+//    outBasket: ArrayOfBasketChangeResult;
+//begin
+//  logger.Info('TEmex.UpdateBasketDetails Begin');
+//
+//  SetLength(inBasket, 1);
+//
+//  inBasket[0]:= Apart;
+//
+//  logger.Info('Emex.UpdateBasketDetails_v2 Begin');
+//  outBasket:=Emex.UpdateBasketDetails_v2(getCustomer(ASupplier), inBasket, FLang);
+//
+//  logger.Info('Emex.UpdateBasketDetails_v2 result');
+//  logger.Info(outBasket[0].BasketId.ToString);
+//  logger.Info(outBasket[0].WarnText);
+//
+//  Result:= outBasket[0].WarnText;
+//
+//  logger.Info('TEmex.UpdateBasketDetails End');
+//end;
 
 end.

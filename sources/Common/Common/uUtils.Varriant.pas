@@ -32,11 +32,11 @@ begin
   if VarType(vVar) in [varEmpty or varNull] then
     Result := Default
   else
-    try
-      Result := vVar;
-    except
-      Result := Default;
-    end;
+  try
+    Result := vVar;
+  except
+    Result := Default;
+  end;
 end;
 
 function VarToInt(vVar : Variant) : Integer;
@@ -49,11 +49,11 @@ begin
   if VarType(vVar) in [varEmpty or varNull] then
     Result := Default
   else
-    try
-      Result := vVar
-    except
-      Result := Default;
-    end;
+  try
+    Result := vVar
+  except
+    Result := Default;
+  end;
 end;
 
 function VarToDouble(vVar : Variant) : Double;

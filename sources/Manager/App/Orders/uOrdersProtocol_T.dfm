@@ -69,7 +69,6 @@ object OrdersProtocol_T: TOrdersProtocol_T
     LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
     LoadMask.Color = clActiveCaption
     EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093' ...'
-    ForceFit = True
     LayoutConfig.Height = '100'
     LayoutConfig.Width = '100'
     BorderStyle = ubsNone

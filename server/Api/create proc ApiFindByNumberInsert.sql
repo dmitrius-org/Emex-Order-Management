@@ -1,8 +1,8 @@
-if OBJECT_ID('FindByNumberInsert', 'P') is not null
-    drop proc FindByNumberInsert	 
+if OBJECT_ID('ApiFindByNumberInsert', 'P') is not null
+    drop proc ApiFindByNumberInsert	 
 go
 /* --------------------------------------------------------
-  FindByNumberInsert - добавление результата поиска в БД
+  ApiFindByNumberInsert - добавление результата поиска в БД
 
 Available     – наличие детали на складе
 bitOldNum     – признак УСТАРЕВШИЙ НОМЕР
@@ -22,36 +22,37 @@ Packing       – количество деталей в упаковке
 VolumeAdd     – наценка объем (объемный вес)
 GuaranteedDay – гарантированный срок поставки детали
 -------------------------------------------------------- */
-create proc FindByNumberInsert
+create proc ApiFindByNumberInsert
                @ClientID                numeric(18, 0)
-              ,@Available               nvarchar(128)
-              ,@bitOldNum               bit          
-              ,@PercentSupped           int          
-              ,@PriceId                 int          
-              ,@Region                  nvarchar(256)
-              ,@Delivery                int          
-              ,@Make                    nvarchar(10) 
-              ,@DetailNum               nvarchar(64) 
-              ,@PriceLogo               nvarchar(64) 
-              ,@Price                   money              
-              ,@PartNameRus             nvarchar(256)
-              ,@PartNameEng             nvarchar(256)
-              ,@WeightGr                money        
-              ,@MakeName                nvarchar(64) 
-              ,@Packing                 int          
-              ,@bitECO                  bit          
-              ,@bitWeightMeasured       bit          
-              ,@VolumeAdd               money        
-              ,@GuaranteedDay           nvarchar(64)       
+              ,@Available               nvarchar(128) = null
+              ,@bitOldNum               bit           = null
+              ,@PercentSupped           int           = null
+              ,@PriceId                 int           = null
+              ,@Region                  nvarchar(256) = null
+              ,@Delivery                int           = null
+              ,@Make                    nvarchar(10)  = null
+              ,@DetailNum               nvarchar(64)  = null
+              ,@PriceLogo               nvarchar(64)  = null
+              ,@Price                   money         = null      
+              ,@PartNameRus             nvarchar(256) = null
+              ,@PartNameEng             nvarchar(256) = null
+              ,@WeightGr                money         = null
+              ,@MakeName                nvarchar(64)  = null
+              ,@Packing                 int           = null
+              ,@bitECO                  bit           = null
+              ,@bitWeightMeasured       bit           = null
+              ,@VolumeAdd               money         = null
+              ,@GuaranteedDay           nvarchar(64)  = null      
 as
 set nocount on;
 
 declare @RetVal       int  = 0
 
-insert into pFindByNumber
+insert into pFindByNumber with (rowlock)
        (Spid, 
         ClientID, 
         DestinationLogo, 
+        ProfilesCustomerID,
         Available, 
         bitOldNum, 
         PercentSupped, 
@@ -75,7 +76,8 @@ insert into pFindByNumber
         )               
 select  @@Spid
        ,@ClientID 
-       ,null 
+       ,sd.DestinationLogo 
+       ,pc.ProfilesCustomerID
        ,@Available        
        ,@bitOldNum        
        ,@PercentSupped    
@@ -96,12 +98,22 @@ select  @@Spid
        ,@bitECO           
        ,@bitWeightMeasured
        ,0
+   from tProfilesCustomer pc (nolock)
+  inner join tSupplierDeliveryProfiles sd (nolock) 
+          on sd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+  where pc.ClientID = @ClientID
+    and pc.isActive = 1
+
+
+--exec SearchPriceCalc
+--       @ProfilesCustomerID=:ProfilesCustomerID,
+--       @DetailNum         =:DetailNum
        
 exit_:
 return @RetVal    
 go
-grant all on FindByNumberInsert to public
+grant exec on ApiFindByNumberInsert to public
 go
-exec setOV 'FindByNumberInsert', 'P', '20240605', '3'
+exec setOV 'ApiFindByNumberInsert', 'P', '20240605', '0'
 go
  

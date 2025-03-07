@@ -8,10 +8,10 @@ begin
 	(
 	 SettingsID        numeric(18,0)  identity -- Ид
 	,GroupID           numeric(18,0)
-	,Brief             nvarchar(64)   not null -- сокращение
-	,Name	           nvarchar(128)  not null -- Наименование
-	,Comment           nvarchar(256)  not null -- Комментарий
-	,Val               nvarchar(1024) not null -- Значение
+	,Brief             varchar(64)   not null -- сокращение
+	,Name	           varchar(128)  not null -- Наименование
+	,Comment           varchar(256)  not null -- Комментарий
+	,Val               varchar(1024) not null -- Значение
 	,SettingType       int                     -- Тип данных
 	)
 

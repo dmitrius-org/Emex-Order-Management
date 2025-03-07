@@ -119,3 +119,4 @@ insert tRetCode (RetCode, Message) select 701, 'Имеются позиции п
 insert tRetCode (RetCode, Message) select 702, 'Пожалуйста заполните поле "Описание"!'
 insert tRetCode (RetCode, Message) select 703, 'Пожалуйста заполните поле "Вес"!'
 insert tRetCode (RetCode, Message) select 704, 'Пожалуйста заполните поле "Объём"!'
+insert tRetCode (RetCode, Message) select 705, 'Деталь не найдена в корзине!'

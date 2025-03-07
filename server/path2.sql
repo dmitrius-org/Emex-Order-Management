@@ -1,65 +1,10 @@
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1028, 1028, 'Коробки',  'TShipmentsT.actShipmentsBoxes', 63, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1031, 1031, 'Проставить признак: Обращение открыто',  'TOrdersT.actRequestOpen', 20, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1033, 1033, 'Протокол детали',  'TOrdersT.actPartProtocol', 20, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1034, 1034, 'Уточнить срок поставки',  'TOrdersT.actSupplierSpecifyDeliveryTime', 20, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1035, 1035, 'Изменить пароль для входа в личный кабинет',  'TClientsT.actPasswordReset', 40, 1
---alter table tOrders add Box numeric(18, 0)
-
---alter table tSettings add Properties varchar(256)
-
---Update o
---   set o.box = SUBSTRING(p.Comment, CHARINDEX('box:', p.Comment) + LEN('box:'), LEN(p.Comment))
---from tOrders o
---inner join tProtocol p 
---       on p.ObjectID = o.OrderID
---      and p.NewStateID = 8 
-
-alter table tBasket add ProfilesCustomerID  numeric(18, 0)  
-alter table tOrders add ProfilesCustomerID  numeric(18, 0)  
-alter table pFindByNumber add ProfilesCustomerID  numeric(18, 0)  
-alter table tPrice add NLA  bit            -- No longer available или Более недоступно
-alter table History.tPartsHistory add NLA  bit     
-
-drop index ao1 on tSupplierDeliveryProfiles
-create index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
+alter table tBasket add ItemKey                 varchar(256)
 
 
-Update o
-set o.ProfilesCustomerID = null
-  from tOrders o
-
-Update o
-   set o.ProfilesCustomerID = pc.ProfilesCustomerID
-  from tOrders o
- inner join tProfilesCustomer pc 
-         on pc.ClientID = o.ClientID
-        and pc.ProfilesDeliveryID = o.ProfilesDeliveryID
-        and pc.ClientPriceLogo = o.CustomerPriceLogo
- where isnull(o.ProfilesCustomerID, 0)= 0
-
-Update o
-   set o.ProfilesCustomerID = pc.ProfilesCustomerID
-  from tOrders o
- inner join tProfilesCustomer pc 
-         on pc.ClientID = o.ClientID
-        and pc.ProfilesDeliveryID = o.ProfilesDeliveryID
- where isnull(o.ProfilesCustomerID, 0)= 0
+insert tMenu (MenuID, N, Caption, Name, Type, ParentID, Icon) select 102, 102, 'Исключения',                  'TExceptionsT',            0,   80, '22' 
 
 
-Update o
-   set o.ProfilesCustomerID = pc.ProfilesCustomerID
-  from tOrders o
- inner join tProfilesCustomer pc 
-         on pc.ProfilesDeliveryID = o.ProfilesDeliveryID
- where isnull(o.ProfilesCustomerID, 0)= 0
-
-
- --Select o.DestinationLogo, o.ProfilesDeliveryID, *
- -- from tOrders o
- --where isnull(o.ProfilesCustomerID, 0)= 0
- --order by OrderDate desc
-
- --select * from tNodes where NodeID=12
- --select * 
- --from tSupplierDeliveryProfiles
- --where ProfilesDeliveryID = 7
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1037, 1037, 'Добавить',  'TExceptionsT.actAdd', 102, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1038, 1038, 'Изменить',  'TExceptionsT.actEdit', 102, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1039, 1039, 'Удалить',  'TExceptionsT.actDelete', 102, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1040, 1040, 'Обновить таблицу',  'TExceptionsT.actRefreshAll', 102, 1

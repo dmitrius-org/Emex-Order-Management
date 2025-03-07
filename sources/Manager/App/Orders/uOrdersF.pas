@@ -15,7 +15,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
-  uUniFSComboBoxHelper, uMessengerF;
+  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton;
 
 type
 
@@ -112,6 +112,7 @@ type
     edtExtraKurs: TUniNumberEdit;
     btnMessage: TUniButton;
     cbNLA: TUniCheckBox;
+    lblChangeW: TUniHTMLFrame;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -137,8 +138,7 @@ type
     procedure edtWeightKGFChange(Sender: TObject);
     procedure edtLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edtVKGKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edtVolumeKGFChange(Sender: TObject);
     procedure btnMessageClick(Sender: TObject);
 
@@ -170,6 +170,10 @@ type
     FIncome2:  Real;
     FProfin2:  Real;
     FQuantity2: Integer;
+    FReference :string;
+    FCustomerSubID:string;
+    FSuppliersID: Integer;
+    FBasketId:Integer;
 
     /// <value>FStatusID - текущее состояние</value>
     FStatusID: Integer;
@@ -279,6 +283,9 @@ type
 
     procedure GetPartFromEmex();
 
+    /// <summary>
+    /// LoadNextPart - переход к следующей детали для обработки
+    /// </summary>
     function LoadNextPart():Boolean;
   end;
 
@@ -289,7 +296,9 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger, ServerModule, uOrdersT, uToast, uOrdersProtocol_T, uUtils.Strings;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger,
+  ServerModule, uOrdersT, uToast, uOrdersProtocol_T, uUtils.Strings,
+  Soap.XSBuiltIns;
 
 function OrderF: TOrderF;
 begin
@@ -811,8 +820,14 @@ begin
   edtVolumeKGF.Value{,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FMakeLogo}]);
 end;
 
-procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0); var sqltext: string;
+procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0);
+var sqltext: string;
+ Emex:TEmex;
+ BasketID: Int64;
+ Baskets : ArrayOfBasketDetails_v2;
+ I: Integer;
 begin
+  logger.Info('TOrderF.OrderUpdate Begin');
   RetVal.Clear;
 
   DataCheck(ATargetStateID);
@@ -823,15 +838,18 @@ begin
       acUpdate:
       begin
         // если заказа в корзине, нужно его удалить
-        if (FStatusID = 3)	{InBasket	В корзине}  and (ATargetStateID = 12) then
+        if (FStatusID = 3)	{InBasket	В корзине}  then
         begin
-            var Emex:TEmex;
-
             Emex := TEmex.Create(UniMainModule.FDConnection);
             try
               RetVal.Code := Emex.DeleteFromBasketByOrderID(FID);
 
-              if RetVal.Code = 1 then  RetVal.Clear;
+              if RetVal.Code = 1 then
+                RetVal.Clear
+              else
+              begin
+                RetVal.Code := 705; // Деталь не найдена в корзине!
+              end;
 
               Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
             finally
@@ -843,23 +861,23 @@ begin
         begin
           sqltext :=
           '''
-                     declare @R      int
+             declare @R int
 
-                     exec @r = OrderUpdate
-                                 @OrderID        = :OrderID
-                                ,@DetailNameF    = :DetailNameF
-                                ,@WeightKGF      = :WeightKGF
-                                ,@VolumeKGF      = :VolumeKGF
-                                ,@Fragile        = :Fragile
-                                ,@NoAir          = :NoAir
-                                ,@Price          = :Price
-                                ,@ProfilesCustomerID=:ProfilesCustomerID
-                                ,@TargetStateID  =:TargetStateID
-                                ,@MakeLogo       =:MakeLogo
-                                ,@ReplacementPrice = :ReplacementPrice
-                                ,@NLA              = :NLA
+             exec @r = OrderUpdate
+                         @OrderID           = :OrderID
+                        ,@DetailNameF       = :DetailNameF
+                        ,@WeightKGF         = :WeightKGF
+                        ,@VolumeKGF         = :VolumeKGF
+                        ,@Fragile           = :Fragile
+                        ,@NoAir             = :NoAir
+                        ,@Price             = :Price
+                        ,@ProfilesCustomerID= :ProfilesCustomerID
+                        ,@TargetStateID     = :TargetStateID
+                        ,@MakeLogo          = :MakeLogo
+                        ,@ReplacementPrice  = :ReplacementPrice
+                        ,@NLA               = :NLA
 
-                     select @r as retcode
+             select @r as retcode
           ''';
 
           Sql.Open(sqltext,
@@ -882,6 +900,35 @@ begin
 
           RetVal.Code := Sql.Q.FieldByName('retcode').Value;
         end;
+
+        if (RetVal.Code = 0) and (FStatusID = 3) and (ATargetStateID = 0) then
+        begin
+            Emex := TEmex.Create(UniMainModule.FDConnection);
+            try
+              BasketID := Emex.InsertFromBasketByOrderID(FID);
+
+              if BasketID>0 then
+              begin
+                Baskets := Emex.GetBasketDetailsBySuppliersID(FSuppliersID);
+
+                // получим нужную нам позицию
+                for I := 0 to High(Baskets)-1 do
+                  begin
+                    if Baskets[I].BasketId = BasketID then
+                    begin
+                      Break;
+                    end;
+                  end;
+
+                SQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
+                Emex.FillBasketDetails(Baskets[I], FSuppliersID);
+
+                Sql.Exec(' exec BasketStateSync ', [], []);
+              end
+            finally
+              Emex.Destroy;
+            end;
+        end;
       end;
     end;
   end;
@@ -895,8 +942,11 @@ begin
   end
   else
   begin
+    logger.Info('TOrderF.OrderUpdate Error: ' + RetVal.Message);
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
+
+  logger.Info('TOrderF.OrderUpdate end');
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -1155,6 +1205,11 @@ end;
 procedure TOrderF.btnOkClick(Sender: TObject);
 begin
   btnOk.Enabled := False;
+  btnOkToCancel.Enabled := False;
+  btnOkToProc.Enabled := False;
+
+  UniSession.Synchronize();
+
   OrderUpdate();
 
   if RetVal.Code = 0 then
@@ -1167,7 +1222,9 @@ end;
 
 procedure TOrderF.btnOkToCancelClick(Sender: TObject);
 begin
+  btnOk.Enabled := False;
   btnOkToCancel.Enabled := False;
+  btnOkToProc.Enabled := False;
 
   OrderUpdate(12 {InCancel	Отказан});
 
@@ -1181,6 +1238,8 @@ end;
 
 procedure TOrderF.btnOkToProcClick(Sender: TObject);
 begin
+  btnOk.Enabled := False;
+  btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
 
   OrderUpdate( 2 {InChecked	Проверено});
@@ -1309,7 +1368,6 @@ begin
              ,v.StatusID
              ,v.MakeLogo
              ,v.PercentSupped -- вероятность доставки
-
              ,v.DeliveryPlanDateSupplier
              ,v.DeliveryRestTermSupplier
              ,v.DeliveryTermSupplier -- Срок до поступления поставщику (срок из прайса)
@@ -1324,7 +1382,9 @@ begin
                        where ps.OrderUniqueCount >= v.OrderUniqueCount), 999) TopPosition
 
              ,datediff(day, v.OrderDate, getdate()) PassedDayInWork  -- прошло дней с момента заказа
-
+             ,v.Reference
+             ,v.CustomerSubID
+             ,v.BasketId
          from vOrders v
         where v.OrderID = :OrderID
 
@@ -1337,6 +1397,9 @@ begin
 
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
+  FReference         := UniMainModule.Query.FieldByName('Reference').AsString;
+  FCustomerSubID     := UniMainModule.Query.FieldByName('CustomerSubID').AsString;
+  FBasketId          := UniMainModule.Query.FieldByName('BasketId').AsInteger;
 
   FDetailNumber2     := FManufacturer + ' ' + FDetailNumber;
 
@@ -1347,12 +1410,32 @@ begin
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
   FClientID          := UniMainModule.Query.FieldByName('ClientID').AsInteger;
   FStatusID          := UniMainModule.Query.FieldByName('StatusID').AsInteger;
+  FSuppliersID       := UniMainModule.Query.FieldByName('SuppliersID').AsInteger;
   FPercentSupped     := UniMainModule.Query.FieldByName('PercentSupped').AsInteger;
 
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
-  edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
-  edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
+
+  lblChangeW.visible := FFlag and 512 > 0;
+
+  if FFlag and 512 > 0 then
+  begin
+    if UniMainModule.Query.FieldByName('WeightKGF').asFloat = 0 then
+       edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('WeightKG').AsString   // Вес Физический факт
+    else
+      edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
+
+    if UniMainModule.Query.FieldByName('VolumeKGF').asFloat = 0 then
+       edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKG').AsString    // Вес Объемный факт
+    else
+      edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
+  end
+  else
+  begin
+    edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
+    edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
+  end;
+
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
   cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки

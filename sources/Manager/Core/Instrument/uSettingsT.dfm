@@ -1,8 +1,8 @@
 object SettingsT: TSettingsT
   Left = 0
   Top = 0
-  Width = 922
-  Height = 523
+  Width = 1229
+  Height = 414
   Layout = 'fit'
   LayoutConfig.Width = '0'
   ParentAlignmentControl = False
@@ -15,8 +15,8 @@ object SettingsT: TSettingsT
   object Grid: TUniDBGrid
     Left = 0
     Top = 0
-    Width = 922
-    Height = 523
+    Width = 1229
+    Height = 414
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -63,7 +63,7 @@ object SettingsT: TSettingsT
         Sortable = True
       end
       item
-        FieldName = 'Val'
+        FieldName = 'val'
         Title.Alignment = taCenter
         Title.Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         Title.Font.Height = -13
@@ -126,33 +126,25 @@ object SettingsT: TSettingsT
       Precision = 18
       Size = 0
     end
-    object QueryBrief: TWideStringField
-      FieldName = 'Brief'
-      Origin = 'Brief'
-      Required = True
-      Size = 64
-    end
-    object QueryName: TWideStringField
-      FieldName = 'Name'
-      Origin = 'Name'
-      Required = True
-      Size = 128
-    end
-    object QueryComment: TWideStringField
-      FieldName = 'Comment'
-      Origin = 'Comment'
-      Required = True
-      Size = 256
-    end
-    object QueryVal: TWideStringField
-      FieldName = 'Val'
-      Origin = 'Val'
-      Required = True
-      Size = 1024
-    end
     object QuerySettingType: TIntegerField
       FieldName = 'SettingType'
       Origin = 'SettingType'
+    end
+    object QueryBrief: TStringField
+      FieldName = 'Brief'
+      Size = 64
+    end
+    object QueryComment: TStringField
+      FieldName = 'Comment'
+      Size = 256
+    end
+    object QueryName: TStringField
+      FieldName = 'Name'
+      Size = 128
+    end
+    object Queryval: TStringField
+      FieldName = 'val'
+      Size = 1024
     end
   end
   object DataSource: TDataSource

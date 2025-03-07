@@ -275,6 +275,8 @@ end;
 procedure TRetVal.SetMessage(const Value: string);
 begin
   FMessage := Value;
+
+  //if FCode = 0 then  FCode := -1;
 end;
 
 {TMultiProp}

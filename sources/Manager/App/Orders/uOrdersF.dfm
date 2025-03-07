@@ -1133,6 +1133,18 @@ object OrderF: TOrderF
       Caption = 'NLA'
       TabOrder = 32
     end
+    object lblChangeW: TUniHTMLFrame
+      Left = 74
+      Top = 121
+      Width = 32
+      Height = 28
+      Hint = ''
+      ShowHint = True
+      HTML.Strings = (
+        
+          '<span class="grid-order-balance-scale" data-qtip="'#1050#1083#1080#1077#1085#1090' '#1080#1079#1084#1077#1085#1080#1083 +
+          ' '#1074#1077#1089' '#1076#1077#1090#1072#1083#1080'"><i class="fa fa-balance-scale"></i></span>')
+    end
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0

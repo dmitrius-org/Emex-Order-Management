@@ -123,11 +123,13 @@ as
   -- сохранение данных на позиции/детали
   update p
      set p.DetailNameF	= nullif(@DetailNameF, '')
-        ,p.WeightKGF	= case 
+        ,p.WeightKGF	= case
+                            when isnull(@WeightKGF, 0) = 0 and t.WeightKG>p.WeightKG and t.Flag&512 > 0 then t.WeightKG
                             when isnull(@WeightKGF, 0) = 0 and p.WeightKG>0 then p.WeightKG
                             else @WeightKGF
                           end  
         ,p.VolumeKGF	= case 
+                            when isnull(@VolumeKGF, 0) = 0 and t.VolumeKG>p.VolumeKG and t.Flag&512 > 0 then t.VolumeKG
                             when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
                             else @VolumeKGF
                           end  

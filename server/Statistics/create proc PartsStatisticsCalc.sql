@@ -24,25 +24,25 @@ as
            on o.OrderID = p.ID 
 
 
-    insert tPartsStatistics
+  insert tPartsStatistics
         (Make,
-            DetailNum,
-            OrderCount
-            )
-    Select p.Make,
-            p.DetailNumber,
-            o.OrderCount
+         DetailNum,
+         OrderCount
+         )
+  Select p.Make,
+         p.DetailNumber,
+         o.OrderCount
     from @Parts p  
-    cross apply (select top 1 count(*) over ()        OrdeUniqueCount 
-                        ,sum(min(o.Quantity))  over () OrderCount 
-                    from tOrders o (nolock)   
-                    where o.MakeLogo     = p.Make
-                    and o.DetailNumber = p.DetailNumber
-                    group by o.CustomerSubId, o.Reference, o.MakeLogo, o.DetailNumber 
-                ) as o
-    where not exists (select 1
-                        from tPartsStatistics pp (nolock)
-                        where pp.Make      = p.Make
+   cross apply (select top 1 count(*) over ()        OrdeUniqueCount 
+                      ,sum(min(o.Quantity))  over () OrderCount 
+                  from tOrders o (nolock)   
+                 where o.MakeLogo     = p.Make
+                   and o.DetailNumber = p.DetailNumber
+                 group by o.CustomerSubId, o.Reference, o.MakeLogo, o.DetailNumber 
+              ) as o
+   where not exists (select 1
+                       from tPartsStatistics pp (nolock)
+                      where pp.Make      = p.Make
                         and pp.DetailNum = p.DetailNumber)
 
 

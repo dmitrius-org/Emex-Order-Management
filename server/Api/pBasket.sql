@@ -1,16 +1,14 @@
-if OBJECT_ID('tBasket') is null
-/*
-  ALTER TABLE tBasket SET ( SYSTEM_VERSIONING = OFF )
-  --drop table tBasket
-  DROP TABLE History.tBasket
-*/
-begin
+if OBJECT_ID('pBasket') is not null
+  drop table pBasket
+go
 /* **********************************************************
 tBasket - корзина деталей
 ********************************************************** */
-  create table tBasket
+  create table pBasket
   (
-   BasketID                numeric(18, 0) identity
+   ID                      numeric(18, 0) identity  
+  ,Spid                    numeric(18, 0) 
+  ,BasketID                numeric(18, 0) 
   ,ClientID                numeric(18, 0)
   ,Make                    nvarchar(10)   -- лого бренда детали
   ,MakeName                nvarchar(64)   -- название бренда
@@ -28,7 +26,6 @@ tBasket - корзина деталей
   ,WeightKG                money          -- вес детали в граммах
   ,VolumeKG                money          -- объемный вес
   ,DestinationLogo         nvarchar(10)   -- направление доставки
-  ,ProfilesCustomerID	   numeric(18, 0)
   ,PercentSupped           int            -- процент поставки
 
   ,Margin                  money          -- наценка
@@ -40,30 +37,25 @@ tBasket - корзина деталей
   ,Fragile                 money 
   ,DeliveryTermToCustomer  int            -- Срок поставки клиенту
   ,Comment2                varchar(128)   -- Комментарий клиента
-  
+  ,ItemKey                 varchar(256) 
+  ,ProfilesCustomerID      numeric(18, 0) 
+
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
   ,Packing                 int            -- количество деталей в упаковке
      --
-  ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
-  ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END
-
-  ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
-
-  ,CONSTRAINT PK_tBasket_BasketID PRIMARY KEY CLUSTERED (BasketID)
 )
-  WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tBasket));
 
-  grant all on tBasket to public;
+  grant all on pBasket to public;
   --
-  create unique index ao1 on tBasket(BasketID);
+  create unique index ao1 on pBasket(ID);
   --
-  create index ao2 on tBasket(ClientID);
-end
+  create index ao2 on pBasket(ClientID);
+
 go
-exec setOV 'tBasket', 'U', '20240101', '0'
+exec setOV 'pBasket', 'U', '20240101', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tBasket', @desc = 'Корзина'
+exec dbo.sys_setTableDescription @table = 'pBasket', @desc = 'Корзина'
 
-select * from tBasket
+select * from pBasket
