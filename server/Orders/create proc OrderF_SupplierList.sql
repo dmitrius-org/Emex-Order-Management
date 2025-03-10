@@ -17,6 +17,7 @@ Select
        convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
        ,0 as Price
+       ,0 as Flag
   from tOrders o (nolock)
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
@@ -53,14 +54,24 @@ select
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               )) as varchar)     
                                                       +') | ' + 
-        convert(varchar, p.PercentSupped) + '%' as Name,
-       p.Price
+        convert(varchar, p.PercentSupped) + '%' as Name ,
+       p.Price,
+       iif( p.PriceLogo=pl.PriceLogo, 1, 0)
   from vOrders o (nolock)
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
         and p.Make = o.MakeLogo
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
+
+ outer apply (Select o2.PriceLogo
+                from tOrders o2 (nolock)
+               where o2.ParentID  = o.OrderID
+                 and o2.PriceLogo = p.PriceLogo
+                 and isnull(o2.Flag, 0)&524288 >0 -- деталь разделена на части менеджером
+             ) as pl
+
+
  where o.OrderID = @OrderID
  order by Price
 
@@ -70,7 +81,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250204', '6'
+exec setOV 'OrderF_SupplierList', 'P', '20250310', '7'
 go
  
 exec OrderF_SupplierList @OrderID=183012

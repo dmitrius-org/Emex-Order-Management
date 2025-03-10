@@ -343,10 +343,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>GroupSetFragileSignF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Orders\uGroupDetailNameEditF.pas">
-            <Form>GroupDetailNameEditF</Form>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
         <DCCReference Include="App\Confluence\uConfluenceT.pas">
             <Form>ConfluenceT</Form>
             <DesignClass>TUniFrame</DesignClass>
@@ -514,6 +510,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>ExceptionsT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Orders\uSpplitForm.pas">
+            <Form>SpplitForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Orders\uGroupDetailNameEditF.pas">
+            <Form>GroupDetailNameEditF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">

@@ -414,3 +414,8 @@
 .grid-box .x-grid-item-alt {
     background-color: #cfcfcf;
 }
+
+.price-logo-block {
+    background-color: #d3d3d3; /* Серый фон */
+    /* color: #000; Цвет текста (при необходимости) */
+}

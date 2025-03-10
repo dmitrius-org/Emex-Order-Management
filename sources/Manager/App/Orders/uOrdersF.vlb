@@ -186,6 +186,7 @@ Coordinates=597,146,86,36
 
 [cbPrice]
 Coordinates=529,146,58,36
+Visible=True
 
 [btnYandexImages]
 Coordinates=401,146,118,36
@@ -242,5 +243,23 @@ Coordinates=605,10,62,36
 Coordinates=505,10,90,36
 
 []
-Coordinates=1176,441,91,36
+Coordinates=1014,111,91,36
+
+[cbNLA]
+Coordinates=858,1,53,36
+
+[btnSplit]
+Coordinates=858,166,58,36
+
+[lblSplit]
+Coordinates=858,221,53,36
+
+[btnMessage]
+Coordinates=1014,1,84,36
+
+[lblChangeW]
+Coordinates=1014,56,84,36
+
+[pnlSplitMessage]
+Coordinates=828,276,109,36
 

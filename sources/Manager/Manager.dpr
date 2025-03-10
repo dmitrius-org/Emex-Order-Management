@@ -83,7 +83,6 @@ uses
   uTaskSQL_F in '..\Scheduler\Task\uTaskSQL_F.pas' {TaskSQL_F: TUniForm},
   uTaskProcedure_F in '..\Scheduler\Task\uTaskProcedure_F.pas' {TaskProcedure_F: TUniForm},
   uGroupSetFragileSignF in 'App\Orders\uGroupSetFragileSignF.pas' {GroupSetFragileSignF: TUniForm},
-  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
   uConfluenceT in 'App\Confluence\uConfluenceT.pas' {ConfluenceT: TUniFrame},
   uNodesF in 'Core\Instrument\uNodesF.pas' {NodesF: TUniForm},
   uConstant in '..\Common\CommonApp\uConstant.pas',
@@ -133,7 +132,9 @@ uses
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
   uUniADCheckComboBoxHelper in '..\Common\Common\uUniADCheckComboBoxHelper.pas',
   uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
-  uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame};
+  uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame},
+  uSpplitForm in 'App\Orders\uSpplitForm.pas' {SpplitForm: TUniForm},
+  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm};
 
 {$R *.res}
 

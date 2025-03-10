@@ -5,11 +5,16 @@ go
   OrderSplitting - 
 */
 Create proc OrderSplitting
-              @OrderID  numeric(18, 0)
+              @OrderID     numeric(18, 0)
              --,@StateID  numeric(18, 0)
-             ,@Quantity int
+             ,@Quantity    int
+             ,@NewOrderID  numeric(18, 0)  = null out
+
 as
  declare @r int = 0
+        ,@AuditComment nvarchar(256)
+        ,@AuditID      numeric(18,0)
+
  declare @ID as table (OrderID  numeric(18, 0)
                       ,ParentID numeric(18, 0) -- OrderID
                       ,StateID  numeric(18, 0)
@@ -150,7 +155,7 @@ select o.ClientID
       ,o.EmexQuantity
       ,o.OverPricing
       ,o.Warning
-      ,isnull(o.Flag, 0)|8 -- Запись добавлена в результате дробления заказа 
+      ,isnull(o.Flag, 0)| 524288 -- деталь разделена на части менеджером
       ,dbo.GetUserID()
       ,isnull(o.inDatetime, GetDate())
       ,GetDate()
@@ -179,6 +184,9 @@ select o.ClientID
       ,null
   from tOrders o  with (nolock index=ao1)
  where o.OrderID = @OrderID
+
+Select @NewOrderID = max(OrderID)
+  from @ID
 
 -- сроки доставки поставщика
 insert tOrdersDeliverySupplier with (rowlock)
@@ -227,26 +235,16 @@ Select i.OrderID
          on p.ObjectID=i.ParentID
  order by p.ProtocolID
 
- /*
-delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-insert pAccrualAction  with (rowlock)
-      (Spid   
-      ,ObjectID
-      ,StateID
-      ,ActionID  
-      ,NewStateID
-      ,ord)
-select @@Spid
-      ,i.OrderID
-      ,o.StatusID 
-      ,16    --ToCancel    Отказать
-      ,12    --InCancel    Отказано
-      ,10
-from @ID i
-inner join tOrders o (nolock) 
-        on o.OrderID = i.OrderID*/
+  select @AuditComment =  'Добавлен в результате разделения заказа'
 
-exec ProtocolAdd
+
+  -- аудит
+  exec AuditInsert
+         @AuditID          = @AuditID out         
+        ,@ObjectID         = @NewOrderID
+        ,@ObjectTypeID     = 3
+        ,@ActionID         = 2 -- ИД выполняемое дейстие из tAction
+        ,@Comment          = @AuditComment
 
   exit_:
 
@@ -254,6 +252,6 @@ exec ProtocolAdd
 GO
 grant exec on OrderSplitting to public
 go
-exec setOV 'OrderSplitting', 'P', '20250206', '0'
+exec setOV 'OrderSplitting', 'P', '20250206', '1'
 go
  

@@ -16,6 +16,10 @@ create proc OrderUpdate
               ,@ReplacementPrice        float         = null -- новая цена   
               
               ,@TargetStateID           numeric(18,0) = null
+
+              -- параметры для дробления заказа
+              ,@IsSplit                 bit           = null
+              ,@SplitQuality            int           = null
 /*
   OrderUpdate - изменение данных по заказу/детали
 
@@ -28,6 +32,15 @@ as
          ,@AuditComment nvarchar(2048)
          ,@DeliveryTermSupplier    int -- Срок доставки поставщику
          ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
+        -- ,@NewOrderID   numeric(18,0)
+
+  if @IsSplit = 1 
+  begin
+    exec OrderSplitting
+            @OrderID    = @OrderID
+            ,@Quantity  = @SplitQuality
+            ,@NewOrderID= @OrderID  out  
+  end
 
   select @DeliveryTermSupplier    = t.DeliveryTerm
         ,@DeliveryTermSupplierNew = p.GuaranteedDay
@@ -285,6 +298,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250301', '18'
+exec setOV 'OrderUpdate', 'P', '20250310', '19'
 go
  

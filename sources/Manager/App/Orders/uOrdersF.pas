@@ -15,7 +15,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
-  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton;
+  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton, uSpplitForm;
 
 type
 
@@ -113,6 +113,9 @@ type
     btnMessage: TUniButton;
     cbNLA: TUniCheckBox;
     lblChangeW: TUniHTMLFrame;
+    btnSplit: TUniBitBtn;
+    pnlSplitMessage: TUniContainerPanel;
+    lblSplit: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -141,6 +144,7 @@ type
     procedure edtWeightKGFKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edtVolumeKGFChange(Sender: TObject);
     procedure btnMessageClick(Sender: TObject);
+    procedure btnSplitClick(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -152,6 +156,7 @@ type
     FDetailNumber: string;
     FDetailNumber2: string;
     FPriceLogo: string;
+    FPriceLogoOld: string;
 
     FManufacturer:string;
     FMakeLogo:string;
@@ -190,6 +195,9 @@ type
     ///</summary>
     FDeliveryTermFromCustomerProfile,
     FPassedDayInWork: Integer;
+
+    FIsSplit: Boolean;
+    FSplitQuantity: Integer;
 
     procedure SetAction(const Value: TFormAction);
 
@@ -272,9 +280,14 @@ type
     procedure SetBtnEnabled();
 
     /// <summary>
-    /// OrderUpdate - Изменение информации по заказу
+    /// OrderSave - Изменение информации по заказу
     /// </summary>
-    procedure OrderUpdate(ATargetStateID: integer = 0);
+    procedure OrderSave(ATargetStateID: integer = 0);
+
+    /// <summary>
+    /// OrderUpdate - Изменение информации по заказу в базе
+    /// </summary>
+    procedure OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);
 
     /// <summary>
     /// LoadDataPart - получение данных по детали из базы
@@ -580,8 +593,31 @@ begin
 
   Price:=cbPrice.Value;
   // список поставщиков
-  ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
 
+  Sql.Q.Close;
+  Sql.Open(' exec OrderF_SupplierList @OrderID = ' + FID.ToString , [], []);
+  with Sql.Q do
+  begin
+    DisableControls;
+    cbPrice.ClearAll;
+    cbPrice.Items.BeginUpdate;
+    First;
+    var i: Integer;
+    while not Eof do
+      begin
+        cbPrice.ValueList.Add(FieldByName('ID').AsString);
+
+        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
+
+        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
+                ['tag',
+                 FieldByName('Flag').AsInteger]);
+        Next;
+      end;
+    cbPrice.Items.EndUpdate;
+    EnableControls;
+  end;
+  //ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
   cbPrice.Value:=Price;
 
   logger.Info('getPartRatingFromDB2 end');
@@ -686,23 +722,16 @@ begin
 
   if not edtNextPart.Checked then Exit;
 
-  sql.open('''
-             Update #CounterPart
-                set Processed = 1
-              where OrderID   = :OrderID
-
-             Select top 1 OrderID
-               from #CounterPart (nolock)
-              where isnull(Processed, 0) = 0
-              order by N
-           ''',
-           ['OrderID'],
-           [FID]);
-
-  sql.q.first;
-  if sql.Q.RecordCount > 0 then
+  if FIsSplit then // если разделили деталь, то нам нужно поднять на изменение ее же, предварительно разбив на части
   begin
-    ID := sql.Q.FieldByName('OrderID').AsInteger;
+//    sql.open('''
+//      exec OrderSplitting
+//              @OrderID  := :OrderID
+//             ,@Quantity := :Quantity
+//    ''',
+//    ['OrderID', 'Quantity'],
+//    [FID, FSplitQuantity]);
+
 
     if ID > 0 then Result := True;
 
@@ -712,7 +741,38 @@ begin
 
     LoadDataPart;
 
-    GetPartFromEmex;
+   // GetPartFromEmex;
+  end
+  else
+  begin
+    sql.open('''
+               Update #CounterPart
+                  set Processed = 1
+                where OrderID   = :OrderID
+
+               Select top 1 OrderID
+                 from #CounterPart (nolock)
+                where isnull(Processed, 0) = 0
+                order by N
+             ''',
+             ['OrderID'],
+             [FID]);
+
+    sql.q.first;
+    if sql.Q.RecordCount > 0 then
+    begin
+      ID := sql.Q.FieldByName('OrderID').AsInteger;
+
+      if ID > 0 then Result := True;
+
+      SetRating(0);
+
+      SetEditDataRating(0);
+
+      LoadDataPart;
+
+      GetPartFromEmex;
+    end;
   end;
 end;
 
@@ -820,9 +880,60 @@ begin
   edtVolumeKGF.Value{,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FMakeLogo}]);
 end;
 
-procedure TOrderF.OrderUpdate(ATargetStateID: integer = 0);
+procedure TOrderF.OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);
 var sqltext: string;
- Emex:TEmex;
+begin
+  if RetVal.Code = 0 then
+  begin
+    sqltext :=
+    '''
+       declare @R int
+
+       exec @r = OrderUpdate
+                   @OrderID           = :OrderID
+                  ,@DetailNameF       = :DetailNameF
+                  ,@WeightKGF         = :WeightKGF
+                  ,@VolumeKGF         = :VolumeKGF
+                  ,@Fragile           = :Fragile
+                  ,@NoAir             = :NoAir
+                  ,@Price             = :Price
+                  ,@ProfilesCustomerID= :ProfilesCustomerID
+                  ,@TargetStateID     = :TargetStateID
+                  ,@MakeLogo          = :MakeLogo
+                  ,@ReplacementPrice  = :ReplacementPrice
+                  ,@NLA               = :NLA
+                  ,@IsSplit           = :IsSplit
+                  ,@SplitQuality      = :SplitQuality
+
+       select @r as retcode
+    ''';
+
+    Sql.Open(sqltext,
+             ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
+              'ProfilesCustomerID', 'Fragile', 'NoAir', 'TargetStateID',
+              'ReplacementPrice', 'NLA', 'IsSplit', 'SplitQuality'],
+             [edtWeightKGF.Value,
+              edtVolumeKGF.Value,
+              edtDetailNameF.Text,
+              AOrderID,
+              FPriceLogo,
+              FMakeLogo,
+              cbDestinationLogo.Value.ToInteger,
+              cbFragile.Checked,
+              cbNoAir.Checked,
+              ATargetStateID,
+              FPrice2,
+              cbNLA.Checked, //-- No longer available Более недоступно
+              FIsSplit,
+              FSplitQuantity
+              ]);
+
+    RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+  end;
+end;
+
+procedure TOrderF.OrderSave(ATargetStateID: integer = 0);
+var Emex:TEmex;
  BasketID: Int64;
  Baskets : ArrayOfBasketDetails_v2;
  I: Integer;
@@ -859,48 +970,10 @@ begin
 
         if RetVal.Code = 0 then
         begin
-          sqltext :=
-          '''
-             declare @R int
-
-             exec @r = OrderUpdate
-                         @OrderID           = :OrderID
-                        ,@DetailNameF       = :DetailNameF
-                        ,@WeightKGF         = :WeightKGF
-                        ,@VolumeKGF         = :VolumeKGF
-                        ,@Fragile           = :Fragile
-                        ,@NoAir             = :NoAir
-                        ,@Price             = :Price
-                        ,@ProfilesCustomerID= :ProfilesCustomerID
-                        ,@TargetStateID     = :TargetStateID
-                        ,@MakeLogo          = :MakeLogo
-                        ,@ReplacementPrice  = :ReplacementPrice
-                        ,@NLA               = :NLA
-
-             select @r as retcode
-          ''';
-
-          Sql.Open(sqltext,
-                   ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
-                    'ProfilesCustomerID', 'Fragile', 'NoAir', 'TargetStateID',
-                    'ReplacementPrice', 'NLA'],
-                   [edtWeightKGF.Value,
-                    edtVolumeKGF.Value,
-                    edtDetailNameF.Text,
-                    FID,
-                    FPriceLogo,
-                    FMakeLogo,
-                    cbDestinationLogo.Value.ToInteger,
-                    cbFragile.Checked,
-                    cbNoAir.Checked,
-                    ATargetStateID,
-                    FPrice2,
-                    cbNLA.Checked //-- No longer available Более недоступно
-                    ]);
-
-          RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+          OrderUpdate(FID, ATargetStateID);
         end;
 
+        // Добавление а корзину emex
         if (RetVal.Code = 0) and (FStatusID = 3) and (ATargetStateID = 0) then
         begin
             Emex := TEmex.Create(UniMainModule.FDConnection);
@@ -967,7 +1040,10 @@ begin
   btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
   btnOk.Enabled := IsExistNext;
 
-  //btnOk.Enabled := True;
+
+  btnSplit.Enabled := (FStatusID in [1, 2]) and (FQuantity > 1);
+
+  pnlSplitMessage.Visible := FIsSplit;
 
   SetOrderCountLabel;
 end;
@@ -1174,6 +1250,8 @@ begin
   else
     UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.hide();');
    LoadDataPart;
+
+
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
@@ -1210,7 +1288,7 @@ begin
 
   UniSession.Synchronize();
 
-  OrderUpdate();
+  OrderSave();
 
   if RetVal.Code = 0 then
   begin
@@ -1226,7 +1304,9 @@ begin
   btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
 
-  OrderUpdate(12 {InCancel	Отказан});
+  UniSession.Synchronize();
+
+  OrderSave(12 {InCancel	Отказан});
 
   if RetVal.Code = 0 then
   begin
@@ -1242,7 +1322,9 @@ begin
   btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
 
-  OrderUpdate( 2 {InChecked	Проверено});
+  UniSession.Synchronize();
+
+  OrderSave( 2 {InChecked	Проверено});
 
   if RetVal.Code = 0 then
   begin
@@ -1250,6 +1332,22 @@ begin
   end;
 
   SetBtnEnabled;
+end;
+
+procedure TOrderF.btnSplitClick(Sender: TObject);
+begin
+  // групповое изменение наименования детали
+  SpplitForm.FormAction := TFormAction.acUpdate;
+
+  if SpplitForm.ShowModal() = mrOk then
+  begin
+    FIsSplit := True;
+    FSplitQuantity := SpplitForm.Quantity;
+
+    pnlSplitMessage.Visible := FIsSplit;
+
+    lblSplit.Caption:= 'При сохранении заказ будет разделен на части. Количество в заказе: ' + FSplitQuantity.ToString;
+  end;
 end;
 
 procedure TOrderF.DataCheck(ATargetStateID: integer = 0);
@@ -1302,6 +1400,20 @@ begin
         RetVal.Code := 1;
         RetVal.Message := 'Невозможно подтвердить деталь: Вес Физический и Вес Физический Факт равны нулю или отсутствуют!';
         Exit();
+      end;
+
+      if (FIsSplit) then
+      begin
+
+        Sql.open('''
+          declare @R int
+          exec @R = OrderSplittingSupplierValid
+                      @OrderID   = :OrderID
+                     ,@PriceLogo = :PriceLogo
+          select @R as retcode
+        ''', ['OrderID', 'PriceLogo'], [FID, FPriceLogo]);
+
+        RetVal.Code := Sql.Q.FieldByName('retcode').Value;
       end;
     end;
   end;
@@ -1405,6 +1517,7 @@ begin
 
   FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
+  FPriceLogoOld      := FPriceLogo;
   FQuantity          := UniMainModule.Query.FieldByName('Quantity').AsInteger;
   FMargin            := UniMainModule.Query.FieldByName('Margin').AsFloat;
   FFlag              := UniMainModule.Query.FieldByName('Flag').AsInteger;
@@ -1576,6 +1689,9 @@ begin
   IsExistNext := True;
 
   WeightKGFStyle;
+
+  FIsSplit:=False;
+  FSplitQuantity:=0;
 end;
 
 end.

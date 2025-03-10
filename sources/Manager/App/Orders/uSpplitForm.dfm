@@ -1,9 +1,9 @@
-object GroupSetFragileSignF: TGroupSetFragileSignF
+object SpplitForm: TSpplitForm
   Left = 0
   Top = 0
   ClientHeight = 161
   ClientWidth = 384
-  Caption = #1043#1088#1091#1087#1087#1086#1074#1086#1077' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' Fragile'
+  Caption = #1059#1082#1072#1078#1080#1090#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1095#1072#1089#1090#1080' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
   BorderStyle = bsDialog
   OldCreateOrder = False
@@ -22,25 +22,25 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     TabOrder = 0
-    ExplicitWidth = 460
-    ExplicitHeight = 310
+    ExplicitWidth = 291
+    ExplicitHeight = 257
     DesignSize = (
       384
       161)
     object lblDetailNameF: TUniLabel
       Left = 21
       Top = 21
-      Width = 49
+      Width = 251
       Height = 13
       Hint = ''
       ShowHint = True
-      Caption = #1055#1088#1080#1079#1085#1072#1082':'
+      Caption = #1059#1082#1072#1078#1080#1090#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1095#1072#1089#1090#1080' '#1079#1072#1082#1072#1079#1072':'
       TabOrder = 1
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 196
-      Top = 126
+      Left = 200
+      Top = 121
       Width = 81
       Height = 27
       Hint = ''
@@ -48,14 +48,14 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akRight, akBottom]
       TabStop = False
-      TabOrder = 3
+      TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitTop = 134
+      ExplicitTop = 93
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 283
-      Top = 126
+      Left = 287
+      Top = 121
       Width = 82
       Height = 27
       Hint = ''
@@ -63,22 +63,21 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       ShowHint = True
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akRight, akBottom]
-      TabOrder = 4
+      TabOrder = 3
       OnClick = btnOkClick
-      ExplicitTop = 134
+      ExplicitTop = 93
     end
-    object cbRestrictions: TUniComboBox
+    object edtQuantity: TUniSpinEdit
       Left = 21
       Top = 40
-      Width = 350
+      Width = 164
+      Height = 27
       Hint = ''
       ShowHint = True
-      Text = ''
-      Items.Strings = (
-        'Fragile')
-      TabOrder = 2
-      TabStop = False
-      IconItems = <>
+      TabOrder = 4
+      ParentFont = False
+      Font.Height = -13
+      SelectOnFocus = True
     end
   end
 end
