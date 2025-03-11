@@ -7,14 +7,15 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uniButton, uniBitBtn,
   uniGUIBaseClasses, uniPanel, uniEdit, uniCheckBox, uniFieldSet, uniLabel,
-  uniDateTimePicker, uCommonType, uniRadioGroup;
+  uniDateTimePicker, uCommonType, uniRadioGroup, uniPageControl;
 
 type
   TNodesF = class(TUniForm)
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
-    fsCommon: TUniFieldSet;
+    PageBase: TUniPageControl;
+    TabCommon: TUniTabSheet;
     UniFieldContainer1: TUniFieldContainer;
     edtBrief: TUniEdit;
     edtName: TUniEdit;
@@ -25,13 +26,22 @@ type
     edtType: TUniRadioGroup;
     edtN: TUniNumberEdit;
     UniLabel3: TUniLabel;
+    TabStateAdditionally: TUniTabSheet;
+    cbSyncEmex: TUniCheckBox;
+    cbRecalClientDelivery: TUniCheckBox;
+    cbRecalSupplierDelivery: TUniCheckBox;
+    cbSyncSupplier: TUniCheckBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
+    procedure edtTypeChangeValue(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
     FID: Integer;
+
+    FFlag: Integer;
+
     procedure SetAction(const Value: TFormAction);
 
     /// <summary>
@@ -72,16 +82,30 @@ end;
 
 procedure TNodesF.btnOkClick(Sender: TObject);
 var sqltext: string;
+  procedure SetFalg();
+  begin
+    FFlag := 0;
+    if cbSyncEmex.Checked then
+      FFlag := FFlag + 2;
+    if cbRecalClientDelivery.Checked then
+      FFlag := FFlag + 4;
+    if cbRecalSupplierDelivery.Checked then
+      FFlag := FFlag + 8;
+    if cbSyncSupplier.Checked then
+      FFlag := FFlag + 16;
+  end;
 begin
   RetVal.Clear;
-  logger.Info(RetVal.Message);
+
   DataCheck();
-  logger.Info(RetVal.Message);
-  logger.Info(RetVal.Code.ToString);
+
   if RetVal.Code = 0 then
   case FAction of
     acInsert:
     begin
+
+      SetFalg;
+
       sqltext :=' declare @R      int                '+
                 '        ,@NodeID numeric(18, 0)     '+
                 '                                    '+
@@ -102,7 +126,7 @@ begin
                [edtBrief.Text,
                 edtName.Text,
                 edtComment.Text,
-                0,
+                FFlag,
                 '',
                 edtType.ItemIndex,
                 edtN.Value]);
@@ -114,6 +138,8 @@ begin
     end;
     acUpdate:
     begin
+      SetFalg;
+
       sqltext :='''
                  declare @R      int
 
@@ -134,7 +160,7 @@ begin
                [FID,
                 edtName.Text,
                 edtComment.Text,
-                0,
+                FFlag,
                 '',
                 edtType.ItemIndex,
                 edtN.Value]);
@@ -217,6 +243,18 @@ begin
   edtComment.Text   := UniMainModule.Query.FieldByName('Comment').AsString;
   edtType.ItemIndex := UniMainModule.Query.FieldByName('Type').AsInteger;
   edtN.Value        := UniMainModule.Query.FieldByName('N').AsInteger;
+
+  FFlag             := UniMainModule.Query.FieldByName('Flag').AsInteger;
+
+  cbSyncEmex.Checked := FFlag and 2 > 0;
+  cbRecalClientDelivery.Checked := FFlag and 4 > 0;
+  cbRecalSupplierDelivery.Checked := FFlag and 8 > 0;
+  cbSyncSupplier.Checked := FFlag and 16 > 0;
+end;
+
+procedure TNodesF.edtTypeChangeValue(Sender: TObject);
+begin
+  TabStateAdditionally.Visible := edtType.ItemIndex = 0;
 end;
 
 procedure TNodesF.SetAction(const Value: TFormAction);
@@ -251,6 +289,8 @@ begin
   else
     //DataLoad;
   end;
+
+  PageBase.ActivePageIndex := 0;
 end;
 
 end.

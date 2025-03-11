@@ -248,6 +248,8 @@ type
     ///</summary>
     procedure GetPartDataFromBase();
 
+    procedure GetSupplierList();
+
     procedure SetRating(ARating: integer);
 
     procedure SetEditDataRating(ARating: integer);
@@ -386,6 +388,7 @@ procedure TOrderF.edtVolumeKGFChange(Sender: TObject);
 begin
   OrdersFinCalc();
   GetPartDataFromBase;
+  GetSupplierList;
 end;
 
 procedure TOrderF.edtWeightKGFChange(Sender: TObject);
@@ -393,6 +396,7 @@ begin
   WeightKGFStyle();
   OrdersFinCalc();
   GetPartDataFromBase();
+  //GetSupplierList;
 end;
 
 procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
@@ -402,6 +406,7 @@ begin
   begin
     OrdersFinCalc();
     GetPartDataFromBase;
+    //GetSupplierList;
   end;
 end;
 
@@ -436,6 +441,53 @@ begin
     UniTimer.Enabled := True;
   finally
   end;
+end;
+
+procedure TOrderF.GetSupplierList;
+var Price: string;
+    i: Integer;
+begin
+  Price:=cbPrice.Value;
+  // список поставщиков
+
+  Sql.Q.Close;
+  Sql.Open(' exec OrderF_SupplierList @OrderID = :OrderID'
+  ,['OrderID'],
+   [FID]);
+
+  with Sql.Q do
+  begin
+    DisableControls;
+    cbPrice.ClearAll;
+    cbPrice.Items.BeginUpdate;
+    First;
+
+    while not Eof do
+      begin
+        cbPrice.ValueList.Add(FieldByName('ID').AsString);
+
+        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
+
+        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
+                ['tag',
+                 FieldByName('Flag').AsInteger]);
+        Next;
+      end;
+    cbPrice.Items.EndUpdate;
+    cbPrice.Value:=Price;
+    EnableControls;
+
+//    DisableControls;
+//    First;
+//    while not Eof do
+//      begin
+//        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
+//                ['tag', FieldByName('Flag').AsInteger]);
+//        Next;
+//      end;
+    EnableControls;
+  end;
+  //ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
 end;
 
 procedure TOrderF.GetPartDataFromBase;
@@ -590,35 +642,6 @@ begin
 
     edtDelivery2.Hint := '';
   end;
-
-  Price:=cbPrice.Value;
-  // список поставщиков
-
-  Sql.Q.Close;
-  Sql.Open(' exec OrderF_SupplierList @OrderID = ' + FID.ToString , [], []);
-  with Sql.Q do
-  begin
-    DisableControls;
-    cbPrice.ClearAll;
-    cbPrice.Items.BeginUpdate;
-    First;
-    var i: Integer;
-    while not Eof do
-      begin
-        cbPrice.ValueList.Add(FieldByName('ID').AsString);
-
-        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
-
-        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
-                ['tag',
-                 FieldByName('Flag').AsInteger]);
-        Next;
-      end;
-    cbPrice.Items.EndUpdate;
-    EnableControls;
-  end;
-  //ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
-  cbPrice.Value:=Price;
 
   logger.Info('getPartRatingFromDB2 end');
 end;
@@ -796,7 +819,7 @@ end;
 
 procedure TOrderF.btnDestinationLogoClick(Sender: TObject);
 begin
-  cbDestinationLogo.Enabled := true;
+  cbDestinationLogo.Enabled := not cbDestinationLogo.Enabled;
   cbDestinationLogo.SetFocus;
 end;
 
@@ -836,6 +859,7 @@ begin
   OrdersFinCalc();
 
   GetPartDataFromBase;
+  GetSupplierList;
 end;
 
 procedure TOrderF.cbPriceChange(Sender: TObject);
@@ -1225,7 +1249,7 @@ end;
 
 procedure TOrderF.UniBitBtn1Click(Sender: TObject);
 begin
-  cbPrice.Enabled := true;
+  cbPrice.Enabled := not cbPrice.Enabled;
   cbPrice.SetFocus;
 end;
 
@@ -1250,8 +1274,6 @@ begin
   else
     UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.hide();');
    LoadDataPart;
-
-
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
@@ -1265,6 +1287,7 @@ begin
       OrdersFinCalc();
 
       GetPartDataFromBase();
+      GetSupplierList;
 
       UniTimer.Enabled := False;
     end;
@@ -1550,8 +1573,9 @@ begin
   end;
 
   edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
-  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
+
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки
+  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;

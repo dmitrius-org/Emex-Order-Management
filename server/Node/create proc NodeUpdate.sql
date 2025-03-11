@@ -39,7 +39,7 @@ as
           Name    = @Name	
         -- ,Type    = @Type
 	     ,Comment = @Comment
-	    -- ,Flag    = @Flag
+	     ,Flag    = @Flag
 		 ,ColorID = @ColorID
          ,N       = @N 
          
@@ -50,5 +50,5 @@ as
 go
 grant exec on NodeUpdate to public
 go
-exec setOV 'NodeUpdate', 'P', '20240911', '2'
+exec setOV 'NodeUpdate', 'P', '20250311', '3'
 go

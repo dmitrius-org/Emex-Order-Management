@@ -649,7 +649,6 @@ object OrderF: TOrderF
               'label  class="half" for=""      title="0 %"></label>     '
             '</fieldset>'
             '<label id="prc" class="ratingprc"></label>')
-          ScreenMask.Enabled = True
           ScreenMask.WaitData = True
           LayoutConfig.IgnorePosition = False
           LayoutConfig.DockWhenAligned = False
@@ -884,7 +883,6 @@ object OrderF: TOrderF
               '/><label class="half" for="" title="0 %"></label>    '
             '</fieldset>'
             '<label id="prc2" class="ratingprc" ></label>')
-          ScreenMask.Enabled = True
           ScreenMask.WaitData = True
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Margin = '8px 0px 0px 0px'

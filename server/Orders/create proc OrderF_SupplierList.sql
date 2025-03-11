@@ -1,7 +1,7 @@
 drop proc if exists OrderF_SupplierList
 go
 create proc OrderF_SupplierList
-               @OrderID                 numeric(18,0)            
+               @OrderID                 numeric(18,0)
 /*
   OrderF_SupplierList - Список поставщиков
 */           
@@ -41,7 +41,7 @@ select
                                                         when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                       -- Срок поставщика из API
                                                               isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                  -- Запас до вылета
-                                                              o.DeliveryTermFromSupplierProfile-       -- Доставка
+                                                              sdp.Delivery -       -- Доставка -- Срок доставки с профиля доставки поставщика
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               ) > 0            
                                                           then '(+' 
@@ -50,7 +50,7 @@ select
                                                              cast(((datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                            -- Срок поставщика из API
                                                               isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                       -- Запас до вылета
-                                                              o.DeliveryTermFromSupplierProfile-            -- Доставка
+                                                              sdp.Delivery -            -- Доставка -- Срок доставки с профиля доставки поставщика
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               )) as varchar)     
                                                       +') | ' + 
@@ -63,7 +63,10 @@ select
         and p.Make = o.MakeLogo
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
-
+ inner join tProfilesCustomer c (nolock)
+         on c.ProfilesCustomerID = p.ProfilesCustomerID
+ inner join tSupplierDeliveryProfiles sdp
+         on sdp.ProfilesDeliveryID = c.ProfilesDeliveryID
  outer apply (Select o2.PriceLogo
                 from tOrders o2 (nolock)
                where o2.ParentID  = o.OrderID

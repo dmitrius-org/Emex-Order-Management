@@ -78,8 +78,12 @@ as
           on s.ShipmentsID = id.ShipmentsID
    inner join tOrders o with (nolock index=ao3)
            on o.Invoice = s.Invoice
-          and o.StatusID <> 26 -- IssuedClient
+         -- and o.StatusID <> 26 -- IssuedClient
           and o.StatusID <> s.StatusID
+
+   inner join tNodes st (nolock)
+           on st.NodeID = o.StatusID
+          and st.Flag&16 = 0 -- Прекратить выполнение синхронизации с Поставками
 
    inner join tNodes n2 (nolock)  
            on n2.Brief = 'AutomaticSynchronization'

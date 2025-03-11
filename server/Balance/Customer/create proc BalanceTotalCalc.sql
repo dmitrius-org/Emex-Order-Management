@@ -38,7 +38,8 @@ as
   select @@SPid, @ClientID, 4, 'На пути в РФ'       union all
   select @@SPid, @ClientID, 5, 'Готовим к выдаче'   union all
   select @@SPid, @ClientID, 6, 'Задержано'          union all
-  select @@SPid, @ClientID, 7, 'Выдано клиенту'
+  select @@SPid, @ClientID, 7, 'Возвращено'         union all
+  select @@SPid, @ClientID, 9, 'Выдано клиенту'
 
   Update pBalanceTotal
      set OperDate = cast(getdate() as date)

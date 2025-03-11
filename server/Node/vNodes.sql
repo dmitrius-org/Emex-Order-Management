@@ -26,6 +26,7 @@ SELECT n.[NodeID]
       ,sc.StatusColorID as ColorID
       ,sc.[Name]        as Color 
       ,n.N
+
   FROM [tNodes] n (nolock)
   left join [tStatusColor] sc with (nolock index=ao1)
          on sc.[StatusColorID] = n.ColorID

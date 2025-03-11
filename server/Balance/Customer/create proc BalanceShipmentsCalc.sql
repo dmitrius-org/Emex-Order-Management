@@ -72,7 +72,7 @@ as
                          4 --На пути в РФ
                         ,5 --Готовим к выдаче' 
                         ,6 -- Задержан
-                        ,7 -- 'Выдано клиенту'
+                        ,9 -- 'Выдано клиенту'
                          )
 
   group by cast(s.ShipmentsDate as date), n.SearchID, n.SearchBrief, o.Invoice
