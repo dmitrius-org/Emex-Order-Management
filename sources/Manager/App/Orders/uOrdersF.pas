@@ -724,7 +724,7 @@ begin
 
   // начитываем данные с базы
   case FAction of
-    acUpdate, acReportEdit, acUserAction, acDelete, acShow:
+    acUpdate, acUpdateShipments, acUserAction, acDelete, acShow:
     begin
       DataLoad;
 
@@ -970,7 +970,7 @@ begin
   if RetVal.Code = 0 then
   begin
     case FAction of
-      acUpdate:
+      acUpdate, acUpdateShipments:
       begin
         // если заказа в корзине, нужно его удалить
         if (FStatusID = 3)	{InBasket	В корзине}  then
@@ -1060,12 +1060,11 @@ begin
     //
   end;
 
-  btnOkToCancel.Enabled := (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
-  btnOkToProc.Enabled := (IsExistNext) and (FStatusID in [1, 22]);
+  btnOkToCancel.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
+  btnOkToProc.Enabled := (FAction <> acUpdateShipments) and  (IsExistNext) and (FStatusID in [1, 22]);
   btnOk.Enabled := IsExistNext;
 
-
-  btnSplit.Enabled := (FStatusID in [1, 2]) and (FQuantity > 1);
+  btnSplit.Enabled := (FAction <> acUpdateShipments) and (FStatusID in [1, 2]) and (FQuantity > 1);
 
   pnlSplitMessage.Visible := FIsSplit;
 
@@ -1385,7 +1384,7 @@ begin
   RetVal.Clear;
 
   case FAction of
-    acInsert, acReportCreate, acUpdate, acReportEdit:
+    acInsert, acUpdateShipments, acUpdate, acReportEdit:
     begin
       if ATargetStateID <> 0 then
       if edtDetailNameF.IsBlank then

@@ -411,11 +411,29 @@
     height:24px !important;
 }
 
+.price-logo-block {
+    background-color: #d3d3d3; /* Серый фон */
+    /* color: #000; Цвет текста (при необходимости) */
+}
+
 .grid-box .x-grid-item-alt {
     background-color: #cfcfcf;
 }
 
-.price-logo-block {
-    background-color: #d3d3d3; /* Серый фон */
-    /* color: #000; Цвет текста (при необходимости) */
+.grid-box .x-grid-row-summary .x-grid-cell {
+    border-top: none !important;
+    border-right: none !important;
+}
+
+.grid-box .x-grid-with-col-lines .x-grid-cell {
+    border-style: solid;
+    border-color: #cfcfcf;
+    border-width: 0 1px 0px 0;
+}
+
+.grid-box .x-grid-cell-inner {
+    position: relative;
+    z-index: 1;
+    text-overflow: ellipsis;
+    padding: 3px 5px 3px;
 }

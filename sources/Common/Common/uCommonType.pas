@@ -51,6 +51,7 @@ Type
   ,acOff           = 26
   ,acRollback      = 27 // Откат действия
   ,acCancelRequest = 28 // Запрос отмены
+  ,acUpdateShipments = 29 //
   );
 
    /// <summary> Типы объектов системы </summary>

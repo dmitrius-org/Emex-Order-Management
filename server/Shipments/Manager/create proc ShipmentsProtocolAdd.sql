@@ -82,7 +82,7 @@ as
           and o.StatusID <> s.StatusID
 
    inner join tNodes st (nolock)
-           on st.NodeID = o.StatusID
+           on st.NodeID  = o.StatusID
           and st.Flag&16 = 0 -- Прекратить выполнение синхронизации с Поставками
 
    inner join tNodes n2 (nolock)  
@@ -96,6 +96,6 @@ as
 go
 grant exec on ShipmentsProtocolAdd to public;
 go
-exec setOV 'ShipmentsProtocolAdd', 'P', '20241002', '1';
+exec setOV 'ShipmentsProtocolAdd', 'P', '20250311', '2';
 go
  

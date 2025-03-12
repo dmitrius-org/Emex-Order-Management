@@ -62,6 +62,10 @@ procedure TShipmentsReceivedStatusF.btnOkClick(Sender: TObject);
 begin
   DataCheck();
 
+  btnOk.Enabled := False;
+
+  UniSession.Synchronize();
+
   if RetVal.Code = 0 then
   begin
     case FAction of
@@ -93,6 +97,9 @@ begin
   else
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
+
+    btnOk.Enabled := True;
+    UniSession.Synchronize();
   end;
 end;
 

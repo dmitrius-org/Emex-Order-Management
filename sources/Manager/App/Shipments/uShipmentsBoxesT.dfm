@@ -42,7 +42,17 @@ object ShipmentsBoxesT: TShipmentsBoxesT
       
         'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
         'r.getDockedItems()[1]; '#13#10'  toolbar.items.getAt(10).hide(); '#13#10'  t' +
-        'oolbar.items.getAt(9).hide(); '#13#10'}'
+        'oolbar.items.getAt(9).hide(); '#13#10'  '#13#10'  sender.addPlugin('#39'gridexpo' +
+        'rter'#39');'#13#10'    '#13#10'  var exporterCfg = new Object({'#13#10'            typ' +
+        'e: "xlsx",'#13#10'            mimeType: "application/vnd.openxmlformat' +
+        's-officedocument.spreadsheetml.sheet",'#13#10'            title: '#39#1050#1086#1088#1086 +
+        #1073#1082#1080#39','#13#10'            fileName: "'#1050#1086#1088#1086#1073#1082#1080'.xlsx"'#13#10'        }); '#13#10#13#10'  /' +
+        '/ '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!toolbar.exportBtn)' +
+        ' {'#13#10'     toolbar.exportBtn = toolbar.insert('#13#10'       0, '#13#10'      ' +
+        ' //{ xtype: '#39'tbseparator'#39' }'#13#10'       {xtype: '#39'button'#39', text: '#39#39', ' +
+        'tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handler: function() {'#13#10'          ' +
+        'sender.saveDocumentAs(exporterCfg);'#13#10'       }}'#13#10'     );'#13#10'     to' +
+        'olbar.exportBtn.setIconCls('#39'ToExcel'#39');// icon...     '#13#10'  }   '#13#10'}'
       
         'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
         'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -75,6 +85,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     OnAjaxEvent = GridAjaxEvent
     OnColumnSort = GridColumnSort
     OnColumnMove = GridColumnMove
+    OnDblClick = GridDblClick
     OnCellContextClick = GridCellContextClick
     OnDrawColumnCell = GridDrawColumnCell
     OnColumnResize = GridColumnResize
@@ -402,5 +413,56 @@ object ShipmentsBoxesT: TShipmentsBoxesT
       FieldName = 'VolumeL'
       Calculated = True
     end
+    object QueryOrderID: TFMTBCDField
+      FieldName = 'OrderID'
+    end
+  end
+  object actMain: TUniActionList
+    Left = 102
+    Top = 281
+    object actOrderEdit: TAction
+      Category = 'Action'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1082#1072#1079
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1082#1072#1079
+      ImageIndex = 6
+      OnExecute = actOrderEditExecute
+    end
+  end
+  object ppMain: TUniPopupMenu
+    Left = 101
+    Top = 218
+    object N12: TUniMenuItem
+      Action = actOrderEdit
+    end
+  end
+  object UpdateSQL: TFDUpdateSQL
+    Connection = UniMainModule.FDConnection
+    ConnectionName = 'Connection'
+    FetchRowSQL.Strings = (
+      'SELECT '
+      '       SupplierWeightKG, '
+      '       SupplierVolumeKG,  '
+      '       SupplierDiffVolumeWeigh, '
+      '       SupplierAmount,'
+      '       '
+      '       TransporterWeightKG, '
+      '       TransporterVolumeKG, '
+      '       TransporterDiffVolumeWeigh, '
+      '       TransporterAmount,'
+      '       TransporterNumber,'
+      ''
+      '       ReceiptDate,'
+      '       ReceiptDate2,'
+      '      '
+      '       DeliverySumF,'
+      '       StatusName,'
+      '       '
+      '       updDatetime      '
+      ''
+      '  from vShipments '
+      ' where ShipmentsID = :ShipmentsID'
+      '')
+    Left = 520
+    Top = 171
   end
 end

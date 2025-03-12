@@ -21,16 +21,28 @@ object ShipmentsProtocol_T: TShipmentsProtocol_T
     ParentShowHint = False
     BodyRTL = False
     ClientEvents.ExtEvents.Strings = (
+      'added=function added(sender, container, pos, eOpts)'#13#10'{'#13#10#13#10'}'
       
         'store.load=function store.load(sender, records, successful, oper' +
-        'ation, eOpts)'#13#10'{'#13#10#13#10'    '#13#10#13#10'   '#13#10'}'
-      'added=function added(sender, container, pos, eOpts)'#13#10'{'#13#10#13#10'}')
+        'ation, eOpts)'#13#10'{'#13#10#13#10'    '#13#10#13#10'   '#13#10'}')
     ClientEvents.UniEvents.Strings = (
       
-        'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-        'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10' // config.displayMsg  = '#39'Vi' +
-        'sualizando {0} - {1} de <b>{2}</b>'#39','#13#10' // config.emptyMsg    = "' +
-        'N'#227'o h'#225' registros",'#13#10'}'
+        'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+        'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
+        #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
+        'n the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(9).hid' +
+        'e(); //Remove the Refresh button in the ToolBar, number 10, hide' +
+        ' him'#13#10#13#10'  sender.addPlugin('#39'gridexporter'#39');'#13#10'    '#13#10'  var exporte' +
+        'rCfg = new Object({'#13#10'            type: "xlsx",'#13#10'            mime' +
+        'Type: "application/vnd.openxmlformats-officedocument.spreadsheet' +
+        'ml.sheet",'#13#10'            title: '#39#1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1090#1075#1088#1091#1079#1082#1080#39','#13#10'           ' +
+        ' fileName: "'#1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1090#1075#1088#1091#1079#1082#1080'.xlsx"'#13#10'        }); '#13#10#13#10'  // '#1044#1086#1073#1072#1074#1083 +
+        #1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!toolbar.exportBtn) {'#13#10'    ' +
+        ' toolbar.exportBtn = toolbar.insert('#13#10'       0, '#13#10'       //{ xty' +
+        'pe: '#39'tbseparator'#39' }'#13#10'       {xtype: '#39'button'#39', text: '#39#39', tooltip ' +
+        ': '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handler: function() {'#13#10'          sender.s' +
+        'aveDocumentAs(exporterCfg);'#13#10'       }}'#13#10'     );'#13#10'     toolbar.ex' +
+        'portBtn.setIconCls('#39'ToExcel'#39');// icon...     '#13#10'  } '#13#10'}'
       
         'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
         'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -40,12 +52,10 @@ object ShipmentsProtocol_T: TShipmentsProtocol_T
         '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
         'ent.body.removeChild(el);'#13#10'    };'#13#10'}'
       
-        'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-        'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-        #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-        'n the ToolBar, number 10, hide him'#13#10'  toolbar.items.getAt(9).hid' +
-        'e(); //Remove the Refresh button in the ToolBar, number 10, hide' +
-        ' him'#13#10#13#10'}')
+        'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+        'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10' // config.displayMsg  = '#39'Vi' +
+        'sualizando {0} - {1} de <b>{2}</b>'#39','#13#10' // config.emptyMsg    = "' +
+        'N'#227'o h'#225' registros",'#13#10'}')
     RowEditor = True
     DataSource = DataSource
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgAutoRefreshRow, dgRowNumbers]

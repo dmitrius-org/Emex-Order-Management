@@ -197,7 +197,8 @@ as
          ,0 VolumeL--Вес Объемный Превышение	
          ,r.OrderDetailSubId--Штрих-код	
          ,r.CustomerSubId--SubID	
-         ,r.Reference--reference	
+         ,r.Reference--reference
+         ,r.OrderID
         --Фото коробки
         --,SupplierWidth              
         --,TransporterWidth           
@@ -215,7 +216,7 @@ as
 go
 grant exec on ShipmentsTransporterSelect to public
 go
-exec setOV 'ShipmentsTransporterSelect', 'P', '20250301', '1'
+exec setOV 'ShipmentsTransporterSelect', 'P', '20250311', '2'
 go
 
 exec ShipmentsTransporterSelect @TransporterNumber= 'QBOW202C', @Invoice = '249567'

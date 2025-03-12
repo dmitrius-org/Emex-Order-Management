@@ -13,15 +13,8 @@ begin
 	(
      ID                    numeric(18,0)  identity --
     ,OrderID               numeric(18,0)  -- Заказ
-    ,Type                  int -- тип запроса:  0 - уточнение срока доставки; 1 - запрос отказа
-    --,ClientID              numeric(18,0)  -- Клиент tClients.ClientID
-    --,SuppliersID           numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
-    --,Manufacturer          varchar(64)    -- Производитель
-    --,DetailNumber          varchar(32)    -- Номер детали
-    --,DetailID              varchar(32)    -- ID Детали
-    --,Reference             varchar(32)    -- Reference
-    --,Quantity              int            -- Количество деталей    
-    ,StatusID              int              -- Cтатус обращения в emex: 0 - открыто, 1 - в ожидании, 2 - закрыто
+    ,Type                  int            -- тип запроса:  0 - уточнение срока доставки; 1 - запрос отказа  
+    ,StatusID              int            -- Cтатус обращения в emex: 0 - открыто, 1 - в ожидании, 2 - закрыто
     ,Number                varchar(32)    -- Номер обращения в emex
     ,Message               varchar(max)
     ,InDateTime            datetime       -- Дата протокола с временем
@@ -37,6 +30,8 @@ begin
     WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tAutoCallsToEmex));
 
     create index ao1 on tAutoCallsToEmex(OrderID);
+
+    create index ao2 on tAutoCallsToEmex(Number);
 
 	grant all on tAutoCallsToEmex to public;
 end

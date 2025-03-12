@@ -41,25 +41,25 @@ as
             where s.ShipmentsID  = @ShipmentsID
               and isnull(s.StatusID, 0) <> 24 --	Received	Готовим к выдаче в РФ   
           
-          insert pAccrualAction with (rowlock) 
-                (Spid, ObjectID,  StateID, NewStateID, ActionID, OperDate, Message,  ord)
-          select @@Spid, 
-                 o.OrderID, 
-                 o.StatusID, 
-                 24, --	Received	Готовим к выдаче клиенту в РФ
-                 25, --	ToReceived	Получено
-                 @ReceiptDate,
-                 'Автоматический перевод в Получено из Отгрузки',
-                 0
-            from tShipments t (nolock)
-           inner join tOrders o (nolock)
-                   on o.Invoice = t.Invoice
-           where t.ShipmentsID  = @ShipmentsID
+          --insert pAccrualAction with (rowlock) 
+          --      (Spid, ObjectID,  StateID, NewStateID, ActionID, OperDate, Message,  ord)
+          --select @@Spid, 
+          --       o.OrderID, 
+          --       o.StatusID, 
+          --       24, --	Received	Готовим к выдаче клиенту в РФ
+          --       25, --	ToReceived	Получено
+          --       @ReceiptDate,
+          --       'Автоматический перевод в Получено из Отгрузки',
+          --       0
+          --  from tShipments t (nolock)
+          -- inner join tOrders o (nolock)
+          --         on o.Invoice = t.Invoice
+          -- where t.ShipmentsID  = @ShipmentsID
           
 
           exec ShipmentsProtocolAdd
 
-          exec ProtocolAdd
+          --exec ProtocolAdd
 
 
         --exec AuditInsert
@@ -94,6 +94,6 @@ as
 go
 grant exec on SetShipmentsReceiptStatus to public
 go
-exec setOV 'SetShipmentsReceiptStatus', 'P', '20240101', '3'
+exec setOV 'SetShipmentsReceiptStatus', 'P', '20250311', '4'
 go
  

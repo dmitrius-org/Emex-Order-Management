@@ -12,7 +12,8 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, uniDBPivotGrid, uCommonType,
-  uniGUIApplication, uLogger, uUtils.Varriant;
+  uniGUIApplication, uLogger, uUtils.Varriant, Vcl.Menus, uniMainMenu,
+  System.Actions, Vcl.ActnList, uOrdersF;
 
 type
   TShipmentsBoxesT = class(TUniFrame)
@@ -44,6 +45,12 @@ type
     QueryReference: TStringField;
     QueryWeightL: TIntegerField;
     QueryVolumeL: TIntegerField;
+    actMain: TUniActionList;
+    actOrderEdit: TAction;
+    ppMain: TUniPopupMenu;
+    N12: TUniMenuItem;
+    QueryOrderID: TFMTBCDField;
+    UpdateSQL: TFDUpdateSQL;
     procedure UniFrameCreate(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -60,6 +67,8 @@ type
     procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
     procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
       Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure GridDblClick(Sender: TObject);
+    procedure actOrderEditExecute(Sender: TObject);
   private
     FTransporterNumber: String;
     FGroupFieldValue: Integer;
@@ -68,6 +77,16 @@ type
     FWeightKGS: Real;
     FVolumeKGS: Real;
     FInvoice: String;
+
+    /// <summary>
+    /// ACurrColumn - текущая колонка
+    /// </summary>
+    ACurrColumn: TUniDBGridColumn;
+
+    /// <summary>
+    ///  OrdersFCallBack - CallBack обработчик действия на форме редактирования данных
+    ///</summary>
+    procedure OrdersFCallBack(Sender: TComponent; AResult:Integer);
 
     { Private declarations }
   public
@@ -89,6 +108,15 @@ implementation
 
 uses uUtils.Grid, uMainVar, uConstant;
 
+procedure TShipmentsBoxesT.actOrderEditExecute(Sender: TObject);
+begin
+  OrderF.FormAction := TFormAction.acUpdateShipments;
+  OrderF.ID:=QueryOrderID.AsInteger;
+  OrderF.IsCounter := False;
+
+  OrderF.ShowModal();  //OrdersFCallBack
+end;
+
 procedure TShipmentsBoxesT.btnGridStatisticOpenClick(Sender: TObject);
 begin
   GridOpen;
@@ -105,6 +133,22 @@ begin
   if (Key = 13) then
   begin
     GridOpen;
+  end;
+end;
+
+procedure TShipmentsBoxesT.OrdersFCallBack(Sender: TComponent;
+  AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+  try
+    if OrderF.FormAction = acUpdate then
+    begin
+      Query.Edit ;
+      Query.Post;
+    end;
+  except
+    on E: Exception do
+      logger.Info('TShipmentsBoxesT.OrdersFCallBack Ошибка: ' + e.Message);
   end;
 end;
 
@@ -127,7 +171,9 @@ end;
 procedure TShipmentsBoxesT.GridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
-//  ppMain.Popup(X, Y, Grid);
+  ACurrColumn := Column;
+
+  ppMain.Popup(X, Y, Grid);
 end;
 
 procedure TShipmentsBoxesT.GridColumnMove(Column: TUniBaseDBGridColumn;
@@ -404,6 +450,16 @@ begin
     end;
     Attribs.Font.Style:=[fsBold];
   end
+end;
+
+procedure TShipmentsBoxesT.GridDblClick(Sender: TObject);
+begin
+ if (Assigned(ACurrColumn)) then
+  if (ACurrColumn.FieldName = 'DetailNumber')
+  then
+  begin
+    actOrderEditExecute(Sender);
+  end;
 end;
 
 procedure TShipmentsBoxesT.GridDrawColumnCell(Sender: TObject; ACol,
