@@ -262,6 +262,8 @@ object NodesT: TNodesT
         end
         item
           FieldName = 'Brief'
+          Filtering.Enabled = True
+          Filtering.Editor = flNodeBrief
           Title.Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077
           Width = 200
           ReadOnly = True
@@ -269,6 +271,8 @@ object NodesT: TNodesT
         end
         item
           FieldName = 'Name'
+          Filtering.Enabled = True
+          Filtering.Editor = flNodeName
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
           Width = 325
@@ -277,6 +281,8 @@ object NodesT: TNodesT
         end
         item
           FieldName = 'TypeDescription'
+          Filtering.Enabled = True
+          Filtering.Editor = cbNodeType
           Title.Caption = #1058#1080#1087
           Width = 115
           ReadOnly = True
@@ -318,6 +324,53 @@ object NodesT: TNodesT
         end>
     end
   end
+  object UniHiddenPanel1: TUniHiddenPanel
+    Left = 582
+    Top = 174
+    Width = 160
+    Height = 256
+    Hint = ''
+    Visible = True
+    ShowHint = True
+    object cbNodeType: TUniComboBox
+      Left = 12
+      Top = 32
+      Width = 117
+      Hint = ''
+      ShowHint = True
+      Text = 'cbNodeType'
+      Items.Strings = (
+        #1057#1086#1089#1090#1086#1103#1085#1080#1077
+        #1044#1077#1081#1089#1090#1074#1080#1077)
+      ItemIndex = 0
+      TabOrder = 1
+      EmptyText = #1058#1080#1087'...'
+      ClearButton = True
+      IconItems = <>
+    end
+    object flNodeBrief: TUniEdit
+      Left = 10
+      Top = 60
+      Width = 119
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      TabOrder = 2
+      EmptyText = #1057#1086#1082#1088#1072#1097#1077#1085#1080#1077'...'
+      ClearButton = True
+    end
+    object flNodeName: TUniEdit
+      Left = 11
+      Top = 88
+      Width = 118
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      TabOrder = 3
+      EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
+      ClearButton = True
+    end
+  end
   object Query: TFDQuery
     AutoCalcFields = False
     Connection = UniMainModule.FDConnection
@@ -338,9 +391,34 @@ object NodesT: TNodesT
       '  FROM vNodes as n'
       ' where 1=1'
       ' '
+      '  -- and n.Type  = isnull(nullif(:TypeDescription, -1), n.Type)'
+      ''
+      
+        '   and n.TypeDescription   like isnull(:TypeDescription, n.TypeD' +
+        'escription)'
+      '   and n.Brief   like isnull(:Brief, n.Brief)'
+      '   and n.Name   like isnull(:Name, n.Name)'
+      ' '
       ' order by n.Type, n.N')
     Left = 684
     Top = 120
+    ParamData = <
+      item
+        Name = 'TYPEDESCRIPTION'
+        ParamType = ptInput
+      end
+      item
+        Name = 'BRIEF'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
     object QueryNodeID: TFMTBCDField
       FieldName = 'NodeID'
       Origin = 'NodeID'

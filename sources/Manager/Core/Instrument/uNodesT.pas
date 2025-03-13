@@ -14,7 +14,7 @@ uses
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
   uUserF, uGrant, uCommonType, uniButton, uniBitBtn, uniColorButton,
-  uniColorPalette, uniWidgets, uniDBComboBox, uniDBLookupComboBox;
+  uniColorPalette, uniWidgets, uniDBComboBox, uniDBLookupComboBox, UniFSCombobox;
 
 type
   TNodesT = class(TUniFrame)
@@ -61,6 +61,10 @@ type
     UpdateSQL: TFDUpdateSQL;
     QueryN: TIntegerField;
     QueryType: TIntegerField;
+    UniHiddenPanel1: TUniHiddenPanel;
+    cbNodeType: TUniComboBox;
+    flNodeBrief: TUniEdit;
+    flNodeName: TUniEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -173,10 +177,11 @@ procedure TNodesT.GridColumnFilter(Sender: TUniDBGrid;
 begin
   if Query.Active then
   begin
-    if (Column.Field.DataType = TFieldType.ftBoolean) then  // boolean
-      Query.Params.ParamValues[Column.FieldName]:=Value
-    else
+//    if (Column.Filtering.Editor is TUniEdit) then  // boolean
       Query.Params.ParamValues[Column.FieldName]:='%'+Value+'%';
+//    else
+//    if (Column.Filtering.Editor is TUniComboBox) then  // boolean
+//      Query.Params.ParamValues[Column.FieldName]:=Value;
 
     Query.Refresh();
   end;

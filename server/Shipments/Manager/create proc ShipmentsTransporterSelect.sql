@@ -11,53 +11,11 @@ create proc ShipmentsTransporterSelect
 as
   set nocount on;
   declare @r        int = 0
-
-
-  if OBJECT_ID('tempdb..#r') is not null
-    drop table #r
-  CREATE TABLE #r
+  delete pShipmentsBoxes from pShipmentsBoxes (rowlock) where spid = @@SPID
+  insert pShipmentsBoxes with (rowlock)
   (
-      N                           int,
-      ShipmentsBoxesID            numeric(18,0), --
-      TransporterNumber           varchar(64),  -- Номер груза
-      Invoice                     varchar(64), 
-      BoxNumber                   numeric(18, 0), -- Номер коробки
-      SupplierPhysicalWeight      float, -- Физический вес по данным поставщика
-      TransporterPhysicalWeight   float, -- Физический вес по данным перевозчика
-      SupplierVolumetricWeight    float, -- Объемный вес по данным поставщика
-      TransporterVolumetricWeight float, -- Объемный вес по данным перевозчик
-  
-      --SupplierWidth               float, -- Ширина по данным поставщика 
-      --TransporterWidth            float, -- Ширина по данным перевозчика
-      --SupplierLength              float, -- Длина по данным поставщика
-      --TransporterLength           float, -- Длина по данным перевозчика
-      --SupplierHeight              float, -- Высота по данным поставщика 
-      --TransporterHeight           float, -- Высота по данным перевозчика
-      ImageLinks                  varchar(MAX),
-
-      OrderID                     numeric(18,0) --
-     ,WeightKG                    money         -- Вес Физический
-     ,VolumeKG                    money         -- Вес Объемный
-     ,WeightKGS                   money         -- Вес Физический
-     ,VolumeKGS                   money         -- Вес Объемный
-     ,Quantity                    int           -- Количество
-     ,Manufacturer                varchar(64)   -- Производитель
-     ,DetailNumber                varchar(32)   -- Номер детали
-     ,ManufacturerReplacement     varchar(64)   -- Производитель замены
-     ,DetailNumberReplacement     varchar(32)   -- Номер детали замены
-     ,DetailName                  varchar(256)  -- Название детали
-     ,PricePurchase               money         -- Цена закупки факт
-     ,AmountPurchase              money         -- Сумма закупки факт
-     ,Reference                   varchar(32) 
-     ,OrderDetailSubId            varchar(32) 
-     ,CustomerSubId               varchar(32) 
-     ,ClientName                  varchar(256) 
-     ,Type                        int
-  );
-
-  insert #r
-  (
-         ShipmentsBoxesID           
+         Spid
+        ,ShipmentsBoxesID           
         ,TransporterNumber          
         ,Invoice                    
         ,BoxNumber                  
@@ -74,8 +32,8 @@ as
         --,ImageLinks  
         ,Type
   )
-  select
-         t.ShipmentsBoxesID           
+  select @@SPID
+        ,t.ShipmentsBoxesID           
         ,t.TransporterNumber          
         ,@Invoice --t.Invoice                    
         ,t.BoxNumber     
@@ -95,12 +53,10 @@ as
         ,1
     from tShipmentsBoxes t (nolock)
    where t.TransporterNumber = @TransporterNumber
-   --select * from tShipmentsBoxes
 
-   
- -- t.BoxNumber  in  (101376929, 101376932, 101376934)
-  insert #r
-        (N
+  insert pShipmentsBoxes
+        (Spid
+        ,N
         ,BoxNumber
         ,OrderID
         ,ClientName
@@ -112,6 +68,8 @@ as
         ,Quantity
         ,PricePurchase 
         ,AmountPurchase
+        ,WeightKGOld 
+        ,VolumeKGOld 
         ,WeightKG
         ,VolumeKG
         ,WeightKGS  
@@ -121,7 +79,8 @@ as
         ,CustomerSubId 
         ,Type
          )
-  select ROW_NUMBER() over(partition by r.BoxNumber order by o.OrderID)
+  select @@SPID
+        ,ROW_NUMBER() over(partition by r.BoxNumber order by o.OrderID)
         ,r.BoxNumber
         ,o.OrderID
         ,c.Brief--Клиент
@@ -139,6 +98,8 @@ as
         ,o.Quantity
         ,o.Price
         ,o.Amount
+        ,sbd.[Weight]    -- WeightKGOld 
+        ,sbd.[Volume]    -- VolumeKGOld 
         ,isnull(p.[WeightKGF],o.[WeightKG])
         ,isnull(p.[VolumeKGF],o.[VolumeKG])
         ,isnull(p.[WeightKGF],o.[WeightKG])*o.Quantity
@@ -147,58 +108,66 @@ as
         ,o.OrderDetailSubId 
         ,o.CustomerSubId 
         ,2
-    from #r r with (nolock)
-   inner join tOrders o with (nolock index=ao3)
-           on o.Invoice = r.Invoice
-          and o.box = r.BoxNumber          
+    from pShipmentsBoxes r with (nolock)
+   inner join tShipmentsBoxesDetail sbd (nolock)
+           on sbd.ShipmentsBoxesID = r.ShipmentsBoxesID
+   inner join tOrders o with (nolock index=ao1)
+           on o.OrderID = sbd.OrderID
+          --and o.box     = r.BoxNumber          
    inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = o.ClientID
     left join tMakes b with (nolock index=ao2) -- брент замены
            on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
     left join tPrice p with (nolock index=ao1)
            on p.PriceID = o.PriceID	
+   where r.spid = @@spid 
 
    Update r
       set r.SupplierPhysicalWeight      = r2.SupplierPhysicalWeight
          ,r.TransporterPhysicalWeight   = r2.TransporterPhysicalWeight
          ,r.SupplierVolumetricWeight    = r2.SupplierVolumetricWeight
          ,r.TransporterVolumetricWeight = r2.TransporterVolumetricWeight
-     from #r r with (updlock)
-    inner join #r r2 with (nolock)
-            on r2.BoxNumber = r.BoxNumber
+     from pShipmentsBoxes r with (updlock)
+    inner join pShipmentsBoxes r2 with (nolock)
+            on r2.spid = @@spid 
+           and r2.BoxNumber = r.BoxNumber
            and r2.Type      = 1
-   where r.n    = 1
+   where r.spid = @@spid 
+     and r.n    = 1
      and r.Type = 2
 
-   select 
-          r.N
+   select r.ID
+         ,r.N
          ,r.ShipmentsBoxesID
          ,r.TransporterNumber
          ,r.Invoice
-         ,r.BoxNumber--Коробка	
-         ,r.ClientName--Клиент	
-         ,r.Manufacturer--Производитель	
-         ,r.DetailNumber--Номер детали	
-         ,r.DetailName--Наименование детали	
-         ,r.ManufacturerReplacement--Производитель замены	
-         ,r.DetailNumberReplacement--Номер детали замены	
-         ,r.Quantity--Количество	
-         ,r.PricePurchase--Цена закупки руб	
-         ,r.AmountPurchase--Сумма закупки руб	
-         ,r.WeightKG--Вес Физический Факт	
-         ,r.WeightKGS--Вес Физический Факт Сумма	
-         ,r.SupplierPhysicalWeight--Вес Физический Поставщик Сумма	
-         ,r.TransporterPhysicalWeight--Вес Физический Перевозчик Сумма	
-         ,0 WeightL --Вес Физический Превышение	
-         ,r.VolumeKG--Вес Объемный Факт	
-         ,r.VolumeKGS--Вес Объемный Факт Сумма	
-         ,r.SupplierVolumetricWeight--Вес Объемный Поставщик Сумма	
-         ,r.TransporterVolumetricWeight--Вес Объемный Перевозчик Сумма	
-         ,0 VolumeL--Вес Объемный Превышение	
-         ,r.OrderDetailSubId--Штрих-код	
-         ,r.CustomerSubId--SubID	
-         ,r.Reference--reference
+         ,r.BoxNumber                     --Коробка	
+         ,r.ClientName                    --Клиент	
+         ,r.Manufacturer                  --Производитель	
+         ,r.DetailNumber                  --Номер детали	
+         ,r.DetailName                    --Наименование детали	
+         ,r.ManufacturerReplacement       --Производитель замены	
+         ,r.DetailNumberReplacement       --Номер детали замены	
+         ,r.Quantity                      --Количество	
+         ,r.PricePurchase                 --Цена закупки руб	
+         ,r.AmountPurchase                --Сумма закупки руб	
+         ,r.WeightKG                      --Вес Физический Факт	
+         ,r.WeightKGS                     --Вес Физический Факт Сумма	
+         ,r.SupplierPhysicalWeight        --Вес Физический Поставщик Сумма	
+         ,r.TransporterPhysicalWeight     --Вес Физический Перевозчик Сумма	
+         ,0 WeightL                       --Вес Физический Превышение	
+         ,r.VolumeKG                      --Вес Объемный Факт	
+         ,r.VolumeKGS                     --Вес Объемный Факт Сумма	
+         ,r.SupplierVolumetricWeight      --Вес Объемный Поставщик Сумма	
+         ,r.TransporterVolumetricWeight   --Вес Объемный Перевозчик Сумма	
+         ,0 VolumeL                       --Вес Объемный Превышение	
+         ,r.OrderDetailSubId              --Штрих-код	
+         ,r.CustomerSubId                 --SubID	
+         ,r.Reference                     --reference
          ,r.OrderID
+
+         ,r.WeightKGOld                   -- веса при загрузке отгрузки
+         ,r.VolumeKGOld                   -- веса при загрузке отгрузки
         --Фото коробки
         --,SupplierWidth              
         --,TransporterWidth           
@@ -207,8 +176,9 @@ as
         --,SupplierHeight             
         --,TransporterHeight          
         --,ImageLinks        
-    from #r r (nolock)
-   where r.Type = 2
+    from pShipmentsBoxes r (nolock)
+   where r.spid = @@spid 
+     and r.Type = 2
    order by TransporterNumber
 
  exit_:
@@ -216,8 +186,8 @@ as
 go
 grant exec on ShipmentsTransporterSelect to public
 go
-exec setOV 'ShipmentsTransporterSelect', 'P', '20250311', '2'
+exec setOV 'ShipmentsTransporterSelect', 'P', '20250312', '3'
 go
 
-exec ShipmentsTransporterSelect @TransporterNumber= 'QBOW202C', @Invoice = '249567'
+exec ShipmentsTransporterSelect @TransporterNumber= 'QBLS169C', @Invoice = '250219'
  

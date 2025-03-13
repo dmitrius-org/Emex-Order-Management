@@ -259,12 +259,9 @@ type
     procedure actRequestClosedExecute(Sender: TObject);
     procedure DeliveryDaysReserveGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure QueryDateDeliveryToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
-    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
-    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string;
-      DisplayText: Boolean);
-    procedure QueryTermDeliveryToCustomerGetText(Sender: TField;
-      var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryPlanDateSupplierGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryDeliveryTermSupplierGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryTermDeliveryToCustomerGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure btnNotificationClick(Sender: TObject);
     procedure actRequestOpenExecute(Sender: TObject);
     procedure actPartProtocolExecute(Sender: TObject);
@@ -337,6 +334,7 @@ type
     procedure OrderSetRequestClosed();
     /// <summary>OrderSetRequestOpen - установка признака: Обращение открыто</summary>
     procedure OrderSetRequestOpen();
+
     /// <summary>SupplierSpecifyDeliveryTime - уточнить срок поставки у поставщика</summary>
     procedure SupplierSpecifyDeliveryTime();
 

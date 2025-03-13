@@ -61,9 +61,6 @@ Coordinates=180,828,106,36
 [ToolBar]
 Coordinates=110,828,60,36
 
-[lblVolumeKG]
-Coordinates=10,828,90,36
-
 [edtTransporterNumber]
 Coordinates=1020,782,144,36
 
@@ -84,9 +81,6 @@ Coordinates=952,782,58,36
 
 [N13]
 Coordinates=625,441,40,36
-
-[actGridSettingSave]
-Coordinates=625,496,126,36
 
 [actSetTransporterNumber]
 Coordinates=625,551,163,36
@@ -120,9 +114,6 @@ Coordinates=477,973,122,36
 
 [UniMainModule.MemTable]
 Coordinates=186,10,168,80
-
-[UniPanel5]
-Coordinates=717,782,74,36
 
 [actGridSettingDefault]
 Coordinates=259,973,137,36
@@ -169,14 +160,8 @@ Coordinates=826,386,119,36
 [lblSelRowCunt]
 Coordinates=417,782,99,36
 
-[N8]
-Coordinates=826,496,40,36
-
 [pnlGridSelectedCount]
 Coordinates=266,782,141,36
-
-[lblWeightKG]
-Coordinates=170,782,86,36
 
 [N7]
 Coordinates=826,661,40,36
@@ -201,9 +186,6 @@ Coordinates=10,782,66,36
 
 [actProtocol]
 Coordinates=826,1046,79,36
-
-[actGridSettingLoad]
-Coordinates=697,1047,125,36
 
 [UniPanel]
 Coordinates=1077,10,67,36
@@ -253,9 +235,6 @@ Coordinates=1027,331,60,36
 [QueryDeliverySumF]
 Coordinates=1027,386,130,36
 
-[UniLabel7]
-Coordinates=910,10,73,36
-
 [QueryTransporterVolumeKG]
 Coordinates=1027,496,178,36
 
@@ -276,9 +255,6 @@ Coordinates=1027,661,124,36
 
 [QueryTransporterAmount]
 Coordinates=1027,716,160,36
-
-[N9]
-Coordinates=1027,771,40,36
 
 [UniImageList32]
 Coordinates=1027,826,104,36
@@ -303,5 +279,5 @@ Coordinates=1027,1101,145,36
 Coordinates=928,1121,90,36
 
 []
-Coordinates=829,1121,91,36
+Coordinates=717,782,74,36
 

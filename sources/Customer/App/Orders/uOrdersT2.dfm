@@ -706,7 +706,6 @@
         ParentColor = False
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 0
         object lblRow: TUniLabel
           AlignWithMargins = True
           Left = 3
@@ -726,7 +725,6 @@
           Color = clBtnFace
           TabOrder = 1
           LayoutConfig.Margin = '1'
-          ExplicitLeft = 35
         end
       end
       object pnlNavigation: TUniContainerPanel
@@ -752,7 +750,6 @@
           BorderStyle = ubsNone
           ShowCaption = False
           Caption = 'UniPanel3'
-          ExplicitLeft = 249
           object btnLast: TUniButton
             AlignWithMargins = True
             Left = 40
@@ -770,7 +767,6 @@
             LayoutConfig.Padding = '1'
             LayoutConfig.Margin = '1'
             OnClick = btnLastClick
-            ExplicitHeight = 30
           end
           object btnNext: TUniButton
             AlignWithMargins = True
@@ -789,7 +785,6 @@
             LayoutConfig.Padding = '1'
             LayoutConfig.Margin = '1'
             OnClick = btnNextClick
-            ExplicitHeight = 30
           end
         end
         object pnlPageL: TUniPanel
@@ -804,8 +799,6 @@
           BorderStyle = ubsNone
           ShowCaption = False
           Caption = 'pnlPageL'
-          ExplicitLeft = 722
-          ExplicitHeight = 40
           object btnPrevious: TUniButton
             AlignWithMargins = True
             Left = 40
@@ -823,7 +816,6 @@
             LayoutConfig.Padding = '1'
             LayoutConfig.Margin = '1'
             OnClick = btnPreviousClick
-            ExplicitHeight = 30
           end
           object btnFirst: TUniButton
             AlignWithMargins = True
@@ -842,7 +834,6 @@
             LayoutConfig.Padding = '1'
             LayoutConfig.Margin = '1'
             OnClick = btnFirstClick
-            ExplicitHeight = 30
           end
         end
         object pnlPage: TUniPanel
@@ -860,9 +851,6 @@
           Layout = 'column'
           LayoutAttribs.Columns = 3
           LayoutConfig.Cls = 'order-page'
-          ExplicitLeft = 795
-          ExplicitWidth = 193
-          ExplicitHeight = 40
           object UniContainerPanel1: TUniContainerPanel
             AlignWithMargins = True
             Left = 3
@@ -874,7 +862,6 @@
             ParentColor = False
             Align = alLeft
             TabOrder = 1
-            ExplicitHeight = 34
             object UniLabel3: TUniLabel
               AlignWithMargins = True
               Left = 3
@@ -901,6 +888,7 @@
             Left = 79
             Top = 8
             Width = 69
+            Height = 18
             Hint = ''
             Margins.Top = 8
             Margins.Bottom = 8
@@ -910,7 +898,6 @@
             Alignment = taCenter
             LayoutConfig.Height = '100%'
             OnKeyDown = edtPageKeyDown
-            ExplicitWidth = 74
           end
           object UniContainerPanel2: TUniContainerPanel
             AlignWithMargins = True
@@ -923,8 +910,6 @@
             ParentColor = False
             Align = alRight
             TabOrder = 2
-            ExplicitLeft = 140
-            ExplicitHeight = 34
             object lblAllCount: TUniLabel
               AlignWithMargins = True
               Left = 3

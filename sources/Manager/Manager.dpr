@@ -134,7 +134,8 @@ uses
   uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
   uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame},
   uSpplitForm in 'App\Orders\uSpplitForm.pas' {SpplitForm: TUniForm},
-  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm};
+  uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
+  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas';
 
 {$R *.res}
 

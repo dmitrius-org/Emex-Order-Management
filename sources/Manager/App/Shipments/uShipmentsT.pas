@@ -20,38 +20,12 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniGridExporters, uniMenuButton, uConstant,
-  uShipmentsBoxesT_Wrapper;
+  uShipmentsBoxesT_Wrapper, uUniADCheckComboBoxHelper, uUniADCheckComboBoxEx,
+  uUtils.Mark;
 
 
 
 type
-
-  tMarks = class
-  private
-    FConnection: TFDConnection;
-    FQuery: TFDQuery;
-    FGrid: TUniDBGrid;
-
-    FMarks: TDictionary <Integer, Integer>;
-
-    procedure DeleteInDB();
-    function GetCount: Integer;
-
-    property Count: Integer read GetCount;
-  public
-    constructor Create(AGrid: TUniDBGrid);
-    destructor Destroy; override;
-
-    /// <summary>
-    ///  Select - сохранение отметок в БД
-    ///</summary>
-    procedure Select();
-    procedure Clear();
-
-
-    procedure DataRefresh();
-  end;
-
   TShipmentsT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
@@ -71,24 +45,16 @@ type
     UniImageList32: TUniImageList;
     actFilter: TAction;
     actFilterClear: TAction;
-    actGridSettingLoad: TAction;
-    actGridSettingSave: TAction;
     actGridSettingDefault: TAction;
     N7: TUniMenuItem;
-    N8: TUniMenuItem;
-    N9: TUniMenuItem;
     N11: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
     UniPanel3: TUniPanel;
     lblSelRowCunt: TUniLabel;
     UniPanel4: TUniPanel;
     lblSelRowSum: TUniLabel;
-    UniPanel5: TUniPanel;
     lblRowSum2: TUniLabel;
     lblRowSum1: TUniLabel;
-    UniLabel7: TUniLabel;
-    lblWeightKG: TUniLabel;
-    lblVolumeKG: TUniLabel;
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     fShipmentsDate: TUniDateTimePicker;
@@ -152,6 +118,10 @@ type
     actShipmentsBoxes: TAction;
     N17: TUniMenuItem;
     QueryFlag: TIntegerField;
+    lblStatys: TUniLabel;
+    fStatus2: TUniADCheckComboBox;
+    edtBox: TUniEdit;
+    UniLabel2: TUniLabel;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -163,8 +133,6 @@ type
     procedure actFilterClearExecute(Sender: TObject);
 
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
-    procedure actGridSettingLoadExecute(Sender: TObject);
-    procedure actGridSettingSaveExecute(Sender: TObject);
     procedure actGridSettingDefaultExecute(Sender: TObject);
     procedure fClientSelect(Sender: TObject);
     procedure actExportDataExecute(Sender: TObject);
@@ -186,6 +154,7 @@ type
     procedure actShipmentsBoxesExecute(Sender: TObject);
     procedure QueryFlagGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure UniFrameDestroy(Sender: TObject);
 
   private
     { Private declarations }
@@ -200,6 +169,9 @@ type
     FID: Integer;  //текущая колонка
 
     Marks: TMarks;                  // отметки
+
+    /// <summary>GetMarksInfo - получение информации по выделенным строкам (сумма, количество)</summary>
+    procedure GetMarksInfo();
 
     /// <summary>
     /// GridOpen -
@@ -218,15 +190,6 @@ type
     procedure ShipmentsTransporterNumberFCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
-
-
-
-    /// <summary>
-    ///  GridLayout - сохранение/восстановление настроек грида
-    ///  AOperation 0-сохранение
-    ///             1-восстановление
-    ///</summary>
-    procedure GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
   end;
 
 implementation
@@ -235,7 +198,8 @@ uses
   MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
   Main, ServerModule, uToast, uUtils.Grid, uExportForm,
   uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
-  uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T, uShipmentsEditF;
+  uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T,
+  uShipmentsEditF;
 
 {$R *.dfm}
 
@@ -271,9 +235,11 @@ end;
 procedure TShipmentsT.actFilterClearExecute(Sender: TObject);
 begin
   edtInvoice.Clear;
+  edtBox.Clear;
   fShipmentsDate.DateTime := nulldate;
-  fSupplier.Clear;
+  fSupplier.ClearSelection;
   edtTransporterNumber.Clear;
+  fStatus2.ClearSelection;
 
   GridOpen();
 end;
@@ -285,20 +251,10 @@ end;
 
 procedure TShipmentsT.actGridSettingDefaultExecute(Sender: TObject);
 begin
-  Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[self.ClassName +'.' + Grid.Name]);
-  GridLayout(Self, Grid, tGridLayout.glLoad);
+  GridExt.GridLayoutDefault(Self, Grid);
+  // восстановление настроек грида для пользователя
+  GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
 end;
-
-procedure TShipmentsT.actGridSettingLoadExecute(Sender: TObject);
-begin
-  GridLayout(Self, Grid, tGridLayout.glLoad);
-end;
-
-procedure TShipmentsT.actGridSettingSaveExecute(Sender: TObject);
-begin
-  GridLayout(Self, Grid, tGridLayout.glSave);
-end;
-
 
 procedure TShipmentsT.actProtocolExecute(Sender: TObject);
 begin
@@ -441,6 +397,16 @@ begin
     else
       Query.MacroByName('Invoice').Value := '';
 
+    if edtBox.Text <> '' then
+      Query.MacroByName('Box').Value := ' and s.BoxNumber like ''%'   + edtBox.Text + '%'''
+    else
+      Query.MacroByName('Box').Value := '';
+
+    if fStatus2.Text <> '' then
+      Query.MacroByName('Status').Value := ' and s.StatusID in ('   + fStatus2.SelectedKeys + ')'
+    else
+      Query.MacroByName('Status').Value := '';
+
     if Trim(edtTransporterNumber.Text) <> '' then
       Query.MacroByName('TransporterNumber').Value := ' and s.TransporterNumber like ''%'   + Trim(edtTransporterNumber.Text) + '%'''
     else
@@ -468,15 +434,11 @@ end;
 
 procedure TShipmentsT.GridSelectionChange(Sender: TObject);
 begin
-  //logger.Info('TOrdersT.GridSelectionChange Begin');
+  Marks.Select;
 
- // Marks.Select;
-
- // GetMarksInfo;
+  GetMarksInfo;
 
  // ActionExecuteEnabled;
-
- // logger.Info('TOrdersT.GridSelectionChange End');
 end;
 
 
@@ -521,6 +483,26 @@ begin // Ожидаемая дата поступления
     Text := Sender.AsString;
 end;
 
+procedure TShipmentsT.GetMarksInfo;
+begin
+  lblSelRowCunt.Caption := 'Выделено строк: ' + Grid.SelectedRows.Count.ToString + '  ';
+
+  if Marks.Count > 0 then
+  begin
+    Marks.SaveMarksToDB;
+
+    Sql.Open('Select ShipmentsAmount, ShipmentsAmountR from vShipmentsMarkSum', [], []);
+
+    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('ShipmentsAmountR').Value );
+    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('ShipmentsAmount').Value);
+  end
+  else
+  begin
+    lblRowSum1.Caption := '0 ₽';
+    lblRowSum2.Caption := '0 $';
+  end;
+end;
+
 procedure TShipmentsT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -536,72 +518,6 @@ begin
 //  ACurrColumn := Column;
 
   ppMain.Popup(X, Y, Grid);
-end;
-
-procedure TShipmentsT.GridLayout(AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout; AShowResultMessage:Boolean = True);
-var
-  i: integer;
-  SqlText: string;
-  Column: TUniBaseDBGridColumn;
-begin
-  if not (AGrid is TUniDBGrid) then Exit;
-
-  if AOperation=tGridLayout.glSave then
-    for i := 0 to AGrid.Columns.count-1 do
-    begin
-      Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[AForm.ClassName +'.' + AGrid.Name]);
-      if i = 0 then
-        SqlText:= SqlText + ' Insert into tGridOptions (UserID, Grid, [Column], Position, Width, Visible) '
-      else
-        SqlText:= SqlText + ' Union all ';
-
-       SqlText:= SqlText +
-       Format ('select dbo.GetUserID(), ''%s'', ''%s'', %d, %d, %d',
-       [AForm.ClassName +'.' + AGrid.Name,
-        AGrid.Columns[i].FieldName,
-        AGrid.Columns[i].Index,
-        AGrid.Columns[i].Width,
-        AGrid.Columns[i].Visible.ToInteger
-        //AGrid.Columns[i].Locked.ToInteger Locking
-        ]);
-
-        logger.Info(SqlText);
-        Sql.Exec(SqlText,[],[]);
-    end
-  else
-  if AOperation=tGridLayout.glLoad then
-  begin
-    Sql.Q.Close;
-    Sql.Open('select * '+
-             '  from tGridOptions (nolock) '+
-             ' where UserID = dbo.GetUserID() '+
-             '   and Grid =:Grid '+
-             ' order by Position ',
-            ['Grid'], [AForm.ClassName +'.' + AGrid.Name]);
-    Sql.Q.First;
-    for i:= 0 to Sql.Q.RecordCount-1 do
-    begin
-
-     try
-       Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
-       Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
-       Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
-       Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
-     // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
-
-     except
-       on E: Exception do
-       begin
-         logger.Info('TOrdersT.GridLayout Ошибка: ' + e.Message);
-         logger.Info('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString);
-       end;
-     end;
-      Sql.Q.Next;
-    end;
-  end;
-
-  if AShowResultMessage = True then
-    ToastOK ('Успешно выполнено!', unisession);
 end;
 
 procedure TShipmentsT.ShipmentsTransporterNumberFCallBack(Sender: TComponent;
@@ -662,17 +578,24 @@ begin
   // восстановление настроек грида для пользователя
   GridExt.GridLayout(Self, Grid, tGridLayout.glLoad);
 
-  GridOpen;
-
   // объект для упраления метками
-//  Marks := tMarks.Create(Grid);
-//  Marks.Clear;
+  Marks := tMarks.Create(Grid, 10);
+  Marks.Clear;
 
-  //GetMarksInfo;
+  fStatus2.FillFromSQL('Exec Shipments_StatusList');
+
+  GetMarksInfo;
+
+  GridOpen;
 
   logger.Info('TShipmentsT.UniFrameCreate End');
 end;
 
+
+procedure TShipmentsT.UniFrameDestroy(Sender: TObject);
+begin
+  Marks.Free;
+end;
 
 procedure TShipmentsT.UniFrameReady(Sender: TObject);
 begin
@@ -698,105 +621,6 @@ begin
     end;
   end;
 
-end;
-
-
-{ tMarks }
-
-constructor tMarks.Create(AGrid: TUniDBGrid);
-begin
-    if Assigned(AGrid) then
-    begin
-        FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
-        FQuery := TFDQuery.Create(nil);
-        FQuery.Connection := FConnection;
-        FGrid := AGrid;
-    end;
-    FMarks := TDictionary <integer, integer>.Create();
-end;
-
-procedure tMarks.DataRefresh;
-var Key: Integer;
-    BM : TBookmark;
-begin
-  logger.Info('tMarks.DataRefresh Begin');
-  begin
-      FGrid.DataSource.DataSet.DisableControls;
-      BM := FGrid.DataSource.DataSet.GetBookmark;
-      try
-          for Key in FMarks.Keys  do
-          begin
-              if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
-              begin
-                  tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-                  FGrid.RefreshCurrentRow();
-              end;
-          end;
-      finally
-          FGrid.DataSource.DataSet.GotoBookmark(BM);
-          FGrid.DataSource.DataSet.FreeBookmark(BM);
-          FGrid.DataSource.DataSet.EnableControls;
-      end;
-  end;
-  logger.Info('tMarks.DataRefresh End');
-end;
-
-procedure tMarks.DeleteInDB();
-begin
-    Sql.Exec('Delete tMarks from tMarks (rowlock) where Spid=@@Spid and Type=3', [], [])
-end;
-
-procedure tMarks.Clear;
-begin
-    DeleteInDB();
-    FMarks.Clear;
-end;
-
-destructor tMarks.Destroy;
-begin
-   FMarks.Free;
-   inherited;
-end;
-
-function tMarks.GetCount: Integer;
-begin
-    Result := FMarks.Count;
-end;
-
-procedure tMarks.Select();
-var i, id:Integer;
-    SqlText: string;
-    BM : TBookmark;
-begin
-  logger.Info('tMarks.Select Begin');
-
-  SqlText:='';
-  Clear;
-
-  if FGrid.SelectedRows.Count>0 then
-  begin
-    BM := FGrid.DataSource.DataSet.GetBookmark;
-    try
-      for I := 0 to FGrid.SelectedRows.Count - 1 do
-      begin
-        FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
-        id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
-        FMarks.Add(id, id);
-        if i = 0 then
-          SqlText:= SqlText + ' Insert into tMarks (Spid, Type, ID) select @@Spid, 3, '
-        else
-          SqlText:= SqlText + ' Union all select @@Spid, 3, ';
-
-        SqlText:= SqlText + id.ToString;
-      end;
-      if SqlText <> '' then Sql.Exec(SqlText ,[], []);
-
-    finally
-      FGrid.DataSource.DataSet.GotoBookmark(BM);
-      FGrid.DataSource.DataSet.FreeBookmark(BM);
-    end;
-  end;
-  logger.Info('tMarks.Select End');
 end;
 
 initialization

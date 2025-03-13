@@ -9,7 +9,7 @@ as
   declare @r int = 0
 
 Select 
-       o.PriceLogo  + '.' +  o.MakeLogo  as ID,
+       convert(varchar, o.PriceLogo  + '.' +  o.MakeLogo)  as ID,
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, coalesce(o.PricePurchaseF, o.PricePurchase, 0)) + ' | ' + 
@@ -32,7 +32,7 @@ Select
                    )
  Union all
 select 
-       p.PriceLogo + '.' + p.Make  as ID,
+       convert(varchar, p.PriceLogo + '.' + p.Make)  as ID,
        s.Brief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 

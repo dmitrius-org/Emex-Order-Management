@@ -22,19 +22,19 @@ object SpplitForm: TSpplitForm
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     TabOrder = 0
-    ExplicitWidth = 291
-    ExplicitHeight = 257
     DesignSize = (
       384
       161)
     object lblDetailNameF: TUniLabel
       Left = 21
       Top = 21
-      Width = 251
-      Height = 13
+      Width = 280
+      Height = 17
       Hint = ''
       ShowHint = True
       Caption = #1059#1082#1072#1078#1080#1090#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1095#1072#1089#1090#1080' '#1079#1072#1082#1072#1079#1072':'
+      ParentFont = False
+      Font.Height = -13
       TabOrder = 1
     end
     object btnCancel: TUniBitBtn
@@ -50,7 +50,6 @@ object SpplitForm: TSpplitForm
       TabStop = False
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitTop = 93
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -65,18 +64,17 @@ object SpplitForm: TSpplitForm
       Anchors = [akRight, akBottom]
       TabOrder = 3
       OnClick = btnOkClick
-      ExplicitTop = 93
     end
     object edtQuantity: TUniSpinEdit
       Left = 21
-      Top = 40
+      Top = 49
       Width = 164
-      Height = 27
+      Height = 40
       Hint = ''
       ShowHint = True
       TabOrder = 4
       ParentFont = False
-      Font.Height = -13
+      Font.Height = -16
       SelectOnFocus = True
     end
   end

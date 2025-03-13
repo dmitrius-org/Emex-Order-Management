@@ -389,16 +389,6 @@
     font-size: 1.2em;
 }
 
-
-.grid-box .x-grid-group-hd {
-    border-width: 2px 0 0 0px;
-    border-style: solid;
-    border-color: #cfcfcf;
-    padding: 7px 4px;
-    background: #fff;
-    cursor: pointer;
-}
-
 /* Перенос строки в заголовке таблицы */
 .grid-part-protocol .x-column-header-inner .x-column-header-text {
     white-space: normal;
@@ -420,15 +410,24 @@
     background-color: #cfcfcf;
 }
 
-.grid-box .x-grid-row-summary .x-grid-cell {
-    border-top: none !important;
+/* .grid-box .x-grid-row-summary .x-grid-cell {
+    border-width: 0px 0px 0px 0;
     border-right: none !important;
+}*/
+
+.grid-box .x-grid-item .x-grid-row-summary .x-grid-cell  {
+    border-width: 1px 0px 0px 0;
+}
+
+
+.grid-box tr.x-grid-group-hd-collapsed + tr.x-grid-row-summary .x-grid-cell {
+    border-width: 0px 0px 0px 0;
 }
 
 .grid-box .x-grid-with-col-lines .x-grid-cell {
     border-style: solid;
     border-color: #cfcfcf;
-    border-width: 0 1px 0px 0;
+    /* border-width: 0 1px 0px 0; */
 }
 
 .grid-box .x-grid-cell-inner {
@@ -437,3 +436,18 @@
     text-overflow: ellipsis;
     padding: 3px 5px 3px;
 }
+
+.grid-box .x-grid-group-hd {
+    border-width: 2px 0 1px 0px;
+    border-style: solid;
+    border-color: #cfcfcf;
+    padding: 7px 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.grid-box .x-grid-group-hd-collapsed .x-grid-group-hd {
+    border-width: 2px 0 0 0px;
+}
+
+

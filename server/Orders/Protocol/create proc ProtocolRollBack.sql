@@ -26,7 +26,7 @@ as
 		 ,o.PricePurchaseF = null
 		 ,o.AmountPurchaseF= null
 		 ,o.OverPricing    = null
-		 ,o.Warning        = ''
+		 --,o.Warning        = ''
 		 ,o.Flag           =  o.Flag & ~1 -- превышение цены
                                      & ~2 --нет цены
                                      & ~16384-- Несоответствие упаковке

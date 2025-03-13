@@ -290,7 +290,20 @@ as
         ,@Comment          = @AuditComment
 
   exec EmployeeOrdersProcessed
-         @OrderID = @OrderID                      
+         @OrderID = @OrderID  
+         
+
+  Update pShipmentsBoxes 
+     set WeightKG   = @WeightKGF
+        ,WeightKGS  = @WeightKGF * Quantity
+
+        ,VolumeKG   = @VolumeKGF
+        ,VolumeKGs  = @VolumeKGF * Quantity
+
+
+
+   where spid    = @@spid
+     and OrderID = @OrderID
   
   exit_:
   return @r
@@ -298,6 +311,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250310', '19'
+exec setOV 'OrderUpdate', 'P', '20250312', '20'
 go
  

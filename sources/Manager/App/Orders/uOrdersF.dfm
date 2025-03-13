@@ -676,7 +676,7 @@ object OrderF: TOrderF
       object edtCount: TUniEdit
         Left = 756
         Top = 35
-        Width = 77
+        Width = 96
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
         Margins.Right = 0
@@ -911,7 +911,7 @@ object OrderF: TOrderF
       object edtCount2: TUniEdit
         Left = 756
         Top = 21
-        Width = 77
+        Width = 96
         Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
         Margins.Top = 0
         Margins.Right = 0
@@ -972,16 +972,15 @@ object OrderF: TOrderF
       TabOrder = 12
       ClientEvents.ExtEvents.Strings = (
         
-          'expand=function expand(field, eOpts)'#13#10'{'#13#10' //   setTimeout(functi' +
-          'on() {'#13#10'        var store = field.getStore(); // '#1055#1086#1083#1091#1095#1072#1077#1084' store ' +
-          #1089' '#1076#1072#1085#1085#1099#1084#1080#13#10'        var items = field.picker.el.query('#39'.x-boundli' +
-          'st-item'#39'); // '#1055#1086#1083#1091#1095#1072#1077#1084' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1089#1087#1080#1089#1082#1072#13#10'        //console.log(it' +
-          'ems);'#13#10'        items.forEach(function(item, index) {'#13#10'          ' +
-          '  var record = store.getAt(index); // '#1041#1077#1088#1077#1084' '#1079#1072#1087#1080#1089#1100' '#1080#1079' store'#13#10'   ' +
-          '         '#13#10'            if (record && record.data.tag == 1) {  '#13#10 +
-          '                console.log(record);'#13#10'                item.class' +
-          'List.add('#39'price-logo-block'#39'); // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1083#1072#1089#1089#1099#13#10'            }' +
-          #13#10'        });'#13#10'  //  }, 100);              '#13#10'}')
+          'expand=function expand(field, eOpts)'#13#10'{'#13#10'  console.log("expand")' +
+          ';'#13#10'  var store = field.getStore(); // '#1055#1086#1083#1091#1095#1072#1077#1084' store '#1089' '#1076#1072#1085#1085#1099#1084#1080#13#10 +
+          '  var items = field.picker.el.query('#39'.x-boundlist-item'#39'); // '#1055#1086#1083 +
+          #1091#1095#1072#1077#1084' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1089#1087#1080#1089#1082#1072#13#10'  '#13#10'  items.forEach(function(item, index)' +
+          ' {'#13#10'      var record = store.getAt(index); // '#1041#1077#1088#1077#1084' '#1079#1072#1087#1080#1089#1100' '#1080#1079' st' +
+          'ore'#13#10'      console.log(record);'#13#10'      if (record && record.data' +
+          '.tag == 1) {  '#13#10'          console.log(record);'#13#10'          item.c' +
+          'lassList.add('#39'price-logo-block'#39'); // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1083#1072#1089#1089#1099#13#10'      }'#13#10 +
+          '  });           '#13#10'}')
       AnyMatch = True
       IconItems = <>
       OnChange = cbPriceChange

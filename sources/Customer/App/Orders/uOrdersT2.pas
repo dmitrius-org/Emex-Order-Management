@@ -980,7 +980,7 @@ begin
   GridExt.GridLayout(UniMainModule.AUserID, Self, Grid, tGridLayout.glLoad);
 
   // объект для упраления метками
-  Marks := tMarks.Create(Grid);
+  Marks := tMarks.Create(Grid, 3);
   Marks.Clear;
 
   UniSession.JSCode(' showEmail = function(AVal) {  ajaxRequest(' + Grid.JSName    + ', "showEmail", ["P1=" + AVal]); } ;');

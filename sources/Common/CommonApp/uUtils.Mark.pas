@@ -15,12 +15,14 @@ type
     FMarks: TDictionary<Integer, Integer>;
     FKeyFields: String;
 
+    FObjectType: Integer; // tObjectType.ObjectTypeID
+
     procedure DeleteInDB;
     function GetCount: Integer;
     procedure SetKeyFields(const Value: String);
 
   public
-    constructor Create(AGrid: TUniDBGrid);
+    constructor Create(AGrid: TUniDBGrid; AObjectType: Integer);
     destructor Destroy; override;
 
     procedure Select;
@@ -48,7 +50,7 @@ begin
   DeleteInDB;
 end;
 
-constructor tMarks.Create(AGrid: TUniDBGrid);
+constructor tMarks.Create(AGrid: TUniDBGrid; AObjectType: Integer);
 begin
   if Assigned(AGrid) then
   begin
@@ -60,6 +62,7 @@ begin
   end;
 
   FKeyFields := TFDQuery(AGrid.DataSource.DataSet).UpdateOptions.KeyFields;
+  FObjectType := AObjectType;
 
   FMarks := TDictionary<Integer, Integer>.Create();
 end;
@@ -141,7 +144,7 @@ begin
       for I := 0 to FGrid.SelectedRows.Count - 1 do
       begin
         FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
-        ID := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
+        ID := FGrid.DataSource.DataSet.FieldByName(FKeyFields).AsInteger;
         FMarks.AddOrSetValue(ID, ID);
       end;
     finally
@@ -166,7 +169,7 @@ begin
   Values := TStringList.Create;
   try
     for ID in IDs do
-      Values.Add(Format('SELECT @@Spid, 3, %d', [ID]));
+      Values.Add(Format('SELECT @@Spid, %d, %d', [FObjectType, ID]));
 
     FQuery.SQL.Text := 'INSERT INTO tMarks with (rowlock) (Spid, Type, ID) ' + String.Join(' UNION ALL ', Values.ToStringArray);
     FQuery.ExecSQL;

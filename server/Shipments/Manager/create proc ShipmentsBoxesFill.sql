@@ -11,6 +11,8 @@ as
 
   declare @r        int = 0
 
+  declare @ID as ID
+
   if isnull(@IsSave, 0) = 1
   begin
     Insert tShipmentsBoxes with (rowlock)
@@ -29,7 +31,8 @@ as
            ,SupplierHeight             
            ,TransporterHeight          
            ,ImageLinks                            
-           )
+           ) 
+    output inserted.ShipmentsBoxesID into @ID 
     select
            p.TransporterNumber          
           ,p.Invoice                    
@@ -72,44 +75,32 @@ as
              on t.BoxNumber = p.BoxNumber
      where p.Spid = @@SPid
 
-    --delete pAuditInsert from pAuditInsert (rowlock) where spid=@@spid
-    --insert pAuditInsert with (rowlock)
-    --      (Spid
-    --      ,ObjectID
-    --      ,ObjectTypeID
-    --      ,ActionID
-    --      ,Comment
-    --      )
-    --select @@Spid 
-    --      ,t.ShipmentsID       	         
-    --      ,10        
-    --      ,2      
-    --      ,'Изменение информации о грузе'
-    --   from pShipmentsTransporterData p with (nolock index=ao1)
-    --  inner join tShipments t with (nolock index=ao2)
-    --          on t.Invoice = p.Invoice
-    --  where p.Spid = @@SPid
-            
-    --exec MassAuditInsert
 
+
+  insert tShipmentsBoxesDetail
+        (ShipmentsBoxesID
+        ,OrderID
+        ,TransporterNumber
+        ,Invoice
+        ,BoxNumber
+        ,Weight
+        ,Volume)
+  select sb.ShipmentsBoxesID
+        ,o.OrderID
+        ,sb.TransporterNumber
+        ,o.Invoice
+        ,sb.BoxNumber
+        ,isnull(p.[WeightKGF],o.[WeightKG])
+        ,isnull(p.[VolumeKGF],o.[VolumeKG])
+    from @ID r 
+   inner join tShipmentsBoxes sb (nolock)
+           on sb.ShipmentsBoxesID = r.ID
+   inner join tOrders o with (nolock index=ao3)
+           on o.box = sb.BoxNumber          
+    left join tPrice p with (nolock index=ao1)
+           on p.PriceID = o.PriceID	
   end
 
-  --if @@ROWCOUNT > 0
-  --begin
-  --  Update t
-  --     set t.TransporterAmount  = t.TransporterWeightKG * t.WeightKGAmount + (iif(t.TransporterVolumeKG - t.TransporterWeightKG > 0, t.TransporterVolumeKG-t.TransporterWeightKG, 0) * t.VolumeKGAmount)  
-  --    from tShipments t (updlock)
-  --   where t.ShipmentsID = @ShipmentsID
-
-  --  exec AuditInsert
-  --       @AuditID      = @AuditID out
-  --      ,@ObjectID     = @ShipmentsID
-  --      ,@ObjectTypeID = 10
-  --      ,@ActionID     = 2
-  --      ,@Comment      = 'Изменение tShipments.TransporterWeightKG, TransporterVolumeKG '
-  --      --  ,@UserID       = ''
-  --      --  ,@HostInfoID   = ''
-  --end
 
  exit_:
  return @r

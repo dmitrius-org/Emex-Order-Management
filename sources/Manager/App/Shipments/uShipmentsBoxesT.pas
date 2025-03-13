@@ -13,7 +13,7 @@ uses
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, uniDBPivotGrid, uCommonType,
   uniGUIApplication, uLogger, uUtils.Varriant, Vcl.Menus, uniMainMenu,
-  System.Actions, Vcl.ActnList, uOrdersF;
+  System.Actions, Vcl.ActnList, uOrdersF, uUtils.Math;
 
 type
   TShipmentsBoxesT = class(TUniFrame)
@@ -51,6 +51,10 @@ type
     N12: TUniMenuItem;
     QueryOrderID: TFMTBCDField;
     UpdateSQL: TFDUpdateSQL;
+    QueryWeightKGOld: TCurrencyField;
+    QueryVolumeKGOld: TCurrencyField;
+    QueryN: TIntegerField;
+    QueryID: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
@@ -65,18 +69,21 @@ type
     procedure QueryTransporterPhysicalWeightGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
-    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
-      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure GridDblClick(Sender: TObject);
     procedure actOrderEditExecute(Sender: TObject);
+    procedure QueryWeightKGGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+    procedure QueryWeightKGSGetText(Sender: TField; var Text: string; DisplayText: Boolean);
   private
     FTransporterNumber: String;
     FGroupFieldValue: Integer;
     FTransporterPhysicalWeight: Real;
     FTransporterVolumetricWeight: Real;
-    FWeightKGS: Real;
-    FVolumeKGS: Real;
+    FWeightKGS, FWeightKGSOld: Real;
+    FVolumeKGS, FVolumeKGSOld: Real;
     FInvoice: String;
+
+    FNoCollapseAll: Boolean;
 
     /// <summary>
     /// ACurrColumn - текущая колонка
@@ -106,7 +113,7 @@ implementation
 
 {$R *.dfm}
 
-uses uUtils.Grid, uMainVar, uConstant;
+uses uUtils.Grid, uMainVar, uConstant, System.Math;
 
 procedure TShipmentsBoxesT.actOrderEditExecute(Sender: TObject);
 begin
@@ -114,7 +121,7 @@ begin
   OrderF.ID:=QueryOrderID.AsInteger;
   OrderF.IsCounter := False;
 
-  OrderF.ShowModal();  //OrdersFCallBack
+  OrderF.ShowModal(OrdersFCallBack);
 end;
 
 procedure TShipmentsBoxesT.btnGridStatisticOpenClick(Sender: TObject);
@@ -141,10 +148,12 @@ procedure TShipmentsBoxesT.OrdersFCallBack(Sender: TComponent;
 begin
   if AResult <> mrOK then Exit;
   try
-    if OrderF.FormAction = acUpdate then
+    if OrderF.FormAction = acUpdateShipments then
     begin
-      Query.Edit ;
-      Query.Post;
+      Query.RefreshRecord(False) ;
+      Grid.RefreshCurrentRow(True);
+
+      FNoCollapseAll := True;
     end;
   except
     on E: Exception do
@@ -154,8 +163,8 @@ end;
 
 procedure TShipmentsBoxesT.GridAfterLoad(Sender: TUniCustomDBGrid);
 begin
-  if Query.RecordCount > 25 then
-       grid.JSInterface.JSCall('view.features[0].collapseAll', []);
+  if (not FNoCollapseAll) and (Query.RecordCount > 25) then
+    grid.JSInterface.JSCall('view.features[0].collapseAll', []);
 end;
 
 procedure TShipmentsBoxesT.GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -199,44 +208,58 @@ end;
 
 procedure TShipmentsBoxesT.GridColumnSummary(Column: TUniDBGridColumn; GroupFieldValue: Variant);
 begin
-  if SameText(Column.FieldName, 'WeightKGS') then
+  if SameText(Column.FieldName, 'WeightKGS') then //Вес Физический Факт Сумма
   begin
+//    logger.Info('GridColumnSummary: ' + Column.FieldName + ' ' + Column.Field.AsString + ' ' + QueryVolumeKGOld.Value.ToString + ' ' + QueryQuantity.Value.ToString);
+
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
     if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
+    if Column.AuxValues[3]=NULL then Column.AuxValues[3]:=0.0;
 
-    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;  // сумма для группы по актуальным значениям
+    Column.AuxValues[1]:=Column.AuxValues[1] + (QueryWeightKGOld.Value * QueryQuantity.Value); // сумма для группы по старым значениям
 
-    FWeightKGS:=Column.AuxValue;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;   // сумма всего по актуальным значениям
+    Column.AuxValues[3]:=Column.AuxValues[3] + (QueryWeightKGOld.Value * QueryQuantity.Value); // сумма всего по старым значениям
+
+    FWeightKGS   :=Column.AuxValue;
+    FWeightKGSOld:=Column.AuxValues[1];
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
     if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
+    if Column.AuxValues[3]=NULL then Column.AuxValues[3]:=0.0;
 
-    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;  // сумма для группы по актуальным значениям
+    Column.AuxValues[1]:=Column.AuxValues[1] + (QueryVolumeKGOld.Value * QueryQuantity.Value); // сумма для группы по старым значениям
 
-    FVolumeKGS:=Column.AuxValue;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;   // сумма всего по актуальным значениям
+    Column.AuxValues[3]:=Column.AuxValues[3] + (QueryVolumeKGOld.Value * QueryQuantity.Value); // сумма всего по старым значениям
+
+    FVolumeKGS   :=Column.AuxValue;
+    FVolumeKGSOld:=Column.AuxValues[1];
   end
   else
   if SameText(Column.FieldName, 'SupplierPhysicalWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;
   end
   else
   if SameText(Column.FieldName, 'TransporterPhysicalWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;
 
     FTransporterPhysicalWeight:=Column.AuxValue;
   end
@@ -244,38 +267,22 @@ begin
   if SameText(Column.FieldName, 'SupplierVolumetricWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;
   end
   else
   if SameText(Column.FieldName, 'TransporterVolumetricWeight') then
   begin
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
+    if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
 
     Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-    Column.AuxValues[1]:=Column.AuxValues[1] + Column.Field.AsFloat;
+    Column.AuxValues[2]:=Column.AuxValues[2] + Column.Field.AsFloat;
 
     FTransporterVolumetricWeight := Column.AuxValue;
   end
-//  else
-//  if SameText(Column.FieldName, 'WeightL') then
-//  begin
-//    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-//    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
-//
-//    //Column.AuxValue + Column.Field.AsFloat;
-//  end
-//  else
-//  if SameText(Column.FieldName, 'VolumeL') then
-//  begin
-//    if Column.AuxValue=NULL then Column.AuxValue:=0.0;
-//    if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
-//
-//    //Column.AuxValue:=Column.AuxValue + Column.Field.AsFloat;
-//  end
   else
   if SameText(Column.FieldName, 'BoxNumber') then
   begin
@@ -285,77 +292,104 @@ end;
 
 procedure TShipmentsBoxesT.GridColumnSummaryResult(Column: TUniDBGridColumn;
   GroupFieldValue: Variant; Attribs: TUniCellAttribs; var Result: string);
-var I: Real;
+var Value, ValueOld: Real;
 begin
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    ValueOld:=Column.AuxValues[1];
+
+    if (VarToDouble(Value) <> VarToDouble(ValueOld)) then
+    begin
+       Result:=FormatFloat('###,##0.000', ValueOld) + FormatFloat(' (###,##0.000) кг', Value);
+    end
+    else
+      Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    ValueOld:=Column.AuxValues[1];
+
+    if (VarToDouble(Value) <> VarToDouble(ValueOld)) then
+    begin
+       Result:=FormatFloat('###,##0.000', ValueOld) + FormatFloat(' (###,##0.000) кг', Value);
+    end
+    else
+      Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'SupplierPhysicalWeight') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'TransporterPhysicalWeight') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'SupplierVolumetricWeight') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'TransporterVolumetricWeight') then
   begin
-    I:=Column.AuxValue;
-    Result:=FormatFloat('###,##0.000 кг', I);
+    Value:=Column.AuxValue;
+    Result:=FormatFloat('###,##0.000 кг', Value);
   end
   else
   if SameText(Column.FieldName, 'WeightL') then
   begin
-    I:=FTransporterPhysicalWeight - FWeightKGS;
+    Value:= FTransporterPhysicalWeight - FWeightKGS;
+    ValueOld:= FTransporterPhysicalWeight - FWeightKGSOld;
 
-    //VarToDouble(Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValue) -
-    //Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValue;
-
-    if i > 0 then
+    if Value <> ValueOld  then
     begin
-      Result:=FormatFloat('+##0.000 кг', I);
+      Result:= ifthen(ValueOld>0, '+', '')   + FormatFloat('###,##0.000', ValueOld) +
+               ifthen(Value>0, ' (+', ' (')  + FormatFloat('###,##0.000', Value ) + ') кг';
+    end
+    else
+    begin
+      Result:= ifthen(Value>0, '+', '')      + FormatFloat('###,##0.000 кг', Value);
+    end;
+
+    if ValueOld > 0 then
+    begin
       Attribs.Color   := $008080FF;
     end
     else
     begin
-      Result:=FormatFloat('##0.000 кг', I);
       Attribs.Color   := $8ec9a6;
     end;
   end
   else
   if SameText(Column.FieldName, 'VolumeL') then
   begin
-    I:=FTransporterVolumetricWeight - FVolumeKGS;
-//    Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValue -
-//       Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValue;
+    Value:= FTransporterVolumetricWeight - FVolumeKGS;
+    ValueOld:= FTransporterVolumetricWeight - FVolumeKGSold;
 
-    if i > 0 then
+    if Value <> ValueOld  then
     begin
-      Result:=FormatFloat('+##0.000 кг', I);
+      Result:= ifthen(ValueOld>0, '+', '')   + FormatFloat('###,##0.000', ValueOld) +
+               ifthen(Value>0, ' (+', ' (')  + FormatFloat('###,##0.000', Value ) + ') кг';
+    end
+    else
+    begin
+      Result:= ifthen(Value>0, '+', '')      + FormatFloat('###,##0.000 кг', Value);
+    end;
+
+    if ValueOld > 0 then
+    begin
       Attribs.Color   := $008080FF;
     end
     else
     begin
-      Result:=FormatFloat('##0.000 кг', I);
       Attribs.Color   := $8ec9a6;
     end;
   end
@@ -366,90 +400,113 @@ begin
   end;
 
   Column.AuxValue:=NULL;
+  Column.AuxValues[1]:=NULL;
 end;
 
-procedure TShipmentsBoxesT.GridColumnSummaryTotal(Column: TUniDBGridColumn;
-  Attribs: TUniCellAttribs; var Result: string);
-  var
-  I : Real;
+procedure TShipmentsBoxesT.GridColumnSummaryTotal(Column: TUniDBGridColumn; Attribs: TUniCellAttribs; var Result: string);
+  var  I, IO: Real;
 begin
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
-    I:=Column.AuxValues[1];
-    Result:=FormatFloat('###,##0.000 кг', I);
+    logger.Info('GridColumnSummaryTotal: ' + Column.FieldName);
+    I:=Column.AuxValues[2];
+    IO:=Column.AuxValues[3];
+
+    if I <> IO then
+       Result:=FormatFloat('###,##0.000', IO) + FormatFloat(' (###,##0.000) кг', I)
+    else
+      Result:=FormatFloat('###,##0.000 кг', I);
+
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'VolumeKGS') then
   begin
-    I:=Column.AuxValues[1];
-    Result:=FormatFloat('###,##0.000 кг', I);
+    I :=Column.AuxValues[2];
+    IO:=Column.AuxValues[3];
+
+    if I <> IO then
+       Result:=FormatFloat('###,##0.000', IO) + FormatFloat(' (###,##0.000) кг', I)
+    else
+      Result:=FormatFloat('###,##0.000 кг', I);
+
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'SupplierPhysicalWeight') then
   begin
-    I:=Column.AuxValues[1];
+    I:=Column.AuxValues[2];
     Result:=FormatFloat('###,##0.000 кг', I);
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'TransporterPhysicalWeight') then
   begin
-    I:=Column.AuxValues[1];
+    I:=Column.AuxValues[2];
     Result:=FormatFloat('###,##0.000 кг', I);
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'SupplierVolumetricWeight') then
   begin
-    I:=Column.AuxValues[1];
+    I:=Column.AuxValues[2];
     Result:=FormatFloat('###,##0.000 кг', I);
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'TransporterVolumetricWeight') then
   begin
-    I:=Column.AuxValues[1];
+    I:=Column.AuxValues[2];
     Result:=FormatFloat('###,##0.000 кг', I);
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'WeightL') then
   begin
-    I:= Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValues[1]-
-        Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[1];
+    I:= Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValues[2]-
+        Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[2];
 
-    if i > 0 then
+    IO:= Grid.Columns.ColumnFromFieldName('TransporterPhysicalWeight').AuxValues[2]-
+         Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[3];
+
+    if I <> IO  then
     begin
-      Result:=FormatFloat('+###,##0.000 кг', I) +
-              FormatFloat(' (+##0.00%)', i/Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[1] * 100);
+      Result:= ifthen(IO>0, '+', '')     + FormatFloat('###,##0.000', IO) +
+               ifthen(I>0, ' (+', ' (')  + FormatFloat('###,##0.000', I ) + ') кг';
     end
     else
     begin
-      Result:=FormatFloat('###,##0.000 кг', I) +
-              FormatFloat(' (-##0.00%)', i/Grid.Columns.ColumnFromFieldName('WeightKGS').AuxValues[1] * 100);
+      Result:= ifthen(I>0, '+', '')      + FormatFloat('###,##0.000 кг', I);
     end;
     Attribs.Font.Style:=[fsBold];
   end
   else
   if SameText(Column.FieldName, 'VolumeL') then
   begin
-    I:= Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValues[1]-
-        Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[1];
+    I:= Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValues[2]-
+        Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[2];
 
-    if i > 0 then
+
+    IO:= Grid.Columns.ColumnFromFieldName('TransporterVolumetricWeight').AuxValues[2]-
+        Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[3];
+
+    if I <> IO then
     begin
-      Result:=FormatFloat('+###,##0.000 кг', I) +
-              FormatFloat(' (+##0.00%)', i/Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[1] * 100);
+
+      Result:= ifthen(IO>0, '+', '')      + FormatFloat('###,##0.000', I) +
+               ifthen(I>0, ' (+', ' (')  + FormatFloat('###,##0.000', I) + ') кг';
+
+//      Result:=FormatFloat('+###,##0.000 кг', I) +
+//              FormatFloat(' (+##0.00%)', i/Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[2] * 100);
     end
     else
     begin
-      Result:=FormatFloat('###,##0.000 кг', I) +
-              FormatFloat(' (-##0.00%)', i/Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[1] * 100);
+      Result:= ifthen(I>0, '+', '')      + FormatFloat('###,##0.000 кг', IO);
+//      Result:=FormatFloat('###,##0.000 кг', I) +
+//              FormatFloat(' (-##0.00%)', i/Grid.Columns.ColumnFromFieldName('VolumeKGS').AuxValues[2] * 100);
     end;
     Attribs.Font.Style:=[fsBold];
-  end
+  end;
 end;
 
 procedure TShipmentsBoxesT.GridDblClick(Sender: TObject);
@@ -490,7 +547,6 @@ begin
     Query.Close();
     Query.ParamByName('TransporterNumber').AsString := FTransporterNumber;
     Query.ParamByName('Invoice').AsString := FInvoice;
-
     Query.Open();
   finally
     HideMask();
@@ -502,6 +558,26 @@ procedure TShipmentsBoxesT.QueryTransporterPhysicalWeightGetText(Sender: TField;
   var Text: string; DisplayText: Boolean);
 begin
   Text:='';
+end;
+
+procedure TShipmentsBoxesT.QueryWeightKGGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+begin
+  if (QueryWeightKG.Value <> QueryWeightKGOld.Value) then
+  begin
+    Text := FormatFloat('###,##0.000',  QueryWeightKGOld.Value)  + ' (' +  FormatFloat('###,##0.000',  QueryWeightKG.Value) + ') кг'  ;
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TShipmentsBoxesT.QueryWeightKGSGetText(Sender: TField; var Text: string; DisplayText: Boolean);
+begin
+  if (QueryWeightKG.Value <> QueryWeightKGOld.Value) then
+  begin
+    Text := FormatFloat('###,##0.000',  QueryWeightKGOld.Value * QueryQuantity.Value)  + ' (' +  FormatFloat('###,##0.000',  QueryWeightKG.Value * QueryQuantity.Value) + ') кг'  ;
+  end
+  else
+    Text := Sender.AsString;
 end;
 
 procedure TShipmentsBoxesT.UniFrameCreate(Sender: TObject);

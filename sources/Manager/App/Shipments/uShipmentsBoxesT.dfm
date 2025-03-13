@@ -1,8 +1,8 @@
 object ShipmentsBoxesT: TShipmentsBoxesT
   Left = 0
   Top = 0
-  Width = 1307
-  Height = 412
+  Width = 1600
+  Height = 800
   OnCreate = UniFrameCreate
   Layout = 'fit'
   TabOrder = 0
@@ -10,7 +10,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 1301
+    Width = 1594
     Height = 64
     Hint = ''
     Visible = False
@@ -25,8 +25,8 @@ object ShipmentsBoxesT: TShipmentsBoxesT
   object Grid: TUniDBGrid
     Left = 0
     Top = 70
-    Width = 1307
-    Height = 342
+    Width = 1600
+    Height = 730
     Hint = ''
     ClientEvents.ExtEvents.Strings = (
       
@@ -244,8 +244,8 @@ object ShipmentsBoxesT: TShipmentsBoxesT
   end
   object Source: TDataSource
     DataSet = Query
-    Left = 668
-    Top = 272
+    Left = 620
+    Top = 264
   end
   object Query: TFDQuery
     AutoCalcFields = False
@@ -263,6 +263,9 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
     UpdateOptions.CheckUpdatable = False
+    UpdateOptions.KeyFields = 'ID'
+    UpdateOptions.AutoIncFields = 'ID'
+    UpdateObject = UpdateSQL
     SQL.Strings = (
       'exec ShipmentsTransporterSelect'
       '       @TransporterNumber = :TransporterNumber     '
@@ -273,8 +276,8 @@ object ShipmentsBoxesT: TShipmentsBoxesT
       ''
       ''
       '')
-    Left = 580
-    Top = 273
+    Left = 516
+    Top = 265
     ParamData = <
       item
         Name = 'TRANSPORTERNUMBER'
@@ -288,6 +291,12 @@ object ShipmentsBoxesT: TShipmentsBoxesT
         ParamType = ptInput
         Value = Null
       end>
+    object QueryID: TIntegerField
+      FieldName = 'ID'
+    end
+    object QueryN: TIntegerField
+      FieldName = 'N'
+    end
     object QueryShipmentsBoxesID: TFMTBCDField
       FieldName = 'ShipmentsBoxesID'
       Origin = 'ShipmentsBoxesID'
@@ -344,14 +353,20 @@ object ShipmentsBoxesT: TShipmentsBoxesT
       Origin = 'AmountPurchase'
       DisplayFormat = '###,##0.00 '#8381
     end
+    object QueryWeightKGOld: TCurrencyField
+      FieldName = 'WeightKGOld'
+      DisplayFormat = '###,##0.000 '#1082#1075
+    end
     object QueryWeightKG: TCurrencyField
       FieldName = 'WeightKG'
       Origin = 'WeightKG'
+      OnGetText = QueryWeightKGGetText
       DisplayFormat = '###,##0.000 '#1082#1075
     end
     object QueryWeightKGS: TCurrencyField
       FieldName = 'WeightKGS'
       Origin = 'WeightKGS'
+      OnGetText = QueryWeightKGSGetText
       DisplayFormat = '###,##0.000 '#1082#1075
     end
     object QuerySupplierPhysicalWeight: TFloatField
@@ -365,6 +380,10 @@ object ShipmentsBoxesT: TShipmentsBoxesT
       Origin = 'TransporterPhysicalWeight'
       OnGetText = QueryTransporterPhysicalWeightGetText
       DisplayFormat = '###,##0.000'
+    end
+    object QueryVolumeKGOld: TCurrencyField
+      FieldName = 'VolumeKGOld'
+      DisplayFormat = '###,##0.000 '#1082#1075
     end
     object QueryVolumeKG: TCurrencyField
       FieldName = 'VolumeKG'
@@ -438,31 +457,14 @@ object ShipmentsBoxesT: TShipmentsBoxesT
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
+    ModifySQL.Strings = (
+      'select :ID')
     FetchRowSQL.Strings = (
-      'SELECT '
-      '       SupplierWeightKG, '
-      '       SupplierVolumeKG,  '
-      '       SupplierDiffVolumeWeigh, '
-      '       SupplierAmount,'
-      '       '
-      '       TransporterWeightKG, '
-      '       TransporterVolumeKG, '
-      '       TransporterDiffVolumeWeigh, '
-      '       TransporterAmount,'
-      '       TransporterNumber,'
-      ''
-      '       ReceiptDate,'
-      '       ReceiptDate2,'
-      '      '
-      '       DeliverySumF,'
-      '       StatusName,'
-      '       '
-      '       updDatetime      '
-      ''
-      '  from vShipments '
-      ' where ShipmentsID = :ShipmentsID'
+      'SELECT *   '
+      '  from pShipmentsBoxes (nolock)'
+      ' where ID = :OLD_ID '
       '')
-    Left = 520
+    Left = 512
     Top = 171
   end
 end

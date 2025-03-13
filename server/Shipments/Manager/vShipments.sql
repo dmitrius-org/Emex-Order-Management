@@ -42,7 +42,7 @@ SELECT s.ShipmentsID
 
 
       ,s.StatusID
-      ,st.Name      StatusName
+      ,st.SName      StatusName
       ,s.updDatetime
       -- считать доставку исходя из данных перевозчика
 
@@ -53,6 +53,7 @@ SELECT s.ShipmentsID
          when isnull(sb.ShipmentsBoxesID, 0) > 0 then 1
          else 0
        end Flag
+      ,sb.BoxNumber
   FROM tShipments s (nolock)
   left join tSuppliers sp (nolock)
          on sp.SuppliersID=s.SuppliersID
@@ -75,7 +76,7 @@ go
 grant select on vShipments to public
 go
 go
-exec setOV 'vShipments', 'V', '20250215', '5'
+exec setOV 'vShipments', 'V', '20250312', '6'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vShipments', @desc = 'Отгрузки'

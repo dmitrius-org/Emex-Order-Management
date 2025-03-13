@@ -388,7 +388,6 @@ procedure TOrderF.edtVolumeKGFChange(Sender: TObject);
 begin
   OrdersFinCalc();
   GetPartDataFromBase;
-  GetSupplierList;
 end;
 
 procedure TOrderF.edtWeightKGFChange(Sender: TObject);
@@ -396,7 +395,6 @@ begin
   WeightKGFStyle();
   OrdersFinCalc();
   GetPartDataFromBase();
-  //GetSupplierList;
 end;
 
 procedure TOrderF.edtWeightKGFKeyDown(Sender: TObject; var Key: Word;
@@ -406,7 +404,6 @@ begin
   begin
     OrdersFinCalc();
     GetPartDataFromBase;
-    //GetSupplierList;
   end;
 end;
 
@@ -443,61 +440,61 @@ begin
   end;
 end;
 
-procedure TOrderF.GetSupplierList;
+procedure TOrderF.GetSupplierList;   // список поставщиков
 var Price: string;
     i: Integer;
 begin
   Price:=cbPrice.Value;
-  // список поставщиков
+
+  logger.Info('TOrderF.GetSupplierList begin');
+  logger.Info('TOrderF.GetSupplierList Price: '      + Price);
+  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
+  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
 
   Sql.Q.Close;
-  Sql.Open(' exec OrderF_SupplierList @OrderID = :OrderID'
-  ,['OrderID'],
-   [FID]);
+  Sql.Open(' exec OrderF_SupplierList @OrderID = :OrderID', ['OrderID'], [FID]);
 
   with Sql.Q do
   begin
     DisableControls;
-    cbPrice.ClearAll;
     cbPrice.Items.BeginUpdate;
+    cbPrice.ClearAll;
     First;
-
     while not Eof do
       begin
+        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
+//ломает itemindex почему? не понятно
+//        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
+//                ['tag',
+//                 FieldByName('Flag').AsInteger]);
+
         cbPrice.ValueList.Add(FieldByName('ID').AsString);
 
-        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
-
-        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
-                ['tag',
-                 FieldByName('Flag').AsInteger]);
         Next;
       end;
+
     cbPrice.Items.EndUpdate;
     cbPrice.Value:=Price;
     EnableControls;
-
-//    DisableControls;
-//    First;
-//    while not Eof do
-//      begin
-//        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
-//                ['tag', FieldByName('Flag').AsInteger]);
-//        Next;
-//      end;
-    EnableControls;
   end;
-  //ComboBoxFill( cbPrice, ' exec OrderF_SupplierList @OrderID = ' + FID.ToString );
+
+  logger.Info('TOrderF.GetSupplierList end');
+  logger.Info('TOrderF.GetSupplierList Price: '      + cbPrice.Value);
+  logger.Info('TOrderF.GetSupplierList Price.Value '     + cbPrice.Value);
+  logger.Info('TOrderF.GetSupplierList Price.ItemIndex ' + cbPrice.ItemIndex.ToString);
+  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
+  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
 end;
 
-procedure TOrderF.GetPartDataFromBase;
+procedure TOrderF.GetPartDataFromBase();
 var Price, js, r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
-  logger.Info('getPartRatingFromDB2 begin');
-  logger.Info('FDetailNumber ' + FDetailNumber);
-  logger.Info('FPriceLogo ' + FPriceLogo);
-  logger.Info('FMakeLogo ' + FMakeLogo);
+  logger.Info('TOrderF.GetPartDataFromBase begin');
+  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
+  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
+  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
+
   HintText := '';
 
   sql.Open('''
@@ -643,12 +640,12 @@ begin
     edtDelivery2.Hint := '';
   end;
 
-  logger.Info('getPartRatingFromDB2 end');
+  logger.Info('GetPartDataFromBase end');
 end;
 
 procedure TOrderF.GooglePSE;
 begin
-  logger.info('GooglePSE');
+  logger.info('TOrderF.GooglePSE');
 
   if FGoogleKey = '' then
   begin
@@ -747,15 +744,6 @@ begin
 
   if FIsSplit then // если разделили деталь, то нам нужно поднять на изменение ее же, предварительно разбив на части
   begin
-//    sql.open('''
-//      exec OrderSplitting
-//              @OrderID  := :OrderID
-//             ,@Quantity := :Quantity
-//    ''',
-//    ['OrderID', 'Quantity'],
-//    [FID, FSplitQuantity]);
-
-
     if ID > 0 then Result := True;
 
     SetRating(0);
@@ -858,15 +846,34 @@ procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
 begin
   OrdersFinCalc();
 
-  GetPartDataFromBase;
-  GetSupplierList;
+  GetPartDataFromBase();
+
+  GetSupplierList();
 end;
 
-procedure TOrderF.cbPriceChange(Sender: TObject);
+procedure TOrderF.cbPriceChange(Sender: TObject);   // var i: Integer;
 begin
+  logger.Info('TOrderF.cbPriceChange begin');
+//  logger.Info('TOrderF.cbPriceChange DestinationLogo ' + cbDestinationLogo.Value);
+  logger.Info('TOrderF.cbPriceChange cbPrice.Value '     + cbPrice.Value);
+  logger.Info('TOrderF.cbPriceChange cbPrice.ItemIndex ' + cbPrice.ItemIndex.ToString);
+  logger.Info('TOrderF.cbPriceChange cbPrice.ValueList.Count ' + cbPrice.ValueList.Count.ToString);
+
+  logger.Info('TOrderF.cbPriceChange FPriceLogo '      + FPriceLogo);
+  logger.Info('TOrderF.cbPriceChange FMakeLogo '       + FMakeLogo);
+
+//  for i := 0 to cbPrice.Count - 1 do
+//    logger.Info('TOrderF.cbPriceChange val' + cbPrice.ValueList.ValueFromIndex[i]);
+
   FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
   FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
+  logger.Info('TOrderF.cbPriceChange end');
+  logger.Info('TOrderF.cbPriceChange cbPrice.Value '     + cbPrice.Value);
+  logger.Info('TOrderF.cbPriceChange cbPrice.ItemIndex ' + cbPrice.ItemIndex.ToString);
+  logger.Info('TOrderF.cbPriceChange FPriceLogo '     + FPriceLogo);
+  logger.Info('TOrderF.cbPriceChange FMakeLogo '      + FMakeLogo);
+//
   GetPartDataFromBase;
 end;
 
@@ -883,6 +890,11 @@ end;
 
 procedure TOrderF.OrdersFinCalc;
 begin
+  logger.Info('TOrderF.OrdersFinCalc begin');
+  logger.Info('TOrderF.OrdersFinCalc DestinationLogo ' + cbDestinationLogo.Value);
+  logger.Info('TOrderF.OrdersFinCalc FPriceLogo ' + FPriceLogo);
+  logger.Info('TOrderF.OrdersFinCalc FMakeLogo ' + FMakeLogo);
+
   RetVal.Clear;
 
   Sql.exec(
@@ -896,12 +908,12 @@ begin
           ,@WeightKGF=:Weight
           ,@VolumeKGF=:Volume
   ''',
-  ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume' {, 'PriceLogo', 'WeightGr', 'VolumeAdd', 'MakeLogo'}],
+  ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume'],
   [cbDestinationLogo.Value.ToInteger,
   FDetailNumber,
   FID,
   edtWeightKGF.Value,
-  edtVolumeKGF.Value{,  FPriceLogo, edtWeightKGF.Value, edtVolumeKGF.Value, FMakeLogo}]);
+  edtVolumeKGF.Value]);
 end;
 
 procedure TOrderF.OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);
@@ -962,7 +974,7 @@ var Emex:TEmex;
  Baskets : ArrayOfBasketDetails_v2;
  I: Integer;
 begin
-  logger.Info('TOrderF.OrderUpdate Begin');
+  logger.Info('TOrderF.OrderSave Begin');
   RetVal.Clear;
 
   DataCheck(ATargetStateID);
@@ -1039,11 +1051,11 @@ begin
   end
   else
   begin
-    logger.Info('TOrderF.OrderUpdate Error: ' + RetVal.Message);
+    logger.Info('TOrderF.OrderSave Error: ' + RetVal.Message);
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
 
-  logger.Info('TOrderF.OrderUpdate end');
+  logger.Info('TOrderF.OrderSave end');
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);
@@ -1272,7 +1284,8 @@ begin
     UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.show();')
   else
     UniSession.AddJS(Self.JSInterface.JSName + '.badgeEl.hide();');
-   LoadDataPart;
+
+  LoadDataPart;
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
@@ -1286,7 +1299,8 @@ begin
       OrdersFinCalc();
 
       GetPartDataFromBase();
-      GetSupplierList;
+
+      GetSupplierList();
 
       UniTimer.Enabled := False;
     end;
@@ -1465,9 +1479,10 @@ begin
 
        select @CurKurs = dbo.GetCurrencyRate('840', null)
 
-       delete pFindByNumber
-         from pFindByNumber (rowlock)
-        where spid = @@spid
+       if :IsSplit <> 1
+         delete pFindByNumber
+           from pFindByNumber (rowlock)
+          where spid = @@spid
 
        select @Kurs         as Kurs
              ,@ExtraKurs    as ExtraKurs
@@ -1525,6 +1540,7 @@ begin
   ''';
 
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
+  UniMainModule.Query.ParamByName('IsSplit').AsBoolean := FIsSplit;
   UniMainModule.Query.Open;
 
   cbPrice.FillFromSQL('exec OrderF_SupplierList @OrderID =' + FID.ToString);
@@ -1558,27 +1574,27 @@ begin
     if UniMainModule.Query.FieldByName('WeightKGF').asFloat = 0 then
        edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('WeightKG').AsString   // Вес Физический факт
     else
-      edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
+      edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;  // Вес Физический факт
 
     if UniMainModule.Query.FieldByName('VolumeKGF').asFloat = 0 then
-       edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKG').AsString    // Вес Объемный факт
+       edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKG').AsString  // Вес Объемный факт
     else
-      edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
+      edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString; // Вес Объемный факт
   end
   else
   begin
-    edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;    // Вес Объемный факт
-    edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;    // Вес Физический факт
+    edtVolumeKGF.Text  := UniMainModule.Query.FieldByName('VolumeKGF').AsString;   // Вес Объемный факт
+    edtWeightKGF.Text  := UniMainModule.Query.FieldByName('WeightKGF').AsString;   // Вес Физический факт
   end;
 
-  edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;   //
+  edtDetailNameF.text:= UniMainModule.Query.FieldByName('DetailName').AsString;
 
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки
   cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
 
   cbFragile.Checked  := UniMainModule.Query.FieldByName('Fragile').AsBoolean;
   cbNoAir.Checked    := UniMainModule.Query.FieldByName('NoAir').AsBoolean;
-  cbNLA.Checked    := UniMainModule.Query.FieldByName('NLA').AsBoolean;
+  cbNLA.Checked      := UniMainModule.Query.FieldByName('NLA').AsBoolean;
   edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);

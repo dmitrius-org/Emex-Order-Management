@@ -82,7 +82,7 @@ as
                             end 
         ,o.Warning         = case
                               when isnull(p.WarnText, '') <> '' then p.WarnText	
-                              else o.Warning  
+                              else '' --o.Warning  
                              end
         
 
@@ -95,7 +95,7 @@ as
 
  Update o
     set o.flag = o.Flag & ~1      -- превышение цены
-                        & ~2      --нет цены
+                        & ~2      -- нет цены
                         & ~16384  -- Несоответствие упаковке
                         & ~32768  -- Нет в наличии
                         & ~262144 -- Измените метод отправки         

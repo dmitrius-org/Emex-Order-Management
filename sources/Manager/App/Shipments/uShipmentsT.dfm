@@ -5,6 +5,7 @@ object ShipmentsT: TShipmentsT
   Height = 596
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
+  OnDestroy = UniFrameDestroy
   OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
@@ -123,6 +124,7 @@ object ShipmentsT: TShipmentsT
           #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
           'n the ToolBar, number 10, hide him'#13#10#13#10'}')
       HeaderTitleAlign = taCenter
+      PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgMultiSelect, dgTabs, dgCancelOnExit, dgDontShowSelected, dgRowNumbers]
       WebOptions.PageSize = 500
@@ -182,6 +184,7 @@ object ShipmentsT: TShipmentsT
           Title.Alignment = taCenter
           Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
           Width = 165
+          ReadOnly = True
           Hint = #1055#1086#1089#1090#1072#1074#1097#1080#1082'. '#1040#1082#1082#1072#1091#1085#1090' '#1080#1079' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1089#1076#1077#1083#1072#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1072
           Sortable = True
         end
@@ -220,7 +223,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'ShipmentsAmount'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+          Title.Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ($)'
           Width = 107
           ReadOnly = True
           Sortable = True
@@ -244,7 +247,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'WeightKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
+          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1088#1072#1081#1089')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -252,7 +255,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'VolumeKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
+          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084' ('#1087#1088#1072#1081#1089')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -269,7 +272,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'WeightKGF'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090
+          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1092#1072#1082#1090')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -277,7 +280,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'VolumeKGF'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090
+          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' ('#1092#1072#1082#1090')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -310,19 +313,19 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'Amount'
           Title.Alignment = taCenter
-          Title.Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1074#1077#1089#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1087#1088#1072#1081#1089')'
           Width = 283
         end
         item
           FieldName = 'AmountF'
           Title.Alignment = taCenter
-          Title.Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1087#1086' '#1074#1077#1089#1072#1084' '#1092#1072#1082#1090')'
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1092#1072#1082#1090')'
           Width = 277
         end
         item
           FieldName = 'DeliverySumF'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1092#1072#1082#1090
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1080#1090#1086#1075')'
           Width = 150
           ReadOnly = True
           Hint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1093' '#1076#1072#1085#1085#1099#1093
@@ -331,7 +334,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'SupplierWeightKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1092#1080#1079'. '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -339,7 +342,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'SupplierVolumeKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -355,14 +358,14 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'SupplierAmount'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
           Width = 150
           Sortable = True
         end
         item
           FieldName = 'TransporterWeightKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1092#1080#1079'. '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+          Title.Caption = #1042#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -370,7 +373,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'TransporterVolumeKG'
           Title.Alignment = taCenter
-          Title.Caption = #1042#1077#1089' '#1086#1073#1098#1077#1084' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+          Title.Caption = ' '#1042#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' ('#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082')'
           Width = 150
           ReadOnly = True
           Sortable = True
@@ -386,7 +389,7 @@ object ShipmentsT: TShipmentsT
         item
           FieldName = 'TransporterAmount'
           Title.Alignment = taCenter
-          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1080#1089#1093#1086#1076#1103' '#1080#1079' '#1076#1072#1085#1085#1099#1093' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+          Title.Caption = #1057#1091#1084#1084#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082')'
           Width = 150
           Sortable = True
         end
@@ -425,7 +428,7 @@ object ShipmentsT: TShipmentsT
         LayoutConfig.Width = '0'
         TabOrder = 1
         object fCancel: TUniBitBtn
-          Left = 773
+          Left = 1133
           Top = 35
           Width = 128
           Height = 24
@@ -435,7 +438,7 @@ object ShipmentsT: TShipmentsT
           ImageIndex = 3
         end
         object fOk: TUniBitBtn
-          Left = 630
+          Left = 990
           Top = 35
           Width = 137
           Height = 24
@@ -446,7 +449,7 @@ object ShipmentsT: TShipmentsT
           ImageIndex = 2
         end
         object fShipmentsDate: TUniDateTimePicker
-          Left = 154
+          Left = 408
           Top = 35
           Width = 130
           Height = 21
@@ -460,7 +463,7 @@ object ShipmentsT: TShipmentsT
           EmptyText = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
         end
         object UniLabel8: TUniLabel
-          Left = 154
+          Left = 408
           Top = 16
           Width = 78
           Height = 13
@@ -470,7 +473,7 @@ object ShipmentsT: TShipmentsT
           TabOrder = 4
         end
         object edtInvoice: TUniEdit
-          Left = 10
+          Left = 263
           Top = 35
           Width = 139
           Hint = ''
@@ -482,7 +485,7 @@ object ShipmentsT: TShipmentsT
           ClearButton = True
         end
         object UniLabel4: TUniLabel
-          Left = 10
+          Left = 263
           Top = 16
           Width = 87
           Height = 13
@@ -492,7 +495,7 @@ object ShipmentsT: TShipmentsT
           TabOrder = 6
         end
         object fSupplier: TUniCheckComboBox
-          Left = 290
+          Left = 544
           Top = 35
           Width = 208
           Hint = ''
@@ -534,7 +537,7 @@ object ShipmentsT: TShipmentsT
           OnSelect = fSupplierSelect
         end
         object UniLabel3: TUniLabel
-          Left = 290
+          Left = 544
           Top = 16
           Width = 62
           Height = 13
@@ -544,7 +547,7 @@ object ShipmentsT: TShipmentsT
           TabOrder = 8
         end
         object edtTransporterNumber: TUniEdit
-          Left = 504
+          Left = 11
           Top = 35
           Width = 120
           Hint = ''
@@ -556,7 +559,7 @@ object ShipmentsT: TShipmentsT
           ClearButton = True
         end
         object UniLabel1: TUniLabel
-          Left = 504
+          Left = 11
           Top = 16
           Width = 70
           Height = 13
@@ -565,17 +568,66 @@ object ShipmentsT: TShipmentsT
           Caption = #1053#1086#1084#1077#1088' '#1075#1088#1091#1079#1072':'
           TabOrder = 10
         end
+        object lblStatys: TUniLabel
+          Left = 758
+          Top = 16
+          Width = 36
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1057#1090#1072#1090#1091#1089':'
+          TabOrder = 11
+        end
+        object fStatus2: TUniADCheckComboBox
+          Left = 758
+          Top = 35
+          Width = 209
+          Hint = ''
+          ShowHint = True
+          ShowSearch = True
+          Text = ''
+          TabOrder = 12
+          ClientEvents.ExtEvents.Strings = (
+            ''
+            
+              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+              'oxSearch(sender, "id", "val");'#13#10'}')
+          EmptyText = #1057#1090#1072#1090#1091#1089
+          ClearButton = True
+          IconItems = <>
+        end
+        object edtBox: TUniEdit
+          Left = 137
+          Top = 35
+          Width = 120
+          Hint = ''
+          ShowHint = True
+          Text = ''
+          TabOrder = 13
+          EmptyText = #1050#1086#1088#1086#1073#1082#1072
+          CheckChangeDelay = 200
+          ClearButton = True
+        end
+        object UniLabel2: TUniLabel
+          Left = 137
+          Top = 16
+          Width = 49
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1050#1086#1088#1086#1073#1082#1072':'
+          TabOrder = 14
+        end
       end
     end
     object pnlGridSelectedCount: TUniPanel
       AlignWithMargins = True
       Left = 29
       Top = 420
-      Width = 599
+      Width = 444
       Height = 40
       Hint = ''
       Margins.Right = 50
-      Visible = False
       ShowHint = True
       ParentShowHint = False
       TabOrder = 3
@@ -615,7 +667,7 @@ object ShipmentsT: TShipmentsT
       object UniPanel4: TUniPanel
         Left = 180
         Top = 0
-        Width = 209
+        Width = 264
         Height = 40
         Hint = ''
         ShowHint = True
@@ -624,15 +676,16 @@ object ShipmentsT: TShipmentsT
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel3'
+        ExplicitWidth = 209
         object lblSelRowSum: TUniLabel
           AlignWithMargins = True
-          Left = 6
+          Left = 46
           Top = 3
-          Width = 73
+          Width = 40
           Height = 13
           Hint = ''
           ShowHint = True
-          Caption = #1057#1091#1084#1084#1072' '#1089#1090#1088#1086#1082': '
+          Caption = #1057#1091#1084#1084#1072': '
           ParentColor = False
           Color = clBtnFace
           TabOrder = 1
@@ -652,54 +705,6 @@ object ShipmentsT: TShipmentsT
           AlignWithMargins = True
           Left = 92
           Top = 3
-          Width = 6
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = ': '
-          TabOrder = 3
-        end
-      end
-      object UniPanel5: TUniPanel
-        Left = 389
-        Top = 0
-        Width = 210
-        Height = 40
-        Hint = ''
-        ShowHint = True
-        Align = alRight
-        TabOrder = 3
-        BorderStyle = ubsNone
-        ShowCaption = False
-        Caption = 'UniPanel3'
-        object UniLabel7: TUniLabel
-          AlignWithMargins = True
-          Left = 14
-          Top = 3
-          Width = 73
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = #1057#1091#1084#1084#1072' '#1074#1077#1089#1086#1074': '
-          ParentColor = False
-          Color = clBtnFace
-          TabOrder = 1
-        end
-        object lblWeightKG: TUniLabel
-          AlignWithMargins = True
-          Left = 101
-          Top = 3
-          Width = 6
-          Height = 13
-          Hint = ''
-          ShowHint = True
-          Caption = ': '
-          TabOrder = 2
-        end
-        object lblVolumeKG: TUniLabel
-          AlignWithMargins = True
-          Left = 101
-          Top = 24
           Width = 6
           Height = 13
           Hint = ''
@@ -806,6 +811,10 @@ object ShipmentsT: TShipmentsT
       '   !Invoice'
       '      '
       '   !Supplier'
+      '   '
+      '   !Status'
+      '   '
+      '   !Box'
       '      '
       ' order by s.ShipmentsDate  desc   '
       '   ')
@@ -827,6 +836,14 @@ object ShipmentsT: TShipmentsT
       item
         Value = Null
         Name = 'SUPPLIER'
+      end
+      item
+        Value = Null
+        Name = 'STATUS'
+      end
+      item
+        Value = Null
+        Name = 'BOX'
       end>
     object QueryShipmentsID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -848,15 +865,18 @@ object ShipmentsT: TShipmentsT
     object QuerySupplierBrief: TWideStringField
       FieldName = 'SupplierBrief'
       Origin = 'SupplierBrief'
+      ReadOnly = True
       Size = 256
     end
     object QueryReceiptDate: TSQLTimeStampField
       FieldName = 'ReceiptDate'
       Origin = 'ReceiptDate'
+      ReadOnly = True
       OnGetText = QueryReceiptDateGetText
     end
     object QueryReceiptDate2: TSQLTimeStampField
       FieldName = 'ReceiptDate2'
+      ReadOnly = True
     end
     object QueryInvoice: TWideStringField
       FieldName = 'Invoice'
@@ -1018,16 +1038,6 @@ object ShipmentsT: TShipmentsT
       ImageIndex = 3
       OnExecute = actFilterClearExecute
     end
-    object actGridSettingLoad: TAction
-      Category = 'Grid'
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-      OnExecute = actGridSettingLoadExecute
-    end
-    object actGridSettingSave: TAction
-      Category = 'Grid'
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1090#1072#1073#1083#1080#1094#1099
-      OnExecute = actGridSettingSaveExecute
-    end
     object actGridSettingDefault: TAction
       Category = 'Grid'
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
@@ -1122,12 +1132,6 @@ object ShipmentsT: TShipmentsT
     end
     object N7: TUniMenuItem
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080
-      object N9: TUniMenuItem
-        Action = actGridSettingSave
-      end
-      object N8: TUniMenuItem
-        Action = actGridSettingLoad
-      end
       object N11: TUniMenuItem
         Action = actGridSettingDefault
       end

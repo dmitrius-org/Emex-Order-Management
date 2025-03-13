@@ -30,8 +30,6 @@ Type
     ///             1-восстановление
     ///</summary>
     class procedure GridLayout(AClientID: Integer; AForm:TObject; AGrid: TUniDBGrid; AOperation: tGridLayout); overload;
-
-
     /// <summary>
     ///  GridLayout - сохранение настроек грида
     ///</summary>
@@ -41,6 +39,10 @@ Type
     ///</summary>
     class procedure GridLayoutSave(AClientID: Integer; AForm:TObject; AGrid: TUniDBGrid; AParams:TUniStrings; AEventName: String); overload;
 
+    /// <summary>
+    ///  GridLayoutDefault -
+    ///</summary>
+    class procedure GridLayoutDefault(AForm:TObject; AGrid: TUniDBGrid);
   end;
 
 implementation
@@ -187,6 +189,11 @@ begin
 
   //if AShowResultMessage = True then
   //  ToastOK ('Успешно выполнено!', unisession);
+end;
+
+class procedure GridExt.GridLayoutDefault(AForm:TObject; AGrid: TUniDBGrid);
+begin
+  Sql.Exec('delete tGridOptions from tGridOptions (rowlock) where UserID = dbo.GetUserID() and Grid =:Grid', ['Grid'],[AForm.ClassName +'.' + AGrid.Name]);
 end;
 
 class procedure GridExt.GridLayoutSave(AClientID: Integer; AForm: TObject; AGrid: TUniDBGrid; AParams: TUniStrings; AEventName: String);
