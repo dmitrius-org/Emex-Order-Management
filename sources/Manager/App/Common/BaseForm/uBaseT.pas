@@ -21,13 +21,7 @@ type
     DataSource: TDataSource;
     ImageList32: TUniImageList;
     ActionList: TUniActionList;
-    actAdd: TAction;
-    actEdit: TAction;
-    actDelete: TAction;
     PopupMenu: TUniPopupMenu;
-    N1: TUniMenuItem;
-    N2: TUniMenuItem;
-    N4: TUniMenuItem;
     ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
@@ -35,29 +29,21 @@ type
     fBrief: TUniEdit;
     fisAdmin: TUniCheckBox;
     actRefreshAll: TAction;
-    N5: TUniMenuItem;
     N6: TUniMenuItem;
     fisBlock: TUniCheckBox;
-    UniPanel: TUniPanel;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
-    UniPanel3: TUniPanel;
     procedure UniFrameCreate(Sender: TObject);
-    procedure GridCellContextClick(Column: TUniDBGridColumn; X,
-      Y: Integer);
-    procedure GridColumnFilter(Sender: TUniDBGrid;
-      const Column: TUniDBGridColumn; const Value: Variant);
+    procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
+    procedure GridColumnFilter(Sender: TUniDBGrid; const Column: TUniDBGridColumn; const Value: Variant);
     procedure GridClearFilters(Sender: TObject);
     procedure actRefreshAllExecute(Sender: TObject);
-    procedure QueryAfterPost(DataSet: TDataSet);
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
-      NewIndex: Integer);
+    procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex, NewIndex: Integer);
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
-    procedure GridAjaxEvent(Sender: TComponent; EventName: string;
-      Params: TUniStrings);
+    procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -82,11 +68,6 @@ end;
 procedure TBaseT.DataRefresh;
 begin
 
-
-  actEdit.Enabled := (actEdit.Tag = 1) and (Query.RecordCount >0);
-  actDelete.Enabled := (actDelete.Tag = 1 ) and (Query.RecordCount >0);
-
-  //Grid.ReadOnly := not actEdit.Enabled;
 end;
 
 procedure TBaseT.GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -163,11 +144,6 @@ begin
   end;
 end;
 
-procedure TBaseT.QueryAfterPost(DataSet: TDataSet);
-begin
- // if FAction = acInsert then  Query.Refresh;
-end;
-
 procedure TBaseT.UniFrameCreate(Sender: TObject);
 begin
   {$IFDEF Debug}
@@ -185,4 +161,5 @@ end;
 
 initialization
   RegisterClass(TBaseT);
+
 end.

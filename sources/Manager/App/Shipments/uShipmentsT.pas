@@ -21,7 +21,7 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniGridExporters, uniMenuButton, uConstant,
   uShipmentsBoxesT_Wrapper, uUniADCheckComboBoxHelper, uUniADCheckComboBoxEx,
-  uUtils.Mark;
+  uUtils.Mark, uFragileT_Wrapper;
 
 
 
@@ -122,6 +122,8 @@ type
     fStatus2: TUniADCheckComboBox;
     edtBox: TUniEdit;
     UniLabel2: TUniLabel;
+    actFrigileData: TAction;
+    N8: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -155,6 +157,7 @@ type
     procedure QueryFlagGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
+    procedure actFrigileDataExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -247,6 +250,11 @@ end;
 procedure TShipmentsT.actFilterExecute(Sender: TObject);
 begin
   GridOpen();
+end;
+
+procedure TShipmentsT.actFrigileDataExecute(Sender: TObject);
+begin
+  FragileT_Wrapper.ShowModal;
 end;
 
 procedure TShipmentsT.actGridSettingDefaultExecute(Sender: TObject);
@@ -453,7 +461,7 @@ begin
 
   actSetReceiptDate.Enabled := (actSetReceiptDate.Tag=1) and (Query.RecordCount>0);
 
-  actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and (not QueryTransporterNumber.IsNull);
+  actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and ((QueryFlag.Value and 1) = 1);
 
 end;
 
@@ -625,4 +633,5 @@ end;
 
 initialization
   RegisterClass(TShipmentsT);
+
 end.

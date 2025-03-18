@@ -1,4 +1,4 @@
-unit uExceptionsT;
+п»їunit uExceptionsT;
 
 interface
 
@@ -11,14 +11,10 @@ uses
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniToolBar, uniGUIClasses, uniPanel, uniCheckBox, uniEdit,
   uniMultiItem, uniComboBox, uUniADCheckComboBoxEx, uUniDateRangePicker,
-  uniBitBtn, uniLabel, uniButton, uUniADCheckComboBoxHelper;
+  uniBitBtn, uniLabel, uniButton, uUniADCheckComboBoxHelper, uniGroupBox;
 
 type
   TExceptionsT = class(TBaseT)
-    fCancel: TUniBitBtn;
-    btnGridStatisticOpen: TUniButton;
-    fType: TUniADCheckComboBox;
-    UniLabel3: TUniLabel;
     QueryBrand: TStringField;
     QueryDetailNum: TStringField;
     QueryDetailName: TStringField;
@@ -29,11 +25,16 @@ type
     QueryFragile: TBooleanField;
     QueryNLA: TBooleanField;
     QueryPriceID: TFMTBCDField;
+    gbFilter: TUniGroupBox;
+    fCancel: TUniBitBtn;
+    fOk: TUniBitBtn;
+    UniLabel3: TUniLabel;
+    fType: TUniADCheckComboBox;
     fDetailNum: TUniEdit;
-    lblDEtailNumber: TUniLabel;
+    UniLabel1: TUniLabel;
     procedure UniFrameCreate(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
-    procedure actRefreshAllExecute(Sender: TObject);
+    procedure fOkClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -49,14 +50,9 @@ implementation
 {$R *.dfm}
 
 
-procedure TExceptionsT.actRefreshAllExecute(Sender: TObject);
-begin
-  DataRefresh;
-end;
-
 procedure TExceptionsT.DataRefresh;
 begin
-  ShowMask('Ждите, операция выполняется');
+  ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ');
   UniSession.Synchronize;
   try
     Query.Close;
@@ -75,6 +71,12 @@ end;
 procedure TExceptionsT.fCancelClick(Sender: TObject);
 begin
   fType.ClearSelection;
+  fDetailNum.Clear;
+end;
+
+procedure TExceptionsT.fOkClick(Sender: TObject);
+begin
+  DataRefresh
 end;
 
 procedure TExceptionsT.UniFrameCreate(Sender: TObject);

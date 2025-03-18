@@ -116,14 +116,12 @@ uses
   uUtils.Math in '..\Common\Common\uUtils.Math.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
   uUtils.Strings in '..\Common\Common\uUtils.Strings.pas',
-  uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uShipmentsBoxesT in 'App\Shipments\uShipmentsBoxesT.pas' {ShipmentsBoxesT: TUniFrame},
   uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
   uStringHelper in '..\Common\Common\uStringHelper.pas',
   uClientPasswordResetF in 'App\Clients\uClientPasswordResetF.pas' {ClientPasswordResetF: TUniForm},
   uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
-  uShipmentsBoxesT_Wrapper in 'App\Shipments\uShipmentsBoxesT_Wrapper.pas' {ShipmentsBoxesT_Wrapper: TUniForm},
+  uFragileT_Wrapper in 'App\Shipments\uFragileT_Wrapper.pas' {FragileT_Wrapper: TUniForm},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
   uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas',
@@ -135,7 +133,11 @@ uses
   uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame},
   uSpplitForm in 'App\Orders\uSpplitForm.pas' {SpplitForm: TUniForm},
   uGroupDetailNameEditF in 'App\Orders\uGroupDetailNameEditF.pas' {GroupDetailNameEditF: TUniForm},
-  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas';
+  uUtils.Mark in '..\Common\CommonApp\uUtils.Mark.pas',
+  uShipmentsBoxesT in 'App\Shipments\uShipmentsBoxesT.pas' {ShipmentsBoxesT: TUniFrame},
+  uShipmentsBoxesT_Wrapper in 'App\Shipments\uShipmentsBoxesT_Wrapper.pas' {ShipmentsBoxesT_Wrapper: TUniForm},
+  uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
+  uFragileT in 'App\Shipments\uFragileT.pas' {FragileT: TUniFrame};
 
 {$R *.res}
 

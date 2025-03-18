@@ -36,7 +36,7 @@ select
        s.Brief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
-       convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' | ' + -- количество
+       convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' (' + cast(p.Packing as varchar) + ') | ' + -- количество
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
                                                         when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                       -- Срок поставщика из API
@@ -84,7 +84,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250310', '7'
+exec setOV 'OrderF_SupplierList', 'P', '20250313', '8'
 go
  
 exec OrderF_SupplierList @OrderID=183012

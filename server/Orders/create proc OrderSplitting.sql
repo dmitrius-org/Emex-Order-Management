@@ -207,8 +207,9 @@ inner join tOrdersDeliverySupplier ods (nolock)
 Update o
    set o.Quantity       = (o.Quantity  - @Quantity)
       ,o.Amount         = (o.Quantity  - @Quantity) * o.Price  
-      ,o.AmountPurchase    = (o.Quantity  - @Quantity) * o.PricePurchase
+      ,o.AmountPurchase = (o.Quantity  - @Quantity) * o.PricePurchase
       ,o.AmountPurchaseF= (o.Quantity  - @Quantity) * o.PricePurchaseF
+      ,o.Flag           = isnull(o.Flag, 0)| 524288 
   from tOrders o (updlock) 
  where o.OrderID = @OrderID
 

@@ -81,55 +81,15 @@ object BaseT: TBaseT
       TabOrder = 5
     end
   end
-  object UniPanel: TUniPanel
+  object UniPanel2: TUniPanel
     Left = 0
     Top = 0
     Width = 1163
-    Height = 72
-    Hint = ''
-    Margins.Bottom = 0
-    ShowHint = True
-    Align = alTop
-    TabOrder = 1
-    BorderStyle = ubsNone
-    Caption = '1234'
-    Color = clBtnShadow
-    Images = ImageList32
-    AlignmentControl = uniAlignmentClient
-    ParentAlignmentControl = False
-    Layout = 'fit'
-    LayoutAttribs.Align = 'top'
-    LayoutAttribs.Pack = 'start'
-    LayoutConfig.Width = '100'
-    LayoutConfig.Region = 'north'
-    ExplicitWidth = 1027
-    object UniPanel3: TUniPanel
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 1157
-      Height = 71
-      Hint = ''
-      ShowHint = True
-      Align = alTop
-      TabOrder = 1
-      ShowCaption = False
-      Caption = 'UniPanel1'
-      LayoutAttribs.Align = 'top'
-      LayoutConfig.Width = '0'
-      LayoutConfig.Region = 'north'
-      ExplicitTop = 1
-    end
-  end
-  object UniPanel2: TUniPanel
-    Left = 0
-    Top = 72
-    Width = 1163
-    Height = 327
+    Height = 399
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -138,13 +98,13 @@ object BaseT: TBaseT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
-    ExplicitWidth = 1027
-    ExplicitHeight = 430
+    ExplicitTop = 72
+    ExplicitHeight = 327
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
       Width = 1163
-      Height = 327
+      Height = 399
       Hint = ''
       ShowHint = True
       BodyRTL = False
@@ -212,7 +172,6 @@ object BaseT: TBaseT
     end
   end
   object Query: TFDQuery
-    AfterPost = QueryAfterPost
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
     UpdateOptions.UpdateChangedFields = False
@@ -221,30 +180,11 @@ object BaseT: TBaseT
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
-    UpdateOptions.UpdateTableName = 'dbo.tSuppliers'
-    UpdateOptions.KeyFields = 'SuppliersID'
-    UpdateOptions.AutoIncFields = 'SuppliersID'
     UpdateObject = UpdateSQL
     SQL.Strings = (
-      ''
-      'DECLARE @Type as ID'
-      ' '
-      'if :Types <> '#39#39'    '
-      '  INSERT INTO @Type (ID)'
-      '  SELECT CAST(value AS NUMERIC(18, 0))'
-      '    FROM STRING_SPLIT(:Types, '#39','#39');'
-      '    '
-      '                        '
-      ' exec dbo.ExceptionsSelect            '
-      '            @Type = @Type  '
       '')
     Left = 686
     Top = 118
-    ParamData = <
-      item
-        Name = 'TYPES'
-        ParamType = ptInput
-      end>
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1323,21 +1263,6 @@ object BaseT: TBaseT
   object ActionList: TUniActionList
     Left = 221
     Top = 196
-    object actAdd: TAction
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 1
-    end
-    object actEdit: TAction
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ImageIndex = 3
-    end
-    object actDelete: TAction
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 0
-    end
     object actRefreshAll: TAction
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091
@@ -1348,18 +1273,6 @@ object BaseT: TBaseT
     Images = ImageList16
     Left = 218
     Top = 270
-    object N1: TUniMenuItem
-      Action = actAdd
-    end
-    object N2: TUniMenuItem
-      Action = actEdit
-    end
-    object N4: TUniMenuItem
-      Action = actDelete
-    end
-    object N5: TUniMenuItem
-      Caption = '-'
-    end
     object N6: TUniMenuItem
       Action = actRefreshAll
     end

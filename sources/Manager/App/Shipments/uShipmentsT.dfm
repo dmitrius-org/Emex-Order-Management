@@ -676,7 +676,6 @@ object ShipmentsT: TShipmentsT
         BorderStyle = ubsNone
         ShowCaption = False
         Caption = 'UniPanel3'
-        ExplicitWidth = 209
         object lblSelRowSum: TUniLabel
           AlignWithMargins = True
           Left = 46
@@ -1085,6 +1084,12 @@ object ShipmentsT: TShipmentsT
       ImageIndex = 9
       OnExecute = actShipmentsBoxesExecute
     end
+    object actFrigileData: TAction
+      Category = 'Grid'
+      Caption = #1061#1088#1091#1087#1082#1086#1077
+      Hint = #1055#1086#1079#1074#1086#1083#1103#1077#1090' '#1087#1088#1086#1089#1084#1072#1090#1080#1088#1080#1074#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1076#1077#1090#1072#1083#1077#1081' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1061#1088#1091#1087#1082#1086#1077'"'
+      OnExecute = actFrigileDataExecute
+    end
   end
   object ppMain: TUniPopupMenu
     OnPopup = ppMainPopup
@@ -1117,6 +1122,9 @@ object ShipmentsT: TShipmentsT
     end
     object N2: TUniMenuItem
       Action = actExportData
+    end
+    object N8: TUniMenuItem
+      Action = actFrigileData
     end
     object N14: TUniMenuItem
       Caption = '-'

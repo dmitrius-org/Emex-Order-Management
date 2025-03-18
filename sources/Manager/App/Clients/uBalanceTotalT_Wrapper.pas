@@ -28,8 +28,6 @@ type
 
 function BalanceTotalT_W: TBalanceTotalT_W;
 
-
-
 implementation
 
 {$R *.dfm}
@@ -62,13 +60,11 @@ end;
 
 procedure TBalanceTotalT_W.UniFormCreate(Sender: TObject);
 begin
-
   ComboBoxFill(cbClient, ' select ClientID as ID, Brief as Name from tClients (nolock) ');
 
   BalanceTotal :=  TBalanceTotalT.Create(Self);
   BalanceTotal.Align  := alClient;
   BalanceTotal.Parent := self;
-
 end;
 
 procedure TBalanceTotalT_W.UniFormShow(Sender: TObject);

@@ -17,7 +17,7 @@ object ExportForm: TExportForm
     Width = 1606
     Height = 650
     Hint = ''
-    ActivePage = TabNomenclature
+    ActivePage = tabFragile
     Align = alClient
     TabOrder = 0
     object TabNomenclature: TUniTabSheet

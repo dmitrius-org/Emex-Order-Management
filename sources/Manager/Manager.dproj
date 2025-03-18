@@ -448,14 +448,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Strings.pas"/>
-        <DCCReference Include="App\Statistics\uStatisticCanceled.pas">
-            <Form>StatisticCanceled</Form>
-            <DesignClass>TUniFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="App\Shipments\uShipmentsBoxesT.pas">
-            <Form>ShipmentsBoxesT</Form>
-            <DesignClass>TUniFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Common\uStringHelper.pas"/>
         <DCCReference Include="App\Clients\uClientPasswordResetF.pas">
@@ -473,8 +465,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Shipments\uShipmentsBoxesT_Wrapper.pas">
-            <Form>ShipmentsBoxesT_Wrapper</Form>
+        <DCCReference Include="App\Shipments\uFragileT_Wrapper.pas">
+            <Form>FragileT_Wrapper</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
@@ -522,6 +514,26 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uUtils.Mark.pas"/>
+        <DCCReference Include="App\Shipments\uShipmentsBoxesT.pas">
+            <Form>ShipmentsBoxesT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Shipments\uShipmentsBoxesT_Wrapper.pas">
+            <Form>ShipmentsBoxesT_Wrapper</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Statistics\uStatisticCanceled.pas">
+            <Form>StatisticCanceled</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Shipments\uFragileT.pas">
+            <Form>FragileT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

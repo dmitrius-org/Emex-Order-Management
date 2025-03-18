@@ -1,7 +1,7 @@
 if OBJECT_ID('EmexCreateOrderCheck') is not null
     drop proc EmexCreateOrderCheck
 /*
-  EmexCreateOrderCheck - 
+  EmexCreateOrderCheck - проверка на то, что деталь уже заказана
 
 */
 go
@@ -21,6 +21,9 @@ Update pAccrualAction
          on m.Spid          = @@SPID
 		and m.Reference     = o.Reference
 		and m.CustomerSubId = o.CustomerSubId
+        and ((o.Flag&524288 > 0 /*Деталь разделена на части менеджером*/ and m.PriceLogo = o.PriceLogo)
+          or (o.Flag&524288 = 0)
+            )
  where p.Spid   = @@SPID
    and p.RetVal = 0
 
@@ -40,3 +43,5 @@ go
 exec setOV 'EmexCreateOrderCheck', 'P', '20240521', '4'
 go
  
+--Select * from pMovement where DetailNum='0RF0323806'
+--Select * from tOrders where DetailNumber='0RF0323806'

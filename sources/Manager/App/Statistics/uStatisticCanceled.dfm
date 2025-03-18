@@ -2,7 +2,7 @@ object StatisticCanceled: TStatisticCanceled
   Left = 0
   Top = 0
   Width = 928
-  Height = 359
+  Height = 570
   OnCreate = UniFrameCreate
   Layout = 'fit'
   TabOrder = 0
@@ -20,7 +20,6 @@ object StatisticCanceled: TStatisticCanceled
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 1193
     object btnGridStatisticOpen: TUniButton
       Left = 704
       Top = 27
@@ -183,14 +182,11 @@ object StatisticCanceled: TStatisticCanceled
     Left = 0
     Top = 77
     Width = 928
-    Height = 282
+    Height = 493
     Hint = ''
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -115
-    ExplicitTop = -28
-    ExplicitWidth = 1314
-    ExplicitHeight = 447
+    ExplicitHeight = 282
   end
   object dsCanceled: TDataSource
     DataSet = qCanceled

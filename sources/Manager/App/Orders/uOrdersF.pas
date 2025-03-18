@@ -533,7 +533,7 @@ begin
     FProfin2           := sql.F('Profit').AsFloat;
     FQuantity2         := sql.F('Available').AsInteger;
 
-    edtCount2.Text     := FQuantity.ToString + '/' + sql.F('AvailableStr').AsString;
+    edtCount2.Text     := FQuantity.ToString + '/' + sql.F('AvailableStr').AsString + ' (' + sql.F('Packing').AsString + ')';
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
     edtMarginF2.Text   := FormatFloat('##0%', FMarginF2);
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
