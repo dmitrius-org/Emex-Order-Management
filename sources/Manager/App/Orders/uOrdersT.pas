@@ -21,7 +21,7 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer, uSqlUtils,
   UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx,
-  uOrdersNewDeliveryDateF, uPartProtocol_T;
+  uOrdersNewDeliveryDateF, uPartProtocol_T, uAllowCreateOrderF;
 
 type
   tMarks = class
@@ -603,7 +603,7 @@ begin
 
   Action := Sql.F('Brief').AsString;
 
-  if Action = 'SetNewDeliveryDate'then
+  if Action = 'SetNewDeliveryDate' then
   begin
     logger.Info('TOrdersT.ActionExecute 1 SetNewDeliveryDate');
 
@@ -612,8 +612,17 @@ begin
     OrdersNewDeliveryDateF.ShowModal;
 
     if OrdersNewDeliveryDateF.ModalResult <> mrOk then Exit;
+  end;
 
-    //FAccrual.ShowProgress := True;
+  if Action = 'ToInWork' then //ToInWork	Создать заказ
+  begin
+    logger.Info('TOrdersT.ActionExecute 2 ToInWork');
+    if sql.GetSetting('AllowCreateOrder', false) = True then
+    begin
+      AllowCreateOrderF.ShowModal;
+
+      if AllowCreateOrderF.ModalResult <> mrOk then Exit;
+    end;
   end;
 
   DoShowMask;
@@ -626,7 +635,7 @@ begin
 
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
-    logger.Info('TOrdersT.ActionExecute 2');
+    logger.Info('TOrdersT.ActionExecute 3');
     Sql.exec(' insert #ProcessedRecords with (rowlock) (Processed, Total) select 0, 0 ', [], []);
     FAccrual.ShowProgress := True;
   end;
@@ -1966,4 +1975,5 @@ end;
 
 initialization
   RegisterClass(TOrdersT);
+
 end.

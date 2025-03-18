@@ -145,8 +145,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Build>17</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.17;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.6;Comments=</VerInfo_Keys>
+        <VerInfo_Build>18</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.18;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.6;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <ItemGroup>
@@ -402,8 +402,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>ShipmentsEditF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Shipments\uShipmentsReceiptStatusF.pas">
-            <Form>ShipmentsReceivedStatusF</Form>
+        <DCCReference Include="App\Orders\uAllowCreateOrderF.pas">
+            <Form>AllowCreateOrderF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <DCCReference Include="App\Shipments\uShipmentsTransporterDataF.pas">
@@ -470,11 +470,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="App\Shipments\uShipmentsReceiptDateF.pas">
-            <Form>ShipmentsReceiptDateF</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
         <DCCReference Include="..\Common\Common\uUniMemoHelper.pas"/>
         <DCCReference Include="..\Common\Common\uTreeMenuHelper.pas"/>
         <DCCReference Include="App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas">
@@ -533,6 +528,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>FragileT</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Shipments\uShipmentsReceiptDateF.pas">
+            <Form>ShipmentsReceiptDateF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="App\Shipments\uShipmentsReceiptStatusF.pas">
+            <Form>ShipmentsReceivedStatusF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
         </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
@@ -616,12 +621,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
                 <DeployFile LocalName="EXE\Manager.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>Manager.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="EXE\Manager.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>Manager.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

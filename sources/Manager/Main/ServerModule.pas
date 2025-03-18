@@ -70,6 +70,7 @@ begin
 end;
 
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
+var date: TDateTime;
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
 
@@ -96,6 +97,22 @@ begin
 
   if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot']<> '' then
     FrameworkFilesRoot := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot'];
+
+
+  // Добавляем кастомный CSS с версией
+  date := Now;
+  CustomFiles.Add('files/fonts/fontawesome-pro-5.14.0-web/css/all.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
+  CustomFiles.Add('files/tinyMCE5/tinymce.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
+  CustomFiles.Add('files/css/custom.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/grid.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/main_menu.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/dashboard.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/messenger.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/messenger_style.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
+  CustomFiles.Add('files/js/BadgeText.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;

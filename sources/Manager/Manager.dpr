@@ -100,7 +100,7 @@ uses
   uPromptMarginEdit in 'App\Clients\uPromptMarginEdit.pas' {PromptMarginEdit: TUniForm},
   uExportForm in 'App\Shipments\uExportForm.pas' {ExportForm: TUniForm},
   uShipmentsEditF in 'App\Shipments\uShipmentsEditF.pas' {ShipmentsEditF: TUniForm},
-  uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
+  uAllowCreateOrderF in 'App\Orders\uAllowCreateOrderF.pas' {AllowCreateOrderF: TUniForm},
   uShipmentsTransporterDataF in 'App\Shipments\uShipmentsTransporterDataF.pas' {ShipmentsTransporterDataF: TUniForm},
   uOrdersNewDeliveryDateF in 'App\Orders\uOrdersNewDeliveryDateF.pas' {OrdersNewDeliveryDateF: TUniForm},
   uPartProtocol_T in 'App\Orders\uPartProtocol_T.pas' {PartProtocol_T: TUniForm},
@@ -122,7 +122,6 @@ uses
   uBalanceAddF in 'App\Clients\uBalanceAddF.pas' {BalanceAddF: TUniForm},
   uStatisticBrand in 'App\Statistics\uStatisticBrand.pas' {StatisticBrand: TUniFrame},
   uFragileT_Wrapper in 'App\Shipments\uFragileT_Wrapper.pas' {FragileT_Wrapper: TUniForm},
-  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
   uTreeMenuHelper in '..\Common\Common\uTreeMenuHelper.pas',
   uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
@@ -137,7 +136,9 @@ uses
   uShipmentsBoxesT in 'App\Shipments\uShipmentsBoxesT.pas' {ShipmentsBoxesT: TUniFrame},
   uShipmentsBoxesT_Wrapper in 'App\Shipments\uShipmentsBoxesT_Wrapper.pas' {ShipmentsBoxesT_Wrapper: TUniForm},
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
-  uFragileT in 'App\Shipments\uFragileT.pas' {FragileT: TUniFrame};
+  uFragileT in 'App\Shipments\uFragileT.pas' {FragileT: TUniFrame},
+  uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
+  uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm};
 
 {$R *.res}
 

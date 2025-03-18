@@ -175,8 +175,6 @@ uses System.SysUtils, System.Classes,
       /// </summary>
       procedure FillBasketDetails(ABasket: BasketDetails_v2; ASupplier: Integer = 0); overload;
 
-
-
        /// <summary>UpdateBasketDetails- редактирование запчастей в корзине </summary>
       //function UpdateBasketDetails(Apart: BasketDetails; ASupplier: Integer):string;
 
@@ -251,7 +249,7 @@ begin
   begin
 
     // *** Проверка корзины *** \\
-    Basket:=Emex.GetBasketDetails_v2(getCustomer(Supplier.ToInteger), FLang);  // запрос корзыну в emex
+    Basket:=Emex.GetBasketDetails_v2(getCustomer(Supplier.ToInteger), FLang);  // запрос корзины в emex
      //FLang
     FillBasketDetails(Basket, Supplier.ToInteger); // запись в БД
 
@@ -889,6 +887,7 @@ begin
       FillBasketDetails(ABasket[i], ASupplier);
     end;
 end;
+
 
 procedure TEmex.FillBasketDetails(ABasket: BasketDetails_v2; ASupplier: Integer);
 begin
