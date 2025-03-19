@@ -29,6 +29,7 @@ as
                 where o.DetailNumber  = p.DetailNum
                   and o.CustomerSubId = p.CustomerSubId 
                   and o.Reference     = p.Reference 
+                 
                  order by /*case 
 				            when o.CustomerSubId = p.CustomerSubId 
 							  then 1
@@ -44,11 +45,17 @@ as
 							  then 1
                               else 2
 						  end
-						 --,case 
-				   --         when o.Reference = p.Reference 
-							--  then 1
-       --                       else 2
-						 -- end
+						 ,case 
+				            when o.Quantity = p.Quantity
+							  then 1
+                              else 2
+						  end
+
+						 ,case 
+				            when isnull(o.BasketId, '') = ''
+							  then 1
+                              else 2
+						  end
 
                ) o   
  where p.Spid               = @@SPID
@@ -115,7 +122,7 @@ as
 
 
 Update p 
-   set p.Retval = 517-- 'Неизвестная ошибка, деталь не добалена в корзину!'
+   set p.Retval = 517-- 'Неизвестная ошибка, деталь не добавлена в корзину!'
   from pAccrualAction p (Updlock)
  where p.Spid     = @@spid
    and not exists ( select 1 
@@ -145,6 +152,6 @@ exec OrdersFinCalc @IsSave = 1
 go
 grant exec on BasketStateSync to public
 go
-exec setOV 'BasketStateSync', 'P', '20250305', '4'
+exec setOV 'BasketStateSync', 'P', '20250319', '5'
 go
  

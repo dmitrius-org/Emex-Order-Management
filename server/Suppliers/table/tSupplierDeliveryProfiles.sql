@@ -1,5 +1,9 @@
 if OBJECT_ID('tSupplierDeliveryProfiles') is null
---drop table tSupplierDeliveryProfiles
+/*
+  ALTER TABLE tSupplierDeliveryProfiles SET ( SYSTEM_VERSIONING = OFF )
+  --drop table tSupplierDeliveryProfiles
+  DROP TABLE History.tSupplierDeliveryProfiles
+*/
 /* **********************************************************
 tSupplierDeliveryProfiles - расширение профилей управления выгрузкой 
 ********************************************************** */
@@ -29,7 +33,15 @@ begin
  	,isMyDelivery        bit                    -- Считать с учетом доставки
 	,isIgnore            bit                    -- Игнорировать детали без веса
     ,Fragile             float                  -- Наценка за страховку
-	);
+     --
+    ,[ValidFrom]         DATETIME2 GENERATED ALWAYS AS ROW START
+    ,[ValidTo]           DATETIME2 GENERATED ALWAYS AS ROW END
+
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tSupplierDeliveryProfiles_ID PRIMARY KEY CLUSTERED (ProfilesDeliveryID)
+	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tSupplierDeliveryProfiles));
 
 	create index ao1 on tSupplierDeliveryProfiles(SuppliersID, DestinationLogo);
 

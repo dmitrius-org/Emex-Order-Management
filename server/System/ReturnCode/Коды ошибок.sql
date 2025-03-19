@@ -81,7 +81,7 @@ insert tRetCode (RetCode, Message) select 513, 'Необходимо запол�
 insert tRetCode (RetCode, Message) select 514, 'Необходимо заполнить обязательное поле "CustomerSubId"!'
 insert tRetCode (RetCode, Message) select 515, 'Состояние "Отказан" запрещено откатывать!'
 insert tRetCode (RetCode, Message) select 516, 'Необходимо выделить заказы только одного клиента!'
-insert tRetCode (RetCode, Message) select 517, 'Неизвестная ошибка, деталь не добалена в корзину!'
+insert tRetCode (RetCode, Message) select 517, 'Неизвестная ошибка, деталь не добавлена в корзину!'
 insert tRetCode (RetCode, Message) select 518, 'Необходимо заполнить обязательное поле "DestinationLogo"!'
 insert tRetCode (RetCode, Message) select 519, 'Не задан шаблон Excel для экспорта отказов!'
 insert tRetCode (RetCode, Message) select 520, 'Не задан каталог для сохранения файлов отказов!'
