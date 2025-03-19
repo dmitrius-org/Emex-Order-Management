@@ -258,7 +258,7 @@ DEALLOCATE my_cur
     set ActionID   = n.NodeID
        ,NewStateID = isnull(s.NodeID, p.StateID)
        ,Retval     = case
-                       when isnull(s.NodeID, p.StateID) = p.StateID and m.Flag&8=0  then 1 -- в случае если состояние не меняется не добавляем протокол
+                       when isnull(s.NodeID, p.StateID) = p.StateID and m.Flag&8 =0  then 1 -- в случае если состояние не меняется не добавляем протокол
                        else 0
                      end  
        ,Message   = m.StateText 
@@ -292,6 +292,7 @@ DEALLOCATE my_cur
                      end
        ,o.Flag     = case
                        when p.StatusId  = 5 /*Sent*/ then ((o.Flag & ~1) & ~2)
+                       when p.StatusId in (6, 7) then (o.Flag & ~8192 ) /*8192 - Перезаказан*/
                        else o.Flag 
                      end
        ,o.updDatetime = GetDate()

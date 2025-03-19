@@ -9,7 +9,7 @@ create proc ApiFindByNumberSelect
 as
 set nocount on;
 
-declare @RetVal       int  = 0
+declare @RetVal int  = 0
 
 SELECT 
     MakeName,                      -- Имя производителя

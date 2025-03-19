@@ -1186,7 +1186,6 @@ object OrdersT: TOrdersT
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
-    UpdateOptions.UpdateTableName = 'tOrders'
     UpdateOptions.KeyFields = 'OrderID'
     UpdateOptions.AutoIncFields = 'OrderID'
     UpdateObject = UpdateSQL
@@ -1849,7 +1848,7 @@ object OrdersT: TOrdersT
     ModifySQL.Strings = (
       'select :OLD_OrderID as OrderID  ')
     DeleteSQL.Strings = (
-      'DELETE FROM tOrders WHERE OrderID = :OLD_OrderID')
+      'select :OLD_OrderID as OrderID  ')
     FetchRowSQL.Strings = (
       'SELECT *'
       '      ,Flag as Status -- '#1080#1082#1086#1085#1082#1080

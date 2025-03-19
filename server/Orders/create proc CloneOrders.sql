@@ -95,6 +95,8 @@ INSERT INTO [tOrders] with (rowlock)
       ,Fragile
       ,PercentSupped
       ,Comment2
+      ,Comment3
+      ,itemKey
 	  ,ID)	 
        --                         o.OrderID                    p.ID
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
@@ -177,6 +179,8 @@ select o.ClientID
       ,o.Fragile -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
       ,o.PercentSupped
       ,o.Comment2
+      ,o.Comment3
+      ,o.itemKey
 	  ,p.ID
   from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join tOrders o  (nolock)
@@ -267,6 +271,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20250226', '3'
+exec setOV 'CloneOrders', 'P', '20250319', '4'
 go
  

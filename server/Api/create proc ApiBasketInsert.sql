@@ -44,89 +44,154 @@ insert into pBasket with (rowlock)
        ,SUBSTRING(@SupplierCode, CHARINDEX('-', @SupplierCode) +  1, len(@SupplierCode)) 
        ,0
 
-select @ID= ID 
-  from @tID
+--select @ID= ID 
+--  from @tID
 
-delete
-  from @tID
+--delete
+--  from @tID
+ -- При добавлении brand - number - itemKey - supplierCode позиции, которая уже была ранее добавлена в корзину, значение quantity будет прибавлено к существующему.
 
-insert tBasket with (rowlock) 
-      (ClientID
-      ,Make
-      ,MakeName
-      ,DetailNum
-      ,PartNameRus
-      --,PartNameEng
-      ,PriceLogo
-	  ,OurDelivery   -- срок поставки клиенту
-      ,GuaranteedDay
-      ,Quantity
-      ,Price
-      ,PriceRub
-      ,Amount
-   --  ,Reference
-      ,WeightKG
-      ,VolumeKG
-      ,DestinationLogo
-      ,ProfilesCustomerID
-      ,PercentSupped
+
+
+if not exists (
+           select 1
+             from pBasket b with (nolock index=ao2)
+            inner join tBasket tb (nolock)
+                    on tb.MakeName           = b.MakeName
+                   and tb.DetailNum          = b.DetailNum
+                   and tb.itemKey            = b.itemKey
+                   and tb.PriceLogo          = b.PriceLogo
+                   and tb.ProfilesCustomerID = b.ProfilesCustomerID
+          where b.Spid = @@spid
+        )
+begin
+    insert tBasket with (rowlock) 
+          (ClientID
+          ,Make
+          ,MakeName
+          ,DetailNum
+          ,PartNameRus
+          --,PartNameEng
+          ,PriceLogo
+	      ,OurDelivery   -- срок поставки клиенту
+          ,GuaranteedDay
+          ,Quantity
+          ,Price
+          ,PriceRub
+          ,Amount
+       --  ,Reference
+          ,WeightKG
+          ,VolumeKG
+          ,DestinationLogo
+          ,ProfilesCustomerID
+          ,PercentSupped
       
-      ,Margin
-      ,Discount
-      ,Kurs
-      ,ExtraKurs
-      ,Commission
-      ,Reliability
-      ,Fragile            
-      ,Flag   
-      ,Packing
-      ,Comment2
-      ,ItemKey
-      )
- OUTPUT INSERTED.BasketID into @tID
-select @ClientID
-      ,p.Make
-	  ,p.MakeName
-	  ,p.DetailNum
-	  ,p.PartNameRus
-	  ,p.PriceLogo
-	  ,p.OurDelivery
-	  ,p.GuaranteedDay
-      ,b.Quantity  --((1 + p.Packing - 1) / p.Packing) * p.Packing -- Quantity
-	  ,p.Price
-	  ,p.PriceRub
-	  ,b.Quantity  * p.PriceRub--((1 + p.Packing - 1) / p.Packing) * p.Packing  * p.PriceRub -- Amount
-      ,p.WeightGr
-      ,p.VolumeAdd
-      ,p.DestinationLogo
-      ,p.ProfilesCustomerID
-      ,p.PercentSupped
+          ,Margin
+          ,Discount
+          ,Kurs
+          ,ExtraKurs
+          ,Commission
+          ,Reliability
+          ,Fragile            
+          ,Flag   
+          ,Packing
+          ,Comment2
+          ,ItemKey
+          )
+     OUTPUT INSERTED.BasketID into @tID
+    select @ClientID
+          ,p.Make
+	      ,p.MakeName
+	      ,p.DetailNum
+	      ,p.PartNameRus
+	      ,p.PriceLogo
+	      ,p.OurDelivery
+	      ,p.GuaranteedDay
+          ,b.Quantity  --((1 + p.Packing - 1) / p.Packing) * p.Packing -- Quantity
+	      ,p.Price
+	      ,p.PriceRub
+	      ,b.Quantity  * p.PriceRub--((1 + p.Packing - 1) / p.Packing) * p.Packing  * p.PriceRub -- Amount
+          ,p.WeightGr
+          ,p.VolumeAdd
+          ,p.DestinationLogo
+          ,p.ProfilesCustomerID
+          ,p.PercentSupped
 
-      ,p.Margin
-      ,p.Discount
-      ,p.Kurs
-      ,p.ExtraKurs
-      ,p.Commission
-      ,p.Reliability
-      ,p.Fragile
+          ,p.Margin
+          ,p.Discount
+          ,p.Kurs
+          ,p.ExtraKurs
+          ,p.Commission
+          ,p.Reliability
+          ,p.Fragile
 
-      ,p.Flag
+          ,p.Flag
 
-      ,p.Packing -- количество деталей в упаковке
-      ,b.Comment2
-      ,b.ItemKey
-  from pBasket b (nolock)
- inner join pFindByNumber p with (nolock index=ao1)
-         on p.Spid = @@Spid
-        and p.ClientID           = b.ClientID
-        and p.DetailNum          = b.DetailNum          
-        and p.MakeName           = b.MakeName          
-       -- and p.Quantity           = b.Quantity          
-       -- and p.ItemKey            = b.ItemKey           
-      --  and p.Comment2           = b.Comment2          
-        and p.PriceLogo          = b.PriceLogo         
-        and p.ProfilesCustomerID = b.ProfilesCustomerID
- where b.id = @ID
+          ,p.Packing -- количество деталей в упаковке
+          ,b.Comment2
+          ,b.ItemKey
+      from pBasket b (nolock)
+     inner join pFindByNumber p with (nolock index=ao1)
+             on p.Spid = @@Spid
+            and p.ClientID           = b.ClientID
+            and p.DetailNum          = b.DetailNum          
+            and p.MakeName           = b.MakeName          
+           -- and p.Quantity           = b.Quantity          
+           -- and p.ItemKey            = b.ItemKey           
+          --  and p.Comment2           = b.Comment2          
+            and p.PriceLogo          = b.PriceLogo         
+            and p.ProfilesCustomerID = b.ProfilesCustomerID
+     where b.Spid = @@Spid
+end
+else
+begin
+    UPDATE tBasket WITH (rowlock)
+       SET 
+           --ClientID           = @ClientID,
+           Make               = p.Make,
+           MakeName           = p.MakeName,
+           DetailNum          = p.DetailNum,
+           PartNameRus        = p.PartNameRus,
+           PriceLogo          = p.PriceLogo,
+           OurDelivery        = p.OurDelivery,
+           GuaranteedDay      = p.GuaranteedDay,
+           Quantity           = t.Quantity + b.Quantity,
+           Price              = p.Price,
+           PriceRub           = p.PriceRub,
+           Amount             = (t.Quantity + b.Quantity) * p.PriceRub,
+           WeightKG           = p.WeightGr,
+           VolumeKG           = p.VolumeAdd,
+           DestinationLogo    = p.DestinationLogo,
+           ProfilesCustomerID = p.ProfilesCustomerID,
+           PercentSupped      = p.PercentSupped,
+           Margin             = p.Margin,
+           Discount           = p.Discount,
+           Kurs               = p.Kurs,
+           ExtraKurs          = p.ExtraKurs,
+           Commission         = p.Commission,
+           Reliability        = p.Reliability,
+           Fragile            = p.Fragile,
+           --Flag               = p.Flag,
+           Packing            = p.Packing,
+           Comment2           = b.Comment2
+    OUTPUT INSERTED.BasketID into @tID
+     FROM pBasket b  WITH (nolock) 
+    INNER JOIN tBasket t --WITH (nolock) 
+            ON t.DetailNum          = b.DetailNum          
+           and t.MakeName           = b.MakeName 
+           and t.ItemKey            = b.ItemKey   
+           and t.PriceLogo          = b.PriceLogo         
+           and t.ProfilesCustomerID = b.ProfilesCustomerID
+    INNER JOIN pFindByNumber p WITH (nolock INDEX=ao1)
+            ON p.Spid               = @@Spid
+           AND p.ClientID           = b.ClientID
+           AND p.DetailNum          = b.DetailNum
+           AND p.MakeName           = b.MakeName
+           AND p.PriceLogo          = b.PriceLogo
+           AND p.ProfilesCustomerID = b.ProfilesCustomerID
+    WHERE b.Spid      = @@Spid
+
+end
 
 select @BasketID= ID 
   from @tID 

@@ -16,6 +16,12 @@ DELETE tBasket
   FROM tBasket (rowlock) 
  WHERE ClientID = @ClientID 
 
+if @@ROWCOUNT = 0
+begin
+  select @RetVal = 707 -- 'Корзина пуста!'
+  goto exit_
+end
+
 exit_:
 return @RetVal    
 go

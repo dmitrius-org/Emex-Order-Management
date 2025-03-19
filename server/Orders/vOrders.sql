@@ -135,7 +135,7 @@ SELECT o.[OrderID]
   left join vOrdersDeliveryCustomer oс  with (nolock index=PK_tOrdersDeliveryCustomer_OrderID) -- актуальные сроки доставки клиента
          on oс.OrderID = o.OrderID
 
- inner join tUser u with (nolock index=ao1)
+  left join tUser u with (nolock index=ao1)
          on u.UserID = o.UserID
 
  inner join tNodes s with (nolock index=ao1)

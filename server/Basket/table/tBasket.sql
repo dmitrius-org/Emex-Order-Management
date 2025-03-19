@@ -44,6 +44,7 @@ tBasket - корзина деталей
   ,InDateTime              datetime default getdate()      -- Дата добавления детали в корзину
   ,Flag                    int
   ,Packing                 int            -- количество деталей в упаковке
+  ,ItemKey	               varchar(256)
      --
   ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
   ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END

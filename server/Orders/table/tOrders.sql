@@ -67,7 +67,8 @@ begin
     ,OrderDetailSubId                nvarchar(32)   -- OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx
     ,Warning                         nvarchar(128)  -- Предупреждение
     ,Comment                         nvarchar(512)  -- Комментарий
-    ,Comment2                        varchar(128)   -- Комментарий клиента
+    ,Comment2                        varchar(128)   -- Комментарий клиента к позиции
+    ,Comment3                        varchar(512)   -- Комментарий клиента к заказу
     ,Invoice                         nvarchar(64)   -- Инвойс, номер отправки
     ,Box                             numeric(18, 0) -- Коробка
     ,OverPricing                     money          -- Превышение Цены
@@ -93,7 +94,8 @@ begin
     ,WeightKGAmount                  money          -- Стоимость кг физического веса tSupplierDeliveryProfiles.WeightKG
     ,VolumeKGAmount                  money          -- Стоимость кг объемного веса   tSupplierDeliveryProfiles.VolumeKG
     ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
-    ,PercentSupped                   int            -- процент поставки    
+    ,PercentSupped                   int            -- процент поставки 
+    ,ItemKey	                     varchar(256)
     --   
     ,ID                              numeric(18,0)  -- техническое поле 
     ,UserID                          numeric(18,0) default dbo.GetUserID()

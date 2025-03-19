@@ -4,12 +4,12 @@ drop proc if exists OrderCreateFromBasket
 */
 go
 
-create proc OrderCreateFromBasket          
+create proc OrderCreateFromBasket   
+              @OrderNum varchar(32) = null out
 as
 declare @r int = 0
        ,@StatusID       numeric(18,0)  -- Ид начального состояния 
        ,@ClientID       numeric(18, 0)
-       ,@OrderNum       nvarchar(128) 
        ,@ClientOrderNum int -- сквозной номер заказа клиента
 
   select @StatusID = NodeID
@@ -28,7 +28,6 @@ declare @r int = 0
            on b.BasketID = m.ID
    where m.spid = @@spid   
      and m.Type = 6--Корзина
-
 
   if isnull(@ClientID, 0) = 0
   begin
@@ -146,7 +145,7 @@ declare @r int = 0
           and b.PriceLogo = p.PriceLogo
    where p.PriceID is null
 
-  declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0))
+  declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0), OrderNum	varchar(32))
   insert tOrders with (rowlock)
         (ClientID
         ,SuppliersID 
@@ -197,37 +196,38 @@ declare @r int = 0
         ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
         ,DaysInWork
         ,Comment2
+        ,ItemKey
         )
-  output inserted.OrderID, inserted.ID into @ID (OrderID, ID)
+  output inserted.OrderID, inserted.ID, inserted.OrderNum into @ID (OrderID, ID, OrderNum)
   select b.ClientID
         ,c.SuppliersID
-        ,b.MakeName--Manufacturer
+        ,b.MakeName              -- Manufacturer
         ,b.DetailNum
         ,b.Quantity
         ,b.PriceRub
         ,b.Amount
-        ,b.Price --PricePurchaseOrg
-        ,b.Price -- (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     PricePurchase
-        ,b.Quantity * b.Price -- (b.Price * (b.Discount / 100)))-- Цена закупки с учетом скидки     AmountPurchase
+        ,b.Price                 -- PricePurchaseOrg
+        ,b.Price                 -- (b.Price * (b.Discount / 100))-- Цена закупки с учетом скидки     PricePurchase
+        ,b.Quantity * b.Price    -- (b.Price * (b.Discount / 100)))-- Цена закупки с учетом скидки     AmountPurchase
         ,@OrderNum               -- OrderNum
         ,cast(getdate() as date) -- OrderDate
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
         ,b.PriceLogo             -- PriceLogoOrg
-        ,sdp.ProfilesDeliveryID   -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
+        ,sdp.ProfilesDeliveryID  -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
         ,b.Make                  -- Бренд
         ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
-         + iif((isnull(b.flag, 0)&512)>0, 512/*Вес изменен клиентом*/, 0)
+       + iif((isnull(b.flag, 0)&512)>0, 512/*Вес изменен клиентом*/, 0)
         ,b.WeightKG              -- Вес Физический из прайса    
         ,case
            when b.VolumeKG = 0 then b.WeightKG
            else b.VolumeKG
          end                     -- Вес Объемный из прайса
         ,sdp.DestinationLogo
-        ,sdp.Name                 -- DestinationName
+        ,sdp.Name                -- DestinationName
         ,b.ProfilesCustomerID
         ,b.PercentSupped         -- процент поставки
          --
@@ -253,6 +253,7 @@ declare @r int = 0
         ,b.OurDelivery           -- Остаток срока до поставки клиенту
         ,0
         ,b.Comment2
+        ,b.ItemKey
     from tMarks m with (nolock index=pk_tMarks)
    inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
@@ -343,6 +344,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250226', '23'
+exec setOV 'OrderCreateFromBasket', 'P', '20250319', '24'
 go
  

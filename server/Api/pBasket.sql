@@ -50,7 +50,7 @@ tBasket - корзина деталей
   --
   create unique index ao1 on pBasket(ID);
   --
-  create index ao2 on pBasket(ClientID);
+  create index ao2 on pBasket(Spid, ClientID);
 
 go
 exec setOV 'pBasket', 'U', '20240101', '0'

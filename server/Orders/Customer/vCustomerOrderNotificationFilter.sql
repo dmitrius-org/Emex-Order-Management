@@ -11,7 +11,8 @@ as
     from tOrders o with (nolock)-- index=ao1)
    where ( (o.[IsCancel] = 1
         and o.[Flag] & 4096 /*Отказ подтвержден*/= 0
-        and o.[Flag] & 8192 /*Перезаказан*/= 0)
+        --and o.[Flag] & 8192 /*Перезаказан*/= 0
+        )
        
        or o.[Flag] & 32 /*Сообщение от менеджера*/> 0
       )
