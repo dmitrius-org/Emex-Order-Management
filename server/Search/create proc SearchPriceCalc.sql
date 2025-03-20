@@ -187,7 +187,7 @@ select p.ID,
        pd.DestinationLogo,
        pd.ProfilesDeliveryID,
        @ProfilesCustomerID,
-       isnull(pd.Delivery, 0),
+       isnull(pd.DeliveryTermFromSupplier, 0),
        p.GuaranteedDay,
        isnull(pp.FragileSign, 0),
        isnull(pd.Fragile, 0),
@@ -199,28 +199,9 @@ select p.ID,
          on S.SuppliersID = c.SuppliersID
 
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
-      select top 1
-             pd.DestinationLogo, 
-             pd.Name as DestinationName,
-
-             pd.WeightKG,
-             pd.VolumeKG,
-             pd.ProfilesDeliveryID,
-             pd.Delivery,
-
-             pc.Margin,
-             pc.Reliability,
-
-             pd.VolumeKG_Rate1,
-             pd.VolumeKG_Rate2,
-             pd.VolumeKG_Rate3,
-             pd.VolumeKG_Rate4,
-             pd.Fragile
-
-        from tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
-        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-       where pc.ProfilesCustomerID = @ProfilesCustomerID
+      select top 1 *
+        from vClientProfilesParam
+       where ProfilesCustomerID = @ProfilesCustomerID
      ) as pd
 
  left join @Price pp
@@ -307,5 +288,5 @@ return @RetVal
 go
 grant all on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250226', '14'
+exec setOV 'SearchPriceCalc', 'P', '20250320', '15'
 go

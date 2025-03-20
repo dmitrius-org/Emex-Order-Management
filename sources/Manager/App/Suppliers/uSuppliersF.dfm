@@ -1,8 +1,8 @@
 object SuppliersF: TSuppliersF
   Left = 0
   Top = 0
-  ClientHeight = 458
-  ClientWidth = 1018
+  ClientHeight = 461
+  ClientWidth = 1284
   Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -13,21 +13,24 @@ object SuppliersF: TSuppliersF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 411
-    Width = 1012
+    Top = 414
+    Width = 1278
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
+    BorderStyle = ubsNone
     Caption = ''
+    ExplicitTop = 411
+    ExplicitWidth = 1012
     DesignSize = (
-      1012
+      1278
       44)
     object btnOk: TUniBitBtn
-      Left = 897
-      Top = 10
-      Width = 85
-      Height = 25
+      Left = 1158
+      Top = 4
+      Width = 114
+      Height = 35
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akTop, akRight]
@@ -35,10 +38,10 @@ object SuppliersF: TSuppliersF
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
-      Left = 810
-      Top = 10
+      Left = 1071
+      Top = 4
       Width = 81
-      Height = 25
+      Height = 35
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akTop, akRight]
@@ -49,36 +52,42 @@ object SuppliersF: TSuppliersF
   object pcCommon: TUniPageControl
     Left = 0
     Top = 0
-    Width = 1018
-    Height = 408
+    Width = 1284
+    Height = 411
     Hint = ''
     ActivePage = tabDelivery
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 1018
+    ExplicitHeight = 408
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
+      ExplicitWidth = 1010
+      ExplicitHeight = 380
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
-        Width = 1010
+        Width = 1276
         Height = 143
         Hint = ''
         ParentColor = False
         Align = alTop
         TabOrder = 0
+        ExplicitWidth = 1010
         DesignSize = (
-          1010
+          1276
           143)
         object edtBrief: TUniEdit
           Left = 160
           Top = 16
-          Width = 830
+          Width = 1096
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           ClearButton = True
+          ExplicitWidth = 830
         end
         object lblName: TUniLabel
           Left = 25
@@ -93,8 +102,8 @@ object SuppliersF: TSuppliersF
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
-        Top = 297
-        Width = 1004
+        Top = 300
+        Width = 1270
         Height = 80
         Hint = ''
         Title = #1040#1091#1076#1080#1090
@@ -102,15 +111,18 @@ object SuppliersF: TSuppliersF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 1
+        ExplicitTop = 297
+        ExplicitWidth = 1004
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
-          Width = 1000
+          Width = 1266
           Height = 63
           Hint = ''
           ParentColor = False
           Align = alClient
           TabOrder = 1
+          ExplicitWidth = 1000
           object edtID: TUniEdit
             Left = 141
             Top = 8
@@ -177,18 +189,21 @@ object SuppliersF: TSuppliersF
     object tabSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
+      ExplicitWidth = 1010
+      ExplicitHeight = 380
       DesignSize = (
-        1010
-        380)
+        1276
+        383)
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 26
-        Width = 240
+        Width = 506
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         ClearButton = True
+        ExplicitWidth = 240
       end
       object UniLabel4: TUniLabel
         Left = 33
@@ -277,11 +292,13 @@ object SuppliersF: TSuppliersF
       ParentAlignmentControl = False
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
       LayoutConfig.Width = '100'
+      ExplicitWidth = 1010
+      ExplicitHeight = 380
       object ToolBar: TUniToolBar
         AlignWithMargins = True
         Left = 3
         Top = 0
-        Width = 1004
+        Width = 1270
         Height = 48
         Hint = ''
         Margins.Top = 0
@@ -298,6 +315,7 @@ object SuppliersF: TSuppliersF
         ParentColor = False
         Color = clBtnFace
         OverflowHandler = ohMenu
+        ExplicitWidth = 1004
         object UniToolButton1: TUniToolButton
           Left = 0
           Top = 0
@@ -329,8 +347,8 @@ object SuppliersF: TSuppliersF
       object UniPanel1: TUniPanel
         Left = 0
         Top = 48
-        Width = 1010
-        Height = 332
+        Width = 1276
+        Height = 335
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -339,11 +357,13 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitWidth = 1010
+        ExplicitHeight = 332
         object Grid: TUniDBGrid
           Left = 0
           Top = 0
-          Width = 1010
-          Height = 332
+          Width = 1276
+          Height = 335
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -370,6 +390,7 @@ object SuppliersF: TSuppliersF
           LayoutConfig.IgnorePosition = False
           LayoutConfig.Height = '100'
           LayoutConfig.Width = '100'
+          BorderStyle = ubsNone
           Align = alClient
           TabOrder = 1
           ParentColor = False
@@ -391,7 +412,7 @@ object SuppliersF: TSuppliersF
               Title.Caption = #1050#1072#1088#1090#1080#1085#1082#1072
               Width = 82
               Alignment = taCenter
-              Editor = UniComboBox1
+              Editor = cbImage
               Sortable = True
             end
             item
@@ -446,7 +467,8 @@ object SuppliersF: TSuppliersF
               Title.Alignment = taCenter
               Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 124
-              Hint = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080', '#1076#1086#1073#1072#1074#1083#1103#1077#1084' '#1082' '#1089#1088#1086#1082#1091' emex'
+              Hint = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072', '#1076#1086#1073#1072#1074#1083#1103#1077#1084' '#1082' '#1089#1088#1086#1082#1091' emex'
+              Editor = edtDelivery
               Sortable = True
             end
             item
@@ -527,7 +549,7 @@ object SuppliersF: TSuppliersF
           Visible = True
           object cbDenVileta: TUniCheckComboBox
             Left = 19
-            Top = 32
+            Top = 117
             Width = 137
             Height = 23
             Hint = ''
@@ -543,10 +565,10 @@ object SuppliersF: TSuppliersF
             TabOrder = 1
             IconItems = <>
           end
-          object UniComboBox1: TUniComboBox
+          object cbImage: TUniComboBox
             Left = 19
             Top = 88
-            Width = 145
+            Width = 118
             Height = 23
             Hint = ''
             Style = csDropDownList
@@ -557,6 +579,13 @@ object SuppliersF: TSuppliersF
               '<i class="fa fa-ship"></i>')
             TabOrder = 2
             IconItems = <>
+          end
+          object edtDelivery: TUniSpinEdit
+            Left = 24
+            Top = 56
+            Width = 121
+            Hint = ''
+            TabOrder = 3
           end
         end
       end
@@ -651,24 +680,24 @@ object SuppliersF: TSuppliersF
       'UPDATE pSupplierDeliveryProfiles'
       '   SET '
       '      SuppliersID = :NEW_SuppliersID, '
-      '      Brief            = :NEW_Brief,'
-      '      Name          = :NEW_Name, '
-      '      WeightKG   = :NEW_WeightKG, '
-      '      VolumeKG   = :NEW_VolumeKG, '
+      '      Brief       = :NEW_Brief,'
+      '      Name        = :NEW_Name, '
+      '      WeightKG    = :NEW_WeightKG, '
+      '      VolumeKG    = :NEW_VolumeKG, '
       '      DenVyleta   = :NEW_DenVyleta, '
-      '      VolumeKG_Rate1 = :NEW_VolumeKG_Rate1, '
-      '      VolumeKG_Rate2 = :NEW_VolumeKG_Rate2, '
-      '      VolumeKG_Rate3 = :NEW_VolumeKG_Rate3, '
-      '      VolumeKG_Rate4 = :NEW_VolumeKG_Rate4, '
+      '      VolumeKG_Rate1  = :NEW_VolumeKG_Rate1, '
+      '      VolumeKG_Rate2  = :NEW_VolumeKG_Rate2, '
+      '      VolumeKG_Rate3  = :NEW_VolumeKG_Rate3, '
+      '      VolumeKG_Rate4  = :NEW_VolumeKG_Rate4, '
       '      DestinationLogo = :NEW_DestinationLogo, '
-      '      Restrictions = :NEW_Restrictions, '
-      '      IsActive = :NEW_IsActive,'
-      '      Delivery = :NEW_Delivery,'
-      '      [Image] = :NEW_Image,'
-      '      [ImageHelp]=:New_ImageHelp,'
-      '       isMyDelivery=:New_isMyDelivery,'
-      '       isIgnore=:New_isIgnore,'
-      '       Fragile =:NEW_Fragile'
+      '      Restrictions    = :NEW_Restrictions, '
+      '      IsActive        = :NEW_IsActive,'
+      '      Delivery        = :NEW_Delivery,'
+      '      [Image]         = :NEW_Image,'
+      '      [ImageHelp]     = :New_ImageHelp,'
+      '      isMyDelivery    = :New_isMyDelivery,'
+      '      isIgnore=:New_isIgnore,'
+      '      Fragile =:NEW_Fragile'
       'WHERE ID= :ID;'
       '')
     DeleteSQL.Strings = (

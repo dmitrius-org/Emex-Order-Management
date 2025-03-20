@@ -14,9 +14,9 @@ as
 
   if ISNUMERIC(@TransporterNumber) = 1
   begin
-    select @TransporterNumber = s.SupplierBrief + ltrim(rtrim(@TransporterNumber)) + sd.Brief
+    select @TransporterNumber = s.SupplierBrief + ltrim(rtrim(@TransporterNumber)) + sd.ProfileBrief
       from vShipments s (nolock)
-     inner join tSupplierDeliveryProfiles as sd (nolock)
+     inner join vSupplierDeliveryParam as sd (nolock)
              on sd.SuppliersID     = s.SuppliersID
             and sd.DestinationLogo = s.DestinationLogo
      where s.ShipmentsID = @ShipmentsID
@@ -39,6 +39,6 @@ as
 go
 grant exec on SetShipmentsTransporterNumber to public
 go
-exec setOV 'SetShipmentsTransporterNumber', 'P', '20240101', '1'
+exec setOV 'SetShipmentsTransporterNumber', 'P', '20250320', '2'
 go
  

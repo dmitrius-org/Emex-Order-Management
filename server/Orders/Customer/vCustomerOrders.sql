@@ -62,7 +62,7 @@ SELECT o.[OrderID]
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
       ,o.Invoice                               -- номер инвойса
-      ,coalesce(o.DestinationName, pd.Name, o.DestinationLogo, pd.DestinationLogo) as DestinationName -- Направление отгрузки       
+      ,coalesce(o.DestinationName, pd.DestinationName) as DestinationName -- Направление отгрузки       
       ,coalesce(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo -- используем в форме редактирования
       ,coalesce(o.ProfilesCustomerID, pd.ProfilesCustomerID) ProfilesCustomerID
       ,coalesce(sh.ReceiptDate2, sh.ReceiptDate) ReceiptDate -- Ожидаемая дата поступления
@@ -81,23 +81,41 @@ SELECT o.[OrderID]
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
 
+ --outer apply (
+ --      select top 1 
+ --             pc.ProfilesCustomerID,
+ --             pd.DestinationLogo,
+ --             pd.Name
+ --        from tProfilesCustomer pc with (nolock index=ao2)
+ --        left join t SupplierDeliveryProfiles pd with (nolock index=ao1)
+ --               on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+ --       where pc.ClientID = c.ClientID
+ --         and (pc.ProfilesCustomerID = o.ProfilesCustomerID 
+ --           or pd.DestinationLogo    = o.DestinationLogo)
+ --       order by case
+ --                  when pc.ProfilesCustomerID = o.ProfilesCustomerID  then 1
+ --                  when pc.ClientPriceLogo = o.CustomerPriceLogo  then 2
+ --                  else 555
+ --                end
+ --      ) as pd
+
+
  outer apply (
        select top 1 
-              pc.ProfilesCustomerID,
-              pd.DestinationLogo,
-              pd.Name
-         from tProfilesCustomer pc with (nolock index=ao2)
-         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-        where pc.ClientID = c.ClientID
-          and (pc.ProfilesCustomerID = o.ProfilesCustomerID 
-            or pd.DestinationLogo    = o.DestinationLogo)
+              cp.DestinationLogo, 
+              cp.DestinationName, 
+              --cp.DeliveryTermFromSupplier,
+              --cp.DeliveryTermCustomer,
+              cp.ProfilesCustomerID
+         from vClientProfilesParam cp 
+        where cp.ProfilesCustomerID = o.ProfilesCustomerID
         order by case
-                   when pc.ProfilesCustomerID = o.ProfilesCustomerID  then 1
-                   when pc.ClientPriceLogo = o.CustomerPriceLogo  then 2
+                   when cp.ProfilesCustomerID = o.ProfilesCustomerID  then 1
+                   when cp.ProfilesDeliveryID = o.ProfilesDeliveryID  then 2
+                  -- when pc.ClientPriceLogo = o.CustomerPriceLogo  then 2
                    else 555
                  end
-       ) as pd
+     ) as pd
 
   left join vOrdersDeliverySupplier od  
          on od.OrderID = o.OrderID
@@ -130,5 +148,5 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250226', '36'
+exec setOV 'vCustomerOrders', 'V', '20250320', '37'
 go

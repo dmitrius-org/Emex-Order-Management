@@ -197,6 +197,7 @@ declare @r int = 0
         ,DaysInWork
         ,Comment2
         ,ItemKey
+        ,DeliveryTermFromSupplier
         )
   output inserted.OrderID, inserted.ID, inserted.OrderNum into @ID (OrderID, ID, OrderNum)
   select b.ClientID
@@ -214,7 +215,7 @@ declare @r int = 0
         ,b.PriceLogo             -- CustomerPriceLogo
         ,b.PriceLogo             -- PriceLogo
         ,b.PriceLogo             -- PriceLogoOrg
-        ,sdp.ProfilesDeliveryID  -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
+        ,pd.ProfilesDeliveryID  -- Обязательно нужно заполнять, на основе поля считаем: срок доставки, финасовые показатели OrdersFinCalc
         ,0                       -- isCancel             
         ,b.Make                  -- Бренд
         ,b.PartNameRus           -- наименование детали
@@ -226,8 +227,8 @@ declare @r int = 0
            when b.VolumeKG = 0 then b.WeightKG
            else b.VolumeKG
          end                     -- Вес Объемный из прайса
-        ,sdp.DestinationLogo
-        ,sdp.Name                -- DestinationName
+        ,pd.DestinationLogo
+        ,pd.DestinationName      -- 
         ,b.ProfilesCustomerID
         ,b.PercentSupped         -- процент поставки
          --
@@ -245,8 +246,8 @@ declare @r int = 0
         ,b.BasketID              -- CustomerSubId
         ,p.PriceID               -- tPrice.PriceID
         ,b.BasketID              -- ID
-        ,sdp.WeightKG             
-        ,sdp.VolumeKG          
+        ,pd.WeightKG             
+        ,pd.VolumeKG          
          -- cроки поставки клиента
         ,b.OurDelivery           -- Срок поставки клиенту
         ,cast( dateadd(dd, b.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
@@ -254,6 +255,7 @@ declare @r int = 0
         ,0
         ,b.Comment2
         ,b.ItemKey
+        ,pd.DeliveryTermFromSupplier -- срок поставки от поставщика
     from tMarks m with (nolock index=pk_tMarks)
    inner join tBasket b with (nolock index=PK_tBasket_BasketID)
            on b.BasketID = m.ID
@@ -261,10 +263,13 @@ declare @r int = 0
            on c.ClientID = b.ClientID 
    inner join tSuppliers s with (nolock index=ao1)
            on S.SuppliersID = c.SuppliersID
-   inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
-           on pc.ProfilesCustomerID = b.ProfilesCustomerID
-   inner join tSupplierDeliveryProfiles sdp with (nolock index=ao2)
-           on sdp.ProfilesDeliveryID = pc.ProfilesDeliveryID
+
+   outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
+         select top 1
+                cp.*
+           from vClientProfilesParam cp
+          where cp.ProfilesCustomerID = b.ProfilesCustomerID
+       ) as pd
    inner join @P p
            on p.BasketID = b.BasketID
    where m.spid = @@spid   
@@ -344,6 +349,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250319', '24'
+exec setOV 'OrderCreateFromBasket', 'P', '20250320', '25'
 go
  

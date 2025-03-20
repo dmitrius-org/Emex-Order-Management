@@ -57,7 +57,6 @@ as
         ,PriceLogo
         ,PriceLogoOrg
         ,ProfilesDeliveryID
-
         ,isCancel
 		,PriceID
 		,MakeLogo
@@ -85,6 +84,7 @@ as
         ,DeliveryRestToCustomer -- Остаток срока до поставки клиенту
         ,DaysInWork
         ,ProfilesCustomerID
+        ,DeliveryTermFromSupplier-- Срок поставки от поставщика
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
@@ -100,18 +100,17 @@ as
         ,o.PriceNum             -- CustomerPriceLogo
         ,pc.UploadPriceName     -- PriceLogo
         ,pc.UploadPriceName     -- PriceLogoOrg
-        ,pc.ProfilesDeliveryID  --
-
+        ,pc.ProfilesDeliveryID  -- SupplierDeliveryProfiles.ProfilesDeliveryID
         ,0                      -- isCancel
 		,p.PriceID              -- 
 		,p.MakeLogo				-- Код бренда
 		,coalesce(pd.Name_RUS, o.DetailName) -- наименование детали
         ,o.FileDate  
         ,pc.Margin              -- Наценка из прайса
-		,pc.Discount            -- Скидка
+		,s.Discount            -- Скидка
         ,pc.Reliability         -- Вероятность поставки с "Профили обработки прайсов"
-        ,pc.Commission
-        ,pc.ExtraKurs
+        ,s.Commission
+        ,s.ExtraKurs
         ,pc.Fragile
         ,cr.Value
 
@@ -123,39 +122,25 @@ as
         ,p.Reliability          -- Процент поставки
         ,Prices.DeliveryTerm    -- Срок поставки поставщику
          -- cроки поставки клиента
-        ,pc.DeliveryTermCustomer           -- Срок поставки клиенту
+        ,pc.DeliveryTermCustomer -- Срок поставки клиенту
         ,iif(pc.DeliveryTermCustomer is not null, cast( dateadd(dd, pc.DeliveryTermCustomer, getdate()) as date ), null)-- Дата поставки клиенту	
-        ,pc.DeliveryTermCustomer           -- Остаток срока до поставки клиенту
+        ,pc.DeliveryTermCustomer -- Остаток срока до поставки клиенту
         ,0
         ,pc.ProfilesCustomerID
+        ,pc.DeliveryTermFromSupplier -- DeliveryTermFromSupplier
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
-
-   outer apply (select top 1 
-                       pc.UploadPriceName,
-                       pc.ProfilesDeliveryID,
-                       pc.Margin,
-					   s.Discount,
-                       pc.Reliability,
-                       s.Commission,
-                       s.ExtraKurs,
-                       pd.DestinationLogo,
-                       pd.WeightKG,   -- Стоимость кг физического веса
-                       pd.VolumeKG,
-                       pd.Fragile,
-                       pd.Name as DestinationName,
-                       pc.DeliveryTermCustomer,
-                       pc.ProfilesCustomerID
-                  from tProfilesCustomer pc with (nolock index=ao2)
-                 inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
-                         on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-                 inner join tSuppliers s with (nolock index=ao1)
-                         on s.SuppliersID = pd.SuppliersID 
-                 where pc.ClientID        = c.ClientID
-                   and pc.ClientPriceLogo = o.PriceNum -- CustomerPriceLogo
-                 order by pc.ProfilesCustomerID
-                 ) pc
+   inner join tSuppliers s with (nolock index=ao1)
+           on s.SuppliersID = c.SuppliersID 
+   outer apply (
+         select top 1
+                cp.*
+           from vClientProfilesParam cp
+          where cp.ClientID        = c.ClientID
+            and cp.ClientPriceLogo = o.PriceNum -- CustomerPriceLogo
+          order by cp.ProfilesCustomerID
+         ) pc
    -- - - -
    outer apply (select top 1 *
                   from tPrice p with (nolock index=ao2) 
@@ -255,12 +240,16 @@ as
 
   exec OrdersSupplierDeliveryCalc @IsSave = 1
 
+  /*Расчет сроков доставки при создании заказа: 
+     - Ближайшая дата вылета DeliveryNextDate
+     - Дней запаса до вылета*/
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm (Spid, OrderID)
   Select @@spid, ID
     from @ID
 
   exec OrdersDeliveryTermCalc @IsSave = 1
+
 
   --! Автоматический перевод в Проверено при загрузке заказа
   if OBJECT_ID('tempdb..#Order') is not null drop table #Order
@@ -279,6 +268,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250227', '10'
+exec setOV 'LoadOrders', 'P', '20250320', '11'
 go
  

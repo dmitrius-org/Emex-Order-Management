@@ -1,15 +1,14 @@
 drop proc if exists OrdersCustomerDeliveryTermRecalc
 /*
-  OrdersCustomerDeliveryTermRecalc - расчет сроков доставки клиента :
+  OrdersCustomerDeliveryTermRecalc - - Пересчет сроков доставки клиента (Дней в работе, Остаток срока до поставки клиенту)
                      
-
+  Использую в автоматических заданиях для ежедневного пересчета
 */
 go
 create proc OrdersCustomerDeliveryTermRecalc
        
 as
 SET NOCOUNT ON;
-SET DATEFIRST 1 ;  
 
 declare @r int = 0
 
@@ -19,15 +18,16 @@ Update o
 	  ,o.DeliveryRestToCustomer    = pc.DeliveryTermCustomer  -- Остаток срока до поставки клиенту
 	  ,o.DaysInWork                = 0
   from tOrders o (nolock)
- inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
+ inner join vClientProfilesParam pc 
          on pc.ProfilesCustomerID = o.ProfilesCustomerID
  where o.DeliveryTermToCustomer is null
 
-
 Update o
-   set o.DaysInWork = DATEDIFF(dd, o.OrderDate, getdate())  --Дней в работе
-      ,o.DeliveryRestToCustomer    = o.DeliveryTermToCustomer - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки клиенту
+   set o.DaysInWork = DATEDIFF(dd, o.OrderDate, getdate()) -- Дней в работе
+      ,o.DeliveryRestToCustomer  = odc.DeliveryTermToCustomer - DATEDIFF(dd, o.OrderDate, getdate())  -- Остаток срока до поставки клиенту
   from tOrders o (nolock)
+ inner join vOrdersDeliveryCustomer odc 
+         on odc.OrderID=o.OrderID 
  inner join tNodes n (nolock)
          on n.NodeID = o.StatusID
         and n.Flag&4>0 --Останавливаем счетчик когда статус переходит на Готовим к выдаче в РФ
@@ -41,7 +41,7 @@ Update o
 go
   grant exec on OrdersCustomerDeliveryTermRecalc to public
 go
-exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250227', '3'
+exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250320', '4'
 go
   
 

@@ -155,7 +155,7 @@ Update p
                       and pp.OrderID is null
                    )
 
- exec CloneOrders2 -- разбиение заказа
+ exec CloneOrders -- разбиение заказа
 
  delete o
    from pMovement p (updlock) 

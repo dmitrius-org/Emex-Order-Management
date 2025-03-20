@@ -96,6 +96,8 @@ begin
     ,Fragile                         float          -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
     ,PercentSupped                   int            -- процент поставки 
     ,ItemKey	                     varchar(256)
+    ,DeliveryTermFromSupplier        int            -- Срок доставки от поставщик
+    ,DeliveryTermFromSupplier2       int            -- Срок доставки от поставщик после изменения
     --   
     ,ID                              numeric(18,0)  -- техническое поле 
     ,UserID                          numeric(18,0) default dbo.GetUserID()

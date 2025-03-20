@@ -63,28 +63,11 @@ Select @@spid
          on c.ClientID  = o.ClientID
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
         select top 1
-                --pd.DestinationLogo, 
-                --pd.Name,
-
                 pd.WeightKG,
                 pd.VolumeKG
-	            --pd.ProfilesDeliveryID,
-	            --pd.Delivery,
-
-                --pc.Margin,
-                --pc.Reliability,
-
-                --pd.VolumeKG_Rate1,
-                --pd.VolumeKG_Rate2,
-                --pd.VolumeKG_Rate3,
-                --pd.VolumeKG_Rate4,
-                --pd.Fragile
-
-        from tProfilesCustomer pc with (nolock)
-        left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-        where pc.ClientID           = c.ClientID
-          and pc.ProfilesCustomerID = p.ProfilesCustomerID   
+         from vClientProfilesParam pd
+        where pd.ClientID           = c.ClientID
+          and pd.ProfilesCustomerID = p.ProfilesCustomerID   
         ) as pd
   where p.spid = @@spid
     and p.Flag&2=0  -- 2=No longer available Более недоступно
@@ -100,16 +83,12 @@ Update p
   from tOrders o with (nolock index=ao1)
  inner join pFindByNumber p with (updlock index=ao2) 
          on p.spid = @@spid
-  --inner join tClients c with (nolock index=ao1)
-  --        on c.ClientID  = o.ClientID
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
         select top 1
-               pc.DeliveryTermCustomer
-          from tProfilesCustomer pc with (nolock)
-          left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                 on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-         where pc.ClientID           = o.ClientID
-           and pc.ProfilesCustomerID = p.ProfilesCustomerID   
+               pd.DeliveryTermCustomer
+          from vClientProfilesParam pd
+         where pd.ClientID           = o.ClientID
+           and pd.ProfilesCustomerID = p.ProfilesCustomerID   
         ) as pd
  where o.OrderID   = @OrderID
    and o.Flag&16=0
@@ -119,7 +98,7 @@ Update p
 go
   grant exec on OrderF_OrdersFinCalc to public
 go
-exec setOV 'OrderF_OrdersFinCalc', 'P', '20250227', '7'
+exec setOV 'OrderF_OrdersFinCalc', 'P', '20250320', '8'
 go
  
  

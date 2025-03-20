@@ -178,7 +178,7 @@ select o.ClientID
       ,o.DeliveryTerm
       ,o.SuppliersID
       ,o.Kurs
-      ,o.Fragile -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
+      ,o.Fragile -- Наценка за страховку SupplierDeliveryProfiles.Fragile
       ,o.PercentSupped
       ,o.Comment2    
       ,null

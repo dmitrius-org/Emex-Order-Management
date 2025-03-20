@@ -77,25 +77,25 @@ insert pProfilesCustomer
       ,UploadDelimiterID )
 select @@SPID
       ,c.ClientID           
-      ,s.Name              
+      ,s.ProfileName              
       ,ct.Margin             
       ,ct.Reliability        
       ,p.UploadFolder       
       ,p.UploadPriceName    
       ,p.UploadFileName     
-      ,s.isActive           
+      ,s.SupplierProfileIsActive           
       ,s.ProfilesDeliveryID 
       ,p.ClientPriceLogo                    
       ,p.UploadDelimiterID  
   from tClients c (nolock)
 
- inner join tSupplierDeliveryProfiles s (nolock)
+ inner join vSupplierDeliveryParam s (nolock)
          on s.SuppliersID = @SuppliersID
 
  outer apply (select top 1 *
                 from @p p
                where p.ClientID = C.ClientID 
-                 and p.Brief = s.Name 
+                 and p.Brief = s.ProfileName 
                order by ProfilesCustomerID  desc) as p
 
  left join tClientType ct (nolock)
@@ -107,5 +107,5 @@ return @r
 go
 grant exec on ProfilesCustomerRefresh to public
 go
-exec setOV 'ProfilesCustomerRefresh', 'P', '20240620', '1'
+exec setOV 'ProfilesCustomerRefresh', 'P', '20250320', '2'
 go

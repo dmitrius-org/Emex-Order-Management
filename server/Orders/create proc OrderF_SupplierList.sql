@@ -33,15 +33,15 @@ Select
  Union all
 select 
        convert(varchar, p.PriceLogo + '.' + p.Make)  as ID,
-       s.Brief + ' | ' + 
+       o.SuppliersBrief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
        convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' (' + cast(p.Packing as varchar) + ') | ' + -- количество
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
                                                         when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                       -- Срок поставщика из API
-                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                  -- Запас до вылета
-                                                              sdp.Delivery -       -- Доставка -- Срок доставки с профиля доставки поставщика
+                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) + -- Запас до вылета
+                                                              cp.DeliveryTermFromSupplier -            -- Доставка -- Срок доставки с профиля доставки поставщика
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               ) > 0            
                                                           then '(+' 
@@ -49,8 +49,8 @@ select
                                                       end +
                                                              cast(((datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                            -- Срок поставщика из API
-                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) +                       -- Запас до вылета
-                                                              sdp.Delivery -            -- Доставка -- Срок доставки с профиля доставки поставщика
+                                                              isnull(o.DeliveryDaysReserve2, o.DeliveryDaysReserve) + -- Запас до вылета
+                                                              cp.DeliveryTermFromSupplier -                 -- Доставка -- Срок доставки с профиля доставки поставщика
                                                               iif(o.Flag&16>0, o.DeliveryTermToCustomer, o.DeliveryTermFromCustomerProfile) -- Срок клиента 
                                                               )) as varchar)     
                                                       +') | ' + 
@@ -61,12 +61,10 @@ select
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
         and p.Make = o.MakeLogo
- inner join tSuppliers s (nolock)
-         on s.SuppliersID = o.SuppliersID
- inner join tProfilesCustomer c (nolock)
-         on c.ProfilesCustomerID = p.ProfilesCustomerID
- inner join tSupplierDeliveryProfiles sdp
-         on sdp.ProfilesDeliveryID = c.ProfilesDeliveryID
+ --inner join tSuppliers s (nolock)
+ --        on s.SuppliersID = o.SuppliersID
+ inner join vClientProfilesParam cp
+         on cp.ProfilesCustomerID = p.ProfilesCustomerID
  outer apply (Select o2.PriceLogo
                 from tOrders o2 (nolock)
                where o2.ParentID  = o.OrderID
@@ -84,7 +82,7 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250313', '8'
+exec setOV 'OrderF_SupplierList', 'P', '20250320', '10'
 go
  
 exec OrderF_SupplierList @OrderID=183012

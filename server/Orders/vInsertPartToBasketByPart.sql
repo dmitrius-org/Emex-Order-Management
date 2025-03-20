@@ -20,8 +20,8 @@ Select c.ClientID,
 	   o.PriceLogo, 
 	   o.Quantity, 
 	   isnull(pr.WeightKGF, o.WeightKG) as WeightKG, 
-	   o.Reference, 
-	   o.CustomerSubID,
+	   o.Reference       as Reference, 
+	   o.CustomerSubID   as CustomerSubID,
 	   o.DestinationLogo as DestinationLogo,
 	   isnull(o.Flag, 0) as Flag -- дополнительные признаки
   from pAccrualAction p (nolock)  
@@ -31,15 +31,11 @@ Select c.ClientID,
          on c.ClientID = o.ClientID
   left join tPrice pr with (nolock index=ao1)
          on pr.PriceID = o.PriceID
-  --left join tProfilesCustomer pc (nolock)
-  --       on pc.ProfilesCustomerID = o.ProfilesCustomerID
-  --left join tSupplierDeliveryProfiles pd (nolock)
-  --       on pd.ProfilesDeliveryID = isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
  where p.Spid   = @@spid          
    and p.Retval = 0               
 
 go
-grant all on vInsertPartToBasketByPart to public
+grant select on vInsertPartToBasketByPart to public
 go
 exec setOV 'vInsertPartToBasketByPart', 'V', '20250227', '5'
 go

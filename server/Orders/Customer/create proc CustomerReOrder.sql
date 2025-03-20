@@ -81,18 +81,18 @@ as
         ,t.PriceLogoOrg           = p.PriceLogo
         ,t.isCancel               = 0
         ,t.Flag                   = (isnull(t.Flag, 0) & ~4) 
-                                                     | 8192 /*Перезаказан*/
+                                                        | 8192 /*Перезаказан*/
         ,t.OrderDate              = cast(getdate() as date)
         ,t.BasketId               = null
         ,t.EmexOrderID            = null
         ,t.OrderDetailSubId       = null
         ,t.Comment                = null
-        ,t.DestinationLogo        = pd.DestinationLogo
-        ,t.DestinationName        = pd.Name
-        ,t.ProfilesDeliveryID     = pc.ProfilesDeliveryID
-        ,t.ProfilesCustomerID     = pc.ProfilesCustomerID
-        ,t.WeightKGAmount         = pd.WeightKG  
-        ,t.VolumeKGAmount         = pd.VolumeKG 
+        ,t.DestinationLogo        = cp.DestinationLogo
+        ,t.DestinationName        = cp.DestinationName
+        ,t.ProfilesDeliveryID     = cp.ProfilesDeliveryID
+        ,t.ProfilesCustomerID     = cp.ProfilesCustomerID
+        ,t.WeightKGAmount         = cp.WeightKG  
+        ,t.VolumeKGAmount         = cp.VolumeKG 
          -- cроки поставки клиента
         ,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
         ,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
@@ -138,10 +138,8 @@ as
            on c.ClientID = t.ClientID 
    inner join tSuppliers s with (nolock index=ao1)
            on S.SuppliersID = c.SuppliersID
-   inner join tProfilesCustomer pc with (nolock index=PK_tProfilesCustomer_ProfilesCustomerID)
-           on pc.ProfilesCustomerID = @ProfilesCustomerID
-   inner join tSupplierDeliveryProfiles pd with (nolock index=ao2)
-           on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+   inner join vClientProfilesParam cp
+           on cp.ProfilesCustomerID = @ProfilesCustomerID
    left join @P pp
           on 1=1 
    where t.OrderID = @OrderID
@@ -205,6 +203,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20250226', '8'
+exec setOV 'CustomerReOrder', 'P', '20250320', '9'
 go
  

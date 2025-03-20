@@ -216,6 +216,8 @@ type
     actPartProtocol1: TUniMenuItem;
     actSupplierSpecifyDeliveryTime: TAction;
     N13: TUniMenuItem;
+    QueryDeliveryTermFromSupplier: TIntegerField;
+    QueryDeliveryTermFromSupplier2: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -266,6 +268,8 @@ type
     procedure actRequestOpenExecute(Sender: TObject);
     procedure actPartProtocolExecute(Sender: TObject);
     procedure actSupplierSpecifyDeliveryTimeExecute(Sender: TObject);
+    procedure QueryDeliveryTermFromSupplierGetText(Sender: TField;
+      var Text: string; DisplayText: Boolean);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -1167,6 +1171,18 @@ begin
   begin
     Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
             '</span><span class="x-delivery-next-date">' + QueryDeliveryPlanDateSupplier2.AsString + '</span>';
+  end
+  else
+    Text := Sender.AsString;
+end;
+
+procedure TOrdersT.QueryDeliveryTermFromSupplierGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  if (not QueryDeliveryTermFromSupplier2.IsNull) then
+  begin
+    Text := '<span>' + Sender.AsString +  '</span><br><span class="x-delivery-next-date-arrow">&#10149;'+
+            '</span><span class="x-delivery-next-date">' + QueryDeliveryTermFromSupplier2.AsString + '</span>';
   end
   else
     Text := Sender.AsString;

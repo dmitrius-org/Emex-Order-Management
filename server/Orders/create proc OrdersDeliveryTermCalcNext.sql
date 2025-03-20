@@ -15,7 +15,7 @@ drop proc if exists OrdersDeliveryTermCalcNext
               1 - да
     
     Входящий набор данных: pDeliveryTerm
-    Результат расчета: pDeliveryTerm
+    Результат расчета:     pDeliveryTerm
 */
 go
 create proc OrdersDeliveryTermCalcNext

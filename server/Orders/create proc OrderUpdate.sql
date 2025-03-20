@@ -7,19 +7,17 @@ create proc OrderUpdate
               ,@VolumeKGF               float         = null -- Вес Объемный факт
               ,@Fragile                 bit           = null 
               ,@NoAir                   bit           = null
-              ,@NLA                     bit           = null -- No longer available Более недоступно
-              
-              ,@ProfilesCustomerID      numeric(18,0)              
-
+              ,@NLA                     bit           = null -- No longer available Более недоступно                    
               ,@Price                   nvarchar(64)  = null -- Прайс
               ,@MakeLogo                nvarchar(20)  = null -- Код производителя
-              ,@ReplacementPrice        float         = null -- новая цена   
-              
+              ,@ReplacementPrice        float         = null -- Новая цена   
               ,@TargetStateID           numeric(18,0) = null
-
+              ,@ProfilesCustomerID      numeric(18,0) = null
+              ,@ProfilesDeliveryID      numeric(18,0) = null
               -- параметры для дробления заказа
               ,@IsSplit                 bit           = null
               ,@SplitQuality            int           = null
+
 /*
   OrderUpdate - изменение данных по заказу/детали
 
@@ -55,14 +53,20 @@ as
   where t.OrderID = @OrderID
 
   update t
-     set t.PriceLogo       = isnull(@Price, t.PriceLogo  )
-        ,t.DestinationLogo = pd.DestinationLogo
-        ,t.DestinationName = pd.DestinationName
+     set t.PriceLogo          = isnull(@Price, t.PriceLogo  )
+         -- направление отгрузки
+        ,t.DestinationLogo    = pd.DestinationLogo
+        ,t.DestinationName    = pd.DestinationName        
+        ,t.ProfilesDeliveryID = case 
+                                  when t.Flag&16 >0 then pd.ProfilesDeliveryID
+                                  else @ProfilesDeliveryID
+                                end
         ,t.ProfilesCustomerID = @ProfilesCustomerID
-		,t.Flag            = isnull(t.Flag, 0) | case  
-		                                            when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
-							                        else 0
-                                                 end
+
+		,t.Flag               = isnull(t.Flag, 0) | case  
+		                                               when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
+							                           else 0
+                                                    end
         ,t.ReplacementPrice= case  
 		                       when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> t.PricePurchase then nullif(@ReplacementPrice, 0)
 							   else nullif(t.ReplacementPrice, 0)
@@ -77,6 +81,11 @@ as
         ,t.ExtraKurs       = coalesce(t.ExtraKurs    , p.ExtraKurs    , 0)
         ,t.Commission      = coalesce(t.Commission   , p.Commission   , 0)
         ,t.Reliability     = coalesce(t.Reliability  , p.Reliability  , 0)
+
+        ,t.DeliveryTermFromSupplier2 = case 
+                                         when t.DeliveryTermFromSupplier = pd.DeliveryTermFromSupplier then null
+                                         else pd.DeliveryTermFromSupplier
+                                       end
 
          -- cроки поставки клиента
         --,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
@@ -94,14 +103,17 @@ as
 
     outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
          select top 1
-                pd.DestinationLogo, 
-                pd.Name DestinationName,
-                pd.Delivery-- Срок поставки клиента, для заказов из файла берем из профилей доставки
-           from tProfilesCustomer pc with (nolock index=ao2)
-           left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-                  on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-          where pc.ClientID        = t.ClientID
-            and pc.ProfilesCustomerID = @ProfilesCustomerID   
+                pc.DestinationLogo, 
+                pc.ProfilesDeliveryID,
+                case
+                  when t.Flag&16 > 0 then pc.ClientProfileName
+                  else pc.DestinationName
+                end DestinationName,
+                pc.DeliveryTermFromSupplier-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+           from vClientProfilesParam pc
+          where pc.ClientID           = t.ClientID
+            and ( (t.Flag&16 >0 and pc.ProfilesCustomerID = @ProfilesCustomerID)
+               or (t.Flag&16 =0 and pc.ProfilesDeliveryID = @ProfilesDeliveryID))
         ) as pd
   where t.OrderID = @OrderID
  
@@ -211,7 +223,7 @@ as
   exec OrdersFinCalc 
          @IsSave = 1
 
-  --! расчет сроков доставки
+  --! расчет сроков доставки поставщика
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm with (rowlock) 
         (Spid, OrderID, DeliveryTerm) 
@@ -221,13 +233,35 @@ as
   
   exec OrdersSupplierDeliveryCalc @IsSave = 1
 
+
+  /* расчет сроков доставки :
+      - Следующая ближайшая дата вылета DeliveryNextDate2
+      - Дней запаса до вылета*/
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm with (rowlock) 
         (Spid, OrderID) 
   Select @@spid, 
          @OrderID
   
- exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
+  exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
+
+
+  if exists (select 1
+               from tOrders  with (nolock index=ao1)
+              where OrderID = @OrderID
+                and DeliveryTermFromSupplier <> DeliveryTermFromSupplier2
+                and DeliveryTermFromSupplier2 is not null)
+  begin
+      -- расчет сроков доставки клиента
+      delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+      insert pDeliveryTerm with (rowlock) 
+            (Spid, OrderID) 
+      Select @@spid, 
+             @OrderID
+             
+      exec OrdersDeliveryCustomerTermCalcNext @IsSave = 1
+  end
+
   
   if @TargetStateID > 0
   begin
@@ -311,6 +345,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250312', '20'
+exec setOV 'OrderUpdate', 'P', '20250320', '21'
 go
  

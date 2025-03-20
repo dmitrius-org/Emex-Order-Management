@@ -40,17 +40,6 @@ select  @@Spid
        ,SUBSTRING(@SupplierCode, 0, CHARINDEX('-', @SupplierCode)) 
        ,SUBSTRING(@SupplierCode, CHARINDEX('-', @SupplierCode) +  1, len(@SupplierCode)) 
        ,0
-
-  -- from tProfilesCustomer pc (nolock)
-  --inner join tSupplierDeliveryProfiles sd (nolock) 
-  --        on sd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-  --where pc.ClientID = @ClientID
-  --  and pc.isActive = 1
-
-
---exec SearchPriceCalc
---       @ProfilesCustomerID=:ProfilesCustomerID,
---       @DetailNum         =:DetailNum
        
 exit_:
 return @RetVal    

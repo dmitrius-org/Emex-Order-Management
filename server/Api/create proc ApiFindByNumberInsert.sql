@@ -76,8 +76,8 @@ insert into pFindByNumber with (rowlock)
         )               
 select  @@Spid
        ,@ClientID 
-       ,sd.DestinationLogo 
-       ,pc.ProfilesCustomerID
+       ,cp.DestinationLogo 
+       ,cp.ProfilesCustomerID
        ,@Available        
        ,@bitOldNum        
        ,@PercentSupped    
@@ -98,11 +98,9 @@ select  @@Spid
        ,@bitECO           
        ,@bitWeightMeasured
        ,0
-   from tProfilesCustomer pc (nolock)
-  inner join tSupplierDeliveryProfiles sd (nolock) 
-          on sd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-  where pc.ClientID = @ClientID
-    and pc.isActive = 1
+   from vClientProfilesParam cp
+  where cp.ClientID = @ClientID
+    and cp.ClientProfileIsActive = 1
 
 
 --exec SearchPriceCalc
@@ -114,6 +112,6 @@ return @RetVal
 go
 grant exec on ApiFindByNumberInsert to public
 go
-exec setOV 'ApiFindByNumberInsert', 'P', '20240605', '0'
+exec setOV 'ApiFindByNumberInsert', 'P', '20250320', '0'
 go
  

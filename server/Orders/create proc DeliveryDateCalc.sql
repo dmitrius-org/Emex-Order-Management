@@ -32,6 +32,7 @@ as
   union select 5,  'Пятница'
   union select 6,  'Суббота'
   union select 7,  'Воскресенье'
+         order by N
     
   OPEN cr_Ekv1
   FETCH NEXT FROM cr_Ekv1 INTO @N, @Name
@@ -52,7 +53,7 @@ as
   					 from (select DATEADD(wk, 1, p.OrderDate) as wkNextDate) as p2)
   		   end
   	  from pDeliveryDate p (nolock)
-  	 inner join tSupplierDeliveryProfiles pd (nolock)
+  	 inner join vSupplierDeliveryParam pd 
   			 on pd.ProfilesDeliveryID = p.ProfilesDeliveryID
   			and pd.DenVyleta like '%'+ @Name +'%'
   	 where p.Spid = @@spid
@@ -70,8 +71,8 @@ as
     from pDeliveryDate p (updlock)
    cross apply (select top 1 * 
                   from @DeliveryNextDate d
-  			   where d.OrderID = p.ID
-  			   order by d.DeliveryDate
+  			     where d.OrderID = p.ID
+  			     order by d.DeliveryDate
   			  ) d
    where p.Spid = @@spid
 
@@ -82,6 +83,6 @@ as
 go
   grant exec on DeliveryDateCalc to public
 go
-exec setOV 'DeliveryDateCalc', 'P', '20240403', '2'
+exec setOV 'DeliveryDateCalc', 'P', '20250320', '3'
 go
   

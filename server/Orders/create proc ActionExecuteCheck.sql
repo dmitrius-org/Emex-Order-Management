@@ -225,11 +225,10 @@ as
            on o.OrderID = p.ObjectID
    inner join tProfilesCustomer pc with (nolock)
            on pc.ClientPriceLogo = o.CustomerPriceLogo
-   inner join tSupplierDeliveryProfiles pd with (nolock)
+   inner join vSupplierDeliveryParam pd 
            on pd.ProfilesDeliveryID =  isnull(o.ProfilesDeliveryID, pc.ProfilesDeliveryID)
    where p.Spid   = @@SPID
      and p.RetVal = 0
-
 
   Update pAccrualAction
      set RetVal =  538 -- 'Ошибка выполнения действия, по позиции выгружен отказ!'
@@ -263,5 +262,5 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20240723', '5'
+exec setOV 'ActionExecuteCheck', 'P', '20250320', '6'
 go

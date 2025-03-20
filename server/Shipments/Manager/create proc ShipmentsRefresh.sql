@@ -45,14 +45,14 @@ as
                       ,Max(isnull(o.WeightKGAmount, 0))          as WeightKGAmount -- Стоимость кг физического веса. Данные из  tSupplierDeliveryProfiles.WeightKG 
                       ,max(isnull(o.VolumeKGAmount, 0))          as VolumeKGAmount -- Стоимость кг объемного веса. Данные из  tSupplierDeliveryProfiles.VolumeKG
                       ,min(sp.SuppliersID)                       as SuppliersID
-                      ,max(sdp.Delivery)                         as SupplierDelivery -- “Поставщики” - “Профили доставки” - “Срок доставки”
+                      ,max(sdp.DeliveryTermFromSupplier)         as SupplierDelivery -- “Поставщики” - “Профили доставки” - “Срок доставки”
                   from tOrders o with (nolock)
                   inner join tClients c with (nolock index=ao1)
                           on c.ClientID = o.ClientID
                   inner join tSuppliers sp with (nolock index=ao1)
                           on sp.SuppliersID = c.SuppliersID
 
-                   left join tSupplierDeliveryProfiles sdp (nolock)
+                   left join vSupplierDeliveryParam sdp
                           on sdp.ProfilesDeliveryID = o.ProfilesDeliveryID
 
                    left join tPrice p with (nolock index=ao1)
@@ -210,5 +210,5 @@ return @r
 GO
 grant exec on ShipmentsRefresh to public
 go
-exec setOV 'ShipmentsRefresh', 'P', '20241112', '3'
+exec setOV 'ShipmentsRefresh', 'P', '20250320', '4'
 go

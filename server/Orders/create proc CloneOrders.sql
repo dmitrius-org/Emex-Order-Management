@@ -97,6 +97,8 @@ INSERT INTO [tOrders] with (rowlock)
       ,Comment2
       ,Comment3
       ,itemKey
+      ,DeliveryTermFromSupplier
+      ,DeliveryTermFromSupplier2
 	  ,ID)	 
        --                         o.OrderID                    p.ID
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
@@ -176,11 +178,13 @@ select o.ClientID
 	  ,o.DeliveryTerm
       ,o.SuppliersID
       ,o.Kurs
-      ,o.Fragile -- Наценка за страховку tSupplierDeliveryProfiles.Fragile
+      ,o.Fragile -- Наценка за страховку
       ,o.PercentSupped
       ,o.Comment2
       ,o.Comment3
       ,o.itemKey
+      ,o.DeliveryTermFromSupplier
+      ,o.DeliveryTermFromSupplier2
 	  ,p.ID
   from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join tOrders o  (nolock)
@@ -220,7 +224,6 @@ select  i.OrderID
 inner join tOrdersDeliveryCustomer ods (nolock)
         on ods.OrderID = i.ParentID
 
-
 -- меняем данные по заказу, который был разбит на части
 Update o
    set o.Quantity       = (o.Quantity  - p.Quantity)
@@ -243,7 +246,7 @@ Update p
  where p.Spid = @@SPID
 
 --копирование протоколов для новых записей
-insert tProtocol 
+insert tProtocol with (rowlock)
       (ObjectID
       ,StateID
       ,NewStateID
@@ -271,6 +274,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20250319', '4'
+exec setOV 'CloneOrders', 'P', '20250320', '5'
 go
  

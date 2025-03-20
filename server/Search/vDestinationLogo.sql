@@ -9,20 +9,18 @@ as
 
 Select distinct 
        c.ClientID 
-      ,pc.ProfilesCustomerID 
-      ,sp.DestinationLogo
-      ,sp.Image
-      ,sp.ImageHelp
+      ,cp.ProfilesCustomerID 
+      ,cp.DestinationLogo
+      ,cp.Image
+      ,cp.ImageHelp
   from tClients c with (nolock index=PK_tClients_ClientID)  
-inner join tProfilesCustomer pc with (nolock index=ao2)
-        on pc.ClientID    = c.ClientID
-       and pc.IsActive    = 1   
-inner join tSupplierDeliveryProfiles sp with (nolock index=ao2) 
-        on sp.ProfilesDeliveryID = pc.ProfilesDeliveryID 
-       and sp.IsActive    = 1   
+ inner join vClientProfilesParam cp
+        on cp.ClientID    = c.ClientID
+       and cp.ClientProfileIsActive   = 1   
+       and cp.SupplierProfileIsActive = 1   
 
 go
 grant all on vDestinationLogo to public
 go
-exec setOV 'vDestinationLogo', 'V', '20250226', '3'
+exec setOV 'vDestinationLogo', 'V', '20250320', '4'
 go

@@ -546,9 +546,7 @@ object OrdersT: TOrdersT
           Title.Alignment = taCenter
           Title.Caption = #1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072
           Width = 145
-          Hint = 
-            #1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072'/'#1086#1090#1087#1088#1072#1074#1082#1080' (DateDeparture)|'#1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072'/'#1086#1090#1087#1088#1072#1074#1082#1080' (DateD' +
-            'eparture)'
+          Hint = #1044#1072#1090#1072' '#1074#1099#1083#1077#1090#1072'/'#1086#1090#1087#1088#1072#1074#1082#1080' (DateDeparture)'
           Sortable = True
         end
         item
@@ -616,6 +614,12 @@ object OrdersT: TOrdersT
           Title.Caption = #1064#1090#1088#1080#1093#1082#1086#1076
           Width = 130
           Sortable = True
+        end
+        item
+          FieldName = 'DeliveryTermFromSupplier'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Width = 169
         end>
     end
     object pFilter: TUniPanel
@@ -1275,6 +1279,10 @@ object OrdersT: TOrdersT
       '      ,o.[PercentSupped]'
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
       '      ,o.[OrderDetailSubId]'
+      
+        '      ,o.DeliveryTermFromSupplier  -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082 +
+        #1072' '#1089' '#1087#1088#1086#1092#1080#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      '      ,o.DeliveryTermFromSupplier2'
       '  FROM !Form  '
       ' where 1=1'
       '          '
@@ -1661,6 +1669,13 @@ object OrdersT: TOrdersT
     object QueryOrderDetailSubId: TWideStringField
       FieldName = 'OrderDetailSubId'
       Size = 32
+    end
+    object QueryDeliveryTermFromSupplier: TIntegerField
+      FieldName = 'DeliveryTermFromSupplier'
+      OnGetText = QueryDeliveryTermFromSupplierGetText
+    end
+    object QueryDeliveryTermFromSupplier2: TIntegerField
+      FieldName = 'DeliveryTermFromSupplier2'
     end
   end
   object DataSource: TDataSource

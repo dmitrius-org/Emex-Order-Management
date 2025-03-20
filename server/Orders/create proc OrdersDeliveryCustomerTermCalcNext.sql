@@ -1,6 +1,6 @@
 drop proc if exists OrdersDeliveryCustomerTermCalcNext
 /*
-  OrdersDeliveryTermCalcNext - расчет сроков доставки :
+  OrdersDeliveryCustomerTermCalcNext - расчет сроков доставки :
     @IsSave - сохраняет данные
               0 - нет
               1 - да
@@ -31,9 +31,9 @@ Update p
 
  
 update p
-   set p.DeliveryRestToCustomer = datediff(dd, getdate(), dateadd(dd, sdp.DestinationDeliveryTerm, ods.DeliveryPlanDateSupplier))
-      ,p.DeliveryDateToCustomer = dateadd(dd, sdp.DestinationDeliveryTerm, ods.DeliveryPlanDateSupplier)
-      ,p.DeliveryTermToCustomer = datediff(dd, o.OrderDate, dateadd(dd, sdp.DestinationDeliveryTerm, ods.DeliveryPlanDateSupplier))
+   set p.DeliveryRestToCustomer = datediff(dd, getdate(), dateadd(dd, sdp.DeliveryTermFromSupplier, ods.DeliveryPlanDateSupplier))
+      ,p.DeliveryDateToCustomer = dateadd(dd, sdp.DeliveryTermFromSupplier, ods.DeliveryPlanDateSupplier)
+      ,p.DeliveryTermToCustomer = datediff(dd, o.OrderDate, dateadd(dd, sdp.DeliveryTermFromSupplier, ods.DeliveryPlanDateSupplier))
   from pDeliveryTerm p (updlock)
  inner join tOrders o with (nolock index=ao1)
          on o.OrderID=p.OrderID 
@@ -49,13 +49,13 @@ if @IsSave = 1
 begin
 
   update o
-       set o.DeliveryDateToCustomer = p.DeliveryDateToCustomer 
-          ,o.DeliveryRestToCustomer = p.DeliveryRestToCustomer -- Остаток срока до поставки 
-      from pDeliveryTerm p with (nolock index=ao1)
-     inner join tOrders o with (updlock index=ao1)
-             on o.OrderID=p.OrderID 
-     where p.Spid = @@spid
-       and o.DeliveryDateToCustomer is null
+     set o.DeliveryDateToCustomer = p.DeliveryDateToCustomer 
+        --,o.DeliveryRestToCustomer = p.DeliveryRestToCustomer -- Остаток срока до поставки 
+    from pDeliveryTerm p with (nolock index=ao1)
+   inner join tOrders o with (updlock index=ao1)
+           on o.OrderID=p.OrderID 
+   where p.Spid = @@spid
+     and o.DeliveryDateToCustomer is null
 
   update o
      set o.DeliveryDateToCustomer = p.DeliveryDateToCustomer 
@@ -66,7 +66,6 @@ begin
            on o.OrderID=p.OrderID 
    where p.Spid = @@spid
 
-
   insert tOrdersDeliveryCustomer with (rowlock)
         (OrderID,
          DeliveryDateToCustomer,
@@ -76,11 +75,17 @@ begin
         ,p.DeliveryDateToCustomer
         ,p.DeliveryRestToCustomer 
         ,p.DeliveryTermToCustomer
-    from pDeliveryTerm p with (nolock)
+    from pDeliveryTerm p with (nolock index=ao1)
    where p.Spid = @@spid
      and not exists ( select 1
                         from tOrdersDeliveryCustomer o with (nolock index=PK_tOrdersDeliveryCustomer_OrderID)
                        where o.OrderID = p.OrderID )
+  update o
+     set o.DeliveryRestToCustomer = p.DeliveryRestToCustomer -- Остаток срока до поставки 
+    from pDeliveryTerm p with (nolock index=ao1)
+   inner join tOrders o with (updlock index=ao1)
+           on o.OrderID=p.OrderID 
+   where p.Spid = @@spid
 end
 
  exit_:
@@ -89,6 +94,6 @@ end
 go
   grant exec on OrdersDeliveryCustomerTermCalcNext to public
 go
-exec setOV 'OrdersDeliveryCustomerTermCalcNext', 'P', '20250211', '2'
+exec setOV 'OrdersDeliveryCustomerTermCalcNext', 'P', '20250320', '3'
 go
   

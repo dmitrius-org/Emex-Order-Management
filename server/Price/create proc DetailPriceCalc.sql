@@ -41,22 +41,20 @@ declare @IsDelivery   bit    -- Считать с учетом доставки
 	   ,@ExtraKurs    float
        ,@Fragile      float
 
-Select @Margin      = pc.Margin     
-	  ,@Reliability = pc.Reliability 
+Select @Margin      = cp.Margin     
+	  ,@Reliability = cp.Reliability 
 	  ,@Discount    = s.Discount   
 	  ,@Commission  = s.Commission 
-	  ,@IsMyDelivery= isnull(pd.isMyDelivery , 0)
-      ,@isIgnore    = isnull(pd.isIgnore, 0)
-	  ,@WeightKG	= pd.WeightKG
-	  ,@VolumeKG    = pd.VolumeKG                     
+	  ,@IsMyDelivery= isnull(cp.isMyDelivery , 0)
+      ,@isIgnore    = isnull(cp.isIgnore, 0)
+	  ,@WeightKG	= cp.WeightKG
+	  ,@VolumeKG    = cp.VolumeKG                     
 	  ,@ExtraKurs   = s.ExtraKurs
-      ,@Fragile     = isnull(pd.Fragile, 0)
-  from tProfilesCustomer pc (nolock)
-  inner join tSupplierDeliveryProfiles pd (nolock)
-          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+      ,@Fragile     = isnull(cp.Fragile, 0)
+  from vClientProfilesParam cp
   inner join tSuppliers s (nolock)
-          on s.SuppliersID = pd.SuppliersID
- where pc.Brief =  @ProfileName
+          on s.SuppliersID = cp.SuppliersID
+ where cp.ClientProfileName = @ProfileName
 
 if @@ROWCOUNT = 0
 begin
@@ -126,17 +124,15 @@ select-- top 200000
 	   isnull(t.WeightKGF, t.WeightKG),--
 	   isnull(t.VolumeKGf, t.VolumeKG)
                     * case --коэффициенты [VolumeKG]
-                        when isnull(t.VolumeKGf, t.VolumeKG) < 10                 then isnull(pd.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
-                        when isnull(t.VolumeKGf, t.VolumeKG) between 10 and 19.99 then isnull(pd.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
-                        when isnull(t.VolumeKGf, t.VolumeKG) between 20 and 24.99 then isnull(pd.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
-                        when isnull(t.VolumeKGf, t.VolumeKG) >= 25                then isnull(pd.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
+                        when isnull(t.VolumeKGf, t.VolumeKG) < 10                 then isnull(pc.VolumeKG_Rate1, 1) -- 1. Коэффициент на детали у которых [VolumeKG] строго меньше 10 кг
+                        when isnull(t.VolumeKGf, t.VolumeKG) between 10 and 19.99 then isnull(pc.VolumeKG_Rate2, 1) -- 2. Коэффициент на детали у которых [VolumeKG] от 10 кг включительно, но строго меньше 20 кг
+                        when isnull(t.VolumeKGf, t.VolumeKG) between 20 and 24.99 then isnull(pc.VolumeKG_Rate3, 1) -- 3. Коэффициент на детали у которых [VolumeKG] от 20 кг включительно, но строго меньше 25 кг
+                        when isnull(t.VolumeKGf, t.VolumeKG) >= 25                then isnull(pc.VolumeKG_Rate4, 1) -- 4. Коэффициент на детали у которых [VolumeKG] от 25 кг включительно
                         else 1
                       end,
 	   t.MOSA,
        t.Fragile
-  from tProfilesCustomer pc (nolock)
-  inner join tSupplierDeliveryProfiles pd (nolock)
-          on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
+  from vClientProfilesParam pc
   inner join tPrice t with (nolock index=ao3)
           on t.PriceLogo = pc.UploadPriceName
 		 --and 1=1
@@ -148,12 +144,12 @@ select-- top 200000
          and t.Reliability >= @Reliability
 		 --and t.Quantity > 0
 		 and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
-		                                     when isnull(pd.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
+		                                     when isnull(pc.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
 											 else isnull(t.Restrictions, '')
                                            end
          and isnull(t.NLA, 0) = 0
 
- where pc.Brief =  @ProfileName
+ where pc.DestinationName =  @ProfileName
 
  -- and t.DetailNum = '849753JA1A' --46676
 
@@ -252,6 +248,6 @@ select Brand,
 exit_:
 return @RetVal
 go
-grant all on DetailPriceCalc to public
+grant exec on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20250228', '4'
+exec setOV 'DetailPriceCalc', 'P', '20250320', '5'

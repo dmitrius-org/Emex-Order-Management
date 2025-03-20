@@ -1,6 +1,9 @@
 drop proc if exists OrdersDeliveryTermCalc
 /*
-  OrdersDeliveryTermCalc - расчет сроков доставки при создании заказа:
+  OrdersDeliveryTermCalc - расчет сроков доставки при создании заказа: 
+                                 - Ближайшая дата вылета	DeliveryNextDate
+                                 - Дней запаса до вылета
+
   @IsSave - сохраняет данные в tOrders
             0 - нет
             1 - да

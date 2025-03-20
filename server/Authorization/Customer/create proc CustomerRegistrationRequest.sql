@@ -103,13 +103,13 @@ as
                ,isActive
                ,ClientID
                )
-         select sdp.Name
+         select sdp.ProfileName
                ,sdp.ProfilesDeliveryID
                ,ct.Margin
                ,ct.Reliability
                ,1
                ,@ClientID
-           from tSupplierDeliveryProfiles sdp with (nolock index=ao1)
+           from vSupplierDeliveryParam sdp 
            left join tClientType ct with (nolock index=PK_tClientType_ClientTypeID)
                   on ct.ClientTypeID=@ClientTypeID
           where sdp.SuppliersID=@SuppliersID
@@ -139,5 +139,5 @@ return @r
 go
 grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'CustomerRegistrationRequest', 'P', '20241117', '4'
+exec setOV 'CustomerRegistrationRequest', 'P', '20250320', '5'
 go

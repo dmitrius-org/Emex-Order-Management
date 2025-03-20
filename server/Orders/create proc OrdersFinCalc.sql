@@ -64,7 +64,7 @@ begin
            on o.OrderID = i.OrderID
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
-   inner join tSupplierDeliveryProfiles pd (nolock)
+   inner join vSupplierDeliveryParam pd 
            on pd.ProfilesDeliveryID = o.ProfilesDeliveryID
     left join tPrice p (nolock)
            on p.PriceID = o.PriceID
@@ -198,7 +198,7 @@ end
 go
   grant exec on OrdersFinCalc to public
 go
-exec setOV 'OrdersFinCalc', 'P', '20250206', '1'
+exec setOV 'OrdersFinCalc', 'P', '20250320', '2'
 go
  
  

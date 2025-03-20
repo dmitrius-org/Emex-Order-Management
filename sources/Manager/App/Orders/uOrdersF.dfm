@@ -85,9 +85,9 @@ object OrderF: TOrderF
       TabOrder = 4
     end
     object UniGroupBox1: TUniGroupBox
-      Left = 267
+      Left = 272
       Top = 87
-      Width = 110
+      Width = 104
       Height = 124
       Hint = 
         '|('#1044#1083#1080#1085#1072' (1-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1064#1080#1088#1080#1085#1072' (2-'#1103' '#1075#1088#1072#1092#1072') '#1061' '#1042#1099#1089#1086#1090#1072' (3-'#1103' '#1075#1088#1072#1092#1072')) /' +
@@ -333,7 +333,7 @@ object OrderF: TOrderF
     end
     object btnDestinationLogo: TUniBitBtn
       Left = 874
-      Top = 157
+      Top = 159
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -912,7 +912,9 @@ object OrderF: TOrderF
         Left = 756
         Top = 21
         Width = 96
-        Hint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077
+        Hint = 
+          #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077'/'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1088#1072#1081#1089#1077' ('#1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ' +
+          #1074' '#1079#1072#1082#1072#1079#1077')'
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
@@ -1126,7 +1128,7 @@ object OrderF: TOrderF
       OnClick = btnMessageClick
     end
     object cbFragile: TUniCheckBox
-      Left = 166
+      Left = 168
       Top = 182
       Width = 61
       Height = 17
@@ -1136,7 +1138,7 @@ object OrderF: TOrderF
       TabOrder = 20
     end
     object cbNLA: TUniCheckBox
-      Left = 222
+      Left = 227
       Top = 182
       Width = 42
       Height = 17
@@ -1159,9 +1161,9 @@ object OrderF: TOrderF
     end
     object btnSplit: TUniBitBtn
       Left = 902
-      Top = 157
+      Top = 159
       Width = 87
-      Height = 54
+      Height = 52
       Hint = ''
       ShowHint = True
       Caption = #1056#1072#1079#1076#1077#1083#1080#1090#1100'<br>'#1079#1072#1082#1072#1079
@@ -1573,6 +1575,7 @@ object OrderF: TOrderF
       000000000000}
   end
   object UniTimer: TUniTimer
+    Interval = 500
     Enabled = False
     ClientEvent.Strings = (
       'function(sender)'

@@ -194,9 +194,6 @@ DEALLOCATE my_cur
                         and pp.OrderID is null
                      )
 
--- exec CloneOrders2 -- разбиение заказа
-
-
  -- архивируем данные которые пришли с emex. Вызов тут чтобы записать в архив orderID
  exec MovementArchive
 
