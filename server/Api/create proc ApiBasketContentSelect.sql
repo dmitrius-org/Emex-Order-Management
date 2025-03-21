@@ -2,7 +2,7 @@ if OBJECT_ID('ApiBasketContentSelect', 'P') is not null
     drop proc ApiBasketContentSelect	 
 go
 /* --------------------------------------------------------
-  ApiBasketContentSelect - Получать список товаров в корзине
+  ApiBasketContentSelect - РџРѕР»СѓС‡Р°С‚СЊ СЃРїРёСЃРѕРє С‚РѕРІР°СЂРѕРІ РІ РєРѕСЂР·РёРЅРµ
 -------------------------------------------------------- */
 create proc ApiBasketContentSelect
                @ClientID     numeric(18, 0)
@@ -21,19 +21,19 @@ select
       ,t.ItemKey
       ,t.PartNameRus      DetailName-- 
       ,t.PriceRub         -- 
-      ,t.OurDelivery      Delivery -- наш срок поставки, показываем клиенту/срок поствки клиент
+      ,t.OurDelivery      Delivery -- РЅР°С€ СЃСЂРѕРє РїРѕСЃС‚Р°РІРєРё, РїРѕРєР°Р·С‹РІР°РµРј РєР»РёРµРЅС‚Сѓ/СЃСЂРѕРє РїРѕСЃС‚РІРєРё РєР»РёРµРЅС‚
 	  ,t.Quantity         -- 
       ,t.Amount           -- 
-      ,t.Packing          Packing-- количество деталей в упаковке
-      ,t.Comment2         Comment-- комментарий     
+      ,t.Packing          Packing-- РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµС‚Р°Р»РµР№ РІ СѓРїР°РєРѕРІРєРµ
+      ,t.Comment2         Comment-- РєРѕРјРјРµРЅС‚Р°СЂРёР№     
       ,(case 
               when datediff(hh, t.InDateTime, getdate()) >= 24 then 0
               else 1
-            end ) Status -- прошло 24 часа, необходимо обновить цену
+            end ) Status -- РїСЂРѕС€Р»Рѕ 24 С‡Р°СЃР°, РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ С†РµРЅСѓ
       ,(case 
-              when datediff(hh, t.InDateTime, getdate()) >= 24 then 'Прошло 24 часа, необходимо обновить цену'
+              when datediff(hh, t.InDateTime, getdate()) >= 24 then 'РџСЂРѕС€Р»Рѕ 24 С‡Р°СЃР°, РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ С†РµРЅСѓ'
               else ''
-            end ) ErrorMessage -- прошло 24 часа, необходимо обновить цену
+            end ) ErrorMessage -- РїСЂРѕС€Р»Рѕ 24 С‡Р°СЃР°, РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ С†РµРЅСѓ
       
 
   from tBasket t with (nolock index=ao2)
@@ -44,13 +44,5 @@ return @RetVal
 go
 grant exec on ApiBasketContentSelect to public
 go
-exec setOV 'ApiBasketContentSelect', 'P', '20240605', '0'
+exec setOV 'ApiBasketContentSelect', 'P', '20250321', '0'
 go
- 
-
- --delivery
- --select
- --      *
-
- -- from tBasket t with (nolock index=ao2)
- --Where t.ClientID = 57

@@ -76,7 +76,6 @@ Select @@spid
          @IsSave   = 0,
          @IsFilled = 1
 
-
 Update p
    set p.OurDelivery    = pd.DeliveryTermCustomer
       ,p.OurDeliverySTR = cast(pd.DeliveryTermCustomer as varchar)

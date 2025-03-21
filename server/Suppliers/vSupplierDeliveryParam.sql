@@ -42,7 +42,5 @@ grant all on vSupplierDeliveryParam to public
 go
 exec setOV 'vSupplierDeliveryParam', 'V', '20250320', '1'
 go
+
 Select * from vSupplierDeliveryParam
-
-
-select * from tSupplierDeliveryProfiles

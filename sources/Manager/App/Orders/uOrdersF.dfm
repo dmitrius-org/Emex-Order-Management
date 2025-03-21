@@ -5,6 +5,7 @@ object OrderF: TOrderF
   ClientWidth = 1007
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
   OnShow = UniFormShow
+  Position = poDesktopCenter
   OldCreateOrder = False
   ShowHint = True
   MonitoredKeys.Keys = <>
@@ -54,6 +55,26 @@ object OrderF: TOrderF
     DesignSize = (
       1007
       335)
+    object cbNoAir: TUniCheckBox
+      Left = 116
+      Top = 182
+      Width = 50
+      Height = 17
+      Hint = ''
+      ShowHint = True
+      Caption = 'NoAir'
+      TabOrder = 19
+    end
+    object cbFragile: TUniCheckBox
+      Left = 168
+      Top = 182
+      Width = 61
+      Height = 17
+      Hint = #1046#1088#1091#1087#1082#1080#1081
+      ShowHint = True
+      Caption = 'Fragile'
+      TabOrder = 20
+    end
     object lblWeightKGF: TUniLabel
       Left = 17
       Top = 102
@@ -346,16 +367,6 @@ object OrderF: TOrderF
       Images = ImageList16
       ImageIndex = 2
       OnClick = btnDestinationLogoClick
-    end
-    object cbNoAir: TUniCheckBox
-      Left = 116
-      Top = 182
-      Width = 50
-      Height = 17
-      Hint = ''
-      ShowHint = True
-      Caption = 'NoAir'
-      TabOrder = 19
     end
     object UniGroupBox5: TUniGroupBox
       AlignWithMargins = True
@@ -974,15 +985,15 @@ object OrderF: TOrderF
       TabOrder = 12
       ClientEvents.ExtEvents.Strings = (
         
-          'expand=function expand(field, eOpts)'#13#10'{'#13#10'  console.log("expand")' +
-          ';'#13#10'  var store = field.getStore(); // '#1055#1086#1083#1091#1095#1072#1077#1084' store '#1089' '#1076#1072#1085#1085#1099#1084#1080#13#10 +
-          '  var items = field.picker.el.query('#39'.x-boundlist-item'#39'); // '#1055#1086#1083 +
-          #1091#1095#1072#1077#1084' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1089#1087#1080#1089#1082#1072#13#10'  '#13#10'  items.forEach(function(item, index)' +
-          ' {'#13#10'      var record = store.getAt(index); // '#1041#1077#1088#1077#1084' '#1079#1072#1087#1080#1089#1100' '#1080#1079' st' +
-          'ore'#13#10'      console.log(record);'#13#10'      if (record && record.data' +
-          '.tag == 1) {  '#13#10'          console.log(record);'#13#10'          item.c' +
-          'lassList.add('#39'price-logo-block'#39'); // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1083#1072#1089#1089#1099#13#10'      }'#13#10 +
-          '  });           '#13#10'}')
+          'expand=function expand(field, eOpts)'#13#10'{'#13#10'  //console.log("expand' +
+          '");'#13#10'  var store = field.getStore(); // '#1055#1086#1083#1091#1095#1072#1077#1084' store '#1089' '#1076#1072#1085#1085#1099#1084#1080 +
+          #13#10'  var items = field.picker.el.query('#39'.x-boundlist-item'#39'); // '#1055 +
+          #1086#1083#1091#1095#1072#1077#1084' '#1101#1083#1077#1084#1077#1085#1090#1099' '#1089#1087#1080#1089#1082#1072#13#10'  '#13#10'  items.forEach(function(item, inde' +
+          'x) {'#13#10'      var record = store.getAt(index); // '#1041#1077#1088#1077#1084' '#1079#1072#1087#1080#1089#1100' '#1080#1079' ' +
+          'store'#13#10'      //console.log(record);'#13#10'      if (record && record.' +
+          'data.tag == 1) {  '#13#10'          //console.log(record);'#13#10'          ' +
+          'item.classList.add('#39'price-logo-block'#39'); // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1083#1072#1089#1089#1099#13#10'   ' +
+          '   }'#13#10'  });           '#13#10'}')
       AnyMatch = True
       IconItems = <>
       OnChange = cbPriceChange
@@ -1127,26 +1138,6 @@ object OrderF: TOrderF
       TabOrder = 31
       OnClick = btnMessageClick
     end
-    object cbFragile: TUniCheckBox
-      Left = 168
-      Top = 182
-      Width = 61
-      Height = 17
-      Hint = #1046#1088#1091#1087#1082#1080#1081
-      ShowHint = True
-      Caption = 'Fragile'
-      TabOrder = 20
-    end
-    object cbNLA: TUniCheckBox
-      Left = 227
-      Top = 182
-      Width = 42
-      Height = 17
-      Hint = 'No longer available ('#1041#1086#1083#1077#1077' '#1085#1077#1076#1086#1089#1090#1091#1087#1085#1086')'
-      ShowHint = True
-      Caption = 'NLA'
-      TabOrder = 32
-    end
     object lblChangeW: TUniHTMLFrame
       Left = 74
       Top = 121
@@ -1173,6 +1164,16 @@ object OrderF: TOrderF
       IconPosition = ipButtonEdge
       Images = ImageList16
       OnClick = btnSplitClick
+    end
+    object cbNLA: TUniCheckBox
+      Left = 227
+      Top = 182
+      Width = 42
+      Height = 17
+      Hint = 'No longer available ('#1041#1086#1083#1077#1077' '#1085#1077#1076#1086#1089#1090#1091#1087#1085#1086')'
+      ShowHint = True
+      Caption = 'NLA'
+      TabOrder = 32
     end
   end
   object UniContainerPanel1: TUniContainerPanel

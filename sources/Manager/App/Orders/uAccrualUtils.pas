@@ -555,7 +555,7 @@ begin
       begin
         logger.Info('TAccrual.ProtocolAdd Begin');
         qMetod.Close;
-        qMetod.SQL.Text := ' exec ProtocolAdd  ';
+        qMetod.SQL.Text := ' exec ProtocolAdd ';
         qMetod.ExecSQL;
         logger.Info('TAccrual.Execute ProtocolAdd End');
       end;

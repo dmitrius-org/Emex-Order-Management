@@ -269,7 +269,7 @@ begin
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
-  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+  Sql.Open('select 1 from pAccrualAction p with (nolock index=ao2) where p.Spid = @@spid and p.Retval <> 0', [], []);
   var ServerErr:integer;
   ServerErr := Sql.Q.RecordCount;
 

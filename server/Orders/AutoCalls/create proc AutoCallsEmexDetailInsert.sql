@@ -14,6 +14,7 @@ create proc AutoCallsEmexDetailInsert
              ,@Type             int              -- Тип сообщения: 0 - от нас; 1- от них   
              ,@Message          varchar(max)     -- Тело сообщения
              ,@InDateTime       datetime = null  -- Дата
+             ,@EmexOrderID	    int = null
 
 as
   declare @r int = 0
@@ -28,6 +29,7 @@ as
            ,[Author]
            ,[Type]
            ,[Message]
+           ,[EmexOrderID]
            ,[InDateTime]
            ,[UpdDateTime])
      OUTPUT inserted.ID into @tID
@@ -39,6 +41,7 @@ as
            ,@Author        
            ,@Type          
            ,@Message 
+           ,@EmexOrderID
            ,isnull(nullif(@InDateTime, ''), getdate())
            ,isnull(nullif(@InDateTime, ''), getdate())
 

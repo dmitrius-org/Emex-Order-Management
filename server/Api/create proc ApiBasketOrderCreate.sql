@@ -33,17 +33,16 @@ select @@Spid
 
 if @@ROWCOUNT = 0
 begin
-    set @RetVal =  706 -- 'Нет позиций для заказа!'
+    select @RetVal = 706 -- РќРµС‚ РїРѕР·РёС†РёР№ РґР»СЏ Р·Р°РєР°Р·Р°!
     goto exit_
 end
-
 
 exec @RetVal = OrderCreateFromBasket
                  @OrderNum = @OrderNum out
 
 if isnull(@OrderNum, '') <> ''
   Update tOrders
-     set flag       = isnull(flag, 0) | 1048576 -- Заказ через АПИ
+     set flag       = isnull(flag, 0) | 1048576 -- Р—Р°РєР°Р· С‡РµСЂРµР· РђРџР
          ,Comment3  = @Comment
     from tOrders with (updlock index=ao2)
    where ClientID = @ClientID
@@ -54,6 +53,6 @@ return @RetVal
 go
 grant exec on ApiBasketOrderCreate to public
 go
-exec setOV 'ApiBasketOrderCreate', 'P', '20250318', '0'
+exec setOV 'ApiBasketOrderCreate', 'P', '20250321', '0'
 go
  

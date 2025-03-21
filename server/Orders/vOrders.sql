@@ -122,10 +122,10 @@ SELECT o.[OrderID]
  inner join tOrders o with (nolock index=ao2)
          on o.ClientID = ua.LinkID 
 
-  left join vOrdersDeliverySupplier od  with (nolock index=PK_tOrdersDeliverySupplier_OrderID) -- актуальные сроки доставки поставщика
+  left join vOrdersDeliverySupplier od -- актуальные сроки доставки поставщика
          on od.OrderID = o.OrderID
 
-  left join vOrdersDeliveryCustomer oс  with (nolock index=PK_tOrdersDeliveryCustomer_OrderID) -- актуальные сроки доставки клиента
+  left join vOrdersDeliveryCustomer oс -- актуальные сроки доставки клиента
          on oс.OrderID = o.OrderID
 
   left join tUser u with (nolock index=ao1)

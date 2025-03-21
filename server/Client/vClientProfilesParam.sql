@@ -15,12 +15,10 @@ as
          pc.ClientPriceLogo,
          pc.UploadPriceName,
          pc.Brief             as ClientProfileName,
-
          pc.Margin,
          pc.Reliability,
          pc.DeliveryTermCustomer, -- срок поставки клиента
 
-         --
          pd.ProfilesDeliveryID,
          pd.SupplierProfileIsActive,-- признак активности профиля на направлении
          pd.DestinationLogo   as DestinationLogo, 

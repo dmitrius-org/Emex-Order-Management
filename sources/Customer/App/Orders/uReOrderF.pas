@@ -295,18 +295,7 @@ end;
 procedure TReOrder.LoadDataPart;
 begin
   // способы доставки
-  cbDestinationLogo.FillFromSQL('''
-    SELECT distinct
-           pc.ProfilesCustomerID as ID
-          ,pc.Brief Name
-      FROM tOrders o (nolock)
-     inner join tProfilesCustomer pc with (nolock)
-             on pc.ClientID = o.ClientID
-            and isnull(pc.isActive, 0) = 1
-     inner join tSupplierDeliveryProfiles pd with (nolock index=ao1)
-             on pd.ProfilesDeliveryID = pc.ProfilesDeliveryID
-     where o.OrderID =
-  ''' + FID.ToString );
+  cbDestinationLogo.FillFromSQL('exec CustomerReOrderF_DestinationList @OrderID = ' + FID.ToString );
 
   // начитываем данные с базы
   case FAction of

@@ -28,6 +28,8 @@ begin
 
 	create index ao1 on tApiKeys(ClientID);-- include (Brief, Name);
 
+    create unique index ao2 on tApiKeys(ApiKey);-- include (Brief, Name);
+
 	grant all on tApiKeys to public;
 end
 go

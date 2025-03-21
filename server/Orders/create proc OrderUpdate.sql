@@ -30,14 +30,13 @@ as
          ,@AuditComment nvarchar(2048)
          ,@DeliveryTermSupplier    int -- Срок доставки поставщику
          ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
-        -- ,@NewOrderID   numeric(18,0)
 
   if @IsSplit = 1 
   begin
     exec OrderSplitting
-            @OrderID    = @OrderID
-            ,@Quantity  = @SplitQuality
-            ,@NewOrderID= @OrderID  out  
+           @OrderID    = @OrderID
+          ,@Quantity   = @SplitQuality
+          ,@NewOrderID = @OrderID  out  
   end
 
   select @DeliveryTermSupplier    = t.DeliveryTerm
@@ -57,41 +56,29 @@ as
          -- направление отгрузки
         ,t.DestinationLogo    = pd.DestinationLogo
         ,t.DestinationName    = pd.DestinationName        
-        ,t.ProfilesDeliveryID = case 
-                                  when t.Flag&16 >0 then pd.ProfilesDeliveryID
-                                  else @ProfilesDeliveryID
-                                end
+        ,t.ProfilesDeliveryID = @ProfilesDeliveryID
         ,t.ProfilesCustomerID = @ProfilesCustomerID
-
 		,t.Flag               = isnull(t.Flag, 0) | case  
 		                                               when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
 							                           else 0
                                                     end
-        ,t.ReplacementPrice= case  
-		                       when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> t.PricePurchase then nullif(@ReplacementPrice, 0)
-							   else nullif(t.ReplacementPrice, 0)
-                             end
-        ,t.DetailName      = nullif(@DetailNameF, '')
-        
+        ,t.ReplacementPrice   = case  
+		                          when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> t.PricePurchase then nullif(@ReplacementPrice, 0)
+							      else nullif(t.ReplacementPrice, 0)
+                                end
+        ,t.DetailName         = nullif(@DetailNameF, '')
          -- параметры расчета себестоимости 
-        ,t.PercentSupped   = coalesce(t.PercentSupped, p.PercentSupped, 0) 
-        ,t.Margin          = coalesce(t.Margin       , p.Margin       , 0)
-        ,t.Discount        = coalesce(t.Discount     , p.Discount     , 0)
-        ,t.Kurs            = coalesce(t.Kurs         , p.Kurs         , 0)
-        ,t.ExtraKurs       = coalesce(t.ExtraKurs    , p.ExtraKurs    , 0)
-        ,t.Commission      = coalesce(t.Commission   , p.Commission   , 0)
-        ,t.Reliability     = coalesce(t.Reliability  , p.Reliability  , 0)
-
+        ,t.PercentSupped      = coalesce(t.PercentSupped, p.PercentSupped, 0) 
+        ,t.Margin             = coalesce(t.Margin       , p.Margin       , 0)
+        ,t.Discount           = coalesce(t.Discount     , p.Discount     , 0)
+        ,t.Kurs               = coalesce(t.Kurs         , p.Kurs         , 0)
+        ,t.ExtraKurs          = coalesce(t.ExtraKurs    , p.ExtraKurs    , 0)
+        ,t.Commission         = coalesce(t.Commission   , p.Commission   , 0)
+        ,t.Reliability        = coalesce(t.Reliability  , p.Reliability  , 0)
         ,t.DeliveryTermFromSupplier2 = case 
                                          when t.DeliveryTermFromSupplier = pd.DeliveryTermFromSupplier then null
                                          else pd.DeliveryTermFromSupplier
                                        end
-
-         -- cроки поставки клиента
-        --,t.DeliveryTermToCustomer = p.OurDelivery -- Срок поставки клиенту
-        --,t.DeliveryDateToCustomer = cast( dateadd(dd, p.OurDelivery, getdate()) as date )-- Дата поставки клиенту    
-        --,t.DeliveryRestToCustomer = p.OurDelivery -- Остаток срока до поставки клиенту
-
 	from tOrders t with (updlock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -103,17 +90,24 @@ as
 
     outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
          select top 1
-                pc.DestinationLogo, 
                 pc.ProfilesDeliveryID,
-                case
-                  when t.Flag&16 > 0 then pc.ClientProfileName
-                  else pc.DestinationName
-                end DestinationName,
+                pc.DestinationLogo, 
+                pc.DestinationName,
                 pc.DeliveryTermFromSupplier-- Срок поставки клиента, для заказов из файла берем из профилей доставки
            from vClientProfilesParam pc
-          where pc.ClientID           = t.ClientID
-            and ( (t.Flag&16 >0 and pc.ProfilesCustomerID = @ProfilesCustomerID)
-               or (t.Flag&16 =0 and pc.ProfilesDeliveryID = @ProfilesDeliveryID))
+          where isnull(t.Flag, 0)&16 >0
+            and pc.ClientID           = t.ClientID
+            and pc.ProfilesCustomerID = @ProfilesCustomerID
+         union all
+         select top 1
+                pc.ProfilesDeliveryID,
+                pc.DestinationLogo, 
+                pc.ProfileName,
+                pc.DeliveryTermFromSupplier-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+           from vSupplierDeliveryParam pc
+          where isnull(t.Flag, 0)&16  = 0
+            and pc.ProfilesDeliveryID = @ProfilesDeliveryID
+
         ) as pd
   where t.OrderID = @OrderID
  

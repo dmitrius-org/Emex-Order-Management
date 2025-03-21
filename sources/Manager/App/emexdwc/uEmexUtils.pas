@@ -40,7 +40,7 @@ uses System.SysUtils, System.Classes,
       /// <summary>
       /// ForSupplier - Формирование списка поставщиков для обработки заказов в разрезе поставщиков
       /// </summary>
-      function ForSupplier: TStringList;
+      function ForSupplierByMarks: TStringList;
 
       /// <summary>
       /// FillMovement - Вспомогательная процедура для заполнения pMovement
@@ -243,14 +243,15 @@ begin
     Exit;
   end;
 
-  Suppliers := ForSupplier();
+  Suppliers := ForSupplierByMarks();
 
   for Supplier in Suppliers do // Цикл по поставщикам
   begin
 
     // *** Проверка корзины *** \\
     Basket:=Emex.GetBasketDetails_v2(getCustomer(Supplier.ToInteger), FLang);  // запрос корзины в emex
-     //FLang
+
+    FSQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
     FillBasketDetails(Basket, Supplier.ToInteger); // запись в БД
 
     FSQl.Exec('exec EmexCreateOrderBasketCheck', [], []);
@@ -458,7 +459,7 @@ begin
     end;
 end;
 
-function TEmex.ForSupplier: TStringList;
+function TEmex.ForSupplierByMarks: TStringList;
 var i: Integer;
 begin
     result := TStringList.Create;
@@ -632,7 +633,7 @@ begin
     R :=0;
 
     // Получаем список поставщиков
-    Suppliers := ForSupplier ();
+    Suppliers := ForSupplierByMarks ();
 
     // Цикл по поставщикам
     for Supplier in Suppliers do
@@ -658,16 +659,16 @@ begin
           part := partstobasket.Create;
           // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
           part.Reference       := FQuery.FindField('Reference').AsString;
-          part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);  //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
+          part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);    //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
           part.UploadedPrice   := FQuery.FindField('PricePurchase').Value;  //цена, заданная клиентом
           part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
           part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
           part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
           part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
-          part.MakeLogo        := FQuery.FindField('MakeLogo').AsString;;    // – лого бренда
-          part.DetailNum       := FQuery.FindField('DetailNumber').AsString; // – номер детали
-          part.PriceLogo       := FQuery.FindField('PriceLogo').AsString;    // – лого прайслиста
-          part.Quantity        := FQuery.FindField('Quantity').Value;        // – количество
+          part.MakeLogo        := FQuery.FindField('MakeLogo').AsString;;   // – лого бренда
+          part.DetailNum       := FQuery.FindField('DetailNumber').AsString;// – номер детали
+          part.PriceLogo       := FQuery.FindField('PriceLogo').AsString;   // – лого прайслиста
+          part.Quantity        := FQuery.FindField('Quantity').Value;       // – количество
           part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
           part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
           part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
@@ -880,8 +881,6 @@ end;
 procedure TEmex.FillBasketDetails(ABasket: ArrayOfBasketDetails_v2; ASupplier: Integer = 0);
 var I: Integer;
 begin
-  FSQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
-
   for I := 0 to Length(ABasket)-1 do
     begin
       FillBasketDetails(ABasket[i], ASupplier);
@@ -1090,7 +1089,7 @@ begin
   FSQL.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
 
   // Получаем список поставщиков
-  Suppliers := ForSupplier();
+  Suppliers := ForSupplierByMarks();
 
   for Supplier in Suppliers do
   begin
@@ -1168,8 +1167,9 @@ begin
   logger.Info('TEmex.GetBasketDetailsByMarks Begin');
 
   // Получаем список поставщиков/личный кабинет emex
-  Suppliers := ForSupplier();
+  Suppliers := ForSupplierByMarks();
   try
+    FSQL.Exec('Delete pBasketDetails from pBasketDetails (rowlock) where spid = @@spid', [], []);
     for Supplier in Suppliers do
     begin
       Basket:=Emex.GetBasketDetails_v2(getCustomer(Supplier.ToInteger), FLang);

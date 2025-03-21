@@ -335,8 +335,6 @@ begin
   FDetailNumber:= ADetailNumber;
 end;
 
-
-
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
@@ -351,7 +349,6 @@ begin
 end;
 
 { TOrderF }
-
 procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
@@ -369,7 +366,6 @@ begin
       sql.q.Next;
     end;
 end;
-
 
 procedure TOrderF.edtLKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -443,8 +439,8 @@ begin
 end;
 
 procedure TOrderF.GetSupplierList;   // список поставщиков
-var Price: string;
-    i: Integer;
+var Price: String;
+        i: Integer;
 begin
   Price:=cbPrice.Value;
 
@@ -454,7 +450,13 @@ begin
   logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
 
   Sql.Q.Close;
-  Sql.Open(' exec OrderF_SupplierList @OrderID = :OrderID', ['OrderID'], [FID]);
+  Sql.Open('''
+     exec OrderF_SupplierList
+            @OrderID            = :OrderID
+           ,@ProfilesDeliveryID = :ProfilesDeliveryID
+  ''',
+  ['OrderID', 'ProfilesDeliveryID'],
+  [FID, FProfilesDeliveryID]);
 
   with Sql.Q do
   begin
@@ -480,12 +482,12 @@ begin
     EnableControls;
   end;
 
-  logger.Info('TOrderF.GetSupplierList end');
-  logger.Info('TOrderF.GetSupplierList Price: '      + cbPrice.Value);
-  logger.Info('TOrderF.GetSupplierList Price.Value '     + cbPrice.Value);
-  logger.Info('TOrderF.GetSupplierList Price.ItemIndex ' + cbPrice.ItemIndex.ToString);
-  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
-  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
+//  logger.Info('TOrderF.GetSupplierList end');
+//  logger.Info('TOrderF.GetSupplierList Price: '      + cbPrice.Value);
+//  logger.Info('TOrderF.GetSupplierList Price.Value '     + cbPrice.Value);
+//  logger.Info('TOrderF.GetSupplierList Price.ItemIndex ' + cbPrice.ItemIndex.ToString);
+//  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
+//  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
 end;
 
 procedure TOrderF.GetPartDataFromBase();
@@ -493,39 +495,21 @@ var Price, js, r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
   logger.Info('TOrderF.GetPartDataFromBase begin');
-  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
-  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
-  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
+//  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
+//  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
+//  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
 
   HintText := '';
 
   sql.Open('''
-           select top 1 *,
-                  case
-                    when p.Available = -1 then 'под заказ'
-                    else cast(p.Available as nvarchar)
-                  end as AvailableStr -- наличие детали на складе
-                 ,f.MarginF
-                 ,f.IncomePrc
-                 ,f.Profit
-                 ,s.Delivery as DeliveryTermFromSupplierProfile -- Срок доставки с профиля доставки поставщика
-             from pFindByNumber p with (nolock index= ao3)
-            inner join pOrdersFin f with (nolock index= ao1)
-                    on f.spid = @@spid
-                   and f.ID = p.ID
-            inner join tProfilesCustomer c (nolock)
-                    on c.ProfilesCustomerID = p.ProfilesCustomerID
-            inner join tSupplierDeliveryProfiles s
-                    on s.ProfilesDeliveryID = c.ProfilesDeliveryID
-            where p.spid      = @@spid
-              and p.Make      = :MakeLogo
-              and p.DetailNum = :DetailNum
-              and p.PriceLogo = :PriceLogo
-
-            order by p.PercentSupped desc
+           exec OrderF_GetEditData
+                  @Make      = :MakeLogo
+                 ,@DetailNum = :DetailNum
+                 ,@PriceLogo = :PriceLogo
+                 ,@ProfilesDeliveryID = :ProfilesDeliveryID
            ''',
-           ['DetailNum', 'PriceLogo', 'MakeLogo'],
-           [FDetailNumber, FPriceLogo, FMakeLogo]);
+           ['DetailNum', 'PriceLogo', 'MakeLogo', 'ProfilesDeliveryID'],
+           [FDetailNumber, FPriceLogo, FMakeLogo,  FProfilesDeliveryID]);
 
   if sql.Count>0 then
   begin
@@ -541,25 +525,26 @@ begin
     edtProfit2.Text    := FormatFloat('##0%', FProfin2);
 
     var DeliveryTermSupplier: Integer := sql.F('GuaranteedDay').AsInteger;
-    DeliveryTermFromSupplierProfile   := sql.F('DeliveryTermFromSupplierProfile').AsInteger;
+    DeliveryTermFromSupplierProfile   := sql.F('DeliveryTermFromSupplier').AsInteger;
+
     var DeliveryTermFromCustomerProfile: Integer;
-    DeliveryTermFromCustomerProfile :=
+    DeliveryTermFromCustomerProfile   :=
          IfThen((FFlag and Integer(TOrderFlag.ORDER_ONLINE)) > 0,
                  FDeliveryTermFromCustomerProfile, //sql.F('OurDelivery').AsInteger,
                  FDeliveryTermFromCustomerProfile
                 );
 
     //  Срок поставки:
-    edtDelivery2.Text:= FPassedDayInWork.ToString + '+' +         // дней в обработке
-                        DeliveryTermSupplier.ToString +'+' +     // Срок поставщика из API
-                        FDeliveryDaysReserve.ToString+ '+' +      // Запас до вылета
+    edtDelivery2.Text:= FPassedDayInWork.ToString + '+' +          // дней в обработке
+                        DeliveryTermSupplier.ToString +'+' +       // Срок поставщика из API
+                        FDeliveryDaysReserve.ToString+ '+' +       // Запас до вылета
                         DeliveryTermFromSupplierProfile.ToString + // Доставка
                         '=' +
                         (
                           FPassedDayInWork +               // дней в обработке
                           DeliveryTermSupplier+            // Срок поставщика из API
                           FDeliveryDaysReserve+            // Запас до вылета
-                          DeliveryTermFromSupplierProfile // Доставка
+                          DeliveryTermFromSupplierProfile  // Доставка
                         ).ToString +
 
                         '(' +
@@ -573,7 +558,7 @@ begin
                           FPassedDayInWork +                // дней в обработке
                           DeliveryTermSupplier+             // Срок поставщика из API
                           FDeliveryDaysReserve+             // Запас до вылета
-                          DeliveryTermFromSupplierProfile- // Доставка
+                          DeliveryTermFromSupplierProfile-  // Доставка
                           DeliveryTermFromCustomerProfile   // Срок клиента
                         ).ToString +
                         ')';
@@ -707,7 +692,7 @@ end;
 
 procedure TOrderF.LoadDataPart;
 begin
-  cbDestinationLogo.FillFromSQL('exec OrderFilter_DestinationList @OrderID =' + FID.ToString );
+  cbDestinationLogo.FillFromSQL('exec OrderF_DestinationList @OrderID =' + FID.ToString );
 
   // начитываем данные с базы
   case FAction of
@@ -818,8 +803,8 @@ end;
 
 procedure TOrderF.btnMessageClick(Sender: TObject);
 begin
-   MessageF.OrderID := Fid;
-   MessageF.ShowModal();
+  MessageF.OrderID := Fid;
+  MessageF.ShowModal();
 end;
 
 procedure TOrderF.btnYandexImagesClick(Sender: TObject);
@@ -839,19 +824,19 @@ begin
     FProfilesCustomerID:= cbDestinationLogo.Value.ToInteger;
 
     Sql.Open('''
-    Select ProfilesDeliveryID
-      from vClientProfilesParam
-     where ProfilesCustomerID = :ID
-    ''', ['ID'], [FProfilesCustomerID]);
+      Select ProfilesDeliveryID
+        from vClientProfilesParam
+       where ProfilesCustomerID = :ID
+    ''',
+    ['ID'],
+    [FProfilesCustomerID]);
 
     FProfilesDeliveryID := Sql.F('ProfilesDeliveryID').AsInteger;
+  end
+  else
+  begin
+    FProfilesDeliveryID:= cbDestinationLogo.Value.ToInteger;
   end;
-//  else
-//  begin
-//    cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesDeliveryID').AsString
-//  end;
-
-
 
   OrdersFinCalc();
 
@@ -863,25 +848,10 @@ end;
 procedure TOrderF.cbPriceChange(Sender: TObject);   // var i: Integer;
 begin
   logger.Info('TOrderF.cbPriceChange begin');
-  logger.Info('TOrderF.cbPriceChange cbPrice.Value '     + cbPrice.Value);
-  logger.Info('TOrderF.cbPriceChange cbPrice.ItemIndex ' + cbPrice.ItemIndex.ToString);
-  logger.Info('TOrderF.cbPriceChange cbPrice.ValueList.Count ' + cbPrice.ValueList.Count.ToString);
 
-  logger.Info('TOrderF.cbPriceChange FPriceLogo '      + FPriceLogo);
-  logger.Info('TOrderF.cbPriceChange FMakeLogo '       + FMakeLogo);
+  FMakeLogo  := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
+  FPriceLogo := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
-//  for i := 0 to cbPrice.Count - 1 do
-//    logger.Info('TOrderF.cbPriceChange val' + cbPrice.ValueList.ValueFromIndex[i]);
-
-  FMakeLogo          := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
-  FPriceLogo         := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
-
-  logger.Info('TOrderF.cbPriceChange end');
-  logger.Info('TOrderF.cbPriceChange cbPrice.Value '     + cbPrice.Value);
-  logger.Info('TOrderF.cbPriceChange cbPrice.ItemIndex ' + cbPrice.ItemIndex.ToString);
-  logger.Info('TOrderF.cbPriceChange FPriceLogo '     + FPriceLogo);
-  logger.Info('TOrderF.cbPriceChange FMakeLogo '      + FMakeLogo);
-//
   GetPartDataFromBase;
 end;
 
@@ -891,7 +861,6 @@ begin
 end;
 
 procedure TOrderF.btnNumberClick(Sender: TObject);
-var js: string;
 begin
   btnNumber.JSInterface.JSCall('copyToClipboard', [FDetailNumber]);
 end;
@@ -899,9 +868,9 @@ end;
 procedure TOrderF.OrdersFinCalc;
 begin
   logger.Info('TOrderF.OrdersFinCalc begin');
-  logger.Info('TOrderF.OrdersFinCalc DestinationLogo ' + FProfilesCustomerID.ToString);
-  logger.Info('TOrderF.OrdersFinCalc FPriceLogo ' + FPriceLogo);
-  logger.Info('TOrderF.OrdersFinCalc FMakeLogo ' + FMakeLogo);
+  //logger.Info('TOrderF.OrdersFinCalc DestinationLogo ' + FProfilesCustomerID.ToString);
+  //logger.Info('TOrderF.OrdersFinCalc FPriceLogo ' + FPriceLogo);
+  //logger.Info('TOrderF.OrdersFinCalc FMakeLogo ' + FMakeLogo);
 
   RetVal.Clear;
 
@@ -918,10 +887,10 @@ begin
   ''',
   ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume'],
   [FProfilesCustomerID,
-  FDetailNumber,
-  FID,
-  edtWeightKGF.Value,
-  edtVolumeKGF.Value]);
+   FDetailNumber,
+   FID,
+   edtWeightKGF.Value,
+   edtVolumeKGF.Value]);
 end;
 
 procedure TOrderF.OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);
@@ -1083,7 +1052,7 @@ begin
   end;
 
   btnOkToCancel.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
-  btnOkToProc.Enabled := (FAction <> acUpdateShipments) and  (IsExistNext) and (FStatusID in [1, 22]);
+  btnOkToProc.Enabled   := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 22]);
   btnOk.Enabled := IsExistNext;
 
   btnSplit.Enabled := (FAction <> acUpdateShipments) and (FStatusID in [1, 2]) and (FQuantity > 1);
@@ -1112,17 +1081,15 @@ begin
   edtDelivery.Hint := HintText;
 end;
 
-
-
 procedure TOrderF.SetDeliveryStyle(aVal: Integer);
 begin
   if aVal < 0 then
-      edtDelivery.Color :=  $0080FF80
+    edtDelivery.Color :=  $0080FF80
   else
   if aVal = 0 then
-      edtDelivery.Color := clWhite
+    edtDelivery.Color := clWhite
   else
-      edtDelivery.Color := $008080FF;
+    edtDelivery.Color := $008080FF;
 end;
 
 procedure TOrderF.SetEditDataRating(ARating: integer);
@@ -1480,7 +1447,7 @@ begin
        select @Kurs         = o.Kurs
              ,@ExtraKurs    = o.ExtraKurs
              ,@CurExtraKurs = s.ExtraKurs
-         from tOrders o (nolock)
+         from tOrders o with (nolock index=ao1)
         inner join tClients c with (nolock index=PK_tClients_ClientID)
                 on c.ClientID    = o.ClientID
         inner join tSuppliers s with (nolock index=ao1)
@@ -1491,8 +1458,8 @@ begin
 
        if :IsSplit <> 1
          delete pFindByNumber
-           from pFindByNumber (rowlock)
-          where spid = @@spid
+           from pFindByNumber with (rowlock index=ao1)
+          where Spid = @@Spid
 
        select @Kurs         as Kurs
              ,@ExtraKurs    as ExtraKurs
@@ -1546,23 +1513,18 @@ begin
              ,v.BasketId
          from vOrders v
         where v.OrderID = :OrderID
-
   ''';
 
   UniMainModule.Query.ParamByName('OrderID').Value := FID;
   UniMainModule.Query.ParamByName('IsSplit').AsBoolean := FIsSplit;
   UniMainModule.Query.Open;
 
-  cbPrice.FillFromSQL('exec OrderF_SupplierList @OrderID =' + FID.ToString);
-
   FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
   FReference         := UniMainModule.Query.FieldByName('Reference').AsString;
   FCustomerSubID     := UniMainModule.Query.FieldByName('CustomerSubID').AsString;
   FBasketId          := UniMainModule.Query.FieldByName('BasketId').AsInteger;
-
   FDetailNumber2     := FManufacturer + ' ' + FDetailNumber;
-
   FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
   FPriceLogoOld      := FPriceLogo;
@@ -1602,6 +1564,10 @@ begin
   FProfilesCustomerID:= UniMainModule.Query.FieldByName('ProfilesCustomerID').asinteger;
   FProfilesDeliveryID:= UniMainModule.Query.FieldByName('ProfilesDeliveryID').asinteger;
 
+  cbPrice.FillFromSQL('exec OrderF_SupplierList '+
+                      '  @OrderID=' + FID.ToString +
+                      ' ,@ProfilesDeliveryID=' + FProfilesDeliveryID.ToString);
+
   if (FFlag and 16 {Онлайн заказ}) > 0 then  // направления отгрузки
     cbDestinationLogo.Value:= FProfilesCustomerID.ToString
   else
@@ -1614,21 +1580,19 @@ begin
   edtCount.Text      := FQuantity.ToString + '/' + UniMainModule.Query.FieldByName('PriceQuantity').AsString;
 
   edtMargin.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Margin').AsFloat);
-  edtMarginF.Text    := FormatFloat('##0%',  UniMainModule.Query.FieldByName('MarginF').AsFloat);
+  edtMarginF.Text    := FormatFloat('##0%', UniMainModule.Query.FieldByName('MarginF').AsFloat);
   edtProfit.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('Profit').AsFloat);
   edtPrice.Text      := FormatFloat('$###,##0.00', UniMainModule.Query.FieldByName('PricePurchase').AsFloat);
   edtIncome.Text     := FormatFloat('##0%', UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
+  edtKurs.Value      := UniMainModule.Query.FieldByName('Kurs').AsFloat;
+  edtExtraKurs.Value := UniMainModule.Query.FieldByName('ExtraKurs').AsFloat;
+  edtCurKurs.Value   := UniMainModule.Query.FieldByName('CurKurs').AsFloat;
+  edtCurExtraKurs.Value:= UniMainModule.Query.FieldByName('CurExtraKurs').AsFloat;
 
   FPassedDayInWork := UniMainModule.Query.FieldByName('PassedDayInWork').asInteger;        // дней в обработке
   FDeliveryTermSupplier := UniMainModule.Query.FieldByName('DeliveryTermSupplier').asInteger;   // Срок поставщика из прайса
-  FDeliveryDaysReserve  :=  UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
-
-  FDeliveryTermFromSupplierProfile :=  UniMainModule.Query.FieldByName('DeliveryTermFromSupplier').asInteger; // Доставка
-
-  edtKurs.Value        := UniMainModule.Query.FieldByName('Kurs').AsFloat;
-  edtExtraKurs.Value   := UniMainModule.Query.FieldByName('ExtraKurs').AsFloat;
-  edtCurKurs.Value     := UniMainModule.Query.FieldByName('CurKurs').AsFloat;
-  edtCurExtraKurs.Value:= UniMainModule.Query.FieldByName('CurExtraKurs').AsFloat;
+  FDeliveryDaysReserve  := UniMainModule.Query.FieldByName('DeliveryDaysReserve').asInteger;   // Запас до вылета
+  FDeliveryTermFromSupplierProfile := UniMainModule.Query.FieldByName('DeliveryTermFromSupplier').asInteger; // Доставка
 
   // !!! тут по идее можно оставить только DeliveryTermToCustomer
   FDeliveryTermFromCustomerProfile :=
@@ -1637,14 +1601,6 @@ begin
   UniMainModule.Query.FieldByName('DeliveryTermFromCustomerProfile').asInteger);
 
   //  Срок поставки:
-  var HintText: string;
-
-  logger.info('FPassedDayInWork:' + FPassedDayInWork.ToString);
-  logger.info('FDeliveryTermSupplier:' + FDeliveryTermSupplier.ToString);
-  logger.info('FDeliveryDaysReserve:' + FDeliveryDaysReserve.ToString);
-  logger.info('FDeliveryTermFromSupplierProfile:' + FDeliveryTermFromSupplierProfile.ToString);
-  logger.info('FDeliveryTermFromCustomerProfile:' + FDeliveryTermFromCustomerProfile.ToString);
-
   edtDelivery.Text   := FPassedDayInWork.ToString + '+' +         // дней в обработке
                         FDeliveryTermSupplier.ToString + '+' +    // Срок поставщика из прайса
                         FDeliveryDaysReserve.ToString+ '+' +      // Запас до вылета
@@ -1694,7 +1650,6 @@ begin
   edtDelivery2.text  := edtDelivery.Text;
 
   SetDeliveryHint;
-
 
   SetIndicatorsStyle(UniMainModule.Query.FieldByName('IncomePRC').AsFloat);
 

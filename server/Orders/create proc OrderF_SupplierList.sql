@@ -1,7 +1,8 @@
 drop proc if exists OrderF_SupplierList
 go
 create proc OrderF_SupplierList
-               @OrderID                 numeric(18,0)
+               @OrderID            numeric(18,0)
+              ,@ProfilesDeliveryID numeric(18,0)
 /*
   OrderF_SupplierList - Список поставщиков
 */           
@@ -61,10 +62,8 @@ select
  inner join pFindByNumber p (nolock) 
          on p.spid = @@SPid
         and p.Make = o.MakeLogo
- --inner join tSuppliers s (nolock)
- --        on s.SuppliersID = o.SuppliersID
- inner join vClientProfilesParam cp
-         on cp.ProfilesCustomerID = p.ProfilesCustomerID
+ inner join vSupplierDeliveryParam cp
+         on cp.ProfilesDeliveryID = @ProfilesDeliveryID
  outer apply (Select o2.PriceLogo
                 from tOrders o2 (nolock)
                where o2.ParentID  = o.OrderID
@@ -84,5 +83,3 @@ grant exec on OrderF_SupplierList to public
 go
 exec setOV 'OrderF_SupplierList', 'P', '20250320', '10'
 go
- 
-exec OrderF_SupplierList @OrderID=183012
