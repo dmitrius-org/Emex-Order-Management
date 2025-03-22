@@ -12,7 +12,9 @@ begin
 	(	 
      ApiMethodCallsID     INT IDENTITY
     ,ClientID             numeric(18,0) NOT NULL
-    ,MethodName           VARCHAR(255)  NOT NULL
+    ,ApiKey               VARCHAR(64)   NOT NULL
+    ,MethodName           VARCHAR(64)   NOT NULL
+    
     ,CallCount            INT           NOT NULL DEFAULT 0
      --
     ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
@@ -21,6 +23,8 @@ begin
     ,CONSTRAINT PK_tApiMethodCalls_ID PRIMARY KEY CLUSTERED (ApiMethodCallsID)
 	)
     WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tApiMethodCalls));
+
+    create unique index ao1 on tApiMethodCalls(ClientID, ApiKey, MethodName)
 
 	grant select on tApiMethodCalls to public;
 end

@@ -1,7 +1,8 @@
 
 CREATE OR ALTER PROCEDURE ApiMethodCallsInfo
               @ClientID         numeric(18, 0)  
-             ,@MethodName       varchar(100)
+             ,@ApiKey           varchar(64)
+             ,@MethodName       varchar(64)
 /*
   ApiMethodCallsInfo - 
 */
@@ -13,14 +14,17 @@ as
   
   MERGE INTO tApiMethodCalls WITH (HOLDLOCK) AS target
   USING (SELECT @ClientID   AS ClientID, 
+                @ApiKey     AS ApiKey,
                 @MethodName AS MethodName) AS source
-     ON target.ClientID = source.ClientID 
+      ON target.ClientID   = source.ClientID 
+     AND target.ApiKey     = source.ApiKey
      AND target.MethodName = source.MethodName
   WHEN MATCHED THEN
-      UPDATE SET CallCount = target.CallCount + 1
+      UPDATE 
+         SET CallCount = target.CallCount + 1
   WHEN NOT MATCHED THEN
-      INSERT (ClientID, MethodName, CallCount) 
-      VALUES (source.ClientID, source.MethodName, 1);
+      INSERT (ClientID, ApiKey, MethodName, CallCount) 
+      VALUES (source.ClientID, source.ApiKey, source.MethodName, 1);
   
   --SELECT CallCount 
   --  FROM tApiMethodCalls (nolock)

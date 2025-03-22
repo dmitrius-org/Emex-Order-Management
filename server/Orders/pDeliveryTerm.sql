@@ -24,7 +24,7 @@ create table pDeliveryTerm
 ,DeliveryDateToCustomer    datetime       -- Дата поставки клиенту	
 ,DeliveryTermToCustomer    int            -- Срок поставки клиенту	
 ,DeliveryRestToCustomer    int            -- Остаток срока до поставки клиенту
-
+,RetVal                    int
 )
 go
 create unique index ao1 on pDeliveryTerm(Spid, OrderID)

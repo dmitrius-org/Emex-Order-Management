@@ -22,6 +22,10 @@ Update p
       ,p.OrderDate    = coalesce(p.OrderDate, op.OperDate, cast(getdate() as date))
       ,p.PriceLogo    = o.PriceLogo
       ,p.DeliveryTerm = coalesce(p.DeliveryTerm, od.DeliveryTermSupplier, o.DeliveryTerm, 0) -- срок доставки поставщику
+      ,p.RetVal       = case
+                          when o.Flag&8>0 then 0
+                          else 1
+                        end
   from pDeliveryTerm p with (updlock)
  inner join tOrders o with (nolock)
          on o.OrderID = p.OrderID
@@ -46,7 +50,8 @@ Update p
                where t.Name = o.PriceLogo
               ) as Prices
 
- where p.Spid = @@Spid
+ where p.Spid   = @@Spid
+   and p.RetVal = 0
 
 
 if @IsSave = 1
@@ -59,6 +64,7 @@ begin
      inner join tOrders o with (updlock index=ao1)
              on o.OrderID=p.OrderID 
      where p.Spid = @@spid
+       and p.RetVal = 0
        and o.DeliveryPlanDateSupplier is null
 
   update o
@@ -69,6 +75,7 @@ begin
    inner join tOrdersDeliverySupplier o with (updlock index=PK_tOrdersDeliverySupplier_OrderID)
            on o.OrderID=p.OrderID 
    where p.Spid = @@spid
+     and p.RetVal = 0
 
 
   insert tOrdersDeliverySupplier with (rowlock)
@@ -82,6 +89,7 @@ begin
         ,DATEDIFF(dd, getdate(), p.DeliveryPlanDateSupplier) -- Остаток срока до поставки 
     from pDeliveryTerm p with (nolock)
    where p.Spid = @@spid
+     and p.RetVal = 0
      and not exists ( select 1
                         from tOrdersDeliverySupplier o with (nolock index=PK_tOrdersDeliverySupplier_OrderID)
                        where o.OrderID = p.OrderID )

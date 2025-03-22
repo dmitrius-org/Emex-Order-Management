@@ -286,7 +286,7 @@ Update f
 exit_:
 return @RetVal    
 go
-grant all on SearchPriceCalc to public
+grant exec on SearchPriceCalc to public
 go
 exec setOV 'SearchPriceCalc', 'P', '20250320', '15'
 go

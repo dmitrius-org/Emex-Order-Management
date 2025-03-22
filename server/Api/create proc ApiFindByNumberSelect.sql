@@ -12,19 +12,19 @@ set nocount on;
 declare @RetVal int  = 0
 
 SELECT 
-    MakeName,                      -- Имя производителя
-    DetailNum,                     -- Код детали
-    PartNameRus,                   -- Описание детали
+    MakeName,                      -- РРјСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЏ
+    DetailNum,                     -- РљРѕРґ РґРµС‚Р°Р»Рё
+    PartNameRus,                   -- РћРїРёСЃР°РЅРёРµ РґРµС‚Р°Р»Рё
     CASE 
-        WHEN Available=-1 THEN -10 --Под заказ
+        WHEN Available=-1 THEN -10 --РџРѕРґ Р·Р°РєР°Р·
         WHEN Available IS NULL THEN ''
         ELSE CAST(Available as VARCHAR)
-    END AS Available,              -- Наличие на складе
-    Packing,                        -- Минимальная партия для заказа (необязательно)
-    OurDelivery,                    -- Срок поставки
-    PriceRub,                       -- Цена
-    CAST(0 AS BIT) as ReturnSign,   -- Признак возврата (необязательно)    
-    PriceLogo + '-' + cast(ProfilesCustomerID as varchar) as SupplierID       -- Идентификатор поставщика (ID склада)
+    END AS Available,               -- РќР°Р»РёС‡РёРµ РЅР° СЃРєР»Р°РґРµ
+    Packing,                        -- РњРёРЅРёРјР°Р»СЊРЅР°СЏ РїР°СЂС‚РёСЏ РґР»СЏ Р·Р°РєР°Р·Р° (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)
+    OurDelivery,                    -- РЎСЂРѕРє РїРѕСЃС‚Р°РІРєРё
+    PriceRub,                       -- Р¦РµРЅР°
+    CAST(0 AS BIT) as ReturnSign,   -- РџСЂРёР·РЅР°Рє РІРѕР·РІСЂР°С‚Р° (РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)    
+    PriceLogo + '-' + cast(ProfilesCustomerID as varchar) as supplierCode       -- РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕСЃС‚Р°РІС‰РёРєР° (ID СЃРєР»Р°РґР°)
     
 FROM vFindByNumber
 
