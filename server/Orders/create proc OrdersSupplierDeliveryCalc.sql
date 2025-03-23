@@ -12,8 +12,7 @@ go
 create proc OrdersSupplierDeliveryCalc
               @IsSave bit =  null           
 as
-set nocount on;
-SET DATEFIRST 1 ;  
+set nocount on; 
 
 declare @r int = 0
 
@@ -23,12 +22,14 @@ Update p
       ,p.PriceLogo    = o.PriceLogo
       ,p.DeliveryTerm = coalesce(p.DeliveryTerm, od.DeliveryTermSupplier, o.DeliveryTerm, 0) -- срок доставки поставщику
       ,p.RetVal       = case
-                          when o.Flag&8>0 then 0
+                          when n.Flag&8>0 then 0
                           else 1
                         end
   from pDeliveryTerm p with (updlock)
  inner join tOrders o with (nolock)
          on o.OrderID = p.OrderID
+ inner join tNodes n (nolock)
+         on n.NodeID = o.StatusID
   left join vOrdersProtocolInWork op with (nolock)
          on op.OrderID=o.OrderID
   left join tOrdersDeliverySupplier  od with (nolock)

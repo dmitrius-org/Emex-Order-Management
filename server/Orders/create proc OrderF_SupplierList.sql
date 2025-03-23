@@ -15,7 +15,7 @@ Select
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, coalesce(o.PricePurchaseF, o.PricePurchase, 0)) + ' | ' + 
        convert(varchar, o.Quantity) + '/' + isnull(convert(varchar, p.Quantity), '-') + ' | ' + -- количество
-       convert(varchar, isnull(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier) )) + ' дней ' +' | ' + 
+       convert(varchar, coalesce(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier), '999')) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
        ,0 as Price
        ,0 as Flag
