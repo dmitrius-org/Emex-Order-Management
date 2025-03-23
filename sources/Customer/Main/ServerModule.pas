@@ -1,4 +1,4 @@
-unit ServerModule;
+п»їunit ServerModule;
 
 {$I ..\compile.inc}
 
@@ -42,8 +42,8 @@ type
   function UniServerModule: TUniServerModule;
 
   /// <summary>
-  ///  ExploreWeb - Автоматический запуск приложения в браузере
-  ///               Для ускорения разработки
+  ///  ExploreWeb - РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ Р·Р°РїСѓСЃРє РїСЂРёР»РѕР¶РµРЅРёСЏ РІ Р±СЂР°СѓР·РµСЂРµ
+  ///               Р”Р»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°Р·СЂР°Р±РѕС‚РєРё
   ///</summary>
   procedure ExploreWeb(page:PChar);
 
@@ -69,8 +69,8 @@ begin
 
       FDConnection.Params.Values['DriverID'] :=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID'];
 
-      // параметры подключения из ini файла
-      Logger.AddLog('TUniServerModule Параметры подключения', 'FDConnection');
+      // РїР°СЂР°РјРµС‚СЂС‹ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РёР· ini С„Р°Р№Р»Р°
+      Logger.AddLog('TUniServerModule РџР°СЂР°РјРµС‚СЂС‹ РїРѕРґРєР»СЋС‡РµРЅРёСЏ', 'FDConnection');
       Logger.AddLog('TUniServerModule FDTaskConnection DriverID', FDConnection.Params.Values['DriverID']);
       Logger.AddLog('TUniServerModule DriverID',    FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID']);
       Logger.AddLog('TUniServerModule Server',      FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server']);
@@ -84,16 +84,16 @@ begin
       on E: EFDDBEngineException do
       case E.Kind of
         ekUserPwdInvalid:
-          Logger.AddLog('TUniMainModule ekUserPwdInvalid', 'Имя пользователя или пароль неверны! '+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+          Logger.AddLog('TUniMainModule ekUserPwdInvalid', 'РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР»Рё РїР°СЂРѕР»СЊ РЅРµРІРµСЂРЅС‹! '+ #13#10+#13#10+E.ClassName+' РџРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+E.Message);
         ekUserPwdExpired:
-          Logger.AddLog('TUniMainModule ekUserPwdExpired', 'Ошибка подключения к БД. Срок действия пароля пользователя истек! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+          Logger.AddLog('TUniMainModule ekUserPwdExpired', 'РћС€РёР±РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р‘Р”. РЎСЂРѕРє РґРµР№СЃС‚РІРёСЏ РїР°СЂРѕР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёСЃС‚РµРє! ' +#13#10+#13#10+E.ClassName+' РџРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+E.Message);
         ekServerGone:
-          Logger.AddLog('TUniMainModule ekServerGone', 'Ошибка соединения с базой данных. СУБД недоступна по какой-то причине! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+          Logger.AddLog('TUniMainModule ekServerGone', 'РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РЎРЈР‘Р” РЅРµРґРѕСЃС‚СѓРїРЅР° РїРѕ РєР°РєРѕР№-С‚Рѕ РїСЂРёС‡РёРЅРµ! ' +#13#10+#13#10+E.ClassName+' РџРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+E.Message);
       else // other issues
-        Logger.AddLog('TUniMainModule Other issues', 'Ошибка соединения с базой данных. Неизвестная ошибка! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+        Logger.AddLog('TUniMainModule Other issues', 'РћС€РёР±РєР° СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…. РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°! ' +#13#10+#13#10+E.ClassName+' РџРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+E.Message);
       end;
       on E : Exception do
-        Logger.AddLog('TUniMainModule Exception', E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
+        Logger.AddLog('TUniMainModule Exception', E.ClassName+' РїРѕРґРЅСЏС‚Р° РѕС€РёР±РєР°, СЃ СЃРѕРѕР±С‰РµРЅРёРµРј: '+#13#10+#13#10+E.Message);
     end;
   finally
     result:=FDConnection.Connected;
@@ -116,6 +116,7 @@ begin
 end;
 
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
+var date: TDateTime;
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
 
@@ -140,15 +141,28 @@ begin
   if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger > 0 then
     SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger
   else
-    SessionTimeout := 600000; // 10 минут
+    SessionTimeout := 600000; // 10 РјРёРЅСѓС‚
 
   {$IFDEF DEBUG}
       Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName']+
-               '. БД: '+
+               '. Р‘Р”: '+
                FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['Database'];
   {$ELSE}
       Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
   {$ENDIF}
+
+  // Р”РѕР±Р°РІР»СЏРµРј РєР°СЃС‚РѕРјРЅС‹Р№ CSS СЃ РІРµСЂСЃРёРµР№
+  date := Now;
+
+  CustomFiles.Add('files/css/custom.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/grid.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/main_menu.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/dashboard.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/messenger.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/messenger_style.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
+  CustomFiles.Add('files/js/functions.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/js/BadgeText.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   dbConnect;
 
@@ -187,12 +201,12 @@ begin
   if Returnvalue <= 32  then
     begin
       case Returnvalue of
-         0: ShowMessage ('Ошибка, недостаточная память!');
-         2: ShowMessage ('Ошибка, ошибка имени файла!');
-         3: ShowMessage ('Ошибка, ошибка имени пути!');
-         11: ShowMessage ('Ошибка, файл EXE недействителен!');
+         0: ShowMessage ('РћС€РёР±РєР°, РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅР°СЏ РїР°РјСЏС‚СЊ!');
+         2: ShowMessage ('РћС€РёР±РєР°, РѕС€РёР±РєР° РёРјРµРЅРё С„Р°Р№Р»Р°!');
+         3: ShowMessage ('РћС€РёР±РєР°, РѕС€РёР±РєР° РёРјРµРЅРё РїСѓС‚Рё!');
+         11: ShowMessage ('РћС€РёР±РєР°, С„Р°Р№Р» EXE РЅРµРґРµР№СЃС‚РІРёС‚РµР»РµРЅ!');
       else
-        ShowMessage (PCHAR ('Код ошибки: '+ InttoStr (ReturnValue) +', пожалуйста, проверьте ошибку. '));
+        ShowMessage (PCHAR ('РљРѕРґ РѕС€РёР±РєРё: '+ InttoStr (ReturnValue) +', РїРѕР¶Р°Р»СѓР№СЃС‚Р°, РїСЂРѕРІРµСЂСЊС‚Рµ РѕС€РёР±РєСѓ. '));
       end;
     end;
 end;

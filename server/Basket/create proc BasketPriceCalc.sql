@@ -6,40 +6,42 @@ go
 -------------------------------------------------------- */
 create proc BasketPriceCalc
               @BasketID	numeric(18, 0)
-
 as
 set nocount on;
 
-declare @RetVal            int
-       ,@DestinationLogo   nvarchar(20)
-	   ,@DetailNum         nvarchar(40)
+declare @RetVal             int
+       ,@ProfilesCustomerID numeric(18, 0)
+	   ,@DetailNum          nvarchar(40)
 
-  select @DestinationLogo = b.DestinationLogo
-        ,@DetailNum       = b.DetailNum
-    from tBasket b (nolock)
-   where b.BasketID=@BasketID
+select @ProfilesCustomerID = b.ProfilesCustomerID
+      ,@DetailNum          = b.DetailNum
+  from tBasket b (nolock)
+ where b.BasketID=@BasketID
 
-  exec SearchPriceCalc
-         @DestinationLogo = @DestinationLogo
-        ,@DetailNum       = @DetailNum
+exec SearchPriceCalc
+       @ProfilesCustomerID = @ProfilesCustomerID
+      ,@DetailNum          = @DetailNum
 
-  update b
-     set b.PriceRub        = o.PriceRub
-        ,b.Amount          = b.Quantity * o.PriceRub
-        ,b.OurDelivery     = o.OurDelivery
-        ,b.InDateTime      = getDate()
-    from tBasket b (nolock)
-   inner join pFindByNumber o (nolock)
-           on o.Spid = @@SPID
-          and o.DestinationLogo = b.DestinationLogo
-          and o.DetailNum       = b.DetailNum
-          and o.Make            = b.Make
-   where b.BasketID=@BasketID
+update b
+   set b.PriceRub        = o.PriceRub
+      ,b.Amount          = b.Quantity * o.PriceRub
+      ,b.OurDelivery     = o.OurDelivery
+      ,b.InDateTime      = getDate()
+  from tBasket b (nolock)
+ inner join pFindByNumber o (nolock)
+         on o.Spid      = @@SPID
+        and o.Make      = b.Make
+        and o.DetailNum = b.DetailNum
+
+        and o.ProfilesCustomerID = @ProfilesCustomerID 
+        and o.PriceLogo = b.PriceLogo
+        
+ where b.BasketID=@BasketID
 
 exit_:
 return @RetVal    
 go
 grant all on BasketPriceCalc to public
 go
-exec setOV 'BasketPriceCalc', 'P', '20240528', '1'
+exec setOV 'BasketPriceCalc', 'P', '20250323', '2'
 go

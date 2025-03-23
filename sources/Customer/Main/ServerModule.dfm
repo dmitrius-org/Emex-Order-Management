@@ -9,17 +9,6 @@ object UniServerModule: TUniServerModule
   SuppressErrors = []
   Bindings = <>
   MainFormDisplayMode = mfPage
-  CustomFiles.Strings = (
-    'files/css/custom.css '
-    ''
-    'files/css/main_menu.css'
-    'files/css/grid.css'
-    ''
-    'files/css/messenger.css'
-    'files/css/messenger_style.css'
-    ''
-    'files/js/functions.js'
-    'files/js/BadgeText.js')
   ServerMessages.UnavailableErrMsg = #1054#1096#1080#1073#1082#1072' '#1089#1074#1103#1079#1080'.'
   ServerMessages.LoadingMessage = #1047#1072#1075#1088#1091#1079#1082#1072'...'
   ServerMessages.ExceptionTemplate.Strings = (

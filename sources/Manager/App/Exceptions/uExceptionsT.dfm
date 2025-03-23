@@ -1,16 +1,102 @@
 inherited ExceptionsT: TExceptionsT
   Width = 1532
   ExplicitWidth = 1532
+  object gbFilter: TUniGroupBox [0]
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 1526
+    Height = 60
+    Hint = ''
+    ShowHint = True
+    ParentShowHint = False
+    Caption = #1060#1080#1083#1100#1090#1088
+    Align = alTop
+    LayoutConfig.Width = '0'
+    TabOrder = 2
+    object fCancel: TUniBitBtn
+      Left = 629
+      Top = 29
+      Width = 106
+      Height = 24
+      Hint = ''
+      ShowHint = True
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      TabOrder = 1
+      ImageIndex = 3
+      OnClick = fCancelClick
+    end
+    object fOk: TUniBitBtn
+      Left = 516
+      Top = 29
+      Width = 107
+      Height = 24
+      Hint = ''
+      ShowHint = True
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
+      TabOrder = 2
+      IconPosition = ipButtonEdge
+      ImageIndex = 2
+      OnClick = fOkClick
+    end
+    object fType: TUniADCheckComboBox
+      Left = 15
+      Top = 29
+      Width = 329
+      Hint = ''
+      ShowHint = True
+      ShowSearch = True
+      Text = ''
+      TabOrder = 4
+      ClientEvents.ExtEvents.Strings = (
+        ''
+        
+          'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+          'oxSearch(sender, "id", "val");'#13#10'}')
+      ClearButton = True
+      IconItems = <>
+    end
+    object fDetailNum: TUniEdit
+      Left = 350
+      Top = 29
+      Width = 160
+      Hint = ''
+      ShowHint = True
+      Text = ''
+      TabOrder = 5
+      ClearButton = True
+    end
+    object UniLabel1: TUniLabel
+      Left = 350
+      Top = 12
+      Width = 39
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1053#1086#1084#1077#1088':'
+      TabOrder = 6
+    end
+    object UniLabel3: TUniLabel
+      Left = 15
+      Top = 12
+      Width = 22
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1058#1080#1087':'
+      TabOrder = 3
+    end
+  end
   inherited UniPanel2: TUniPanel
-    Top = 68
+    Top = 66
     Width = 1532
-    Height = 331
-    ExplicitTop = 68
+    Height = 333
+    ExplicitTop = 67
     ExplicitWidth = 1532
-    ExplicitHeight = 331
+    ExplicitHeight = 332
     inherited Grid: TUniDBGrid
       Width = 1532
-      Height = 331
+      Height = 333
       WebOptions.PageSize = 500
       Columns = <
         item
@@ -67,92 +153,6 @@ inherited ExceptionsT: TExceptionsT
           Title.Caption = 'NLA'
           Width = 81
         end>
-    end
-  end
-  object gbFilter: TUniGroupBox [2]
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 1526
-    Height = 62
-    Hint = ''
-    ShowHint = True
-    ParentShowHint = False
-    Caption = #1060#1080#1083#1100#1090#1088
-    Align = alTop
-    LayoutConfig.Width = '0'
-    TabOrder = 2
-    object fCancel: TUniBitBtn
-      Left = 469
-      Top = 35
-      Width = 106
-      Height = 24
-      Hint = ''
-      ShowHint = True
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
-      TabOrder = 1
-      ImageIndex = 3
-      OnClick = fCancelClick
-    end
-    object fOk: TUniBitBtn
-      Left = 356
-      Top = 35
-      Width = 107
-      Height = 24
-      Hint = ''
-      ShowHint = True
-      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
-      TabOrder = 2
-      IconPosition = ipButtonEdge
-      ImageIndex = 2
-      OnClick = fOkClick
-    end
-    object UniLabel3: TUniLabel
-      Left = 15
-      Top = 18
-      Width = 22
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1058#1080#1087':'
-      TabOrder = 3
-    end
-    object fType: TUniADCheckComboBox
-      Left = 15
-      Top = 35
-      Width = 209
-      Hint = ''
-      ShowHint = True
-      ShowSearch = True
-      Text = ''
-      TabOrder = 4
-      ClientEvents.ExtEvents.Strings = (
-        ''
-        
-          'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
-          'oxSearch(sender, "id", "val");'#13#10'}')
-      ClearButton = True
-      IconItems = <>
-    end
-    object fDetailNum: TUniEdit
-      Left = 230
-      Top = 35
-      Width = 121
-      Hint = ''
-      ShowHint = True
-      Text = 'fDetailNum'
-      TabOrder = 5
-      ClearButton = True
-    end
-    object UniLabel1: TUniLabel
-      Left = 230
-      Top = 18
-      Width = 39
-      Height = 13
-      Hint = ''
-      ShowHint = True
-      Caption = #1053#1086#1084#1077#1088':'
-      TabOrder = 6
     end
   end
   inherited Query: TFDQuery

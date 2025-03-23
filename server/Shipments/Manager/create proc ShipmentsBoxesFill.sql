@@ -9,7 +9,7 @@ create proc ShipmentsBoxesFill
 as
   set nocount on;
 
-  declare @r        int = 0
+  declare @r int = 0
 
   declare @ID as ID
 
@@ -32,7 +32,6 @@ as
            ,TransporterHeight          
            ,ImageLinks                            
            ) 
-    output inserted.ShipmentsBoxesID into @ID 
     select
            p.TransporterNumber          
           ,p.Invoice                    
@@ -51,12 +50,13 @@ as
       from pShipmentsBoxesData p with (nolock index=ao1)
      where p.Spid = @@SPid
        and not exists (select 1
-                         from tShipmentsBoxes t (nolock)
+                         from tShipmentsBoxes t with (nolock index=ao3)
                         where t.BoxNumber = p.BoxNumber
                        )
+
+
     Update t
-       set           
-           t.TransporterNumber           = p.TransporterNumber           
+       set t.TransporterNumber           = p.TransporterNumber           
           ,t.Invoice                     = p.Invoice                    
           ,t.BoxNumber                   = p.BoxNumber                  
           ,t.SupplierPhysicalWeight      = p.SupplierPhysicalWeight     
@@ -69,15 +69,15 @@ as
           ,t.TransporterLength           = p.TransporterLength          
           ,t.SupplierHeight              = p.SupplierHeight             
           ,t.TransporterHeight           = p.TransporterHeight          
-          ,t.ImageLinks                  = p.ImageLinks                 
+          ,t.ImageLinks                  = p.ImageLinks    
+    output inserted.ShipmentsBoxesID into @ID 
       from pShipmentsBoxesData p with (nolock index=ao1)
      inner join tShipmentsBoxes t with (Updlock index=ao3)
              on t.BoxNumber = p.BoxNumber
      where p.Spid = @@SPid
 
 
-
-  insert tShipmentsBoxesDetail
+  insert tShipmentsBoxesDetail with (rowlock)
         (ShipmentsBoxesID
         ,OrderID
         ,TransporterNumber
