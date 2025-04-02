@@ -116,7 +116,7 @@ select 'Заказы, которые не удалось разбить на ч�
 -- where OrderID is null
 
 -- заказы, которых нет в emex
-Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,  p.Quantity, P.Reference,  n.Brief, n.Name, *
+Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,P.Reference,  n.Brief, n.Name, p.OrderNum, p.DetailNumber, p.Quantity,  *
   from tOrders p  (nolock)
  inner join tClients c (nolock)
          on c.ClientID = p.ClientID 
@@ -138,7 +138,7 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
 				   ,9	--NotAvailable
                     )
                -- and p.Quantity < 0
-  order by p.OrderDate 
+  order by p.OrderDate, p.OrderNum,  p.DetailNumber
 /* -- исправление
 delete p
   from tOrders p

@@ -198,7 +198,7 @@ as
 
   Update pAccrualAction
      set RetVal = case 
-	                when (isnull(o.PricePurchase, 0) = 0  or isnull(o.AmountPurchase, 0) = 0) then 504-- 'Необходимо заполнить обязательные поля "Цена закупки" и "Сумма закупки"!'
+	                when (coalesce(nullif(o.PricePurchase, 0), o.ReplacementPrice, 0) = 0  or isnull(o.AmountPurchase, 0) = 0) then 504-- 'Необходимо заполнить обязательные поля "Цена закупки" и "Сумма закупки"!'
 					when isnull(o.Reference, '') = ''     then 513 -- 'Необходимо заполнить обязательное поле "Reference"!'
 					when isnull(o.CustomerSubId, '') = '' then 514 -- 'Необходимо заполнить обязательное поле "CustomerSubId"!'
 					else 0

@@ -31,31 +31,6 @@ Update p
 where p.Spid = @@SPID
   and SUBSTRING(p.OrderDetailSubId, 1,1) = '!'
 
---2. Статус и Количество совпадают
-Update p
-    set p.OrderID = o.OrderID
-       ,p.Tag     = 2 
-   from pMovement p (updlock) 
-  inner join tNodes n (nolock)
-          on n.EID = p.StatusId
-  cross apply (select top 1 o.OrderID
-                 from tOrders o (nolock) 
-                 left join pMovement m (nolock)
-                        on m.Spid        = @@spid
-                       and m.OrderID     = o.OrderID
-                       and m.OrderNumber = o.EmexOrderID 
-                where o.EmexOrderID   = p.OrderNumber
-                  and o.DetailNumber  = p.DetailNum            
-                  and o.CustomerSubId = p.CustomerSubId
-                  and o.Reference     = p.Reference 
-                  and o.Quantity      = p.Quantity
-                  and o.StatusID      = n.NodeID 
-
-                  and m.OrderID is null
-                ) o   
-where p.Spid = @@SPID
-  and isnull(p.OrderID, 0) = 0
-
 
 Update pMovement -- 
    set pMovement.N = p.N
@@ -84,30 +59,30 @@ FETCH NEXT FROM my_cur INTO @N
 WHILE @@FETCH_STATUS = 0
 BEGIN
     --2. Количество
-    --Update p
-    --   set p.OrderID = o.OrderID
-    --      ,p.Tag     = 3 
-    --  from pMovement p (updlock) 
-    -- inner join tNodes n (nolock)
-    --         on n.EID = p.StatusId
-    -- cross apply (select top 1 o.OrderID
-    --                from tOrders o (nolock) 
-    --                left join pMovement m (nolock)
-    --                       on m.Spid        = @@spid
-    --                      and m.OrderID     = o.OrderID
-    --                      and m.OrderNumber = o.EmexOrderID 
-    --               where o.EmexOrderID   = p.OrderNumber
-    --                 and o.DetailNumber  = p.DetailNum            
-    --                 and o.CustomerSubId = p.CustomerSubId
-    --                 and o.Reference     = p.Reference 
-    --                 and o.Quantity      = p.Quantity
-    --                 and o.StatusID      = n.NodeID 
-    --                 and m.OrderID is null
-    --              ) o   
-    --where p.Spid = @@SPID
-    --  and isnull(p.OrderID, 0) = 0
-    --  and p.N = @N
+    Update p
+        set p.OrderID = o.OrderID
+           ,p.Tag     = 2 
+       from pMovement p (updlock) 
+      inner join tNodes n (nolock)
+              on n.EID = p.StatusId
+      cross apply (select top 1 o.OrderID
+                     from tOrders o (nolock) 
+                     left join pMovement m (nolock)
+                            on m.Spid        = @@spid
+                           and m.OrderID     = o.OrderID
+                           and m.OrderNumber = o.EmexOrderID 
+                    where o.EmexOrderID   = p.OrderNumber
+                      and o.DetailNumber  = p.DetailNum            
+                      and o.CustomerSubId = p.CustomerSubId
+                      and o.Reference     = p.Reference 
+                      and o.Quantity      = p.Quantity
+                      and o.StatusID      = n.NodeID 
 
+                      and m.OrderID is null
+                    ) o   
+    where p.Spid = @@SPID
+      and isnull(p.OrderID, 0) = 0
+      and p.N = @N
 
     --3. Все остальное
     Update p

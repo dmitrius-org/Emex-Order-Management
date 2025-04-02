@@ -123,6 +123,7 @@ object AllowCreateOrderF: TAllowCreateOrderF
   end
   object UniTimer: TUniTimer
     Interval = 500
+    Enabled = False
     RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'

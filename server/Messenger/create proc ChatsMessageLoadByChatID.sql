@@ -15,9 +15,10 @@ as
           ,cm.UserID
           ,cm.Message
           ,cm.InDateTime
+          ,convert(varchar, cm.DateRead, 120) DateRead
           ,u.Brief
           ,u.Name
-          ,cm.Flag
+          ,cm.Flag          
       from tChatsMessage cm (nolock)
      left join tUser u (nolock)
              on u.UserID = cm.UserID
@@ -33,11 +34,8 @@ as
 go
 grant exec on ChatsMessageLoadByChatID to public
 go
-exec setOV 'ChatsMessageLoadByChatID', 'P', '20250128', '2'
+exec setOV 'ChatsMessageLoadByChatID', 'P', '20250326', '3'
 go
  
 
- exec ChatsMessageLoadByChatID @ChatID = 772
-
-
- select * from tChatsMessage
+ exec ChatsMessageLoadByChatID @ChatID = 1029

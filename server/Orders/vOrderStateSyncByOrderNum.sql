@@ -12,7 +12,7 @@ Select o.ClientID,
 	   o.OrderID,
 	   o.StatusID,
        o.EmexOrderID as EmexOrderID,
-       c.SuppliersID
+       o.SuppliersID
 
   from tOrders o (nolock)   
  inner join tClients c (nolock)
@@ -30,7 +30,8 @@ go
 exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240914', '2'
 go
 
-select EmexOrderID, count(*) 
-  
+select *  
   from vOrderStateSyncByOrderNum 
- group by EmexOrderID
+
+  --where SuppliersID is null
+ --group by EmexOrderID

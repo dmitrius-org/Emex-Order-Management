@@ -149,7 +149,7 @@ select-- top 200000
                                            end
          and isnull(t.NLA, 0) = 0
 
- where pc.DestinationName =  @ProfileName
+ where pc.ClientProfileName =  @ProfileName
 
  -- and t.DetailNum = '849753JA1A' --46676
 

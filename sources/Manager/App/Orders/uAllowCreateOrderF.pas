@@ -116,6 +116,7 @@ end;
 procedure TAllowCreateOrderF.UniFormShow(Sender: TObject);
 begin
   btnOk.Enabled := False;
+  UniTimer.Enabled:= True;
 end;
 
 procedure TAllowCreateOrderF.UniTimerTimer(Sender: TObject);

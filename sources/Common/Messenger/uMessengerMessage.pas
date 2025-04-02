@@ -116,7 +116,8 @@ type
     procedure AddMessageToChat(  MID: integer;
                                  MFlag: integer;
                                  MText: string;
-                                 MDate: TDateTime);
+                                 MDate: TDateTime;
+                                 MReadDate: string = '');
 
     /// <summary>
     /// SendMessage - Отправка сообщения
@@ -247,7 +248,8 @@ procedure TMessage.AddMessageToChat(
    MID: integer;
    MFlag: integer;
    MText: string;
-   MDate: TDateTime
+   MDate: TDateTime;
+   MReadDate: string = ''
    );
 var
   i: integer;
@@ -261,14 +263,18 @@ begin
    begin
      Message := StringReplace(Message, 'message_type', '--self', []);
      if (MFlag and 2) > 0 then // прочитано
+     begin
        Message := StringReplace(Message, 'message_viewed', '--viewed', []);
+     end;
    end
    else
    if ((MFlag and 1) = 0) and (FAppType = 0) then
    begin
      Message := StringReplace(Message, 'message_type', '--self', []);
      if (MFlag and 2) > 0 then //прочитано
+     begin
        Message := StringReplace(Message, 'message_viewed', '--viewed', []);
+     end;
    end
    else
    begin
@@ -277,6 +283,8 @@ begin
      if MFlag and 2 = 0 then // если сообщение не прочитано, то проставим признак
        MessageIsRead(MID);   //
    end;
+
+   Message := StringReplace(Message, 'message_DateRead', MReadDate, []);
 
    i:=MessageEditor.Items.Add( Message );
 end;
@@ -424,7 +432,8 @@ begin
       AddMessageToChat (FieldByName('MessageID').AsInteger,
                         FieldByName('Flag').AsInteger,
                         FieldByName('Message').AsString,
-                        FieldByName('InDateTime').AsDateTime);
+                        FieldByName('InDateTime').AsDateTime,
+                        FieldByName('DateRead').AsString);
 
       Next;
     end;
@@ -469,7 +478,8 @@ begin
       AddMessageToChat (FieldByName('MessageID').AsInteger,
                         FieldByName('Flag').AsInteger,
                         FieldByName('Message').AsString,
-                        FieldByName('InDateTime').AsDateTime);
+                        FieldByName('InDateTime').AsDateTime,
+                        FieldByName('DateRead').AsString);
 
       Next;
     end;

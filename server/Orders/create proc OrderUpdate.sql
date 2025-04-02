@@ -63,7 +63,7 @@ as
 							                           else 0
                                                     end
         ,t.ReplacementPrice   = case  
-		                          when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> t.PricePurchase then nullif(@ReplacementPrice, 0)
+		                          when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> isnull(t.PricePurchase, 0) then nullif(@ReplacementPrice, 0)
 							      else nullif(t.ReplacementPrice, 0)
                                 end
         ,t.DetailName         = nullif(@DetailNameF, '')

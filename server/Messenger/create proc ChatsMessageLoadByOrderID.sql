@@ -15,7 +15,7 @@ as
           ,cm.UserID
           ,cm.Message
           ,cm.InDateTime
-          
+          ,convert(varchar, cm.DateRead, 120) DateRead
           ,u.Brief
           ,u.Name
           ,cm.Flag
@@ -34,7 +34,7 @@ as
 go
 grant exec on ChatsMessageLoadByOrderID to public
 go
-exec setOV 'ChatsMessageLoadByOrderID', 'P', '20240813', '1'
+exec setOV 'ChatsMessageLoadByOrderID', 'P', '20250326', '3'
 go
  
 
