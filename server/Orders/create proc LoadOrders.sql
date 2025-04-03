@@ -58,13 +58,13 @@ as
         ,PriceLogoOrg
         ,ProfilesDeliveryID
         ,isCancel
-		,PriceID
-		,MakeLogo
-		,DetailName
+        ,PriceID
+        ,MakeLogo
+        ,DetailName
         ,FileDate    
         
         ,Margin
-		,Discount
+        ,Discount
         ,Reliability
         ,Commission
         ,ExtraKurs
@@ -85,6 +85,7 @@ as
         ,DaysInWork
         ,ProfilesCustomerID
         ,DeliveryTermFromSupplier-- Срок поставки от поставщика
+        ,Flag
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
@@ -128,6 +129,11 @@ as
         ,0
         ,pc.ProfilesCustomerID
         ,pc.DeliveryTermFromSupplier -- DeliveryTermFromSupplier
+        ,case 
+           when ltrim(rtrim(o.OnlyThisBrand))='Без замен' 
+           then 2097152 -- ТОЛЬКО ЭТОТ БРЕНД. Без замен
+           else 0
+         end
     from pOrders o (nolock)
    inner join tClients c (nolock)
            on c.ClientID = o.ClientID
@@ -268,6 +274,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250320', '11'
+exec setOV 'LoadOrders', 'P', '20250402', '12'
 go
  

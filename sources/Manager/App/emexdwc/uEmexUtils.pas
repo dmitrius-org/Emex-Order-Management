@@ -552,9 +552,11 @@ begin
     begin
       logger.Info('TEmex.InsertPartToBasketByMarks AOrderID: ' + AOrderID.ToString);
       FQuery.Close;
-      FQuery.SQL.Text:='Select distinct * '+
-                       '  from vInsertPartToBasketByOrder '+
-                       ' where OrderID=:OrderID    ';
+      FQuery.SQL.Text:='''
+        Select distinct *
+          from vInsertPartToBasketByOrder
+         where OrderID=:OrderID
+      ''';
       FQuery.ParamByName('OrderID').AsInteger := AOrderID;
       FQuery.Open;
 
@@ -567,16 +569,16 @@ begin
         part := partstobasket.Create;
         // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
         part.Reference       := FQuery.FieldByName('Reference').AsString;
-        part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);  //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
-        part.UploadedPrice   := FQuery.FieldByName('PricePurchase').AsFloat;  //цена, заданная клиентом
+        part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);  // - максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
+        part.UploadedPrice   := FQuery.FieldByName('PricePurchase').AsFloat;  // - цена, заданная клиентом
         part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
         part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
         part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
-        part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
-        part.MakeLogo        := FQuery.FieldByName('MakeLogo').AsString;;   // – лого бренда
-        part.DetailNum       := FQuery.FieldByName('DetailNumber').AsString;// – номер детали
-        part.PriceLogo       := FQuery.FieldByName('PriceLogo').AsString;   // – лого прайслиста
-        part.Quantity        := FQuery.FieldByName('Quantity').AsInteger;   // – количество
+        part.OnlyThisBrand   := FQuery.FieldByName('OnlyThisBrand').asBoolean; // – признак ТОЛЬКО ЭТОТ БРЕНД
+        part.MakeLogo        := FQuery.FieldByName('MakeLogo').AsString;       // – лого бренда
+        part.DetailNum       := FQuery.FieldByName('DetailNumber').AsString;   // – номер детали
+        part.PriceLogo       := FQuery.FieldByName('PriceLogo').AsString;      // – лого прайслиста
+        part.Quantity        := FQuery.FieldByName('Quantity').AsInteger;      // – количество
         part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
         part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
         part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
@@ -658,25 +660,25 @@ begin
 
           part := partstobasket.Create;
           // – Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти
-          part.Reference       := FQuery.FindField('Reference').AsString;
+          part.Reference       := FQuery.FieldByName('Reference').AsString;
           part.CoeffMaxAgree   := FSQL.GetSetting('CoeffMaxAgree', 1.1);    //максимальный коэффициент превышения цены продажи для клиента над ценой, показанной на сайте (по умолчанию 1.1)
-          part.UploadedPrice   := FQuery.FindField('PricePurchase').Value;  //цена, заданная клиентом
+          part.UploadedPrice   := FQuery.FieldByName('PricePurchase').Value;  //цена, заданная клиентом
           part.Confirm         := True;  // – признак, что строчка корзины будет включена в заказ (необходимо задать 1)
           part.Delete          := False; // – признак, что строчка корзины будет удалена (необходимо задать 0)
           part.bitAgree        := False; // – признак что клиент согласен на превышение цены свыше коэффициента CoeffMaxAgree
-          part.OnlyThisBrand   := False; // – признак ТОЛЬКО ЭТОТ БРЕНД
-          part.MakeLogo        := FQuery.FindField('MakeLogo').AsString;;   // – лого бренда
-          part.DetailNum       := FQuery.FindField('DetailNumber').AsString;// – номер детали
-          part.PriceLogo       := FQuery.FindField('PriceLogo').AsString;   // – лого прайслиста
-          part.Quantity        := FQuery.FindField('Quantity').Value;       // – количество
+          part.OnlyThisBrand   := FQuery.FieldByName('OnlyThisBrand').asBoolean; // – признак ТОЛЬКО ЭТОТ БРЕНД
+          part.MakeLogo        := FQuery.FieldByName('MakeLogo').AsString;;   // – лого бренда
+          part.DetailNum       := FQuery.FieldByName('DetailNumber').AsString;// – номер детали
+          part.PriceLogo       := FQuery.FieldByName('PriceLogo').AsString;   // – лого прайслиста
+          part.Quantity        := FQuery.FieldByName('Quantity').Value;       // – количество
           part.bitOnly         := False; // – признак ТОЛЬКО ЭТОТ НОМЕР
           part.bitQuantity     := False; // – признак ТОЛЬКО ЭТО КОЛИЧЕСТВО
           part.bitWait         := False; // – признак СОГЛАСЕН ЖДАТЬ 1 месяц
-          part.CustomerSubId   := FQuery.FindField('CustomerSubID').Value;  // – идентификатор запчасти клиента
+          part.CustomerSubId   := FQuery.FieldByName('CustomerSubID').Value;  // – идентификатор запчасти клиента
           part.TransportPack   := '';   // – тип упаковки (WOOD – требуется деревянная обрешетка, CARTON := '' – отправка в картонной коробке)
-          part.DetailWeight    := FQuery.FindField('WeightKG').Value; //  – вес детали в кг
-          part.EmExWeight      := FQuery.FindField('WeightKG').Value; //  – последнее изменение веса датали, сделанное  на нашем складе
-          part.DestinationLogo := FQuery.FindField('DestinationLogo').AsString; // – тип отгрузки (EMEW – авиа, CNTE – контейнер)
+          part.DetailWeight    := FQuery.FieldByName('WeightKG').Value; //  – вес детали в кг
+          part.EmExWeight      := FQuery.FieldByName('WeightKG').Value; //  – последнее изменение веса датали, сделанное  на нашем складе
+          part.DestinationLogo := FQuery.FieldByName('DestinationLogo').AsString; // – тип отгрузки (EMEW – авиа, CNTE – контейнер)
           part.CustomerStickerData:= '';
 
           outBasket[i]:= part;

@@ -6,7 +6,7 @@ go
 create table pOrders
 (
   Spid             numeric(18,0)  default @@spid--  
- ,ClientID         numeric(18,0) 
+ ,ClientID         numeric(18,0)  -- 
  ,Manufacturer     nvarchar(64)   --  2 Производитель	
  ,DetailNumber     nvarchar(32)   --  4 Номер детали
  ,Quantity         float          --  8 Количество
@@ -17,12 +17,15 @@ create table pOrders
  ,OrderNum         nvarchar(64)   -- Номер заказа	
  ,OrderDate        nvarchar(32)   -- Дата заказа	
  ,PriceNum         nvarchar(64)   -- Лого прайса клиента	
- ,FileDate         datetime
+ ,FileDate         datetime       --
+ ,OnlyThisBrand    nvarchar(30)    -- признак ТОЛЬКО ЭТОТ БРЕНД
 )
+go
+create index ao1 on pOrders(Spid, ClientID)
 go
 grant all on pOrders to public
 go
-exec setOV 'pOrders', 'U', '20240101', '0'
+exec setOV 'pOrders', 'U', '20250402', '1'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pOrders', @desc = 'Временная таблица заказов. Используется для импорта заказов в базу данных'

@@ -184,6 +184,7 @@ type
     UniLabel13: TUniLabel;
     edtContactPerson: TUniEdit;
     UniLabel14: TUniLabel;
+    QueryOnlyThisBrand: TIntegerField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

@@ -23,6 +23,10 @@ Select c.ClientID,
 	   o.Reference       as Reference, 
 	   o.CustomerSubID   as CustomerSubID,
 	   o.DestinationLogo as DestinationLogo,
+       cast(case 
+              when isnull(o.Flag, 0)&2097152 /*ТОЛЬКО ЭТОТ БРЕНД. Без замен */ >0 then 1
+              else 0
+            end as bit) OnlyThisBrand, 
 	   isnull(o.Flag, 0) as Flag -- дополнительные признаки
   from pAccrualAction p (nolock)  
  inner join tOrders o (nolock)    
@@ -37,5 +41,5 @@ Select c.ClientID,
 go
 grant select on vInsertPartToBasketByPart to public
 go
-exec setOV 'vInsertPartToBasketByPart', 'V', '20250227', '5'
+exec setOV 'vInsertPartToBasketByPart', 'V', '20250402', '6'
 go

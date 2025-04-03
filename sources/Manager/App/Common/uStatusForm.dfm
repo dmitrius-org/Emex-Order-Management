@@ -1,8 +1,8 @@
 object StatusForm: TStatusForm
   Left = 0
   Top = 0
-  ClientHeight = 295
-  ClientWidth = 465
+  ClientHeight = 312
+  ClientWidth = 524
   Caption = #1057#1090#1072#1090#1091#1089#1099
   OnShow = UniFormShow
   BorderStyle = bsDialog
@@ -13,17 +13,18 @@ object StatusForm: TStatusForm
     AlignWithMargins = True
     Left = 10
     Top = 3
-    Width = 445
-    Height = 289
+    Width = 504
+    Height = 306
     Hint = ''
     Margins.Left = 10
     Margins.Right = 10
     ShowHint = True
     ParentShowHint = False
+    AutoScroll = True
     Align = alClient
-    ExplicitLeft = -56
-    ExplicitTop = -119
-    ExplicitWidth = 678
-    ExplicitHeight = 459
+    ExplicitWidth = 445
+    ExplicitHeight = 289
+    ScrollHeight = 306
+    ScrollWidth = 504
   end
 end

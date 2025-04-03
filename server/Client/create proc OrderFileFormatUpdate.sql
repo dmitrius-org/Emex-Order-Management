@@ -23,7 +23,8 @@ create proc OrderFileFormatUpdate
 			 ,@CustomerSubID       varchar(32)   -- Правило формирование поля CustomerSubID
              ,@Reference           varchar(64)   -- Правило формирование поля Reference
 			 ,@IsActive            bit
-			 ,@ID                  numeric(18,0)   
+			 ,@ID                  numeric(18,0) 
+             ,@OnlyThisBrand       int           -- признак ТОЛЬКО ЭТОТ БРЕНД
              --
 
 as
@@ -55,6 +56,7 @@ as
 		,CustomerSubID = @CustomerSubID 
 		,Reference     = @Reference 
 		,IsActive      = @IsActive
+        ,OnlyThisBrand = @OnlyThisBrand
     from pOrderFileFormat (updlock)
    where ID = @ID
 
@@ -63,5 +65,5 @@ return @r
 go
 grant exec on OrderFileFormatUpdate to public
 go
-exec setOV 'OrderFileFormatUpdate', 'P', '20240101', '0'
+exec setOV 'OrderFileFormatUpdate', 'P', '20250402', '1'
 go

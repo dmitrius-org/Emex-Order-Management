@@ -25,9 +25,9 @@ object ClientsF: TClientsF
       44)
     object btnOk: TUniBitBtn
       Left = 1086
-      Top = 10
-      Width = 85
-      Height = 25
+      Top = 6
+      Width = 87
+      Height = 32
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akTop, akRight]
@@ -35,10 +35,10 @@ object ClientsF: TClientsF
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
-      Left = 996
-      Top = 10
+      Left = 998
+      Top = 6
       Width = 81
-      Height = 25
+      Height = 32
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akTop, akRight]
@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = tabPriceProfiles
+    ActivePage = pcOrders
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -460,6 +460,13 @@ object ClientsF: TClientsF
               GroupHeader = #1060#1086#1088#1084#1072#1090' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1079#1072#1082#1072#1079#1086#1074';'#1057#1090#1086#1083#1073#1077#1094
             end
             item
+              FieldName = 'OnlyThisBrand'
+              Title.Alignment = taCenter
+              Title.Caption = #1041#1077#1079' '#1079#1072#1084#1077#1085
+              Width = 64
+              GroupHeader = #1060#1086#1088#1084#1072#1090' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1079#1072#1082#1072#1079#1086#1074';'#1057#1090#1086#1083#1073#1077#1094
+            end
+            item
               FieldName = 'OrderNum'
               Title.Alignment = taCenter
               Title.Caption = #1047#1072#1082#1072#1079
@@ -483,7 +490,7 @@ object ClientsF: TClientsF
             item
               FieldName = 'Commission'
               Title.Alignment = taCenter
-              Title.Caption = #1050#1086#1084#1080#1089#1089#1080#1103
+              Title.Caption = #1050#1086#1084#1080#1089#1089#1080#1103' ('#1085#1077' '#1080#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103')'
               Width = 86
             end
             item
@@ -1191,6 +1198,9 @@ object ClientsF: TClientsF
       AutoGenerateValue = arAutoInc
       FieldName = 'ID'
     end
+    object QueryOnlyThisBrand: TIntegerField
+      FieldName = 'OnlyThisBrand'
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1222,7 +1232,8 @@ object ClientsF: TClientsF
       '               ,@Commission        = :NEW_Commission  '
       #9'       ,@CustomerSubID     = :NEW_CustomerSubID '
       #9'       ,@Reference         = :NEW_Reference '
-      '               ,@IsActive          = :NEW_IsActive   '
+      '               ,@IsActive          = :NEW_IsActive'
+      '               ,@OnlyThisBrand     = :NEW_OnlyThisBrand  '
       ''
       ''
       'if @R > 0'
@@ -1258,8 +1269,8 @@ object ClientsF: TClientsF
       #9'       ,@Reference         = :NEW_Reference '
       '               ,@IsActive          = :NEW_IsActive  '
       '               ,@ID                = :ID'
+      '               ,@OnlyThisBrand     = :NEW_OnlyThisBrand'
       '       '
-      ''
       'if @R > 0'
       'begin'
       ' declare @M nvarchar(1024)'

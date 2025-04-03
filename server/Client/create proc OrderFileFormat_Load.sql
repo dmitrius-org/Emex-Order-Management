@@ -37,7 +37,8 @@ as
 			,Commission            
 			,IsActive              
 			,CustomerSubID         
-			,Reference             
+			,Reference      
+            ,OnlyThisBrand  -- признак ТОЛЬКО ЭТОТ БРЕНД       
 			)
 	  select
 			 @@Spid                  
@@ -59,6 +60,7 @@ as
 			,IsActive              
 			,CustomerSubID         
 			,Reference 
+            ,OnlyThisBrand
 	   from tOrderFileFormat (nolock)
 	  where ClientID = @ClientID
   end
@@ -97,7 +99,8 @@ as
 			,Commission            
 			,IsActive              
 			,CustomerSubID         
-			,Reference             
+			,Reference    
+            ,OnlyThisBrand
 			)
 	  select isnull(nullif(ClientID, 0), @ClientID)
 			,Folder                
@@ -116,6 +119,7 @@ as
 			,IsActive              
 			,CustomerSubID         
 			,Reference 
+            ,OnlyThisBrand
 	   from pOrderFileFormat (nolock)
 	  where Spid     = @@Spid 
 	    and isnull(OrderFileFormatID, 0) = 0
@@ -137,6 +141,7 @@ as
            ,t.CustomerSubID = p.CustomerSubID 
            ,t.Reference     = p.Reference 
            ,t.IsActive      = p.IsActive
+           ,t.OnlyThisBrand = p.OnlyThisBrand
        from pOrderFileFormat p (nolock)
       inner join tOrderFileFormat t (updlock)
               on t.OrderFileFormatID = p.OrderFileFormatID
@@ -150,5 +155,5 @@ return @r
 go
 grant exec on OrderFileFormat_load to public
 go
-exec setOV 'OrderFileFormat_load', 'P', '20240101', '0'
+exec setOV 'OrderFileFormat_load', 'P', '20250402', '1'
 go

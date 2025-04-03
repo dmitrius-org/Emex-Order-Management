@@ -481,3 +481,9 @@
     background-color: #f5f5f5;
 } */
 
+/* Иконка: Без замен. только этот бренд */
+.grid-order-only-this-brand {
+    overflow: visible;
+    width: 100%;
+    color: #1E90FF;
+}

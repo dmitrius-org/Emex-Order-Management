@@ -1273,7 +1273,6 @@ end;
 procedure TOrdersT.QueryStatusGetText(Sender: TField; var Text: string; DisplayText: Boolean);
 var t: string;
 begin
- // logger.Info('QueryFlagGetText: ');
   t := '';
   //Сообщение от менеджера клиенту
   if (Sender.AsInteger and 32) > 0 then
@@ -1304,6 +1303,10 @@ begin
   if (Sender.AsInteger and 131072) > 0 then
   begin
     t := t + '<span class="grid-order-request-open" data-qtip="Обращение открыто"><i class="fa fa-exclamation"></i></span> ';
+  end;
+  if (Sender.AsInteger and 2097152) > 0 then //2097152 - ТОЛЬКО ЭТОТ БРЕНД. Без замен
+  begin
+    t := t + '<span class="grid-order-only-this-brand" data-qtip="Без замен"><i class="fa fa-minus-square"></i></span> ';
   end;
   if Query.FieldByName('Fragile').AsBoolean then
   begin
