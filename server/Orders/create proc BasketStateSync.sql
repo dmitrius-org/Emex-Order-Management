@@ -77,23 +77,14 @@ as
 	   ,o.AmountPurchaseF = round(p.Price * p.Quantity, 2)
 	   ,o.EmexQuantity    = p.Quantity
 	   ,o.OverPricing     = case 
-	                          when p.Price >  iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) 
-                              /*Если у детали изменили прайс-лист по которому она будет поставляться, нужно отправлять ее в корзину EmEx DWC без указания закупочной цены,
-                              тогда в корзине отобразится и нам по API в обратку передастся реальная цена по которой деталь будет поставлена. Иначе, если мы понимаем что готовы на превышение
-                              или понижение цены, но передадим изначальную закупочную цену, то нам дадут отказ по несоответствию цены.
-							  
-							  в таком случае превышение считаем по PricePurchase, иначе UploadedPrice. Хотя нет разницы, и там и там должна быть обдна цифра :)
-							  */
-							  then p.Price / iif((isnull(o.Flag, 0) & 256)>0, o.PricePurchase, p.UploadedPrice) * 100 - 100
+	                          when p.Price >  p.UploadedPrice
+							  then p.Price / p.UploadedPrice * 100 - 100
 							  else 0
                             end 
         ,o.Warning         = case
                               when isnull(p.WarnText, '') <> '' then p.WarnText	
                               else '' --o.Warning  
-                             end
-        
-
-                             
+                             end                 
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
