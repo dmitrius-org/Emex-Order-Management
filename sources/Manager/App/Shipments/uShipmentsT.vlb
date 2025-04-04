@@ -181,9 +181,6 @@ Coordinates=86,782,74,36
 [QueryWeightKGF]
 Coordinates=826,936,116,36
 
-[fSupplier]
-Coordinates=10,782,66,36
-
 [actProtocol]
 Coordinates=826,1046,79,36
 
@@ -279,5 +276,5 @@ Coordinates=1027,1101,145,36
 Coordinates=928,1121,90,36
 
 []
-Coordinates=717,782,74,36
+Coordinates=10,782,66,36
 

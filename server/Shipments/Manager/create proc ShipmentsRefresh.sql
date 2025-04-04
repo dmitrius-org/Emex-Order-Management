@@ -143,7 +143,7 @@ select
 
   Update p
      set p.Amount   = p.WeightKG  * p.WeightKGAmount + (iif(p.VolumeKG - p.WeightKG > 0, p.VolumeKG-p.WeightKG, 0) * p.VolumeKGAmount)  
-        ,p.AmountF  = p.WeightKGF * p.WeightKGAmount + (iif(p.VolumeKGF - p.WeightKGF > 0, VolumeKGF - p.WeightKGF, 0) * p.VolumeKGAmount)  
+        ,p.AmountF  = p.WeightKGF * p.WeightKGAmount + (iif(p.VolumeKGF - p.WeightKGF > 0, p.VolumeKGF - p.WeightKGF, 0) * p.VolumeKGAmount)  
     from pShipments p with (Updlock index=ao1)
    --inner join tShipments t (updlock)
    --        on t.Invoice = p.Invoice

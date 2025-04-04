@@ -120,8 +120,9 @@ object SearchF: TSearchF
           'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13 +
           #10'    ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
         
-          'edit=function edit(editor, context, eOpts)'#13#10'{'#13#10'  console.log(edi' +
-          'tor);'#13#10'  console.log(context);'#13#10'  console.log(eOpts);   '#13#10'}'
+          'edit=function edit(editor, context, eOpts)'#13#10'{'#13#10'  //console.log(e' +
+          'ditor);'#13#10'  //console.log(context);'#13#10'  //console.log(eOpts);   '#13#10 +
+          '}'
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
           'e, oldColumns, eOpts) {'#13#10'    var startCol = 0; // zero based'#13#10'  ' +
@@ -154,56 +155,13 @@ object SearchF: TSearchF
           '   }'#13#10'}'#13#10)
       ClientEvents.UniEvents.Strings = (
         
-          'afterCreate=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.c' +
-          'opyToClipboard = str => {'#13#10'        const el = document.createEle' +
-          'ment('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0]' +
-          '.data[sender.uniCol];'#13#10'        el.value = document.activeElement' +
-          '.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.' +
-          'select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docume' +
-          'nt.body.removeChild(el);'#13#10'    };'#13#10'}'
-        
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
           'ent('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0].' +
           'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
           'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
           'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
-          't.body.removeChild(el);'#13#10'    };'#13#10'        '#13#10#13#10'    config.updateRo' +
-          'wSpan = function() {'#13#10#13#10'    var columns = sender.getColumns(),'#13#10 +
-          '        view = sender.getView(),'#13#10'        store = sender.getStor' +
-          'e(),'#13#10'        rowCount = store.getCount();'#13#10#13#10'    for (var col =' +
-          ' 0; col < columns.length; ++col) {     '#13#10'        var colIndx = c' +
-          'ol; '#13#10'        var column = columns[colIndx];'#13#10'        var dataIn' +
-          'dex = column.dataIndex;'#13#10'        var spanCell = null,'#13#10'         ' +
-          '   spanCount = 0,'#13#10'            spanValue = null;'#13#10#13#10'        for ' +
-          '(var row = 0; row < rowCount; ++row) {'#13#10'            var cell = v' +
-          'iew.getCellByPosition({ row: row, column: colIndx }).dom,'#13#10'     ' +
-          '           record = store.getAt(row),'#13#10'                value = r' +
-          'ecord.get(dataIndex);'#13#10#13#10'            // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1087#1088#1086#1074#1077#1088#1082#1091' '#1085#1072' '#1089#1091 +
-          #1097#1077#1089#1090#1074#1086#1074#1072#1085#1080#1077' '#1103#1095#1077#1081#1082#1080#13#10'          //  if (!cell || !Ext.fly(cell).qu' +
-          'ery('#39'.x-grid-cell-inner'#39')[0]) {'#13#10'          //      continue;'#13#10'  ' +
-          '        //  }'#13#10#13#10'            if (col < 6) {'#13#10'                if ' +
-          '(spanValue !== value) {'#13#10'                    // '#1055#1088#1080#1084#1077#1085#1103#1077#1084' rowSpa' +
-          'n '#1076#1083#1103' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1081' '#1075#1088#1091#1087#1087#1099#13#10'                    if (spanCell !== nu' +
-          'll) {'#13#10'                        spanCell.rowSpan = spanCount;'#13#10'  ' +
-          '                  }'#13#10#13#10'                    // '#1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072#13#10'    ' +
-          '                Ext.fly(cell).query('#39'.x-grid-cell-inner'#39')[0].sty' +
-          'le.display = '#39#39';'#13#10'                    spanCell = cell;'#13#10'        ' +
-          '            spanCount = 1;'#13#10'                    spanValue = valu' +
-          'e;'#13#10'                } else {'#13#10'                    // '#1059#1074#1077#1083#1080#1095#1080#1074#1072#1077#1084 +
-          ' '#1089#1095#1077#1090#1095#1080#1082' '#1076#1083#1103' '#1090#1077#1082#1091#1097#1077#1081' '#1075#1088#1091#1087#1087#1099'    '#13#10'                    spanCount++' +
-          ';'#13#10'                    '#13#10'                    Ext.fly(cell).query' +
-          '('#39'.x-grid-cell-inner'#39')[0].style.display = '#39'none'#39';'#13#10'             ' +
-          '       '#13#10'                }'#13#10'            } else {'#13#10'              ' +
-          '  // '#1051#1086#1075#1080#1082#1072' '#1076#1083#1103' '#1082#1086#1083#1086#1085#1086#1082' '#1073#1086#1083#1100#1096#1077' 6'#13#10'                if (row === 0)' +
-          ' {'#13#10'                    Ext.fly(cell).query('#39'.x-grid-cell-inner'#39 +
-          ')[0].style.display = '#39#39';'#13#10'                } else {'#13#10'            ' +
-          '        Ext.fly(cell).addCls('#39'bordered-cell'#39'); // '#1042#1084#1077#1089#1090#1086' '#1087#1088#1103#1084#1086#1081' ' +
-          #1088#1072#1073#1086#1090#1099' '#1089' inline-'#1089#1090#1080#1083#1103#1084#1080#13#10'                }'#13#10'            }'#13#10'     ' +
-          '   }'#13#10#13#10'        // '#1055#1088#1080#1084#1077#1085#1103#1077#1084' rowSpan '#1076#1083#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1075#1088#1091#1087#1087#1099' '#1089#1090#1088#1086#1082' ' +
-          '('#1086#1089#1086#1073#1077#1085#1085#1086' '#1076#1083#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1089#1090#1088#1086#1082#1080')'#13#10'        if (spanCell !== null) ' +
-          '{'#13#10'            spanCell.rowSpan = spanCount;'#13#10'        }'#13#10'    }'#13#10 +
-          '    };'#13#10#13#10#13#10'}')
+          't.body.removeChild(el);'#13#10'    };        '#13#10#13#10#13#10'}')
       ClicksToEdit = 1
       DataSource = DataSource
       Options = [dgEditing, dgTitles, dgColumnResize, dgTitleClick]

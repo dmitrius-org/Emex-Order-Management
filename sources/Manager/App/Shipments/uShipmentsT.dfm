@@ -96,7 +96,7 @@ object ShipmentsT: TShipmentsT
       ShowHint = True
       BodyRTL = False
       ClientEvents.ExtEvents.Strings = (
-        'beforerender=function beforerender(sender, eOpts)'#13#10'{'#13#10#13#10'}'
+        'afterrender=function afterrender(sender, eOpts) {'#13#10#13#10'}'#13#10
         
           'columnhide=function columnhide(ct, column, eOpts)'#13#10'{'#13#10'  if (colu' +
           'mn.dataIndex >= 0) { //column.dataIndex >= 0 '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' Argumen' +
@@ -108,6 +108,11 @@ object ShipmentsT: TShipmentsT
           '" + column.hidden]);'#13#10'}')
       ClientEvents.UniEvents.Strings = (
         
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
+          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
+          'n the ToolBar, number 10, hide him'#13#10'}'
+        
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
           'ent('#39'textarea'#39');'#13#10'       // el.value = sender.getSelection()[0].' +
@@ -117,12 +122,7 @@ object ShipmentsT: TShipmentsT
           't.body.removeChild(el);'#13#10'    };     '#13#10'}'#13#10#13#10
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
-          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}'
-        
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
-          'r.getDockedItems()[1]; //Remove the ToolBar fixed in the bottom'#13 +
-          #10'  toolbar.items.getAt(10).hide(); //Remove the Refresh button i' +
-          'n the ToolBar, number 10, hide him'#13#10#13#10'}')
+          'g)'#13#10'{'#13#10'  config.displayInfo=true;'#13#10'}')
       HeaderTitleAlign = taCenter
       PagingBarAuxControl = pnlGridSelectedCount
       DataSource = DataSource
@@ -154,6 +154,7 @@ object ShipmentsT: TShipmentsT
       OnColumnSort = GridColumnSort
       OnColumnMove = GridColumnMove
       OnCellContextClick = GridCellContextClick
+      OnDrawColumnCell = GridDrawColumnCell
       OnColumnResize = GridColumnResize
       Columns = <
         item
@@ -494,48 +495,6 @@ object ShipmentsT: TShipmentsT
           Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
           TabOrder = 6
         end
-        object fSupplier: TUniCheckComboBox
-          Left = 544
-          Top = 35
-          Width = 208
-          Hint = ''
-          ShowHint = True
-          Text = ''
-          TabOrder = 7
-          ClientEvents.UniEvents.Strings = (
-            'ajaxRequest=function ajaxRequest(sender, url, data)'#13#10'{'#13#10#13#10'}'
-            
-              'store.afterCreate=function store.afterCreate(sender)'#13#10'{'#13#10#13#10'   /*' +
-              ' var done = new Ext.Button({'#13#10'        text: '#39#1047#1072#1082#1088#1099#1090#1100#39','#13#10'        ' +
-              'renderTo: sender.getPicker(),'#13#10'        style: '#39'position: absolut' +
-              'e; bottom: 0px; width: 100%;'#39#13#10'    });'#13#10#13#10' */   sender.getSelIds' +
-              ' = function(sender) {'#13#10'        let Ids = "";'#13#10'        if (sender' +
-              '.getSelection() == null) return "";'#13#10'        sender.getSelection' +
-              '().forEach(function(item) {'#13#10'            Ids += item.id + ","'#13#10' ' +
-              '       });'#13#10'        return Ids.slice(0, -1);'#13#10'    };'#13#10#13#10'}')
-          EmptyText = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-          CheckChangeDelay = 100
-          ClearButton = True
-          Triggers = <
-            item
-              ImageIndex = 3
-              ButtonId = 0
-              HandleClicks = True
-              Hint = #1054#1095#1080#1089#1090#1080#1090#1100
-            end
-            item
-              ImageIndex = 2
-              ButtonId = 1
-              HandleClicks = True
-              Hint = #1055#1088#1080#1084#1077#1085#1080#1090#1100
-            end>
-          Images = UniImageList
-          HideTrigger = True
-          HideDefaultTrigger = False
-          SelectOnFocus = True
-          IconItems = <>
-          OnSelect = fSupplierSelect
-        end
         object UniLabel3: TUniLabel
           Left = 544
           Top = 16
@@ -544,7 +503,7 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-          TabOrder = 8
+          TabOrder = 7
         end
         object edtTransporterNumber: TUniEdit
           Left = 11
@@ -553,7 +512,7 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 9
+          TabOrder = 8
           EmptyText = #1053#1086#1084#1077#1088' '#1075#1088#1091#1079#1072
           CheckChangeDelay = 200
           ClearButton = True
@@ -566,7 +525,7 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Caption = #1053#1086#1084#1077#1088' '#1075#1088#1091#1079#1072':'
-          TabOrder = 10
+          TabOrder = 9
         end
         object lblStatys: TUniLabel
           Left = 758
@@ -576,7 +535,7 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Caption = #1057#1090#1072#1090#1091#1089':'
-          TabOrder = 11
+          TabOrder = 10
         end
         object fStatus2: TUniADCheckComboBox
           Left = 758
@@ -586,7 +545,7 @@ object ShipmentsT: TShipmentsT
           ShowHint = True
           ShowSearch = True
           Text = ''
-          TabOrder = 12
+          TabOrder = 11
           ClientEvents.ExtEvents.Strings = (
             ''
             
@@ -603,7 +562,7 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Text = ''
-          TabOrder = 13
+          TabOrder = 12
           EmptyText = #1050#1086#1088#1086#1073#1082#1072
           CheckChangeDelay = 200
           ClearButton = True
@@ -616,7 +575,25 @@ object ShipmentsT: TShipmentsT
           Hint = ''
           ShowHint = True
           Caption = #1050#1086#1088#1086#1073#1082#1072':'
+          TabOrder = 13
+        end
+        object fSupplier: TUniADCheckComboBox
+          Left = 544
+          Top = 35
+          Width = 209
+          Hint = ''
+          ShowHint = True
+          ShowSearch = True
+          Text = ''
           TabOrder = 14
+          ClientEvents.ExtEvents.Strings = (
+            ''
+            
+              'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
+              'oxSearch(sender, "id", "val");'#13#10'}')
+          EmptyText = #1057#1090#1072#1090#1091#1089
+          ClearButton = True
+          IconItems = <>
         end
       end
     end
@@ -734,115 +711,40 @@ object ShipmentsT: TShipmentsT
     UpdateObject = UpdateSQL
     SQL.Strings = (
       ''
-      'SELECT s.ShipmentsID'
-      '      ,s.ShipmentsDate               -- '#1076#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
-      
-        '      ,s.ReceiptDate                 -- '#1086#1078#1080#1076#1072#1077#1084#1072#1103' '#1078#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085 +
-        #1080#1103' ('#1088#1072#1089#1095#1077#1090#1085#1086#1077' '#1087#1086#1083#1077')'
-      '      ,s.ReceiptDate2'
-      '      ,s.Invoice                     -- '#1085#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072
-      '      ,s.DestinationLogo             -- '#1090#1080#1087' '#1086#1090#1087#1088#1072#1074#1082#1080
-      '      ,s.DestinationName'
-      
-        '      ,s.ShipmentsAmount             -- '#1089#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1074' '#1076#1086#1083#1083#1072#1088#1072 +
-        #1093
-      '      ,s.ShipmentsAmountR            -- '#1089#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1074' '#1088#1091#1073#1083#1103#1093
-      '      ,s.DetailCount                 -- '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1077#1090#1072#1083#1077#1081
-      
-        '      ,s.WeightKG                    -- '#1074#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' ('#1087#1086' '#1087#1088#1072#1081#1089 +
-        #1091')'
-      '      ,s.VolumeKG                    -- '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' ('#1087#1086' '#1087#1088#1072#1081#1089#1091')'
-      
-        '      ,s.WeightKGDiff                -- '#1091#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1085#1080#1094#1091' '#1089#1091#1084#1084' '#1074#1077#1089 +
-        ' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082#1090' '#1084#1080#1085#1091#1089' '#1074#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1080#1079
-      
-        '      ,s.WeightKGF                   -- '#1089#1091#1084#1084#1072' '#1074#1077#1089' '#1092#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1092#1072#1082 +
-        #1090
-      '      ,s.VolumeKGF                   -- '#1089#1091#1084#1084#1072' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090
-      
-        '      ,s.VolumeKGDiff                -- '#1091#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1085#1080#1094#1091' '#1089#1091#1084#1084' '#1074#1077#1089 +
-        ' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1092#1072#1082#1090' '#1084#1080#1085#1091#1089' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099#1081' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '
-      
-        '      ,s.Amount                      -- '#1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086#1089#1090 +
-        #1072#1074#1082#1080' '#1087#1086' '#1074#1077#1089#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089#1072
-      
-        '      ,s.AmountF                     -- '#1060#1072#1082#1090#1080#1095#1077#1089#1082#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1086 +
-        #1089#1090#1072#1074#1082#1080' ('#1087#1086' '#1074#1077#1089#1072#1084' '#1092#1072#1082#1090')'
-      
-        '      ,s.SupplierWeightKG            -- "'#1074#1077#1089' '#1092#1080#1079' '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072#1085#1085 +
-        #1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"'
-      
-        '      ,s.SupplierVolumeKG            -- "'#1074#1077#1089' '#1086#1073#1098#1077#1084' '#1080#1085#1074#1086#1081#1089#1072' '#1087#1086' '#1076#1072 +
-        #1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"'
-      
-        '      ,s.SupplierDiffVolumeWeigh     -- '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099 +
-        #1081' '#1080' '#1074#1077#1089' '#1092#1080#1079' '#1092#1072#1082#1090' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      '      ,s.SupplierAmount '
-      ''
-      
-        '      ,s.TransporterWeightKG         -- '#1087#1086#1083#1077' "'#1074#1077#1089' '#1092#1080#1079' '#1087#1086' '#1076#1072#1085#1085#1099#1084' ' +
-        #1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072'"'
-      
-        '      ,s.TransporterVolumeKG         -- '#1087#1086#1083#1077' "'#1074#1077#1089' '#1086#1073#1098#1077#1084' '#1087#1086' '#1076#1072#1085#1085#1099 +
-        #1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072'"'
-      
-        '      ,s.TransporterDiffVolumeWeigh  -- '#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1074#1077#1089' '#1086#1073#1098#1077#1084#1085#1099 +
-        #1081' '#1080' '#1074#1077#1089' '#1092#1080#1079' '#1092#1072#1082#1090' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
-      '      ,s.TransporterAmount '
-      '      ,s.TransporterNumber'
-      ''
-      '      ,s.WeightKGAmount'
-      '      ,s.VolumeKGAmount'
-      '      '
-      '      ,s.updDatetime'
-      '      ,s.SupplierBrief               -- '#1087#1086#1089#1090#1072#1074#1097#1080#1082
-      '      ,s.StatusName'
-      '      ,s.DeliverySumF'
-      '      ,s.Flag'
-      ''
-      '  FROM vShipments s '
-      ' Where 1=1'
-      '  '
-      '   !TransporterNumber'
-      '  '
-      '   !ShipmentsDate'
-      '   '
-      '   !Invoice'
-      '      '
-      '   !Supplier'
-      '   '
-      '   !Status'
-      '   '
-      '   !Box'
-      '      '
-      ' order by s.ShipmentsDate  desc   '
-      '   ')
+      'exec ShipmentsSelect'
+      '       @TransporterNumber = :TransporterNumber'
+      '      ,@ShipmentsDate     = :ShipmentsDate'
+      '      ,@Invoice           = :Invoice'
+      '      ,@SupplierIdList    = :Supplier'
+      '      ,@StatusIdList      = :Status'
+      '      ,@BoxNumber         = :Box'
+      '      ')
     Left = 582
     Top = 172
-    MacroData = <
+    ParamData = <
       item
-        Value = Null
         Name = 'TRANSPORTERNUMBER'
+        ParamType = ptInput
       end
       item
-        Value = Null
         Name = 'SHIPMENTSDATE'
+        ParamType = ptInput
       end
       item
-        Value = Null
         Name = 'INVOICE'
+        ParamType = ptInput
       end
       item
-        Value = Null
         Name = 'SUPPLIER'
+        ParamType = ptInput
       end
       item
-        Value = Null
         Name = 'STATUS'
+        ParamType = ptInput
       end
       item
-        Value = Null
         Name = 'BOX'
+        ParamType = ptInput
       end>
     object QueryShipmentsID: TFMTBCDField
       AutoGenerateValue = arAutoInc

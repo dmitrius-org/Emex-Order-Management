@@ -106,7 +106,6 @@ type
     actProtocol: TAction;
     N13: TUniMenuItem;
     N14: TUniMenuItem;
-    fSupplier: TUniCheckComboBox;
     UniLabel3: TUniLabel;
     N15: TUniMenuItem;
     actDataEdit: TAction;
@@ -124,6 +123,7 @@ type
     UniLabel2: TUniLabel;
     actFrigileData: TAction;
     N8: TUniMenuItem;
+    fSupplier: TUniADCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -136,7 +136,6 @@ type
 
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
     procedure actGridSettingDefaultExecute(Sender: TObject);
-    procedure fClientSelect(Sender: TObject);
     procedure actExportDataExecute(Sender: TObject);
     procedure actSetTransporterNumberExecute(Sender: TObject);
     procedure actSetReceiptDateExecute(Sender: TObject);
@@ -150,7 +149,6 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridColumnMove(Column: TUniBaseDBGridColumn; OldIndex,
       NewIndex: Integer);
-    procedure fSupplierSelect(Sender: TObject);
     procedure UniFrameReady(Sender: TObject);
     procedure actDataEditExecute(Sender: TObject);
     procedure actShipmentsBoxesExecute(Sender: TObject);
@@ -158,15 +156,13 @@ type
       DisplayText: Boolean);
     procedure UniFrameDestroy(Sender: TObject);
     procedure actFrigileDataExecute(Sender: TObject);
+    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+      Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
 
   private
     { Private declarations }
     FAction: tFormaction;
     FAccrual: TAccrual;
-
-    FFilterTextStatus: string;
-    FFilterTextPriceLogo: string;
-    FFilterTextSupplier: string;
 
     ACurrColumn: TUniDBGridColumn;
     FID: Integer;  //текущая колонка
@@ -327,110 +323,29 @@ begin
 //  UniSession.Synchronize;
 end;
 
-procedure TShipmentsT.fClientSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextSupplier := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextSupplier := s;
-  GridOpen;
-  logger.Info('FFilterTextSupplier: ' + FFilterTextSupplier);
-end;
-
 procedure TShipmentsT.FilterSupplierCreate;
 begin
-  sql.Open('select SuppliersID, Brief from tSuppliers (nolock) where SuppliersID<>8', [],[]);
-
-  fSupplier.Clear;
-  sql.q.First;
-  while not sql.q.Eof do
-  begin
-    fSupplier.Items.AddObject( sql.q.FieldByName('Brief').AsString, Pointer(sql.q.FieldByName('SuppliersID').AsInteger) );
-    sql.q.Next;
-  end;
-
-  fSupplier.Refresh;
-end;
-
-procedure TShipmentsT.fSupplierSelect(Sender: TObject);
-var
-  s: String;
-  i: Integer;
-begin
-  s:= '';
-  FFilterTextSupplier := '';
-
-  for i:= 0 to (Sender as TUniCheckComboBox).Items.Count-1 do
-  begin
-    if (Sender as TUniCheckComboBox).Selected[i] = True then
-    begin
-      s:= s + integer((Sender as TUniCheckComboBox).Items.Objects[i]).ToString +',';
-    end;
-  end;
-
-  if (s<> '') and  (s[length(s)]=',') then
-    delete(s,length(s),1);
-
-  FFilterTextSupplier := s;
-
-  logger.Info('FFilterTextSupplier: ' + FFilterTextSupplier);
+  fSupplier.FillFromSQL('select SuppliersID as ID, Brief as Name from tSuppliers (nolock) where SuppliersID<>8');
 end;
 
 procedure TShipmentsT.GridOpen;
-var FSupplier:string;
-    FStatus :string;
-    FPriceLogo :string;
 begin
   logger.Info('TOrdersT.GridOpen Begin');
   DoShowMask;
   try
     Query.Close();
 
-    if edtInvoice.Text <> '' then
-      Query.MacroByName('Invoice').Value := ' and s.Invoice like ''%'   + edtInvoice.Text + '%'''
-    else
-      Query.MacroByName('Invoice').Value := '';
+    Query.ParamByName('TransporterNumber').Value := Trim(edtTransporterNumber.Text);
+    Query.ParamByName('Invoice').Value := Trim(edtInvoice.Text);
+    Query.ParamByName('Box').Value := Trim(edtBox.Text);
 
-    if edtBox.Text <> '' then
-      Query.MacroByName('Box').Value := ' and s.BoxNumber like ''%'   + edtBox.Text + '%'''
-    else
-      Query.MacroByName('Box').Value := '';
-
-    if fStatus2.Text <> '' then
-      Query.MacroByName('Status').Value := ' and s.StatusID in ('   + fStatus2.SelectedKeys + ')'
-    else
-      Query.MacroByName('Status').Value := '';
-
-    if Trim(edtTransporterNumber.Text) <> '' then
-      Query.MacroByName('TransporterNumber').Value := ' and s.TransporterNumber like ''%'   + Trim(edtTransporterNumber.Text) + '%'''
-    else
-      Query.MacroByName('TransporterNumber').Value := '';
-
-    // поставщик
-    if FFilterTextSupplier <> '' then FSupplier := ' and s.SuppliersID in (' + FFilterTextSupplier + ')'
-    else
-      FSupplier := '';
-
-    Query.MacroByName('Supplier').Value    := FSupplier;
+    Query.ParamByName('Status').Value := fStatus2.SelectedKeys;
+    Query.ParamByName('Supplier').Value := fSupplier.SelectedKeys; // поставщик
 
     if (fShipmentsDate.Text <> '') and (fShipmentsDate.Text <> '30.12.1899') then
-      Query.MacroByName('ShipmentsDate').Value := ' and cast(s.ShipmentsDate as date) = '''   + FormatDateTime('yyyymmdd', fShipmentsDate.DateTime) + ''''
+      Query.ParamByName('ShipmentsDate').Value := FormatDateTime('yyyymmdd', fShipmentsDate.DateTime)
     else
-      Query.MacroByName('ShipmentsDate').Value := '';
+      Query.ParamByName('ShipmentsDate').Value := '';
 
     Query.Open();
 
@@ -463,6 +378,12 @@ begin
 
   actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and ((QueryFlag.Value and 1) = 1);
 
+
+  N3.Enabled := ((QueryFlag.Value and 2) = 0);
+  N16.Enabled := ((QueryFlag.Value and 2) = 0);
+  N2.Enabled := ((QueryFlag.Value and 2) = 0);
+  N8.Enabled := ((QueryFlag.Value and 2) = 0);
+  N13.Enabled := ((QueryFlag.Value and 2) = 0);
 end;
 
 procedure TShipmentsT.QueryFlagGetText(Sender: TField; var Text: string;
@@ -562,6 +483,15 @@ end;
 procedure TShipmentsT.GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
 begin
   SortColumn(Column.FieldName, Direction);
+end;
+
+procedure TShipmentsT.GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
+  Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+begin
+  if (Query.FieldByName('Flag').AsInteger and 2 > 0) then
+  begin
+    Attribs.Font.Color:=clGray;
+  end;
 end;
 
 procedure TShipmentsT.UniFrameCreate(Sender: TObject);

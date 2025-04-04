@@ -11,7 +11,7 @@ as
 
 SELECT s.ShipmentsID
       ,s.ShipmentsDate               -- дата отгрузки
-      ,s.ReceiptDate                 -- ожидаемая жата поступления (расчетное поле)
+      ,s.ReceiptDate                 -- ожидаемая дата поступления (расчетное поле)
       ,s.ReceiptDate2
       ,s.Invoice                     -- номер инвойса
       ,s.DestinationLogo             -- тип отправки
@@ -50,7 +50,7 @@ SELECT s.ShipmentsID
       ,s.SuppliersID
       ,s.DeliverySumF
       ,case
-         when isnull(sb.ShipmentsBoxesID, 0) > 0 then 1
+         when isnull(sb.ShipmentsBoxesID, 0) > 0 then 1  /* Flag не занимать значение 2. уже используется */
          else 0
        end Flag
       ,sb.BoxNumber
@@ -72,13 +72,18 @@ SELECT s.ShipmentsID
                   from tShipmentsBoxes sb (nolock)
                  where sb.TransporterNumber = s.TransporterNumber
                ) as sb
+
+
+ --order by isnull(o.DeliveryNextDate2, o.DeliveryNextDate)
+
+
 go
 grant select on vShipments to public
 go
-go
-exec setOV 'vShipments', 'V', '20250312', '6'
+exec setOV 'vShipments', 'V', '20250403', '7'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vShipments', @desc = 'Отгрузки'
 go
-select  * from vShipments where Invoice = '241002'
+select Flag,  * 
+  from vShipments--- where Invoice = '241002'

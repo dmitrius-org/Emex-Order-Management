@@ -142,6 +142,10 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
 /* -- исправление
 delete p
   from tOrders p
+ where p.Quantity < 0
+
+delete p
+  from tOrders p
  where not exists (select 1
                     from tMovement m (nolock)
 				   where m.OrderID = p.OrderID

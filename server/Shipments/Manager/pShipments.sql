@@ -42,14 +42,14 @@ create table pShipments
 --,inDatetime                      datetime      default GetDate()      --
 --,updDatetime                     datetime      default GetDate()      --
 
-
+,ShipmentsID	                 numeric(18, 0)
 )
 go
-create unique index ao1 on pShipments(Spid, Invoice)
+create index ao1 on pShipments(Spid, Invoice)
 go
 grant select on pShipments to public
 go
-exec setOV 'pShipments', 'U', '20240822', '4'
+exec setOV 'pShipments', 'U', '20250403', '5'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pShipments', @desc = ''

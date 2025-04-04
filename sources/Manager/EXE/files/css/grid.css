@@ -487,3 +487,51 @@
     width: 100%;
     color: #1E90FF;
 }
+
+/* Родитель грида должен допускать sticky */
+.grid-shipments  {
+    overflow: auto !important;
+    /* overflow: scroll !important; */
+    position: relative;
+}
+
+/* Закрепляем строку */
+.grid-shipments .sticky-row {
+    position: sticky;
+    top: calc(25px * var(--row-index)); 
+    background: white;
+    z-index: 10;
+    color: grey !important;           
+}
+
+
+.grid-shipments .sticky-row:nth-of-type(1) {
+    --row-index: 0;
+}
+.grid-shipments .sticky-row:nth-of-type(2) {
+    --row-index: 1;
+}
+.grid-shipments .sticky-row:nth-of-type(3) {
+    --row-index: 2;
+}
+.grid-shipments .sticky-row:nth-of-type(4) {
+    --row-index: 3;
+}
+.grid-shipments .sticky-row:nth-of-type(5) {
+    --row-index: 4;
+}
+.grid-shipments .sticky-row:nth-of-type(6) {
+    --row-index: 5;
+}
+.grid-shipments .sticky-row:nth-of-type(7) {
+    --row-index: 6;
+}
+.grid-shipments .sticky-row:nth-of-type(8) {
+    --row-index: 7;
+}   
+.grid-shipments .sticky-row:nth-of-type(9) {
+    --row-index: 8;
+}
+.grid-shipments .sticky-row:nth-of-type(10) {
+    --row-index: 9;
+}

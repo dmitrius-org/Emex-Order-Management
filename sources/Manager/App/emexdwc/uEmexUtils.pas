@@ -642,9 +642,11 @@ begin
     begin
       logger.Info('TEmex.InsertPartToBasketByMarks Supplier:' + Supplier);
       FQuery.Close;
-      FQuery.SQL.Text:='Select distinct * '+
-                       '  from vInsertPartToBasketByPart p '+
-                       ' where SuppliersID=:SuppliersID    ';
+      FQuery.SQL.Text:='''
+        Select distinct *
+          from vInsertPartToBasketByPart p
+         where SuppliersID=:SuppliersID
+      ''';
       FQuery.ParamByName('SuppliersID').AsInteger := Supplier.ToInteger;
       FQuery.Open;
 
