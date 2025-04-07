@@ -33,7 +33,7 @@ SELECT o.[OrderID]
       ,o.[Quantity]
       ,o.[Price]
       ,o.[Amount]
-      ,o.[PricePurchase]
+      ,isnull(o.[PricePurchase], 0) PricePurchase
       ,o.[AmountPurchase]
       ,o.[PricePurchaseF]
       ,o.[AmountPurchaseF]

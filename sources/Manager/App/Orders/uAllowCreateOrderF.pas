@@ -51,7 +51,8 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uLogger, uEmexUtils;
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uLogger, uEmexUtils,
+  System.Math;
 
 function AllowCreateOrderF: TAllowCreateOrderF;
 begin
@@ -173,7 +174,7 @@ begin
       begin
          Append;
          FieldByName('Supplier').AsString := sql.f('Brief').AsString;
-         FieldByName('Balance').AsFloat := Balance.Balance;
+         FieldByName('Balance').AsFloat := IfThen( Balance.Total > 0, Balance.Total * 10, 0.00);
          FieldByName('NewOrderAmount').AsFloat := Balance.NewOrderAmount;
          Post;
       end;

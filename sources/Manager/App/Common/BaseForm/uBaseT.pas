@@ -12,7 +12,6 @@ uses
   uniGUIBaseClasses, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
-
   uUserF, uGrant, uCommonType, uUtils.Grid;
 
 type
@@ -56,7 +55,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uSuppliersF;
+  MainModule, uGrantUtils, uMainVar;
 
 {$R *.dfm}
 
@@ -67,7 +66,7 @@ end;
 
 procedure TBaseT.DataRefresh;
 begin
-
+  //
 end;
 
 procedure TBaseT.GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -147,7 +146,7 @@ end;
 procedure TBaseT.UniFrameCreate(Sender: TObject);
 begin
   {$IFDEF Debug}
-  Grant.GrantTemplateCreate(self);
+    Grant.GrantTemplateCreate(self);
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
 
@@ -157,7 +156,6 @@ begin
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
 end;
-
 
 initialization
   RegisterClass(TBaseT);

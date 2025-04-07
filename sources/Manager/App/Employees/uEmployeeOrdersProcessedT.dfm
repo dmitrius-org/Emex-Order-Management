@@ -4,7 +4,6 @@ object EmployeeOrdersProcessedT: TEmployeeOrdersProcessedT
   Width = 1199
   Height = 480
   OnCreate = UniFrameCreate
-  OnDestroy = UniFrameDestroy
   Layout = 'fit'
   TabOrder = 0
   object UniPanel3: TUniPanel
@@ -21,7 +20,6 @@ object EmployeeOrdersProcessedT: TEmployeeOrdersProcessedT
     LayoutAttribs.Align = 'top'
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'north'
-    ExplicitTop = 19
     object btnGridStatisticOpen: TUniButton
       Left = 526
       Top = 27

@@ -48,7 +48,7 @@ uses
   uGroupF in 'Core\User\uGroupF.pas' {GroupF: TUniForm},
   uClientsF in 'App\Clients\uClientsF.pas' {ClientsF: TUniForm},
   uPricesT in 'App\Prices\uPricesT.pas' {PricesT: TUniFrame},
-  uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm},
+  uAPIKeyForm_F in 'App\Clients\uAPIKeyForm_F.pas' {APIKeyForm_F: TUniForm},
   uUserT in 'Core\User\uUserT.pas' {UsersT: TUniFrame},
   uUserF in 'Core\User\uUserF.pas' {UserF: TUniForm},
   uInstrumentActionT in 'Core\Instrument\uInstrumentActionT.pas' {InstrumentActionT: TUniFrame},
@@ -138,7 +138,10 @@ uses
   uStatisticCanceled in 'App\Statistics\uStatisticCanceled.pas' {StatisticCanceled: TUniFrame},
   uFragileT in 'App\Shipments\uFragileT.pas' {FragileT: TUniFrame},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
-  uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm};
+  uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
+  uAPIKeyForm_Wrapper in 'App\Clients\uAPIKeyForm_Wrapper.pas' {APIKeyForm_W: TUniForm},
+  uAPIKeyForm_T in 'App\Clients\uAPIKeyForm_T.pas' {APIKeyForm_T: TUniFrame},
+  uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm};
 
 {$R *.res}
 

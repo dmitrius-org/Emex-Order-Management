@@ -11,9 +11,7 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker, uUniADCheckComboBoxEx
-
-  ;
+  uUniDateRangePicker, uUniADCheckComboBoxEx;
 
 type
   TEmployeeOrdersProcessedT = class(TUniFrame)
@@ -40,7 +38,6 @@ type
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure fCancelClick(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
-    procedure UniFrameDestroy(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
   private
     FEmployeeID: Integer;
@@ -133,18 +130,12 @@ end;
 
 procedure TEmployeeOrdersProcessedT.UniFrameCreate(Sender: TObject);
 begin
-
   ComboBoxFill(fEmployees,'''
     EXEC EmployeeOrdersProcessedT_EmployeeList
   ''');
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
-end;
-
-procedure TEmployeeOrdersProcessedT.UniFrameDestroy(Sender: TObject);
-begin
-//  FClients.Free;
 end;
 
 initialization

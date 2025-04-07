@@ -129,9 +129,9 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
    and p.OrderDate >= '20240310'
    and StatusID in (--1	--New
                    --,2	--InChecked
-                    3	--InBasket
-                   ,4	--InWork
-                   ,5	--Purchased
+                   -- 3	--InBasket
+                   --,4	--InWork
+                    5	--Purchased
                    ,6	--ReceivedOnStock
                    ,7	--ReadyToSend
                    ,8	--Send

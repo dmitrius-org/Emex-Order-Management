@@ -16,6 +16,7 @@ begin
     ,ApiKey               VARCHAR(255)  NOT NULL
     ,Flag                 int
 	,inDatetime           datetime      default GetDate() --
+    ,EndDatetime          datetime      default GetDate() --
      --
     ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
     ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END

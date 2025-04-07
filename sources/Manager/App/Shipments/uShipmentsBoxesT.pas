@@ -95,10 +95,7 @@ type
     ///</summary>
     procedure OrdersFCallBack(Sender: TComponent; AResult:Integer);
 
-    { Private declarations }
   public
-    { Public declarations }
-
     /// <summary>
     /// GridOpen - получение данных с сервера
     /// </summary>

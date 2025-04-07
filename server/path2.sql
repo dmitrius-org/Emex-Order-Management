@@ -1,1 +1,1 @@
- alter table tOrderFileFormat  add OnlyThisBrand      int --признак ТОЛЬКО ЭТОТ БРЕНД
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1041, 1041, 'Api',  'TClientsT.actApi', 40, 1

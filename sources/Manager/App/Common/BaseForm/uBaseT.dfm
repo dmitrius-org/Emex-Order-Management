@@ -98,8 +98,6 @@ object BaseT: TBaseT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
-    ExplicitTop = 72
-    ExplicitHeight = 327
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -182,7 +180,7 @@ object BaseT: TBaseT
     UpdateOptions.CheckRequired = False
     UpdateObject = UpdateSQL
     SQL.Strings = (
-      '')
+      'select 1')
     Left = 686
     Top = 118
   end

@@ -2151,6 +2151,10 @@ object ClientsT: TClientsT
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1074#1093#1086#1076#1072' '#1074' '#1083#1080#1095#1085#1099#1081' '#1082#1072#1073#1080#1085#1077#1090
       OnExecute = actPasswordResetExecute
     end
+    object actApi: TAction
+      Caption = 'Api'
+      OnExecute = actApiExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -2182,6 +2186,12 @@ object ClientsT: TClientsT
     end
     object N11: TUniMenuItem
       Action = actBalanceTotal
+    end
+    object N15: TUniMenuItem
+      Caption = '-'
+    end
+    object Api1: TUniMenuItem
+      Action = actApi
     end
     object N10: TUniMenuItem
       Caption = '-'

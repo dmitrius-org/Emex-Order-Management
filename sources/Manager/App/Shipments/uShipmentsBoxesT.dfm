@@ -2,7 +2,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
   Left = 0
   Top = 0
   Width = 1600
-  Height = 800
+  Height = 567
   OnCreate = UniFrameCreate
   Layout = 'fit'
   TabOrder = 0
@@ -26,7 +26,7 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     Left = 0
     Top = 70
     Width = 1600
-    Height = 730
+    Height = 497
     Hint = ''
     ClientEvents.ExtEvents.Strings = (
       

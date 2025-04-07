@@ -82,6 +82,9 @@ type
     QueryRest: TCurrencyField;
     actPasswordReset: TAction;
     N14: TUniMenuItem;
+    actApi: TAction;
+    N15: TUniMenuItem;
+    Api1: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -108,6 +111,7 @@ type
     procedure GridAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
     procedure actPasswordResetExecute(Sender: TObject);
+    procedure actApiExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -131,7 +135,7 @@ implementation
 
 uses
   MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF,
-  uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper, uToast;
+  uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper, uToast, uBalanceTotalT, uAPIKeyForm_T, uAPIKeyForm_Wrapper;
 
 {$R *.dfm}
 
@@ -139,6 +143,12 @@ procedure TClientsT.actAddExecute(Sender: TObject);
 begin
   ClientsF.FormAction := TFormAction.acInsert;
   ClientsF.ShowModal(ClientCallBack);
+end;
+
+procedure TClientsT.actApiExecute(Sender: TObject);
+begin
+  APIKeyForm_W.ClientID:=QueryClientID.AsInteger;
+  APIKeyForm_W.ShowModal;
 end;
 
 procedure TClientsT.actBalanceAddExecute(Sender: TObject);
