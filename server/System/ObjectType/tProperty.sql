@@ -45,3 +45,8 @@ insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 6, 102, 2,
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 1, 12, 0, 'Карта', 'Карта' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 12, 0, 'Наличные', 'Наличные' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 3, 12, 0, 'Взаимозачет', 'Взаимозачет' 
+
+-- тип ответа на отказы
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 0, 13, 0, 'Эмекс.ру', 'Эмекс.ру' 
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 1, 13, 0, 'Файл',     'Файл' 
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 13, 0, 'Скрипт',   'Скрипт' 

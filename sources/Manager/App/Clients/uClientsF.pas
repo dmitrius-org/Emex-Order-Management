@@ -185,6 +185,8 @@ type
     edtContactPerson: TUniEdit;
     UniLabel14: TUniLabel;
     QueryOnlyThisBrand: TIntegerField;
+    edtScript: TUniEdit;
+    UniLabel12: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -705,6 +707,8 @@ begin
   ComboBoxFill(cbClientType,   ' select ClientTypeID as ID, Name from tClientType (nolock) ');
 
   ComboBoxFill(cbStatusRequiringPayment,   ' select distinct SearchBrief as name, SearchID as ID from tNodes (nolock) where Type = 0 and SearchID <> 8 order by ID ');
+
+  ComboBoxFill(cbResponseType,   ' select Brief Name from tProperty (nolock)  where ObjectTypeID = 13 order by PropertyID ');
 
   case FAction of
     acInsert, acReportCreate:

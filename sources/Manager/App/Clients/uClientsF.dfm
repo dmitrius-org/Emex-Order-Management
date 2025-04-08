@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = pcOrders
+    ActivePage = pcRefusals
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet
@@ -800,9 +800,6 @@ object ClientsF: TClientsF
         Height = 23
         Hint = ''
         Text = ''
-        Items.Strings = (
-          #1069#1084#1077#1082#1089'.'#1088#1091#10#10
-          #1060#1072#1081#1083)
         TabOrder = 0
         IconItems = <>
       end
@@ -822,11 +819,29 @@ object ClientsF: TClientsF
       object edtNotificationAddress: TUniEdit
         Left = 196
         Top = 117
-        Width = 829
+        Width = 957
         Hint = ''
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 4
+      end
+      object edtScript: TUniEdit
+        Left = 196
+        Top = 156
+        Width = 687
+        Hint = ''
+        Text = ''
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 6
+      end
+      object UniLabel12: TUniLabel
+        Left = 49
+        Top = 162
+        Width = 81
+        Height = 13
+        Hint = ''
+        Caption = #1055#1091#1090#1100' '#1082' '#1089#1082#1088#1080#1087#1090#1091':'
+        TabOrder = 7
       end
     end
     object pcSuppliers: TUniTabSheet
