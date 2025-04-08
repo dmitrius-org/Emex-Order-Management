@@ -25,8 +25,10 @@ create proc OrderFileFormatUpdate
 			 ,@IsActive            bit
 			 ,@ID                  numeric(18,0) 
              ,@OnlyThisBrand       int           -- признак ТОЛЬКО ЭТОТ БРЕНД
+             ,@CustomerClientNum   int           -- № Клиента
+             ,@CustomerClientSign  int           -- Пометки Клиента
+             ,@CustomerOrder       int           -- Заказ
              --
-
 as
   declare @r int = 0
   --if exists (select 1 
@@ -39,24 +41,27 @@ as
 
   delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
 
-  Update pOrderFileFormat
-     set Folder        = @Folder      
-        ,Firstline     = @Firstline   
-        ,Manufacturer  = @Manufacturer
-        ,DetailNumber  = @DetailNumber 
-        ,Quantity      = @Quantity    
-        ,DetailID      = @DetailID         
-        ,DetailName    = @DetailName   
-        ,Price         = @Price       
-        ,Amount        = @Amount      
-        ,OrderNum      = @OrderNum    
-        ,OrderDate     = @OrderDate   
-        ,PriceNum      = @PriceNum    
-        ,Commission    = @Commission  
-		,CustomerSubID = @CustomerSubID 
-		,Reference     = @Reference 
-		,IsActive      = @IsActive
-        ,OnlyThisBrand = @OnlyThisBrand
+  Update pOrderFileFormat     
+     set Folder             = @Folder      
+        ,Firstline          = @Firstline   
+        ,Manufacturer       = @Manufacturer
+        ,DetailNumber       = @DetailNumber 
+        ,Quantity           = @Quantity    
+        ,DetailID           = @DetailID         
+        ,DetailName         = @DetailName   
+        ,Price              = @Price       
+        ,Amount             = @Amount      
+        ,OrderNum           = @OrderNum    
+        ,OrderDate          = @OrderDate   
+        ,PriceNum           = @PriceNum    
+        ,Commission         = @Commission  
+		,CustomerSubID      = @CustomerSubID 
+		,Reference          = @Reference 
+		,IsActive           = @IsActive
+        ,OnlyThisBrand      = @OnlyThisBrand
+        ,CustomerClientNum  = @CustomerClientNum  
+        ,CustomerClientSign = @CustomerClientSign 
+        ,CustomerOrder      = @CustomerOrder      
     from pOrderFileFormat (updlock)
    where ID = @ID
 
@@ -65,5 +70,5 @@ return @r
 go
 grant exec on OrderFileFormatUpdate to public
 go
-exec setOV 'OrderFileFormatUpdate', 'P', '20250402', '1'
+exec setOV 'OrderFileFormatUpdate', 'P', '20250408', '2'
 go

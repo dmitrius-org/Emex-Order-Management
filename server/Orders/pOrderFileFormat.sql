@@ -25,8 +25,11 @@ create table pOrderFileFormat
 ,IsActive                   bit
 ,CustomerSubID              varchar(32)   --правило формирование поля CustomerSubID
 ,Reference                  varchar(64)   --правило формирование поля Reference 
-,OnlyThisBrand              int -- признак ТОЛЬКО ЭТОТ БРЕНД
---
+,OnlyThisBrand              int  -- признак ТОЛЬКО ЭТОТ БРЕНД
+,CustomerClientNum          int  -- № Клиента
+,CustomerClientSign         int  -- Пометки Клиента
+,CustomerOrder              int  -- Заказ
+--                          
 ,inDatetime                 datetime default GetDate()      --
 ,updDatetime                datetime default GetDate()      --
 
@@ -36,7 +39,7 @@ create unique index ao1 on pOrderFileFormat(ID)
 go
 grant all on pOrderFileFormat to public
 go
-exec setOV 'pOrderFileFormat', 'U', '20250402', '1'
+exec setOV 'pOrderFileFormat', 'U', '20250408', '2'
 go
 exec dbo.sys_setTableDescription @table = 'pOrderFileFormat', @desc = 'Формат файла с заказом'
 go

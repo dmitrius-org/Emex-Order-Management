@@ -28,12 +28,15 @@ select p.ID
       ,p.CustomerSubID
       ,p.Reference
       ,p.OnlyThisBrand -- признак ТОЛЬКО ЭТОТ БРЕНД
+      ,p.CustomerClientNum   
+      ,p.CustomerClientSign  
+      ,p.CustomerOrder       
   from pOrderFileFormat p (nolock)
  where p.spid=@@spid
 
 go
 grant all on vOrderFileFormat to public
 go
-exec setOV 'vOrderFileFormat', 'V', '20250402', '1'
+exec setOV 'vOrderFileFormat', 'V', '20250408', '2'
 go
 

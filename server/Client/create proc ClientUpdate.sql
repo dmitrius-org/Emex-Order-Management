@@ -19,6 +19,7 @@ create proc ClientUpdate
              ,@Email	              nvarchar(256)= null
              ,@Phone                  varchar(32)  = null
              ,@ContactPerson          varchar(256) = null
+             ,@NotificationScript     varchar(256) = null -- Скрипт оповещения
 
 as
   declare @r int = 0
@@ -74,6 +75,7 @@ as
               ,Phone                  = @Phone         
               ,ContactPerson          = @ContactPerson
               ,Email                  = @Email
+              ,NotificationScript     = @NotificationScript
 		  from tClients with (rowlock index=PK_tClients_ClientID)
 	     where ClientID     = @ClientID 
 
@@ -116,5 +118,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20240205', '4'
+exec setOV 'ClientUpdate', 'P', '20250408', '5'
 go

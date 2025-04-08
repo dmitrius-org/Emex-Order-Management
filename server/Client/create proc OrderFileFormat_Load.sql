@@ -38,7 +38,10 @@ as
 			,IsActive              
 			,CustomerSubID         
 			,Reference      
-            ,OnlyThisBrand  -- признак ТОЛЬКО ЭТОТ БРЕНД       
+            ,OnlyThisBrand  -- признак ТОЛЬКО ЭТОТ БРЕНД     
+            ,CustomerClientNum   -- № Клиента
+            ,CustomerClientSign  -- Пометки Клиента
+            ,CustomerOrder       -- Заказ
 			)
 	  select
 			 @@Spid                  
@@ -61,6 +64,9 @@ as
 			,CustomerSubID         
 			,Reference 
             ,OnlyThisBrand
+            ,CustomerClientNum   -- № Клиента
+            ,CustomerClientSign  -- Пометки Клиента
+            ,CustomerOrder       -- Заказ
 	   from tOrderFileFormat (nolock)
 	  where ClientID = @ClientID
   end
@@ -101,6 +107,9 @@ as
 			,CustomerSubID         
 			,Reference    
             ,OnlyThisBrand
+            ,CustomerClientNum   -- № Клиента
+            ,CustomerClientSign  -- Пометки Клиента
+            ,CustomerOrder       -- Заказ
 			)
 	  select isnull(nullif(ClientID, 0), @ClientID)
 			,Folder                
@@ -120,28 +129,34 @@ as
 			,CustomerSubID         
 			,Reference 
             ,OnlyThisBrand
+            ,CustomerClientNum   -- № Клиента
+            ,CustomerClientSign  -- Пометки Клиента
+            ,CustomerOrder       -- Заказ
 	   from pOrderFileFormat (nolock)
 	  where Spid     = @@Spid 
 	    and isnull(OrderFileFormatID, 0) = 0
 
      Update t
-        set t.Folder        = p.Folder      
-           ,t.Firstline     = p.Firstline   
-           ,t.Manufacturer  = p.Manufacturer
-           ,t.DetailNumber  = p.DetailNumber 
-           ,t.Quantity      = p.Quantity    
-           ,t.DetailID      = p.DetailID         
-           ,t.DetailName    = p.DetailName   
-           ,t.Price         = p.Price       
-           ,t.Amount        = p.Amount      
-           ,t.OrderNum      = p.OrderNum    
-           ,t.OrderDate     = p.OrderDate   
-           ,t.PriceNum      = p.PriceNum    
-           ,t.Commission    = p.Commission  
-           ,t.CustomerSubID = p.CustomerSubID 
-           ,t.Reference     = p.Reference 
-           ,t.IsActive      = p.IsActive
-           ,t.OnlyThisBrand = p.OnlyThisBrand
+        set t.Folder            = p.Folder      
+           ,t.Firstline         = p.Firstline   
+           ,t.Manufacturer      = p.Manufacturer
+           ,t.DetailNumber      = p.DetailNumber 
+           ,t.Quantity          = p.Quantity    
+           ,t.DetailID          = p.DetailID         
+           ,t.DetailName        = p.DetailName   
+           ,t.Price             = p.Price       
+           ,t.Amount            = p.Amount      
+           ,t.OrderNum          = p.OrderNum    
+           ,t.OrderDate         = p.OrderDate   
+           ,t.PriceNum          = p.PriceNum    
+           ,t.Commission        = p.Commission  
+           ,t.CustomerSubID     = p.CustomerSubID 
+           ,t.Reference         = p.Reference 
+           ,t.IsActive          = p.IsActive
+           ,t.OnlyThisBrand     = p.OnlyThisBrand
+           ,t.CustomerClientNum = p.CustomerClientNum   -- № Клиента
+           ,t.CustomerClientSign= p.CustomerClientSign  -- Пометки Клиента
+           ,t.CustomerOrder     = p.CustomerOrder       -- Заказ
        from pOrderFileFormat p (nolock)
       inner join tOrderFileFormat t (updlock)
               on t.OrderFileFormatID = p.OrderFileFormatID
@@ -149,11 +164,10 @@ as
 
   end
 
-
 exit_:
 return @r
 go
 grant exec on OrderFileFormat_load to public
 go
-exec setOV 'OrderFileFormat_load', 'P', '20250402', '1'
+exec setOV 'OrderFileFormat_load', 'P', '20250408', '2'
 go

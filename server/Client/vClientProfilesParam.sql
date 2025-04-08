@@ -14,6 +14,7 @@ as
          pc.ClientID,       
          pc.ClientPriceLogo,
          pc.UploadPriceName,
+         pc.UploadFileName,
          pc.Brief             as ClientProfileName,
          pc.Margin,
          pc.Reliability,

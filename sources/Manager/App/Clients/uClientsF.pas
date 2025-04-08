@@ -185,8 +185,11 @@ type
     edtContactPerson: TUniEdit;
     UniLabel14: TUniLabel;
     QueryOnlyThisBrand: TIntegerField;
-    edtScript: TUniEdit;
+    edtNotificationScript: TUniEdit;
     UniLabel12: TUniLabel;
+    QueryCustomerClientNum: TIntegerField;
+    QueryCustomerClientSign: TIntegerField;
+    QueryCustomerOrder: TIntegerField;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -223,6 +226,7 @@ type
       DisplayText: Boolean);
     procedure ManagerGridCellClick(Column: TUniDBGridColumn);
     procedure pmManagerPopup(Sender: TObject);
+    procedure cbResponseTypeChange(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -391,6 +395,7 @@ begin
                             ,@Email	              = :Email
                             ,@Phone	              = :Phone
                             ,@ContactPerson       = :ContactPerson
+                            ,@NotificationScript  = :NotificationScript
 
                  select @r as retcode
       ''';
@@ -398,7 +403,7 @@ begin
       Sql.Open(sqltext,
                ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType',
                 'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'Email',
-                'Phone', 'ContactPerson'],
+                'Phone', 'ContactPerson', 'NotificationScript'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -410,7 +415,8 @@ begin
                cbClientType.Value,
                edtEmail.Text,
                edtPhone.Text,
-               edtContactPerson.text
+               edtContactPerson.text,
+               edtNotificationScript.text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -436,6 +442,7 @@ begin
                             ,@Email	                = :Email
                             ,@Phone	                = :Phone
                             ,@ContactPerson         = :ContactPerson
+                            ,@NotificationScript    = :NotificationScript
                  select @r as retcode
       ''';
 
@@ -443,7 +450,7 @@ begin
                ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes',
                'ResponseType', 'NotificationMethod', 'NotificationAddress',
                'ClientTypeID', 'StatusRequiringPayment', 'Email',
-                'Phone', 'ContactPerson'],
+                'Phone', 'ContactPerson', 'NotificationScript'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
@@ -457,7 +464,8 @@ begin
                cbStatusRequiringPayment.Text,
                edtEmail.Text,
                edtPhone.Text,
-               edtContactPerson.text
+               edtContactPerson.text,
+               edtNotificationScript.text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -487,6 +495,11 @@ begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
 
+end;
+
+procedure TClientsF.cbResponseTypeChange(Sender: TObject);
+begin
+  edtNotificationScript.Enabled := cbResponseType.ItemIndex = 2;
 end;
 
 procedure TClientsF.cbSuppliersChange(Sender: TObject);
@@ -537,6 +550,7 @@ begin
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
   cbStatusRequiringPayment.Text  := UniMainModule.Query.FieldByName('StatusRequiringPayment').AsString;
+  edtNotificationScript.Text     := UniMainModule.Query.FieldByName('NotificationScript').AsString;
   edtEmail.Text        := UniMainModule.Query.FieldByName('Email').AsString;
   edtPhone.Text        := UniMainModule.Query.FieldByName('Phone').AsString;
   edtContactPerson.Text:= UniMainModule.Query.FieldByName('ContactPerson').AsString;

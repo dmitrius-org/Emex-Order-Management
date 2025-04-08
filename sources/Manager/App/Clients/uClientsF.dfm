@@ -502,6 +502,27 @@ object ClientsF: TClientsF
               FieldName = 'Reference'
               Title.Caption = 'Reference'
               Width = 221
+            end
+            item
+              FieldName = 'CustomerClientNum'
+              Title.Alignment = taCenter
+              Title.Caption = ' '#8470' '#1050#1083#1080#1077#1085#1090#1072
+              Width = 118
+              GroupHeader = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1072#1090#1088#1080#1073#1091#1090#1099
+            end
+            item
+              FieldName = 'CustomerClientSign'
+              Title.Alignment = taCenter
+              Title.Caption = #1055#1086#1084#1077#1090#1082#1080' '#1050#1083#1080#1077#1085#1090#1072
+              Width = 140
+              GroupHeader = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1072#1090#1088#1080#1073#1091#1090#1099
+            end
+            item
+              FieldName = 'CustomerOrder'
+              Title.Alignment = taCenter
+              Title.Caption = #1047#1072#1082#1072#1079
+              Width = 86
+              GroupHeader = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1072#1090#1088#1080#1073#1091#1090#1099
             end>
         end
       end
@@ -802,10 +823,11 @@ object ClientsF: TClientsF
         Text = ''
         TabOrder = 0
         IconItems = <>
+        OnChange = cbResponseTypeChange
       end
       object cbNotificationMethod: TUniComboBox
         Left = 196
-        Top = 77
+        Top = 78
         Width = 264
         Height = 23
         Hint = ''
@@ -825,18 +847,22 @@ object ClientsF: TClientsF
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 4
       end
-      object edtScript: TUniEdit
+      object edtNotificationScript: TUniEdit
         Left = 196
-        Top = 156
-        Width = 687
-        Hint = ''
+        Top = 155
+        Width = 957
+        Hint = 
+          #1055#1088#1080#1084#1077#1088' '#1079#1085#1072#1095#1077#1085#1080#1103':'#13#10#13#10'- C:\scripts\client_export.py'#13#10'- python C:\s' +
+          'cripts\notify_customer.py'#13#10'- C:\scripts\run_export.bat'
+        ShowHint = True
+        ParentShowHint = False
         Text = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 6
       end
       object UniLabel12: TUniLabel
         Left = 49
-        Top = 162
+        Top = 161
         Width = 81
         Height = 13
         Hint = ''
@@ -1216,6 +1242,15 @@ object ClientsF: TClientsF
     object QueryOnlyThisBrand: TIntegerField
       FieldName = 'OnlyThisBrand'
     end
+    object QueryCustomerClientNum: TIntegerField
+      FieldName = 'CustomerClientNum'
+    end
+    object QueryCustomerClientSign: TIntegerField
+      FieldName = 'CustomerClientSign'
+    end
+    object QueryCustomerOrder: TIntegerField
+      FieldName = 'CustomerOrder'
+    end
   end
   object DataSource: TDataSource
     DataSet = Query
@@ -1248,7 +1283,11 @@ object ClientsF: TClientsF
       #9'       ,@CustomerSubID     = :NEW_CustomerSubID '
       #9'       ,@Reference         = :NEW_Reference '
       '               ,@IsActive          = :NEW_IsActive'
-      '               ,@OnlyThisBrand     = :NEW_OnlyThisBrand  '
+      '               ,@OnlyThisBrand     = :NEW_OnlyThisBrand'
+      '               ,@CustomerClientNum = :NEW_CustomerClientNum '
+      '               ,@CustomerClientSign= :NEW_CustomerClientSign'
+      '               ,@CustomerOrder     = :NEW_CustomerOrder'
+      '  '
       ''
       ''
       'if @R > 0'
@@ -1285,6 +1324,9 @@ object ClientsF: TClientsF
       '               ,@IsActive          = :NEW_IsActive  '
       '               ,@ID                = :ID'
       '               ,@OnlyThisBrand     = :NEW_OnlyThisBrand'
+      '               ,@CustomerClientNum = :NEW_CustomerClientNum '
+      '               ,@CustomerClientSign= :NEW_CustomerClientSign'
+      '               ,@CustomerOrder     = :NEW_CustomerOrder'
       '       '
       'if @R > 0'
       'begin'

@@ -19,6 +19,7 @@ create proc ClientInsert
              ,@Email	              nvarchar(256)= null
              ,@Phone                  varchar(32)= null
              ,@ContactPerson          varchar(256) = null
+             ,@NotificationScript     varchar(256) = null -- Скрипт оповещения
             -- ,@Margin               money       =null -- Наценка в процентах
             -- ,@Reliability          money       =null -- Вероятность поставки 
             -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
@@ -55,7 +56,8 @@ as
               ,ClientTypeID	
               ,StatusRequiringPayment
               ,Phone       
-              ,ContactPerson  
+              ,ContactPerson
+              ,NotificationScript
 		       )
 		OUTPUT INSERTED.ClientID INTO @ID
 		select @Brief     
@@ -71,6 +73,7 @@ as
               ,@StatusRequiringPayment
               ,@Phone
               ,@ContactPerson
+              ,@NotificationScript
 
 		Select @ClientID = ID from @ID	    
  
@@ -112,6 +115,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20241117', '3'
+exec setOV 'ClientInsert', 'P', '20250408', '4'
 go
 

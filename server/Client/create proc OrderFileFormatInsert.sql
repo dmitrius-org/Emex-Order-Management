@@ -24,8 +24,10 @@ create proc OrderFileFormatInsert
              ,@Reference           varchar(64)   -- Правило формирование поля Reference 
 			 ,@IsActive            bit
              ,@OnlyThisBrand       int           -- признак ТОЛЬКО ЭТОТ БРЕНД
+             ,@CustomerClientNum   int           -- № Клиента
+             ,@CustomerClientSign  int           -- Пометки Клиента
+             ,@CustomerOrder       int           -- Заказ
              --
-
 as
   declare @r int = 0
 
@@ -53,6 +55,9 @@ as
 		,Reference   
 		,IsActive
         ,OnlyThisBrand
+        ,CustomerClientNum  
+        ,CustomerClientSign 
+        ,CustomerOrder      
         )
   OUTPUT INSERTED.ID INTO @tID
   select @@SPID
@@ -74,6 +79,9 @@ as
 		,@Reference 
 		,@IsActive
         ,@OnlyThisBrand
+        ,@CustomerClientNum  
+        ,@CustomerClientSign 
+        ,@CustomerOrder      
 
   Select @ID = ID from @tID
 
@@ -82,5 +90,5 @@ return @r
 go
 grant exec on OrderFileFormatInsert to public
 go
-exec setOV 'OrderFileFormatInsert', 'P', '20250402', '1'
+exec setOV 'OrderFileFormatInsert', 'P', '20250408', '2'
 go

@@ -24,6 +24,9 @@ tOrderFileFormat - Формат файла с заказом
   ,CustomerSubID      varchar(32)   -- Правило формирование поля CustomerSubID
   ,Reference          varchar(64)   -- Правило формирование поля Reference 
   ,OnlyThisBrand      int           -- Признак ТОЛЬКО ЭТОТ БРЕНД
+  ,CustomerClientNum  int           -- № Клиента
+  ,CustomerClientSign int           -- Пометки Клиента
+  ,CustomerOrder      int           -- Заказ
   --
   ,inDatetime         datetime default GetDate()      --
   ,updDatetime        datetime default GetDate()      --
@@ -36,7 +39,7 @@ end
 go
 grant all on tOrderFileFormat to public
 go
-exec setOV 'tOrderFileFormat', 'U', '20240101', '0'
+exec setOV 'tOrderFileFormat', 'U', '20250408', '1'
 go
 exec dbo.sys_setTableDescription @table = 'tOrderFileFormat', @desc = 'Формат файла с заказом'
 go

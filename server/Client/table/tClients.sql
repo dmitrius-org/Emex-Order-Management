@@ -26,6 +26,7 @@ begin
 	,ResponseType         int          -- Тип ответа
 	,NotificationMethod   int          -- Способ оповещения
 	,NotificationAddress  nvarchar(256)-- Адрес оповещения
+    ,NotificationScript   varchar(256) -- Скрипт оповещения
 	,SuppliersID          numeric(18,0)-- Поставщик
     --
 	,ClientTypeID         int          -- Тип клиента

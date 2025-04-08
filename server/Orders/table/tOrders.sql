@@ -80,7 +80,7 @@ begin
     ,Flag                            int            -- битовые признаки, смотри flags.md
     ,ParentID                        numeric(18,0)  -- Родительский идентификатор заказа. Проставляется при дроблении заказа.
     ,FileDate                        datetime       -- Дата файла заказа
-    ,ClientOrderNum                  int            -- Номер заказа клиента
+    
 
     -- блок фин. показателей  
     ,Margin                          money          -- Наценка из прайса
@@ -98,7 +98,15 @@ begin
     ,ItemKey	                     varchar(256)
     ,DeliveryTermFromSupplier        int            -- Срок доставки от поставщик
     ,DeliveryTermFromSupplier2       int            -- Срок доставки от поставщик после изменения
-    --   
+    
+    -- дополнительные признаки из заказа клиента
+    ,CustomerClientNum               varchar(128)   -- № Клиента
+    ,CustomerClientSign              varchar(128)   -- Пометки Клиента
+    ,CustomerOrder                   varchar(128)   -- Заказ
+    -- апи
+    ,ClientOrderNum                  int            -- Номер заказа клиента 
+
+     --   
     ,ID                              numeric(18,0)  -- техническое поле 
     ,UserID                          numeric(18,0) default dbo.GetUserID()
     ,inDatetime                      datetime      default GetDate()--

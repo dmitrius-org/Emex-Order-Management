@@ -21,6 +21,7 @@ select c.ClientID
       ,isnull(c.ResponseType, -1)       ResponseType
       ,isnull(c.NotificationMethod, -1) NotificationMethod
       ,c.NotificationAddress
+      ,c.NotificationScript
       ,c.ClientTypeID
       ,c.Email
       ,c.Phone
@@ -39,7 +40,7 @@ select c.ClientID
 go
 grant all on vClientEdit to public
 go
-exec setOV 'vClientEdit', 'V', '20241117', '5'
+exec setOV 'vClientEdit', 'V', '20250408', '6'
 go
 
 select * from vClientEdit
