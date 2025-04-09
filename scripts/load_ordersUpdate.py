@@ -11,8 +11,9 @@ import excel_utils as eu
 from pathlib import Path
 import shutil
 from _utils import *
-import getpass
 import xlrd
+
+
 '''
                      Загрузка заказов из EXCEL в базу данных
 '''
@@ -20,12 +21,8 @@ import xlrd
 config = configparser.ConfigParser()  # создаём объект парсера
 config.read("settings.ini")  # читаем конфиг
 
-logger.add(config["Log"]["LogFile"] + 'load_orders.log', level='DEBUG', rotation="1 MB")
-logger.info('Начало импорта заказов')
-logger.info(f'getuser: { getpass.getuser()}')
-logger.info(f'getlogin: { os.getlogin()}')
-logger.info(f'getpid: { os.getpid()}')
-logger.info(f'getppid: { os.getppid()}')
+logger.add(config["Log"]["LogFile"] + 'load_orders_test.log', level='DEBUG', rotation="1 MB")
+logger.info('Начало импорта')
 
 now = datetime.datetime.now()
 if (now > datetime.datetime(now.year, now.month, now.day, 20, 55, 00, 000) ):
@@ -62,14 +59,13 @@ def load_orders(conn, data, batchsize=500):
             
         logger.info(f'Выполнили загрузку данных во временную таблицу. Время выполнения {time.perf_counter() - tic2:0.4f}')
         tic3 = time.perf_counter()
-        cursor.execute("exec LoadOrders")
+        cursor.execute("exec LoadOrdersUpdate")
         logger.info(f'Выполнили загрузку в постоянную таблицу. Время выполнения  {time.perf_counter() - tic3:0.4f}')
         return True
     except BaseException as err:
         logger.error(f"[load_orders] Ошибка загрузки в БД. Время выполнения  {time.perf_counter() - tic2:0.4f}")
         logger.error(err)
         return False
-
 
 def prepare_orders_data(prow, filexls):
     '''
@@ -78,7 +74,7 @@ def prepare_orders_data(prow, filexls):
     '''
     tic2 = time.perf_counter()  
     logger.info(f'[prepare_orders_data] Начало подготовки данных. Файл: {filexls}')
-
+    
     # параметры начитки данных
     firstline    = prow.Firstline
     manufacturer = prow.Manufacturer
@@ -183,6 +179,12 @@ def prepare_orders_data(prow, filexls):
 # подготовка данных для загрузки с использованием pandas DataFrame
 conn = Sql()
 if conn.connection:
+    
+    logger.info(config["DataBase"]["database"])
+    logger.info(config["DataBase"]["server"])
+    logger.info(config["DataBase"]["username"])
+    logger.info(config["DataBase"]["password"])
+
     logger.info('Успешно подключились к базе данных')
 else:
     exit()
@@ -215,7 +217,7 @@ sql = """
                  on o.ClientID = c.ClientID
 
          where isnull(o.folder, '') <> ''
-           ---and c.Brief = 'EmEx'--EmEx ADEO EEZap
+           and c.ClientID = 149-- Brief = 'EmEx'--EmEx ADEO EEZap
       """
                      
 prows = crsr.execute(sql).fetchall()    
@@ -225,7 +227,8 @@ if not (prows):
 
 tic = time.perf_counter()
 for prow in prows:   
-    folder = prow.Folder
+    folder = 'C:\\Users\\da\\Desktop\\test'
+    # prow.Folder
     isActive = prow.IsActive
 
     if not isActive:
@@ -250,10 +253,10 @@ for prow in prows:
                 retval = load_orders(conn, r)
                 
         # переносим файл в архив
-        if retval:
-            dst = folder + 'Archive\\'
-            if not os.path.isdir(dst):
-                os.mkdir(dst)
-            shutil.move(folder + file, dst + file)
+        # if retval:
+        #     dst = folder + 'Archive\\'
+        #     if not os.path.isdir(dst):
+        #         os.mkdir(dst)
+        #     shutil.move(folder + file, dst + file)
 
 logger.info(f'Завершили импорт. Вычисление заняло {time.perf_counter()-tic:0.4f}')

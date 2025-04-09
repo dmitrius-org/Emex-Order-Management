@@ -5,7 +5,6 @@ import configparser  # импортируем библиотеку для чте
 import os
 from data import Sql
 from _utils import *
-# import sys
 import getpass
 
 config = configparser.ConfigParser()  # создаём объект парсера
@@ -158,7 +157,7 @@ for file_row in prows:
                     """, (file_row.OrderRefusalsID))
       
       cursor.execute("""Update t 
-                          set t.Flag     = t.Flag|4 
+                           set t.Flag     = t.Flag|4 
                               ,t.FileName = ?
                           from tOrderRefusals t (updlock)
                         where t.OrderRefusalsID = ?""", (filexcelfile_out, file_row.OrderRefusalsID))  
