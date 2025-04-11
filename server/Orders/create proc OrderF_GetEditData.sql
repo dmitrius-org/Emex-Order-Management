@@ -26,7 +26,7 @@ as
           and f.ID    = p.ID
    inner join vSupplierDeliveryParam cpp
            on cpp.ProfilesDeliveryID      = @ProfilesDeliveryID
-          and cpp.SupplierProfileIsActive = 1
+         -- and cpp.SupplierProfileIsActive = 1
    where p.Spid      = @@spid
      and p.Make      = @Make
      and p.DetailNum = @DetailNum

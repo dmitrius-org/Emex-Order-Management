@@ -255,10 +255,6 @@ object OrderF: TOrderF
       ShowHint = True
       Caption = #1055#1086#1080#1089#1082':'
       Anchors = [akLeft, akTop, akRight]
-      Layout = 'column'
-      LayoutAttribs.Align = 'top'
-      LayoutAttribs.Pack = 'center'
-      LayoutAttribs.Columns = 5
       TabOrder = 2
       object btnGoogleImages: TUniButton
         AlignWithMargins = True

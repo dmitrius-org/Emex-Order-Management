@@ -246,7 +246,7 @@ type
     property IsCounter: Boolean read FIsCounter write FIsCounter;
 
     ///<summary>
-    ///  GetPartDataFromBase - получение данных по детали после изменения данных
+    ///  GetPartDataFromBase - получение данных по детали для: Показатели после изменения
     ///</summary>
     procedure GetPartDataFromBase();
 
@@ -495,9 +495,10 @@ var Price, js, r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
   logger.Info('TOrderF.GetPartDataFromBase begin');
-//  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
-//  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
-//  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
+  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
+  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
+  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
+  logger.Info('TOrderF.GetPartDataFromBase FProfilesDeliveryID ' + FProfilesDeliveryID.ToString);
 
   HintText := '';
 
@@ -603,7 +604,7 @@ begin
     edtReliability2.Visible := true;
   end
   else
-  begin
+  begin // нет данных
 
     edtCount2.Clear;
     edtMargin2.Clear;
@@ -834,7 +835,7 @@ begin
     FProfilesDeliveryID := Sql.F('ProfilesDeliveryID').AsInteger;
   end
   else
-  begin
+  begin // если не онлайн, то у нас тут cbDestinationLogo=ProfilesDeliveryID
     FProfilesDeliveryID:= cbDestinationLogo.Value.ToInteger;
   end;
 
