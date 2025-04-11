@@ -2,3 +2,5 @@
 
 
 TemplateOrderRefusals - шаблон документа для выгрузки отказов
+
+TemplateOrderRefusalsAVD - шаблон документа для выгрузки отказов по клиенту avd

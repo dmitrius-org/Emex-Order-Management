@@ -1145,6 +1145,14 @@ begin
       Order :=  FQuery.FieldByName('EmexOrderID').AsInteger;
       logger.Info('TEmex.OrderStateSyncByOrderNum Номер заказа Emex: ' + Order.ToString);
 
+
+      if FQuery.FieldByName('SuppliersID').AsInteger = 0 then
+      begin
+        logger.Info('TEmex.OrderStateSyncByOrderNum Ошибка, нет идентификатра поставщика');
+
+        Continue;
+      end;
+
       FSQL.Exec('delete pMovement from pMovement (rowlock) where spid = @@spid', [],[]);
 
       MovementByOrderNumber(FQuery.FieldByName('SuppliersID').AsInteger, Order);
