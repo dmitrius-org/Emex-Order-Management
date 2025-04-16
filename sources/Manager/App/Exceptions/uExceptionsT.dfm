@@ -91,12 +91,39 @@ inherited ExceptionsT: TExceptionsT
     Top = 66
     Width = 1532
     Height = 333
-    ExplicitTop = 67
+    ExplicitTop = 66
     ExplicitWidth = 1532
-    ExplicitHeight = 332
+    ExplicitHeight = 333
     inherited Grid: TUniDBGrid
       Width = 1532
       Height = 333
+      ClientEvents.UniEvents.Strings = (
+        
+          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
+          'r.getDockedItems()[1];'#13#10'  toolbar.items.getAt(10).hide(); '#13#10'  to' +
+          'olbar.items.getAt(9).hide(); '#13#10#13#10'  sender.addPlugin('#39'gridexporte' +
+          'r'#39');'#13#10'    '#13#10'  var exporterCfg = new Object({'#13#10'            type: ' +
+          '"xlsx",'#13#10'            mimeType: "application/vnd.openxmlformats-o' +
+          'fficedocument.spreadsheetml.sheet",'#13#10'            title: '#39#1048#1089#1082#1083#1102#1095#1077 +
+          #1085#1080#1103#39','#13#10'            fileName: "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103'.xlsx"'#13#10'        }); '#13#10#13#10 +
+          '  // '#1044#1086#1073#1072#1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!toolbar.exportB' +
+          'tn) {'#13#10'     toolbar.exportBtn = toolbar.insert('#13#10'       0, '#13#10'   ' +
+          '    //{ xtype: '#39'tbseparator'#39' }'#13#10'       {xtype: '#39'button'#39', text: '#39 +
+          #39', tooltip : '#39#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' Excel'#39', handler: function() {'#13#10'       ' +
+          '   sender.saveDocumentAs(exporterCfg);'#13#10'       }}'#13#10'     );'#13#10'    ' +
+          ' toolbar.exportBtn.setIconCls('#39'ToExcel'#39');// icon...     '#13#10'  }  '#13 +
+          #10'}'
+        
+          'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
+          'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
+          'ent('#39'textarea'#39');'#13#10'        //el.value = sender.getSelection()[0].' +
+          'data[sender.uniCol];'#13#10'        el.value = document.activeElement.' +
+          'innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el.s' +
+          'elect();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        documen' +
+          't.body.removeChild(el);'#13#10'    };'#13#10'}'
+        
+          'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
+          'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
       WebOptions.PageSize = 500
       Columns = <
         item

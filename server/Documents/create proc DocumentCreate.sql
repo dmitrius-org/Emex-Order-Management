@@ -53,12 +53,6 @@ as
           ,1
           ,@PayType
 
-
-    if not exists (Select 1
-                     from tRest r (nolock)
-                    where r.ClientID = @ClientID)
-      insert tRest (ClientID, Amount) select @ClientID, 0.0
-
       exec RestCalc  @ClientID  = @ClientID
 
     commit tran

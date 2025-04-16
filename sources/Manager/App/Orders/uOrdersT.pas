@@ -376,7 +376,7 @@ uses
   MainModule, uGrantUtils, uEmexUtils, uLogger, uError_T, uMainVar,
   uOrdersProtocol_T, Main, uOrdersF, ServerModule, uToast,uGroupDetailNameEditF,
   uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date,
-  uConstant, uMessengerMessage, uMessengerF;
+  uConstant, uMessengerMessage, uMessengerF, uSpplitForm;
 
 {$R *.dfm}
 
@@ -594,6 +594,7 @@ begin
 
   Sql.Open('''
     delete from #ActionParams;
+
     insert #ActionParams (ActionID)
     select :NodeID
 
@@ -629,6 +630,37 @@ begin
     end;
   end;
 
+  if Action = 'ToReturnPartial' then //ToReturnPartial	Частичный возврат
+  begin
+    logger.Info('TOrdersT.ActionExecute 3 ToReturnPartial');
+
+    if Grid.SelectedRows.Count > 1 then
+    begin
+      MessageDlg('Необходимо выделить только одну запись!' , mtWarning, [mbOK]);
+      Exit;
+    end;
+
+    SpplitForm.ID := QueryOrderID.AsInteger;
+    SpplitForm.FormAction := TFormAction.acUpdate;
+    SpplitForm.Caption := 'Укажите количество для возврата';
+    SpplitForm.lblDetailNameF.Caption := 'Укажите количество для возврата:';
+
+    if SpplitForm.ShowModal() = mrOk then
+    begin
+      Sql.Exec('''
+        exec OrdersToReturnPartial
+              @OrderID  = :OrderID
+             ,@Quantity = :Quantity
+      ''',
+      ['OrderID', 'Quantity'],
+      [QueryOrderID.AsInteger, SpplitForm.Quantity]);
+    end
+    else
+    begin
+      Exit
+    end;
+  end;
+
   DoShowMask;
 
   FAccrual.ShowProgress := False;
@@ -639,7 +671,7 @@ begin
 
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
-    logger.Info('TOrdersT.ActionExecute 3');
+    logger.Info('TOrdersT.ActionExecute 4');
     Sql.exec(' insert #ProcessedRecords with (rowlock) (Processed, Total) select 0, 0 ', [], []);
     FAccrual.ShowProgress := True;
   end;

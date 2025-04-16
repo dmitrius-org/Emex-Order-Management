@@ -19,6 +19,10 @@ as
 
   exec BalanceTotalCalc @ClientID = @ClientID
 
+  if not exists (Select 1
+                   from tRest r (nolock)
+                  where r.ClientID = @ClientID)
+    insert tRest (ClientID, Amount) select @ClientID, 0.0
 
   Update r
      set r.Amount = t.BalanceSum

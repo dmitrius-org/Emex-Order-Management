@@ -2155,6 +2155,11 @@ object ClientsT: TClientsT
       Caption = 'Api'
       OnExecute = actApiExecute
     end
+    object actRestCalc: TAction
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1073#1072#1083#1072#1085#1089#1072
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084
+      OnExecute = actRestCalcExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -2201,6 +2206,9 @@ object ClientsT: TClientsT
     end
     object N14: TUniMenuItem
       Action = actPasswordReset
+    end
+    object N16: TUniMenuItem
+      Action = actRestCalc
     end
     object N12: TUniMenuItem
       Caption = '-'

@@ -261,6 +261,8 @@ class Sql:
             else:
                 batch = data[i: i+batchsize].values.tolist()
 
+            print(batch)
+
             # запускаем вставку батча           
             cursor.executemany(query, batch)
 

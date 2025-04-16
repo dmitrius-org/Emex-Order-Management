@@ -85,6 +85,8 @@ type
     actApi: TAction;
     N15: TUniMenuItem;
     Api1: TUniMenuItem;
+    actRestCalc: TAction;
+    N16: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -112,6 +114,7 @@ type
       Params: TUniStrings);
     procedure actPasswordResetExecute(Sender: TObject);
     procedure actApiExecute(Sender: TObject);
+    procedure actRestCalcExecute(Sender: TObject);
   private
     { Private declarations }
     FAction: Integer;
@@ -234,6 +237,21 @@ end;
 procedure TClientsT.actRefreshAllExecute(Sender: TObject);
 begin
   Refresh;
+end;
+
+procedure TClientsT.actRestCalcExecute(Sender: TObject);
+begin
+  ShowMask('Выполняется: Пересчет балансов по клиентам');
+  UniSession.Synchronize;
+  try
+    sql.Exec('exec RestCalcMassAll', [], []);
+
+    ToastOK('Выполнено', UniSession);
+  finally
+    HideMask();
+    UniSession.Synchronize
+  end;
+
 end;
 
 procedure TClientsT.actViewExecute(Sender: TObject);

@@ -39,7 +39,7 @@ for file in file_list:
             df = pd.read_csv(directory+file, delimiter=";", encoding='oem', header=None, usecols=[0,1,2,3], keep_default_na=False);
             df = df.fillna("")
             
-            logger.info('Загрузили файл {0} в объект DataFrame'.format(file));         
+            logger.info('Загрузили файл {0} в объект DataFrame'.format(file));
             sql.load_shipments(data=df, table='#shipments', batchsize=500)
             
             logger.info('Завершение обработки файла {0}'.format(file))
@@ -51,4 +51,3 @@ for file in file_list:
 #sql.drop(table_names)
 # print (sql.query);
 logger.info('Завершили импорт')
-

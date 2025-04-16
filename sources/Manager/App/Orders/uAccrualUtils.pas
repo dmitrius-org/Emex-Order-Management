@@ -226,6 +226,7 @@ begin
 
   FRetVal.Clear;
   FRetVal.Code := ActionExecuteCheck(ActionID, acVerify);
+
   begin
     if FRetVal.Code = 0 then
     begin

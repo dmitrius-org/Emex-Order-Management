@@ -216,9 +216,13 @@ type
     ///</summary>
     procedure ReOrderCallBack(Sender: TComponent; AResult:Integer);
 
-    procedure OrdersFCallBack;
-
+    /// <summary>
+    ///  ReOrderCallBack - CallBack постобработчик добавления/просмотра сообщений
+    ///</summary>
     procedure MessageCallBack(Sender: TComponent; AResult: Integer);
+
+    procedure OrdersBtnCancelEnabled;
+
 
   public
     { Public declarations }
@@ -547,6 +551,8 @@ end;
 procedure TOrdersT2.GridSelectionChange(Sender: TObject);
 begin
   Marks.Select;
+
+  OrdersBtnCancelEnabled();
 end;
 
 procedure TOrdersT2.MessageCallBack(Sender: TComponent; AResult: Integer);
@@ -573,9 +579,10 @@ begin
   SetNotificationCount;
 end;
 
-procedure TOrdersT2.OrdersFCallBack;
-begin
 
+procedure TOrdersT2.OrdersBtnCancelEnabled;
+begin
+  btnCancel.Enabled := Grid.SelectedRows.Count > 0;
 end;
 
 procedure TOrdersT2.OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
@@ -1002,6 +1009,8 @@ begin
   SetNotificationCount();
 
   PageNavigation();
+
+  OrdersBtnCancelEnabled();
 
   UniSession.AddJS('Ext.getCmp("' + N2.JSId + '").addCls("menu-item-ok");');
   UniSession.AddJS('Ext.getCmp("' + N1.JSId + '").addCls("menu-item-cancel");');

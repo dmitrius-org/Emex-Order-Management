@@ -91,13 +91,16 @@ as
    inner join pAccrualAction p with (nolock)
            on p.Spid     = @@spid
           and p.ObjectID = id.OrderID
-          and p.retval = 0
+          and p.retval   = 0
    inner join tOrders o with (updlock)
            on o.OrderID = id.OrderID
    inner join tNodes ns with (nolock)
            on ns.NodeID = p.NewStateID
    inner join tNodes act with (nolock)
            on act.NodeID = p.ActionID
+   -- 
+
+
 
   --! Расчет сроков доставки поставщика
   delete pDeliveryTerm from pDeliveryTerm with (rowlock) where spid = @@Spid
@@ -164,15 +167,15 @@ as
              on o.OrderID=p.OrderID 
      where p.ActionID = 40 --SetNewDeliveryDate Установить новый срок поставки
 
-  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-  insert pDeliveryTerm with (rowlock) 
-        (Spid, OrderID) 
-  Select @@spid, 
-         OrderID
-    from @ID
-   where ActionID = 40 -- SetNewDeliveryDate    Установить новый срок поставки
-  
-  exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
+    delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
+    insert pDeliveryTerm with (rowlock) 
+          (Spid, OrderID) 
+    Select @@spid, 
+           OrderID
+      from @ID
+     where ActionID = 40 -- SetNewDeliveryDate    Установить новый срок поставки
+    
+    exec OrdersDeliveryTermCalcNext @IsSave = 1, @IsUpdate = 1
 
 
     delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
@@ -260,9 +263,10 @@ as
              on t.ChatID = p.ID
     
     exec OrdersDeliveryCustomerTermCalcNext @IsSave = 1
+
   end
 
-  --! расчет статистики по заказам
+  --! расчет статистики по заказам *************************
   declare @Orders as ID
   insert @Orders (ID) 
   select OrderID 
@@ -270,11 +274,14 @@ as
   
   EXEC PartsStatisticsCalc @Orders = @Orders;
 
+  -- расчет баланса по клиентам *************************
+  exec RestCalcMassByOrderID @ID = @Orders
+
  exit_:
  return @r
 go
 grant exec on ProtocolAdd to public;
 go
-exec setOV 'ProtocolAdd', 'P', '20250210', '7';
+exec setOV 'ProtocolAdd', 'P', '20250416', '8';
 go
  

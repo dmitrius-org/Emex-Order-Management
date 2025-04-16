@@ -10,7 +10,7 @@ uses
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniGUIClasses, uniPanel, uniCheckBox, uniEdit, uniButton,
-  uniBitBtn, uniGroupBox, uniToolBar;
+  uniBitBtn, uniGroupBox, uniToolBar, uCommonType;
 
 type
   TAPIKeyForm_T = class(TBaseT)
@@ -52,7 +52,7 @@ type
 implementation
 
 uses
-  uCommonType, uAPIKeyForm_F;
+  uAPIKeyForm_F;
 
 {$R *.dfm}
 
@@ -78,7 +78,7 @@ end;
 
 procedure TAPIKeyForm_T.DataRefresh;
 begin
-  inherited;
+//  inherited;
 
   Query.Close;
   Query.ParamByName('ClientID').AsInteger := FClientID;

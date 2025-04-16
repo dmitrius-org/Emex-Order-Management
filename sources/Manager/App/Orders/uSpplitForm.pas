@@ -134,9 +134,9 @@ begin
 
   ''', ['OrderID'], [FID]);
 
-  FDetailNumber      := UniMainModule.Query.FieldByName('DetailNumber').AsString;
+  FDetailNumber      := sql.f('DetailNumber').AsString;
 //  FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
-  FQuantity         := UniMainModule.Query.FieldByName('Quantity').AsInteger;
+  FQuantity         := sql.f('Quantity').AsInteger;
 
 
 //  edtQuantity.MaxValue:= FQuantity-1;
