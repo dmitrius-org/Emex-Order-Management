@@ -23,9 +23,9 @@ as
           ,@NewOrderID = @NewOrderID out
 
   delete tMarks 
-      from tMarks (rowlock) 
-      where spid= @@spid 
-      and type = 3
+    from tMarks (rowlock) 
+   where spid= @@spid 
+     and type = 3
 
   if isnull(@NewOrderID, 0) > 0
       Insert into tMarks with (rowlock) 

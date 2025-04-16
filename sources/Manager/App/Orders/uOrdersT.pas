@@ -630,7 +630,7 @@ begin
     end;
   end;
 
-  if Action = 'ToReturnPartial' then //ToReturnPartial	Частичный возврат
+  if Action = 'ToReturnPartial' then //ToReturnPartial Частичный возврат
   begin
     logger.Info('TOrdersT.ActionExecute 3 ToReturnPartial');
 
@@ -642,7 +642,7 @@ begin
 
     SpplitForm.ID := QueryOrderID.AsInteger;
     SpplitForm.FormAction := TFormAction.acUpdate;
-    SpplitForm.Caption := 'Укажите количество для возврата';
+    SpplitForm.Caption    := 'Укажите количество для возврата';
     SpplitForm.lblDetailNameF.Caption := 'Укажите количество для возврата:';
 
     if SpplitForm.ShowModal() = mrOk then
