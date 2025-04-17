@@ -69,7 +69,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uMainVar, uLogger;
+  MainModule, uniGUIApplication, uMainVar;
 
 function PartProtocol_T: TPartProtocol_T;
 begin

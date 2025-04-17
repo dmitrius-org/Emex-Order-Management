@@ -56,7 +56,7 @@ update tOrders
   */
 
 -- проставлен признак отказан ...
-select *
+select 'проставлен признак отказан', *
   from tOrders  (nolock)
  where StatusID in (1	--New
                    ,2	--InChecked

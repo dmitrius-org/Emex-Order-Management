@@ -100,8 +100,8 @@ cross apply (select top 1 *
               order by p.ProtocolID desc
               ) as p
 where o.StatusID <> p.NewStateID
-  and  o.updDatetime > '2024-10-03'
-order by o.StatusID
+ -- and  o.updDatetime > '2024-10-03'
+--order by o.StatusID
 
 
 select * from tUser

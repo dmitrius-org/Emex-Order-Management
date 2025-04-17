@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uLogger, uEmexUtils,
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils,
   System.Math;
 
 function AllowCreateOrderF: TAllowCreateOrderF;
@@ -130,7 +130,6 @@ var   i: Integer;
 Balance: BalanceForOrder; // AllowCreateOrderResponse
    emex: TEmex;
 begin
-  logger.Info('TAllowCreateOrderF.AllowCreateOrderByMarks Begin');
   Table.Open;
   Table.EmptyDataSet;
 
@@ -142,7 +141,6 @@ begin
   ''', [],[]);
   if SQl.Q.RecordCount > 0 then
   begin
-    logger.Info('TAllowCreateOrderF.AllowCreateOrderByMarks End Ошибка: 534');
     Exit;
   end;
 
@@ -191,7 +189,6 @@ begin
     btnOk.Enabled := true;
     UniSession.Synchronize();
   end;
-  logger.Info('TAllowCreateOrderF.AllowCreateOrderByMarks End');
 end;
 
 end.

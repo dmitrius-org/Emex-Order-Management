@@ -13,7 +13,7 @@ uses
   FireDAC.Phys.FB,
   FireDAC.Phys.MySQL, FireDAC.Phys.ODBCBase, FireDAC.Moni.Custom,
 
-  uCommonType, uAuditUtils, uEmexUtils, uSqlUtils, uLogger,
+  uCommonType, uAuditUtils, uEmexUtils, uSqlUtils,
   FireDAC.Moni.RemoteClient
   , uUtils.WS;
 
@@ -43,9 +43,10 @@ type
     AAudit   : TAudit;
     /// <summary> ASPID - ИД SQL соединения </summary>
     ASPID: Integer;
-
     /// <summary> WS - WebSocket </summary>
     WS: tWS;
+    /// <summary> AppName - Приложение </summary>
+    AAppName:  String;
 
     const _loginname = '_loginname2D02D0BF';
     const _pwd = '_pwd2D02D0BF';
@@ -64,7 +65,11 @@ implementation
 
 {$R *.dfm}
 
-uses UniGUIVars, ServerModule, uniGUIApplication, uMainVar;
+uses UniGUIVars, ServerModule, uniGUIApplication, uMainVar,
+     Quick.Commons,
+     Quick.Logger,
+     Quick.Logger.ExceptionHook,
+     Quick.Logger.Provider.Files, uConstant;
 
 function UniMainModule: TUniMainModule;
 begin
@@ -75,7 +80,6 @@ function TUniMainModule.dbConnect(): Boolean;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbConnect', 'Begin');
   try
-
     try
       FDConnection.Close;
       FDConnection.ConnectionDefName:='Connection';
@@ -163,6 +167,7 @@ begin
     UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
     AUserID  := Query.FieldByName('ClientID').AsInteger;
     AUserName:= AU;
+    AAppName := AppCustomer;
 
     WS :=TWS.Create('client:' + AUserID.ToString);
 
@@ -171,14 +176,34 @@ begin
     Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
 
     // настройки  логирования
-    CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
+      Logger.Providers.Add(GlobalLogFileProvider);
+      with GlobalLogFileProvider do
+        begin
+            FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_' + FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
+            DailyRotate := True;
+            MaxFileSizeInMB := 20;
+            LogLevel := LOG_ALL;
+            TimePrecission := True;
+            CompressRotatedFiles := False;
+//            IncludedInfo:=[iiThreadId, iiProcessId];
+//            CustomMsgOutput := True;
+//            CustomFormatOutput := '%{DATETIME} [%{LEVEL}] : %{MESSAGE} [%{APPNAME}] (%{MYTAG1})';
+        end;
 
-    Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
+    Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = :UserID and AppName = :AppName ',
+    ['UserID', 'AppName'],[AUserID, AAppName]);
 
     if Sql.Q.RecordCount > 0 then
     begin
-      logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-      logger.Info('Программа запущена');
+
+      with GlobalLogFileProvider do
+        begin
+          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean;
+        end;
+        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+
+      Log('Программа запущена', etHeader);
       FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
       FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
     end;
@@ -236,9 +261,8 @@ begin
 
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'Программа остановлена');
 
-  logger.Info('Программа остановлена');
+  Log('Программа остановлена', etHeader);
 
-  FreeDefLogger;
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleDestroy', 'end');
 end;
 

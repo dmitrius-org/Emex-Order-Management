@@ -235,7 +235,6 @@ object NodesT: TNodesT
       OnColumnSort = GridColumnSort
       OnColumnMove = GridColumnMove
       OnClearFilters = GridClearFilters
-      OnEndDrag = GridEndDrag
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
       OnColumnResize = GridColumnResize

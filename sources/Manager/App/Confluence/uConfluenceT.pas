@@ -92,7 +92,7 @@ type
 implementation
 
 uses
-  uCommonType, uConfluencePagesF, ServerModule, MainModule, uLogger, uMainVar;
+  uCommonType, uConfluencePagesF, ServerModule, MainModule, uMainVar;
 
 {$R *.dfm}
 
@@ -100,8 +100,6 @@ uses
 procedure TConfluenceT.actAddChildExecute(Sender: TObject);
 var Nd : TUniTreeNode;
 begin
-  logger.Info('TConfluenceT.actAddChildExecute');
-
   try
     if SelectedNode.Tag = 0  then Exit;
   except
@@ -293,8 +291,6 @@ procedure TConfluenceT.edt1AjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 var sqltext: string;
 begin
-  logger.Info('TConfluenceT.edt1AjaxEvent: ' + EventName);
-
   if EventName = 'myCustomSaveButton' then
   begin
     actSave.Enabled := False;
@@ -417,8 +413,6 @@ var
   js: string;
   tmp : TStringList;
 begin
-  logger.Info('TConfluenceT.UniFrameReady');
-
   lblArticle.Caption := '';
 
   ConstructNavigator;
@@ -435,7 +429,7 @@ begin
   edt1.HTML.Clear;
   edt1.HTML.SetStrings(tmp);
   tmp.Free;
-//
+
   js := GetEditor + '_ArticleSaveButtonEnabled = function() { ' + ' ajaxRequest(' + edt1.JSName + ', "ArticleSaveButtonEnabled", []);' + ' } ;';
   UniSession.JSCode(js);
 end;

@@ -136,7 +136,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar;
 
 function SuppliersF: TSuppliersF;
 begin

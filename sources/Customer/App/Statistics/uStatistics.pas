@@ -29,7 +29,7 @@ type
 implementation
 
 uses
-  MainModule, uLogger;
+  MainModule;
 
 {$R *.dfm}
 

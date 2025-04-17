@@ -535,3 +535,10 @@
 .grid-shipments .sticky-row:nth-of-type(10) {
     --row-index: 9;
 }
+
+/* Иконка: сообщение по заказу*/
+.grid-clients .logger-enabled {
+    overflow: visible;
+    width: 100%;
+    color: red
+}

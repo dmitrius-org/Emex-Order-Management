@@ -89,7 +89,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger, uUtils.Controll;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uUtils.Controll;
 
 function EmployeeParametersF: TEmployeeParametersF;
 begin
@@ -197,14 +197,11 @@ end;
 
 procedure TEmployeeParametersF.edtAmountKeyPress(Sender: TObject; var Key: Char);
 begin
-//  logger.Info(Key);
 //  // Если нажата запятая, заменяем её на точку
 //  if Key = '.' then
 //  begin
 //    Key := ',';
 //  end;
-
-
 end;
 
 procedure TEmployeeParametersF.SetAction(const Value: TFormAction);

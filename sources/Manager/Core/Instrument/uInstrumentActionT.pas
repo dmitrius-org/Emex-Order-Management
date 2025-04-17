@@ -61,7 +61,7 @@ type
 implementation
 
 uses
-  uLogger, uMainVar;
+  uMainVar;
 
 {$R *.dfm}
 
@@ -91,13 +91,11 @@ end;
 
 procedure TInstrumentActionT.DataRefresh;
 begin
-  logger.Info('TInstrumentActionT.DataRefresh begin');
   begin
     Query.Close();
     Query.ParamByName('ModelID').Value := FID;
     Query.Open();
   end;
-  logger.Info('TInstrumentActionT.DataRefresh end');
 end;
 
 function TInstrumentActionT.GetID: Integer;
@@ -119,17 +117,15 @@ end;
 
 procedure TInstrumentActionT.SetID(const Value: Integer);
 begin
-  logger.Info('TInstrumentActionT.SetID begin');
   FID := Value;
 
   DataRefresh;
-  logger.Info('TInstrumentActionT.SetID end');
 end;
 
 procedure TInstrumentActionT.UniFrameReady(Sender: TObject);
 begin
-  ComboBoxFill(cbMetod,' select Brief as Name from tProperty where ObjectTypeID=102 and ((Flag & 1) >0)' );
-  ComboBoxFill(cbMetodRollback,' select Brief as Name from tProperty where ObjectTypeID=102 and ((Flag & 2) >0)' );
+  ComboBoxFill(cbMetod,' select Brief as Name from tProperty (nolock) where ObjectTypeID=102 and ((Flag & 1) >0)' );
+  ComboBoxFill(cbMetodRollback,' select Brief as Name from tProperty (nolock) where ObjectTypeID=102 and ((Flag & 2) >0)' );
 end;
 
 initialization

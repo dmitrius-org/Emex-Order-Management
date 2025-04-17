@@ -12,7 +12,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniDateRangePicker, uUniADCheckComboBoxEx, uniDBPivotGrid, uCommonType,
-  uniGUIApplication, uLogger, uUtils.Varriant, Vcl.Menus, uniMainMenu,
+  uniGUIApplication, uUtils.Varriant, Vcl.Menus, uniMainMenu,
   System.Actions, Vcl.ActnList, uOrdersF, uUtils.Math;
 
 type
@@ -69,7 +69,6 @@ type
     procedure QueryTransporterPhysicalWeightGetText(Sender: TField; var Text: string; DisplayText: Boolean);
     procedure GridAfterLoad(Sender: TUniCustomDBGrid);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
-    procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
     procedure GridDblClick(Sender: TObject);
     procedure actOrderEditExecute(Sender: TObject);
     procedure QueryWeightKGGetText(Sender: TField; var Text: string; DisplayText: Boolean);
@@ -110,7 +109,7 @@ implementation
 
 {$R *.dfm}
 
-uses uUtils.Grid, uMainVar, uConstant, System.Math;
+uses uUtils.Grid, uMainVar, uConstant, System.Math, Quick.Logger;
 
 procedure TShipmentsBoxesT.actOrderEditExecute(Sender: TObject);
 begin
@@ -154,7 +153,7 @@ begin
     end;
   except
     on E: Exception do
-      logger.Info('TShipmentsBoxesT.OrdersFCallBack Ошибка: ' + e.Message);
+      log('TShipmentsBoxesT.OrdersFCallBack Ошибка: ' + e.Message, etException);
   end;
 end;
 
@@ -207,8 +206,6 @@ procedure TShipmentsBoxesT.GridColumnSummary(Column: TUniDBGridColumn; GroupFiel
 begin
   if SameText(Column.FieldName, 'WeightKGS') then //Вес Физический Факт Сумма
   begin
-//    logger.Info('GridColumnSummary: ' + Column.FieldName + ' ' + Column.Field.AsString + ' ' + QueryVolumeKGOld.Value.ToString + ' ' + QueryQuantity.Value.ToString);
-
     if Column.AuxValue=NULL then Column.AuxValue:=0.0;
     if Column.AuxValues[1]=NULL then Column.AuxValues[1]:=0.0;
     if Column.AuxValues[2]=NULL then Column.AuxValues[2]:=0.0;
@@ -405,7 +402,6 @@ procedure TShipmentsBoxesT.GridColumnSummaryTotal(Column: TUniDBGridColumn; Attr
 begin
   if SameText(Column.FieldName, 'WeightKGS') then
   begin
-    logger.Info('GridColumnSummaryTotal: ' + Column.FieldName);
     I:=Column.AuxValues[2];
     IO:=Column.AuxValues[3];
 
@@ -514,14 +510,6 @@ begin
   begin
     actOrderEditExecute(Sender);
   end;
-end;
-
-procedure TShipmentsBoxesT.GridDrawColumnCell(Sender: TObject; ACol,
-  ARow: Integer; Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
-begin
-//x-grid-item-alt
- /// logger.Info('ARow ' + ARow.ToString);
- // logger.Info('Column ' + Column.FieldName);
 end;
 
 procedure TShipmentsBoxesT.GridKeyDown(Sender: TObject; var Key: Word;

@@ -158,13 +158,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Grid.pas"/>
         <DCCReference Include="..\Common\Common\uSqlUtils.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Varriant.pas"/>
-        <DCCReference Include="..\Common\logger\TimeIntervals.pas"/>
-        <DCCReference Include="..\Common\logger\uLogger.pas"/>
         <DCCReference Include="..\Common\logger\uLoggerF.pas">
             <Form>LoggerF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\logger\uUtils.pas"/>
         <DCCReference Include="..\Common\CommonApp\uGrantUtils.pas"/>
         <DCCReference Include="..\Common\Login\LoginEditForm.pas">
             <Form>LoginEditF</Form>

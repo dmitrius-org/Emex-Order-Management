@@ -35,7 +35,7 @@ Type
 
 implementation
 
-uses MainModule, uUtils.Varriant, uLogger;
+uses MainModule, uUtils.Varriant, Quick.Logger;
 
 { TGrant }
 
@@ -97,7 +97,6 @@ var Index:Integer;
 begin
   for Index := 0 to AAction.ActionCount- 1 do
   Begin
-    logger.Info(AComp.ClassName + '.' + vartostr(AAction[Index].Name));
     try
       // если -1, то пункт не контролируем правами
       if AAction[Index].Tag = -1 then Continue;
@@ -108,7 +107,7 @@ begin
     except
       on E: Exception do
       begin
-        logger.Info(Format('Ошибка  [%s]', [E.Message]));
+        log(Format('Ошибка  [%s]', [E.Message]), etException);
       end;
     end;
   end;

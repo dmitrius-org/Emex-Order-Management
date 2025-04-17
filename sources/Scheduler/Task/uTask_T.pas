@@ -115,7 +115,7 @@ type
 implementation
 
 uses
-  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils, uLogger, ServerModule, uAuditUtils;
+  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils, ServerModule, uAuditUtils;
 
 {$R *.dfm}
 
@@ -289,33 +289,23 @@ end;
 
 procedure TTask_T.SetTaskEnabledStatus(AIsEnabled: boolean);
 begin
-	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
-
   IsActive := AIsEnabled;
 
   SetTasksEnabledLabel();
-
-  logger.Info('TTask_T.SetTaskEnabledStatus End');
 end;
 
 procedure TTask_T.SetTasksEnabledStatus;
 begin
-	logger.Info('TTask_T.SetTaskEnabledStatus Begin');
-
   Sql.Open(' Select IsActive from tTaskActive (nolock) ', [], []);
 
   IsActive := Sql.Q.FieldByName('IsActive').AsBoolean;
 
   SetTasksEnabledLabel();
-
-  logger.Info('TTask_T.SetTaskEnabledStatus End');
 end;
 
 procedure TTask_T.TaskProcessing(ATaskID: Integer);
 var BM : TBookmark;
 begin
-  logger.Info('TTask_T.TaskProcessing Begin');
-
   qTask.DisableControls;
   BM := qTask.GetBookmark;
   try
@@ -330,8 +320,6 @@ begin
     qTask.FreeBookmark(BM);
     qTask.EnableControls;
   end;
-
-  logger.Info('TTask_T.TaskProcessing End');
 end;
 
 procedure TTask_T.UniFrameCreate(Sender: TObject);

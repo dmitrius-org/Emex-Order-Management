@@ -19,7 +19,6 @@ object LoggerF: TLoggerF
     Caption = #1051#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 577
     object UniDBCheckBox2: TUniDBCheckBox
       Left = 26
       Top = 29
@@ -41,8 +40,6 @@ object LoggerF: TLoggerF
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 577
-    ExplicitHeight = 214
     object UniGroupBox3: TUniGroupBox
       AlignWithMargins = True
       Left = 295
@@ -54,8 +51,6 @@ object LoggerF: TLoggerF
       Caption = #1057#1077#1088#1074#1077#1088#1085#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' (sql)'
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 277
-      ExplicitHeight = 184
       object cbAppSqlLog: TUniDBCheckBox
         AlignWithMargins = True
         Left = 5
@@ -71,7 +66,6 @@ object LoggerF: TLoggerF
         TabOrder = 1
         ParentColor = False
         Color = clBtnFace
-        ExplicitWidth = 267
       end
     end
     object UniGroupBox4: TUniGroupBox
@@ -85,7 +79,6 @@ object LoggerF: TLoggerF
       Caption = #1050#1083#1080#1077#1085#1090#1089#1082#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
       Align = alLeft
       TabOrder = 2
-      ExplicitHeight = 184
       object cbAppClientLog: TUniDBCheckBox
         AlignWithMargins = True
         Left = 5
@@ -114,8 +107,6 @@ object LoggerF: TLoggerF
     Align = alBottom
     TabOrder = 2
     Caption = ''
-    ExplicitTop = 292
-    ExplicitWidth = 571
     object btnOk: TUniBitBtn
       AlignWithMargins = True
       Left = 484
@@ -163,8 +154,6 @@ object LoggerF: TLoggerF
       Align = alRight
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 487
-      ExplicitTop = 5
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
@@ -212,7 +201,6 @@ object LoggerF: TLoggerF
       Align = alRight
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 373
     end
   end
   object DataSource: TDataSource
@@ -235,19 +223,41 @@ object LoggerF: TLoggerF
       'if not exists ('
       '  Select 1'
       '    from tLoggerSettings (nolock)'
-      '   where UserID = dbo.GetUserID() '
+      '   where UserID = :UserID'
+      '     and AppName= :AppName'
       ' )  '
       '  '
       '  insert into tLoggerSettings '
-      '        (UserID, AppClientLog, AppSqlLog) '
-      '  select dbo.GetUserID(), 0, 0     '
+      '        (UserID, AppName, AppClientLog, AppSqlLog) '
+      '  select :UserID, :AppName, 0, 0     '
       ''
       ''
-      'Select LoggerSettingsID, UserID, AppClientLog, AppSqlLog'
-      '  from tLoggerSettings (nolock)'
-      ' where UserID = dbo.GetUserID() ')
+      'Select ls.LoggerSettingsID, '
+      '       ls.UserID, '
+      '       ls.AppClientLog, '
+      '       ls.AppSqlLog,'
+      '       convert(varchar, coalesce(c.Brief, u.Name, '#39#39')) Username'
+      '  from tLoggerSettings ls (nolock)'
+      '  left join tClients c (nolock)'
+      '         on c.ClientID = ls.UserID'
+      '        and :AppName   = '#39'Customer'#39
+      '  left join tUser u (nolock)'
+      '         on u.UserID  = ls.UserID'
+      '        and :AppName <> '#39'Customer'#39'        '
+      '        '
+      ' where ls.UserID = :UserID'
+      '   and ls.AppName= :AppName')
     Left = 540
     Top = 178
+    ParamData = <
+      item
+        Name = 'USERID'
+        ParamType = ptInput
+      end
+      item
+        Name = 'APPNAME'
+        ParamType = ptInput
+      end>
     object QueryLoggerSettingsID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'LoggerSettingsID'
@@ -273,6 +283,10 @@ object LoggerF: TLoggerF
       FieldName = 'AppSqlLog'
       Origin = 'AppSqlLog'
     end
+    object QueryUsername: TStringField
+      FieldName = 'Username'
+      Size = 128
+    end
   end
   object FDUpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
@@ -288,7 +302,7 @@ object LoggerF: TLoggerF
       '  UPDATE tLoggerSettings '
       '     SET AppClientLog  = :NEW_AppClientLog  '
       '        ,AppSqlLog     = :NEW_AppSqlLog     '
-      '   WHERE ULoggerSettingsIDserID = :NEW_LoggerSettingsID'
+      '   WHERE LoggerSettingsID= :NEW_LoggerSettingsID'
       ''
       ''
       ''

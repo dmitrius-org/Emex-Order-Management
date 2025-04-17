@@ -72,7 +72,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uTask_T, uLogger;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uTask_T, Quick.Logger;
 
 function MainForm: TMainForm;
 begin
@@ -262,8 +262,8 @@ procedure TMainForm.UniFormBroadcastMessage(const Sender: TComponent;
   const Msg: string; const Params: TUniStrings);
 var Form: TComponent;
 begin
-  logger.Info('TMainForm.UniFormBroadcastMessage');
-  logger.Info(Msg);
+  log('TMainForm.UniFormBroadcastMessage', etDebug);
+  log(Msg, etDebug);
 
   if Msg = 'TaskProgress' then
   begin
@@ -271,7 +271,7 @@ begin
 
     if Assigned(Form) and (Form is TTask_T) then
     begin
-      logger.Info(Form.ClassName);
+      log(Form.ClassName, etDebug);
       TTask_T(Form).TaskProcessing(Params['TaskID'].AsInteger());
     end;
   end
@@ -282,7 +282,7 @@ begin
 
     if Assigned(Form) and (Form is TTask_T) then
     begin
-      logger.Info(Form.ClassName);
+      log(Form.ClassName, etDebug);
       TTask_T(Form).SetTaskEnabledStatus(Params['Enabled'].AsBoolean());
     end;
   end;
@@ -298,7 +298,12 @@ begin
  case Key of
     76 : // 'L'
       if (ssCtrl in Shift) and (ssAlt in Shift) then
+      begin
+        LoggerF.UserID := UniMainModule.AUserID;
+        LoggerF.AppName:= UniMainModule.AAppName;
+
         LoggerF.ShowModal;
+      end;
   end;
 end;
 

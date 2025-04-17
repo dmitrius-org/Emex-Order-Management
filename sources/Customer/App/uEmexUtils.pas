@@ -10,7 +10,9 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
      uCommonType,
 
-     uServiceEmex, Soap.XSBuiltIns, uSqlUtils;
+     uServiceEmex, Soap.XSBuiltIns, uSqlUtils,
+
+     Quick.Logger{, Quick.Logger.Provider.Files};
 
   Type
   /// <summary>
@@ -77,15 +79,10 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
 implementation
 
-uses
-  uLogger;
-
 
 { TEmex }
 constructor TEmex.Create(Value: TFDConnection);
 begin
-  logger.Info('TEmex.Create Begin');
-
   if Assigned(Value) then
     FConnection:= Value;
 
@@ -109,8 +106,6 @@ begin
   begin
     raise Exception.Create('Незадан адрес Emex Service Soap! (EmexServiceSoapUrl)');
   end;
-
-  logger.Info('TEmex.Create End');
 end;
 
 function TEmex.ForClients: TStringList;
@@ -137,10 +132,7 @@ end;
 function TEmex.getCustomer(AAccount: Integer): Customer;
 var SuppliersID: Integer;
 begin
-  logger.Info('TEmex.getCustomer begin');
-  logger.Info('TEmex.getCustomer AAccount: ' + AAccount.ToString);
   begin
-
       //данные для интеграции берем из справочника "Клиенты"
     SQl.Open('''
              Select s.emexUsername, s.emexPassword
@@ -158,13 +150,10 @@ begin
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
   end;
-  logger.Info('TEmex.getCustomer end');
 end;
 
 function TEmex.GetEmex: ServiceSoap;
 begin
-  logger.Info('TEmex.GetEmex: ServiceSoap');
-
   result:= GetServiceSoap(false, FUrl);
 end;
 
@@ -203,17 +192,17 @@ var part: FindByNumber;
        I: Integer;
  ShowSubsts: Boolean;
 begin
-  logger.Info('TEmex.MovementByOrderNumber Begin');
+  log('TEmex.MovementByOrderNumber Begin', etInfo);
   // Показывать аналоги в поиске
   ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
-  logger.Info('TEmex.MovementByOrderNumber SearchPart begin');
+  log('TEmex.MovementByOrderNumber SearchPart begin', etInfo);
   parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, ShowSubsts);
-  logger.Info('TEmex.MovementByOrderNumber SearchPart end');
+  log('TEmex.MovementByOrderNumber SearchPart end', etInfo);
 
   FillFindByNumber(AClientID, parts);
 
-  logger.Info('TEmex.MovementByOrderNumber End');
+  log('TEmex.MovementByOrderNumber End', etInfo);
 end;
 
 destructor TEmex.Destroy;
@@ -228,7 +217,7 @@ procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumbe
 var part: FindByNumber;
     I: Integer;
 begin
-  logger.Info('TEmex.FillFindByNumber Begin');
+  log('TEmex.FillFindByNumber Begin', etInfo);
   SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
@@ -307,7 +296,7 @@ begin
 
     freeandnil(part);
   end;
-  logger.Info('TEmex.FillFindByNumber End');
+  log('TEmex.FillFindByNumber End', etInfo);
 end;
 
 

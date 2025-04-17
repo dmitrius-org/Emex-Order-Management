@@ -93,7 +93,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger, uUtils.Controll;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uUtils.Controll;
 
 function BalanceAddF: TBalanceAddF;
 begin
@@ -274,7 +274,7 @@ end;
 
 procedure TBalanceAddF.edtAmountKeyPress(Sender: TObject; var Key: Char);
 begin
-//  logger.Info(Key);
+
 //  // Если нажата запятая, заменяем её на точку
 //  if Key = '.' then
 //  begin

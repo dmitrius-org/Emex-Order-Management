@@ -171,7 +171,7 @@ type
 implementation
 
 uses
-  uEmexUtils, MainModule, uMainVar, uLogger, uToast, uUtils.Grid;
+  uEmexUtils, MainModule, uMainVar, uToast, uUtils.Grid, Quick.Logger;
 
 {$R *.dfm}
 
@@ -191,9 +191,9 @@ end;
 
 procedure TSearchF.PriceCalc;
 begin
-  logger.Info('TSearchF.PriceCalc begin');
-  logger.Info('TSearchF.PriceCalc FProfilesCustomerID: ' + FProfilesCustomerID.ToString);
-  logger.Info('TSearchF.PriceCalc FDetailNum: ' + FDetailNum);
+  log('TSearchF.PriceCalc begin', etInfo);
+  log('TSearchF.PriceCalc FProfilesCustomerID: ' + FProfilesCustomerID.ToString, etInfo);
+  log('TSearchF.PriceCalc FDetailNum: ' + FDetailNum, etInfo);
   RetVal.Clear;
 
   Sql.exec('''
@@ -203,7 +203,7 @@ begin
   ''',
   ['ProfilesCustomerID', 'DetailNum'],
   [FProfilesCustomerID,   FDetailNum]);
-  logger.Info('TSearchF.PriceCalc end');
+  log('TSearchF.PriceCalc end', etInfo);
 end;
 
 procedure TSearchF.edtLChange(Sender: TObject);
@@ -257,10 +257,10 @@ end;
 
 procedure TSearchF.GridRefresh();
 begin
-  logger.Info('TSearchF.GridRefresh begin');
-  logger.Info('FProfilesCustomerID: ' + FProfilesCustomerID.ToString);
-  logger.Info('FMakeName: ' + FMakeName);
-  logger.Info('FDetailNum: ' + FDetailNum);
+  log('TSearchF.GridRefresh begin', etDebug);
+  log('FProfilesCustomerID: ' + FProfilesCustomerID.ToString, etDebug);
+  log('FMakeName: ' + FMakeName, etDebug);
+  log('FDetailNum: ' + FDetailNum, etDebug);
   // определение количества уникальных брендов
   sql.Open('''
               DECLARE @Count INT;
@@ -279,7 +279,7 @@ begin
  // Query.ResourceOptions.CmdExecMode :=amNonBlocking;
   Query.Open;
 
-  logger.Info('TSearchF.GridRefresh end');
+  log('TSearchF.GridRefresh end', etDebug);
 end;
 
 procedure TSearchF.MakeLogoGridDblClick(Sender: TObject);
@@ -363,23 +363,23 @@ procedure TSearchF.PartSearch;
 var
   emex: TEmex;
 begin
-  logger.Info('TSearchF.PartSearch Begin');
+  logger.Info('TSearchF.PartSearch %s', ['Begin']);
   ShowMask('Поиск...');
   UniSession.Synchronize();
   try
     emex := TEmex.Create(UniMainModule.FDConnection);
     emex.FindByDetailNumber(UniMainModule.AUserID, Trim(edtSearch.Text));
-    logger.Info('TSearchF.PartSearch Получили данные с эмекс');
+    log('TSearchF.PartSearch %s', ['Получили данные с эмекс'], etInfo);
 
     SetMakeName;
 
     PriceCalc;
 
-    logger.Info('TSearchF.PartSearch расcчитали цены');
+    log('TSearchF.PartSearch %s', ['Расcчитали цены'], etInfo);
 
     GridRefresh();
 
-    logger.Info('TSearchF.PartSearch обновили таблицу');
+    log('TSearchF.PartSearch %s', ['Обновили таблицу'], etInfo);
 
     if (Query.RecordCount > 1) then
     begin
@@ -389,20 +389,20 @@ begin
 
       SearchHistorySave;
 
-      logger.Info('TSearchF.PartSearch обновили историю поиска');
+      log('TSearchF.PartSearch %s', ['Обновили историю поиска'], etInfo);
     end;
   finally
     FreeAndNil(emex);
     HideMask;
     UniSession.Synchronize();
 
-    logger.Info('TSearchF.PartSearch end');
+    log('TSearchF.PartSearch %s', ['End'], etInfo);
   end;
 end;
 
 procedure TSearchF.SetMakeName;
 begin
-  logger.Info('TSearchF.SetMakeName begin');
+  log('TSearchF.SetMakeName begin', etInfo);
   sql.Open('''
            select top 1 p.DetailNum, p.MakeName
              from pFindByNumber p with (nolock index=ao2)
@@ -418,15 +418,15 @@ begin
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
   FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
 
-  logger.Info('TSearchF.SetMakeName MakeName: ' + FMakeName);
-  logger.Info('TSearchF.SetMakeName DetailNum: ' + FDetailNum);
-  logger.Info('TSearchF.SetMakeName end');
+  log('TSearchF.SetMakeName MakeName: ' + FMakeName, etInfo);
+  log('TSearchF.SetMakeName DetailNum: ' + FDetailNum, etInfo);
+  log('TSearchF.SetMakeName end', etInfo);
 end;
 
 procedure TSearchF.PartToBasket;
 begin
-  logger.Info('ClientID: ' + UniMainModule.AUserID.ToString);
-  logger.Info('SPID: ' + UniMainModule.ASPID.ToString);
+  log('ClientID: ' + UniMainModule.AUserID.ToString, etInfo);
+  log('SPID: ' + UniMainModule.ASPID.ToString, etInfo);
 
   RetVal.Clear;
   Sql.Open('declare @R int exec @R=PartToBasket @ClientID = :ClientID, @PartID=:PartID  select @R as retval',
@@ -463,7 +463,7 @@ end;
 
 procedure TSearchF.DestinationLogo; var i: Integer;
 begin
-  logger.Info('TSearchF.DestinationLogo begin');
+  log('TSearchF.DestinationLogo begin', etDebug);
   sql.Open('''
      Select *
        from vDestinationLogo
@@ -632,15 +632,15 @@ end;
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  logger.Info('TSearchF.SearchGridAjaxEvent EventName: ' + EventName);
+  log('TSearchF.SearchGridAjaxEvent EventName: ' + EventName, etDebug);
 
   if EventName = 'setDestLogo' then
   begin
-    logger.Info('TSearchF.SearchGridAjaxEvent setDestLogo begin ');
+    log('TSearchF.SearchGridAjaxEvent setDestLogo begin ', etDebug);
     ShowMask('Поиск...');
     UniSession.Synchronize();
     try
-      logger.Info('setDestLogo FProfilesCustomerID: ' + Params.Values['P1']);
+      log('setDestLogo FProfilesCustomerID: ' + Params.Values['P1'], etDebug);
       FProfilesCustomerID := Params.Values['P1'].ToInteger;
 
       DestinationLogo;  // тут переделать через js
@@ -652,7 +652,7 @@ begin
       HideMask;
       UniSession.Synchronize();
     end;
-    logger.Info('TSearchF.SearchGridAjaxEvent setDestLogo end ');
+    log('TSearchF.SearchGridAjaxEvent setDestLogo end ', etDebug);
   end
   else
   if EventName = 'MakeLogoGridShow' then
@@ -788,7 +788,7 @@ end;
 
 procedure TSearchF.SearchHistorySave;
 begin
-  logger.Info('TSearchF.SearchHistorySave begin');
+  log('TSearchF.SearchHistorySave begin', etDebug);
   Sql.Exec('''
   insert tSearchHistory (ClientID, DetailNum)
   select distinct
@@ -800,7 +800,7 @@ begin
   ''',
   ['DetailNum'],
   [FDetailNum]);
-  logger.Info('TSearchF.SearchHistorySave end');
+  log('TSearchF.SearchHistorySave end', etDebug);
 end;
 
 procedure TSearchF.TopPanelClick(Sender: TObject);

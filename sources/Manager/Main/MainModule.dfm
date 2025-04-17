@@ -11,8 +11,8 @@ object UniMainModule: TUniMainModule
   EnableSynchronousOperations = True
   ExtLocale = 'ru'
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
-  Height = 351
-  Width = 1020
+  Height = 406
+  Width = 623
   object FDConnection: TFDConnection
     ConnectionName = 'Connection'
     Params.Strings = (

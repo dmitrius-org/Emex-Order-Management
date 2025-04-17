@@ -96,7 +96,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uFileU, uLogger, ServerModule, uUploadingRefusals, uToast;
+  MainModule, uGrantUtils, uMainVar, uFileU, ServerModule, uUploadingRefusals, uToast;
 
 {$R *.dfm}
 
@@ -162,23 +162,17 @@ var i, id:Integer;
 
     AFnabled: LongBool;
 begin
-  logger.Info('TRefusalsT.actToArchiveExecute Begin');
-
-
   if Grid.SelectedRows.Count>0 then
   begin
     Query.DisableControls;
     BM := Query.GetBookmark;
     try
-      logger.Info('Count: ' + Grid.SelectedRows.Count.ToString);
       for I := 0 to Grid.SelectedRows.Count - 1 do
       begin
         Query.Bookmark := Grid.SelectedRows[I];
 
         id := Query.FieldByName('OrderRefusalsID').AsInteger;
         fn := Query.FieldByName('FileName').AsString;
-
-        logger.Info(id.ToString );
 
         if Query.FieldByName('Flag').AsInteger and 16 = 0 then
         begin
@@ -213,17 +207,14 @@ begin
       GridRefresh;
     end;
   end;
-  logger.Info('TRefusalsT.actToArchiveExecute End');
 end;
 
 procedure TRefusalsT.actUploadExecute(Sender: TObject);
 begin
-  logger.Info('TRefusalsT.actUploadExecute Begin');
   if Query.RecordCount > 0 then
   begin
     UniSession.SendFile(Query.FieldByName('FileName').AsString);
   end;
-  logger.Info('TRefusalsT.actUploadExecute End');
 end;
 
 procedure TRefusalsT.actUploadingRefusalsEmexExecute(Sender: TObject);
@@ -312,12 +303,8 @@ var f:TUniFileInfoClass;
 
     AFnabled : Boolean;
 begin
-  logger.Info('TRefusalsT.UniFileUpload1MultiCompleted Begin');
   for f in Files do
   begin
-    logger.Info('UniFileUpload1Completed ' + f.FileName);
-    logger.Info(ExtractFileName(f.FileName));
-
     RetVal.Clear;
 
     DestFolder:= UniServerModule.StartPath+'temp\';
@@ -358,11 +345,9 @@ begin
     else
     begin
       ToastERR(RetVal.Message, UniSession);
-      logger.Info('TRefusalsT.RetVal.Code:' + RetVal.Code.ToString + ', ' + RetVal.Message);
     end;
 
   end;
-  logger.Info('TRefusalsT.UniFileUpload1MultiCompleted End');
 end;
 
 procedure TRefusalsT.UniFrameCreate(Sender: TObject);

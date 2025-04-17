@@ -274,13 +274,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <Form>OrdersT</Form>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\logger\TimeIntervals.pas"/>
-        <DCCReference Include="..\Common\logger\uLogger.pas"/>
-        <DCCReference Include="..\Common\logger\uLoggerF.pas">
-            <Form>LoggerF</Form>
-            <DesignClass>TUniForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\Common\logger\uUtils.pas"/>
         <DCCReference Include="..\Common\Login\LoginEditForm.pas">
             <Form>LoginEditF</Form>
             <DesignClass>TUniForm</DesignClass>
@@ -551,6 +544,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="App\Suppliers\uSuppliersF.pas">
             <Form>SuppliersF</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Common\Logger\uLoggerF.pas">
+            <Form>LoggerF</Form>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>

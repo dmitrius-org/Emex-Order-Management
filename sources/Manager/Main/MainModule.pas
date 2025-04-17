@@ -13,10 +13,12 @@ uses
   FireDAC.Phys.FB,
   FireDAC.Phys.MySQL, FireDAC.Phys.ODBCBase, FireDAC.Moni.Custom,
 
-  uCommonType, uAuditUtils, uAccrualUtils, uEmexUtils, uSqlUtils, uLogger,
+  uCommonType, uAuditUtils, uAccrualUtils, uEmexUtils, uSqlUtils,
   uGrantUtils, FireDAC.Moni.RemoteClient, Windows, uniGUIBaseClasses,
-  uniGUIClasses, uniTimer
-  , uUtils.WS, FireDAC.Phys.ODBCDef, FireDAC.Phys.ODBC;
+  uniGUIClasses, uniTimer, FireDAC.Phys.ODBCDef, FireDAC.Phys.ODBC,
+  uUtils.WS,
+
+  Quick.Logger, Quick.Logger.Provider.Files;
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -27,7 +29,7 @@ type
     FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
     MemTable: TFDMemTable;
     MemTableIsPart: TBooleanField;
-//    procedure AddConnectionDef(Sender: TObject);
+
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
@@ -58,6 +60,8 @@ type
     ASPID: Integer;
     /// <summary> WS - Объект WebSocket </summary>
     WS:  tWS;
+    /// <summary> AppName - Приложение </summary>
+    AAppName:  String;
 
     const _loginname = '_loginname';
     const _pwd = '_pwd';
@@ -73,13 +77,12 @@ implementation
 {$R *.dfm}
 
 uses
-  UniGUIVars, ServerModule, uniGUIApplication, uMainVar;
+  UniGUIVars, ServerModule, uniGUIApplication, uMainVar, uConstant;
 
 function UniMainModule: TUniMainModule;
 begin
   Result := TUniMainModule(UniApplication.UniMainModule)
 end;
-
 
 procedure TUniMainModule.AppVersion;
 begin
@@ -117,6 +120,7 @@ begin
       AUserName:=AUser;
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
       AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
+      AAppName:= AppManager;
 
       WS := TWS.Create('manager:' + AUserID.ToString);
 
@@ -125,18 +129,35 @@ begin
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
       // настройки  логирования
-      CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
+      Logger.Providers.Add(GlobalLogFileProvider);
+      with GlobalLogFileProvider do
+        begin
+            FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_' + FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
+            DailyRotate := True;
+            MaxFileSizeInMB := 20;
+            LogLevel := LOG_ALL;
+            TimePrecission := True;
+        end;
 
-      Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
+      Sql.Open('''
+        Select AppClientLog, AppSqlLog
+          from tLoggerSettings (nolock)
+         where UserID = dbo.GetUserID()
+           and AppName= :AppName
+       ''', ['AppName'],[AAppName]);
+
       if Sql.Q.RecordCount > 0 then
       begin
-        logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-        logger.Info('Программа запущена');
 
-        FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+        with GlobalLogFileProvider do
+        begin
+          Enabled := Sql.Q.FindField('AppClientLog').Value;
+        end;
+        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
 
+      Log('Программа запущена', etHeader);
     except
       on E: EFDDBEngineException do
       case E.Kind of
@@ -208,7 +229,6 @@ begin
       (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname','',Date-1);
       (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd','',Date-1);
     end;
-
   end;
 
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'end');
@@ -232,8 +252,7 @@ begin
 
   FDConnection.Close;
 
-  logger.Info('Программа остановлена');
-  FreeDefLogger;
+  log('Программа остановлена', etHeader);
 end;
 
 initialization

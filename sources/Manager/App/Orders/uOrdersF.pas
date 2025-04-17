@@ -313,7 +313,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils, uLogger,
+  MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils,
   ServerModule, uOrdersT, uToast, uOrdersProtocol_T, uUtils.Strings,
   Soap.XSBuiltIns;
 
@@ -444,11 +444,6 @@ var Price: String;
 begin
   Price:=cbPrice.Value;
 
-  logger.Info('TOrderF.GetSupplierList begin');
-  logger.Info('TOrderF.GetSupplierList Price: '      + Price);
-  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
-  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
-
   Sql.Q.Close;
   Sql.Open('''
      exec OrderF_SupplierList
@@ -481,25 +476,12 @@ begin
     cbPrice.Value:=Price;
     EnableControls;
   end;
-
-//  logger.Info('TOrderF.GetSupplierList end');
-//  logger.Info('TOrderF.GetSupplierList Price: '      + cbPrice.Value);
-//  logger.Info('TOrderF.GetSupplierList Price.Value '     + cbPrice.Value);
-//  logger.Info('TOrderF.GetSupplierList Price.ItemIndex ' + cbPrice.ItemIndex.ToString);
-//  logger.Info('TOrderF.GetSupplierList FPriceLogo: ' + FPriceLogo);
-//  logger.Info('TOrderF.GetSupplierList FMakeLogo: '  + FMakeLogo);
 end;
 
 procedure TOrderF.GetPartDataFromBase();
 var Price, js, r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
-  logger.Info('TOrderF.GetPartDataFromBase begin');
-  logger.Info('TOrderF.GetPartDataFromBase FDetailNumber ' + FDetailNumber);
-  logger.Info('TOrderF.GetPartDataFromBase FPriceLogo ' + FPriceLogo);
-  logger.Info('TOrderF.GetPartDataFromBase FMakeLogo ' + FMakeLogo);
-  logger.Info('TOrderF.GetPartDataFromBase FProfilesDeliveryID ' + FProfilesDeliveryID.ToString);
-
   HintText := '';
 
   sql.Open('''
@@ -627,14 +609,10 @@ begin
 
     edtDelivery2.Hint := '';
   end;
-
-  logger.Info('GetPartDataFromBase end');
 end;
 
 procedure TOrderF.GooglePSE;
 begin
-  logger.info('TOrderF.GooglePSE');
-
   if FGoogleKey = '' then
   begin
     with TStringList.Create() do
@@ -848,8 +826,6 @@ end;
 
 procedure TOrderF.cbPriceChange(Sender: TObject);   // var i: Integer;
 begin
-  logger.Info('TOrderF.cbPriceChange begin');
-
   FMakeLogo  := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
   FPriceLogo := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
@@ -868,11 +844,6 @@ end;
 
 procedure TOrderF.OrdersFinCalc;
 begin
-  logger.Info('TOrderF.OrdersFinCalc begin');
-  //logger.Info('TOrderF.OrdersFinCalc DestinationLogo ' + FProfilesCustomerID.ToString);
-  //logger.Info('TOrderF.OrdersFinCalc FPriceLogo ' + FPriceLogo);
-  //logger.Info('TOrderF.OrdersFinCalc FMakeLogo ' + FMakeLogo);
-
   RetVal.Clear;
 
   Sql.exec(
@@ -954,7 +925,6 @@ var Emex:TEmex;
  Baskets : ArrayOfBasketDetails_v2;
  I: Integer;
 begin
-  logger.Info('TOrderF.OrderSave Begin');
   RetVal.Clear;
 
   DataCheck(ATargetStateID);
@@ -1031,11 +1001,8 @@ begin
   end
   else
   begin
-    logger.Info('TOrderF.OrderSave Error: ' + RetVal.Message);
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
-
-  logger.Info('TOrderF.OrderSave end');
 end;
 
 procedure TOrderF.SetAction(const Value: TFormAction);

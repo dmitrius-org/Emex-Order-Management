@@ -56,7 +56,7 @@ type
 implementation
 
 uses
-  MainModule, uLogger;
+  MainModule;
 
 {$R *.dfm}
 
@@ -87,7 +87,6 @@ end;
 
 procedure TStatisticOrders.GridStatisticsRefresh;
 begin
-  logger.Info('TStatisticsT.GridStatisticsRefresh');
   ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize();
   try

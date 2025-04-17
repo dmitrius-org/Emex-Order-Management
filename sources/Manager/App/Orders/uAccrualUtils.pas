@@ -116,7 +116,7 @@ end;
 implementation
 
 uses
-  uLogger, uError_T, uUtils.Varriant;
+  Quick.Logger, uError_T, uUtils.Varriant;
 
 { TProcExec }
 
@@ -142,9 +142,9 @@ end;
 
 constructor TProcExec.Create(Value: TFDConnection);
 begin
-  logger.Info('TProcExec.Create Begin');
+  log('TProcExec.Create Begin', etDebug);
   Emex := TEmex.Create(Value);
-  logger.Info('TProcExec.Create Begin');
+  log('TProcExec.Create Begin', etDebug);
 end;
 
 destructor TProcExec.Destroy;
@@ -160,7 +160,7 @@ end;
 
 procedure TProcExec.EmexCreateOrderCheck;
 begin
-  logger.Info('TProcExec.EmexCreateOrderCheck Begin ');
+  log('TProcExec.EmexCreateOrderCheck Begin ', etDebug);
 
   //Запрашиваем заказы в статусе в Работе
   Emex.MovementInWorkByMarks;
@@ -168,7 +168,7 @@ begin
   // Выполняем проверку, результат пишем pAccrualAction.RetVal
   Emex.SQl.Exec('exec EmexCreateOrderCheck', [], []);
 
-  logger.Info('TProcExec.EmexCreateOrderCheck End ');
+  log('TProcExec.EmexCreateOrderCheck End ', etDebug);
 end;
 
 procedure TProcExec.EmexOrderStateSync;
@@ -189,10 +189,10 @@ end;
 
 procedure TProcExec.InsertPartToBasketByPartFromMark; var R: Integer;
 begin
-  logger.Info('TProcExec.InsertPartToBasketByPartFromMark Begin ');
+  log('TProcExec.InsertPartToBasketByPartFromMark Begin ', etDebug);
 
   R := Emex.InsertPartToBasketByMarks;
-  logger.Info('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString);
+  log('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString, etDebug);
 
   if R > 0 then
   begin
@@ -204,7 +204,7 @@ begin
     Emex.InsertPartToBasketCancelByMarks();
   end;
 
-  logger.Info('TProcExec.InsertPartToBasketByPartFromMark End ');
+  log('TProcExec.InsertPartToBasketByPartFromMark End ', etDebug);
 end;
 
 procedure TProcExec.InsertPartToBasketByPartRollBack;
@@ -219,8 +219,8 @@ var t: TAccrualThread;
 begin
   //FEnabled := True;
 
-  logger.Info('TAccrual.ActionExecute Begin ');
-  logger.Info('TAccrual.ActionExecute ActionID: ' + ActionID.ToString);
+  log('TAccrual.ActionExecute Begin ', etDebug);
+  log('TAccrual.ActionExecute ActionID: ' + ActionID.ToString, etDebug);
   result    := 0;
   FFinished := False;
 
@@ -233,7 +233,7 @@ begin
       // Настройка: Автоматический отказ деталей с ошибками при создании заказа
       if sql.GetSetting('AutomaticRejectionPartsByCreatOrder', false)  then
       begin
-        logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: ДА');
+        log('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: ДА', etDebug);
         Sql.Open('''
           Select 1
             from vOrdersWarningList
@@ -257,7 +257,7 @@ begin
       end
       else
       begin
-        logger.Info('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: НЕТ');
+        log('TAccrual.ActionExecute Автоматический отказ деталей с ошибками при создании заказа: НЕТ', etDebug);
         Sql.Open('''
            Select 1
              from vOrdersWarningList
@@ -294,14 +294,14 @@ begin
       FFinished := True;
     end;
   end;
-  logger.Info('TAccrual.ActionExecute End ');
+  log('TAccrual.ActionExecute End ', etDebug);
 end;
 
 function TAccrual.ActionExecuteCheck(AActionID: integer; AResult: TFormAction): integer;
 var
   Query: TFDQuery;
 begin
-  logger.Info('TAccrual.ActionExecuteCheck Begin ');
+  log('TAccrual.ActionExecuteCheck Begin ', etDebug);
 
   Query := TFDQuery.Create(nil);
   Try
@@ -320,11 +320,11 @@ begin
 
       Result := Query.FieldByName('retcode').Value;
     end;
-    logger.Info('TAccrual.ActionExecuteCheck. Result: ' + Result.ToString);
+    log('TAccrual.ActionExecuteCheck. Result: ' + Result.ToString, etDebug);
   finally
     FreeAndNil(Query);
   end;
-  logger.Info('TAccrual.ActionExecuteCheck. end ');
+  log('TAccrual.ActionExecuteCheck. end ', etDebug);
 end;
 
 function TAccrual.ActionExecuteRollback: integer;
@@ -333,7 +333,7 @@ var
   ServerErr: Integer;
   Query: TFDQuery;
 begin
-  logger.Info('TAccrual.ActionExecuteRollback Begin ' );
+  log('TAccrual.ActionExecuteRollback Begin ' , etDebug);
 
   Query := TFDQuery.Create(nil);
   Try
@@ -369,10 +369,10 @@ begin
            order by a.Number
         ''', [],[]);
 
-        logger.Info('Проверка наличия настроенной под действием процедур: ' + (Sql.Q.RecordCount > 0).ToString(True));
+        log('Проверка наличия настроенной под действием процедур: ' + (Sql.Q.RecordCount > 0).ToString(True), etDebug);
         if Sql.Q.RecordCount > 0 then
         begin
-          logger.Info('Процедура: ' + Sql.Q.FieldByName('MetodRollback').AsString);
+          log('Процедура: ' + Sql.Q.FieldByName('MetodRollback').AsString, etDebug);
 
           Proc := TProcExec.Create(FConnection);
           if Sql.Q.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
@@ -420,7 +420,7 @@ begin
     FreeAndNil(Query);
   end;
 
-  logger.Info('TAccrual.ActionExecuteRollback End ');
+  log('TAccrual.ActionExecuteRollback End ', etDebug);
 end;
 
 constructor TAccrual.Create(AConnection: TFDConnection);
@@ -508,7 +508,7 @@ begin
       ''', [], []);
       qActionMetod.First;
 
-      logger.Info('TAccrualThread.Execute ActionMetod Begin');
+      log('TAccrualThread.Execute ActionMetod Begin', etDebug);
       for j := 0 to qActionMetod.RecordCount-1 do
       begin
 
@@ -522,20 +522,20 @@ begin
          order by Number
         ''';
 
-        logger.Info('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
+        log('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString, etDebug);
         qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;
         qMetod.ParamByName('StateID').Value := qActionMetod.FieldByName('StateID').AsInteger;
         qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
         qMetod.Open;
 
-        logger.Info('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString());
+        log('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString(), etDebug);
 
         if qMetod.RecordCount > 0 then
         begin
           qMetod.First;
           for I := 0 to qMetod.RecordCount-1 do
           begin
-            logger.Info('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
+            log('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString, etDebug);
 
             Proc := TProcExec.Create(FAccrual.FConnection);
 
@@ -554,11 +554,11 @@ begin
 
       // Добавление протокола
       begin
-        logger.Info('TAccrual.ProtocolAdd Begin');
+        log('TAccrual.ProtocolAdd Begin', etDebug);
         qMetod.Close;
         qMetod.SQL.Text := ' exec ProtocolAdd ';
         qMetod.ExecSQL;
-        logger.Info('TAccrual.Execute ProtocolAdd End');
+        log('TAccrual.Execute ProtocolAdd End', etDebug);
       end;
 
   finally

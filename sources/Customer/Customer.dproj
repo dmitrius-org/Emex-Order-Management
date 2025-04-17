@@ -115,10 +115,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.7;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
-        <VerInfo_Build>5</VerInfo_Build>
+        <VerInfo_Build>7</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_DebugInformation>0</DCC_DebugInformation>
@@ -147,13 +147,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uCommonType.pas"/>
         <DCCReference Include="..\Common\Common\uSqlUtils.pas"/>
         <DCCReference Include="App\uMainVar.pas"/>
-        <DCCReference Include="..\Common\logger\TimeIntervals.pas"/>
-        <DCCReference Include="..\Common\logger\uLogger.pas"/>
         <DCCReference Include="..\Common\logger\uLoggerF.pas">
             <Form>LoggerF</Form>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\logger\uUtils.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Varriant.pas"/>
         <DCCReference Include="..\Common\CommonApp\uAuditUtils.pas"/>
         <DCCReference Include="Main\ServerModule.pas">

@@ -32,7 +32,7 @@ object UniMainModule: TUniMainModule
     Top = 75
   end
   object FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink
-    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut]
+    EventKinds = [ekError, ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
     FileAppend = True
     FileColumns = [tiRefNo, tiTime, tiThreadID, tiClassName, tiObjID, tiMsgText]
     ShowTraces = False
@@ -45,7 +45,7 @@ object UniMainModule: TUniMainModule
     Top = 139
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
-    EventKinds = [ekSQL, ekSQLVarIn, ekSQLVarOut]
+    EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
     Tracing = True
     Left = 407
     Top = 17

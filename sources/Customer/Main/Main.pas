@@ -105,7 +105,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uLogger, uApp, uMainVar, uUtils.Varriant;
+  LoginEditForm, InfoForm, uLoggerF, uApp, uMainVar, uUtils.Varriant;
 
 function MainForm: TMainForm;
 begin
@@ -260,7 +260,7 @@ procedure TMainForm.tsBalanceBeforeFirstActivate(Sender: TObject;
 begin
   if not Assigned(FBalance) then
   begin
-    FBalance :=  TBalanceTotalT.Create(Self);
+    FBalance := TBalanceTotalT.Create(Self);
     FBalance.Align := alClient;
     FBalance.Parent := tsBalance;
     FBalance.ClientID := UniMainModule.AUserID;
@@ -326,7 +326,12 @@ begin
  case Key of
     76 : // 'l'
       if (ssCtrl in Shift) and (ssAlt in Shift) then
+      begin
+        LoggerF.UserID := UniMainModule.AUserID;
+        LoggerF.AppName:= UniMainModule.AAppName;
+
         LoggerF.ShowModal;
+      end;
   end;
 end;
 

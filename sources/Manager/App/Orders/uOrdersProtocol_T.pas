@@ -66,7 +66,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uMainVar, uLogger;
+  MainModule, uniGUIApplication, uMainVar;
 
 function OrdersProtocol_T: TOrdersProtocol_T;
 begin
@@ -85,8 +85,6 @@ begin
     if FFilterTextProtocol <> '' then FProtocol := ' and ProtocolType in (' + FFilterTextProtocol + ')'
     else
       FProtocol := '';
-
-    logger.Info(FProtocol);
 
     ProtocolQuery.Close();
     ProtocolQuery.ParamByName('ID').AsLargeInt := FID;
@@ -119,8 +117,6 @@ begin
     delete(s,length(s),1);
 
   FFilterTextProtocol := s;
-
-  logger.Info(FFilterTextProtocol);
 end;
 
 procedure TOrdersProtocol_T.GridCellContextClick(Column: TUniDBGridColumn; X,
@@ -170,7 +166,6 @@ end;
 
 procedure TOrdersProtocol_T.UniFormShow(Sender: TObject);  var i: Integer;
 begin
-  logger.Info('TOrdersProtocol_T.UniFormShow');
   sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 
   Self.Caption:= 'Протокол по [' +

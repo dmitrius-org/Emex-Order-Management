@@ -47,9 +47,6 @@ type
 
 implementation
 
-uses
-  uLogger;
-
 {$R *.dfm}
 
 procedure TSettingsT.actRefreshAllExecute(Sender: TObject);

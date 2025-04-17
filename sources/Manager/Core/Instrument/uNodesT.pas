@@ -86,7 +86,6 @@ type
     procedure GridColumnResize(Sender: TUniBaseDBGridColumn; NewSize: Integer);
     procedure GridDropRowsEvent(SrcGrid, DstGrid: TUniDBGrid;
       Rows: TUniBookmarkList; Params: TUniDragDropParams; var Handled: Boolean);
-    procedure GridEndDrag(Sender: TUniControl; Left, Top: Integer);
   private
     { Private declarations }
     procedure SortColumn(const FieldName: string; Dir: Boolean);
@@ -109,7 +108,7 @@ end;
 implementation
 
 uses
-  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar, uUtils.Grid, uLogger;
+  MainModule, uGrantUtils, ServerModule, uNodesF, uMainVar, uUtils.Grid;
 
 {$R *.dfm}
 
@@ -225,9 +224,6 @@ var
   Bookmark: TBookmark;
   i: Integer;
 begin
-  Logger.Info('GridDropRowsEvent');
-  Logger.Info('GridDropRowsEvent ' + Params.OverIndex.ToString);
-
   Handled := true; // ”казываем, что событие обработано
   //Params.Effect := deCopy:
 
@@ -262,11 +258,6 @@ begin
   RecalculateRowNumbers();
 
   GridRefresh;
-end;
-
-procedure TNodesT.GridEndDrag(Sender: TUniControl; Left, Top: Integer);
-begin
-  Logger.Info('GridEndDrag');
 end;
 
 procedure TNodesT.GridRefresh;

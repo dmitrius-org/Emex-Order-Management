@@ -87,7 +87,6 @@ object ShipmentsBoxesT: TShipmentsBoxesT
     OnColumnMove = GridColumnMove
     OnDblClick = GridDblClick
     OnCellContextClick = GridCellContextClick
-    OnDrawColumnCell = GridDrawColumnCell
     OnColumnResize = GridColumnResize
     OnColumnSummary = GridColumnSummary
     OnColumnSummaryResult = GridColumnSummaryResult

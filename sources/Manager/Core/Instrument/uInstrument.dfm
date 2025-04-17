@@ -38,7 +38,6 @@ object InstrumentT: TInstrumentT
     Layout = 'border'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'center'
-    ExplicitHeight = 440
     object UniPanelleft: TUniPanel
       Left = 1
       Top = 1
@@ -52,7 +51,6 @@ object InstrumentT: TInstrumentT
       Layout = 'fit'
       LayoutConfig.Split = True
       LayoutConfig.Region = 'west'
-      ExplicitHeight = 438
       object twInstrument: TUniTreeView
         Left = 1
         Top = 1
@@ -72,7 +70,6 @@ object InstrumentT: TInstrumentT
         OnClick = twInstrumentClick
         OnDblClick = twInstrumentDblClick
         OnCellContextClick = twInstrumentCellContextClick
-        ExplicitHeight = 436
       end
     end
     object UniPanelCenter: TUniPanel

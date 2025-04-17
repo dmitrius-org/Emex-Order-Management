@@ -58,7 +58,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uLogger, uMainVar;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar;
 
 function ConfluencePagesF: TConfluencePagesF;
 begin

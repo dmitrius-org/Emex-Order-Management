@@ -58,12 +58,15 @@ type
     Profile : TUniTreeNode;
 
     /// <summary>
-    ///  ConstructNavigator - создание меню пользователя
+    ///  ConstructNavigator - создание меню пользователя (дианамическое меню, зависящее от прав)
     ///</summary>
     procedure ConstructNavigator;
 
     procedure SetMainMenuMicroName;
 
+    /// <summary>
+    ///  ProfileMenuAdd - создание меню по умолчанию
+    ///</summary>
     procedure ProfileMenuAdd();
 
     function CreateImageIndex(filename: string): Integer;
@@ -81,7 +84,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uLogger, uUtils.Varriant,
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uUtils.Varriant,
   uUserProfile, uCommonType;
 
 function MainForm: TMainForm;
@@ -367,7 +370,12 @@ begin
  case Key of
     76 : // 'l'
       if (ssCtrl in Shift) and (ssAlt in Shift) then
+      begin
+        LoggerF.UserID := UniMainModule.AUserID;
+        LoggerF.AppName:= UniMainModule.AAppName;
+
         LoggerF.ShowModal;
+      end;
   end;
 end;
 
@@ -388,8 +396,6 @@ begin
 
   ProfileMenuAdd;
 
-  //Profile.MoveTo(nil, TUniNodeAttachMode.naAdd );
-
   if MainMenu.Items.Count > 1 then
   begin
     MainMenu.Selected := MainMenu.Items[1];
@@ -398,6 +404,9 @@ begin
     {$ENDIF}
     MainMenuClick(Sender);
   end;
+
+
+    //Profile.MoveTo(nil, TUniNodeAttachMode.naAdd );
 end;
 
 initialization

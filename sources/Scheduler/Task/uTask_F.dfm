@@ -62,11 +62,12 @@ object Task_F: TTask_F
         Left = 0
         Top = 0
         Width = 889
-        Height = 417
+        Height = 415
         Hint = ''
         ParentColor = False
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 417
         DesignSize = (
           889
           417)

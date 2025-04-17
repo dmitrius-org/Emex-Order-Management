@@ -94,18 +94,15 @@ object ConfluencePagesF: TConfluencePagesF
     Title = #1054#1073#1097#1080#1077' '#1089#1074#1077#1076#1077#1085#1080#1103
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 613
-    ExplicitHeight = 203
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
-      Top = 15
+      Top = 17
       Width = 613
       Height = 122
       Hint = ''
       ParentColor = False
       Align = alTop
       TabOrder = 1
-      ExplicitWidth = 609
       DesignSize = (
         613
         122)
@@ -146,7 +143,6 @@ object ConfluencePagesF: TConfluencePagesF
         Hint = ''
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 4
-        ExplicitWidth = 467
       end
     end
   end

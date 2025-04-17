@@ -243,7 +243,7 @@ type
 implementation
 
 uses
-  MainModule, uEmexUtils, uSqlUtils, uLogger, uMainVar, uOrdersProtocol_T, Main,
+  MainModule, uEmexUtils, uSqlUtils, Quick.Logger, uMainVar, uOrdersProtocol_T, Main,
   ServerModule, uError_T, uUtils.Grid, uMessengerF;
 
   var screenmask: Boolean;
@@ -265,8 +265,6 @@ end;
 
 procedure TOrdersT2.CancelRequest;
 begin
-  logger.Info('actCancelRequestExecute:') ;
-
   Marks.SaveMarksToDB;
 
   Sql.Exec(' exec CustomerOrderCancelRequest  ', [], []);

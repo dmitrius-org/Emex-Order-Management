@@ -86,7 +86,7 @@ type
 implementation
 
 uses
-  MainModule, cfs.GCharts, uLogger;
+  MainModule, cfs.GCharts;
 
 {$R *.dfm}
 
@@ -327,7 +327,6 @@ end;
 
 procedure TStatisticsT.GridStatisticsRefresh;
 begin
-  logger.Info('TStatisticsT.GridStatisticsRefresh');
   ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize();
   try
@@ -342,8 +341,6 @@ begin
                ,@DateEnd   = :DateEnd
 
       ''';
-      logger.Info(edtBeginDate2.DateTime.ToString) ;
-      logger.Info(cbCancel.ItemIndex.ToBoolean.ToString());
 
       qGridStatistics.ParamByName('DateBegin').AsDateTime := edtBeginDate2.DateTime;
       qGridStatistics.ParamByName('DateEnd').AsDateTime := edtEndDate2.DateTime;
@@ -352,7 +349,6 @@ begin
         qGridStatistics.ParamByName('isCancel').AsBoolean := cbCancel.ItemIndex.ToBoolean
       else
         qGridStatistics.ParamByName('isCancel').Value := null;
-
 
       qGridStatistics.Open;
     end
@@ -369,7 +365,6 @@ begin
 
       ''';
 
-      logger.Info(cbCancel.ItemIndex.ToBoolean.ToString());
       qGridStatistics.ParamByName('DateBegin').Value := edtBeginDate2.text;
       qGridStatistics.ParamByName('DateEnd').Value := edtEndDate2.text;
       qGridStatistics.ParamByName('RowSize').Value := edtDataSize.Value;

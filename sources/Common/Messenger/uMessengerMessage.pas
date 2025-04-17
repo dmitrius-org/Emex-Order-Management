@@ -153,7 +153,7 @@ implementation
 
 {$R *.dfm}
 
-uses MainModule, uMainVar, uLogger, uUtils.Math, ServerModule;
+uses MainModule, uMainVar, uUtils.Math, ServerModule, Quick.Logger;
 
 
 { TMessage }
@@ -495,21 +495,14 @@ procedure TMessage.ContentChatContainerAjaxEvent(Sender: TComponent;
   EventName: string; Params: TUniStrings);   var i:Integer;
   JSONObject: TJSONObject;
 begin
-  logger.Info(EventName );
-
   if EventName = 'websocket_message' then
   begin
-    logger.Info( Params.Values['message'] );
-
     try
       JSONObject := TJSONObject.ParseJSONValue(Params.Values['message']) as TJSONObject;
       try
         // Извлекаем значения из JSON
         if JSONObject <> nil then
         begin
-          logger.Info( JSONObject.GetValue('type').Value);
-          logger.Info( JSONObject.GetValue('id').Value);
-
           if JSONObject.GetValue('type').Value = 'connection' then
             SetUserStatus(JSONObject.GetValue('type').Value, JSONObject.GetValue('id').Value.ToInteger)
           else
@@ -524,7 +517,7 @@ begin
       end;
     except
       on E: Exception do
-        logger.Info( 'Ошибка разбора JSON: ' + E.Message );
+        log( 'Ошибка разбора JSON: ' + E.Message , etException );
        // ShowMessage('Ошибка разбора JSON: ' + E.Message);
     end;
 

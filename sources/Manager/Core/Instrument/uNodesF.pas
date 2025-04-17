@@ -66,7 +66,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uLogger, uMainVar;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar;
 
 function NodesF: TNodesF;
 begin
@@ -207,8 +207,6 @@ begin
       begin
         RetVal.Code := 1;
         RetVal.Message := 'Поле [Сокращение] обязательно к заполнению!';
-
-        logger.Info(RetVal.Message);
         Exit();
       end
       else if edtName.IsBlank then

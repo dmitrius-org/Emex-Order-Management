@@ -121,7 +121,7 @@ type
 implementation
 
 uses
-  uEmexUtils, MainModule, uMainVar, uLogger, uOrderF;
+  uEmexUtils, MainModule, uMainVar, uOrderF;
 
 {$R *.dfm}
 
@@ -323,8 +323,6 @@ var i, id:Integer;
     SqlText: string;
     BM : TBookmark;
 begin
-  logger.Info('tMarks.Select Begin');
-
   SqlText:='';
   Clear;
 
@@ -353,9 +351,6 @@ begin
     end;
 
   end;
-
-  logger.Info('tMarks.Count: ' + Count.ToString);
-  logger.Info('tMarks.Select End');
 end;
 
 

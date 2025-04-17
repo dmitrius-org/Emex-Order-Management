@@ -44,7 +44,7 @@ end;
 implementation
 
 uses
-  uniGUIApplication, uLogger, uMainVar;
+  uniGUIApplication, uMainVar;
 
 { tMessenger }
 
@@ -178,8 +178,6 @@ begin
   for Key in FEventForm.Keys  do
   begin
     str:= str + 'ajaxRequest(' + Key + ' , "' + FEventForm.Items[Key]  + '", ["message=" + event.data]);';
-
-    logger.Info(str);
   end;
 
   Result := str;

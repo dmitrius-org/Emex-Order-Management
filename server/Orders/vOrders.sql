@@ -113,7 +113,7 @@ SELECT o.[OrderID]
       ,p.Fragile                                -- признак: хрупкий
       ,p.NLA                                    -- No longer available или Более недоступно
       ,o.OrderDetailSubId
-	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState
+	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState -- где использую?
       ,o.BasketId
       ,o.Reference
       ,o.CustomerSubID
@@ -142,11 +142,11 @@ SELECT o.[OrderID]
          on i.InstrumentID = m.InstrumentID
 		and i.ObjectTypeID = 3
 
- inner join tClients c with (nolock index=ao1)
+  left join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
 
- inner join tSuppliers su with (nolock index=ao1)
-         on su.SuppliersID = o.SuppliersID
+  left join tSuppliers su with (nolock index=ao1)
+         on su.SuppliersID = isnull(o.SuppliersID, c.SuppliersID)
 
  outer apply (
        select top 1 

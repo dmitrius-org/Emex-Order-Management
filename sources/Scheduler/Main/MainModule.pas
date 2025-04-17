@@ -11,9 +11,11 @@ uses
   FireDAC.Comp.DataSet, uniGUIForm, uniGUITypes, vcl.Dialogs,
   FireDAC.Moni.Base, FireDAC.Moni.FlatFile,  FireDAC.Phys.FB,
   FireDAC.Phys.MySQL, FireDAC.Phys.ODBCBase, FireDAC.Moni.Custom,
-  uCommonType, uAuditUtils, uAccrualUtils, uSqlUtils, uLogger,
-  uGrantUtils, FireDAC.Moni.RemoteClient
-  ;
+  uCommonType, uAuditUtils, uAccrualUtils, uSqlUtils,
+  uGrantUtils, FireDAC.Moni.RemoteClient,
+
+  Quick.Logger, Quick.Logger.Provider.Files;
+
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -41,8 +43,10 @@ type
     AAudit   : TAudit;
     /// <summary> AGrant  - </summary>
     AGrant: TGrant;
-
+    /// <summary> ASPID - Идентификатор сессии подключения к БД </summary>
     ASPID: Integer;
+    /// <summary> AppName - Приложение </summary>
+    AAppName:  String;
 
     const _loginname = '_loginname';
     const _pwd = '_pwd';
@@ -57,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UniGUIVars, ServerModule, uniGUIApplication, uMainVar;
+  UniGUIVars, ServerModule, uniGUIApplication, uMainVar, uConstant;
 
 function UniMainModule: TUniMainModule;
 begin
@@ -91,21 +95,41 @@ begin
 
       FDConnection.Open;
 
-      AUserName:=AUser;
-      ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
+      AUserName:= AUser;
+      ASPID    := FDConnection.ExecSQLScalar('Select @@Spid');
       AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
-      // настройки  логирования
-      CreateDefLogger(UniServerModule.Logger.RootPath + '\log\' + AUserName + '_app_' + FormatDateTime('ddmmyyyy', Now) +'.log');
+      AAppName := AppScheduler;
 
-      Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = dbo.GetUserID() ', [],[]);
+      // настройки  логирования
+      Logger.Providers.Add(GlobalLogFileProvider);
+      with GlobalLogFileProvider do
+        begin
+            FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_' + FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
+            DailyRotate := True;
+            MaxFileSizeInMB := 20;
+            LogLevel := LOG_ALL;
+            TimePrecission := True;
+        end;
+
+      Sql.Open('''
+        Select AppClientLog, AppSqlLog
+          from tLoggerSettings (nolock)
+         where UserID = dbo.GetUserID()
+           and AppName= :AppName
+       ''', ['AppName'],[AAppName]);
+
       if Sql.Q.RecordCount > 0 then
       begin
-        logger.isActive := Sql.Q.FindField('AppClientLog').Value;
-        logger.Info('Программа запущена');
 
-        FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+        with GlobalLogFileProvider do
+        begin
+          Enabled := Sql.Q.FindField('AppClientLog').Value;
+        end;
+        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
+
+      Log('Программа запущена', etHeader);
 
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
@@ -175,11 +199,9 @@ begin
   A.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
   A.Destroy;
 
-  logger.Info('Программа остановлена');
+  log('Программа остановлена', etdebug);
 
   FDConnection.Close;
-
-  FreeDefLogger;
 end;
 
 initialization

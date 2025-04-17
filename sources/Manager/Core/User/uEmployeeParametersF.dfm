@@ -19,8 +19,6 @@ object EmployeeParametersF: TEmployeeParametersF
     Align = alBottom
     TabOrder = 1
     Caption = ''
-    ExplicitTop = 286
-    ExplicitWidth = 597
     DesignSize = (
       565
       44)
@@ -34,7 +32,6 @@ object EmployeeParametersF: TEmployeeParametersF
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnOkClick
-      ExplicitLeft = 478
     end
     object btnCancel: TUniBitBtn
       Left = 360
@@ -46,7 +43,6 @@ object EmployeeParametersF: TEmployeeParametersF
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnCancelClick
-      ExplicitLeft = 392
     end
   end
   object pcCommon: TUniPageControl
@@ -59,15 +55,9 @@ object EmployeeParametersF: TEmployeeParametersF
     ActivePage = tabCommon
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 0
-    ExplicitTop = 0
-    ExplicitWidth = 603
-    ExplicitHeight = 283
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
-      ExplicitWidth = 595
-      ExplicitHeight = 255
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -79,7 +69,6 @@ object EmployeeParametersF: TEmployeeParametersF
         AlignmentControl = uniAlignmentClient
         ParentAlignmentControl = False
         TabOrder = 0
-        ExplicitWidth = 595
         object lblName: TUniLabel
           Left = 26
           Top = 18
@@ -143,8 +132,6 @@ object EmployeeParametersF: TEmployeeParametersF
       ParentAlignmentControl = False
       Caption = #1040#1091#1076#1080#1090
       LayoutConfig.Width = '100'
-      ExplicitWidth = 595
-      ExplicitHeight = 255
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
@@ -157,8 +144,6 @@ object EmployeeParametersF: TEmployeeParametersF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 0
-        ExplicitTop = 172
-        ExplicitWidth = 589
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
@@ -168,7 +153,6 @@ object EmployeeParametersF: TEmployeeParametersF
           ParentColor = False
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 585
           object edtID: TUniEdit
             Left = 127
             Top = 8

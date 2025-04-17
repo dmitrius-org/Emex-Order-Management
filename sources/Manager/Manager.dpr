@@ -56,10 +56,6 @@ uses
   uOrdersF in 'App\Orders\uOrdersF.pas' {OrderF: TUniForm},
   uBaseT in 'App\Common\BaseForm\uBaseT.pas' {BaseT: TUniFrame},
   uOrdersT in 'App\Orders\uOrdersT.pas' {OrdersT: TUniFrame},
-  TimeIntervals in '..\Common\logger\TimeIntervals.pas',
-  uLogger in '..\Common\logger\uLogger.pas',
-  uLoggerF in '..\Common\logger\uLoggerF.pas' {LoggerF: TUniForm},
-  uUtils in '..\Common\logger\uUtils.pas',
   LoginEditForm in '..\Common\Login\LoginEditForm.pas' {LoginEditF: TUniForm},
   LoginForm in '..\Common\Login\LoginForm.pas' {LoginF: TUniLoginForm},
   InfoForm in '..\Common\InfoForm.pas' {Info: TUniForm},
@@ -141,7 +137,8 @@ uses
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
   uAPIKeyForm_Wrapper in 'App\Clients\uAPIKeyForm_Wrapper.pas' {APIKeyForm_W: TUniForm},
   uAPIKeyForm_T in 'App\Clients\uAPIKeyForm_T.pas' {APIKeyForm_T: TUniFrame},
-  uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm};
+  uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm},
+  uLoggerF in '..\Common\Logger\uLoggerF.pas' {LoggerF: TUniForm};
 
 {$R *.res}
 

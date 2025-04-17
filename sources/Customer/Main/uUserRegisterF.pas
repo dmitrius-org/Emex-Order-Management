@@ -38,7 +38,7 @@ type
 implementation
 
 uses
-  uniGUIApplication, uMainVar, MainModule, uLogger, ServerModule, uEmail.gmail, uFileU;
+  uniGUIApplication, uMainVar, MainModule, ServerModule, uEmail.gmail, uFileU;
 
 {$R *.dfm}
 

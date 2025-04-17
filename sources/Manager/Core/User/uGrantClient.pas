@@ -57,7 +57,7 @@ type
 implementation
 
 uses
-  uLogger, MainModule, uLookupF, uMainVar, uToast;
+  MainModule, uLookupF, uMainVar, uToast;
 
 {$R *.dfm}
 

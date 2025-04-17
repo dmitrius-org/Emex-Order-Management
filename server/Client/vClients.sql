@@ -18,7 +18,11 @@ select c.ClientID
 	  ,c.UserID
       ,ct.Name  as ClientTypeName --
 	  ,s.Brief  as Supplier
-      ,r.Amount as Rest 
+      ,r.Amount as Rest
+      ,case 
+         when isnull(ls.AppClientLog, 0) = 1 then 1
+         else 0
+       end Status
   from tClients c (nolock)
   left join tSuppliers s (nolock)
          on s.SuppliersID = c.SuppliersID
@@ -28,10 +32,13 @@ select c.ClientID
          on o.ClientID = c.ClientID
   left join tRest r  (updlock) 
          on r.ClientID = c.ClientID  
+  left join tLoggerSettings ls (nolock) 
+         on ls.UserID = c.ClientID 
+        and ls.AppName = 'Customer'
 go
 grant all on vClients to public
 go
-exec setOV 'vClients', 'V', '20241112', '2'
+exec setOV 'vClients', 'V', '20250414', '3'
 go
 
 select * from vClients

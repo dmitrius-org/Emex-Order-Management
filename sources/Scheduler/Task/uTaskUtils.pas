@@ -71,7 +71,7 @@ Type
 implementation
 
 uses
-  uAccrualUtils, uLogger;
+  uAccrualUtils, Quick.Logger;
 
 
 { TMTask }
@@ -251,7 +251,6 @@ TaskErr: Boolean;
    /// </summary>
    procedure ExecProcedure();
    begin
-     Logger.Info('ExecProcedure.Execute Method: ' + M );
      Proc := TProcExec.Create(FConnection);
      try
        try
@@ -266,7 +265,7 @@ TaskErr: Boolean;
        except
          on E: Exception do
          begin
-           Logger.Info('ExecProcedure.Exception: ' + E.Message);
+           Log('ExecProcedure.Exception: ' + E.Message, etException);
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
 
            WriteTaskMessage(TaskID, E.Message);
@@ -275,7 +274,7 @@ TaskErr: Boolean;
          end
        end;
      finally
-       Logger.Info('ExecProcedure.finally');
+       Log('ExecProcedure.finally', etDebug);
        Proc.Destroy;
      end;
    end;
@@ -286,7 +285,7 @@ TaskErr: Boolean;
    /// </summary>
    procedure ExecBat();
    begin
-     Logger.Info('ExecBat.Execute Script: ' + M );
+     Log('ExecBat.Execute Script: ' + M, etDebug);
      try
        try
          if M='' then
@@ -296,7 +295,7 @@ TaskErr: Boolean;
 
          if Msg<>'' then
          begin
-           Logger.Info('ExecBat.ERROR AnsiPos: ' + AnsiPos ('ERROR', Msg).ToString);
+           Log('ExecBat.ERROR AnsiPos: ' + AnsiPos ('ERROR', Msg).ToString, etDebug);
 
            if AnsiPos ('ERROR', Msg)>0 then
              raise Exception.Create(Msg);
@@ -307,7 +306,7 @@ TaskErr: Boolean;
        except
          on E: Exception do
          begin
-           Logger.Info('ExecBat.Exception' + E.Message);
+           Log('ExecBat.Exception' + E.Message, etDebug);
 
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message);
 
@@ -317,7 +316,7 @@ TaskErr: Boolean;
          end
        end;
      finally
-       Logger.Info('ExecBat.finally');
+       Log('ExecBat.finally', etDebug);
      end;
    end;
 
@@ -327,7 +326,7 @@ TaskErr: Boolean;
    /// </summary>
    procedure ExecSQL();
    begin
-     Logger.Info('ExecSQL.Execute Script: ' + M );
+     Log('ExecSQL.Execute Script: ' + M, etDebug);
      try
        try
          if M='' then
@@ -341,7 +340,7 @@ TaskErr: Boolean;
        except
          on E: Exception do
          begin
-           Logger.Info('ExecSQL.Exception' + E.Message);
+           Log('ExecSQL.Exception' + E.Message, etDebug);
            AuditInsert(TObjectType.otTask, TaskID, TFormAction.acNone, E.Message, tAuditFlag.agError);
 
            WriteTaskMessage(TaskID, e.Message);
@@ -350,12 +349,12 @@ TaskErr: Boolean;
          end
        end;
      finally
-       Logger.Info('ExecSQL.finally');
+       Log('ExecSQL.finally', etDebug);
      end;
    end;
 
 begin
-    Logger.Info('TMTask.Execute Begin');
+    Log('TMTask.Execute Begin', etDebug);
 
     qry:= TFDQuery.Create(nil);
     qry.Connection:= FConnection;
@@ -368,7 +367,7 @@ begin
         qry.First;
         for i := 0 to qry.RecordCount-1 do
         begin
-            Logger.Info('TMTask.Execute Задача: ' + qry.FieldByName('TaskBrief').AsString);
+            Log('TMTask.Execute Задача: ' + qry.FieldByName('TaskBrief').AsString, etDebug);
 
             TaskID:= qry.FieldByName('TaskID').AsInteger;
             TaskErr := false;
@@ -436,7 +435,7 @@ begin
     finally
         FreeAndNil(Qry);
     End;
-    Logger.Info('TMTask.Execute End');
+    Log('TMTask.Execute End', etDebug);
 end;
 
 function TMTask.ExecDosOutput(CommandLine:String): String;

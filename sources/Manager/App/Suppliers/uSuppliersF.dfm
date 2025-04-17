@@ -63,8 +63,6 @@ object SuppliersF: TSuppliersF
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 1010
-      ExplicitHeight = 380
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -189,8 +187,6 @@ object SuppliersF: TSuppliersF
     object tabSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
-      ExplicitWidth = 1010
-      ExplicitHeight = 380
       DesignSize = (
         1276
         383)
@@ -292,8 +288,6 @@ object SuppliersF: TSuppliersF
       ParentAlignmentControl = False
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
       LayoutConfig.Width = '100'
-      ExplicitWidth = 1010
-      ExplicitHeight = 380
       object ToolBar: TUniToolBar
         AlignWithMargins = True
         Left = 3
@@ -348,7 +342,7 @@ object SuppliersF: TSuppliersF
         Left = 0
         Top = 48
         Width = 1276
-        Height = 335
+        Height = 333
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -363,7 +357,7 @@ object SuppliersF: TSuppliersF
           Left = 0
           Top = 0
           Width = 1276
-          Height = 335
+          Height = 333
           Hint = ''
           ShowHint = True
           ParentShowHint = False

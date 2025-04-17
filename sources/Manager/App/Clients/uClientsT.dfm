@@ -273,7 +273,7 @@ object ClientsT: TClientsT
           'g)'#13#10'{'#13#10'    config.displayInfo = true'#13#10'}')
       RowEditor = True
       DataSource = DataSource
-      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgConfirmDelete]
       WebOptions.PageSize = 300
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
@@ -307,6 +307,13 @@ object ClientsT: TClientsT
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
           Width = 125
           ReadOnly = True
+          Sortable = True
+        end
+        item
+          FieldName = 'Status'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089#1099
+          Width = 64
           Sortable = True
         end
         item
@@ -474,6 +481,10 @@ object ClientsT: TClientsT
     object QueryRest: TCurrencyField
       FieldName = 'Rest'
       DisplayFormat = '###,##0.00 '#8381
+    end
+    object QueryStatus: TIntegerField
+      FieldName = 'Status'
+      OnGetText = QueryStatusGetText
     end
   end
   object DataSource: TDataSource
@@ -2160,6 +2171,10 @@ object ClientsT: TClientsT
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084
       OnExecute = actRestCalcExecute
     end
+    object actLogger: TAction
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
+      OnExecute = actLoggerExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -2186,11 +2201,14 @@ object ClientsT: TClientsT
     object N8: TUniMenuItem
       Action = actBalance
     end
+    object N11: TUniMenuItem
+      Action = actBalanceTotal
+    end
     object N9: TUniMenuItem
       Action = actBalanceAdd
     end
-    object N11: TUniMenuItem
-      Action = actBalanceTotal
+    object N16: TUniMenuItem
+      Action = actRestCalc
     end
     object N15: TUniMenuItem
       Caption = '-'
@@ -2207,8 +2225,8 @@ object ClientsT: TClientsT
     object N14: TUniMenuItem
       Action = actPasswordReset
     end
-    object N16: TUniMenuItem
-      Action = actRestCalc
+    object N17: TUniMenuItem
+      Action = actLogger
     end
     object N12: TUniMenuItem
       Caption = '-'

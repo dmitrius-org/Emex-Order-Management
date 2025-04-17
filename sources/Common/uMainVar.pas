@@ -3,7 +3,7 @@ unit uMainVar;
 interface
 
 uses
-  uAccrualUtils, uSqlUtils, uLogger, uCommonType, uGrantUtils, uniComboBox,
+  uAccrualUtils, uSqlUtils, uCommonType, uGrantUtils, uniComboBox,
   UniFSCombobox, uUniADCheckComboBoxEx;
 
   function Sql: TSql;

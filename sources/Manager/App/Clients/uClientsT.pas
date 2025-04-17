@@ -87,6 +87,9 @@ type
     Api1: TUniMenuItem;
     actRestCalc: TAction;
     N16: TUniMenuItem;
+    actLogger: TAction;
+    N17: TUniMenuItem;
+    QueryStatus: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -115,6 +118,9 @@ type
     procedure actPasswordResetExecute(Sender: TObject);
     procedure actApiExecute(Sender: TObject);
     procedure actRestCalcExecute(Sender: TObject);
+    procedure actLoggerExecute(Sender: TObject);
+    procedure QueryStatusGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FAction: Integer;
@@ -130,6 +136,8 @@ type
     ///</summary>
     procedure ClientCallBack(Sender: TComponent; AResult:Integer);
 
+    procedure LoggerFCallBack(Sender: TComponent; AResult:Integer);
+
     procedure BalanceAddCallBack(Sender: TComponent; AResult:Integer);
     property FormAction: Integer read FAction write SetAction;
   end;
@@ -138,7 +146,7 @@ implementation
 
 uses
   MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF,
-  uBalanceT, uClientsType2T, uLogger, uBalanceTotalT_Wrapper, uToast, uBalanceTotalT, uAPIKeyForm_T, uAPIKeyForm_Wrapper;
+  uBalanceT, uClientsType2T, uBalanceTotalT_Wrapper, uToast, uBalanceTotalT, uAPIKeyForm_T, uAPIKeyForm_Wrapper, uUploadingRefusals, uLoggerF, uConstant;
 
 {$R *.dfm}
 
@@ -196,10 +204,16 @@ end;
 
 procedure TClientsT.actEditExecute(Sender: TObject);
 begin
-  logger.Info(Grid.Columns.ColumnFromFieldName('ClientID').Field.Value);
   ClientsF.FormAction := TFormAction.acUpdate;
   ClientsF.ID:=Grid.Columns.ColumnFromFieldName('ClientID').Field.Value;
   ClientsF.ShowModal(ClientCallBack);
+end;
+
+procedure TClientsT.actLoggerExecute(Sender: TObject);
+begin
+  LoggerF.UserID := Grid.Columns.ColumnFromFieldName('ClientID').Field.Value;
+  LoggerF.AppName:= AppCustomer;
+  LoggerF.ShowModal(LoggerFCallBack);
 end;
 
 procedure TClientsT.actLookupExecute(Sender: TObject);
@@ -323,7 +337,6 @@ procedure TClientsT.GridColumnFilter(Sender: TUniDBGrid;
 begin
   if Query.Active then
   begin
-   // logger.Info(VarToStr(Column.Field.DataType.ftFMTBcd));
     if (Column.Field.DataType in [TFieldType.ftBoolean, TFieldType.ftFMTBcd]) then  // boolean
       Query.Params.ParamValues[Column.FieldName]:=Value
     else
@@ -363,9 +376,27 @@ begin
   end;
 end;
 
+procedure TClientsT.LoggerFCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult= mrOK then
+  begin
+    Query.RefreshRecord();
+    Grid.RefreshCurrentRow();
+  end;
+end;
+
 procedure TClientsT.QueryAfterPost(DataSet: TDataSet);
 begin
   if FAction = Integer(acInsert) then  Query.Refresh;
+end;
+
+procedure TClientsT.QueryStatusGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if (Sender.AsInteger and 1) > 0 then
+  begin
+      Text := '<span class="logger-enabled" data-qtip="Включено логирование"><i class="fa fa-bug"></i></span> ';
+  end;
 end;
 
 procedure TClientsT.Refresh;

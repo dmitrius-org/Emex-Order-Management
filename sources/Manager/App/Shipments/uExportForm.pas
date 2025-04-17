@@ -139,7 +139,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uLogger;
+  MainModule, uniGUIApplication;
 
 function ExportForm: TExportForm;
 begin

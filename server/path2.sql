@@ -1,1 +1,2 @@
 insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1042, 1042, 'Пересчет баланса',  'TClientsT.actRestCalc', 40, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1043, 1043, 'Настройки логирования',  'TClientsT.actLogger', 40, 1

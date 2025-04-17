@@ -182,16 +182,13 @@ uses System.SysUtils, System.Classes,
 
 implementation
 
-uses
-  uLogger;
+uses Quick.Logger;
 
 
 { TEmex }
 
 constructor TEmex.Create(Value: TFDConnection);
 begin
-  logger.Info('TEmex.Create Begin');
-
   if Assigned(Value) then
     FConnection:= Value;
 
@@ -217,8 +214,6 @@ begin
   begin
     raise Exception.Create('Незадан адрес Emex Service Soap! (EmexServiceSoapUrl)');
   end;
-
-  logger.Info('TEmex.Create End');
 end;
 
 procedure TEmex.CreateOrder();
@@ -228,8 +223,6 @@ var Suppliers : TStringList;
     retval: Integer;
     Basket: ArrayOfBasketDetails_v2;
 begin
-  logger.Info('TEmex.CreateOrder Begin');
-
 
   FSQl.Open('''
             select 1
@@ -239,7 +232,6 @@ begin
            ''', [],[]);
   if FSQl.Q.RecordCount > 0 then
   begin
-    logger.Info('TEmex.CreateOrder End Ошибка: 534');
     Exit;
   end;
 
@@ -271,8 +263,6 @@ begin
 
         if FSQl.Q.RecordCount > 0 then // если имеются ошибки удаления, то оста
         begin
-            logger.Info('TEmex.CreateOrder End Ошибка: 537');
-
             FQuery.Close;
             FQuery.SQL.Text := ' Update p                 '+
                             '    set p.Retval = 537    '+
@@ -289,11 +279,8 @@ begin
     // *** Создание заказа *** \\
     Order:=Emex.CreateOrder(getCustomer(Supplier.ToInteger));
 
-    logger.Info('TEmex.CreateOrder Создан заказ: ' + Order.ToString);
-
     if Order > 0 then
     begin
-      logger.Info('TEmex.CreateOrder Order: ' + Order.ToString);
       FSQL.Exec(' delete pMovement from pMovement (rowlock) where spid = @@spid ', [],[]);
 
       // запрашиваем данные по сформированному заказу для проверки, что все позиции заказаны
@@ -305,7 +292,6 @@ begin
     end
     else
     begin
-      logger.Info('TEmex.CreateOrder Error: ' + Order.ToString);
 
       case Order of
         -1: retval := 507; // Клиенту запрещено создавать заказ!
@@ -328,7 +314,6 @@ begin
 
   end;
   FreeAndNil(Suppliers);
-  logger.Info('TEmex.CreateOrder End');
 end;
 
 procedure TEmex.DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer);
@@ -336,7 +321,6 @@ var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
     I, R: Integer;
 begin
-  logger.Info('TEmex.DeleteBasketDetails Begin');
   if AQry.RecordCount > 0 then
   begin
     SetLength(outBasket, 1);
@@ -346,7 +330,6 @@ begin
     AQry.First;
     for I := 0 to AQry.RecordCount - 1 do // удаление выполняем по одному, чтобы можно было понять по какой детали получили ошибку
     begin
-      logger.Info('TEmex.DeleteBasketDetails BasketId: ' + AQry.FieldByName('BasketId').AsString);
 
       part.BasketId := AQry.FieldByName('BasketId').AsLargeInt;
       part.Date_add:= TXSDateTime.Create;
@@ -357,9 +340,6 @@ begin
 
       if R <> 1 then
       begin
-        logger.Info('TEmex.DeleteBasketDetails 537 Количество удаленных товаров: ' + R.ToString);
-        logger.Info('TEmex.DeleteBasketDetails 537 Ошибка удаления товара из корзины, требуется ручная проверка! '+
-        '[ASupplier: ' + ASupplier.ToString + ', BasketId: ' + part.BasketId.ToString +  ']');
 
         FSQl.Exec(' Update pBasketDetails '+
                   '    set Retval = 537   '+
@@ -375,7 +355,6 @@ begin
 
     part.Destroy;
   end;
-  logger.Info('TEmex.DeleteBasketDetails End');
 end;
 
 procedure TEmex.DeleteFromBasketByBasketID(ABasketID: Integer);
@@ -390,7 +369,6 @@ function TEmex.DeleteFromBasketByOrderID(AOrderID: Integer): integer;
 var part: BasketDetails;
     InBasket: ArrayOfBasketDetails;
 begin
-  logger.Info('TEmex.DeleteFromBasketByOrderID Begin');
   result:=0;
 
   FQuery.close;
@@ -406,7 +384,6 @@ begin
 
     FQuery.First;
     begin
-      logger.Info('TEmex.DeleteFromBasketByOrderID BasketId: ' + FQuery.FieldByName('BasketId').AsString);
 
       part.BasketId := FQuery.FieldByName('BasketId').AsLargeInt;
       part.Date_add:= TXSDateTime.Create;
@@ -418,8 +395,6 @@ begin
       if result <> 1 then
       begin
         Result := 537;
-        logger.Info('TEmex.DeleteFromBasketByOrderID 537 Количество удаленных товаров: ' + result.ToString);
-        logger.Info('TEmex.DeleteFromBasketByOrderID 537 Ошибка удаления товара из корзины. '+ '[ASupplier: ' + FQuery.FieldByName('SuppliersID').AsLargeInt.ToString + ', BasketId: ' + part.BasketId.ToString +  ']');
       end;
 
       FQuery.Next;
@@ -427,7 +402,6 @@ begin
 
     part.Destroy;
   end;
-  logger.Info('TEmex.DeleteFromBasketByOrderID End');
 end;
 
 destructor TEmex.Destroy;
@@ -487,8 +461,6 @@ end;
 
 function TEmex.getCustomer(ASuppliersID: Integer): Customer;
 begin
-  logger.Info('TEmex.getCustomer begin');
-  logger.Info('TEmex.getCustomer ASuppliersID: ' + ASuppliersID.ToString);
   begin
     //данные для интеграции берем из справочника "Клиенты"
     FSQL.Open('''
@@ -505,13 +477,10 @@ begin
     result.CustomerId    := '0';
 
   end;
-  logger.Info('TEmex.getCustomer end');
 end;
 
 function TEmex.getCustomerByClient(AClientID: Integer): Customer;
 begin
-  logger.Info('TEmex.getCustomerByClient begin');
-  logger.Info('TEmex.getCustomerByClient AClientID: ' + AClientID.ToString);
   begin
     FSQL.Open('Select s.emexUsername, s.emexPassword        '+
              '  from tClients c with (nolock index=ao1)    '+
@@ -527,13 +496,10 @@ begin
     result.SubCustomerId := '0';
     result.CustomerId    := '0';
   end;
-  logger.Info('TEmex.getCustomerByClient end');
 end;
 
 function TEmex.GetEmex: ServiceSoap;
 begin
-  logger.Info('TEmex.GetEmex: ServiceSoap');
-
   result:= GetServiceSoap(false, FUrl);
 end;
 
@@ -547,10 +513,8 @@ var part: partstobasket;
     InBasket: ArrayOfPartstobasket;
     OutBasket: ArrayOfBasketChangeResult;
 begin
-    logger.Info('TEmex.InsertPartToBasketByMarks Begin');
     Result := 0;
     begin
-      logger.Info('TEmex.InsertPartToBasketByMarks AOrderID: ' + AOrderID.ToString);
       FQuery.Close;
       FQuery.SQL.Text:='''
         Select distinct *
@@ -591,8 +555,6 @@ begin
 
         InBasket[0]:= part;
 
-        logger.Info('Emex.InsertPartToBasket_v2 Begin');
-
         OutBasket:=Emex.InsertPartToBasket_v2(getCustomer( FQuery.FieldByName('SuppliersID').AsInteger ), InBasket,  FUrl);
 
         if OutBasket[0].BasketId > 0 then
@@ -612,15 +574,12 @@ begin
            OutBasket[0].WarnText,
            Result]);
 
-          logger.Info('Emex.InsertPartToBasket_v2 End');
           SetLength(InBasket, 0);
         end;
 
         FreeAndNil(part);
       end;
     end;
-
-    logger.Info('TEmex.InsertPartToBasketByMarks End');
 end;
 
 function TEmex.InsertPartToBasketByMarks: integer;
@@ -631,7 +590,6 @@ var part: partstobasket;
   Suppliers : TStringList;
     Supplier: string;
 begin
-    logger.Info('TEmex.InsertPartToBasketByMarks Begin');
     R :=0;
 
     // Получаем список поставщиков
@@ -640,7 +598,7 @@ begin
     // Цикл по поставщикам
     for Supplier in Suppliers do
     begin
-      logger.Info('TEmex.InsertPartToBasketByMarks Supplier:' + Supplier);
+
       FQuery.Close;
       FQuery.SQL.Text:='''
         Select distinct *
@@ -654,7 +612,6 @@ begin
       if RCount > 0 then
       begin
         FQuery.First;
-        logger.Info('TEmex.InsertPartToBasketByMarks RecordCount ' + FQuery.RecordCount.ToString);
 
         for I := 0 to FQuery.RecordCount - 1 do
         begin
@@ -685,7 +642,6 @@ begin
 
           outBasket[i]:= part;
 
-          logger.Info('Emex.InsertPartToBasket Begin');
           R:=Emex.InsertPartToBasket(getCustomer(Supplier.ToInteger), outBasket);
 
           if R > 0 then
@@ -698,7 +654,6 @@ begin
                      Total     = :Total
             ''', ['Processed', 'Total'], [i+1,  FQuery.RecordCount]);
 
-            logger.Info('Emex.InsertPartToBasket End');
             SetLength(outBasket, 0);
           end;
 
@@ -714,7 +669,6 @@ begin
     FreeAndNil(Suppliers);
 
     Result := R;
-    logger.Info('TEmex.InsertPartToBasketByMarks End');
 end;
 
 procedure TEmex.InsertPartToBasketRollbackByMarks;
@@ -724,9 +678,7 @@ var part: BasketDetails;
     I, RCount, R: Integer;
     dat: TXSDateTime;
 begin
-  logger.Info('TEmex.InsertPartToBasketRollbackByMarks Begin');
   try
-
     FQuery.Close;
     FQuery.Open('Select o.OrderID,  o.BasketId, o.ClientID '+
              '  from pAccrualAction p (nolock)'+
@@ -757,7 +709,6 @@ begin
 
         outBasket[0]:= part;
 
-        logger.Info('TEmex.InsertPartToBasketRollbackByMarks DeleteFromBasket: ' +  part.BasketId.ToString);
 
         R:=Emex.DeleteFromBasket(getCustomerByClient(FQuery.FieldByName('ClientID').AsInteger), outBasket);
 
@@ -770,11 +721,6 @@ begin
                set Processed = :Processed,
                    Total     = :Total
           ''', ['Processed', 'Total'], [i+1,  FQuery.RecordCount]);
-        end
-        else
-        begin
-          logger.Info('TEmex.InsertPartToBasketRollbackByMarks 505 Количество удаленных товаров: ' +  R.ToString);
-          logger.Info('TEmex.InsertPartToBasketRollbackByMarks 505 Ошибка удаления товара из корзины, требуется ручная проверка! [OrderID: ' + OrderID.ToString + ']');
         end;
 
         FQuery.Next;
@@ -789,7 +735,6 @@ begin
 
       if Assigned(part) then part.Destroy;
 
-      logger.Info('TEmex.InsertPartToBasketRollbackByMarks error: ' + e.Message);
 
       FSQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID=:OrderID',
               ['OrderID','Message'],[OrderID, e.Message]);
@@ -799,7 +744,6 @@ begin
     end;
   end;
 
-  logger.Info('TEmex.InsertPartToBasketRollbackByMarks End');
 end;
 
 procedure TEmex.InsertPartToBasketCancelByMarks;
@@ -808,7 +752,6 @@ var part: BasketDetails;
     I, RCount, R: Integer;
     dat: TXSDateTime;
 begin
-  logger.Info('TEmex.InsertPartToBasketCancelByMarks Begin');
   try
 
     FQuery.Close;
@@ -839,13 +782,12 @@ begin
 
         outBasket[0]:= part;
 
-        logger.Info('TEmex.InsertPartToBasketCancelByMarksInsertPartToBasketCancel DeleteFromBasket: ' + part.BasketId.ToString);
 
         R:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SupplierID').AsInteger), outBasket);
 
         if R <> 1 then
         begin
-          logger.Info('TEmex.InsertPartToBasketCancelByMarks Количество удаленных товаров: ' +  R.ToString);
+          log('TEmex.InsertPartToBasketCancelByMarks Количество удаленных товаров: ' +  R.ToString, etError);
         end;
 
         FQuery.Next;
@@ -858,11 +800,9 @@ begin
     begin
       if Assigned(part) then part.Destroy;
 
-      logger.Info('TEmex.InsertPartToBasketCancelByMarks Error: ' + e.Message);
+      log('TEmex.InsertPartToBasketCancelByMarks Error: ' + e.Message, etException);
     end;
   end;
-
-  logger.Info('TEmex.InsertPartToBasketCancelByMarks End');
 end;
 
 function TEmex.Login(AAccount: Integer): String;
@@ -1054,29 +994,17 @@ end;
 procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum: string);
 var parts: ArrayOfFindByNumber;
 begin
-  logger.Info('TEmex.MovementByOrderNumber Begin');
-  logger.Info('TEmex.AClientID: '  + AClientID.ToString);
-  logger.Info('TEmex.ADetailNum: ' + ADetailNum);
-
   parts:=Emex.SearchPart(getCustomerByClient(AClientID), ADetailNum, False);
 
   FillFindByNumber(parts, AClientID);
-
-  logger.Info('TEmex.MovementByOrderNumber End');
 end;
 
 procedure TEmex.MovementByOrderNumber(ASupplierID: Integer; AEmexOrderID: integer);
 var parts: ArrayOfMovement;
 begin
-  logger.Info('TEmex.MovementByOrderNumber Begin');
-  logger.Info('TEmex.MovementByOrderNumber ASupplierID: ' + ASupplierID.ToString);
-  logger.Info('TEmex.MovementByOrderNumber EmexOrderID: ' + AEmexOrderID.ToString);
-
   parts:=Emex.MovementByOrderNumber(getCustomer(ASupplierID), AEmexOrderID);
 
   FillMovement(parts);
-
-  logger.Info('TEmex.MovementByOrderNumber End');
 end;
 
 procedure TEmex.MovementInWorkByMarks;
@@ -1084,7 +1012,6 @@ var parts : ArrayOfMovement;
  Suppliers: TStringList;
   Supplier: string;
 begin
-  logger.Info('TEmex.MovementInWorkByMarks Begin');
   {
   TProcExec.EmexCreateOrderCheck -> ...
 
@@ -1102,8 +1029,6 @@ begin
   end;
 
   FreeAndNil(Suppliers);
-
-  logger.Info('TEmex.MovementInWorkByMarks Begin');
 end;
 
 procedure TEmex.OrderStateSyncByOrderNum;
@@ -1112,7 +1037,6 @@ var Clients: TStringList;
       Order: Integer;
           I: Integer;
 begin
-  logger.Info('TEmex.OrderStateSyncByOrderNum Begin');
   {
     данная процедура вызывается
     при синхронизации статусов из автоматического задания
@@ -1122,13 +1046,11 @@ begin
   Clients := ForClients();
 
   if Clients.Count = 0 then
-     logger.Info('TEmex.OrderStateSyncByOrderNum Нет данных для синхронизации статусов!');
+     log('TEmex.OrderStateSyncByOrderNum Нет данных для синхронизации статусов!', etdebug);
 
   // Цикл по клиентам
   for Client in Clients do
   begin
-    logger.Info('TEmex.OrderStateSyncByOrderNum Клиент:' + Client);
-
     FQuery.Close;
     FQuery.SQL.Text := '''
      Select distinct EmexOrderID, SuppliersID
@@ -1143,13 +1065,9 @@ begin
     for I := 0 to FQuery.RecordCount-1 do
     begin
       Order :=  FQuery.FieldByName('EmexOrderID').AsInteger;
-      logger.Info('TEmex.OrderStateSyncByOrderNum Номер заказа Emex: ' + Order.ToString);
-
 
       if FQuery.FieldByName('SuppliersID').AsInteger = 0 then
       begin
-        logger.Info('TEmex.OrderStateSyncByOrderNum Ошибка, нет идентификатра поставщика');
-
         Continue;
       end;
 
@@ -1165,8 +1083,6 @@ begin
   end;
 
   FreeAndNil(Clients);
-
-  logger.Info('TEmex.OrderStateSyncByOrderNum End');
 end;
 
 procedure TEmex.GetBasketDetailsByMarks;
@@ -1176,8 +1092,6 @@ var Basket : ArrayOfBasketDetails_v2;
   Suppliers: TStringList;
    Supplier: string;
 begin
-  logger.Info('TEmex.GetBasketDetailsByMarks Begin');
-
   // Получаем список поставщиков/личный кабинет emex
   Suppliers := ForSupplierByMarks();
   try
@@ -1190,44 +1104,17 @@ begin
   finally
     freeandnil(Suppliers);
   end;
-
-  logger.Info('TEmex.GetBasketDetailsByMarks End');
 end;
 
 Function TEmex.GetBasketDetailsBySuppliersID(ASuppliersID: Integer):ArrayOfBasketDetails_v2;
 begin
-  logger.Info('TEmex.GetBasketDetailsBySuppliersID Begin');
-
   Result:=Emex.GetBasketDetails_v2(getCustomer(ASuppliersID), FLang);
-
-  logger.Info('TEmex.GetBasketDetailsBySuppliersID End');
 end;
 
 function TEmex.TestConnect: string;
 begin
   result := Emex.TEST;
 end;
-//
-//function TEmex.UpdateBasketDetails(Apart: BasketDetails; ASupplier: Integer):string;
-//var inBasket: ArrayOfBasketDetails;
-//    outBasket: ArrayOfBasketChangeResult;
-//begin
-//  logger.Info('TEmex.UpdateBasketDetails Begin');
-//
-//  SetLength(inBasket, 1);
-//
-//  inBasket[0]:= Apart;
-//
-//  logger.Info('Emex.UpdateBasketDetails_v2 Begin');
-//  outBasket:=Emex.UpdateBasketDetails_v2(getCustomer(ASupplier), inBasket, FLang);
-//
-//  logger.Info('Emex.UpdateBasketDetails_v2 result');
-//  logger.Info(outBasket[0].BasketId.ToString);
-//  logger.Info(outBasket[0].WarnText);
-//
-//  Result:= outBasket[0].WarnText;
-//
-//  logger.Info('TEmex.UpdateBasketDetails End');
-//end;
 
 end.
+

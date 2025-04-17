@@ -88,7 +88,7 @@ type
 implementation
 
 uses
-  uInstrumentF, uCommonType, uSqlUtils, uLogger, MainModule, uMainVar;
+  uInstrumentF, uCommonType, uSqlUtils, MainModule, uMainVar;
 
 var
    InstData: PInstrumentData;
@@ -194,7 +194,6 @@ end;
 
 procedure TInstrumentT.PMInstrumentPopup(Sender: TObject);
 begin
-  logger.Info('PMInstrumentPopup');
   ActInstrumentAdd.Enabled :=  PInstrumentData(twInstrument.Selected.Data).IType <> 7;
   ActInstrumentEdit.Enabled :=  PInstrumentData(twInstrument.Selected.Data).IType > 2;
   ActInstrumentDelete.Enabled :=  PInstrumentData(twInstrument.Selected.Data).IType > 2;

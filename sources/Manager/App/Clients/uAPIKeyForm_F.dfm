@@ -62,7 +62,6 @@ object APIKeyForm_F: TAPIKeyForm_F
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
-      ExplicitWidth = 1276
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0

@@ -91,7 +91,7 @@ type
 implementation
 
 uses
-  MainModule, ServerModule, uMainVar, uLogger;
+  MainModule, ServerModule, uMainVar;
 
 {$R *.dfm}
 

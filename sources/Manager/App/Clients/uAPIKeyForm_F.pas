@@ -64,7 +64,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uLogger;
+  MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar;
 
 function APIKeyForm_F: TAPIKeyForm_F;
 begin

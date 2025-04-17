@@ -30,6 +30,10 @@ object StatisticsT: TStatisticsT
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
       OnBeforeFirstActivate = TabOrdersBeforeFirstActivate
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
     end
   end
 end

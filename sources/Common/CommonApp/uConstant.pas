@@ -6,6 +6,10 @@ uses System.SysUtils;
 
 
 const  NullDate: TDateTime = 0; // 30.12.1899
+       //
+       AppManager: string = 'Manager';
+       AppCustomer: string = 'Customer'; // жестко прописан в TLoggerF.Query, vClients
+       AppScheduler: string = 'Scheduler';
 
 Type
 {
@@ -29,6 +33,8 @@ TOrderFlag = (
    ORDER_ONLINE                     = 16,
    ORDER_CHANGE_PRICELOGO           = 256
 );
+
+
 
 
 implementation

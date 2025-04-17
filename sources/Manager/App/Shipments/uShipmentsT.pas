@@ -194,7 +194,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uSqlUtils, uLogger, uMainVar,
+  MainModule, uGrantUtils, uSqlUtils, uMainVar,
   Main, ServerModule, uToast, uUtils.Grid, uExportForm,
   uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
   uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T,
@@ -330,7 +330,6 @@ end;
 
 procedure TShipmentsT.GridOpen;
 begin
-  logger.Info('TOrdersT.GridOpen Begin');
   DoShowMask;
   try
     Query.Close();
@@ -351,7 +350,6 @@ begin
 
   finally
     DoHideMask();
-    logger.Info('TOrdersT.GridOpen End');
   end;
 end;
 
@@ -500,8 +498,6 @@ var
   IndexnameAsc : string;
   IndexnameDes : string;
 begin
-  logger.Info('TShipmentsT.UniFrameCreate Begin');
-
   {$IFDEF Debug}
   Grant.GrantTemplateCreate(self);
   {$ENDIF}
@@ -525,8 +521,6 @@ begin
   GetMarksInfo;
 
   GridOpen;
-
-  logger.Info('TShipmentsT.UniFrameCreate End');
 end;
 
 
