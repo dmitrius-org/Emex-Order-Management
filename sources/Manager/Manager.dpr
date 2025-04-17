@@ -135,10 +135,11 @@ uses
   uFragileT in 'App\Shipments\uFragileT.pas' {FragileT: TUniFrame},
   uShipmentsReceiptDateF in 'App\Shipments\uShipmentsReceiptDateF.pas' {ShipmentsReceiptDateF: TUniForm},
   uShipmentsReceiptStatusF in 'App\Shipments\uShipmentsReceiptStatusF.pas' {ShipmentsReceivedStatusF: TUniForm},
-  uAPIKeyForm_Wrapper in 'App\Clients\uAPIKeyForm_Wrapper.pas' {APIKeyForm_W: TUniForm},
-  uAPIKeyForm_T in 'App\Clients\uAPIKeyForm_T.pas' {APIKeyForm_T: TUniFrame},
+  uAPIKeyT in 'App\Clients\uAPIKeyT.pas' {APIKeyT: TUniFrame},
+  uAPIKeyT_Wrapper in 'App\Clients\uAPIKeyT_Wrapper.pas' {APIKeyT_W: TUniForm},
   uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm},
-  uLoggerF in '..\Common\Logger\uLoggerF.pas' {LoggerF: TUniForm};
+  uLoggerF in '..\Common\Logger\uLoggerF.pas' {LoggerF: TUniForm},
+  utest in 'App\utest.pas' {test: TUniFrame};
 
 {$R *.res}
 

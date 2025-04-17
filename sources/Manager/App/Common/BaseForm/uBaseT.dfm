@@ -1,8 +1,8 @@
 object BaseT: TBaseT
   Left = 0
   Top = 0
-  Width = 1163
-  Height = 399
+  Width = 909
+  Height = 481
   OnCreate = UniFrameCreate
   Layout = 'fit'
   LayoutConfig.Width = '0'
@@ -22,74 +22,15 @@ object BaseT: TBaseT
       't.innerText;'#13#10'        document.body.appendChild(el);'#13#10'        el' +
       '.select();'#13#10'        document.execCommand('#39'copy'#39');'#13#10'        docum' +
       'ent.body.removeChild(el);'#13#10'    };'#13#10'}')
-  object hdFilter: TUniHiddenPanel
-    Left = 29
-    Top = 330
-    Width = 160
-    Height = 161
-    Hint = ''
-    Visible = True
-    ShowHint = True
-    object fUserID: TUniEdit
-      Left = 17
-      Top = 14
-      Width = 121
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      TabOrder = 1
-      EmptyText = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088'...'
-    end
-    object fName: TUniEdit
-      Left = 18
-      Top = 68
-      Width = 121
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      TabOrder = 2
-      EmptyText = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077'...'
-    end
-    object fBrief: TUniEdit
-      Left = 19
-      Top = 40
-      Width = 121
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      TabOrder = 3
-      EmptyText = #1051#1086#1075#1080#1085'...'
-    end
-    object fisAdmin: TUniCheckBox
-      Left = 20
-      Top = 95
-      Width = 97
-      Height = 17
-      Hint = ''
-      ShowHint = True
-      Caption = ''
-      TabOrder = 4
-    end
-    object fisBlock: TUniCheckBox
-      Left = 20
-      Top = 118
-      Width = 97
-      Height = 17
-      Hint = ''
-      ShowHint = True
-      Caption = ''
-      TabOrder = 5
-    end
-  end
   object UniPanel2: TUniPanel
     Left = 0
     Top = 0
-    Width = 1163
-    Height = 399
+    Width = 909
+    Height = 481
     Hint = ''
     ShowHint = True
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     BorderStyle = ubsNone
     Caption = 'UniPanel2'
     AlignmentControl = uniAlignmentClient
@@ -101,8 +42,8 @@ object BaseT: TBaseT
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
-      Width = 1163
-      Height = 399
+      Width = 909
+      Height = 481
       Hint = ''
       ShowHint = True
       BodyRTL = False
@@ -144,8 +85,8 @@ object BaseT: TBaseT
           'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
       RowEditor = True
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
-      WebOptions.PageSize = 50
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
+      WebOptions.PageSize = 500
       WebOptions.AppendPosition = tpCurrentRow
       WebOptions.FetchAll = True
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
@@ -1271,7 +1212,7 @@ object BaseT: TBaseT
     Images = ImageList16
     Left = 218
     Top = 270
-    object N6: TUniMenuItem
+    object ppRefresh: TUniMenuItem
       Action = actRefreshAll
     end
   end
@@ -1552,6 +1493,7 @@ object BaseT: TBaseT
   end
   object UpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
+    ConnectionName = 'Connection'
     Left = 754
     Top = 117
   end

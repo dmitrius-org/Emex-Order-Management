@@ -18,7 +18,9 @@ uses
   uniGUIClasses, uniTimer, FireDAC.Phys.ODBCDef, FireDAC.Phys.ODBC,
   uUtils.WS,
 
-  Quick.Logger, Quick.Logger.Provider.Files;
+  Quick.Logger,
+  Quick.Logger.ExceptionHook,
+  Quick.Logger.Provider.Files;
 
 type
   TUniMainModule = class(TUniGUIMainModule)

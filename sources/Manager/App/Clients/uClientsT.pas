@@ -146,7 +146,7 @@ implementation
 
 uses
   MainModule, uGrantUtils, uMainVar, uClientsF, uLookupF, uBalanceAddF,
-  uBalanceT, uClientsType2T, uBalanceTotalT_Wrapper, uToast, uBalanceTotalT, uAPIKeyForm_T, uAPIKeyForm_Wrapper, uUploadingRefusals, uLoggerF, uConstant;
+  uBalanceT, uClientsType2T, uBalanceTotalT_Wrapper, uToast, uBalanceTotalT, uAPIKeyT_Wrapper, uUploadingRefusals, uLoggerF, uConstant;
 
 {$R *.dfm}
 
@@ -158,8 +158,8 @@ end;
 
 procedure TClientsT.actApiExecute(Sender: TObject);
 begin
-  APIKeyForm_W.ClientID:=QueryClientID.AsInteger;
-  APIKeyForm_W.ShowModal;
+  APIKeyT_W.ClientID:=QueryClientID.AsInteger;
+  APIKeyT_W.ShowModal;
 end;
 
 procedure TClientsT.actBalanceAddExecute(Sender: TObject);

@@ -111,6 +111,9 @@ select 'Заказы, которые не удалось разбить на ч�
  where OrderID is null
 
 
+
+
+
 --delete
 --  from tMovement 
 -- where OrderID is null

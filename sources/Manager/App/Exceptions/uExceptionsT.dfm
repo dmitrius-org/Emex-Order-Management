@@ -13,7 +13,7 @@ inherited ExceptionsT: TExceptionsT
     Caption = #1060#1080#1083#1100#1090#1088
     Align = alTop
     LayoutConfig.Width = '0'
-    TabOrder = 2
+    TabOrder = 1
     object fCancel: TUniBitBtn
       Left = 629
       Top = 29
@@ -90,13 +90,13 @@ inherited ExceptionsT: TExceptionsT
   inherited UniPanel2: TUniPanel
     Top = 66
     Width = 1532
-    Height = 333
+    Height = 415
     ExplicitTop = 66
     ExplicitWidth = 1532
-    ExplicitHeight = 333
+    ExplicitHeight = 553
     inherited Grid: TUniDBGrid
       Width = 1532
-      Height = 333
+      Height = 415
       ClientEvents.UniEvents.Strings = (
         
           'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  var toolbar=sende' +
@@ -124,7 +124,6 @@ inherited ExceptionsT: TExceptionsT
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
           'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
-      WebOptions.PageSize = 500
       Columns = <
         item
           FieldName = 'Brand'

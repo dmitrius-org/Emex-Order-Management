@@ -22,14 +22,8 @@ type
     ActionList: TUniActionList;
     PopupMenu: TUniPopupMenu;
     ImageList16: TUniImageList;
-    hdFilter: TUniHiddenPanel;
-    fUserID: TUniEdit;
-    fName: TUniEdit;
-    fBrief: TUniEdit;
-    fisAdmin: TUniCheckBox;
     actRefreshAll: TAction;
-    N6: TUniMenuItem;
-    fisBlock: TUniCheckBox;
+    ppRefresh: TUniMenuItem;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
@@ -66,7 +60,7 @@ end;
 
 procedure TBaseT.DataRefresh;
 begin
-  //
+
 end;
 
 procedure TBaseT.GridAjaxEvent(Sender: TComponent; EventName: string;
