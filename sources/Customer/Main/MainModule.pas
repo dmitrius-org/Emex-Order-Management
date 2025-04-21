@@ -69,7 +69,7 @@ uses UniGUIVars, ServerModule, uniGUIApplication, uMainVar,
      Quick.Commons,
      Quick.Logger,
      Quick.Logger.ExceptionHook,
-     Quick.Logger.Provider.Files, uConstant;
+     Quick.Logger.Provider.Files, Quick.Logger.Provider.ADODB, uConstant;
 
 function UniMainModule: TUniMainModule;
 begin
@@ -124,6 +124,7 @@ procedure TUniMainModule.FDConnectionAfterConnect(Sender: TObject);
 begin
   FDConnection.ExecSQL(
   '''
+    -- таблица для пагинации формы заказов
     if OBJECT_ID('tempdb..#OrderPage') is not null
       drop table #OrderPage
 
@@ -140,44 +141,46 @@ begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'begin');
 
   Query.SQL.Text := '''
-                       declare @R int
-                              ,@Password nvarchar(512)
-                              ,@ClientID numeric(18, 0)
+   declare @R int
+          ,@Password nvarchar(512)
+          ,@ClientID numeric(18, 0)
 
-                       select @Password = master.dbo.fn_varbintohexstr(HashBytes('SHA2_512', :Password))
+   select @Password = master.dbo.fn_varbintohexstr(HashBytes('SHA2_512', :Password))
 
-                       exec @R = CustomerAuthorization
-                                   @UserName = :Email,
-                                   @Password = @Password,
-                                   @ClientID = @ClientID out
+   exec @R = CustomerAuthorization
+               @UserName = :Email,
+               @Password = @Password,
+               @ClientID = @ClientID out
 
-                       select @R        as R
-                             ,@ClientID as ClientID
-                      ''';
+   select @R        as R
+         ,@ClientID as ClientID
+  ''';
+
   // Важно AsWideString
   Query.ParamByName('Email').AsWideString    := AU;
   Query.ParamByName('Password').AsWideString := AP;
   Query.Open();
 
-  RetVal.Code :=  Query.FieldByName('r').AsInteger;
+  RetVal.Code := Query.FieldByName('r').AsInteger;
 
   if RetVal.Code = 0 then
   begin
 
     UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
+
     AUserID  := Query.FieldByName('ClientID').AsInteger;
     AUserName:= AU;
     AAppName := AppCustomer;
 
     WS :=TWS.Create('client:' + AUserID.ToString);
 
-    Result   := True;
+    Result := True;
 
     Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
 
     // настройки  логирования
-      Logger.Providers.Add(GlobalLogFileProvider);
-      with GlobalLogFileProvider do
+    Logger.Providers.Add(GlobalLogFileProvider);
+    with GlobalLogFileProvider do
         begin
             FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_' + FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
             DailyRotate := True;
@@ -185,12 +188,32 @@ begin
             LogLevel := LOG_ALL;
             TimePrecission := True;
             CompressRotatedFiles := False;
-//            IncludedInfo:=[iiThreadId, iiProcessId];
-//            CustomMsgOutput := True;
-//            CustomFormatOutput := '%{DATETIME} [%{LEVEL}] : %{MESSAGE} [%{APPNAME}] (%{MYTAG1})';
         end;
 
-    Sql.Open('Select AppClientLog, AppSqlLog from tLoggerSettings (nolock) where UserID = :UserID and AppName = :AppName ',
+    Logger.Providers.Add(GlobalLogADODBProvider);
+    Logger.CustomTags['MYTAG1'] := AUserID.ToString;  //  AddToQuery(fields,values,'UserID',fCustomTags['MYTAG1']);
+    with GlobalLogADODBProvider do
+        begin
+            LogLevel := LOG_ALL;
+            TimePrecission := True;
+            DBConfig.Table := 'tLogMsg';
+            DBConfig.Provider:= dbMSSQL;
+            DBConfig.Server:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server'];
+            DBConfig.Database:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Database'];
+            DBConfig.UserName:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerUserName'];
+            DBConfig.Password:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerPassword'];
+            Enabled:=True;
+        end;
+
+    Sql.Open('''
+      Select AppClientLog,
+             AppSqlLog,
+             cast(iif(CHARINDEX('В файл', LogDestination) > 0, 1, 0) as bit) SaveFile,
+             cast(iif(CHARINDEX('В базу данных', LogDestination) > 0, 1, 0) as bit) SaveDB
+        from tLoggerSettings (nolock)
+       where UserID = :UserID
+         and AppName= :AppName
+    ''',
     ['UserID', 'AppName'],[AUserID, AAppName]);
 
     if Sql.Q.RecordCount > 0 then
@@ -198,10 +221,13 @@ begin
 
       with GlobalLogFileProvider do
         begin
-          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean;
+          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean and Sql.Q.FindField('SaveFile').AsBoolean;
         end;
-        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+
+      with GlobalLogADODBProvider do
+        begin
+          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean and Sql.Q.FindField('SaveDB').AsBoolean;
+        end;
 
       Log('Программа запущена', etHeader);
       FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
@@ -246,6 +272,8 @@ begin
   {$IFDEF RELEASE}
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
   {$ENDIF}
+
+  dbConnect;
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject); // Отрабатывает с некоторой задержкой

@@ -9,7 +9,8 @@ uses
   uniBitBtn, uniPanel, uniCheckBox, uniDBCheckBox, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniMultiItem,
+  uniComboBox, uUniADCheckComboBoxEx, uniDBComboBox;
 
 type
   TLoggerF = class(TUniForm)
@@ -18,7 +19,6 @@ type
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
-    UniGroupBox3: TUniGroupBox;
     UniGroupBox4: TUniGroupBox;
     cbAppClientLog: TUniDBCheckBox;
     DataSource: TDataSource;
@@ -31,6 +31,9 @@ type
     QueryAppClientLog: TBooleanField;
     QueryAppSqlLog: TBooleanField;
     QueryUsername: TStringField;
+    UniLabel1: TUniLabel;
+    QueryLogDestination: TStringField;
+    LogDestination: TUniDBCheckComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -52,7 +55,8 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, Quick.Logger, Quick.Logger.Provider.Files;
+  MainModule, uniGUIApplication, Quick.Logger, Quick.Logger.Provider.Files,
+  Quick.Logger.Provider.ADODB;
 
 function LoggerF: TLoggerF;
 begin
@@ -69,9 +73,14 @@ begin
   Query.ApplyUpdates();
 
   with GlobalLogFileProvider do
-  begin
-      Enabled := cbAppClientLog.Checked;
-  end;
+    begin
+      Enabled := (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0);
+    end;
+
+  with GlobalLogADODBProvider do
+    begin
+      Enabled := (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0);
+    end;
 
   UniMainModule.FDMoniFlatFileClientLink.Tracing := cbAppSqlLog.Checked;
 
@@ -85,10 +94,7 @@ begin
   Query.ParamByName('AppName').Value := FAppName;
   Query.Open();
 
-
   Self.Caption := 'Настройки логирования: ' +  Query.FieldByName('Username').Value;
-
-
 end;
 
 

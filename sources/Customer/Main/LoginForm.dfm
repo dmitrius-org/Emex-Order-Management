@@ -69,9 +69,9 @@ object LoginF: TLoginF
     end
     object btnOk: TUniButton
       Left = 200
-      Top = 248
+      Top = 245
       Width = 115
-      Height = 25
+      Height = 33
       Hint = ''
       Caption = #1042#1086#1081#1090#1080
       TabOrder = 3

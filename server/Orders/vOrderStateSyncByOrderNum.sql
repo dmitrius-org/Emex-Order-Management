@@ -20,8 +20,9 @@ Select o.ClientID,
  inner join tNodes n (nolock) 
          on n.NodeID = o.StatusID
         and n.Flag&2>0 
- where isnull(o.EmexOrderID, 0) >0
+ where isnull(o.EmexOrderID, 0) > 0
    and isnull(o.isCancel, 0)    = 0 
+ -- and o.SuppliersID=3
 
 go
 grant all on vOrderStateSyncByOrderNum to public

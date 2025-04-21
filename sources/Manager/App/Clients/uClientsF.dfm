@@ -52,7 +52,7 @@ object ClientsF: TClientsF
     Width = 1185
     Height = 486
     Hint = ''
-    ActivePage = pcRefusals
+    ActivePage = tabShipments
     Align = alClient
     TabOrder = 0
     object tabHome: TUniTabSheet

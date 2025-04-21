@@ -9,10 +9,10 @@ begin
 	(
 	 LoggerSettingsID           numeric(18, 0) identity  --
 	,UserID                     numeric(18, 0) not null   -- 
-	--,AppServerLog               bit -- Сервер приложения UniServerModule
     ,AppName                    varchar(30)
 	,AppClientLog               bit -- Клиентское логирование
 	,AppSqlLog                  bit -- Серверное логирование (sql)
+    ,LogDestination             varchar(64)
 	);
 
 	create unique index ao1 on tLoggerSettings(LoggerSettingsID);

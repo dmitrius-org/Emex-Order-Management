@@ -27,7 +27,9 @@ Update p
                 from tOrders o (nolock) 
                where o.EmexOrderID      = p.OrderNumber
                  and o.OrderDetailSubId = p.OrderDetailSubId
-                 and p.OrderDetailSubId<> '' ) o 
+                 and p.OrderDetailSubId<> ''
+               order by o.StatusID -- есть состояние "Возвращено" у котрого такой-же OrderDetailSubId
+              ) o 
 where p.Spid = @@SPID
   and SUBSTRING(p.OrderDetailSubId, 1,1) = '!'
 
@@ -40,6 +42,37 @@ Update pMovement --
          where p.Spid = @@Spid
         ) p
   where p.ID = pMovement.ID
+
+
+-- 2. -- если количество заказа в статусе с признаком не синхронизируем совпадает с количеством всего, то такие заказы вообще не трокаем
+UPDATE m
+   SET m.Flag = 1
+  FROM pMovement m WITH (NOLOCK)
+  CROSS APPLY (
+      SELECT SUM(o.Quantity) AS OrderQty
+       FROM tOrders o WITH (NOLOCK)
+      INNER JOIN tNodes n WITH (NOLOCK)
+              ON n.NodeID = o.StatusID
+             AND n.Flag & 2 = 0
+      WHERE o.EmexOrderID   = m.OrderNumber
+        AND o.DetailNumber  = m.DetailNum
+        AND o.CustomerSubId = m.CustomerSubId
+        AND o.Reference     = m.Reference
+        AND o.PriceLogo     = m.PriceLogo -- 
+  ) o
+  CROSS APPLY (
+      SELECT SUM(m2.Quantity) AS MovementQty
+       FROM pMovement m2 WITH (NOLOCK)
+      WHERE m2.spid = @@SPID
+        AND m2.OrderNumber    = m.OrderNumber
+        AND m2.DetailNum      = m.DetailNum
+        AND m2.CustomerSubId  = m.CustomerSubId
+        AND m2.Reference      = m.Reference
+        AND m2.PriceLogo      = m.PriceLogo
+         
+  ) q
+WHERE m.spid        = @@SPID
+  AND q.MovementQty = o.OrderQty;
 
 
 declare @N int 
@@ -61,7 +94,7 @@ BEGIN
     --2. Количество
     Update p
         set p.OrderID = o.OrderID
-           ,p.Tag     = 2 
+           ,p.Tag     = 3 
        from pMovement p (updlock) 
       inner join tNodes n (nolock)
               on n.EID = p.StatusId
@@ -79,6 +112,8 @@ BEGIN
                       and o.StatusID      = n.NodeID 
 
                       and m.OrderID is null
+
+                    order by case when p.PriceLogo = o.PriceLogo then 0 else 1 end
                     ) o   
     where p.Spid = @@SPID
       and isnull(p.OrderID, 0) = 0

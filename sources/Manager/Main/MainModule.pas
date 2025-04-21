@@ -20,7 +20,8 @@ uses
 
   Quick.Logger,
   Quick.Logger.ExceptionHook,
-  Quick.Logger.Provider.Files;
+  Quick.Logger.Provider.Files,
+  Quick.Logger.Provider.ADODB;
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -141,22 +142,47 @@ begin
             TimePrecission := True;
         end;
 
+      Logger.Providers.Add(GlobalLogADODBProvider);
+      Logger.CustomTags['MYTAG1'] := AUserID.ToString;  //  AddToQuery(fields,values,'UserID',fCustomTags['MYTAG1']);
+      with GlobalLogADODBProvider do
+          begin
+              LogLevel := LOG_ALL;
+              TimePrecission := True;
+              DBConfig.Table := 'tLogMsg';
+              DBConfig.Provider:= dbMSSQL;
+              DBConfig.Server:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server'];
+              DBConfig.Database:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Database'];
+              DBConfig.UserName:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerUserName'];
+              DBConfig.Password:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerPassword'];
+              Enabled:=True;
+          end;
+
       Sql.Open('''
-        Select AppClientLog, AppSqlLog
-          from tLoggerSettings (nolock)
-         where UserID = dbo.GetUserID()
-           and AppName= :AppName
-       ''', ['AppName'],[AAppName]);
+      Select AppClientLog,
+             AppSqlLog,
+             cast(iif(CHARINDEX('В файл', LogDestination) > 0, 1, 0) as bit) SaveFile,
+             cast(iif(CHARINDEX('В базу данных', LogDestination) > 0, 1, 0) as bit) SaveDB
+        from tLoggerSettings (nolock)
+       where UserID = :UserID
+         and AppName= :AppName
+      ''',
+      ['UserID', 'AppName'],[AUserID, AAppName]);
 
       if Sql.Q.RecordCount > 0 then
       begin
 
         with GlobalLogFileProvider do
         begin
-          Enabled := Sql.Q.FindField('AppClientLog').Value;
+          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean and Sql.Q.FindField('SaveFile').AsBoolean;
         end;
-        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+
+        with GlobalLogADODBProvider do
+        begin
+          Enabled := Sql.Q.FindField('AppClientLog').AsBoolean and Sql.Q.FindField('SaveDB').AsBoolean;
+        end;
+
+        FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
+        FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
       end;
 
       Log('Программа запущена', etHeader);

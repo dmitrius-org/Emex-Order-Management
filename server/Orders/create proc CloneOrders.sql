@@ -201,6 +201,7 @@ select o.ClientID
          on n.EID = p.StatusId
 where p.Spid = @@SPID
   and p.N    = @N
+  and isnull(p.Flag, 0)&1 =0
 order by p.DetailNum
 
 -- сроки доставки поставщика

@@ -59,7 +59,6 @@ begin
   Result := TUniServerModule(UniGUIServerInstance);
 end;
 
-
 function TUniServerModule.dbConnect: Boolean;
 begin
   Logger.AddLog('TUniServerModule.dbConnect', 'begin');

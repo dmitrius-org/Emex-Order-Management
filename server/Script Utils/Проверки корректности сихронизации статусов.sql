@@ -35,7 +35,7 @@ Select o.OrderID, Quantity, o.PricePurchaseF * o.Quantity 'calc sum',PricePurcha
 
 
 -- не проставлен признак отказан и статус нет в наличи
-select 'не проставлен признак отказан и статус нет в наличи', StatusID, p.NewStateID, *
+select 'не проставлен признак отказан и статус нет в наличи', StatusID, p.NewStateID, o.OrderNum, o.DetailNumber,  *
   from tOrders o  (nolock)
  cross apply (select  * 
                 from tProtocol p  (nolock)
@@ -106,30 +106,28 @@ delete p
 
 
 --
-select 'Заказы, которые не удалось разбить на части', *
+select 'Заказы, которые не удалось разбить на части',*
   from tMovement (nolock)
  where OrderID is null
+ order by OrderNumber
 
 
-
-
-
---delete
---  from tMovement 
--- where OrderID is null
+----delete
+----  from tMovement 
+---- where OrderID is null
 
 -- заказы, которых нет в emex
-Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity,P.Reference,  n.Brief, n.Name, p.OrderNum, p.DetailNumber, p.Quantity,  *
+Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.EmexQuantity, P.Reference, n.Brief, n.Name, p.OrderNum, p.DetailNumber, p.Quantity,  *
   from tOrders p  (nolock)
  inner join tClients c (nolock)
          on c.ClientID = p.ClientID 
  inner join tNodes n (nolock)
          on n.NodeID  = p.StatusID
  where not exists (select 1
-                    from tMovement m (nolock)
-				   where m.OrderID = p.OrderID
+                     from tMovement m (nolock)
+				    where m.OrderID = p.OrderID
 				   )
-   and p.OrderDate >= '20240310'
+--   and p.OrderDate >= '20240310'
    and StatusID in (--1	--New
                    --,2	--InChecked
                    -- 3	--InBasket
@@ -142,6 +140,12 @@ Select 'Заказы, которых нет в emex', c.Brief, p.EmexOrderID, p.
                     )
                -- and p.Quantity < 0
   order by p.OrderDate, p.OrderNum,  p.DetailNumber
+
+
+select *
+  from tOrders p
+ where p.Quantity < 0
+
 /* -- исправление
 delete p
   from tOrders p
@@ -168,7 +172,9 @@ delete p
 
 
 --
-select 'Разное количество', m.Quantity QuantityM , o.Quantity QuantityQ, o.EmexQuantity, c.Brief, o.OrderDetailSubId, *
+select 'Смапили разное количество', m.Quantity QuantityM , o.Quantity QuantityQ, o.EmexQuantity, c.Brief, o.OrderDetailSubId, 
+       o.OrderNum, o.DetailNumber,
+       *
   from tMovement m (nolock)
   inner join tOrders o (nolock)
           on o.OrderID = m.OrderID
