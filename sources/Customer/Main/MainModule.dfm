@@ -35,9 +35,16 @@ object UniMainModule: TUniMainModule
       'MonitorBy=Remote')
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
+    OnLogin = FDConnectionLogin
+    OnLost = FDConnectionLost
+    OnRestored = FDConnectionRestored
+    OnRecover = FDConnectionRecover
     AfterConnect = FDConnectionAfterConnect
-    Left = 41
-    Top = 13
+    AfterDisconnect = FDConnectionAfterDisconnect
+    BeforeDisconnect = FDConnectionBeforeDisconnect
+    BeforeStartTransaction = FDConnectionBeforeStartTransaction
+    Left = 49
+    Top = 5
   end
   object Query: TFDQuery
     Connection = FDConnection
@@ -52,7 +59,7 @@ object UniMainModule: TUniMainModule
     FileColumns = [tiRefNo, tiTime, tiThreadID, tiClassName, tiObjID, tiMsgText]
     ShowTraces = False
     Left = 244
-    Top = 16
+    Top = 8
   end
   object qSetting: TFDQuery
     Connection = FDConnection
@@ -63,6 +70,6 @@ object UniMainModule: TUniMainModule
     EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]
     Tracing = True
     Left = 428
-    Top = 15
+    Top = 7
   end
 end

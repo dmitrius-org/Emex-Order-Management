@@ -156,7 +156,6 @@ begin
   CustomFiles.Add('files/css/custom.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/grid.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/main_menu.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
-  CustomFiles.Add('files/css/dashboard.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/messenger.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/messenger_style.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 

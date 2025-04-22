@@ -52,7 +52,7 @@ object UniServerModule: TUniServerModule
   SSL.SSLOptions.Mode = sslmClient
   SSL.SSLOptions.VerifyMode = []
   SSL.SSLOptions.VerifyDepth = 0
-  Options = [soAutoPlatformSwitch, soRestartSessionOnTimeout, soWipeShadowSessions, soDontCompressDownloads, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
+  Options = [soAutoPlatformSwitch, soRestartSessionOnTimeout, soWipeShadowSessions, soDontCompressDownloads, soTerminateOnSession, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
   ServerLogger.Options = [logIndyExceptions, logSessionExceptions, logIndySSLExceptions, logIndySSLCryptoExceptions]
   ConnectionFailureRecovery.DetailedLog = True
   ConnectionFailureRecovery.FullSequenceLog = True

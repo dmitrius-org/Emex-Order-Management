@@ -18,11 +18,11 @@ begin
     ,Msg              varchar(max)
 
     ,Environment      varchar(50)
-    ,Platform         varchar(50)
-    ,OSVersion        varchar(70)
+    ,PlaftormInfo     varchar(128)
+    ,OSVersion        varchar(128)
     ,Host             varchar(20)
-    ,UserName         varchar(50)
-    ,AppName          varchar(70)
+    ,UserName         varchar(128)
+    ,AppName          varchar(50)
 	);
 
 	create unique index ao1 on tLogMsg(LogMsgID);

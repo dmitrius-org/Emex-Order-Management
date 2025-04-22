@@ -122,11 +122,14 @@ var UrlRedirect: string;
 begin  // выход из программы
   UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
   UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',      Date-1);
+  {$IFDEF Release}
+    UrlRedirect := Sql.GetSetting('RedirectOnExit');
 
-  UrlRedirect := Sql.GetSetting('RedirectOnExit');
-
-  if UrlRedirect <> '' then
-    UniSession.UrlRedirect(UrlRedirect);
+    if UrlRedirect <> '' then
+      UniSession.UrlRedirect(UrlRedirect);
+  {$ELSE}
+    UniApplication.Restart();
+  {$ENDIF}
 end;
 
 procedure TMainForm.actinfoExecute(Sender: TObject);

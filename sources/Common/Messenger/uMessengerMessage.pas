@@ -153,7 +153,7 @@ implementation
 
 {$R *.dfm}
 
-uses MainModule, uMainVar, uUtils.Math, ServerModule, Quick.Logger;
+uses MainModule, uMainVar, uUtils.Math, ServerModule, uUtils.Logger;
 
 
 { TMessage }

@@ -243,8 +243,8 @@ type
 implementation
 
 uses
-  MainModule, uEmexUtils, uSqlUtils, Quick.Logger, uMainVar, uOrdersProtocol_T, Main,
-  ServerModule, uError_T, uUtils.Grid, uMessengerF;
+  MainModule, uEmexUtils, uSqlUtils, uMainVar, uOrdersProtocol_T, Main,
+  ServerModule, uError_T, uUtils.Grid, uMessengerF, uUtils.Logger;
 
   var screenmask: Boolean;
   var Marks: TMarks;
@@ -373,7 +373,7 @@ begin
       Query.EnableControls;
     end;
 
-    logger.Info(SqlText);
+    log(SqlText,etInfo);
 
     sql.Exec('''
                 if OBJECT_ID('tempdb..#CounterPart') is not null
@@ -441,7 +441,7 @@ end;
 
 procedure TOrdersT2.Page;
 begin
-  logger.Info('TOrdersT2.Page begin');
+  log('TOrdersT2.Page begin', etInfo);
 
   sql.Open(
   '''
@@ -506,7 +506,7 @@ begin
 
   PageNavigation;
 
-  logger.Info('TOrdersT2.Page end');
+  log('TOrdersT2.Page end', etInfo);
 end;
 
 procedure TOrdersT2.PageNavigation;
@@ -525,7 +525,7 @@ var FClient:string;
     FStatus :string;
     FPriceLogo :string;
 begin
-  logger.Info('GridOpen Begin');
+  log('GridOpen Begin', etInfo);
 
   Query.Close();
   Query.ParamByName('Page').AsInteger := edtPage.Value;
@@ -543,7 +543,7 @@ begin
      (edtPage.Value-1) * Grid.WebOptions.PageSize + Query.RecordCount,
      FAllPage]);
 
-  logger.Info('GridOpen End');
+  log('GridOpen End', etInfo);
 end;
 
 procedure TOrdersT2.GridSelectionChange(Sender: TObject);
@@ -560,7 +560,7 @@ begin
      Grid.RefreshCurrentRow();
   except
     on E: Exception do
-      logger.Info('TOrdersT.MessageCallBack Ошибка: ' + e.Message);
+      log('TOrdersT.MessageCallBack Ошибка: ' + e.Message, etException);
   end;
 end;
 
@@ -613,7 +613,7 @@ begin
     end;
   except
     on E: Exception do
-      logger.Info('TOrdersT2.ReOrderCallBack Ошибка: ' + e.Message);
+      log('TOrdersT2.ReOrderCallBack Ошибка: ' + e.Message, etException);
   end;
 end;
 
@@ -820,7 +820,6 @@ end;
 procedure TOrdersT2.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  logger.Info('EventName: ' + EventName);
   if (EventName = '_columnhide') then
   begin
       Sql.Exec('''
@@ -990,7 +989,7 @@ begin
 
   UniSession.JSCode(' showEmail = function(AVal) {  ajaxRequest(' + Grid.JSName    + ', "showEmail", ["P1=" + AVal]); } ;');
 
-  logger.Info('TOrdersT2.UniFrameCreate End');
+  log('TOrdersT2.UniFrameCreate End', etInfo);
 end;
 
 procedure TOrdersT2.UniFrameDestroy(Sender: TObject);

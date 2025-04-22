@@ -51,7 +51,6 @@ object LoggerF: TLoggerF
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 284
       object cbAppClientLog: TUniDBCheckBox
         AlignWithMargins = True
         Left = 5
@@ -67,7 +66,6 @@ object LoggerF: TLoggerF
         TabOrder = 1
         ParentColor = False
         Color = clBtnFace
-        ExplicitWidth = 274
       end
       object cbAppSqlLog: TUniDBCheckBox
         AlignWithMargins = True
@@ -84,9 +82,6 @@ object LoggerF: TLoggerF
         TabOrder = 2
         ParentColor = False
         Color = clBtnFace
-        ExplicitLeft = 7
-        ExplicitTop = 85
-        ExplicitWidth = 274
       end
       object UniLabel1: TUniLabel
         AlignWithMargins = True
@@ -98,8 +93,6 @@ object LoggerF: TLoggerF
         Caption = #1057#1086#1093#1088#1072#1085#1103#1090#1100' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' '#1074':'
         Align = alTop
         TabOrder = 3
-        ExplicitLeft = 2
-        ExplicitTop = 56
       end
       object LogDestination: TUniDBCheckComboBox
         AlignWithMargins = True
@@ -114,9 +107,9 @@ object LoggerF: TLoggerF
           #1042' '#1092#1072#1081#1083
           #1042' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093)
         TabOrder = 4
+        ClearButton = True
         IconItems = <>
         Mode = umNameValue
-        ExplicitTop = 115
       end
     end
   end

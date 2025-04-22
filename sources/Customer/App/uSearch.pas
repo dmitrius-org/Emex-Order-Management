@@ -171,7 +171,7 @@ type
 implementation
 
 uses
-  uEmexUtils, MainModule, uMainVar, uToast, uUtils.Grid, Quick.Logger;
+  uEmexUtils, MainModule, uMainVar, uToast, uUtils.Grid, uUtils.Logger;
 
 {$R *.dfm}
 
@@ -363,7 +363,7 @@ procedure TSearchF.PartSearch;
 var
   emex: TEmex;
 begin
-  logger.Info('TSearchF.PartSearch %s', ['Begin']);
+  log('TSearchF.PartSearch %s', ['Begin'], etInfo);
   ShowMask('Поиск...');
   UniSession.Synchronize();
   try

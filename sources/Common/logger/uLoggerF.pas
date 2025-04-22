@@ -55,8 +55,12 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, Quick.Logger, Quick.Logger.Provider.Files,
-  Quick.Logger.Provider.ADODB;
+  MainModule, uniGUIApplication, Quick.Logger,
+
+  Quick.Logger.Provider.Files,
+  Quick.Logger.Provider.ADODB,
+
+  uUtils.Logger;
 
 function LoggerF: TLoggerF;
 begin
@@ -72,15 +76,37 @@ procedure TLoggerF.btnOkClick(Sender: TObject);
 begin
   Query.ApplyUpdates();
 
-  with GlobalLogFileProvider do
-    begin
-      Enabled := (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0);
-    end;
+  //GlobalLogFileProvider
+  if (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0) then
+  begin
+    UniMainModule.CreateGlobalLogFileProvider;
+  end;
 
-  with GlobalLogADODBProvider do
-    begin
-      Enabled := (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0);
-    end;
+  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
+  with UniMainModule.GlobalLogFileProvider do
+  begin
+    Enabled := (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0);
+    if Enabled then
+      Log('Включено логирование в файл', etInfo)
+    else
+      Log('Оключено логирование в файл', etInfo)
+  end;
+
+  //GlobalLogADODBProvider
+  if (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0) then
+  begin
+    UniMainModule.CreateGlobalLogADODBProvider;
+  end;
+
+  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
+  with UniMainModule.GlobalLogADODBProvider do
+  begin
+    Enabled := (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0);
+    if Enabled then
+      Log('Включено логирование в базу данных', etInfo)
+    else
+      Log('Оключено логирование в базу данных', etInfo)
+  end;
 
   UniMainModule.FDMoniFlatFileClientLink.Tracing := cbAppSqlLog.Checked;
 

@@ -66,7 +66,8 @@ uses
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
   uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
   uUniADCheckComboBoxHelper in '..\Common\Common\uUniADCheckComboBoxHelper.pas',
-  uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas';
+  uUniFSComboBoxHelper in '..\Common\Common\uUniFSComboBoxHelper.pas',
+  uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas';
 
 {$R *.res}
 

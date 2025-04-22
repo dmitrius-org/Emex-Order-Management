@@ -144,6 +144,7 @@ begin
 
       Logger.Providers.Add(GlobalLogADODBProvider);
       Logger.CustomTags['MYTAG1'] := AUserID.ToString;  //  AddToQuery(fields,values,'UserID',fCustomTags['MYTAG1']);
+
       with GlobalLogADODBProvider do
           begin
               LogLevel := LOG_ALL;
@@ -154,7 +155,6 @@ begin
               DBConfig.Database:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Database'];
               DBConfig.UserName:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerUserName'];
               DBConfig.Password:=FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerPassword'];
-              Enabled:=True;
           end;
 
       Sql.Open('''

@@ -10,9 +10,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
      uCommonType,
 
-     uServiceEmex, Soap.XSBuiltIns, uSqlUtils,
-
-     Quick.Logger{, Quick.Logger.Provider.Files};
+     uServiceEmex, Soap.XSBuiltIns, uSqlUtils, uUtils.Logger;
 
   Type
   /// <summary>
