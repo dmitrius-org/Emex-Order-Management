@@ -134,11 +134,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.25;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.21;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.26;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.21;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>25</VerInfo_Build>
+        <VerInfo_Build>26</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

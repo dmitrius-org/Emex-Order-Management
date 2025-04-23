@@ -139,7 +139,8 @@ uses
   uAPIKeyT_Wrapper in 'App\Clients\uAPIKeyT_Wrapper.pas' {APIKeyT_W: TUniForm},
   uSuppliersF in 'App\Suppliers\uSuppliersF.pas' {SuppliersF: TUniForm},
   uLoggerF in '..\Common\Logger\uLoggerF.pas' {LoggerF: TUniForm},
-  utest in 'App\utest.pas' {test: TUniFrame};
+  utest in 'App\utest.pas' {test: TUniFrame},
+  uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas';
 
 {$R *.res}
 

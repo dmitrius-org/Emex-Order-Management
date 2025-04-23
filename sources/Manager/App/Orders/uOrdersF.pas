@@ -1318,7 +1318,10 @@ end;
 procedure TOrderF.btnSplitClick(Sender: TObject);
 begin
   // групповое изменение наименования детали
+  SpplitForm.ID := FID;
   SpplitForm.FormAction := TFormAction.acUpdate;
+  SpplitForm.Caption    := 'Укажите количество для текущей части заказа';
+  SpplitForm.lblDetailNameF.Caption := 'Укажите количество для текущей части заказа:';
 
   if SpplitForm.ShowModal() = mrOk then
   begin

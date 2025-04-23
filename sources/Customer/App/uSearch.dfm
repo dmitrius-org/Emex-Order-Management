@@ -117,12 +117,8 @@ object SearchF: TSearchF
         
           'click=function click(sender, eOpts)'#13#10'{'#13#10'  if (SearchF.MakeLogoPa' +
           'nel.isVisible()){'#13#10'    ajaxRequest(this, '#39'MakeLogoPanelVisibleFa' +
-          'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13 +
-          #10'    ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
-        
-          'edit=function edit(editor, context, eOpts)'#13#10'{'#13#10'  //console.log(e' +
-          'ditor);'#13#10'  //console.log(context);'#13#10'  //console.log(eOpts);   '#13#10 +
-          '}'
+          'lse'#39', []);'#13#10'  }  '#13#10'  '#13#10'  if (SearchF.VKGPanel.isVisible()){'#13#10'   ' +
+          ' ajaxRequest(this, '#39'VKGPanelVisibleFalse'#39', []);'#13#10'  }  '#13#10'}'
         
           'reconfigure=function reconfigure(sender, store, columns, oldStor' +
           'e, oldColumns, eOpts) {'#13#10'    var startCol = 0; // zero based'#13#10'  ' +

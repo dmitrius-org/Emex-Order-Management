@@ -35,7 +35,7 @@ Type
 
 implementation
 
-uses MainModule, uUtils.Varriant, Quick.Logger;
+uses MainModule, uUtils.Varriant, uUtils.Logger;
 
 { TGrant }
 

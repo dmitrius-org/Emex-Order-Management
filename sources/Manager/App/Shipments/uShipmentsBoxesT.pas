@@ -109,7 +109,7 @@ implementation
 
 {$R *.dfm}
 
-uses uUtils.Grid, uMainVar, uConstant, System.Math, Quick.Logger;
+uses uUtils.Grid, uMainVar, uConstant, System.Math, uUtils.Logger;
 
 procedure TShipmentsBoxesT.actOrderEditExecute(Sender: TObject);
 begin

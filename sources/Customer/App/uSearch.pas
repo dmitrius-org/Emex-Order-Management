@@ -194,6 +194,7 @@ begin
   log('TSearchF.PriceCalc begin', etInfo);
   log('TSearchF.PriceCalc FProfilesCustomerID: ' + FProfilesCustomerID.ToString, etInfo);
   log('TSearchF.PriceCalc FDetailNum: ' + FDetailNum, etInfo);
+
   RetVal.Clear;
 
   Sql.exec('''
@@ -203,6 +204,7 @@ begin
   ''',
   ['ProfilesCustomerID', 'DetailNum'],
   [FProfilesCustomerID,   FDetailNum]);
+
   log('TSearchF.PriceCalc end', etInfo);
 end;
 
@@ -263,12 +265,13 @@ begin
   log('FDetailNum: ' + FDetailNum, etDebug);
   // определение количества уникальных брендов
   sql.Open('''
-              DECLARE @Count INT;
+    DECLARE @Count INT;
 
-              SET @Count = dbo.GetReplacementCount();
+    SET @Count = dbo.GetReplacementCount();
 
-              SELECT @Count AS ReplacementCount;
-           ''', [], [] );
+    SELECT @Count AS ReplacementCount;
+  ''', [], [] );
+
   FMakeCount := sql.Q.Fields[0].AsInteger;
 
   Query.Close;
@@ -319,10 +322,10 @@ begin
 
   MakeLogoPanel.Left := SearchGrid.Left;
 
-  MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width := SearchGrid.Columns.ColumnFromFieldName('MakeName').Width;
-  MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width := SearchGrid.Columns.ColumnFromFieldName('DetailNum').Width;
-  MakeLogoGrid.Columns.ColumnFromFieldName('PartNameRus').Width := SearchGrid.Columns.ColumnFromFieldName('PartNameRus').Width;
-  MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width := SearchGrid.Columns.ColumnFromFieldName('PriceRub').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width   := SearchGrid.Columns.ColumnFromFieldName('MakeName').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width  := SearchGrid.Columns.ColumnFromFieldName('DetailNum').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('PartNameRus').Width:= SearchGrid.Columns.ColumnFromFieldName('PartNameRus').Width;
+  MakeLogoGrid.Columns.ColumnFromFieldName('PriceRub').Width   := SearchGrid.Columns.ColumnFromFieldName('PriceRub').Width;
 
   MakeLogoPanel.Width := MakeLogoGrid.Columns.ColumnFromFieldName('MakeName').Width +
                          MakeLogoGrid.Columns.ColumnFromFieldName('DetailNum').Width+
@@ -341,22 +344,17 @@ begin
 
     UniSession.AddJS('''
       var el = document.getElementById("makereplacement");
-        if (el) {
+      if (el) {
             el.classList.remove("hide-column");
-        } else {
-            console.error("remove Элемент с идентификатором 'makereplacement' не найден.");
-        }
+      }
     ''')
   else
     UniSession.AddJS('''
       var el = document.getElementById("makereplacement");
-        if (el) {
+      if (el) {
             el.classList.add("hide-column");
-        } else {
-            console.error("add Элемент с идентификатором 'makereplacement' не найден.");
-        }
+      }
     ''')
-
 end;
 
 procedure TSearchF.PartSearch;
@@ -425,9 +423,6 @@ end;
 
 procedure TSearchF.PartToBasket;
 begin
-  log('ClientID: ' + UniMainModule.AUserID.ToString, etInfo);
-  log('SPID: ' + UniMainModule.ASPID.ToString, etInfo);
-
   RetVal.Clear;
   Sql.Open('declare @R int exec @R=PartToBasket @ClientID = :ClientID, @PartID=:PartID  select @R as retval',
           ['PartID', 'ClientID'],
@@ -603,10 +598,10 @@ begin
   js := ' setDestLogo = function(AVal) { ajaxRequest(' + SearchGrid.JSName + ', "setDestLogo", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
 
-  js := ' setMakelogo = function() {  ajaxRequest(' + SearchGrid.JSName    + ', "MakeLogoGridShow", []); } ;';
+  js := ' setMakelogo = function() { ajaxRequest(' + SearchGrid.JSName    + ', "MakeLogoGridShow", []); } ;';
   UniSession.JSCode(js);
 
-  js := ' clickInfoButton = function(AVal) {  ajaxRequest(' + SearchGrid.JSName    + ', "clickInfoButton", [ "P1=" + AVal ]); } ;';
+  js := ' clickInfoButton = function(AVal) { ajaxRequest(' + SearchGrid.JSName    + ', "clickInfoButton", [ "P1=" + AVal ]); } ;';
   UniSession.JSCode(js);
 
   GridExt.SortColumnCreate(SearchGrid);
@@ -617,16 +612,16 @@ begin
         '<i class="fa fa-info-circle column-btn-info"></i> </span> '+
         '</span> ';
 
-  SearchGrid.Columns.ColumnFromFieldName('Weight').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вес', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoWeight'), []);
-  SearchGrid.Columns.ColumnFromFieldName('VolumeAdd').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Объем', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoVolume'), []);
-  SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
-  SearchGrid.Columns.ColumnFromFieldName('OurDelivery').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
-  SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption :=  StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
+  SearchGrid.Columns.ColumnFromFieldName('Weight').Title.Caption := StringReplace(StringReplace (js, 'ColName', 'Вес', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoWeight'), []);
+  SearchGrid.Columns.ColumnFromFieldName('VolumeAdd').Title.Caption := StringReplace(StringReplace (js, 'ColName', 'Объем', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoVolume'), []);
+  SearchGrid.Columns.ColumnFromFieldName('DeliveryType').Title.Caption  := StringReplace(StringReplace (js, 'ColName', 'Доставка', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDeliveryType'), []);
+  SearchGrid.Columns.ColumnFromFieldName('OurDelivery').Title.Caption   := StringReplace(StringReplace (js, 'ColName', 'Срок доставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoDelivery'), []);
+  SearchGrid.Columns.ColumnFromFieldName('PercentSupped').Title.Caption := StringReplace(StringReplace (js, 'ColName', 'Вероятность поставки', []), 'ColDataQtip', sql.GetSetting('SearchColumnInfoRating'), []);
 end;
 
 procedure TSearchF.SearchGridAfterLoad(Sender: TUniCustomDBGrid);
 begin
-  AnalogLblVisible
+  AnalogLblVisible;
 end;
 
 procedure TSearchF.SearchGridAjaxEvent(Sender: TComponent; EventName: string;
@@ -675,16 +670,14 @@ begin
     if Params.ValueFromIndex[8].ToInteger = 2 then // поле описание
     begin
       sql.Exec('''
-        exec FindByNumberUpdate_PartNameRus
-              @PartNameRus=:PartNameRus
+        exec FindByNumberUpdate_PartNameRus @PartNameRus=:PartNameRus
       ''', ['PartNameRus'], [Params.ValueFromIndex[5]]);
     end;
 
     if Params.ValueFromIndex[8].ToInteger = 3 then // поле вес
     begin
       sql.Exec('''
-        exec FindByNumberUpdate_WeightGr
-              @WeightGr=:WeightGr
+        exec FindByNumberUpdate_WeightGr @WeightGr=:WeightGr
       ''', ['WeightGr'], [Params.ValueFromIndex[5]]);
 
       PriceCalc();
@@ -694,8 +687,7 @@ begin
     if Params.ValueFromIndex[8].ToInteger = 4 then // поле объем
     begin
       sql.Exec('''
-        exec FindByNumberUpdate_VolumeAdd
-              @VolumeAdd=:VolumeAdd
+        exec FindByNumberUpdate_VolumeAdd @VolumeAdd=:VolumeAdd
       ''', ['VolumeAdd'], [Params.ValueFromIndex[5]]);
 
       PriceCalc();
@@ -705,7 +697,6 @@ begin
   else
   if (EventName = 'VKGPanelLeft') then
   begin
-
     edtL.Clear;
     edtH.Clear;
     edtW.Clear;
@@ -738,14 +729,13 @@ end;
 
 procedure TSearchF.SearchGridDblClick(Sender: TObject);
 begin
- if (Assigned(ACurrColumn)) and (not MakeLogoPanel.Visible )then
-  if (
-       (ACurrColumn.FieldName = 'MakeName') or
-       (ACurrColumn.FieldName = 'DetailNum') )
-  then
-  begin
-    UniSession.BrowserWindow(Format('https://www.google.com/search?tbm=isch&q=%s+%s', [QueryMakeName.Value, QueryDetailNum.Value]), 0, 0, '_blank');
-  end;
+  if (Assigned(ACurrColumn)) and (not MakeLogoPanel.Visible )then
+    if ( (ACurrColumn.FieldName = 'MakeName' ) or
+         (ACurrColumn.FieldName = 'DetailNum') )
+    then
+    begin
+      UniSession.BrowserWindow(Format('https://www.google.com/search?tbm=isch&q=%s+%s', [QueryMakeName.Value, QueryDetailNum.Value]), 0, 0, '_blank');
+    end;
 end;
 
 procedure TSearchF.SearchGridDrawColumnCell(Sender: TObject; ACol,
@@ -789,6 +779,7 @@ end;
 procedure TSearchF.SearchHistorySave;
 begin
   log('TSearchF.SearchHistorySave begin', etDebug);
+
   Sql.Exec('''
   insert tSearchHistory (ClientID, DetailNum)
   select distinct
@@ -858,7 +849,6 @@ begin
 end;
 
 initialization
-
-RegisterClass(TSearchF);
+  RegisterClass(TSearchF);
 
 end.

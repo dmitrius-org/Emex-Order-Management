@@ -373,7 +373,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uEmexUtils, Quick.Logger, uError_T, uMainVar,
+  MainModule, uGrantUtils, uEmexUtils, uUtils.Logger, uError_T, uMainVar,
   uOrdersProtocol_T, Main, uOrdersF, ServerModule, uToast,uGroupDetailNameEditF,
   uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date,
   uConstant, uMessengerMessage, uMessengerF, uSpplitForm;

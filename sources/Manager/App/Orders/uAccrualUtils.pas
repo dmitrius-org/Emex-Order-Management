@@ -116,7 +116,7 @@ end;
 implementation
 
 uses
-  Quick.Logger, uError_T, uUtils.Varriant;
+  uUtils.Logger, uError_T, uUtils.Varriant;
 
 { TProcExec }
 
@@ -136,8 +136,6 @@ begin
      Emex.SQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid',
                   ['Message'],[e.Message]);
   end;
-
-
 end;
 
 constructor TProcExec.Create(Value: TFDConnection);
@@ -174,8 +172,10 @@ end;
 procedure TProcExec.EmexOrderStateSync;
 begin
   Emex.SQl.Exec('''
-       delete pAccrualAction from pAccrualAction (rowlock) where spid = @@Spid
-    ''');
+    delete pAccrualAction
+      from pAccrualAction (rowlock)
+     where spid = @@Spid
+  ''');
 
   Emex.SQl.Exec('''
        insert pAccrualAction with (rowlock)

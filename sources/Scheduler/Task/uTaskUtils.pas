@@ -71,7 +71,7 @@ Type
 implementation
 
 uses
-  uAccrualUtils, Quick.Logger;
+  uAccrualUtils, uUtils.Logger;
 
 
 { TMTask }

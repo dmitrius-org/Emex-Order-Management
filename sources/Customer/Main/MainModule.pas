@@ -304,7 +304,6 @@ begin
 
     if Sql.Q.RecordCount > 0 then
     begin
-
       if Sql.Q.FindField('AppClientLog').AsBoolean then
       begin
         UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization SaveFile', Sql.Q.FindField('SaveFile').AsString );
@@ -330,12 +329,9 @@ begin
           end;
         end;
       end;
-
       FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
       FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
     end;
-
-    Log(ALogger.Providers.Count.ToString, etHeader);
   end
   else
   begin
@@ -376,7 +372,6 @@ begin
   {$ENDIF}
 
   // настройки  логирования
-
   if Assigned(ALogger) then
     ALogger.Free;
   ALogger := TLogger.Create;

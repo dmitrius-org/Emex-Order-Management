@@ -182,8 +182,8 @@ uses System.SysUtils, System.Classes,
 
 implementation
 
-uses Quick.Logger;
-
+uses
+  uUtils.Logger;
 
 { TEmex }
 

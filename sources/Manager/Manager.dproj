@@ -556,6 +556,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\Common\Logger\uUtils.Logger.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
