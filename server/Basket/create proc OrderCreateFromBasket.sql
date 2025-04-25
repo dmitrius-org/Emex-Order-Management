@@ -45,9 +45,10 @@ declare @r int = 0
   end
 
   -- формирование номера заказа 
-  exec OrderNum
-         @ClientID = @ClientID
-        ,@OrderNum = @OrderNum out
+  if isnull(@OrderNum, '') = ''
+      exec OrderNum
+             @ClientID = @ClientID
+            ,@OrderNum = @OrderNum out
 
   if exists (Select 1
                from tOrders with (nolock index=ao2)
@@ -349,6 +350,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250320', '25'
+exec setOV 'OrderCreateFromBasket', 'P', '20250423', '26'
 go
  

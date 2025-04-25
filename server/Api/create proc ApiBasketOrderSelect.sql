@@ -7,39 +7,62 @@ ApiBasketOrderSelect - получение списка заказов
 
 create proc ApiBasketOrderSelect
                @ClientID numeric(18, 0)
-              ,@OrderNum varchar(32)
+              ,@OrderNum SID readonly
 as
 
-SELECT OrderID
-      ,ClientID
-      ,cast(OrderNum as varchar) OrderNum
-      ,1                       Status
-      ,Count(*) over(partition by ClientID)         PositionsQuantity
-      ,Sum(Amount) over(partition by ClientID)      TotalSum
-      ,OrderDate               OrderDate
-      
-      ,Manufacturer          Brand
-      ,DetailNumber          DetailNumber
-      ,DetailName            DetailName
-      ,Quantity              Quantity
-      ,Price                 Price
-      ,Amount                Amount
-      ,itemKey               itemKey
-      ,Comment2              Comment2 -- комментарий к позиции
-      ,Comment3              Comment3 -- комментарий к заказу
-  FROM tOrders o with (nolock index=ao2)
+SELECT o.OrderID
+      ,@ClientID                                      ClientID
+      ,num.Name                                       OrderNum
+      ,iif(o.OrderNum is null, 0, 1)                  Status
+      ,Count(*) over(partition by o.ClientID, o.OrderNum)         PositionsQuantity
+      ,Sum(Amount) over(partition by o.ClientID, o.OrderNum)      TotalSum
+      ,o.OrderDate             OrderDate
+      ,o.PriceLogo + '-' + cast(o.ProfilesCustomerID as varchar) as supplierCode -- Идентификатор поставщика (ID склада)
+      ,o.Manufacturer          Brand
+      ,o.DetailNumber          DetailNumber
+      ,o.DetailName            DetailName
+      ,o.Quantity              Quantity
+      ,o.Price                 Price
+      ,o.Amount                Amount
+      ,o.itemKey               itemKey
+      ,o.Comment2              Comment2 -- комментарий к позиции
+      ,o.Comment3              Comment3 -- комментарий к заказу
+      ,n.NodeID                StatusId
+      ,n.SearchBrief           StatusCode
+      ,o.Reference
+      ,oс.DeliveryDateToCustomer  -- Дата поставки клиенту после изменения
+      ,oс.DeliveryTermToCustomer  -- Срок поставки клиенту после изменения
+      ,p.OperDate              StatusDate
+  FROM @OrderNum num
+  left join tOrders o with (nolock index=ao2)
+         on o.ClientID = @ClientID
+        and o.OrderNum = num.Name
+  left join tNodes n with (nolock index=ao1)
+         on n.NodeID = o.StatusID  
   --left join tMakes b with (nolock index=ao2) -- брент замены
   --       on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
- WHERE o.ClientID = @ClientID
-   and o.OrderNum = @OrderNum
+ left join vOrdersDeliveryCustomer oс -- актуальные сроки доставки клиента
+         on oс.OrderID = o.OrderID
+ outer apply (select top 1 *
+                from tProtocol p with (nolock index=ao2)
+               where p.ObjectID = o.OrderID
+                 and p.NewStateID = o.StatusID
+               order by p.InDateTime desc 
+              ) p
+
+
 go
 grant exec on ApiBasketOrderSelect to public
 go
-exec setOV 'ApiBasketOrderSelect', 'P', '20250305', '0'
+exec setOV 'ApiBasketOrderSelect', 'P', '20250423', '1'
 go
--- Описание таблицы
---exec dbo.sys_setTableDescription @table = 'vApiOrdersSelect', @desc = 'Список заказов'
+
+DECLARE @OrderNums as sID
+                    
+INSERT INTO @OrderNums (Name)
+SELECT value
+    FROM STRING_SPLIT('15,номер6', ',');
 
 exec ApiBasketOrderSelect 
        @ClientID = 57
-      ,@OrderNum ='FL19032500001'
+      ,@OrderNum =@OrderNums

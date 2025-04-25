@@ -992,7 +992,7 @@ object OrdersT: TOrdersT
       Margins.Right = 50
       ShowHint = True
       ParentShowHint = False
-      TabOrder = 4
+      TabOrder = 3
       BorderStyle = ubsNone
       ShowCaption = False
       Caption = ''
@@ -1165,15 +1165,6 @@ object OrdersT: TOrdersT
           TabOrder = 2
         end
       end
-    end
-    object UniHiddenPanel1: TUniHiddenPanel
-      Left = 1096
-      Top = 192
-      Width = 127
-      Height = 244
-      Hint = ''
-      Visible = True
-      ShowHint = True
     end
   end
   object Query: TFDQuery

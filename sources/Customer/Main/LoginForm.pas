@@ -13,14 +13,13 @@ uses
 type
   TLoginF = class(TUniLoginForm)
     UniPanel1: TUniPanel;
-    UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
     btnOk: TUniButton;
     edtUser: TUniEdit;
     edtPassword: TUniEdit;
     UniCheckBox1: TUniCheckBox;
     lblReg: TUniLabel;
     lblReset: TUniLabel;
+    UniLabel3: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure UniLoginFormShow(Sender: TObject);
     procedure lblRegClick(Sender: TObject);

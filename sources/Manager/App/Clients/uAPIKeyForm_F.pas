@@ -34,7 +34,7 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
-    UniEdit1: TUniEdit;
+    edtComment: TUniEdit;
     UniLabel4: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -83,85 +83,45 @@ var sqltext: string;
 begin
   RetVal.Clear;
 
-//  case FAction of
+  case FAction of
 //    acInsert:
 //    begin
-//      sqltext :=' declare @R           int                     '+
-//                '        ,@SuppliersID numeric(18, 0)          '+
-//                '                                              '+
-//                ' exec @r = SupplierInsert                     '+
-//                '             @SuppliersID  = @SuppliersID out '+
-//                '            ,@Brief        = :Brief           '+
-//                '            ,@Name         = :Name            '+
-//                '            ,@emexUsername = :emexUsername    '+
-//                '            ,@emexPassword = :emexPassword    '+
-//                '            ,@Discount     = :Discount        '+
-//                '            ,@Commission   = :Commission      '+
-//                '            ,@ExtraKurs    = :ExtraKurs       '+
-//                '   '+
-//                '   '+
-//                ' select @r as retcode      ';
-//
-//      Sql.Open(sqltext,
-//               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs'],
-//               [edtBrief.Text,
-//               '',
-//               edtEmexUsername.text,
-//               edtEmexPassword.text,
-//               edtDiscount.Value,
-//               edtCommission.Value,
-//               edtExtraKurs.Value
-//               ]);
-//
-//      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-//
 //    end;
-//    acUpdate:
-//    begin
-//      sqltext :=' declare @R      int                        '+
-//                '                                            '+
-//                ' exec @r = SupplierUpdate                   '+
-//                '             @SuppliersID   = :SuppliersID  '+
-//                '            ,@Brief         = :Brief        '+
-//                '            ,@Name          = :Name         '+
-//                '            ,@emexUsername  = :emexUsername '+
-//                '            ,@emexPassword  = :emexPassword '+
-//                '            ,@Discount      = :Discount     '+
-//                '            ,@Commission    = :Commission   '+
-//                '            ,@ExtraKurs     = :ExtraKurs    '+
-//                '   '+
-//                '   '+
-//                ' select @r as retcode      ';
-//
-//      Sql.Open(sqltext,
-//               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs', 'SuppliersID'],
-//               [edtBrief.Text,
-//               '',
-//               edtEmexUsername.text,
-//               edtEmexPassword.text,
-//               edtDiscount.Value,
-//               edtCommission.Value,
-//               edtExtraKurs.Value,
-//               FID
-//               ]);
-//
-//      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-//    end;
-//    acDelete:
-//    begin
-//      sqltext :=  ' declare @R      int                 '+
-//                  '                                     '+
-//                  ' exec @r = SupplierDelete            '+
-//                  '         @SuppliersID = :SuppliersID '+
-//                  '                                     '+
-//                  ' select @r as retcode                '+
-//                  ' ';
-//
-//      Sql.Open(sqltext, ['SuppliersID'], [FID]);
-//
-//      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-//    end;
-//  end;
+    acUpdate:
+    begin
+      sqltext :='''
+        declare @R      int
+        exec @r =  ApiKeyUpdate
+                     @ApiKeysID = :ApiKeysID
+                    ,@Name      = :Name
+
+       select @r as retcode
+       ''';
+
+      Sql.Open(sqltext,
+               ['Name', 'ApiKeysID'],
+               [edtComment.Text,
+               FID
+               ]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
+    acDelete:
+    begin
+      sqltext :=  '''
+       declare @R      int
+
+       exec @r = ApiKeyDelete
+               @ApiKeysID = :ApiKeysID
+
+       select @r as retcode
+      ''';
+
+      Sql.Open(sqltext, ['ApiKeysID'], [FID]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
+  end;
 
   if RetVal.Code = 0 then
   begin
@@ -177,14 +137,16 @@ end;
 procedure TAPIKeyForm_F.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select *  '+
-                                  '   from tSuppliers (nolock) '+
-                                  '  where SuppliersID = :SuppliersID '+
-                                  ' ';
-  UniMainModule.Query.ParamByName('SuppliersID').Value := FID;
+  UniMainModule.Query.SQL.Text := '''
+   select *
+     from vApiKeys
+    where ApiKeysID= :ApiKeysID
+  ''';
+  UniMainModule.Query.ParamByName('ApiKeysID').Value := FID;
   UniMainModule.Query.Open;
 
-  edtBrief.Text:= UniMainModule.Query.FieldByName('Brief').AsString;
+  edtBrief.Text:= UniMainModule.Query.FieldByName('ApiKey').AsString;
+  edtComment.Text:= UniMainModule.Query.FieldByName('Name').AsString;
 //
 //  edtDiscount.Value:= UniMainModule.Query.FieldByName('Discount').AsFloat;
 //  edtCommission.Value:= UniMainModule.Query.FieldByName('Commission').AsFloat;
@@ -194,7 +156,7 @@ begin
 //  edtEmexPassword.Text:= UniMainModule.Query.FieldByName('emexPassword').AsString;
 
   // аудит
-  edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
+  edtID.Text         := UniMainModule.Query.FieldValues['ApiKeysID'];
   edtInDate.DateTime := UniMainModule.Query.FieldValues['inDatetime'];
   edtUpdDate.DateTime:= UniMainModule.Query.FieldValues['updDatetime'];
 end;

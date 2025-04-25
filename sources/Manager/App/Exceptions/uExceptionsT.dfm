@@ -93,7 +93,7 @@ inherited ExceptionsT: TExceptionsT
     Height = 415
     ExplicitTop = 66
     ExplicitWidth = 1532
-    ExplicitHeight = 553
+    ExplicitHeight = 415
     inherited Grid: TUniDBGrid
       Width = 1532
       Height = 415
@@ -260,6 +260,11 @@ inherited ExceptionsT: TExceptionsT
     Tag = -1
     inherited actRefreshAll: TAction
       Tag = -1
+    end
+  end
+  inherited PopupMenu: TUniPopupMenu
+    object N1: TUniMenuItem
+      Action = actRefreshAll
     end
   end
   inherited UpdateSQL: TFDUpdateSQL

@@ -1,7 +1,7 @@
 object ReOrder: TReOrder
   Left = 0
   Top = 0
-  ClientHeight = 157
+  ClientHeight = 200
   ClientWidth = 620
   Caption = 'ReOrder'
   OnShow = UniFormShow
@@ -19,17 +19,19 @@ object ReOrder: TReOrder
   OnDestroy = UniFormDestroy
   DesignSize = (
     620
-    157)
+    200)
   TextHeight = 15
   object UniLabel11: TUniLabel
     Left = 8
     Top = 24
-    Width = 52
-    Height = 13
+    Width = 58
+    Height = 17
     Hint = ''
     ShowHint = True
     ParentShowHint = False
     Caption = #1044#1086#1089#1090#1072#1074#1082#1072':'
+    ParentFont = False
+    Font.Height = -13
     TabOrder = 0
   end
   object cbDestinationLogo: TUniFSComboBox
@@ -50,19 +52,22 @@ object ReOrder: TReOrder
   end
   object UniLabel12: TUniLabel
     Left = 8
-    Top = 60
-    Width = 62
-    Height = 13
+    Top = 72
+    Width = 69
+    Height = 17
     Hint = ''
     ShowHint = True
     ParentShowHint = False
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+    ParentFont = False
+    Font.Height = -13
     TabOrder = 2
   end
   object cbPrice: TUniFSComboBox
     Left = 112
-    Top = 57
+    Top = 69
     Width = 500
+    Height = 23
     Hint = ''
     Enabled = False
     ShowHint = True
@@ -79,7 +84,7 @@ object ReOrder: TReOrder
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
-    Top = 120
+    Top = 163
     Width = 620
     Height = 37
     Hint = ''
@@ -89,6 +94,7 @@ object ReOrder: TReOrder
     Align = alBottom
     TabOrder = 4
     LayoutConfig.Padding = '2'
+    ExplicitTop = 120
     DesignSize = (
       620
       37)

@@ -32,6 +32,7 @@ type
     fType: TUniADCheckComboBox;
     fDetailNum: TUniEdit;
     UniLabel1: TUniLabel;
+    N1: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
     procedure fOkClick(Sender: TObject);

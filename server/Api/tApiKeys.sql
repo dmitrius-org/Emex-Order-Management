@@ -1,7 +1,7 @@
 if OBJECT_ID('tApiKeys') is null
 /*
   ALTER TABLE tApiKeys SET ( SYSTEM_VERSIONING = OFF )
-  --drop table tApiKeys
+  drop table tApiKeys
   DROP TABLE History.tApiKeys
 */
 /* **********************************************************
@@ -12,11 +12,11 @@ begin
 	(	 
      ApiKeysID            INT IDENTITY
     ,ClientID             numeric(18,0) NOT NULL 
-    ,Name                 VARCHAR(255)  NOT NULL
+    ,Name                 VARCHAR(255)  
     ,ApiKey               VARCHAR(255)  NOT NULL
     ,Flag                 int
 	,inDatetime           datetime      default GetDate() --
-    ,EndDatetime          datetime      default GetDate() --
+    ,EndDatetime          datetime      --default GetDate() --
      --
     ,[ValidFrom]          DATETIME2 GENERATED ALWAYS AS ROW START
     ,[ValidTo]            DATETIME2 GENERATED ALWAYS AS ROW END

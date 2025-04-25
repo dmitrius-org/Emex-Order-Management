@@ -185,7 +185,6 @@ type
     QueryDeliveryNextDate2: TSQLTimeStampField;
     QueryDateDeparture: TSQLTimeStampField;
     QueryDaysInWork: TIntegerField;
-    UniHiddenPanel1: TUniHiddenPanel;
     fDetailNum: TUniEdit;
     QueryStatus: TIntegerField;
     actCancellation: TAction;
@@ -397,7 +396,7 @@ end;
 
 procedure TOrdersT.OrderSetCancellation;
 begin
-  log('TOrdersT.OrderSetCancellation:', etDebug) ;
+  log('TOrdersT.OrderSetCancellation:', etInfo) ;
 
   Sql.Exec(' exec OrderSetCancellation  ', [], []);
 
@@ -422,7 +421,7 @@ end;
 
 procedure TOrdersT.OrderSetRequestClosed;
 begin
-  log('TOrdersT.OrderSetRequestClosed:', etDebug);
+  log('TOrdersT.OrderSetRequestClosed:', etInfo);
 
   Sql.Exec(' exec OrderSetRequestClosed  ', [], []);
 
@@ -447,7 +446,7 @@ end;
 
 procedure TOrdersT.OrderSetRequestOpen;
 begin
-  log('TOrdersT.OrderSetRequestOpen Begin', etDebug) ;
+  log('TOrdersT.OrderSetRequestOpen Begin', etInfo) ;
 
   Sql.Exec(' exec OrderSetRequestOpen ', [], []);
 
@@ -468,7 +467,7 @@ begin
   begin
     Error_T.ShowModal;
   end;
-  log('TOrdersT.OrderSetRequestOpen End', etDebug) ;
+  log('TOrdersT.OrderSetRequestOpen End', etInfo) ;
 end;
 
 procedure TOrdersT.actDeleteExecute(Sender: TObject);
@@ -589,7 +588,7 @@ procedure TOrdersT.ActionExecute(ActionID: Integer);
 var Action: string;
     DateValue: TDateTime;
 begin
-  log('TOrdersT.ActionExecute Begin', etDebug);
+  log('TOrdersT.ActionExecute Begin', etinfo);
 
   Sql.Open('''
     delete from #ActionParams;
@@ -609,7 +608,7 @@ begin
 
   if Action = 'SetNewDeliveryDate' then
   begin
-    log('TOrdersT.ActionExecute 1 SetNewDeliveryDate', etDebug);
+    log('TOrdersT.ActionExecute 1 SetNewDeliveryDate', etinfo);
 
     OrdersNewDeliveryDateF.FormAction := acUpdate;
     OrdersNewDeliveryDateF.ID := ActionID;
@@ -620,7 +619,7 @@ begin
 
   if Action = 'ToInWork' then //ToInWork	Создать заказ
   begin
-    log('TOrdersT.ActionExecute 2 ToInWork', etDebug);
+    log('TOrdersT.ActionExecute 2 ToInWork', etinfo);
     if sql.GetSetting('AllowCreateOrder', false) = True then
     begin
       AllowCreateOrderF.ShowModal;
@@ -631,7 +630,7 @@ begin
 
   if Action = 'ToReturnPartial' then //ToReturnPartial Частичный возврат
   begin
-    log('TOrdersT.ActionExecute 3 ToReturnPartial', etDebug);
+    log('TOrdersT.ActionExecute 3 ToReturnPartial', etinfo);
 
     if Grid.SelectedRows.Count > 1 then
     begin
@@ -670,7 +669,7 @@ begin
 
   if ActionID = 14	{ToBasket	Добавить в корзину} then
   begin
-    log('TOrdersT.ActionExecute 4', etDebug);
+    log('TOrdersT.ActionExecute 4', etinfo);
     Sql.exec(' insert #ProcessedRecords with (rowlock) (Processed, Total) select 0, 0 ', [], []);
     FAccrual.ShowProgress := True;
   end;
@@ -685,13 +684,13 @@ begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
 
-  log('TOrdersT.ActionExecute End', etDebug);
+  log('TOrdersT.ActionExecute End', etinfo);
 end;
 
 procedure TOrdersT.actExecuteActionRollbackExecute(Sender: TObject);
 var Accrual: TAccrual;
 begin
-  log('TOrdersT.actExecuteActionRollbackExecute Begin', etDebug);
+  log('TOrdersT.actExecuteActionRollbackExecute Begin', etInfo);
   Query.DisableControls;
   try
     case (MessageDlg('Вы действительно хотите отменить операцию?' , mtConfirmation, mbYesNo))  of
@@ -714,11 +713,12 @@ begin
     Query.EnableControls;
     DoHideMask;
   end;
-  log('TOrdersT.actExecuteActionRollbackExecute Begin', etDebug);
+  log('TOrdersT.actExecuteActionRollbackExecute Begin', etInfo);
 end;
 
 procedure TOrdersT.actFilterClearExecute(Sender: TObject);
 begin
+  log('TOrdersT.actFilterClearExecute Begin', etInfo);
   DoShowMask;
 
   fStatus2.ClearSelection;
@@ -735,6 +735,7 @@ begin
   edtInvoice.Text := '';
 
   DoHideMask;
+  log('TOrdersT.actFilterClearExecute End', etInfo);
 end;
 
 procedure TOrdersT.actFilterExecute(Sender: TObject);
@@ -771,7 +772,7 @@ end;
 
  procedure TOrdersT.ActionExecuteEnabled;
 begin
-  log('TOrdersT.ActionExecuteEnabled Begin', etDebug);
+  log('TOrdersT.ActionExecuteEnabled Begin', etInfo);
   //добавляем метки в таблицу
   try
     Sql.Q.Close;
@@ -787,7 +788,7 @@ begin
     StateActionMenuCreate;
 
   finally
-    log('TOrdersT.ActionExecuteEnabled End', etDebug);
+    log('TOrdersT.ActionExecuteEnabled End', etInfo);
   end;
 end;
 
@@ -917,7 +918,7 @@ begin
 
   FFilterTextStatus := s;
 
-  log('FFilterTextStatus: ' + FFilterTextStatus, etDebug);
+  log('FFilterTextStatus: ' + FFilterTextStatus, etInfo);
 end;
 
 procedure TOrdersT.GridOpen(Key: Word);
@@ -932,7 +933,7 @@ procedure TOrdersT.GridOpen;
 var FStatus :string;
     FilterIsCancel: Integer;
 begin
-  log('TOrdersT.GridOpen Begin', etDebug);
+  log('TOrdersT.GridOpen Begin', etInfo);
   DoShowMask;
   try
     Query.Close();
@@ -1050,21 +1051,17 @@ begin
   finally
     DoHideMask();
     //UniSession.Synchronize;
-    log('TOrdersT.GridOpen End', etDebug);
+    log('TOrdersT.GridOpen End', etInfo);
   end;
 end;
 
 procedure TOrdersT.GridSelectionChange(Sender: TObject);
 begin
-  log('TOrdersT.GridSelectionChange Begin', etDebug);
-
   Marks.Select;
 
   GetMarksInfo;
 
   ActionExecuteEnabled;
-
-  log('TOrdersT.GridSelectionChange End', etDebug);
 end;
 
 procedure TOrdersT.GroupDetailNameEditCallBack(Sender: TComponent;
@@ -1356,7 +1353,7 @@ end;
 procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  log(EventName, etDebug);
+  log(EventName, etInfo);
   if (EventName = '_columnhide')
   then
   begin
@@ -1407,7 +1404,7 @@ end;
 
 procedure TOrdersT.GridDblClick(Sender: TObject);
 begin
-  if ACurrColumn.FieldName = 'DetailNumber' then
+  if (assigned(ACurrColumn)) and  (ACurrColumn.FieldName = 'DetailNumber') then
   begin
     UniSession.BrowserWindow(Format('https://www.google.com/search?tbm=isch&q=%s+%s', [QueryManufacturer.Value, QueryDetailNumber.Value]), 0, 0, '_blank');
   end
@@ -1513,8 +1510,8 @@ begin
       except
         on E: Exception do
         begin
-          log('TOrdersT.GridLayout Ошибка: ' + e.Message, etDebug);
-          log('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString, etDebug);
+          log('TOrdersT.GridLayout Ошибка: ' + e.Message, etException);
+          log('TOrdersT.GridLayout Column: ' + Sql.Q.FieldByName('Column').AsString, etException);
         end;
       end;
       Sql.Q.Next;
@@ -1631,7 +1628,7 @@ end;
 
 procedure TOrdersT.SupplierSpecifyDeliveryTime;
 begin
-  log('SupplierSpecifyDeliveryTime:', etDebug) ;
+  log('SupplierSpecifyDeliveryTime:', etInfo) ;
 
   Sql.Exec(' exec SupplierSpecifyDeliveryTime ', [], []);
 
@@ -1723,7 +1720,7 @@ var
   IndexnameAsc : string;
   IndexnameDes : string;
 begin
-  log('TOrdersT.UniFrameCreate Begin', etDebug);
+  log('TOrdersT.UniFrameCreate Begin', etInfo);
 
   {$IFDEF Debug}
     Grant.GrantTemplateCreate(self);
@@ -1763,7 +1760,7 @@ begin
 
 
 //  Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
-  log('TOrdersT.UniFrameCreate End', etDebug);
+  log('TOrdersT.UniFrameCreate End', etInfo);
 end;
 
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);
@@ -1774,6 +1771,7 @@ end;
 
 procedure TOrdersT.UniFrameReady(Sender: TObject);
 begin
+  log('TOrdersT.UniFrameReady Begin', etInfo);
   {$IFDEF Debug}
     // fOrderDate.DateTime := date();
     // fClient.Text := 'egud@mail.ru';
@@ -1785,13 +1783,10 @@ end;
 
 procedure TOrdersT.TimerProcessedShowTimer(Sender: TObject);
 begin
-  log('TOrdersT.TimerProcessedShowTimer begin', etDebug);
   try
-    log('TOrdersT.TimerProcessedShowTimer ShowProgress: ' + FAccrual.ShowProgress.ToString(), etDebug);
+
     if FAccrual.ShowProgress then
     begin
-      log('TOrdersT.TimerProcessedShowTimer ShowProgress', etDebug);
-
       FSql.Open('''
           select top 1 Processed, Total
             from #ProcessedRecords (nolock)
@@ -1811,7 +1806,6 @@ begin
     end;
 
   finally
-    log('TOrdersT.TimerProcessedShowTimer Finished: ' + FAccrual.Finished.ToString(), etdebug);
     if FAccrual.Finished then
     begin
       // ОБРАБОТКА ОШИБОК
@@ -1936,7 +1930,7 @@ procedure tMarks.DataRefresh;
 var Key: Integer;
     BM : TBookmark;
 begin
-  log('tMarks.DataRefresh Begin', etDebug);
+  log('tMarks.DataRefresh Begin', etInfo);
   begin
     FGrid.DataSource.DataSet.DisableControls;
     BM := FGrid.DataSource.DataSet.GetBookmark;
@@ -1955,7 +1949,7 @@ begin
       FGrid.DataSource.DataSet.EnableControls;
     end;
   end;
-  log('tMarks.DataRefresh End', etDebug);
+  log('tMarks.DataRefresh End', etInfo);
 end;
 
 procedure tMarks.DeleteInDB();
@@ -1985,7 +1979,7 @@ var i, id:Integer;
     SqlText: string;
     BM : TBookmark;
 begin
-  log('tMarks.Select Begin', etDebug);
+  log('tMarks.Select Begin', etInfo);
 
   SqlText:='';
   Clear;
@@ -2013,7 +2007,7 @@ begin
       FGrid.DataSource.DataSet.FreeBookmark(BM);
     end;
   end;
-  log('tMarks.Select End', etDebug);
+  log('tMarks.Select End', etInfo);
 end;
 
 initialization

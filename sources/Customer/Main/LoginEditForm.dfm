@@ -1,121 +1,120 @@
 object LoginEditF: TLoginEditF
   Left = 0
   Top = 0
-  ClientHeight = 200
-  ClientWidth = 455
+  ClientHeight = 400
+  ClientWidth = 400
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1086#1083#1103
   BorderStyle = bsDialog
   Position = poDesktopCenter
   OldCreateOrder = False
   MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
-  DesignSize = (
-    455
-    200)
+  Layout = 'fit'
+  LayoutConfig.Cls = 'login-form login-container'
   TextHeight = 15
-  object UniLabel2: TUniLabel
-    Left = 41
-    Top = 31
-    Width = 90
-    Height = 13
-    Hint = ''
-    Caption = #1058#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100':'
-    Anchors = []
-    TabOrder = 0
-  end
-  object edtPas: TUniEdit
-    Left = 165
-    Top = 31
-    Width = 225
-    Hint = ''
-    PasswordChar = '*'
-    CharEOL = '*'
-    Text = ''
-    Anchors = []
-    TabOrder = 1
-    EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
-    ClearButton = True
-  end
-  object UniPanel: TUniPanel
+  object loginbox: TUniContainerPanel
     Left = 0
-    Top = 160
-    Width = 455
-    Height = 40
+    Top = 0
+    Width = 400
+    Height = 400
     Hint = ''
-    Align = alBottom
-    TabOrder = 2
-    Caption = ''
+    ParentColor = False
+    Align = alClient
+    TabOrder = 0
+    LayoutConfig.Cls = 'login-box'
+    ExplicitLeft = 75
+    ExplicitTop = 30
+    ExplicitWidth = 256
+    ExplicitHeight = 128
     DesignSize = (
-      455
-      40)
-    object btnOk: TUniButton
-      Left = 281
-      Top = 6
-      Width = 110
-      Height = 28
-      Hint = ''
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      400
+      400)
+    object edtPas: TUniEdit
+      Left = 96
+      Top = 19
+      Width = 225
+      Hint = #1058#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
+      ShowHint = True
+      ParentShowHint = False
+      PasswordChar = '*'
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
       Anchors = []
       TabOrder = 1
-      OnClick = btnOkClick
+      EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1090#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabel = #1058#1077#1082#1091#1097#1080#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabelWidth = 50
+      FieldLabelAlign = laTop
+      ExplicitLeft = 88
+      ExplicitTop = 16
+    end
+    object edtNewPas2: TUniEdit
+      Left = 96
+      Top = 177
+      Width = 225
+      Hint = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      ShowHint = True
+      ParentShowHint = False
+      PasswordChar = '*'
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
+      Anchors = []
+      TabOrder = 2
+      EmptyText = #1055#1086#1074#1090#1086#1088#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabel = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabelWidth = 50
+      FieldLabelAlign = laTop
+      ExplicitLeft = 88
+      ExplicitTop = 159
+    end
+    object edtNewPas: TUniEdit
+      Left = 96
+      Top = 100
+      Width = 225
+      Hint = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      ShowHint = True
+      ParentShowHint = False
+      PasswordChar = '*'
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
+      Anchors = []
+      TabOrder = 3
+      EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabel = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
+      FieldLabelWidth = 50
+      FieldLabelAlign = laTop
+      ExplicitLeft = 88
+      ExplicitTop = 89
     end
     object btnCancel: TUniButton
-      Left = 167
-      Top = 6
+      Left = 94
+      Top = 296
       Width = 107
-      Height = 28
+      Height = 33
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Cancel = True
       Anchors = []
-      TabOrder = 2
+      TabOrder = 4
       OnClick = btnCancelClick
+      ExplicitLeft = 88
+      ExplicitTop = 266
     end
-  end
-  object UniLabel1: TUniLabel
-    Left = 45
-    Top = 80
-    Width = 81
-    Height = 13
-    Hint = ''
-    Caption = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100':'
-    Anchors = []
-    TabOrder = 3
-  end
-  object edtNewPas2: TUniEdit
-    Left = 165
-    Top = 103
-    Width = 225
-    Hint = ''
-    PasswordChar = '*'
-    CharEOL = '*'
-    Text = ''
-    Anchors = []
-    TabOrder = 4
-    EmptyText = #1055#1086#1074#1090#1086#1088#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
-    ClearButton = True
-  end
-  object UniLabel3: TUniLabel
-    Left = 45
-    Top = 104
-    Width = 81
-    Height = 13
-    Hint = ''
-    Caption = #1053#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100':'
-    Anchors = []
-    TabOrder = 5
-  end
-  object edtNewPas: TUniEdit
-    Left = 165
-    Top = 73
-    Width = 225
-    Hint = ''
-    PasswordChar = '*'
-    CharEOL = '*'
-    Text = ''
-    Anchors = []
-    TabOrder = 6
-    EmptyText = #1042#1074#1077#1076#1080#1090#1077' '#1085#1086#1074#1099#1081' '#1087#1072#1088#1086#1083#1100
-    ClearButton = True
+    object btnOk: TUniButton
+      Left = 214
+      Top = 296
+      Width = 110
+      Height = 33
+      Hint = ''
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Anchors = []
+      TabOrder = 5
+      OnClick = btnOkClick
+      ExplicitLeft = 203
+      ExplicitTop = 266
+    end
   end
 end

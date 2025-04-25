@@ -343,48 +343,45 @@ begin
   ReOrder.FormAction := TFormAction.acUpdate;
   ReOrder.ID:=QueryOrderID.AsInteger;
 
-//  begin
-    ReOrder.IsCounter := True;
+  ReOrder.IsCounter := True;
 
-    BM := Query.GetBookmark;
-    Query.DisableControls;
-    try
+  BM := Query.GetBookmark;
+  Query.DisableControls;
+  try
 
-      Query.first;
-      for y := 0 to Query.RecordCount - 1 do
-      begin
+    Query.first;
+    for y := 0 to Query.RecordCount - 1 do
+    begin
 
-        //if Query.FieldByName('StatusID').AsInteger in [1] then  continue;
-        if ((Query.FieldByName('Flag').AsInteger and 4) = 0)  then  continue;
+      //if Query.FieldByName('StatusID').AsInteger in [1] then  continue;
+      if ((Query.FieldByName('Flag').AsInteger and 4) = 0)  then  continue;
 
-        if y = 0 then
-          SqlText:= SqlText + ' Insert into #CounterPart (OrderID, N) '
-        else
-          SqlText:= SqlText + ' Union all ';
+      if y = 0 then
+        SqlText:= SqlText + ' Insert into #CounterPart (OrderID, N) '
+      else
+        SqlText:= SqlText + ' Union all ';
 
-        SqlText:= SqlText + ' select ' + Query.FieldByName('OrderID').AsString + ', ' + y.ToString;
+      SqlText:= SqlText + ' select ' + Query.FieldByName('OrderID').AsString + ', ' + y.ToString;
 
-        Query.Next;
-      end;
-
-    finally
-      Query.GotoBookmark(BM);
-      Query.FreeBookmark(BM);
-      Query.EnableControls;
+      Query.Next;
     end;
 
-    log(SqlText,etInfo);
+  finally
+    Query.GotoBookmark(BM);
+    Query.FreeBookmark(BM);
+    Query.EnableControls;
+  end;
 
-    sql.Exec('''
-                if OBJECT_ID('tempdb..#CounterPart') is not null
-                  drop table #CounterPart;
+  sql.Exec('''
+              if OBJECT_ID('tempdb..#CounterPart') is not null
+                drop table #CounterPart;
 
-                 CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
-                                           ,N         int
-                                           ,Processed bit
-                                           );
-             ''' + SqlText
-             , [], []);
+               CREATE TABLE #CounterPart (OrderID   Numeric(18, 0)
+                                         ,N         int
+                                         ,Processed bit
+                                         );
+           ''' + SqlText
+           , [], []);
 
   ReOrder.ShowModal(ReOrderCallBack);
 end;

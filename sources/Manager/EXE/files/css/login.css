@@ -1,0 +1,122 @@
+
+/* Центрирование формы */
+.login-container {
+    /* max-width: 320px; */
+    /* margin: 80px auto; */
+    /* padding: 32px; */
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-style: none; 
+    /* border-width: 1px; */
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+.login-box {
+    background-color: white;
+    padding: 32px;
+}
+
+/* Заголовок */
+.login-form .login-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-form .x-panel-default {
+    /* border-color: #ddd; */
+    border-style: none !important; 
+    /* border-width: 1px; */
+}
+
+/* Поля ввода TUniEdit */
+.login-form .x-form-field {
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc !important;
+    transition: border-color 0.3s;
+} 
+
+.login-form .x-form-field:focus {
+    border-color: #0078d7 !important;
+}
+
+/* Кнопка TUniButton */
+.login-form .x-btn-default-small {
+    background-color: #0078d7 !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-size: 14px;
+    padding: 10px 14px;
+    transition: background-color 0.3s;
+}
+
+.login-form .x-btn-default-small:hover {
+    background-color: #005a9e !important;
+}
+
+/* --- ЧЕКБОКС --- */
+
+/* Блок чекбокса */
+.remember-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 8px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Сам квадрат чекбокса */
+.login-form .x-form-cb-wrap .x-form-checkbox {
+    background-color: white !important;
+    border: 2px solid #0078d7 !important;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    box-shadow: none !important;
+    background-image: none !important;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Выбранный чекбокс */
+.login-form .x-form-item.x-form-cb-checked .x-form-checkbox {
+    background-color: #0078d7 !important;
+    background-image: none !important;
+    border-color: #0078d7 !important;
+}
+
+/* Текст чекбокса */
+.login-form .x-form-cb-label {
+    font-size: 14px !important;
+    color: #333 !important;
+    font-family: 'Segoe UI', sans-serif !important;
+    line-height: 18px !important; 
+    height: 18px;                 
+    display: flex;
+    align-items: center;
+}
+
+/* Убираем стандартные иконки ExtJS */
+.login-form .x-form-checkbox-default:after {
+    display: none !important;
+}
+
+
+.login-form .x-form-cb-label-default.x-form-cb-label-after {
+    padding-left: 30px;
+    padding-top: 15px;
+} 

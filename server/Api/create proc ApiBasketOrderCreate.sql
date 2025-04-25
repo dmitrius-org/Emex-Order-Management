@@ -43,7 +43,7 @@ exec @RetVal = OrderCreateFromBasket
 if isnull(@OrderNum, '') <> ''
   Update tOrders
      set flag       = isnull(flag, 0) | 1048576 -- Заказ через АПИ
-         ,Comment3  = @Comment
+        ,Comment3   = @Comment
     from tOrders with (updlock index=ao2)
    where ClientID = @ClientID
      and OrderNum = @OrderNum
@@ -53,6 +53,6 @@ return @RetVal
 go
 grant exec on ApiBasketOrderCreate to public
 go
-exec setOV 'ApiBasketOrderCreate', 'P', '20250321', '0'
+exec setOV 'ApiBasketOrderCreate', 'P', '20250423', '1'
 go
  

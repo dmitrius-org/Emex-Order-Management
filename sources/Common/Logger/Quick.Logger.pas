@@ -482,6 +482,8 @@ type
   end;
 
 var
+//  Logger : TLogger;
+
   GlobalLoggerHandledException : procedure(E : Exception) of object;
   GlobalLoggerRuntimeError : procedure(const ErrorName : string; ErrorCode : Byte; ErrorPtr : Pointer) of object;
   GlobalLoggerUnhandledException : procedure(ExceptObject: TObject; ExceptAddr: Pointer) of object;
@@ -1777,7 +1779,6 @@ end;
 
 //initialization
 //  Logger := TLogger.Create;
-
 //
 //finalization
 //  Logger.Free;

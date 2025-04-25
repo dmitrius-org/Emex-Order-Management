@@ -72,6 +72,13 @@ type
     function CreateImageIndex(filename: string): Integer;
 
     function FindNodeByID(AID: Integer): TUniTreeNode;
+
+    procedure SetUserLabel();
+
+    /// <summary>
+    ///  ProfileCallBack - CallBack обработчик действия на форме профили пользователя
+    ///</summary>
+    procedure ProfileCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
   end;
@@ -127,7 +134,8 @@ procedure TMainForm.actProfileExecute(Sender: TObject);
 begin
   UserProfile.FormAction := acUpdate;
   UserProfile.ID := UniMainModule.AUserID;
-  UserProfile.ShowModal();
+  UserProfile.ShowModal(ProfileCallBack);
+
 end;
 
 procedure TMainForm.ConstructNavigator;
@@ -287,6 +295,13 @@ begin
 end;
 
 
+procedure TMainForm.ProfileCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult <> mrOK then Exit;
+
+  SetUserLabel();
+end;
+
 procedure TMainForm.ProfileMenuAdd;
 begin
 //  Profile := MainMenu.Items.Add(Profile, 'О системе');// FindNodeByID(600);
@@ -338,6 +353,11 @@ begin
   UniApplication.Cookies.SetCookie('_MicroWidth', MainMenu.Micro.ToString());
 end;
 
+procedure TMainForm.SetUserLabel;
+begin
+  UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select Name + ''('' + Brief + '')'' from tUser (nolock) where UserID=dbo.GetUserID()');
+end;
+
 procedure TMainForm.TabMainClose(Sender: TObject; var AllowClose: Boolean);
 var
   Ts : TUniTabSheet;
@@ -357,7 +377,7 @@ procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
 
-  UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select Name from tUser (nolock) where UserID=dbo.GetUserID()') + ' (' + UniMainModule.AUserName + ')';
+  SetUserLabel();
 end;
 
 procedure TMainForm.UniFormDestroy(Sender: TObject);

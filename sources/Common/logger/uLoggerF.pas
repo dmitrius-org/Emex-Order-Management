@@ -14,26 +14,25 @@ uses
 
 type
   TLoggerF = class(TUniForm)
-    UniGroupBox1: TUniGroupBox;
-    UniGroupBox2: TUniGroupBox;
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
     UniGroupBox4: TUniGroupBox;
-    cbAppClientLog: TUniDBCheckBox;
     DataSource: TDataSource;
     Query: TFDQuery;
-    UniDBCheckBox2: TUniDBCheckBox;
     FDUpdateSQL: TFDUpdateSQL;
     cbAppSqlLog: TUniDBCheckBox;
     QueryLoggerSettingsID: TFMTBCDField;
     QueryUserID: TFMTBCDField;
-    QueryAppClientLog: TBooleanField;
-    QueryAppSqlLog: TBooleanField;
     QueryUsername: TStringField;
     UniLabel1: TUniLabel;
     QueryLogDestination: TStringField;
     LogDestination: TUniDBCheckComboBox;
+    FileEvent: TUniDBCheckComboBox;
+    QueryFileLogLevel: TStringField;
+    QueryDBLogLevel: TStringField;
+    DBEvent: TUniDBCheckComboBox;
+    QueryLogSql: TBooleanField;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -77,7 +76,7 @@ begin
   Query.ApplyUpdates();
 
   //GlobalLogFileProvider
-  if (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0) then
+  if (AnsiPos('В файл', LogDestination.text) > 0) then
   begin
     UniMainModule.CreateGlobalLogFileProvider;
   end;
@@ -85,7 +84,9 @@ begin
   if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
   with UniMainModule.GlobalLogFileProvider do
   begin
-    Enabled := (cbAppClientLog.Checked) and (Pos('В файл', LogDestination.text) > 0);
+    LogLevel:= ParseLogLevel(FileEvent.text);
+    Enabled := (AnsiPos('В файл', LogDestination.text) > 0);
+
     if Enabled then
       Log('Включено логирование в файл', etInfo)
     else
@@ -93,22 +94,29 @@ begin
   end;
 
   //GlobalLogADODBProvider
-  if (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0) then
+  if (AnsiPos('В базу данных', LogDestination.text) > 0) then
   begin
     UniMainModule.CreateGlobalLogADODBProvider;
   end;
 
-  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
+  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogADODBProvider)>-1 then   //В файл;В базу данных
   with UniMainModule.GlobalLogADODBProvider do
   begin
-    Enabled := (cbAppClientLog.Checked) and (Pos('В базу данных', LogDestination.text) > 0);
+    LogLevel:= ParseLogLevel(DBEvent.text);
+    Enabled := (AnsiPos('В базу данных', LogDestination.text) > 0);
     if Enabled then
       Log('Включено логирование в базу данных', etInfo)
     else
       Log('Оключено логирование в базу данных', etInfo)
   end;
 
-  UniMainModule.FDMoniFlatFileClientLink.Tracing := cbAppSqlLog.Checked;
+  if (AnsiPos('В файл', LogDestination.text) > 0)or
+     (AnsiPos('В базу данных', LogDestination.text) > 0)
+  then
+  begin
+    UniMainModule.FDConnection.Params.MonitorBy := mbCustom;
+    UniMainModule.FDMoniSQl.Tracing := cbAppSqlLog.Checked;
+  end;
 
   ModalResult:=mrOK;
 end;

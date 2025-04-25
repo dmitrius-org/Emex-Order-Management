@@ -11,15 +11,12 @@ uses
 
 type
   TLoginEditF = class(TUniForm)
-    UniLabel2: TUniLabel;
+    loginbox: TUniContainerPanel;
     edtPas: TUniEdit;
-    UniPanel: TUniPanel;
-    btnOk: TUniButton;
-    btnCancel: TUniButton;
-    UniLabel1: TUniLabel;
     edtNewPas2: TUniEdit;
-    UniLabel3: TUniLabel;
     edtNewPas: TUniEdit;
+    btnCancel: TUniButton;
+    btnOk: TUniButton;
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
   private

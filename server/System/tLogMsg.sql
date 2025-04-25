@@ -10,9 +10,9 @@ begin
 	create table tLogMsg
 	(
 	 LogMsgID         numeric(18, 0) identity  --
+    
+    ,ThreadId         integer 
 	,UserID           numeric(18, 0)    -- 
-    --,AppName          varchar(30)
-
 	,EventDate        DateTime -- Клиентское логирование
 	,EventType        varchar(20) -- Серверное логирование (sql)
     ,Msg              varchar(max)

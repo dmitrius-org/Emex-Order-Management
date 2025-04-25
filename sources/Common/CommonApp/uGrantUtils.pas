@@ -53,20 +53,22 @@ begin
 
       UniMainModule.Query.Close;
       UniMainModule.Query.SQL.Text :=
-         ' insert tMenu (MenuID, N, Caption, Name, Type, ParentID ) ' +
-         ' select t.MenuID ' +
-         '       ,t.MenuID ' +
-         '       ,:Caption ' +
-         '       ,:Name    ' +
-         '       ,1        ' +
-         '       ,m.MenuID ' +
-         '   from tMenu m (nolock)                      ' +
-         '  inner join ( Select max(MenuID)+1 MenuID from tMenu m (nolock) ) t on 1=1 '+
-         '  where m.Name = :ParentID                    ' +
-         '    and not exists (select 1                  ' +
-         '                      from tMenu mm (nolock)  ' +
-         '                     where mm.Name = :Name)   ' +
-         ' select 0';
+      '''
+          insert tMenu (MenuID, N, Caption, Name, Type, ParentID )
+          select t.MenuID
+                ,t.MenuID
+                ,:Caption
+                ,:Name
+                ,1
+                ,m.MenuID
+            from tMenu m (nolock)
+           inner join ( Select max(MenuID)+1 MenuID from tMenu m (nolock) ) t on 1=1
+           where m.Name = :ParentID
+             and not exists (select 1
+                               from tMenu mm (nolock)
+                              where mm.Name = :Name)
+          select 0
+      ''';
 
       for Index := 0 to Menu.ActionCount- 1 do
       Begin
@@ -79,6 +81,7 @@ begin
 
 
          UniMainModule.Query.ParamByName('Name').Value := AComp.ClassName + '.' + Menu[Index].Name;
+
          if AParentMenu <> '' then
            UniMainModule.Query.ParamByName('ParentID').Value := AParentMenu
          else
@@ -100,6 +103,7 @@ begin
     try
       // если -1, то пункт не контролируем правами
       if AAction[Index].Tag = -1 then Continue;
+
       r:= VarToInt(FUserGrant.Values[AComp.ClassName + '.' + vartostr(AAction[Index].Name)]);
 
       AAction[Index].Tag:=r;
@@ -108,6 +112,7 @@ begin
       on E: Exception do
       begin
         log(Format('Ошибка  [%s]', [E.Message]), etException);
+        log(Format('Ошибка  [%s]', [FUserGrant.Values[AComp.ClassName + '.' + vartostr(AAction[Index].Name)]]), etException);
       end;
     end;
   end;

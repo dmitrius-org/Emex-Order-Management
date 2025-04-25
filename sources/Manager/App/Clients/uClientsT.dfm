@@ -2163,7 +2163,7 @@ object ClientsT: TClientsT
       OnExecute = actPasswordResetExecute
     end
     object actApi: TAction
-      Caption = 'Api'
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' API'
       OnExecute = actApiExecute
     end
     object actRestCalc: TAction

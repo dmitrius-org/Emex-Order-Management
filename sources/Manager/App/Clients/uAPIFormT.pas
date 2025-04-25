@@ -1,4 +1,4 @@
-﻿unit utest;
+﻿unit uAPIFormT;
 
 interface
 
@@ -13,8 +13,9 @@ uses
   uniBitBtn, uniGroupBox, uniToolBar, uCommonType, uniGUIFrame, uBaseT;
 
 type
-  TAPIKeyT = class(TBaseT)
+  TAPIFormT = class(TBaseT)
     actDelete: TAction;
+    ppInsert: TUniMenuItem;
     ToolBars: TUniPanel;
     ToolBar: TUniToolBar;
     UniToolButton1: TUniToolButton;
@@ -30,14 +31,22 @@ type
     QueryFlag: TIntegerField;
     QueryinDatetime: TSQLTimeStampField;
     QueryEndDatetime: TSQLTimeStampField;
+    UniToolButton3: TUniToolButton;
+    ppUpdate: TUniMenuItem;
+    ppDelete: TUniMenuItem;
+    N3: TUniMenuItem;
+    N1: TUniMenuItem;
     procedure actDeleteExecute(Sender: TObject);
     procedure actInsertExecute(Sender: TObject);
     procedure actUpdateExecute(Sender: TObject);
+    procedure UniFrameCreate(Sender: TObject);
   private
     FClientID: Integer;
     procedure SetClientID(const Value: Integer);
     { Private declarations }
     procedure EditCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure MenuEnabled;
   public
     { Public declarations }
     procedure DataRefresh(); override;
@@ -46,50 +55,72 @@ type
   end;
 
 var
-  APIKeyT: TAPIKeyT;
+  APIFormT: TAPIFormT;
 
 implementation
 
 uses
-  uUtils.Logger, uAPIKeyForm_F;
+  uUtils.Logger, uAPIKeyForm_F, uMainVar;
 
 {$R *.dfm}
 
-procedure TAPIKeyT.actDeleteExecute(Sender: TObject);
+procedure TAPIFormT.actDeleteExecute(Sender: TObject);
 begin
-  APIKeyForm_F.FormAction := TFormAction.acDelete;
-  APIKeyForm_F.ShowModal(EditCallBack);
+  Sql.Open('''
+    declare @R      int
+
+    exec @R =ApiKeyDelete
+              @ApiKeysID = :ApiKeysID
+    select @R as R
+  ''', ['ApiKeysID'], [QueryApiKeysID.AsInteger]
+  );
+
+  if Sql.f('R').value = 0 then
+    DataRefresh;
 end;
 
-procedure TAPIKeyT.actInsertExecute(Sender: TObject);
+procedure TAPIFormT.actInsertExecute(Sender: TObject);
 begin
-  APIKeyForm_F.FormAction := TFormAction.acInsert;
-  APIKeyForm_F.ShowModal(EditCallBack);
+  Sql.Open('''
+    declare @R      int
+           ,@ApiKey NVARCHAR(128)
+    exec @R =ApiKeyGenerate
+              @ClientID = :ClientID
+             ,@ApiKey   = @ApiKey out
+    select @R as R
+  ''', ['ClientID'], [FClientID]
+  );
+
+  if Sql.f('R').value = 0 then
+    DataRefresh;
 end;
 
-procedure TAPIKeyT.actUpdateExecute(Sender: TObject);
+procedure TAPIFormT.actUpdateExecute(Sender: TObject);
 begin
   APIKeyForm_F.FormAction := TFormAction.acUpdate;
+  APIKeyForm_F.ID := QueryApiKeysID.AsInteger;
   APIKeyForm_F.ShowModal(EditCallBack);
 end;
 
-procedure TAPIKeyT.DataRefresh;
+procedure TAPIFormT.DataRefresh;
 begin
   ShowMask('Ждите, операция выполняется');
-  UniSession.Synchronize;
+ // UniSession.Synchronize;
   try
     Query.Close;
     Query.ParamByName('ClientID').AsInteger := FClientID;
     Query.Open;
 
-    inherited;
+    //inherited;
+
+    MenuEnabled;
   finally
     HideMask();
-    UniSession.Synchronize;
+  //  UniSession.Synchronize;
   end;
 end;
 
-procedure TAPIKeyT.EditCallBack(Sender: TComponent; AResult: Integer);
+procedure TAPIFormT.EditCallBack(Sender: TComponent; AResult: Integer);
 begin
   LogInfo('TAPIKeyT.EditCallBack Begin');
   if AResult <> mrOK then Exit;
@@ -112,12 +143,29 @@ begin
   LogInfo('TAPIKeyT.EditCallBack end');
 end;
 
-procedure TAPIKeyT.SetClientID(const Value: Integer);
+procedure TAPIFormT.MenuEnabled;
+begin
+  actUpdate.Enabled := (Query.recordcount > 0) and (actUpdate.tag = 1);
+  actDelete.Enabled := (Query.recordcount > 0) and (actDelete.tag = 1);
+end;
+
+procedure TAPIFormT.SetClientID(const Value: Integer);
 begin
   FClientID := Value;
+
+  DataRefresh;
+end;
+
+procedure TAPIFormT.UniFrameCreate(Sender: TObject);
+begin
+  ParentMenu := 'TClientsT.actApi';
+
+  inherited;
+
+  MenuEnabled;
 end;
 
 initialization
-  RegisterClass(TAPIKeyT);
+  RegisterClass(TAPIFormT);
 
 end.

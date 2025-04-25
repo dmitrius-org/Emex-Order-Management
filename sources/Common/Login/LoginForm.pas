@@ -7,19 +7,17 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIRegClasses, uniGUIForm, uniEdit, uniButton,
   uniGUIBaseClasses, uniLabel,
-  Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Error, uniCheckBox;
+  Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Error, uniCheckBox, uniPanel;
 
 type
   TLoginF = class(TUniLoginForm)
-    UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
+    loginbox: TUniContainerPanel;
     btnOk: TUniButton;
     edtUser: TUniEdit;
     edtPas: TUniEdit;
-    btnCancel: TUniButton;
     UniCheckBox1: TUniCheckBox;
     lblReset: TUniLabel;
-    procedure btnCancelClick(Sender: TObject);
+    UniLabel2: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure UniLoginFormShow(Sender: TObject);
   private
@@ -39,11 +37,6 @@ uses uniGUIVars, ServerModule, MainModule, uniGUIApplication;
 function LoginF: TLoginF;
 begin
   Result := TLoginF(UniMainModule.GetFormInstance(TLoginF));
-end;
-
-procedure TLoginF.btnCancelClick(Sender: TObject);
-begin
-  self.ModalResult:=mrcancel;
 end;
 
 procedure TLoginF.btnOkClick(Sender: TObject);

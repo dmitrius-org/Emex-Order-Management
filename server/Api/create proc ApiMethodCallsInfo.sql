@@ -12,7 +12,7 @@ as
 
   select @R         = 0
   
-  MERGE INTO tApiMethodCalls WITH (HOLDLOCK) AS target
+  MERGE INTO tApiMethodCalls WITH (rowlock) AS target
   USING (SELECT @ClientID   AS ClientID, 
                 @ApiKey     AS ApiKey,
                 @MethodName AS MethodName) AS source
@@ -53,6 +53,6 @@ return @r
 go
 grant exec on ApiMethodCallsInfo to public
 go
-exec setOV 'ApiMethodCallsInfo', 'P', '20250217', '1'
+exec setOV 'ApiMethodCallsInfo', 'P', '20250423', '3'
 go
 

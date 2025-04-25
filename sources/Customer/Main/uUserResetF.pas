@@ -15,6 +15,8 @@ type
     btnOk: TUniButton;
     UniLabel2: TUniLabel;
     UniContainerPanel1: TUniContainerPanel;
+    loginbox: TUniContainerPanel;
+    UniLabel1: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

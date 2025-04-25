@@ -1,4 +1,5 @@
 object LoggerF: TLoggerF
+  AlignWithMargins = True
   Left = 0
   Top = 0
   ClientHeight = 327
@@ -8,127 +9,26 @@ object LoggerF: TLoggerF
   BorderStyle = bsDialog
   OldCreateOrder = False
   MonitoredKeys.Keys = <>
+  AlignmentControl = uniAlignmentClient
+  Layout = 'fit'
   TextHeight = 15
-  object UniGroupBox1: TUniGroupBox
-    Left = 0
-    Top = 0
-    Width = 581
-    Height = 75
-    Hint = ''
-    Visible = False
-    Caption = #1051#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-    Align = alTop
-    TabOrder = 0
-    object UniDBCheckBox2: TUniDBCheckBox
-      Left = 26
-      Top = 29
-      Width = 367
-      Height = 17
-      Hint = ''
-      Caption = #1057#1077#1088#1074#1077#1088#1085#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-      TabOrder = 1
-      ParentColor = False
-      Color = clBtnFace
-    end
-  end
-  object UniGroupBox2: TUniGroupBox
-    Left = 0
-    Top = 75
-    Width = 581
-    Height = 215
-    Hint = ''
-    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
-    Align = alClient
-    TabOrder = 1
-    object UniGroupBox4: TUniGroupBox
-      AlignWithMargins = True
-      Left = 5
-      Top = 25
-      Width = 571
-      Height = 185
-      Hint = ''
-      Margins.Top = 10
-      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
-      Align = alClient
-      TabOrder = 1
-      object cbAppClientLog: TUniDBCheckBox
-        AlignWithMargins = True
-        Left = 5
-        Top = 25
-        Width = 561
-        Height = 17
-        Hint = ''
-        Margins.Top = 10
-        DataField = 'AppClientLog'
-        DataSource = DataSource
-        Caption = #1042#1082#1083#1102#1095#1080#1090#1100' '#1082#1083#1080#1077#1085#1090#1089#1082#1086#1077' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
-        Align = alTop
-        TabOrder = 1
-        ParentColor = False
-        Color = clBtnFace
-      end
-      object cbAppSqlLog: TUniDBCheckBox
-        AlignWithMargins = True
-        Left = 5
-        Top = 55
-        Width = 561
-        Height = 17
-        Hint = ''
-        Margins.Top = 10
-        DataField = 'AppSqlLog'
-        DataSource = DataSource
-        Caption = #1051#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' SQL '#1079#1072#1087#1088#1086#1089#1086#1074
-        Align = alTop
-        TabOrder = 2
-        ParentColor = False
-        Color = clBtnFace
-      end
-      object UniLabel1: TUniLabel
-        AlignWithMargins = True
-        Left = 5
-        Top = 78
-        Width = 142
-        Height = 13
-        Hint = ''
-        Caption = #1057#1086#1093#1088#1072#1085#1103#1090#1100' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' '#1074':'
-        Align = alTop
-        TabOrder = 3
-      end
-      object LogDestination: TUniDBCheckComboBox
-        AlignWithMargins = True
-        Left = 5
-        Top = 97
-        Width = 561
-        Hint = ''
-        Align = alTop
-        DataField = 'LogDestination'
-        DataSource = DataSource
-        Items.Strings = (
-          #1042' '#1092#1072#1081#1083
-          #1042' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093)
-        TabOrder = 4
-        ClearButton = True
-        IconItems = <>
-        Mode = umNameValue
-      end
-    end
-  end
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 293
+    Top = 280
     Width = 575
-    Height = 31
+    Height = 44
     Hint = ''
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 0
+    BorderStyle = ubsNone
     Caption = ''
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 484
-      Top = 4
-      Width = 84
-      Height = 23
+      Left = 464
+      Top = 3
+      Width = 105
+      Height = 38
       Hint = ''
       Margins.Right = 6
       Glyph.Data = {
@@ -168,16 +68,20 @@ object LoggerF: TLoggerF
         0000000000000000000000000000000000000000000000000000}
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Align = alRight
+      ParentFont = False
+      Font.Height = -13
       TabOrder = 1
+      LayoutConfig.Margin = '0px 2px 5px 5px'
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 375
-      Top = 4
+      Left = 348
+      Top = 3
       Width = 103
-      Height = 23
+      Height = 38
       Hint = ''
+      Margins.Right = 10
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         200000000000000400000000000000000000000000000000000000000000131C
@@ -216,7 +120,113 @@ object LoggerF: TLoggerF
       Caption = #1054#1090#1084#1077#1085#1072
       Align = alRight
       TabOrder = 2
+      LayoutConfig.Margin = '0px 0px 5px 2px'
       OnClick = btnCancelClick
+      ExplicitLeft = 369
+    end
+  end
+  object UniGroupBox4: TUniGroupBox
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 575
+    Height = 271
+    Hint = ''
+    Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
+    Align = alClient
+    TabOrder = 1
+    object cbAppSqlLog: TUniDBCheckBox
+      AlignWithMargins = True
+      Left = 14
+      Top = 208
+      Width = 561
+      Height = 17
+      Hint = ''
+      Margins.Top = 10
+      DataField = 'LogSql'
+      DataSource = DataSource
+      Caption = #1051#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077' SQL '#1079#1072#1087#1088#1086#1089#1086#1074
+      TabOrder = 1
+      ParentColor = False
+      Color = clBtnFace
+    end
+    object UniLabel1: TUniLabel
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 3
+      Height = 13
+      Hint = ''
+      Caption = ''
+      Align = alTop
+      TabOrder = 2
+    end
+    object LogDestination: TUniDBCheckComboBox
+      AlignWithMargins = True
+      Left = 14
+      Top = 34
+      Width = 499
+      Hint = ''
+      DataField = 'LogDestination'
+      DataSource = DataSource
+      Items.Strings = (
+        #1042' '#1092#1072#1081#1083
+        #1042' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093)
+      TabOrder = 3
+      FieldLabel = #1042#1082#1083#1102#1095#1080#1090#1100' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
+      FieldLabelAlign = laTop
+      FieldLabelFont.Height = -13
+      ClearButton = True
+      IconItems = <>
+      Mode = umNameValue
+    end
+    object FileEvent: TUniDBCheckComboBox
+      AlignWithMargins = True
+      Left = 14
+      Top = 86
+      Width = 499
+      Hint = ''
+      DataField = 'FileLogLevel'
+      DataSource = DataSource
+      Items.Strings = (
+        'HEADER'
+        'INFO'
+        'WARN'
+        'ERROR'
+        'CRITICAL'
+        'EXCEPT'
+        'DEBUG')
+      TabOrder = 4
+      FieldLabel = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1092#1072#1081#1083
+      FieldLabelAlign = laTop
+      FieldLabelFont.Height = -13
+      ClearButton = True
+      IconItems = <>
+      Mode = umNameValue
+    end
+    object DBEvent: TUniDBCheckComboBox
+      AlignWithMargins = True
+      Left = 14
+      Top = 138
+      Width = 499
+      Hint = ''
+      DataField = 'DBLogLevel'
+      DataSource = DataSource
+      Items.Strings = (
+        'HEADER'
+        'INFO'
+        'WARN'
+        'ERROR'
+        'CRITICAL'
+        'EXCEPT'
+        'DEBUG')
+      TabOrder = 5
+      FieldLabel = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093
+      FieldLabelAlign = laTop
+      FieldLabelFont.Height = -13
+      ClearButton = True
+      IconItems = <>
+      Mode = umNameValue
     end
   end
   object DataSource: TDataSource
@@ -244,14 +254,15 @@ object LoggerF: TLoggerF
       ' )  '
       '  '
       '  insert into tLoggerSettings '
-      '        (UserID, AppName, AppClientLog, AppSqlLog) '
-      '  select :UserID, :AppName, 0, 0     '
+      '        (UserID, AppName) '
+      '  select :UserID, :AppName     '
       ''
       ''
       'Select ls.LoggerSettingsID, '
       '       ls.UserID, '
-      '       ls.AppClientLog, '
-      '       ls.AppSqlLog,'
+      '       ls.FileLogLevel,'
+      '       ls.DBLogLevel,'
+      '       ls.LogSql,'
       '       convert(varchar, coalesce(c.Brief, u.Name, '#39#39')) Username,'
       '       ls.LogDestination'
       '  from tLoggerSettings ls (nolock)'
@@ -292,14 +303,6 @@ object LoggerF: TLoggerF
       Precision = 18
       Size = 0
     end
-    object QueryAppClientLog: TBooleanField
-      FieldName = 'AppClientLog'
-      Origin = 'AppClientLog'
-    end
-    object QueryAppSqlLog: TBooleanField
-      FieldName = 'AppSqlLog'
-      Origin = 'AppSqlLog'
-    end
     object QueryUsername: TStringField
       FieldName = 'Username'
       Size = 128
@@ -307,6 +310,17 @@ object LoggerF: TLoggerF
     object QueryLogDestination: TStringField
       FieldName = 'LogDestination'
       Size = 64
+    end
+    object QueryFileLogLevel: TStringField
+      FieldName = 'FileLogLevel'
+      Size = 256
+    end
+    object QueryDBLogLevel: TStringField
+      FieldName = 'DBLogLevel'
+      Size = 256
+    end
+    object QueryLogSql: TBooleanField
+      FieldName = 'LogSql'
     end
   end
   object FDUpdateSQL: TFDUpdateSQL
@@ -321,9 +335,10 @@ object LoggerF: TLoggerF
       '        :NEW_AppSqlLog      */    ')
     ModifySQL.Strings = (
       '  UPDATE tLoggerSettings '
-      '     SET AppClientLog  = :NEW_AppClientLog  '
-      '        ,AppSqlLog     = :NEW_AppSqlLog  '
-      '        ,LogDestination= :NEW_LogDestination     '
+      '     SET FileLogLevel  = :NEW_FileLogLevel'
+      '        ,DBLogLevel    = :NEW_DBLogLevel '
+      '        ,LogDestination= :NEW_LogDestination '
+      '        ,LogSql        = :NEW_LogSql    '
       '   WHERE LoggerSettingsID= :NEW_LoggerSettingsID'
       ''
       ''
@@ -335,7 +350,7 @@ object LoggerF: TLoggerF
       'Select *'
       '  from tLoggerSettings (nolock)'
       ' where LoggerSettingsID= :NEW_LoggerSettingsID')
-    Left = 540
-    Top = 123
+    Left = 396
+    Top = 211
   end
 end

@@ -1,7 +1,7 @@
 object OrdersProtocol_T: TOrdersProtocol_T
   Left = 0
   Top = 0
-  ClientHeight = 491
+  ClientHeight = 645
   ClientWidth = 1324
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083
   OnShow = UniFormShow
@@ -15,7 +15,7 @@ object OrdersProtocol_T: TOrdersProtocol_T
     Left = 0
     Top = 69
     Width = 1324
-    Height = 422
+    Height = 576
     Hint = ''
     ShowHint = True
     ParentShowHint = False

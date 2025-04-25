@@ -10,11 +10,7 @@ uses
 
 type
   TAPIKeyT_W = class(TUniForm)
-    UniButton1: TUniButton;
-    UniButton2: TUniButton;
-    procedure UniFormDestroy(Sender: TObject);
-    procedure UniButton1Click(Sender: TObject);
-    procedure UniButton2Click(Sender: TObject);
+    procedure UniFormShow(Sender: TObject);
   private
     FClientID: Integer;
     procedure SetClientID(const Value: Integer);
@@ -29,7 +25,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uniGUIFrame, uAPIKeyT, uBaseT, utest;
+  MainModule, uniGUIApplication, uniGUIFrame, uBaseT, uAPIFormT, utest;
 
 function APIKeyT_W: TAPIKeyT_W;
 begin
@@ -43,28 +39,12 @@ begin
   FClientID := Value;
 end;
 
-procedure TAPIKeyT_W.UniButton1Click(Sender: TObject);
-
+procedure TAPIKeyT_W.UniFormShow(Sender: TObject);
 begin
-
-
-
-  test := Ttest.Create(Self);
-  test.Align    := alClient;
-  test.Parent   := self;
-
-end;
-
-procedure TAPIKeyT_W.UniButton2Click(Sender: TObject);
-begin
-  APIKeyT := TAPIKeyT.Create(Self);
-  APIKeyT.Align    := alClient;
-  APIKeyT.Parent   := self;
-end;
-
-procedure TAPIKeyT_W.UniFormDestroy(Sender: TObject);
-begin
-//  FreeAndNil(BaseT);
+  APIFormT := TAPIFormT.Create(Self);
+  APIFormT.Align    := alClient;
+  APIFormT.Parent   := self;
+  APIFormT.ClientID := FClientID;
 end;
 
 end.

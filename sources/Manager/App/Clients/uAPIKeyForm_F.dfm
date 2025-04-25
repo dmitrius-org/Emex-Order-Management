@@ -1,8 +1,8 @@
 object APIKeyForm_F: TAPIKeyForm_F
   Left = 0
   Top = 0
-  ClientHeight = 461
-  ClientWidth = 769
+  ClientHeight = 274
+  ClientWidth = 616
   Caption = 'API '#1050#1083#1102#1095
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -12,20 +12,19 @@ object APIKeyForm_F: TAPIKeyForm_F
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 414
-    Width = 763
+    Top = 227
+    Width = 610
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
-    ExplicitWidth = 1278
     DesignSize = (
-      763
+      610
       44)
     object btnOk: TUniBitBtn
-      Left = 643
+      Left = 490
       Top = 4
       Width = 114
       Height = 35
@@ -34,10 +33,9 @@ object APIKeyForm_F: TAPIKeyForm_F
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnClick = btnOkClick
-      ExplicitLeft = 1158
     end
     object btnCancel: TUniBitBtn
-      Left = 556
+      Left = 403
       Top = 4
       Width = 81
       Height = 35
@@ -46,45 +44,42 @@ object APIKeyForm_F: TAPIKeyForm_F
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnClick = btnCancelClick
-      ExplicitLeft = 1071
     end
   end
   object pcCommon: TUniPageControl
     Left = 0
     Top = 0
-    Width = 769
-    Height = 411
+    Width = 616
+    Height = 224
     Hint = ''
     ActivePage = tabCommon
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 1284
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
-        Width = 761
+        Width = 608
         Height = 143
         Hint = ''
         ParentColor = False
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 1276
         DesignSize = (
-          761
+          608
           143)
         object edtBrief: TUniEdit
           Left = 160
           Top = 16
-          Width = 581
+          Width = 428
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
+          ReadOnly = True
           ClearButton = True
-          ExplicitWidth = 1096
         end
         object lblName: TUniLabel
           Left = 25
@@ -95,10 +90,10 @@ object APIKeyForm_F: TAPIKeyForm_F
           Caption = 'API '#1082#1083#1102#1095':'
           TabOrder = 2
         end
-        object UniEdit1: TUniEdit
+        object edtComment: TUniEdit
           Left = 160
           Top = 44
-          Width = 581
+          Width = 428
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
@@ -118,8 +113,8 @@ object APIKeyForm_F: TAPIKeyForm_F
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
-        Top = 300
-        Width = 755
+        Top = 113
+        Width = 602
         Height = 80
         Hint = ''
         Title = #1040#1091#1076#1080#1090
@@ -127,17 +122,15 @@ object APIKeyForm_F: TAPIKeyForm_F
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 1
-        ExplicitWidth = 1270
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
-          Width = 751
+          Width = 598
           Height = 63
           Hint = ''
           ParentColor = False
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 1266
           object edtID: TUniEdit
             Left = 141
             Top = 8

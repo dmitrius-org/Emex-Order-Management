@@ -78,20 +78,21 @@ Begin
     qry.Connection:= FConnection;
 
     qry.Close;
-    qry.SQL.Text := ' declare @R      int                     '+
-                    '        ,@AuditID numeric(18, 0)         '+
-                    ' ' +
-                    ' exec @r = AuditInsert                   '+
-                    '             @AuditID     = @AuditID out  '+
-                    '            ,@ObjectID    = :ObjectID     '+
-                    '            ,@ObjectTypeID= :ObjectTypeID '+
-                    '            ,@ActionID    = :ActionID     '+
-                    '            ,@Comment     = :Comment      '+
-                    '            ,@UserID      = :UserID       '+
-                    '            ,@HostInfoID  = :HostInfoID   '+
-                    ' ' +
-                    ' select @r as retcode, @AuditID as AuditID'+
-                    ' ';
+    qry.SQL.Text := '''
+     declare @R      int
+            ,@AuditID numeric(18, 0)
+
+     exec @r = AuditInsert
+                 @AuditID     = @AuditID out
+                ,@ObjectID    = :ObjectID
+                ,@ObjectTypeID= :ObjectTypeID
+                ,@ActionID    = :ActionID
+                ,@Comment     = :Comment
+                ,@UserID      = :UserID
+                ,@HostInfoID  = :HostInfoID
+
+     select @r as retcode, @AuditID as AuditID
+    ''';
     qry.ParamByName('ObjectID').Value     := AObjectID;
     qry.ParamByName('ObjectTypeID').Value := AObjectTypeID ;
     qry.ParamByName('ActionID').Value     := AActionID;

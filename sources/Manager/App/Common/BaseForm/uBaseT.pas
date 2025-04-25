@@ -23,7 +23,6 @@ type
     PopupMenu: TUniPopupMenu;
     ImageList16: TUniImageList;
     actRefreshAll: TAction;
-    ppRefresh: TUniMenuItem;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
@@ -40,16 +39,18 @@ type
   private
     { Private declarations }
     FAction: tFormaction;
+    FParentMenu: string;
 
   public
     { Public declarations }
     procedure DataRefresh(); dynamic;
+    property ParentMenu: string read FParentMenu write FParentMenu;
   end;
 
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar;
+  MainModule, uGrantUtils, uMainVar, uUtils.Logger;
 
 {$R *.dfm}
 
@@ -139,8 +140,9 @@ end;
 
 procedure TBaseT.UniFrameCreate(Sender: TObject);
 begin
+  LogInfo('TBaseT.UniFrameCreate Begin ' + Sender.ClassName);
   {$IFDEF Debug}
-    Grant.GrantTemplateCreate(self);
+    Grant.GrantTemplateCreate(self, FParentMenu);
   {$ENDIF}
   Grant.SetGrant(self, ActionList);
 
@@ -149,6 +151,7 @@ begin
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
+  LogInfo('TBaseT.UniFrameCreate End');
 end;
 
 initialization

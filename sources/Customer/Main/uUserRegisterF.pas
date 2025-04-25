@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel;
+  uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel,
+  uniPanel;
 
 type
   TUserRegisterF = class(TUniForm)
@@ -13,19 +14,16 @@ type
     edtPassword: TUniEdit;
     btnCancel: TUniButton;
     btnOk: TUniButton;
-    UniLabel1: TUniLabel;
-    UniLabel2: TUniLabel;
     edtBrief: TUniEdit;
-    UniLabel3: TUniLabel;
     edtPhone: TUniEdit;
-    UniLabel4: TUniLabel;
     edtContactPerson: TUniEdit;
-    UniLabel5: TUniLabel;
     UniLabel6: TUniLabel;
-    UniLabel7: TUniLabel;
-    UniLabel8: TUniLabel;
-    UniLabel9: TUniLabel;
-    UniLabel10: TUniLabel;
+    UniContainerPanel1: TUniContainerPanel;
+    UniLabel2: TUniLabel;
+    UniLabel1: TUniLabel;
+    UniLabel3: TUniLabel;
+    UniLabel4: TUniLabel;
+    UniLabel5: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -63,7 +61,6 @@ begin
   begin
 
     sql.Open('''
-
                declare @R int
                       ,@ClientID numeric(18,0)
                       ,@Hash nvarchar(512)

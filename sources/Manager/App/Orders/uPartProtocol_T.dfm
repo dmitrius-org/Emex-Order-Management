@@ -1,7 +1,7 @@
 object PartProtocol_T: TPartProtocol_T
   Left = 0
   Top = 0
-  ClientHeight = 491
+  ClientHeight = 646
   ClientWidth = 1324
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1080
   OnShow = UniFormShow
@@ -16,7 +16,7 @@ object PartProtocol_T: TPartProtocol_T
     Left = 0
     Top = 0
     Width = 1324
-    Height = 491
+    Height = 646
     Hint = ''
     ShowHint = True
     ParentShowHint = False

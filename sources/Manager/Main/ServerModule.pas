@@ -111,6 +111,7 @@ begin
   CustomFiles.Add('files/css/dashboard.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/messenger.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/messenger_style.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/login.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   CustomFiles.Add('files/js/BadgeText.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 

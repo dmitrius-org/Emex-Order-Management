@@ -123,6 +123,9 @@ type
 
 implementation
 
+//uses
+//  uLogContext;
+
 constructor TLogADODBProvider.Create;
 begin
   inherited;
@@ -230,12 +233,6 @@ begin
   aValues := Format('%s,''%s''',[aValues,aNewValue]);
 end;
 
-//procedure TLogADODBProvider.AddToQuery(var aFields, aValues : string; const aNewField : string; aNewValue : Integer);
-//begin
-//  aFields := Format('%s,%s',[aFields,aNewField]);
-//  aValues := Format('%s,%d',[aValues,aNewValue]);
-//end;
-
 procedure TLogADODBProvider.WriteLog(cLogItem : TLogItem);
 var
   fields : string;
@@ -247,7 +244,7 @@ begin
 
   AddToQuery(fields,values,fFieldsMapping.EventType,EventTypeName[cLogItem.EventType]);
 
-  if iiHost in IncludedInfo        then AddToQuery(fields,values,fFieldsMapping.Host,Host);
+  if iiHost in IncludedInfo        then AddToQuery(fields,values,fFieldsMapping.Host, Host);
   if iiAppName in IncludedInfo     then AddToQuery(fields,values,fFieldsMapping.AppName, AppName);
   if iiEnvironment in IncludedInfo then AddToQuery(fields,values,fFieldsMapping.Environment,Environment);
   if iiOSVersion in IncludedInfo   then AddToQuery(fields,values,fFieldsMapping.OSVersion,OS);
@@ -260,6 +257,10 @@ begin
   fDBQuery.SQL.Clear;
   fDBQuery.SQL.Add(Format('INSERT INTO %s (%s)',[fDBConfig.Table,fields]));
   fDBQuery.SQL.Add(Format('VALUES (%s)',[values]));
+
+//  fDBQuery.SQL.Add(Format('INSERT INTO %s (UserID, UserName, PlaftormInfo, OSVersion, Host, AppName, %s)',[fDBConfig.Table,fields]));
+//  fDBQuery.SQL.Add(Format('Select u.UserID, u.UserName, u.PlaftormInfo, u.OSVersion, u.Host, u.AppName, %s',[values]));
+//  fDBQuery.SQL.Add('From #UsersParams u');
 
   if fDBQuery.ExecSQL = 0 then raise ELogger.Create('[TLogADODBProvider] : Error trying to write to ADODB');
 end;

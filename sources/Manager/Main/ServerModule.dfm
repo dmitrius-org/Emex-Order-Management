@@ -6,6 +6,7 @@ object UniServerModule: TUniServerModule
   SessionTimeout = 86400000
   Port = 8087
   Title = 'Managers'
+  FaviconOptions = [foVisible]
   AjaxTimeout = 500000
   SuppressErrors = [errObjectNotFound]
   Bindings = <>

@@ -1,13 +1,15 @@
 object UserRegisterF: TUserRegisterF
   Left = 0
   Top = 0
-  ClientHeight = 365
-  ClientWidth = 800
+  ClientHeight = 500
+  ClientWidth = 500
   Caption = #1056#1077#1075#1080#1089#1090#1088#1072#1094#1080#1103' '#1074' '#1089#1080#1089#1090#1077#1084#1077
   OnShow = UniFormShow
   BorderStyle = bsNone
   OldCreateOrder = False
   MonitoredKeys.Keys = <>
+  Visible = True
+  AlignmentControl = uniAlignmentClient
   ClientEvents.ExtEvents.Strings = (
     
       'window.afterlayout=function window.afterlayout(sender, layout, e' +
@@ -27,202 +29,212 @@ object UserRegisterF: TUserRegisterF
     
       'window.beforeInit=function window.beforeInit(sender, config)'#13#10'{'#13 +
       #10'    config.shadow=false;'#13#10'}')
+  LayoutConfig.Cls = 'login-form login-container'
   LayoutConfig.Region = 'center'
-  DesignSize = (
-    800
-    365)
   TextHeight = 15
-  object edtEmail: TUniEdit
-    Left = 273
-    Top = 90
-    Width = 325
+  object UniContainerPanel1: TUniContainerPanel
+    Left = 0
+    Top = 0
+    Width = 500
+    Height = 500
     Hint = ''
-    MaxLength = 64
-    Text = ''
-    ParentFont = False
+    ParentColor = False
+    Align = alClient
+    AlignmentControl = uniAlignmentClient
+    ParentAlignmentControl = False
     TabOrder = 0
-    FieldLabelWidth = 5
-    FieldLabelFont.Color = clCrimson
-  end
-  object edtPassword: TUniEdit
-    Left = 273
-    Top = 164
-    Width = 325
-    Hint = ''
-    PasswordChar = '*'
-    MaxLength = 64
-    CharEOL = '*'
-    Text = ''
-    ParentFont = False
-    TabOrder = 1
-    FieldLabelWidth = 5
-    FieldLabelFont.Color = clCrimson
-  end
-  object btnCancel: TUniButton
-    Left = 288
-    Top = 287
-    Width = 143
-    Height = 25
-    Hint = ''
-    Caption = #1053#1072#1079#1072#1076
-    Cancel = True
-    Anchors = []
-    TabOrder = 2
-    OnClick = btnCancelClick
-  end
-  object btnOk: TUniButton
-    Left = 444
-    Top = 287
-    Width = 140
-    Height = 25
-    Hint = ''
-    Caption = #1047#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1090#1100#1089#1103
-    Anchors = []
-    TabOrder = 3
-    ScreenMask.Enabled = True
-    ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' ...'
-    ScreenMask.Target = Owner
-    OnClick = btnOkClick
-  end
-  object UniLabel1: TUniLabel
-    Left = 145
-    Top = 94
-    Width = 36
-    Height = 13
-    Hint = ''
-    Caption = #1055#1086#1095#1090#1072':'
-    TabOrder = 4
-  end
-  object UniLabel2: TUniLabel
-    Left = 145
-    Top = 167
-    Width = 43
-    Height = 13
-    Hint = ''
-    Caption = #1055#1072#1088#1086#1083#1100':'
-    TabOrder = 5
-  end
-  object edtBrief: TUniEdit
-    Left = 273
-    Top = 53
-    Width = 325
-    Hint = ''
-    MaxLength = 128
-    Text = ''
-    ParentFont = False
-    TabOrder = 6
-    FieldLabelWidth = 5
-    FieldLabelFont.Color = clCrimson
-  end
-  object UniLabel3: TUniLabel
-    Left = 145
-    Top = 53
-    Width = 107
-    Height = 13
-    Hint = ''
-    Caption = #1048#1084#1103' / '#1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103':'
-    TabOrder = 7
-  end
-  object edtPhone: TUniEdit
-    Left = 273
-    Top = 126
-    Width = 325
-    Hint = ''
-    MaxLength = 64
-    CharEOL = '*'
-    Text = ''
-    ParentFont = False
-    TabOrder = 8
-    FieldLabelWidth = 5
-    FieldLabelFont.Color = clCrimson
-  end
-  object UniLabel4: TUniLabel
-    Left = 145
-    Top = 129
-    Width = 49
-    Height = 13
-    Hint = ''
-    Caption = #1058#1077#1083#1077#1092#1086#1085':'
-    TabOrder = 9
-  end
-  object edtContactPerson: TUniEdit
-    Left = 273
-    Top = 203
-    Width = 325
-    Hint = ''
-    MaxLength = 256
-    CharEOL = '*'
-    Text = ''
-    TabOrder = 10
-    FieldLabelWidth = 5
-  end
-  object UniLabel5: TUniLabel
-    Left = 145
-    Top = 206
-    Width = 95
-    Height = 13
-    Hint = ''
-    Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086':'
-    TabOrder = 11
-  end
-  object UniLabel6: TUniLabel
-    Left = 8
-    Top = 344
-    Width = 191
-    Height = 13
-    Hint = ''
-    Caption = '* - '#1087#1086#1083#1077' '#1086#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086' '#1082' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1102
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clCrimson
-    TabOrder = 12
-  end
-  object UniLabel7: TUniLabel
-    Left = 604
-    Top = 53
-    Width = 5
-    Height = 13
-    Hint = ''
-    Caption = '*'
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clCrimson
-    TabOrder = 13
-  end
-  object UniLabel8: TUniLabel
-    Left = 604
-    Top = 126
-    Width = 5
-    Height = 13
-    Hint = ''
-    Caption = '*'
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clCrimson
-    TabOrder = 14
-  end
-  object UniLabel9: TUniLabel
-    Left = 604
-    Top = 90
-    Width = 5
-    Height = 13
-    Hint = ''
-    Caption = '*'
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clCrimson
-    TabOrder = 15
-  end
-  object UniLabel10: TUniLabel
-    Left = 604
-    Top = 164
-    Width = 5
-    Height = 13
-    Hint = ''
-    Caption = '*'
-    Anchors = [akLeft, akBottom]
-    ParentFont = False
-    Font.Color = clCrimson
-    TabOrder = 16
+    LayoutConfig.Cls = 'login-box'
+    ExplicitLeft = 48
+    ExplicitTop = 40
+    ExplicitWidth = 609
+    ExplicitHeight = 417
+    DesignSize = (
+      500
+      500)
+    object UniLabel6: TUniLabel
+      Left = 50
+      Top = 471
+      Width = 191
+      Height = 13
+      Hint = ''
+      Caption = '* - '#1087#1086#1083#1077' '#1086#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086' '#1082' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1102
+      Anchors = [akLeft, akBottom]
+      ParentFont = False
+      Font.Color = clCrimson
+      TabOrder = 1
+    end
+    object edtPhone: TUniEdit
+      Left = 50
+      Top = 208
+      Width = 401
+      Hint = #1058#1077#1083#1077#1092#1086#1085
+      ShowHint = True
+      ParentShowHint = False
+      MaxLength = 64
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
+      ParentFont = False
+      TabOrder = 2
+      EmptyText = #1058#1077#1083#1077#1092#1086#1085
+      FieldLabelWidth = 5
+      FieldLabelFont.Color = clCrimson
+      InputType = 'tel'
+    end
+    object edtPassword: TUniEdit
+      Left = 50
+      Top = 254
+      Width = 401
+      Hint = #1055#1072#1088#1086#1083#1100
+      ShowHint = True
+      ParentShowHint = False
+      PasswordChar = '*'
+      MaxLength = 64
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
+      ParentFont = False
+      TabOrder = 3
+      EmptyText = #1055#1072#1088#1086#1083#1100
+      FieldLabelWidth = 5
+      FieldLabelFont.Color = clCrimson
+      InputType = 'tel'
+    end
+    object edtEmail: TUniEdit
+      Left = 50
+      Top = 162
+      Width = 401
+      Hint = #1055#1086#1095#1090#1072
+      ShowHint = True
+      ParentShowHint = False
+      MaxLength = 64
+      BorderStyle = ubsNone
+      Text = ''
+      ParentFont = False
+      TabOrder = 4
+      EmptyText = #1055#1086#1095#1090#1072
+      FieldLabelWidth = 5
+      FieldLabelFont.Color = clCrimson
+      InputType = 'email'
+    end
+    object edtContactPerson: TUniEdit
+      Left = 50
+      Top = 300
+      Width = 401
+      Hint = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+      ShowHint = True
+      ParentShowHint = False
+      MaxLength = 256
+      CharEOL = '*'
+      BorderStyle = ubsNone
+      Text = ''
+      TabOrder = 5
+      EmptyText = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
+      FieldLabelWidth = 5
+      InputType = 'text'
+    end
+    object edtBrief: TUniEdit
+      Left = 50
+      Top = 117
+      Width = 401
+      Hint = #1048#1084#1103'/'#1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103':'
+      ShowHint = True
+      ParentShowHint = False
+      MaxLength = 128
+      BorderStyle = ubsNone
+      Text = ''
+      ParentFont = False
+      TabOrder = 6
+      EmptyText = #1048#1084#1103'/'#1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103':'
+      FieldLabelWidth = 5
+      FieldLabelAlign = laRight
+      FieldLabelFont.Color = clCrimson
+      InputType = 'text'
+    end
+    object btnOk: TUniButton
+      Left = 281
+      Top = 392
+      Width = 170
+      Height = 33
+      Hint = ''
+      Caption = #1047#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1090#1100#1089#1103
+      Anchors = []
+      TabOrder = 7
+      ScreenMask.Enabled = True
+      ScreenMask.Message = #1054#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103' ...'
+      ScreenMask.Target = Owner
+      OnClick = btnOkClick
+    end
+    object btnCancel: TUniButton
+      Left = 50
+      Top = 392
+      Width = 170
+      Height = 33
+      Hint = ''
+      Caption = #1053#1072#1079#1072#1076
+      Cancel = True
+      Anchors = []
+      TabOrder = 8
+      OnClick = btnCancelClick
+    end
+    object UniLabel2: TUniLabel
+      Left = 56
+      Top = 45
+      Width = 395
+      Height = 13
+      Hint = ''
+      AutoSize = False
+      Caption = #1042#1093#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1091
+      TabOrder = 9
+      LayoutConfig.Cls = 'login-title'
+    end
+    object UniLabel1: TUniLabel
+      Left = 457
+      Top = 117
+      Width = 5
+      Height = 13
+      Hint = ''
+      Caption = '*'
+      Anchors = [akLeft, akBottom]
+      ParentFont = False
+      Font.Color = clCrimson
+      TabOrder = 10
+    end
+    object UniLabel3: TUniLabel
+      Left = 457
+      Top = 162
+      Width = 5
+      Height = 13
+      Hint = ''
+      Caption = '*'
+      Anchors = [akLeft, akBottom]
+      ParentFont = False
+      Font.Color = clCrimson
+      TabOrder = 11
+    end
+    object UniLabel4: TUniLabel
+      Left = 457
+      Top = 208
+      Width = 5
+      Height = 13
+      Hint = ''
+      Caption = '*'
+      Anchors = [akLeft, akBottom]
+      ParentFont = False
+      Font.Color = clCrimson
+      TabOrder = 12
+    end
+    object UniLabel5: TUniLabel
+      Left = 457
+      Top = 254
+      Width = 5
+      Height = 13
+      Hint = ''
+      Caption = '*'
+      Anchors = [akLeft, akBottom]
+      ParentFont = False
+      Font.Color = clCrimson
+      TabOrder = 13
+    end
   end
 end

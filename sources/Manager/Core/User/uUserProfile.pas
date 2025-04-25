@@ -13,12 +13,10 @@ type
     edtBrief: TUniEdit;
     edtName: TUniEdit;
     Email: TUniEdit;
-    lblName: TUniLabel;
     lblBrief: TUniLabel;
-    UniLabel5: TUniLabel;
-    UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
+    loginbox: TUniContainerPanel;
     procedure UniFormShow(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -100,7 +98,6 @@ begin
   begin
     MessageDlg(RetVal.Message, mtError, [mbOK]);
   end;
-
 end;
 
 procedure TUserProfile.DataLoad;

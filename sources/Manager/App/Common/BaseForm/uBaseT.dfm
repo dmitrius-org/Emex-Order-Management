@@ -1212,9 +1212,6 @@ object BaseT: TBaseT
     Images = ImageList16
     Left = 218
     Top = 270
-    object ppRefresh: TUniMenuItem
-      Action = actRefreshAll
-    end
   end
   object ImageList16: TUniImageList
     Left = 458

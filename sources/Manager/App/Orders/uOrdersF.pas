@@ -15,7 +15,8 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
-  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton, uSpplitForm;
+  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton, uSpplitForm,
+  Quick.Logger;
 
 type
 
@@ -25,10 +26,15 @@ type
     FClientID: Integer;
     FDetailNumber: string;
     FPriceLogo: string;
+    FLogger: tLogger;
+    function GetLogger: tLogger;
+    procedure SetLogger(const Value: tLogger);
   protected
     procedure Execute(); override;
   public
     constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+    // передаем логгер в поток
+    property Logger: tLogger read GetLogger write SetLogger;
   end;
 
   TOrderF = class(TUniForm)
@@ -315,7 +321,7 @@ implementation
 uses
   MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils,
   ServerModule, uOrdersT, uToast, uOrdersProtocol_T, uUtils.Strings,
-  Soap.XSBuiltIns;
+  Soap.XSBuiltIns, uUtils.Logger;
 
 function OrderF: TOrderF;
 begin
@@ -338,14 +344,30 @@ end;
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
+  SetCurrentLogData(Flogger);
+  Log('TSQLQueryThread.Execute Begin', etInfo);
   Emex := TEmex.Create(FConnection);
   try
+    Log('TSQLQueryThread.Execute FindByDetailNumber Begin', etInfo);
+    Log('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber], etInfo);
     Emex.FindByDetailNumber(FClientID, FDetailNumber);
-
+    Log('TSQLQueryThread.Execute FindByDetailNumber End', etInfo);
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
   finally
     Emex.Destroy;
+    Log('TSQLQueryThread.Execute End', etInfo);
   end;
+end;
+
+function TSQLQueryThread.GetLogger: tLogger;
+begin
+  Result:=FLogger;
+end;
+
+procedure TSQLQueryThread.SetLogger(const Value: tLogger);
+begin
+  if Assigned(Value) then
+    FLogger := Value;
 end;
 
 { TOrderF }
@@ -431,6 +453,7 @@ begin
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
     t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+    t.Logger := GetCurrentLogData();
     t.Resume; // непосредственно ручной запуск потока
 
     UniTimer.Enabled := True;

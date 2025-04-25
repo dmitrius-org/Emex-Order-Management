@@ -1,7 +1,9 @@
-inherited test: Ttest
+inherited APIKeyT: TAPIKeyT
   inherited UniPanel2: TUniPanel
     Top = 67
     Height = 414
+    ExplicitTop = 67
+    ExplicitHeight = 414
     inherited Grid: TUniDBGrid
       Top = 52
       Height = 362
@@ -32,6 +34,37 @@ inherited test: Ttest
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
           'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
+      Columns = <
+        item
+          FieldName = 'ApiKeysID'
+          Title.Caption = 'ApiKeysID'
+          Width = 64
+        end
+        item
+          FieldName = 'Flag'
+          Title.Caption = 'Flag'
+          Width = 64
+        end
+        item
+          FieldName = 'ApiKey'
+          Title.Caption = 'ApiKey'
+          Width = 1534
+        end
+        item
+          FieldName = 'Name'
+          Title.Caption = 'Name'
+          Width = 1534
+        end
+        item
+          FieldName = 'inDatetime'
+          Title.Caption = 'inDatetime'
+          Width = 208
+        end
+        item
+          FieldName = 'EndDatetime'
+          Title.Caption = 'EndDatetime'
+          Width = 208
+        end>
     end
     object gbFilter: TUniGroupBox
       AlignWithMargins = True
@@ -46,8 +79,6 @@ inherited test: Ttest
       Align = alTop
       LayoutConfig.Width = '0'
       TabOrder = 2
-      ExplicitLeft = 6
-      ExplicitTop = 11
     end
   end
   object ToolBars: TUniPanel [1]
@@ -70,8 +101,6 @@ inherited test: Ttest
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitLeft = -348
-    ExplicitWidth = 1257
     object ToolBar: TUniToolBar
       Left = 0
       Top = 0
@@ -91,48 +120,89 @@ inherited test: Ttest
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 1257
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
         Top = 3
         ShowHint = True
-        Action = actdelete
+        Action = actInsert
+        ImageIndex = 1
         TabOrder = 1
       end
       object UniToolButton2: TUniToolButton
         AlignWithMargins = True
         Left = 118
         Top = 3
-        Hint = ''
         Margins.Left = 0
         ShowHint = True
+        Action = actUpdate
         ImageIndex = 3
-        Caption = ''
         TabOrder = 2
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
         Left = 233
         Top = 3
-        Hint = ''
         Margins.Left = 0
         ShowHint = True
+        Action = actDelete
         ImageIndex = 0
-        Caption = ''
         TabOrder = 3
       end
     end
   end
-  inherited ActionList: TUniActionList
-    object actdelete: TAction
-      Caption = 'actTest'
-      OnExecute = actdeleteExecute
+  inherited Query: TFDQuery
+    SQL.Strings = (
+      'select * '
+      '  from vApiKeys'
+      ' where ClientID = :ClientID ')
+    ParamData = <
+      item
+        Name = 'CLIENTID'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    object QueryApiKeysID: TIntegerField
+      FieldName = 'ApiKeysID'
+    end
+    object QueryClientID: TFMTBCDField
+      FieldName = 'ClientID'
+      Size = 0
+    end
+    object QueryApiKey: TStringField
+      FieldName = 'ApiKey'
+      Size = 255
+    end
+    object QueryName: TStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object QueryFlag: TIntegerField
+      FieldName = 'Flag'
+    end
+    object QueryinDatetime: TSQLTimeStampField
+      FieldName = 'inDatetime'
+    end
+    object QueryEndDatetime: TSQLTimeStampField
+      FieldName = 'EndDatetime'
     end
   end
-  inherited PopupMenu: TUniPopupMenu
-    object actTest1: TUniMenuItem
-      Action = actdelete
+  inherited ActionList: TUniActionList
+    object actDelete: TAction
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 0
+      OnExecute = actDeleteExecute
+    end
+    object actInsert: TAction
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 1
+      OnExecute = actInsertExecute
+    end
+    object actUpdate: TAction
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 3
+      OnExecute = actUpdateExecute
     end
   end
 end

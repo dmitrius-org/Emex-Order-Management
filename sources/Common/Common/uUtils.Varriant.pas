@@ -33,7 +33,10 @@ begin
     Result := Default
   else
   try
-    Result := vVar;
+    if vVar='' then
+      Result := Default
+    else
+      Result := vVar;
   except
     Result := Default;
   end;
@@ -50,7 +53,10 @@ begin
     Result := Default
   else
   try
-    Result := vVar
+    if vVar='' then
+      Result := Default
+    else
+      Result := vVar;
   except
     Result := Default;
   end;
