@@ -176,8 +176,9 @@ begin
       UniServerModule.Logger.AddLog('TUniMainModule User_name', FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['User_name']);
       UniServerModule.Logger.AddLog('TUniMainModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
 
-
-      FDConnection.Params.MonitorBy := mbCustom;
+      {$IFDEF Release}
+        FDConnection.Params.MonitorBy := mbCustom;
+      {$ENDIF}
       FDConnection.Open;
 
       AUserName:=AUser;

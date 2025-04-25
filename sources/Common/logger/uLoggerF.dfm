@@ -122,7 +122,6 @@ object LoggerF: TLoggerF
       TabOrder = 2
       LayoutConfig.Margin = '0px 0px 5px 2px'
       OnClick = btnCancelClick
-      ExplicitLeft = 369
     end
   end
   object UniGroupBox4: TUniGroupBox
@@ -135,10 +134,10 @@ object LoggerF: TLoggerF
     Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
     Align = alClient
     TabOrder = 1
-    object cbAppSqlLog: TUniDBCheckBox
+    object cbSqlLog: TUniDBCheckBox
       AlignWithMargins = True
       Left = 14
-      Top = 208
+      Top = 216
       Width = 561
       Height = 17
       Hint = ''
@@ -161,33 +160,27 @@ object LoggerF: TLoggerF
       Align = alTop
       TabOrder = 2
     end
-    object LogDestination: TUniDBCheckComboBox
-      AlignWithMargins = True
+    object LogDestination: TUniCheckComboBox
       Left = 14
-      Top = 34
+      Top = 28
       Width = 499
-      Hint = ''
-      DataField = 'LogDestination'
-      DataSource = DataSource
+      Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
+      Text = ''
       Items.Strings = (
         #1042' '#1092#1072#1081#1083
         #1042' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093)
       TabOrder = 3
+      ClearButton = True
       FieldLabel = #1042#1082#1083#1102#1095#1080#1090#1100' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1077
       FieldLabelAlign = laTop
-      FieldLabelFont.Height = -13
-      ClearButton = True
       IconItems = <>
-      Mode = umNameValue
     end
-    object FileEvent: TUniDBCheckComboBox
-      AlignWithMargins = True
+    object FileEvent: TUniCheckComboBox
       Left = 14
-      Top = 86
+      Top = 85
       Width = 499
-      Hint = ''
-      DataField = 'FileLogLevel'
-      DataSource = DataSource
+      Hint = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1092#1072#1081#1083
+      Text = ''
       Items.Strings = (
         'HEADER'
         'INFO'
@@ -197,21 +190,17 @@ object LoggerF: TLoggerF
         'EXCEPT'
         'DEBUG')
       TabOrder = 4
+      ClearButton = True
       FieldLabel = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1092#1072#1081#1083
       FieldLabelAlign = laTop
-      FieldLabelFont.Height = -13
-      ClearButton = True
       IconItems = <>
-      Mode = umNameValue
     end
-    object DBEvent: TUniDBCheckComboBox
-      AlignWithMargins = True
+    object DBEvent: TUniCheckComboBox
       Left = 14
-      Top = 138
+      Top = 140
       Width = 499
-      Hint = ''
-      DataField = 'DBLogLevel'
-      DataSource = DataSource
+      Hint = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093
+      Text = ''
       Items.Strings = (
         'HEADER'
         'INFO'
@@ -221,28 +210,23 @@ object LoggerF: TLoggerF
         'EXCEPT'
         'DEBUG')
       TabOrder = 5
+      ClearButton = True
       FieldLabel = #1057#1086#1073#1099#1090#1080#1103' '#1076#1083#1103' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103' '#1074' '#1073#1072#1079#1091' '#1076#1072#1085#1085#1099#1093
       FieldLabelAlign = laTop
-      FieldLabelFont.Height = -13
-      ClearButton = True
       IconItems = <>
-      Mode = umNameValue
     end
   end
   object DataSource: TDataSource
     DataSet = Query
-    Left = 542
-    Top = 238
+    Left = 310
+    Top = 214
   end
   object Query: TFDQuery
-    CachedUpdates = True
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvRefreshMode]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
     UpdateOptions.RefreshMode = rmManual
-    UpdateOptions.UpdateTableName = 'tLoggerSettings'
     UpdateOptions.KeyFields = 'LoggerSettingsID'
+    UpdateOptions.AutoIncFields = 'LoggerSettingsID'
     SQL.Strings = (
       '  '
       '  '
@@ -275,16 +259,20 @@ object LoggerF: TLoggerF
       '        '
       ' where ls.UserID = :UserID'
       '   and ls.AppName= :AppName')
-    Left = 540
+    Left = 484
     Top = 178
     ParamData = <
       item
         Name = 'USERID'
+        DataType = ftInteger
         ParamType = ptInput
+        Value = Null
       end
       item
         Name = 'APPNAME'
+        DataType = ftString
         ParamType = ptInput
+        Value = Null
       end>
     object QueryLoggerSettingsID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -322,35 +310,5 @@ object LoggerF: TLoggerF
     object QueryLogSql: TBooleanField
       FieldName = 'LogSql'
     end
-  end
-  object FDUpdateSQL: TFDUpdateSQL
-    Connection = UniMainModule.FDConnection
-    InsertSQL.Strings = (
-      '/*'
-      '  insert into tLoggerSettings '
-      '        (UserID, AppServerLog, AppClientLog, AppSqlLog) '
-      '  select dbo.GetUserID(), '
-      '        :NEW_AppServerLog,'
-      '        :NEW_AppClientLog,'
-      '        :NEW_AppSqlLog      */    ')
-    ModifySQL.Strings = (
-      '  UPDATE tLoggerSettings '
-      '     SET FileLogLevel  = :NEW_FileLogLevel'
-      '        ,DBLogLevel    = :NEW_DBLogLevel '
-      '        ,LogDestination= :NEW_LogDestination '
-      '        ,LogSql        = :NEW_LogSql    '
-      '   WHERE LoggerSettingsID= :NEW_LoggerSettingsID'
-      ''
-      ''
-      ''
-      ' ')
-    DeleteSQL.Strings = (
-      '')
-    FetchRowSQL.Strings = (
-      'Select *'
-      '  from tLoggerSettings (nolock)'
-      ' where LoggerSettingsID= :NEW_LoggerSettingsID')
-    Left = 396
-    Top = 211
   end
 end

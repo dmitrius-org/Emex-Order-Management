@@ -20,31 +20,32 @@ type
     UniGroupBox4: TUniGroupBox;
     DataSource: TDataSource;
     Query: TFDQuery;
-    FDUpdateSQL: TFDUpdateSQL;
-    cbAppSqlLog: TUniDBCheckBox;
+    cbSqlLog: TUniDBCheckBox;
     QueryLoggerSettingsID: TFMTBCDField;
     QueryUserID: TFMTBCDField;
     QueryUsername: TStringField;
     UniLabel1: TUniLabel;
     QueryLogDestination: TStringField;
-    LogDestination: TUniDBCheckComboBox;
-    FileEvent: TUniDBCheckComboBox;
     QueryFileLogLevel: TStringField;
     QueryDBLogLevel: TStringField;
-    DBEvent: TUniDBCheckComboBox;
     QueryLogSql: TBooleanField;
+    LogDestination: TUniCheckComboBox;
+    FileEvent: TUniCheckComboBox;
+    DBEvent: TUniCheckComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
   private
     FUserID: Integer;
     FAppName: string;
+    FID: Integer;
 
     { Private declarations }
   public
     { Public declarations }
     property UserID:Integer  read FUserID  write FUserID;
     property AppName: string read FAppName write FAppName;
+    property ID:Integer  read FID write FID;
   end;
 
 function LoggerF: TLoggerF;
@@ -59,7 +60,7 @@ uses
   Quick.Logger.Provider.Files,
   Quick.Logger.Provider.ADODB,
 
-  uUtils.Logger;
+  uUtils.Logger, uMainVar;
 
 function LoggerF: TLoggerF;
 begin
@@ -72,8 +73,27 @@ begin
 end;
 
 procedure TLoggerF.btnOkClick(Sender: TObject);
+var sqltext: string;
 begin
-  Query.ApplyUpdates();
+  sqltext :='''
+  UPDATE tLoggerSettings
+     SET FileLogLevel   = :FileLogLevel
+        ,DBLogLevel     = :DBLogLevel
+        ,LogDestination = :LogDestination
+        ,LogSql         = :LogSql
+   WHERE LoggerSettingsID = :LoggerSettingsID
+  ''';
+
+  Sql.Exec(sqltext,
+           ['LoggerSettingsID','FileLogLevel','DBLogLevel','LogDestination','LogSql'],
+           [FID,
+            FileEvent.Text,
+            DBEvent.Text,
+            LogDestination.Text,
+            cbSqlLog.Checked
+           ]);
+
+//   RetVal.Code := Sql.Q.FieldByName('retcode').Value;
 
   //GlobalLogFileProvider
   if (AnsiPos('В файл', LogDestination.text) > 0) then
@@ -115,7 +135,7 @@ begin
   then
   begin
     UniMainModule.FDConnection.Params.MonitorBy := mbCustom;
-    UniMainModule.FDMoniSQl.Tracing := cbAppSqlLog.Checked;
+    UniMainModule.FDMoniSQl.Tracing := cbSqlLog.Checked;
   end;
 
   ModalResult:=mrOK;
@@ -127,6 +147,13 @@ begin
   Query.ParamByName('UserID').Value := FUserID;
   Query.ParamByName('AppName').Value := FAppName;
   Query.Open();
+
+  FID:= Query.FieldByName('LoggerSettingsID').AsInteger;
+  LogDestination.Text := Query.FieldByName('LogDestination').AsString;
+  FileEvent.Text := Query.FieldByName('FileLogLevel').AsString;
+  DBEvent.Text := Query.FieldByName('DBLogLevel').AsString;
+  cbSqlLog.Checked := Query.FieldByName('LogSql').AsBoolean;
+
 
   Self.Caption := 'Настройки логирования: ' +  Query.FieldByName('Username').Value;
 end;
