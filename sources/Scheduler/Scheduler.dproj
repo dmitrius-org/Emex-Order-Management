@@ -205,6 +205,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Manager\App\Orders\uAccrualUtils.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Manager\App\emexdwc\uEmexUtils.pas"/>
+        <DCCReference Include="..\Common\Logger\uUtils.Logger.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

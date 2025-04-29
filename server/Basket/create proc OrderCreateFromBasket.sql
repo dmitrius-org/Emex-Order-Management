@@ -153,6 +153,7 @@ declare @r int = 0
         ,Manufacturer
         ,DetailNumber
         ,Quantity
+        ,QuantityOrg
         ,Price
         ,Amount
         ,PricePurchaseOrg
@@ -206,6 +207,7 @@ declare @r int = 0
         ,b.MakeName              -- Manufacturer
         ,b.DetailNum
         ,b.Quantity
+        ,b.Quantity
         ,b.PriceRub
         ,b.Amount
         ,b.Price                 -- PricePurchaseOrg
@@ -222,7 +224,8 @@ declare @r int = 0
         ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
-       + iif((isnull(b.flag, 0)&512)>0, 512/*Вес изменен клиентом*/, 0)
+         + isnull(b.flag, 0)&512     --Вес изменен клиентом
+         + isnull(b.flag, 0)&4194304 --NOAIR
         ,b.WeightKG              -- Вес Физический из прайса    
         ,case
            when b.VolumeKG = 0 then b.WeightKG
@@ -350,6 +353,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250423', '26'
+exec setOV 'OrderCreateFromBasket', 'P', '20250423', '27'
 go
  

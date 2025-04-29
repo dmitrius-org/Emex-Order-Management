@@ -14,7 +14,12 @@ uses
   uCommonType, uAuditUtils, uAccrualUtils, uSqlUtils,
   uGrantUtils, FireDAC.Moni.RemoteClient,
 
-  Quick.Logger, Quick.Logger.Provider.Files;
+  //uUtils.WS,
+  uUtils.Logger,
+  Quick.Logger,
+  Quick.Logger.ExceptionHook,
+  Quick.Logger.Provider.Files,
+  Quick.Logger.Provider.ADODB;
 
 
 type
@@ -24,9 +29,12 @@ type
     FDMoniFlatFileClientLink: TFDMoniFlatFileClientLink;
     qSetting: TFDQuery;
     FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
+    FDMoniSQl: TFDMoniCustomClientLink;
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
     procedure UniGUIMainModuleCreate(Sender: TObject);
+    procedure FDMoniSQlOutput(ASender: TFDMoniClientLinkBase; const AClassName,
+      AObjName, AMessage: string);
   private
     { Private declarations }
 
@@ -47,11 +55,17 @@ type
     ASPID: Integer;
     /// <summary> AppName - Приложение </summary>
     AAppName:  String;
+    ALogger : TLogger;
+
+    GlobalLogFileProvider : TLogFileProvider;
+    GlobalLogADODBProvider : TLogADODBProvider;
 
     const _loginname = '_loginname';
     const _pwd = '_pwd';
 
     function dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
+    procedure CreateGlobalLogFileProvider();
+    procedure CreateGlobalLogADODBProvider();
   end;
 
 function UniMainModule: TUniMainModule;
@@ -66,6 +80,60 @@ uses
 function UniMainModule: TUniMainModule;
 begin
   Result := TUniMainModule(UniApplication.UniMainModule)
+end;
+
+procedure TUniMainModule.CreateGlobalLogADODBProvider;
+var
+  C : TUniClientInfoRec;
+begin
+  if ALogger.Providers.IndexOf(GlobalLogADODBProvider) > -1 then
+    Exit;
+
+  GlobalLogADODBProvider := TLogADODBProvider.Create;
+  ALogger.Providers.Add(GlobalLogADODBProvider);
+
+  with GlobalLogADODBProvider do
+  begin
+    C:=UniSession.UniApplication.ClientInfoRec;
+    TimePrecission := True;
+    Environment    :='';
+    AppName        := AAppName;
+    Host           := UniSession.RemoteIP;
+    UserID         := AUserID;
+    UserName       := AUserName;
+    PlatformInfo   := C.BrowserType + ' ' +
+                      C.BrowserVersion.ToString;
+    OS             := C.OSType;
+    IncludedInfo   := [iiAppName,iiHost,iiUserName,iiUserID,iiOSVersion,iiPlatform,iiThreadId];
+
+    DBConfig.Table   := 'tLogMsg';
+    DBConfig.Provider:= dbMSSQL;
+    DBConfig.Server  := FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Server'];
+    DBConfig.Database:= FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['Database'];
+    DBConfig.UserName:= FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerUserName'];
+    DBConfig.Password:= FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['LoggerPassword'];
+  end;
+end;
+
+procedure TUniMainModule.CreateGlobalLogFileProvider;
+begin
+  if ALogger.Providers.IndexOf(GlobalLogFileProvider)>-1 then
+    Exit;
+
+  GlobalLogFileProvider:= TLogFileProvider.Create;
+  ALogger.Providers.Add(GlobalLogFileProvider);
+
+  with GlobalLogFileProvider do
+  begin
+    FileName        := UniServerModule.Logger.RootPath + '\log\' +
+                       AUserName + '_' +
+                       FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
+    DailyRotate     := True;
+    MaxFileSizeInMB := 20;
+    TimePrecission  := True;
+    CompressRotatedFiles := False;
+    IncludedInfo    := [iiAppName,iiHost,iiUserName,iiOSVersion,iiThreadId,iiProcessId];
+  end;
 end;
 
 function TUniMainModule.dbConnect(AUser: string; APass: string; ABefore: Boolean = false): Boolean;
@@ -93,6 +161,9 @@ begin
       UniServerModule.Logger.AddLog('TUniMainModule User_name', FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['User_name']);
       UniServerModule.Logger.AddLog('TUniMainModule ConnectionDefFileName', FDManager.ConnectionDefFileName);
 
+      {$IFDEF Release}
+        FDConnection.Params.MonitorBy := mbCustom;
+      {$ENDIF}
       FDConnection.Open;
 
       AUserName:= AUser;
@@ -100,38 +171,59 @@ begin
       AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
       AAppName := AppScheduler;
 
-      // настройки  логирования
-      Logger.Providers.Add(GlobalLogFileProvider);
-      with GlobalLogFileProvider do
-        begin
-            FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_' + FormatDateTime('ddmmyyyy', Now) +'_Logger.log';
-            DailyRotate := True;
-            MaxFileSizeInMB := 20;
-            LogLevel := LOG_ALL;
-            TimePrecission := True;
-        end;
+      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
+      // настройки  логирования
       Sql.Open('''
-        Select AppClientLog, AppSqlLog
-          from tLoggerSettings (nolock)
-         where UserID = dbo.GetUserID()
-           and AppName= :AppName
-       ''', ['AppName'],[AAppName]);
+      Select cast(iif(CHARINDEX('В файл', LogDestination) > 0, 1, 0) as bit) SaveFile,
+             cast(iif(CHARINDEX('В базу данных', LogDestination) > 0, 1, 0) as bit) SaveDB,
+             FileLogLevel,
+             DBLogLevel,
+             LogSql
+        from tLoggerSettings (nolock)
+       where UserID = :UserID
+         and AppName= :AppName
+      ''',
+      ['UserID', 'AppName'],[AUserID, AAppName]);
 
       if Sql.Q.RecordCount > 0 then
       begin
-
-        with GlobalLogFileProvider do
+        // настройки  логирования
+        if Sql.Q.FindField('SaveFile').AsBoolean then
         begin
-          Enabled := Sql.Q.FindField('AppClientLog').Value;
+          CreateGlobalLogFileProvider();
+
+          with GlobalLogFileProvider do
+          begin
+            LogLevel:= ParseLogLevel(Sql.Q.FindField('FileLogLevel').AsString);
+            Enabled := True;
+          end;
         end;
-        //FDMoniFlatFileClientLink.FileName := UniServerModule.Logger.RootPath + '\log\' + AUserName + '_sql_' + FormatDateTime('ddmmyyyy', Now) +'.log';
-        //FDMoniFlatFileClientLink.Tracing := Sql.Q.FindField('AppSqlLog').Value;
+
+        if Sql.Q.FindField('SaveDB').AsBoolean then
+        begin
+          CreateGlobalLogADODBProvider;
+
+          with GlobalLogADODBProvider do
+          begin
+            LogLevel:= ParseLogLevel(Sql.Q.FindField('DBLogLevel').AsString);
+            Enabled := True;
+          end;
+        end;
+
+        if (Sql.Q.FindField('SaveFile').AsBoolean) or
+           (Sql.Q.FindField('SaveDB').AsBoolean)
+        then
+        begin
+          FDMoniSQl.Tracing := Sql.Q.FindField('LogSql').AsBoolean;
+        end
+        else
+          FDMoniSQl.Tracing := False;
       end;
 
-      Log('Программа запущена', etHeader);
+      Log('Программа запущена', uUtils.Logger.etHeader);
 
-      Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
+
 
     except
       on E: EFDDBEngineException do
@@ -163,6 +255,13 @@ begin
   end;
 end;
 
+procedure TUniMainModule.FDMoniSQlOutput(ASender: TFDMoniClientLinkBase;
+  const AClassName, AObjName, AMessage: string);
+begin
+  ALogger.Info(Format('[%s:%s]', [AClassName, AObjName]));
+  ALogger.Info(Format('%s', [AMessage]));
+end;
+
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
 var S1, S2 : string;
 begin
@@ -190,6 +289,13 @@ begin
   {$IFDEF RELEASE}
   BackButtonAction := TUniBackButtonAction.bbaWarnUser;
   {$ENDIF}
+
+  // Инициация объекта для логирования
+  if Assigned(ALogger) then
+    ALogger.Free;
+  ALogger := TLogger.Create;
+
+  SetCurrentLogData(ALogger);
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
@@ -199,9 +305,18 @@ begin
   A.Add(TObjectType.otUser, AUserID, TFormAction.acExit, 'Выход из системы');
   A.Destroy;
 
-  log('Программа остановлена', etdebug);
-
   FDConnection.Close;
+
+  ALogger.Info('Программа остановлена');
+
+  if Assigned(GlobalLogFileProvider) and (GlobalLogFileProvider.RefCount = 0) then
+    GlobalLogFileProvider.Free;
+
+  if Assigned(GlobalLogADODBProvider) and (GlobalLogADODBProvider.RefCount = 0) then
+    GlobalLogADODBProvider.Free;
+
+  if Assigned(ALogger) then
+    ALogger.Free;
 end;
 
 initialization

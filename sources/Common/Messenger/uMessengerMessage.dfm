@@ -372,7 +372,7 @@ object Message: TMessage
     end
   end
   object UserStatusTimer: TUniTimer
-    Interval = 4000
+    Interval = 2000
     RunOnce = True
     ClientEvent.Strings = (
       'function(sender)'

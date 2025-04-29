@@ -186,7 +186,7 @@ begin
       AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
       AAppName:= AppManager;
 
-      WS := TWS.Create('manager:' + AUserID.ToString);
+      WS := TWS.Create('manager', AUserID.ToString);
 
       AppVersion;
 
@@ -308,8 +308,6 @@ procedure TUniMainModule.FDMoniSQlOutput(
 begin
   ALogger.Info(Format('[%s:%s]', [AClassName, AObjName]));
   ALogger.Info(Format('%s', [AMessage]));
-//  ALogger.Info();
-//  ALogger.Info();
 end;
 
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
@@ -351,7 +349,7 @@ end;
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);
 var FAudit : TAudit;
 begin
-  WS.Destroy('manager:' + AUserID.ToString);
+  WS.Destroy();
 
   FAudit := TAudit.Create(FDConnection);
   FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);

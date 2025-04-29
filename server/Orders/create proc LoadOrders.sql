@@ -48,6 +48,7 @@ as
         ,Manufacturer
         ,DetailNumber
         ,Quantity
+        ,QuantityOrg
         ,DetailID
         ,Price
         ,Amount
@@ -96,6 +97,7 @@ as
         ,c.SuppliersID
         ,o.Manufacturer
         ,o.DetailNumber
+        ,o.Quantity
         ,o.Quantity
         ,o.DetailID
         ,o.Price

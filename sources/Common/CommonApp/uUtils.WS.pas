@@ -2,59 +2,45 @@
 
 interface
 
-uses System.SysUtils, System.Generics.Collections, uniGUIJSUtils;
+uses
+  System.SysUtils, System.Generics.Collections, uniGUIJSUtils;
 
 type
+  tWS = class
+  private
+    FEventForm: TDictionary <String, String>;  // Регистрация форм и событий
+    FWSAddress: string;
 
-/// <summary>
-/// tWS - класс для работы с WebSocket
-/// </summary>
-tWS = class
-private
-  FEventForm: TDictionary <String, String>;
+    function ObjMessage(): string;
+    function GetRegisterJSON(AObjectType, AObjectID: string): string;
 
-  FWSAddress: string;
+  public
+    constructor Create(AObjectType, AObjectID: string);
+    destructor Destroy();
 
-  function ObjMessage(): string;
+    procedure Send(Args: string);
+    /// <summary>
+    ///  FormRegister - регистрация формы для приема сообщений от websocket сервера
+    /// </summary>
+    procedure FormRegister(JSFormName, EventName: string);
+    procedure FormUnRegister(JSFormName: string);
 
-protected
+    procedure CheckOnline(AObjectType, AObjectID: string);
 
-public
-  /// <summary>
-  /// Create - Создание WebSocket соединения
-  /// </summary>
-  constructor Create(const Args: string);     //socket.send('client:123');
-
-  /// <summary>
-  /// Destroy - Закрываем WebSocket соединение клиента
-  /// </summary>
-  destructor Destroy(const Args: string);
-
-  procedure Send(Args: string);
-
-  procedure FormRegister(JSFormName, EventName: string);
-  procedure FormUnRegister(JSFormName: string);
-
-published
-
-
-end;
-
+  published
+  end;
 
 implementation
 
 uses
-  uniGUIApplication, uMainVar;
+  uniGUIApplication, uMainVar, uUtils.Logger;
 
-{ tMessenger }
+{ tWS }
 
-constructor tWS.Create(const Args: string);
-// Args
-// manager:56
+constructor tWS.Create(AObjectType, AObjectID: string);
 begin
-
   if not Assigned(FEventForm) then
-    FEventForm := TDictionary <string, string>.Create();
+    FEventForm := TDictionary<string, string>.Create();
 
   FWSAddress := Sql.GetSetting('WebSocketAddress');
 
@@ -67,6 +53,7 @@ begin
 
       if (!WebSockets) {
         var url = '%s';
+        console.log(url);
         if (url) {
           WebSockets = new WebSocket(url);
         }
@@ -74,10 +61,12 @@ begin
 
       // Обработчик при открытии соединения
       WebSockets.onopen = function(event) {
-        //manager:56
         console.log("Connection opened!");
+        console.log(event);
 
-        WebSockets.send('%s');
+        var str = JSON.stringify(%s);
+        console.log(str);
+        WebSockets.send(str);
       };
 
       // Обработчик получения сообщений
@@ -87,43 +76,73 @@ begin
 
       // Обработчик ошибок WebSocket
       WebSockets.onerror = function(error) {
-        console.log("WebSocket Error: ");
+        console.error("WebSocket Error: ");
         console.error(error);
       };
 
       // Обработчик закрытия соединения
       WebSockets.onclose = function(event) {
         console.log("Connection closed!");
+        console.log(event);
       };
 
       // Экспортируем WebSockets в глобальный объект window
       window.WebSockets = WebSockets;
 
     '''
-    , [FWSAddress, Args])
+    , [FWSAddress, GetRegisterJSON(AObjectType, AObjectID)])
     );
   end;
 end;
 
-destructor tWS.Destroy(const Args: string);
+destructor tWS.Destroy();
 begin
-  // Сообщаем серверу об отключении, а затем закрываем WebSocket соединение
+  // Сообщаем серверу об отключении и закрываем WebSocket соединение
   UniSession.AddJS(
   StringReplace(
   '''
     if (window.WebSockets) {
       // Отправляем сообщение серверу о том, что клиент отключается
-      window.WebSockets.send('SendText:disconnecting');
-
-      // Закрываем WebSocket соединение
+      //window.WebSockets.send('SendText:disconnecting');
       window.WebSockets.close();
       console.log('WebSocket connection closed by client.');
     }
   '''
-  , 'SendText', Args, [])
+  , '', '', [])
   );
 
   FEventForm.Free;
+end;
+
+function tWS.GetRegisterJSON(AObjectType, AObjectID: string): string;
+begin
+  Result := Format('{"type": "%s", "id": "%s"}', [AObjectType, AObjectID]);
+end;
+
+function tWS.ObjMessage: string;
+var
+  str, Key: string;
+begin
+  for Key in FEventForm.Keys do
+  begin
+    Log(Key, etInfo);
+    Log(FEventForm.Items[Key], etInfo);
+
+    if FEventForm.Items[Key] = 'online_status' then
+    begin
+      str := ' var messageData = JSON.parse(event.data);' +
+             ' var type = messageData.type;' +
+             ' if (["online_status", "connection", "disconnection"].includes(type)) {' +
+             '   ajaxRequest(' + Key + ' , "' + FEventForm.Items[Key] + '", ["message=" + event.data]);'+
+             ' }; '
+    end
+    else
+    begin
+      str := str + ' ajaxRequest(' + Key + ' , "' + FEventForm.Items[Key] + '", ["message=" + event.data]); ';
+    end
+  end;
+
+  Result := str;
 end;
 
 procedure tWS.FormRegister(JSFormName, EventName: string);
@@ -133,74 +152,71 @@ begin
     FEventForm.Add(JSFormName, EventName);
 
     UniSession.AddJS(
+    StringReplace(
     '''
-      if (WebSockets) {
-
-        //  получения сообщений
+      if (window.WebSockets) {
         WebSockets.onmessage = function(event) {
-          console.log("FormRegister");
-          console.log("Message received: " + event.data);
-     '''
-     +  ObjMessage +
-     '''
+          console.log('WebSockets.onmessage');
+          console.log(event);
+    '''
+    +
+          ObjMessage
+    +
+    '''
         };
       };
-
-    ''' );
+    '''
+    , '', '',[])
+    );
+    //{
+    //  "action": "subscribe",
+    //  "events": ["online_status", "message"]
+    //}
+    Send((' {"action": "subscribe", "events": ["online_status"] }'));
   end;
 end;
 
 procedure tWS.FormUnRegister(JSFormName: string);
+var
+  EventName: string;
 begin
   if FWSAddress <> '' then
   begin
+    // Перебираем все ключи и значения в FEventForm
+    for EventName in FEventForm.Values do
+    begin
+      // Отправляем запрос на отписку от каждого события
+      Send(Format('{"action": "unsubscribe", "events": ["%s"]}', [EventName]));
+    end;
+
+    // Удаляем все подписки для данной формы
     FEventForm.Remove(JSFormName);
-
-    UniSession.AddJS(
-    '''
-      if (WebSockets) {
-        //  получения сообщений
-        WebSockets.onmessage = function(event) {
-          console.log("Message received: " + event.data);
-     '''
-     +  ObjMessage +
-     '''
-        };
-      };
-
-    ''');
   end;
-end;
-
-function tWS.ObjMessage: string;
-var str: string; Key:string;
-begin
-  for Key in FEventForm.Keys  do
-  begin
-    str:= str + 'ajaxRequest(' + Key + ' , "' + FEventForm.Items[Key]  + '", ["message=" + event.data]);';
-  end;
-
-  Result := str;
 end;
 
 procedure tWS.Send(Args: string);
-var  xMsg, S : string;
 begin
   if FWSAddress <> '' then
   begin
     UniSession.AddJS(
-
-
-      'if (WebSockets) {' +
-      '  if (WebSockets && WebSockets.readyState === WebSocket.OPEN) {' +
-      '    WebSockets.send("' + Args + '");' +
+      'if (window.WebSockets) {' +
+      '  if (window.WebSockets && window.WebSockets.readyState === WebSocket.OPEN) {' +
+      '    window.WebSockets.send(''' + Args + ''');' +
       '  } else {' +
-      '    console.log("WebSockets is not open !");' +
+      '    console.log("WebSockets is not open!");' +
       '  }'+
       '};'
     );
   end;
+end;
 
+procedure tWS.CheckOnline(AObjectType, AObjectID: string);
+var
+  Msg: string;
+begin
+  Msg := Format('{"action": "check_online", "type": "%s", "id": "%s"}', [AObjectType, AObjectID]);
+  Send(Msg);
 end;
 
 end.
+

@@ -139,6 +139,15 @@ Type
   ,agError = 1
   );
 
+
+  /// <summary> tAppType - </summary>
+  tAppType = (
+   /// <remarks>Приложение клиентов</remarks>
+   atCustomer = 0
+   /// <remarks>Приложение менеджеров</remarks>
+  ,atManager = 1
+  );
+
   /// <summary> Тип для обработки ошибок </summary>
   TRetVal = class
   private

@@ -8,7 +8,8 @@ uses
   uniGUIClasses, uniGUIFrame, uniButton, uniMemo, uniBitBtn, uniSpeedButton,
   uniMultiItem, uniListBox, uniLabel, uniPanel, uniGUIBaseClasses, uSqlUtils,
   uniHTMLMemo, UniFSPopup, uniGUIApplication, uniStrUtils, System.JSON,
-  uniThreadTimer, uniTimer, uUniMemoHelper;
+  uniThreadTimer, uniTimer, uUniMemoHelper, uUtils.Logger, uCommonType;
+
 
 type
   TMessage = class(TUniFrame)
@@ -50,7 +51,7 @@ type
     FOrderID: Integer;
     FClientID: Integer;
 
-    FAppType: Integer;
+    FAppType: tAppType;
 
     FMessageItem: string;
 
@@ -74,7 +75,8 @@ type
     /// <summary>
     /// SetUserStatus - Статус пользователя/клиента
     /// </summary>
-    procedure SetUserStatus(AEvent: string; ClientID: integer; Status: string='');
+    procedure SetUserStatus(AEvent: string; ClientID: integer; Status: Boolean=False);
+
     procedure SetChatID(const Value: Integer);
   public
     { Public declarations }
@@ -144,16 +146,17 @@ type
     /// 0 - клиентское приложение;
     /// 1 - приложение менеджера;
     /// </summary>
-    property AppType: Integer read FAppType write FAppType;
+    property AppType: tAppType read FAppType write FAppType;
 
   end;
 
-
 implementation
+
+
 
 {$R *.dfm}
 
-uses MainModule, uMainVar, uUtils.Math, ServerModule, uUtils.Logger;
+uses MainModule, uMainVar, uUtils.Math, ServerModule, uUtils.WS;
 
 
 { TMessage }
@@ -194,7 +197,7 @@ begin
 
   if FChatID = 0 then AddChat;
 
-  if FAppType = 1 then
+  if FAppType = atManager then
     FFlag := 1
   else
     FFlag := 0;
@@ -259,7 +262,7 @@ begin
    Message := StringReplace(Message, 'message_text', MText, []);
    Message := StringReplace(Message, 'message_date', DateTimeToStr(MDate), []);
 
-   if ((MFlag and 1) > 0) and (FAppType = 1) then
+   if ((MFlag and 1) > 0) and (FAppType = atManager) then
    begin
      Message := StringReplace(Message, 'message_type', '--self', []);
      if (MFlag and 2) > 0 then // прочитано
@@ -268,7 +271,7 @@ begin
      end;
    end
    else
-   if ((MFlag and 1) = 0) and (FAppType = 0) then
+   if ((MFlag and 1) = 0) and (FAppType = atCustomer) then
    begin
      Message := StringReplace(Message, 'message_type', '--self', []);
      if (MFlag and 2) > 0 then //прочитано
@@ -354,7 +357,7 @@ begin
     begin
       lblChatTitleText.Caption := 'Заказ: ' + FOrderID.ToString +
 
-      IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
+      IfThen(FAppType=atManager, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
 
       FClientID := FieldByName('ClientID').AsInteger;
       Next;
@@ -385,14 +388,14 @@ begin
       begin
         lblChatTitleText.Caption := '' +
 
-        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '') +
-        IfThen(FAppType=0, string(' Тема: ' + FieldByName('Subject').AsString), '');
+        IfThen(FAppType=atManager, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '') +
+        IfThen(FAppType=atCustomer, string(' Тема: ' + FieldByName('Subject').AsString), '');
       end
       else
       begin
         lblChatTitleText.Caption := 'Заказ: ' + FOrderID.ToString +
 
-        IfThen(FAppType=1, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
+        IfThen(FAppType=atManager, string(' Клиент: ' + FieldByName('ClientBrief').AsString), '');
       end;
 
       Next;
@@ -492,10 +495,14 @@ begin
 end;
 
 procedure TMessage.ContentChatContainerAjaxEvent(Sender: TComponent;
-  EventName: string; Params: TUniStrings);   var i:Integer;
+  EventName: string; Params: TUniStrings);
+  var i:Integer;
   JSONObject: TJSONObject;
 begin
-  if EventName = 'websocket_message' then
+  Log('TMessage.ContentChatContainerAjaxEvent', etInfo);
+  Log(EventName, etInfo);
+
+  if EventName = 'online_status' then
   begin
     try
       JSONObject := TJSONObject.ParseJSONValue(Params.Values['message']) as TJSONObject;
@@ -503,14 +510,20 @@ begin
         // Извлекаем значения из JSON
         if JSONObject <> nil then
         begin
+          Log(JSONObject.ToJSON, etInfo);
+
           if JSONObject.GetValue('type').Value = 'connection' then
-            SetUserStatus(JSONObject.GetValue('type').Value, JSONObject.GetValue('id').Value.ToInteger)
+            SetUserStatus(JSONObject.GetValue('type').Value,
+                          JSONObject.GetValue('id').Value.ToInteger)
           else
           if JSONObject.GetValue('type').Value = 'disconnection' then
-            SetUserStatus(JSONObject.GetValue('type').Value, JSONObject.GetValue('id').Value.ToInteger)
+            SetUserStatus(JSONObject.GetValue('type').Value,
+                          JSONObject.GetValue('id').Value.ToInteger)
           else
-          if JSONObject.GetValue('type').Value = 'status' then
-            SetUserStatus(JSONObject.GetValue('type').Value, JSONObject.GetValue('id').Value.ToInteger, JSONObject.GetValue('status').Value)
+          if JSONObject.GetValue('type').Value = 'online_status' then
+            SetUserStatus(JSONObject.GetValue('type').Value,
+                          JSONObject.GetValue('id').Value.ToInteger,
+                          JSONObject.GetValue('online').Value.ToBoolean())
         end;
       finally
         JSONObject.Free;  // Освобождаем память
@@ -520,9 +533,9 @@ begin
         log( 'Ошибка разбора JSON: ' + E.Message , etException );
        // ShowMessage('Ошибка разбора JSON: ' + E.Message);
     end;
-
   end;
 end;
+
 
 procedure TMessage.SetChatID(const Value: Integer);
 begin
@@ -539,28 +552,30 @@ begin
   LoadMessageByOrderID(FOrderID);
 end;
 
-procedure TMessage.SetUserStatus(AEvent: string; ClientID: integer; Status: string='');  var i:Integer;
+procedure TMessage.SetUserStatus(AEvent: string; ClientID: integer; Status: Boolean=false);  var i:Integer;
 begin
+  Log('TMessage.SetUserStatus Begin', etInfo);
   if AEvent = 'connection' then
     lblChatHeaderUserStatus.Caption := 'Онлайн'
   else
   if AEvent = 'disconnection' then
     lblChatHeaderUserStatus.Caption := 'Офлайн'
   else
-  if AEvent = 'status' then
+  if AEvent = 'online_status' then
   begin
-    if Status = 'online' then
+    if Status then
       lblChatHeaderUserStatus.Caption := 'Онлайн'
     else
       lblChatHeaderUserStatus.Caption := 'Офлайн';
   end;
+  Log('TMessage.SetUserStatus End', etInfo);
 end;
 
 procedure TMessage.UserStatusTimerTimer(Sender: TObject);
 begin
   // статуса пользователя (клиента)
-  if FAppType = 1 then
-    UniMainModule.WS.Send('request_status:' + FClientID.ToString) ;
+  if FAppType = atManager then
+    UniMainModule.WS.CheckOnline('customer', FClientID.ToString) ;
 end;
 
 procedure TMessage.UniFrameCreate(Sender: TObject);
@@ -575,7 +590,7 @@ begin
     f.Free;
   end;
 
-  // фуекция для копирования текста сообщения
+  // функция для копирования текста сообщения
   js := '''
     copyText = function(button) {
 
@@ -594,7 +609,7 @@ end;
 
 procedure TMessage.UniFrameDestroy(Sender: TObject);
 begin
-  UniMainModule.WS.FormUnRegister (ContentChatContainer.JSName);
+  UniMainModule.WS.FormUnRegister(ContentChatContainer.JSName);
 end;
 
 procedure TMessage.UniFrameReady(Sender: TObject);
@@ -603,7 +618,14 @@ begin
 
   btnSendEnabled;
 
-  UniMainModule.WS.FormRegister (ContentChatContainer.JSName , 'websocket_message');
+  if FAppType = atManager then
+    UniMainModule.WS.FormRegister(ContentChatContainer.JSName, 'online_status');
+
+//
+//        var subscribeMessage = {
+//        action: "subscribe",
+//        events: ["online_status", "disconnection", "new_message"] // список событий
+//      };
 end;
 
 initialization

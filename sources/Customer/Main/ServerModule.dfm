@@ -58,6 +58,7 @@ object UniServerModule: TUniServerModule
   ConnectionFailureRecovery.FullSequenceLog = True
   ConnectionFailureRecovery.ErrorMessage = 'Connection Error'
   ConnectionFailureRecovery.RetryMessage = 'Retrying...'
+  WebSocketServer.Enabled = False
   OnBeforeInit = UniGUIServerModuleBeforeInit
   Height = 261
   Width = 682

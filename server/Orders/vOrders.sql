@@ -106,10 +106,10 @@ SELECT o.[OrderID]
 	  ,isnull(o.Flag, 0)        as Flag
       ,p.[PriceID]           
       ,p.[Quantity]             as PriceQuantity-- количество из прайса
-      ,cast(Case 
-              when p.Restrictions = 'NOAIR' then 1
-              else 0
-            end as bit)         as NoAir
+      --,cast(Case 
+      --        when p.Restrictions = 'NOAIR' then 1
+      --        else 0
+      --      end as bit)         as NoAir
       ,p.Fragile                                -- признак: хрупкий
       ,p.NLA                                    -- No longer available или Более недоступно
       ,o.OrderDetailSubId
@@ -183,7 +183,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250320', '22'
+exec setOV 'vOrders', 'V', '20250320', '23'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

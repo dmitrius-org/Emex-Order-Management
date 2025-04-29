@@ -36,6 +36,11 @@ Update p
                                                                                                 o.DeliveryPlanDateSupplier))
 	  ,p.DeliveryPlanDateSupplier = coalesce(od.DeliveryPlanDateSupplier, 
                                               o.DeliveryPlanDateSupplier)
+
+      ,p.RetVal                   = case 
+                                      when isnull(o.DeliveredDateToSupplier, '') <> '' then 1 -- доставлена поставщику
+                                      else 0
+                                    end
   from pDeliveryTerm p (updlock)
  inner join tOrders o with(nolock index=ao1)
          on o.OrderID = p.OrderID
@@ -45,7 +50,7 @@ Update p
   left join vOrdersDeliverySupplier od 
          on od.OrderID = o.OrderID    
  where p.Spid = @@Spid
-
+ 
 -- расчет ближайшей дата вылета
 delete pDeliveryDate from pDeliveryDate (rowlock) where spid = @@spid
 insert pDeliveryDate with (rowlock)
@@ -59,7 +64,8 @@ select @@SPID,
        end, 
        ProfilesDeliveryID
   from pDeliveryTerm (nolock)
- where Spid = @@Spid
+ where Spid   = @@Spid
+   and RetVal = 0
 
 exec DeliveryDateCalc  
 
@@ -69,7 +75,8 @@ Update f
  inner join pDeliveryTerm f with (updlock index=ao1)
          on f.Spid    = @@Spid
         and f.OrderID = p.ID
- where p.Spid = @@Spid
+        and f.RetVal = 0
+ where p.Spid = @@Spid   
 
 update p
        -- Дней запаса до вылета	
@@ -83,7 +90,8 @@ update p
                                    else datediff(dd, p.DeliveryNextDate, GetDate()) 
                                  end
    from pDeliveryTerm p with (updlock index=ao1)
-  where p.Spid = @@spid
+  where p.Spid   = @@spid
+    and p.RetVal = 0
 
 /* Перестать отображать в меню “Заказы” в поле “Ближайшая дата вылета” новые варианты дат, 
    если у детали статус сменился на “Отгружена”/ Ставим дату которую получаем по API*/
@@ -105,7 +113,8 @@ Update s
 
               order by p.ProtocolID desc
              ) o
-where s.Spid = @@SPID
+where s.Spid   = @@SPID
+  and s.RetVal = 0 
 
 
 if @IsSave = 1
@@ -115,7 +124,8 @@ if @IsSave = 1
       from pDeliveryTerm p (nolock)
      inner join tOrders o (updlock)
              on o.OrderID=p.OrderID 
-     where p.Spid = @@spid
+     where p.Spid   = @@spid
+       and p.RetVal = 0
 	   and isnull(p.DeliveryNextDate, '') <> ''
 
  exit_:

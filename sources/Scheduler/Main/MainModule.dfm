@@ -50,4 +50,10 @@ object UniMainModule: TUniMainModule
     Left = 407
     Top = 17
   end
+  object FDMoniSQl: TFDMoniCustomClientLink
+    EventKinds = [ekError, ekSQL, ekSQLVarIn, ekSQLVarOut]
+    OnOutput = FDMoniSQlOutput
+    Left = 408
+    Top = 112
+  end
 end

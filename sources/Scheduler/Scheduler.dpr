@@ -51,7 +51,8 @@ uses
   uConstant in '..\Common\CommonApp\uConstant.pas',
   uAccrualUtils in '..\Manager\App\Orders\uAccrualUtils.pas',
   uServiceEmex in '..\Service\uServiceEmex.pas',
-  uEmexUtils in '..\Manager\App\emexdwc\uEmexUtils.pas';
+  uEmexUtils in '..\Manager\App\emexdwc\uEmexUtils.pas',
+  uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas';
 
 {$R *.res}
 

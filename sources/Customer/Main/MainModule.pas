@@ -296,7 +296,7 @@ begin
     AUserName:= AU;
     AAppName := AppCustomer;
 
-    WS :=TWS.Create('client:' + AUserID.ToString);
+    WS :=TWS.Create('customer', AUserID.ToString);
 
     Result := True;
 
@@ -399,7 +399,7 @@ end;
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject); // Отрабатывает с некоторой задержкой
 var FAudit : TAudit;
 begin
-  WS.Destroy('client:' + AUserID.ToString);
+  WS.Destroy();
 
   FAudit := TAudit.Create(FDConnection);
   FAudit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acExit, 'Выход из системы', AUserID, UniSession.RemoteIP);

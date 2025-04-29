@@ -32,6 +32,7 @@ INSERT INTO [tOrders] with (rowlock)
       ,MakeLogo
       ,DetailID
       ,Quantity
+      ,QuantityOrg
       ,Price
       ,Amount
       ,PricePurchase
@@ -122,6 +123,7 @@ select o.ClientID
       ,o.MakeLogo
       ,o.DetailID
       ,p.Quantity-- Quantity
+      ,o.QuantityOrg
       ,o.Price
       ,p.Quantity * o.Price --Amount
       ,o.PricePurchase

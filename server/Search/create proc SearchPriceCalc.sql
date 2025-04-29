@@ -6,7 +6,7 @@ go
 -------------------------------------------------------- */
 create proc SearchPriceCalc
               @ProfilesCustomerID  numeric(18, 0)  
-             ,@DetailNum           nvarchar(40)          
+             ,@DetailNum           nvarchar(40)  -- не использую зачем добавлял не помню        
 as
 set nocount on;
 
@@ -25,7 +25,7 @@ create table #Price
       ,DetailNum           varchar(30)    -- Номер детали 
       ,DetailPrice         float          -- Цена
       ,FinalPrice          float          -- Цена
-      ,DetailName           varchar(255)   -- Название
+      ,DetailName          varchar(255)   -- Название
       ,PriceLogo           varchar(30)    -- Название прайса 
       ,Quantity            int            -- Количество
       ,PackQuantity        int            -- Количество в упаковке
@@ -42,13 +42,13 @@ create table #Price
       ,Term                int            -- срок доставки
       ,TFinPriceKurs       money      
        --
-      ,Margin               float
-      ,Kurs                   float
+      ,Margin              float
+      ,Kurs                float
       ,ExtraKurs           float
-      ,Commission           float  -- Комиссия эквайера
-      ,Discount               float  -- Скидка
+      ,Commission          float  -- Комиссия эквайера
+      ,Discount            float  -- Скидка
       ,Reliability         float  -- Вероятность поставки
-      ,PDWeightKG           float
+      ,PDWeightKG          float
       ,PDVolumeKG          float
        -- данные с профиля поставщика
       ,ProfilesCustomerID  numeric(18, 0)  
@@ -58,8 +58,8 @@ create table #Price
       ,GuaranteedDay       int    -- дополнительный срок поставки с поставщика
       ,FragileSign         bit    default 0-- признак Хрункий на детали
       ,Fragile             float  default 0-- величина процента с направления доставки 
-      ,NLA                 bit default 0--No longer available Более недоступно
-
+      ,NLA                 bit    default 0--No longer available Более недоступно
+      ,NOAIR               bit    default 0
       ,RetVal              int
       )
 
@@ -81,13 +81,13 @@ declare  @Price  table
         ,VolumeKGf   float
         ,FragileSign bit
         ,NLA         bit
+        ,NOAIR       bit
         ,DetailName  nvarchar(256));
 
 insert @Num (DetailNum, Make)
 select distinct p.DetailNum, p.Make
   from pFindByNumber p with (nolock index=ao2)
  where p.Spid = @@spid
-   and p.DetailNum = @DetailNum
 
 insert @Price
        (DetailNum, 
@@ -96,6 +96,7 @@ insert @Price
         VolumeKGf,
         FragileSign,
         NLA,
+        NOAIR,
         DetailName)
 select 
        p.DetailNum,
@@ -104,6 +105,7 @@ select
        max(pp.VolumeKGf),
        max( cast(isnull(pp.Fragile, 0) as int) ),
        max( cast(isnull(pp.NLA, 0) as int) ),
+       max( cast(iif(isnull(pp.Restrictions, '')='NOAIR', 1, 0) as int) ),
        max(pp.DetailNameF)
   from @Num p 
  inner join tPrice pp with (nolock index=ao2) 
@@ -143,6 +145,7 @@ insert #Price with (rowlock)
       ,FragileSign
       ,Fragile
       ,NLA
+      ,NOAIR
       )
 select p.ID,
        p.MakeName, 
@@ -191,7 +194,8 @@ select p.ID,
        p.GuaranteedDay,
        isnull(pp.FragileSign, 0),
        isnull(pd.Fragile, 0),
-       isnull(pp.NLA, 0)
+       isnull(pp.NLA, 0),
+       isnull(pp.NOAIR, 0)
   from pFindByNumber p with (nolock index=ao1)
  inner join tClients c  with (nolock index=PK_tClients_ClientID)
          on c.ClientID = p.ClientID 
@@ -254,7 +258,9 @@ Update f
       ,f.WeightGr           = p.WeightKG   
       ,f.VolumeAdd          = p.VolumeKG   
       ,f.PartNameRus        = p.DetailName
-      ,f.Flag               = iif(p.NLA=1, f.Flag|2 /* No longer available Более недоступно */, f.Flag )
+      ,f.Flag               = f.Flag | 
+                              iif(p.NLA=1  ,       2 /* No longer available Более недоступно */, 0) | 
+                              iif(p.NOAIR=1, 4194304 /* NOAIR*/, 0)
       ,f.ProfilesCustomerID = p.ProfilesCustomerID
   from #Price p (nolock)
  inner join pFindByNumber f (updlock)
@@ -288,5 +294,5 @@ return @RetVal
 go
 grant exec on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250320', '15'
+exec setOV 'SearchPriceCalc', 'P', '20250320', '16'
 go

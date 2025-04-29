@@ -1334,7 +1334,10 @@ begin
   begin
     t := t + '<span class="grid-order-fragile" data-qtip="Fragile - Хрупкий товар"><i class="fa fa-fragile"></i></span> ';
   end;
-
+  if (Sender.AsInteger and 4194304) > 0 then
+  begin
+    t := t + '<span class="grid-order-no-air" data-qtip="NoAir - Запрещено к авиаперевозке"><i class="fa fa-plane"></i></span> ';
+  end;
   Text := t;
 end;
 

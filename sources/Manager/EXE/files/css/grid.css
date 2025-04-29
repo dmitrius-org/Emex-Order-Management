@@ -161,6 +161,12 @@
     color: #ff0303
 }
 
+.grid-order-no-air{
+    width: 100%;
+    font-size: 16px;
+    color: #ff0303
+}
+
 /* Иконка: сообщение по заказу*/
 .grid-order-message {
     overflow: visible;

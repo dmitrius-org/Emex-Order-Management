@@ -22,6 +22,7 @@ begin
     ,MakeLogo                        nvarchar(32)  
     ,DetailID                        nvarchar(32)   -- ID    
     ,Quantity                        int            -- Количество
+    ,QuantityOrg                     int            -- Количество
     ,Price                           money          -- Цена продажи
     ,Amount                          money          -- Сумма продажи
     ,PricePurchase                   money          -- Цена закупки с учетом скидки

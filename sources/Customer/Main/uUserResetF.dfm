@@ -44,8 +44,6 @@ object UserResetF: TUserResetF
     ParentAlignmentControl = False
     TabOrder = 0
     LayoutConfig.Cls = 'login-box'
-    ExplicitLeft = 64
-    ExplicitTop = 80
     DesignSize = (
       400
       400)
@@ -111,7 +109,6 @@ object UserResetF: TUserResetF
         ParentFont = False
         Font.Color = clGrayText
         TabOrder = 1
-        ExplicitTop = -5
       end
     end
     object UniLabel1: TUniLabel
@@ -121,7 +118,7 @@ object UserResetF: TUserResetF
       Height = 13
       Hint = ''
       AutoSize = False
-      Caption = #1042#1093#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1091
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' '#1087#1072#1088#1086#1083#1103
       TabOrder = 5
       LayoutConfig.Cls = 'login-title'
     end

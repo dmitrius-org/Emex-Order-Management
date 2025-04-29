@@ -162,10 +162,10 @@ procedure TUniServerModule.UniGUIServerModuleControlPanelLogin(
   ASession: TUniGUISession; const AUser, APassword: string;
   var LoginValid: Boolean; LoginAttempt: Integer);
 begin
- Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', AUser);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', AUser);
   Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin APassword', AUser);
-   Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginValid.ToString());
-      Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginAttempt.ToString);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginValid.ToString());
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleControlPanelLogin AUser', LoginAttempt.ToString);
 end;
 
 procedure TUniServerModule.UniGUIServerModuleCreate(Sender: TObject);
@@ -188,6 +188,12 @@ begin
 
   if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot']<> '' then
     FrameworkFilesRoot := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot'];
+
+  CustomFiles.Add('files/fonts/fontawesome-pro-5.14.0-web/css/all.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
+  CustomFiles.Add('files/css/grid.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/main_menu.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/css/login.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
 
   dbConnect;

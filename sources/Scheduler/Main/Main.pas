@@ -72,7 +72,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
-  LoginEditForm, InfoForm, uLoggerF, uMainVar, uTask_T, Quick.Logger;
+  LoginEditForm, InfoForm, uLoggerF, uMainVar, uTask_T, Quick.Logger, uUtils.Logger;
 
 function MainForm: TMainForm;
 begin

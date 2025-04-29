@@ -124,3 +124,4 @@ insert tRetCode (RetCode, Message) select 704, 'Пожалуйста запол�
 insert tRetCode (RetCode, Message) select 705, 'Деталь не найдена в корзине!'
 insert tRetCode (RetCode, Message) select 706, 'Нет позиций для заказа!'
 insert tRetCode (RetCode, Message) select 707, 'Корзина пуста!'
+insert tRetCode (RetCode, Message) select 708, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.'

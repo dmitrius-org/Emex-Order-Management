@@ -44,10 +44,6 @@ object UserRegisterF: TUserRegisterF
     ParentAlignmentControl = False
     TabOrder = 0
     LayoutConfig.Cls = 'login-box'
-    ExplicitLeft = 48
-    ExplicitTop = 40
-    ExplicitWidth = 609
-    ExplicitHeight = 417
     DesignSize = (
       500
       500)
@@ -184,7 +180,7 @@ object UserRegisterF: TUserRegisterF
       Height = 13
       Hint = ''
       AutoSize = False
-      Caption = #1042#1093#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1091
+      Caption = #1056#1077#1075#1080#1089#1090#1088#1072#1094#1080#1103
       TabOrder = 9
       LayoutConfig.Cls = 'login-title'
     end

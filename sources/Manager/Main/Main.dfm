@@ -15,6 +15,7 @@ object MainForm: TMainForm
   MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
   Layout = 'fit'
+  OnAjaxEvent = UniFormAjaxEvent
   OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
   TextHeight = 15

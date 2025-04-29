@@ -27,7 +27,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uMessengerMessage;
+  MainModule, uniGUIApplication, uMessengerMessage, uCommonType;
 
 function MessageF: TMessageF;
 begin
@@ -39,7 +39,7 @@ var Message: TMessage;
 begin
    Message:= TMessage.Create(self);
    Message.Parent := self;
-   Message.AppType := 1;
+   Message.AppType := atManager;
    Message.OrderID := FOrderID;
 
 end;

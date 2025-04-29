@@ -12,12 +12,6 @@ object UniServerModule: TUniServerModule
   Bindings = <>
   MainFormDisplayMode = mfPage
   CustomFiles.Strings = (
-    
-      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/' +
-      'css/all.min.css'
-    ''
-    'files/css/main_menu.css'
-    'files/css/grid.css'
     ''
     '')
   ExtLocale = 'ru'

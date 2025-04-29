@@ -1,6 +1,6 @@
 drop proc if exists PartToBasket
 /*
-  PartToBasket - добавление детали в корзину
+  PartToBasket - добавление детали в корзину из формы поиска
 
 
   @ClientID  - ид клиента
@@ -58,6 +58,20 @@ declare @r int = 0
       goto exit_
     end    
 
+  if exists (select 1
+               from pFindByNumber p with (nolock index=ao1)
+              inner join vClientProfilesParam  cpp
+                      on cpp.ProfilesCustomerID = p.ProfilesCustomerID
+                     and cpp.Restrictions       = 1 -- контролировать
+              where p.Spid = @@Spid
+                and p.ID   = @PartID
+                and p.Flag&4194304 > 0
+                  )
+    begin
+      select @r = 708 -- Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.
+      goto exit_
+    end  
+  
   Update t
      set t.Quantity =  (( (t.Quantity + 1) + p.Packing - 1) / p.Packing) * p.Packing
 	    ,t.Amount   = ((( (t.Quantity + 1) + p.Packing - 1) / p.Packing) * p.Packing) * t.PriceRub
@@ -150,5 +164,5 @@ declare @r int = 0
 GO
 grant exec on PartToBasket to public
 go
-exec setOV 'PartToBasket', 'P', '20250226', '14'
+exec setOV 'PartToBasket', 'P', '20250226', '15'
 go

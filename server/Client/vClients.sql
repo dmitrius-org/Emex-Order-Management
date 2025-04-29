@@ -20,7 +20,8 @@ select c.ClientID
 	  ,s.Brief  as Supplier
       ,r.Amount as Rest
       ,case 
-         when isnull(ls.AppClientLog, 0) = 1 then 1
+         when isnull(ls.LogDestination, '') <> '' 
+          and (isnull(ls.FileLogLevel, '') <> '' or isnull(ls.DBLogLevel, '') <> '') then 1
          else 0
        end Status
   from tClients c (nolock)

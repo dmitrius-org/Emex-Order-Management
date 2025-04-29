@@ -51,6 +51,8 @@ type
     procedure UniFormKeyDown(Sender: TObject; var Key:Word; Shift: TShiftState);
     procedure UniFormCreate(Sender: TObject);
     procedure actProfileExecute(Sender: TObject);
+    procedure UniFormAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -92,7 +94,7 @@ implementation
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
   LoginEditForm, InfoForm, uLoggerF, uMainVar, uUtils.Varriant,
-  uUserProfile, uCommonType;
+  uUserProfile, uCommonType, uUtils.WS, uUtils.Logger;
 
 function MainForm: TMainForm;
 begin
@@ -371,6 +373,27 @@ begin
     if MainMenu.Selected = Nd then
       MainMenu.Selected := nil;
   end;
+end;
+
+procedure TMainForm.UniFormAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+var
+  JSONData, EventType: string;
+begin
+  Log('TMainForm.UniFormAjaxEvent Begin ' + EventType, etWarning);
+//  if EventName = 'ws_message' then
+//  begin
+//    JSONData := Params.Values['message'];
+//
+//    // Вытащить тип события из JSON
+////    EventType := UniMainModule.WS.ExtractEventType(JSONData);
+//
+//    // Вызвать обработчик по типу
+//    if UniMainModule.WS.Handlers.ContainsKey(EventType) then
+//      UniMainModule.WS.Handlers[EventType](JSONData)
+//    else
+//      Log('No handler registered for event type: ' + EventType, etWarning);
+//  end;
 end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);
