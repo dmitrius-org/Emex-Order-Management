@@ -81,6 +81,11 @@ type
 
     procedure CreateGlobalLogFileProvider();
     procedure CreateGlobalLogADODBProvider();
+
+    /// <summary>
+    /// CreateLogger - включение логирования
+    /// </summary>
+    procedure CreateLogger(_AUserID: Integer; _AAppName: string);
   end;
 
   function UniMainModule: TUniMainModule;
@@ -258,6 +263,73 @@ begin
   end;
 end;
 
+procedure TUniMainModule.CreateLogger(_AUserID: Integer; _AAppName: string);
+begin
+  Sql.Open('''
+  Select cast(iif(CHARINDEX('В файл', LogDestination) > 0, 1, 0) as bit) SaveFile,
+         cast(iif(CHARINDEX('В базу данных', LogDestination) > 0, 1, 0) as bit) SaveDB,
+         FileLogLevel,
+         DBLogLevel,
+         LogSql
+    from tLoggerSettings (nolock)
+   where UserID = :UserID
+     and AppName= :AppName
+  ''',
+  ['UserID', 'AppName'],[_AUserID, _AAppName]);
+
+  if Sql.Q.RecordCount > 0 then
+  begin
+    // настройки  логирования
+    if Sql.Q.FindField('SaveFile').AsBoolean then
+    begin
+      CreateGlobalLogFileProvider();
+
+      with GlobalLogFileProvider do
+      begin
+        LogLevel:= ParseLogLevel(Sql.Q.FindField('FileLogLevel').AsString);
+        Enabled := True;
+      end;
+    end;
+
+    if Sql.Q.FindField('SaveDB').AsBoolean then
+    begin
+      CreateGlobalLogADODBProvider;
+
+      with GlobalLogADODBProvider do
+      begin
+        LogLevel:= ParseLogLevel(Sql.Q.FindField('DBLogLevel').AsString);
+        Enabled := True;
+      end;
+    end;
+
+    if (Sql.Q.FindField('SaveFile').AsBoolean) or
+       (Sql.Q.FindField('SaveDB').AsBoolean)
+    then
+    begin
+      FDMoniSQl.Tracing := Sql.Q.FindField('LogSql').AsBoolean;
+    end
+    else
+      FDMoniSQl.Tracing := False;
+  end;
+
+  log('Логирование', uUtils.Logger.etDebug);
+  log('AUserID=%s', [_AUserID.ToString], uUtils.Logger.etDebug);
+  log('AUserName=%s', [AUserName], uUtils.Logger.etDebug);
+  log('AAppName=%s', [AAppName], uUtils.Logger.etDebug);
+
+  if Assigned(GlobalLogFileProvider) then
+    log('Логирование в файл=%s', [GlobalLogFileProvider.Enabled.ToString()], uUtils.Logger.etDebug)
+  else
+    log('Логирование в файл=%s', [False.ToString()], uUtils.Logger.etDebug);
+
+  if Assigned(GlobalLogADODBProvider) then
+    log('Логирование в базу=%s', [GlobalLogADODBProvider.Enabled.ToString()], uUtils.Logger.etDebug)
+  else
+    log('Логирование в базу=%s', [False.ToString()], uUtils.Logger.etDebug);
+
+  log('Логирование в sql=%s', [FDMoniSQl.Tracing.ToString()], uUtils.Logger.etDebug);
+end;
+
 function TUniMainModule.CustomerAuthorization(AU, AP: string; IsSaveSession: Boolean = False): Boolean;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'begin');
@@ -289,66 +361,19 @@ begin
 
   if RetVal.Code = 0 then
   begin
-
-    UniServerModule.Logger.AddLog('TUniMainModule.dbUserAuthorization', 'Успешная авторизация');
-
     AUserID  := Query.FieldByName('ClientID').AsInteger;
     AUserName:= AU;
     AAppName := AppCustomer;
 
+    Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
+
+    CreateLogger(AUserID, AAppName);
+
+    Log('Программа запущена', uUtils.Logger.etHeader);
+
     WS :=TWS.Create('customer', AUserID.ToString);
 
     Result := True;
-
-    Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
-
-    Sql.Open('''
-      Select cast(iif(CHARINDEX('В файл', LogDestination) > 0, 1, 0) as bit) SaveFile,
-             cast(iif(CHARINDEX('В базу данных', LogDestination) > 0, 1, 0) as bit) SaveDB,
-             FileLogLevel,
-             DBLogLevel,
-             LogSql
-        from tLoggerSettings (nolock)
-       where UserID = :UserID
-         and AppName= :AppName
-    ''',
-    ['UserID', 'AppName'],[AUserID, AAppName]);
-
-    if Sql.Q.RecordCount > 0 then
-    begin
-      if Sql.Q.FindField('SaveFile').AsBoolean then
-      begin
-        CreateGlobalLogFileProvider();
-
-        with GlobalLogFileProvider do
-        begin
-          LogLevel:= ParseLogLevel(Sql.Q.FindField('FileLogLevel').AsString);
-          Enabled := True;
-        end;
-      end;
-
-      if Sql.Q.FindField('SaveDB').AsBoolean then
-      begin
-        CreateGlobalLogADODBProvider;
-
-        with GlobalLogADODBProvider do
-        begin
-          LogLevel:= ParseLogLevel(Sql.Q.FindField('DBLogLevel').AsString);
-          Enabled := True;
-        end;
-      end;
-
-      if (Sql.Q.FindField('SaveFile').AsBoolean) or
-         (Sql.Q.FindField('SaveDB').AsBoolean)
-      then
-      begin
-        FDMoniSQl.Tracing := Sql.Q.FindField('LogSql').AsBoolean;
-      end
-      else
-        FDMoniSQl.Tracing := False;
-    end;
-
-    Log('Программа запущена', uUtils.Logger.etHeader);
   end
   else
   begin
@@ -392,8 +417,6 @@ begin
   if Assigned(ALogger) then
     ALogger.Free;
   ALogger := TLogger.Create;
-
-  SetCurrentLogData(ALogger);
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject); // Отрабатывает с некоторой задержкой

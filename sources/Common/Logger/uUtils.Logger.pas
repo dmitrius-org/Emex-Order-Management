@@ -13,10 +13,6 @@ type
   TmyEventType = (etHeader, etInfo, etSuccess, etWarning, etError, etCritical, etException, etDebug, etTrace, etDone, etCustom1, etCustom2);
 
   /// <summary>
-  /// SetCurrentLogData - сохранение логгера в потоке
-  /// </summary>
-  procedure SetCurrentLogData(const AValue: TLogger);
-  /// <summary>
   /// GetCurrentLogData -  получение логгера для потока
   /// </summary>
   function GetCurrentLogData():TLogger;
@@ -31,26 +27,14 @@ type
   /// </summary>
   function ParseLogLevel(const S: string): TLogLevel;
 
-threadvar
-  CurrentLogData : TLogger;
-
 implementation
 
 uses
   MainModule, ServerModule;
 
-procedure SetCurrentLogData(const AValue: TLogger);
-begin
-  if Assigned(AValue) then
-    CurrentLogData := AValue;
-end;
-
 function GetCurrentLogData: TLogger;
 begin
   try
-    if Assigned(CurrentLogData) then
-      Result := CurrentLogData
-    else
      Result := UniMainModule.ALogger;
   except
     on E: Exception do
@@ -91,8 +75,6 @@ begin
   GetCurrentLogData.Add(cMsg, cValues, MyToQuickEventType(cEventType));
 end;
 
-
-//
 function ParseLogLevel(const S: string): TLogLevel;
 var
   Parts: TArray<string>;

@@ -182,9 +182,6 @@ uses System.SysUtils, System.Classes,
 
 implementation
 
-uses
-  uUtils.Logger;
-
 { TEmex }
 
 constructor TEmex.Create(Value: TFDConnection);
@@ -229,7 +226,7 @@ begin
               from pAccrualAction p (nolock)
              where p.Spid   = @@SPID
                and p.RetVal = 534;
-           ''', [],[]);
+  ''', [],[]);
   if FSQl.Q.RecordCount > 0 then
   begin
     Exit;
@@ -274,7 +271,6 @@ begin
             Exit;
         end;
     end;
-
 
     // *** Создание заказа *** \\
     Order:=Emex.CreateOrder(getCustomer(Supplier.ToInteger));
@@ -362,7 +358,6 @@ var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
     I, R: Integer;
 begin
-
 end;
 
 function TEmex.DeleteFromBasketByOrderID(AOrderID: Integer): integer;
@@ -384,7 +379,6 @@ begin
 
     FQuery.First;
     begin
-
       part.BasketId := FQuery.FieldByName('BasketId').AsLargeInt;
       part.Date_add:= TXSDateTime.Create;
 
@@ -418,13 +412,13 @@ begin
     result := TStringList.Create;
     FQuery.Close;
     FQuery.Open('''
-              Select distinct o.ClientID
-               from pAccrualAction p with (nolock index=ao2)
-              inner join tOrders o with (nolock)
-                      on o.OrderID=p.ObjectID
-              where p.Spid = @@spid
-                and p.Retval = 0
-             ''', [], []);
+      Select distinct o.ClientID
+        from pAccrualAction p with (nolock index=ao2)
+       inner join tOrders o with (nolock)
+               on o.OrderID=p.ObjectID
+       where p.Spid = @@spid
+         and p.Retval = 0
+    ''', [], []);
     FQuery.First;
     for I := 0 to FQuery.RecordCount - 1 do
     begin
@@ -439,18 +433,18 @@ begin
     result := TStringList.Create;
     FQuery.Close;
     FQuery.Open('''
-              Select distinct
-                     s.SuppliersID
-                from pAccrualAction p with (nolock index=ao2)
-               inner join tOrders o with (nolock)
-                       on o.OrderID = p.ObjectID
-               inner join tClients c with (nolock)
-                       on c.ClientID = o.ClientID
-               inner join tSuppliers  s with (nolock)
-                       on s.SuppliersID = c.SuppliersID
-               where p.Spid   = @@spid
-                 and p.Retval = 0
-             ''', [], []);
+      Select distinct
+             s.SuppliersID
+        from pAccrualAction p with (nolock index=ao2)
+       inner join tOrders o with (nolock)
+               on o.OrderID = p.ObjectID
+       inner join tClients c with (nolock)
+               on c.ClientID = o.ClientID
+       inner join tSuppliers s with (nolock)
+               on s.SuppliersID = c.SuppliersID
+       where p.Spid   = @@spid
+         and p.Retval = 0
+    ''', [], []);
     FQuery.First;
     for I := 0 to FQuery.RecordCount - 1 do
     begin
@@ -692,7 +686,6 @@ begin
 
     if RCount > 0 then
     begin
-
       OrderID:=FQuery.FieldByName('OrderID').Value;
 
       SetLength(outBasket, 1);
@@ -706,9 +699,7 @@ begin
         part.BasketId := FQuery.FieldByName('BasketId').AsLargeInt;
         part.Date_add:= dat;
 
-
         outBasket[0]:= part;
-
 
         R:=Emex.DeleteFromBasket(getCustomerByClient(FQuery.FieldByName('ClientID').AsInteger), outBasket);
 
@@ -737,13 +728,12 @@ begin
 
 
       FSQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID=:OrderID',
-              ['OrderID','Message'],[OrderID, e.Message]);
+               ['OrderID','Message'],[OrderID, e.Message]);
 
       FSQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid and ObjectID<>:OrderID',
-              ['OrderID','Message'],[OrderID, '']);
+               ['OrderID','Message'],[OrderID, '']);
     end;
   end;
-
 end;
 
 procedure TEmex.InsertPartToBasketCancelByMarks;
@@ -753,7 +743,6 @@ var part: BasketDetails;
     dat: TXSDateTime;
 begin
   try
-
     FQuery.Close;
     FQuery.Open('''
               Select distinct
@@ -785,10 +774,10 @@ begin
 
         R:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SupplierID').AsInteger), outBasket);
 
-        if R <> 1 then
-        begin
-          log('TEmex.InsertPartToBasketCancelByMarks Количество удаленных товаров: ' +  R.ToString, etError);
-        end;
+//        if R <> 1 then
+//        begin
+//          log('TEmex.InsertPartToBasketCancelByMarks Количество удаленных товаров: ' +  R.ToString, etError);
+//        end;
 
         FQuery.Next;
       end;
@@ -800,7 +789,7 @@ begin
     begin
       if Assigned(part) then part.Destroy;
 
-      log('TEmex.InsertPartToBasketCancelByMarks Error: ' + e.Message, etException);
+      //log('TEmex.InsertPartToBasketCancelByMarks Error: ' + e.Message, etException);
     end;
   end;
 end;
@@ -1045,8 +1034,8 @@ begin
   }
   Clients := ForClients();
 
-  if Clients.Count = 0 then
-     log('TEmex.OrderStateSyncByOrderNum Нет данных для синхронизации статусов!', etdebug);
+//  if Clients.Count = 0 then
+//    log('TEmex.OrderStateSyncByOrderNum Нет данных для синхронизации статусов!', etdebug);
 
   // Цикл по клиентам
   for Client in Clients do

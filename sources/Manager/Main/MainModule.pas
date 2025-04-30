@@ -255,20 +255,20 @@ begin
       {$ENDIF}
       FDConnection.Open;
 
-      AUserName:=AUser;
-      ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
-      AUserID := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
-      AAppName:= AppManager;
-
-      WS := TWS.Create('manager', AUserID.ToString);
-
-      AppVersion;
+      AUserName:= AUser;
+      ASPID    := FDConnection.ExecSQLScalar('Select @@Spid');
+      AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
+      AAppName := AppManager;
 
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
       CreateLogger(AUserID, AAppName);
 
       Log('Программа запущена', uUtils.Logger.etHeader);
+
+      WS := TWS.Create('manager', AUserID.ToString);
+
+      AppVersion;
     except
       on E: EFDDBEngineException do
       case E.Kind of
@@ -371,8 +371,6 @@ begin
   if Assigned(ALogger) then
     ALogger.Free;
   ALogger := TLogger.Create;
-
-  SetCurrentLogData(ALogger);
 end;
 
 procedure TUniMainModule.UniGUIMainModuleDestroy(Sender: TObject);

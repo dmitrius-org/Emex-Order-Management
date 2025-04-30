@@ -344,18 +344,20 @@ end;
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
-  SetCurrentLogData(Flogger);
-  Log('TSQLQueryThread.Execute Begin', etInfo);
+//  SetCurrentLogData(Flogger);
+  FLogger.Debug('TSQLQueryThread.Execute Begin');
   Emex := TEmex.Create(FConnection);
   try
-    Log('TSQLQueryThread.Execute FindByDetailNumber Begin', etInfo);
-    Log('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber], etInfo);
+    FLogger.Info('TEmex.FindByDetailNumber Begin');
+    FLogger.Debug('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber]);
+
     Emex.FindByDetailNumber(FClientID, FDetailNumber);
-    Log('TSQLQueryThread.Execute FindByDetailNumber End', etInfo);
+
+    FLogger.info('TEmex.FindByDetailNumber End');
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
   finally
     Emex.Destroy;
-    Log('TSQLQueryThread.Execute End', etInfo);
+    FLogger.Debug('TSQLQueryThread.Execute End');
   end;
 end;
 
@@ -371,6 +373,7 @@ begin
 end;
 
 { TOrderF }
+
 procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin

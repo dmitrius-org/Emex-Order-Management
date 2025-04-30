@@ -94,7 +94,6 @@ object ReOrder: TReOrder
     Align = alBottom
     TabOrder = 4
     LayoutConfig.Padding = '2'
-    ExplicitTop = 120
     DesignSize = (
       620
       37)
@@ -151,8 +150,8 @@ object ReOrder: TReOrder
       ' '
       '}')
     OnTimer = UniTimerTimer
-    Left = 574
-    Top = 92
+    Left = 518
+    Top = 100
   end
   object UniActionList1: TUniActionList
     Left = 310

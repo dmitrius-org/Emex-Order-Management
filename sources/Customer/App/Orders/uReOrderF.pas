@@ -118,7 +118,6 @@ begin
 end;
 
 { TReOrder }
-
 procedure TReOrder.actRefreshFormDataExecute(Sender: TObject);
 begin
   actRefreshFormData.Enabled := False;
@@ -198,7 +197,7 @@ begin
                @OrderID =
   ''' + FID.ToString);
 
-  cbPrice.Value      := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
+  cbPrice.Value := UniMainModule.Query.FieldByName('PriceLogo').AsString + '.' +UniMainModule.Query.FieldByName('MakeLogo').AsString;    //
   cbDestinationLogo.Value:= UniMainModule.Query.FieldByName('ProfilesCustomerID').AsString; // направление отгрузки
 
   Self.Caption:=UniMainModule.Query.FieldByName('Manufacturer').AsString + ' ' +
@@ -332,7 +331,6 @@ begin
                from #CounterPart (nolock)
               where isnull(Processed, 0) = 0
               order by N
-
            ''',
            ['OrderID'],
            [FID]
@@ -377,7 +375,6 @@ end;
 
 procedure TReOrder.UniFormShow(Sender: TObject);
 begin
-
   LoadDataPart;
 end;
 
@@ -415,18 +412,19 @@ end;
 procedure TSQLQueryThread.Execute;
 var Emex:TEmex;
 begin
-  SetCurrentLogData(Flogger);
-  Log('TSQLQueryThread.Execute Begin', etInfo);
+  FLogger.Debug('TSQLQueryThread.Execute Begin');
   Emex := TEmex.Create(FConnection);
   try
-    Log('TSQLQueryThread.Execute FindByDetailNumber Begin', etInfo);
-    Log('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber], etInfo);
+    FLogger.Info('TEmex.FindByDetailNumber Begin');
+    FLogger.Info('TEmex.FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber]);
+
     Emex.FindByDetailNumber(FClientID, FDetailNumber);
-    Log('TSQLQueryThread.Execute FindByDetailNumber End', etInfo);
+
+    FLogger.Info('TEmex.FindByDetailNumber End');
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
   finally
     Emex.Destroy;
-    Log('TSQLQueryThread.Execute End', etInfo);
+    FLogger.Debug('TSQLQueryThread.Execute End');
   end;
 end;
 

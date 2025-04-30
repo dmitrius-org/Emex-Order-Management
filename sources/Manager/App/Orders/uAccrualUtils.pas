@@ -17,6 +17,9 @@ type
   TProcExec = class
   private
     Emex: TEmex;
+    FLogger: tLogger;
+    function GetLogger: tLogger;
+    procedure SetLogger(const Value: tLogger);
   published
     /// <summary>
     /// InsertPartToBasketByPartFromMark - Помещение запчастей в корзину на основе меток tMarks
@@ -48,6 +51,7 @@ type
     destructor Destroy; override;
 
     procedure Call(MethodName: string);
+    property Logger: tLogger read GetLogger write SetLogger;
   end;
 
 /// <summary>
@@ -120,13 +124,14 @@ end;
 implementation
 
 uses
-  uUtils.Logger, uError_T, uUtils.Varriant, MainModule;
+  uError_T, uUtils.Varriant, MainModule, uUtils.Logger;
 
 { TProcExec }
 
 procedure TProcExec.Call(MethodName: string);
 var m: TMethod;
 begin
+  FLogger.Debug('TProcExec.Call Begin %s', ['MethodName']);
   try
      m.Code := Self.MethodAddress(MethodName); //find method code
      m.Data := pointer(Self); //store pointer to object instance
@@ -138,16 +143,15 @@ begin
       Emex.SQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid',
                    ['Message'],[e.Message]);
 
-      log('TProcExec.Call ' + E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message, etException);
+
+      FLogger.&Except('TProcExec.Call ' + E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
     end;
   end;
 end;
 
 constructor TProcExec.Create(Value: TFDConnection);
 begin
-  log('TProcExec.Create Begin', etInfo);
   Emex := TEmex.Create(Value);
-  log('TProcExec.Create Begin', etInfo);
 end;
 
 destructor TProcExec.Destroy;
@@ -163,7 +167,7 @@ end;
 
 procedure TProcExec.EmexCreateOrderCheck;
 begin
-  log('TProcExec.EmexCreateOrderCheck Begin ', etInfo);
+  FLogger.Debug('TProcExec.EmexCreateOrderCheck Begin');
 
   //Запрашиваем заказы в статусе в Работе
   Emex.MovementInWorkByMarks;
@@ -171,7 +175,7 @@ begin
   // Выполняем проверку, результат пишем pAccrualAction.RetVal
   Emex.SQl.Exec('exec EmexCreateOrderCheck', [], []);
 
-  log('TProcExec.EmexCreateOrderCheck End ', etInfo);
+  FLogger.Debug('TProcExec.EmexCreateOrderCheck End');
 end;
 
 procedure TProcExec.EmexOrderStateSync;
@@ -192,12 +196,17 @@ begin
   Emex.OrderStateSyncByOrderNum;
 end;
 
+function TProcExec.GetLogger: tLogger;
+begin
+  Result:=FLogger;
+end;
+
 procedure TProcExec.InsertPartToBasketByPartFromMark; var R: Integer;
 begin
-  log('TProcExec.InsertPartToBasketByPartFromMark Begin ', etInfo);
+  FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark Begin');
 
   R := Emex.InsertPartToBasketByMarks;
-  log('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString, etDebug);
+  FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString);
 
   if R > 0 then
   begin
@@ -209,7 +218,7 @@ begin
     Emex.InsertPartToBasketCancelByMarks();
   end;
 
-  log('TProcExec.InsertPartToBasketByPartFromMark End ', etInfo);
+  FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark End');
 end;
 
 procedure TProcExec.InsertPartToBasketByPartRollBack;
@@ -217,6 +226,11 @@ begin
   Emex.InsertPartToBasketRollbackByMarks;
 end;
 
+procedure TProcExec.SetLogger(const Value: tLogger);
+begin
+  if Assigned(Value) then
+    FLogger := Value;
+end;
 
 { TAccrual }
 
@@ -380,6 +394,7 @@ begin
           log('Процедура: ' + Sql.Q.FieldByName('MetodRollback').AsString, etInfo);
 
           Proc := TProcExec.Create(FConnection);
+          Proc.Logger := GetCurrentLogData();
           if Sql.Q.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
           begin
             Proc.Call(Sql.Q.FieldByName('MetodRollback').AsString);
@@ -498,15 +513,12 @@ var
   qActionMetod: TFDQuery;
   qMetod: TFDQuery;
 begin
-
-  SetCurrentLogData(Flogger);
+  FLogger.Debug('TAccrualThread.Execute Begin');
 
   if not Assigned(qMetod) then qMetod := TFDQuery.Create(nil);
   if not Assigned(qActionMetod) then qActionMetod := TFDQuery.Create(nil);
 
   try
-      log('TAccrualThread.Execute Begin', etInfo); //тут
-
       qMetod.Connection := FAccrual.FConnection;
 
       qActionMetod.Connection := FAccrual.FConnection;
@@ -520,7 +532,7 @@ begin
       ''', [], []);
       qActionMetod.First;
 
-      log('TAccrualThread.Execute ActionMetod Begin', etInfo);
+      FLogger.Debug('TAccrualThread.Execute ActionMetod Begin');
       for j := 0 to qActionMetod.RecordCount-1 do
       begin
 
@@ -534,24 +546,24 @@ begin
            order by Number
         ''';
 
-        log('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString, etInfo);
+        FLogger.Debug('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
 
         qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;
         qMetod.ParamByName('StateID').Value := qActionMetod.FieldByName('StateID').AsInteger;
         qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
         qMetod.Open;
 
-        log('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString(True), etInfo);
+        FLogger.Debug('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString(True));
 
         if qMetod.RecordCount > 0 then
         begin
           qMetod.First;
           for I := 0 to qMetod.RecordCount-1 do
           begin
-            log('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString, etInfo);
+            FLogger.Debug('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
 
             Proc := TProcExec.Create(FAccrual.FConnection);
-
+            Proc.Logger := FLogger;
             if qMetod.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
             begin
               Proc.Call(qMetod.FieldByName('Metod').AsString);
@@ -567,11 +579,11 @@ begin
 
       // Добавление протокола
       begin
-        log('TAccrualThread.Execute ProtocolAdd Begin', etInfo);
+        FLogger.Debug('TAccrualThread.Execute ProtocolAdd Begin');
         qMetod.Close;
         qMetod.SQL.Text := ' exec ProtocolAdd ';
         qMetod.ExecSQL;
-        log('TAccrualThread.Execute ProtocolAdd End', etInfo);
+        FLogger.Debug('TAccrualThread.Execute ProtocolAdd End');
       end;
 
   finally
@@ -579,7 +591,7 @@ begin
 
     FreeAndNil(qMetod);
     FreeAndNil(qActionMetod);
-    log('TAccrualThread.Execute End', etInfo);
+    FLogger.Debug('TAccrualThread.Execute End');
   end;
 end;
 

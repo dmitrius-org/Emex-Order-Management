@@ -10,7 +10,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
 
      uCommonType,
 
-     uServiceEmex, Soap.XSBuiltIns, uSqlUtils, uUtils.Logger;
+     uServiceEmex, Soap.XSBuiltIns, uSqlUtils;
 
   Type
   /// <summary>
@@ -28,11 +28,6 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       FLang:string;
       FUrl:string;
 
-     // function GetConnection: TFDConnection;
-     // procedure SetConnection(const Value: TFDConnection);
-
-      //function GetQry: TFDQuery;
-      //procedure SetQry(const Value: TFDQuery);
       function GetEmex: ServiceSoap;
       function GetSQl: TSQL;
 
@@ -42,17 +37,11 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
       /// </summary>
       procedure FillFindByNumber(AClientID:LongInt; APparts: ArrayOfFindByNumber);
-
-//      property Emex: ServiceSoap read GetEmex;
     public
       constructor Create(Value: TFDConnection); overload;
       destructor Destroy; override;
 
-      //property Connection: TFDConnection read GetConnection write SetConnection;
-
       property Emex: ServiceSoap read GetEmex;
-
-      //property Qry: TFDQuery read GetQry write SetQry;
 
       property SQl: TSQL read GetSQl;
 
@@ -109,22 +98,22 @@ end;
 function TEmex.ForClients: TStringList;
 var i: Integer;
 begin
-    result := TStringList.Create;
-    FQuery.Close;
-    FQuery.Open('''
-              Select distinct o.ClientID
-               from pAccrualAction p with (nolock index=ao2)
-              inner join tOrders o with (nolock)
-                      on o.OrderID=p.ObjectID
-              where p.Spid = @@spid
-                and p.Retval = 0
-             ''', [], []);
-    FQuery.First;
-    for I := 0 to FQuery.RecordCount - 1 do
-    begin
-      result.Add(FQuery.FieldByName('ClientID').AsString);
-      FQuery.Next;
-    end;
+  result := TStringList.Create;
+  FQuery.Close;
+  FQuery.Open('''
+            Select distinct o.ClientID
+             from pAccrualAction p with (nolock index=ao2)
+            inner join tOrders o with (nolock)
+                    on o.OrderID=p.ObjectID
+            where p.Spid = @@spid
+              and p.Retval = 0
+           ''', [], []);
+  FQuery.First;
+  for I := 0 to FQuery.RecordCount - 1 do
+  begin
+    result.Add(FQuery.FieldByName('ClientID').AsString);
+    FQuery.Next;
+  end;
 end;
 
 function TEmex.getCustomer(AAccount: Integer): Customer;
@@ -138,9 +127,8 @@ begin
                join tSuppliers  s with (nolock)
                  on s.SuppliersID = c.SuppliersID
               where c.ClientID = :ClientID
-             ''',
-            ['ClientID'], [AAccount]);
-
+    ''',
+    ['ClientID'], [AAccount]);
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -155,12 +143,10 @@ begin
   result:= GetServiceSoap(false, FUrl);
 end;
 
-
 function TEmex.GetSQl: TSQL;
 begin
   Result :=FSQl;
 end;
-
 
 function TEmex.TestConnect: string;
 begin
@@ -178,8 +164,7 @@ begin
   except
     on E: Exception do
     begin
-      Result := 'Ошибка авторизации. Клиент [' + AAccount.ToString + ']' + #13#10 +
-                E.Message;
+      Result := 'Ошибка авторизации. Клиент [' + AAccount.ToString + ']' + #13#10 + E.Message;
     end;
   end;
 end;
@@ -190,17 +175,12 @@ var part: FindByNumber;
        I: Integer;
  ShowSubsts: Boolean;
 begin
-  log('TEmex.MovementByOrderNumber Begin', etInfo);
   // Показывать аналоги в поиске
   ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
-  log('TEmex.MovementByOrderNumber SearchPart begin', etInfo);
   parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, ShowSubsts);
-  log('TEmex.MovementByOrderNumber SearchPart end', etInfo);
 
   FillFindByNumber(AClientID, parts);
-
-  log('TEmex.MovementByOrderNumber End', etInfo);
 end;
 
 destructor TEmex.Destroy;
@@ -215,7 +195,6 @@ procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumbe
 var part: FindByNumber;
     I: Integer;
 begin
-  log('TEmex.FillFindByNumber Begin', etInfo);
   SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
@@ -294,7 +273,6 @@ begin
 
     freeandnil(part);
   end;
-  log('TEmex.FillFindByNumber End', etInfo);
 end;
 
 
