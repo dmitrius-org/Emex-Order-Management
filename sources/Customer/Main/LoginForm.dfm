@@ -38,10 +38,6 @@ object LoginF: TLoginF
     ShowCaption = False
     Caption = 'UniPanel1'
     LayoutConfig.Region = 'center'
-    ExplicitLeft = 24
-    ExplicitTop = 16
-    ExplicitWidth = 497
-    ExplicitHeight = 313
     object btnOk: TUniButton
       Left = 82
       Top = 295

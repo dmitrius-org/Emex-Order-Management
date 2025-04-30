@@ -189,6 +189,12 @@ object UsersT: TUsersT
       OnColumnFilter = GridUsersColumnFilter
       Columns = <
         item
+          FieldName = 'Status'
+          Title.Alignment = taCenter
+          Title.Caption = #1057#1090#1072#1090#1091#1089#1099
+          Width = 64
+        end
+        item
           FieldName = 'UserID'
           Filtering.Enabled = True
           Filtering.Editor = fUserID
@@ -337,11 +343,17 @@ object UsersT: TUsersT
     end
   end
   object Query: TFDQuery
+    AutoCalcFields = False
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords]
+    UpdateOptions.EnableDelete = False
+    UpdateOptions.EnableInsert = False
+    UpdateOptions.EnableUpdate = False
     UpdateOptions.RefreshMode = rmAll
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.KeyFields = 'UserID'
+    UpdateOptions.AutoIncFields = 'UserID'
+    UpdateObject = FDUpdateSQL
     SQL.Strings = (
       'select * '
       '  from vUsers u'
@@ -356,8 +368,8 @@ object UsersT: TUsersT
       
         '   and isnull(u.isBlock, 0) = isnull(:isBlock, isnull(u.isBlock,' +
         ' 0))')
-    Left = 684
-    Top = 103
+    Left = 692
+    Top = 119
     ParamData = <
       item
         Name = 'USERID'
@@ -393,6 +405,10 @@ object UsersT: TUsersT
         ParamType = ptInput
         Value = Null
       end>
+    object QueryStatus: TIntegerField
+      FieldName = 'Status'
+      OnGetText = QueryStatusGetText
+    end
     object QueryUserID: TFMTBCDField
       AutoGenerateValue = arAutoInc
       FieldName = 'UserID'
@@ -1571,6 +1587,10 @@ object UsersT: TUsersT
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1079#1072#1082#1072#1079#1086#1074
       OnExecute = actEmployeeOrdersProcessedExecute
     end
+    object actLogger: TAction
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1083#1086#1075#1080#1088#1086#1074#1072#1085#1080#1103
+      OnExecute = actLoggerExecute
+    end
   end
   object PopupMenu: TUniPopupMenu
     Images = ImageList16
@@ -1603,11 +1623,11 @@ object UsersT: TUsersT
     object N8: TUniMenuItem
       Action = actGrant
     end
-    object N10: TUniMenuItem
-      Action = actGroup
-    end
     object N11: TUniMenuItem
       Action = actGrantCopy
+    end
+    object N10: TUniMenuItem
+      Action = actGroup
     end
     object N12: TUniMenuItem
       Caption = '-'
@@ -1617,6 +1637,12 @@ object UsersT: TUsersT
     end
     object N14: TUniMenuItem
       Action = actEmployeeParameters
+    end
+    object N16: TUniMenuItem
+      Caption = '-'
+    end
+    object N15: TUniMenuItem
+      Action = actLogger
     end
   end
   object ImageList16: TUniImageList
@@ -1894,12 +1920,16 @@ object UsersT: TUsersT
       00004017000F80070000C02F803FFFFF00000000000000000000000000000000
       000000000000}
   end
-  object FDUpdateSQL1: TFDUpdateSQL
+  object FDUpdateSQL: TFDUpdateSQL
     Connection = UniMainModule.FDConnection
     ConnectionName = 'Connection'
     ModifySQL.Strings = (
       '--Update o'
       '  ')
+    FetchRowSQL.Strings = (
+      'select * '
+      '  from vUsers u'
+      ' where u.UserID = :UserID')
     Left = 847
     Top = 118
   end

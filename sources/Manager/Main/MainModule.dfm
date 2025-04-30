@@ -9,8 +9,10 @@ object UniMainModule: TUniMainModule
   BrowserOptions = [boDisableMouseRightClick, boDisableChromeRefresh]
   MonitoredKeys.Keys = <>
   EnableSynchronousOperations = True
+  WebSocketConnection.Enabled = True
   ExtLocale = 'ru'
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
+  OnNewComponent = UniGUIMainModuleNewComponent
   Height = 238
   Width = 623
   object FDConnection: TFDConnection

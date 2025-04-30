@@ -14,11 +14,9 @@ uses
 
 type
   TLoggerF = class(TUniForm)
-    UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
-    UniGroupBox4: TUniGroupBox;
-    DataSource: TDataSource;
+    Mainbox: TUniGroupBox;
     Query: TFDQuery;
     cbSqlLog: TUniDBCheckBox;
     QueryLoggerSettingsID: TFMTBCDField;
@@ -32,6 +30,7 @@ type
     LogDestination: TUniCheckComboBox;
     FileEvent: TUniCheckComboBox;
     DBEvent: TUniCheckComboBox;
+    MainContainer: TUniContainerPanel;
     procedure btnOkClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -60,7 +59,7 @@ uses
   Quick.Logger.Provider.Files,
   Quick.Logger.Provider.ADODB,
 
-  uUtils.Logger, uMainVar;
+  uUtils.Logger, uMainVar, uConstant;
 
 function LoggerF: TLoggerF;
 begin
@@ -75,6 +74,7 @@ end;
 procedure TLoggerF.btnOkClick(Sender: TObject);
 var sqltext: string;
 begin
+  Log('TLoggerF.btnOkClick Begin', etDebug);
   sqltext :='''
   UPDATE tLoggerSettings
      SET FileLogLevel   = :FileLogLevel
@@ -93,52 +93,64 @@ begin
             cbSqlLog.Checked
            ]);
 
-//   RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-
-  //GlobalLogFileProvider
-  if (AnsiPos('В файл', LogDestination.text) > 0) then
+  if UniMainModule.AAppName = AppManager then
   begin
-    UniMainModule.CreateGlobalLogFileProvider;
-  end;
+    Log('TLoggerF.btnOkClick BroadcastMessage LoggerManagerRefresh', etDebug);
+    Log('TLoggerF.btnOkClick Refresh=%s UserID=%s AppName=%s', ['True', FUserID.ToString, FAppName], etDebug);
+    BroadcastMessage('LoggerManagerRefresh',
+                    ['Refresh', 'true' , 'UserID', FUserID, 'AppName', FAppName],
+                    []); //  boClientOnly boIgnoreCurrentSession
 
-  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
-  with UniMainModule.GlobalLogFileProvider do
-  begin
-    LogLevel:= ParseLogLevel(FileEvent.text);
-    Enabled := (AnsiPos('В файл', LogDestination.text) > 0);
-
-    if Enabled then
-      Log('Включено логирование в файл', etInfo)
-    else
-      Log('Оключено логирование в файл', etInfo)
   end;
-
-  //GlobalLogADODBProvider
-  if (AnsiPos('В базу данных', LogDestination.text) > 0) then
-  begin
-    UniMainModule.CreateGlobalLogADODBProvider;
-  end;
-
-  if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogADODBProvider)>-1 then   //В файл;В базу данных
-  with UniMainModule.GlobalLogADODBProvider do
-  begin
-    LogLevel:= ParseLogLevel(DBEvent.text);
-    Enabled := (AnsiPos('В базу данных', LogDestination.text) > 0);
-    if Enabled then
-      Log('Включено логирование в базу данных', etInfo)
-    else
-      Log('Оключено логирование в базу данных', etInfo)
-  end;
-
-  if (AnsiPos('В файл', LogDestination.text) > 0)or
-     (AnsiPos('В базу данных', LogDestination.text) > 0)
-  then
-  begin
-    UniMainModule.FDConnection.Params.MonitorBy := mbCustom;
-    UniMainModule.FDMoniSQl.Tracing := cbSqlLog.Checked;
-  end;
+//  if FID = UniMainModule.AUserID then
+//  begin
+//
+//    //GlobalLogFileProvider
+//    if (AnsiPos('В файл', LogDestination.text) > 0) then
+//    begin
+//      UniMainModule.CreateGlobalLogFileProvider;
+//    end;
+//
+//    if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogFileProvider)>-1 then
+//    with UniMainModule.GlobalLogFileProvider do
+//    begin
+//      LogLevel:= ParseLogLevel(FileEvent.text);
+//      Enabled := (AnsiPos('В файл', LogDestination.text) > 0);
+//
+//      if Enabled then
+//        Log('Включено логирование в файл', etInfo)
+//      else
+//        Log('Оключено логирование в файл', etInfo)
+//    end;
+//
+//    //GlobalLogADODBProvider
+//    if (AnsiPos('В базу данных', LogDestination.text) > 0) then
+//    begin
+//      UniMainModule.CreateGlobalLogADODBProvider;
+//    end;
+//
+//    if UniMainModule.ALogger.Providers.IndexOf(UniMainModule.GlobalLogADODBProvider)>-1 then   //В файл;В базу данных
+//    with UniMainModule.GlobalLogADODBProvider do
+//    begin
+//      LogLevel:= ParseLogLevel(DBEvent.text);
+//      Enabled := (AnsiPos('В базу данных', LogDestination.text) > 0);
+//      if Enabled then
+//        Log('Включено логирование в базу данных', etInfo)
+//      else
+//        Log('Оключено логирование в базу данных', etInfo)
+//    end;
+//
+//    if (AnsiPos('В файл', LogDestination.text) > 0)or
+//       (AnsiPos('В базу данных', LogDestination.text) > 0)
+//    then
+//    begin
+//      UniMainModule.FDConnection.Params.MonitorBy := mbCustom;
+//      UniMainModule.FDMoniSQl.Tracing := cbSqlLog.Checked;
+//    end;
+//  end
 
   ModalResult:=mrOK;
+  Log('TLoggerF.btnOkClick End', etDebug);
 end;
 
 procedure TLoggerF.UniFormShow(Sender: TObject);

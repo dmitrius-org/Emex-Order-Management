@@ -26,41 +26,6 @@ DELETE FROM #PartsUpdate
 )
 DELETE FROM CTE WHERE rn > 1;
 
-if not exists (select 1
-                 from #PartsUpdate pu (nolock)
-                inner join tParts u (nolock)
-                        on u.MakeLogo  = pu.MakeLogo
-                       and u.DetailNum = pu.DetailNum
-              )
-begin
-  insert into tParts with (rowlock)
-        (MakeLogo 
-  	    ,Brand    
-        ,DetailNum	  
-  	    ,Restrictions
-        ,DetailName	
-        ,WeightKG	
-        ,VolumeKG
-        ,Fragile	
-        ,NLA
-        ,UserID
-        ,InDatetime) 
-  select distinct
-         p.MakeLogo
-  	    ,p.Brand    
-        ,p.DetailNum	  
-  	    ,p.RestrictionsOld
-        ,p.DetailNameOld
-        ,p.WeightKGOld
-        ,p.VolumeKGOld
-        ,p.FragileOld	
-        ,p.NLAOld
-        ,dbo.GetUserID()
-        ,p.InDatetime
-    from #PartsUpdate p (nolock)
-
-end
-
 update u
    set u.MakeLogo      = pu.MakeLogo
       ,u.Brand         = pu.Brand
@@ -77,8 +42,43 @@ update u
  inner join tParts u (updlock)
          on u.MakeLogo  = pu.MakeLogo
         and u.DetailNum = pu.DetailNum
+
+
+insert into tParts with (rowlock)
+      (MakeLogo 
+      ,Brand    
+      ,DetailNum	  
+      ,Restrictions
+      ,DetailName	
+      ,WeightKG	
+      ,VolumeKG
+      ,Fragile	
+      ,NLA
+      ,UserID
+      ,InDatetime) 
+select 
+      distinct
+      p.MakeLogo
+     ,p.Brand    
+     ,p.DetailNum	  
+     ,p.RestrictionsOld
+     ,p.DetailNameOld
+     ,p.WeightKGOld
+     ,p.VolumeKGOld
+     ,p.FragileOld	
+     ,p.NLAOld
+     ,dbo.GetUserID()
+     ,p.InDatetime
+ from #PartsUpdate p (nolock)
+where not exists (select 1
+                    from tParts u (nolock)
+                   where u.MakeLogo  = p.MakeLogo
+                     and u.DetailNum = p.DetailNum
+                  )
+
 exit_:
 go
 grant execute on PartHistoryInsert to public
 go
 exec setOV 'PartHistoryInsert', 'P', '20250227', '1'
+

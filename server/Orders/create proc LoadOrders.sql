@@ -135,11 +135,16 @@ as
         ,0
         ,pc.ProfilesCustomerID
         ,pc.DeliveryTermFromSupplier -- DeliveryTermFromSupplier
-        ,case 
+        ,case -- Flag
            when ltrim(rtrim(o.OnlyThisBrand))='Без замен' 
            then 2097152        -- ТОЛЬКО ЭТОТ БРЕНД. Без замен
            else 0
          end
+        +case 
+           when isnull(p.Restrictions, '')='NOAIR' 
+           then 4194304--NOAIR    
+           else 0
+         end 
         ,o.CustomerClientNum   -- № Клиента
         ,o.CustomerClientSign  -- Пометки Клиента
         ,o.CustomerOrder       -- Заказ

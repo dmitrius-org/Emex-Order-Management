@@ -61,7 +61,7 @@ type
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
     GridUsers: TUniDBGrid;
-    FDUpdateSQL1: TFDUpdateSQL;
+    FDUpdateSQL: TFDUpdateSQL;
     actLookup: TAction;
     N9: TUniMenuItem;
     UniToolButton5: TUniToolButton;
@@ -76,6 +76,10 @@ type
     N14: TUniMenuItem;
     actEmployeeOrdersProcessed: TAction;
     N13: TUniMenuItem;
+    actLogger: TAction;
+    N16: TUniMenuItem;
+    N15: TUniMenuItem;
+    QueryStatus: TIntegerField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridUsersCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -96,11 +100,16 @@ type
     procedure actGrantCopyExecute(Sender: TObject);
     procedure actEmployeeParametersExecute(Sender: TObject);
     procedure actEmployeeOrdersProcessedExecute(Sender: TObject);
+    procedure actLoggerExecute(Sender: TObject);
+    procedure QueryStatusGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     FAction: Integer;
     procedure SetAction(const Value: Integer);
     { Private declarations }
     procedure GridRefresh;
+
+    procedure LoggerFCallBack(Sender: TComponent; AResult:Integer);
   public
     { Public declarations }
     /// <summary>
@@ -115,7 +124,7 @@ type
 implementation
 
 uses
-  MainModule, uGrantUtils, uMainVar, uLookupF, uGroups2T;
+  MainModule, uGrantUtils, uMainVar, uLookupF, uGroups2T, uLoggerF, uConstant;
 
 {$R *.dfm}
 
@@ -197,6 +206,13 @@ end;
 procedure TUsersT.actGroupExecute(Sender: TObject);
 begin
   Groups2T.ShowModal;
+end;
+
+procedure TUsersT.actLoggerExecute(Sender: TObject);
+begin
+  LoggerF.UserID :=QueryUserID.AsInteger;
+  LoggerF.AppName:= AppManager;
+  LoggerF.ShowModal(LoggerFCallBack);
 end;
 
 procedure TUsersT.actLookupExecute(Sender: TObject);
@@ -300,6 +316,24 @@ begin
     begin
       GridUsers.JSInterface.JSCall('copyToClipboard', []);
     end;
+  end;
+end;
+
+procedure TUsersT.LoggerFCallBack(Sender: TComponent; AResult: Integer);
+begin
+  if AResult= mrOK then
+  begin
+    Query.RefreshRecord();
+    GridUsers.RefreshCurrentRow();
+  end;
+end;
+
+procedure TUsersT.QueryStatusGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if (Sender.AsInteger and 1) > 0 then
+  begin
+      Text := '<span class="logger-enabled" data-qtip="Включено логирование"><i class="fa fa-bug"></i></span> ';
   end;
 end;
 

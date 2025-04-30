@@ -1260,6 +1260,7 @@ object OrdersT: TOrdersT
       '      ,o.[Invoice]'
       '      ,o.[FileDate]'
       '      ,o.[Flag]'
+      '      ,o.[NoAir]'
       
         '      ,o.[OverVolume]      -- '#1087#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1073#1098#1077#1084#1072', '#1088#1072#1079#1085#1080#1094#1072' '#1054#1073#1098#1077#1084#1085#1099 +
         #1081' '#1074#1077#1089' - '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1081' '#1074#1077#1089' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'.'
@@ -1667,6 +1668,9 @@ object OrdersT: TOrdersT
     end
     object QueryDeliveryTermFromSupplier2: TIntegerField
       FieldName = 'DeliveryTermFromSupplier2'
+    end
+    object QueryNoAir: TBooleanField
+      FieldName = 'NoAir'
     end
   end
   object DataSource: TDataSource

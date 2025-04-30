@@ -112,6 +112,10 @@ SELECT o.[OrderID]
       --      end as bit)         as NoAir
       ,p.Fragile                                -- признак: хрупкий
       ,p.NLA                                    -- No longer available или Более недоступно
+      ,cast(Case 
+              when p.Restrictions = 'NOAIR' then 1
+              else 0
+            end as bit)         as NoAir
       ,o.OrderDetailSubId
 	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState -- где использую?
       ,o.BasketId
@@ -183,7 +187,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250320', '23'
+exec setOV 'vOrders', 'V', '20250320', '24'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

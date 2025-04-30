@@ -997,7 +997,7 @@ object OrderF: TOrderF
     end
     object lblKurs: TUniLabel
       Left = 382
-      Top = 98
+      Top = 94
       Width = 83
       Height = 13
       Hint = ''
@@ -1029,7 +1029,7 @@ object OrderF: TOrderF
     end
     object lblCurKurs: TUniLabel
       Left = 594
-      Top = 94
+      Top = 92
       Width = 83
       Height = 24
       Hint = ''

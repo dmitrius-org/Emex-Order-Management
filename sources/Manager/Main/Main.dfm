@@ -15,9 +15,11 @@ object MainForm: TMainForm
   MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
   Layout = 'fit'
+  ReceiveSocketEvents = True
   OnAjaxEvent = UniFormAjaxEvent
   OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
+  OnBroadcastMessage = UniFormBroadcastMessage
   TextHeight = 15
   object UniContainerPanel: TUniContainerPanel
     Left = 0

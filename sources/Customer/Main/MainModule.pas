@@ -364,8 +364,8 @@ var S1, S2 : string;
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'begin');
 
-  S1 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_loginname2D02D0BF'];
-  S2 := (Sender as TUniGUISession).UniApplication.Cookies.Values['_pwd2D02D0BF'];
+  S1 := (Sender as TUniGUISession).UniApplication.Cookies.Values[_loginname];
+  S2 := (Sender as TUniGUISession).UniApplication.Cookies.Values[_pwd];
 
   if (S1 <> '') and ( S2 <> '') then
   begin
@@ -373,8 +373,8 @@ begin
 
     if not Handled then
     begin
-      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_loginname2D02D0BF', '', Date - 1);
-      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie('_pwd2D02D0BF', '', Date - 1);
+      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie(_loginname, '', Date - 1);
+      (Sender as TUniGUISession).UniApplication.Cookies.SetCookie(_pwd, '', Date - 1);
     end;
 
   end;

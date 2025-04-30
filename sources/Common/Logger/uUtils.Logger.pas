@@ -37,7 +37,7 @@ threadvar
 implementation
 
 uses
-  MainModule;
+  MainModule, ServerModule;
 
 procedure SetCurrentLogData(const AValue: TLogger);
 begin
@@ -47,10 +47,15 @@ end;
 
 function GetCurrentLogData: TLogger;
 begin
-  if Assigned(CurrentLogData) then
-    Result := CurrentLogData
-  else
-   Result := UniMainModule.ALogger;
+  try
+    if Assigned(CurrentLogData) then
+      Result := CurrentLogData
+    else
+     Result := UniMainModule.ALogger;
+  except
+    on E: Exception do
+      UniServerModule.Logger.AddLog('GetCurrentLogData', e.Message);
+  end;
 end;
 
 function MyToQuickEventType(E: TmyEventType): TEventType;

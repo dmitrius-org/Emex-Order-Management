@@ -53,6 +53,8 @@ type
     procedure actProfileExecute(Sender: TObject);
     procedure UniFormAjaxEvent(Sender: TComponent; EventName: string;
       Params: TUniStrings);
+    procedure UniFormBroadcastMessage(const Sender: TComponent;
+      const Msg: string; const Params: TUniStrings);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -224,6 +226,7 @@ var
   Fr : TUniFrame;
   FClassName: string;
 begin
+  Log('TMainForm.MainMenuClick begin', etDebug);
   Nd := MainMenu.Selected;
 
   if Nd.IsFirstNode then
@@ -380,7 +383,7 @@ procedure TMainForm.UniFormAjaxEvent(Sender: TComponent; EventName: string;
 var
   JSONData, EventType: string;
 begin
-  Log('TMainForm.UniFormAjaxEvent Begin ' + EventType, etWarning);
+//  Log('TMainForm.UniFormAjaxEvent Begin ' + EventType, etWarning);
 //  if EventName = 'ws_message' then
 //  begin
 //    JSONData := Params.Values['message'];
@@ -394,6 +397,24 @@ begin
 //    else
 //      Log('No handler registered for event type: ' + EventType, etWarning);
 //  end;
+end;
+
+procedure TMainForm.UniFormBroadcastMessage(const Sender: TComponent;
+  const Msg: string; const Params: TUniStrings);
+begin
+  log('TMainForm.UniFormBroadcastMessage', etDebug);
+  log(Msg, etDebug);
+
+  if Msg = 'LoggerManagerRefresh' then
+  begin
+    log('Refresh: ' + Params.Values['Refresh'], etDebug);
+    log('UserID: ' + Params.Values['UserID'], etDebug);
+    log('AppName: ' + Params.Values['AppName'], etDebug);
+
+    if Params.Values['UserID'].ToInteger() > 0 then
+      UniMainModule.CreateLogger(Params.Values['UserID'].ToInteger(),
+                                 Params.Values['AppName']);
+  end
 end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);

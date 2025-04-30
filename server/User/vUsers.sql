@@ -20,13 +20,17 @@ select u.UserID
       ,u.inDatetime  
       ,u.updDatetime 
       ,isnull(u.Email, '') Email
+      ,case 
+         when isnull(ls.LogDestination, '') <> '' and (isnull(ls.FileLogLevel, '') <> '' or isnull(ls.DBLogLevel, '') <> '') then 1
+         else 0
+       end Status
   from tUser u (nolock)
- -- inner join  is_disabled from sys.server_principals
+  left join tLoggerSettings ls (nolock) 
+         on ls.UserID = u.UserID 
+        and ls.AppName = 'Manager'
 go
 grant all on vUsers to public
 go
-exec setOV 'vUsers', 'V', '20241007', '1'
+exec setOV 'vUsers', 'V', '20250430', '2'
 go
- 
- 
- select * from vUsers
+

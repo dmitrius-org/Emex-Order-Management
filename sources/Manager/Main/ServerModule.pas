@@ -87,17 +87,22 @@ begin
   FDManager.ConnectionDefFileAutoLoad := True;
   FDManager.Active := True;
 
-  Logger.AddLog('TUniServerModule.SessionTimeout', FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout']);
-  if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger > 0 then
-    SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['SessionTimeout'].ToInteger
+  //Application
+  Logger.AddLog('TUniServerModule.SessionTimeout', FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['SessionTimeout']);
+  if FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['SessionTimeout'].ToInteger > 0 then
+    SessionTimeout := FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['SessionTimeout'].ToInteger
   else
     SessionTimeout := 600000; // 10 минут
 
-  Title := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['ApplicationName'];
+  Title := FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['ApplicationName'];
 
-  if FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot']<> '' then
-    FrameworkFilesRoot := FDManager.ConnectionDefs.FindConnectionDef('Connection').Params.Values['FrameworkFilesRoot'];
+  if FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['FrameworkFilesRoot']<> '' then
+    FrameworkFilesRoot := FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['FrameworkFilesRoot'];
 
+  //WebSocketServer
+  WebSocketServer.AlwaysUseHTTP := FDManager.ConnectionDefs.FindConnectionDef('WebSocketServer').Params.Values['AlwaysUseHTTP'].ToBoolean();
+  WebSocketServer.AuxPort := FDManager.ConnectionDefs.FindConnectionDef('WebSocketServer').Params.Values['AuxPort'].ToInteger();
+  WebSocketServer.Enabled := FDManager.ConnectionDefs.FindConnectionDef('WebSocketServer').Params.Values['Enabled'].ToBoolean();
 
   // Добавляем кастомный CSS с версией
   date := Now;

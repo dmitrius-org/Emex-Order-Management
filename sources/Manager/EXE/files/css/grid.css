@@ -542,8 +542,13 @@
     --row-index: 9;
 }
 
-/* Иконка: сообщение по заказу*/
 .grid-clients .logger-enabled {
+    overflow: visible;
+    width: 100%;
+    color: red
+}
+
+.grid-users .logger-enabled {
     overflow: visible;
     width: 100%;
     color: red
