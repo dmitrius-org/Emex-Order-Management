@@ -224,8 +224,8 @@ declare @r int = 0
         ,b.PartNameRus           -- наименование детали
         ,@OrderNum               -- Reference
         ,16                      -- on-line заказ
-         + isnull(b.flag, 0)&512     --Вес изменен клиентом
-         + isnull(b.flag, 0)&4194304 --NOAIR
+         | (isnull(b.flag, 0)&512)     --Вес изменен клиентом
+         | (isnull(b.flag, 0)&4194304) --NOAIR
         ,b.WeightKG              -- Вес Физический из прайса    
         ,case
            when b.VolumeKG = 0 then b.WeightKG
