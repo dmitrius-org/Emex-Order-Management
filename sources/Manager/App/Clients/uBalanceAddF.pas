@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, uniWidgets, uniDBComboBox,
-  uniDBLookupComboBox, Vcl.Menus, uniMemo, UniFSCombobox;
+  uniDBLookupComboBox, Vcl.Menus, uniMemo, uUniExComboBox;
 
 type
   TBalanceAddF = class(TUniForm)
@@ -55,9 +55,9 @@ type
     edtComment: TUniMemo;
     lblDate: TUniLabel;
     edtDate: TUniDateTimePicker;
-    cbPayType: TUniFSComboBox;
+    cbPayType: TUniExComboBox;
     UniLabel5: TUniLabel;
-    cbClient: TUniFSComboBox;
+    cbClient: TUniExComboBox;
     UniLabel6: TUniLabel;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);

@@ -17,7 +17,7 @@ uses
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
   System.Generics.Collections, System.MaskUtils, uniDateTimePicker,
   uUniExDateRangePicker, uConstant, uToast, uReOrderF, uUtils.Mark,
-  uUniADCheckComboBoxEx, uUniADCheckComboBoxHelper, uniSpinEdit;
+  uUniExCheckComboBox, uUniExCheckComboBoxHelper, uniSpinEdit;
 
 
 type
@@ -113,7 +113,7 @@ type
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;
     QueryDeliveryTermToCustomer2: TIntegerField;
     QueryAllMessageCount: TIntegerField;
-    fStatus2: TUniADCheckComboBox;
+    fStatus2: TUniExCheckComboBox;
     btnLast: TUniButton;
     btnNext: TUniButton;
     btnPrevious: TUniButton;

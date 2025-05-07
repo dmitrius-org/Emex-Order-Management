@@ -37,10 +37,6 @@ Coordinates=76,327,64,36
 [UniButton1]
 Coordinates=10,300,78,36
 
-[UniADCheckComboBox1]
-Coordinates=461,254,158,36
-Visible=True
-
 [N2]
 Coordinates=27,327,40,36
 
@@ -98,9 +94,7 @@ Coordinates=10,254,102,36
 [QueryComment]
 Coordinates=571,276,105,36
 
-[cbClient]
-Coordinates=451,10,61,36
-
 []
-Coordinates=571,386,91,36
+Coordinates=451,10,61,36
+Visible=True
 

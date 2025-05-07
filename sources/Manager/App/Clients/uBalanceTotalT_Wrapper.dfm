@@ -23,7 +23,7 @@ object BalanceTotalT_W: TBalanceTotalT_W
     DesignSize = (
       1507
       47)
-    object cbClient: TUniFSComboBox
+    object cbClient: TUniExComboBox
       Left = 63
       Top = 11
       Width = 367

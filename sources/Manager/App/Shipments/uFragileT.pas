@@ -11,7 +11,7 @@ uses
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniGUIClasses, uniPanel, uniCheckBox, uniEdit, uniLabel,
   uniMultiItem, uniComboBox, uniButton, uniBitBtn, uniGroupBox, uniGridExporters,
-  uUniADCheckComboBoxHelper, uUniADCheckComboBoxEx;
+  uUniExCheckComboBoxHelper, uUniExCheckComboBox;
 
 type
   TFragileT = class(TBaseT)
@@ -29,7 +29,7 @@ type
     QueryAmountPurchaseF: TCurrencyField;
     QueryManufacturer: TWideStringField;
     Queryreference: TWideStringField;
-    fSupplier: TUniADCheckComboBox;
+    fSupplier: TUniExCheckComboBox;
     QuerySupplierBrief: TWideStringField;
     procedure fCancelClick(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);

@@ -146,7 +146,7 @@ object StatisticOrders: TStatisticOrders
       Font.Height = -13
       TabOrder = 5
     end
-    object edtDataType: TUniFSComboBox
+    object edtDataType: TUniExComboBox
       Left = 239
       Top = 23
       Width = 437

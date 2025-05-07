@@ -537,12 +537,13 @@ object ShipmentsT: TShipmentsT
           Caption = #1057#1090#1072#1090#1091#1089':'
           TabOrder = 10
         end
-        object fStatus2: TUniADCheckComboBox
+        object fStatus2: TUniExCheckComboBox
           Left = 758
           Top = 35
           Width = 209
           Hint = ''
           ShowHint = True
+          ShowSelectButton = True
           ShowSearch = True
           Text = ''
           TabOrder = 11
@@ -577,12 +578,13 @@ object ShipmentsT: TShipmentsT
           Caption = #1050#1086#1088#1086#1073#1082#1072':'
           TabOrder = 13
         end
-        object fSupplier: TUniADCheckComboBox
+        object fSupplier: TUniExCheckComboBox
           Left = 544
           Top = 35
           Width = 209
           Hint = ''
           ShowHint = True
+          ShowSelectButton = True
           ShowSearch = True
           Text = ''
           TabOrder = 14

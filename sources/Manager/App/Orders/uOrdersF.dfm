@@ -937,7 +937,7 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '1'
       end
     end
-    object cbDestinationLogo: TUniFSComboBox
+    object cbDestinationLogo: TUniExComboBox
       Left = 471
       Top = 159
       Width = 397
@@ -966,7 +966,7 @@ object OrderF: TOrderF
       IconItems = <>
       OnRemoteQuery = edtDetailNameFRemoteQuery
     end
-    object cbPrice: TUniFSComboBox
+    object cbPrice: TUniExComboBox
       Left = 471
       Top = 187
       Width = 397

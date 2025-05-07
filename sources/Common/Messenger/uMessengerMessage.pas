@@ -7,7 +7,7 @@ uses
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniButton, uniMemo, uniBitBtn, uniSpeedButton,
   uniMultiItem, uniListBox, uniLabel, uniPanel, uniGUIBaseClasses, uSqlUtils,
-  uniHTMLMemo, UniFSPopup, uniGUIApplication, uniStrUtils, System.JSON,
+  uniHTMLMemo, uniGUIApplication, uniStrUtils, System.JSON,
   uniThreadTimer, uniTimer, uUniMemoHelper, uUtils.Logger, uCommonType;
 
 

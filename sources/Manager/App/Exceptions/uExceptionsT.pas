@@ -10,8 +10,8 @@ uses
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniToolBar, uniGUIClasses, uniPanel, uniCheckBox, uniEdit,
-  uniMultiItem, uniComboBox, uUniADCheckComboBoxEx, uUniExDateRangePicker,
-  uniBitBtn, uniLabel, uniButton, uUniADCheckComboBoxHelper, uniGroupBox;
+  uniMultiItem, uniComboBox, uUniExCheckComboBox, uUniExDateRangePicker,
+  uniBitBtn, uniLabel, uniButton, uUniExCheckComboBoxHelper, uniGroupBox;
 
 type
   TExceptionsT = class(TBaseT)
@@ -29,7 +29,7 @@ type
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     UniLabel3: TUniLabel;
-    fType: TUniADCheckComboBox;
+    fType: TUniExCheckComboBox;
     fDetailNum: TUniEdit;
     UniLabel1: TUniLabel;
     N1: TUniMenuItem;

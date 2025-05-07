@@ -20,7 +20,7 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniGridExporters, uniMenuButton, uConstant,
-  uShipmentsBoxesT_Wrapper, uUniADCheckComboBoxHelper, uUniADCheckComboBoxEx,
+  uShipmentsBoxesT_Wrapper, uUniExCheckComboBoxHelper, uUniExCheckComboBox,
   uUtils.Mark, uFragileT_Wrapper;
 
 
@@ -118,12 +118,12 @@ type
     N17: TUniMenuItem;
     QueryFlag: TIntegerField;
     lblStatys: TUniLabel;
-    fStatus2: TUniADCheckComboBox;
+    fStatus2: TUniExCheckComboBox;
     edtBox: TUniEdit;
     UniLabel2: TUniLabel;
     actFrigileData: TAction;
     N8: TUniMenuItem;
-    fSupplier: TUniADCheckComboBox;
+    fSupplier: TUniExCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);

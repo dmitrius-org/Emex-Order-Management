@@ -130,7 +130,7 @@ object StatisticBrand: TStatisticBrand
           #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
           'oment().subtract(1, "month").endOf("month")]')
     end
-    object fClient: TUniADCheckComboBox
+    object fClient: TUniExCheckComboBox
       Left = 215
       Top = 27
       Width = 209

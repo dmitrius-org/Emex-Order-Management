@@ -657,7 +657,7 @@
           LayoutConfig.ComponentCls = 'order-notification-btn'
           OnClick = btnNotificationClick
         end
-        object fStatus2: TUniADCheckComboBox
+        object fStatus2: TUniExCheckComboBox
           Left = 17
           Top = 35
           Width = 288

@@ -108,7 +108,7 @@ object ClientsF: TClientsF
           Caption = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072':'
           TabOrder = 4
         end
-        object cbClientType: TUniFSComboBox
+        object cbClientType: TUniExComboBox
           Left = 144
           Top = 44
           Width = 183

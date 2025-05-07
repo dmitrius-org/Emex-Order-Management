@@ -39,7 +39,7 @@ inherited ExceptionsT: TExceptionsT
       ImageIndex = 2
       OnClick = fOkClick
     end
-    object fType: TUniADCheckComboBox
+    object fType: TUniExCheckComboBox
       Left = 15
       Top = 29
       Width = 329

@@ -3,7 +3,7 @@ unit uUtils.Controll;
 interface
 
 uses
-  uniEdit, UniFSCombobox;
+  uniEdit, uUniExComboBox;
 
     /// <summary>
     ///  Disabled - установка свойств недоступности контрола
@@ -12,7 +12,7 @@ uses
     /// <summary>
     ///  Disabled - установка свойств недоступности контрола
     ///</summary>
-    procedure Disabled(AControl: TUniFSComboBox); overload;
+    procedure Disabled(AControl: TUniExComboBox); overload;
 
 implementation
 
@@ -26,7 +26,7 @@ begin
   AControl.ClearButton := False;
 end;
 
-procedure Disabled(AControl: TUniFSComboBox);
+procedure Disabled(AControl: TUniExComboBox);
 begin
   AControl.ReadOnly := true;
   AControl.Color    := cl3DLight;

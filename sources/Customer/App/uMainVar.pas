@@ -3,7 +3,7 @@ unit uMainVar;
 interface
 
 uses
-  uSqlUtils, uCommonType, uniComboBox, UniFSCombobox;
+  uSqlUtils, uCommonType, uniComboBox, uUniExComboBox;
 
   function Sql: TSql;
 
@@ -13,7 +13,7 @@ uses
 
 
   procedure ComboBoxFill(AComboBox: TUniComboBox; ASQL: string); overload;
-  procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string); overload;
+  procedure ComboBoxFill(AComboBox: TUniExComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniCheckComboBox; ASQL: string); overload;
 
 implementation
@@ -63,7 +63,7 @@ begin
   end;
 end;
 
-procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string);
+procedure ComboBoxFill(AComboBox: TUniExComboBox; ASQL: string);
 begin
   Sql.Q.Close;
   Sql.Open(ASQL, [], []);

@@ -137,13 +137,12 @@ object BalanceT: TBalanceT
     TabOrder = 0
     ShowCaption = False
     Caption = 'UniPanel1'
-    ExplicitTop = -6
     DesignSize = (
       1125
       99)
     object UniButton1: TUniButton
       Left = 280
-      Top = 61
+      Top = 63
       Width = 127
       Height = 28
       Hint = ''
@@ -209,24 +208,6 @@ object BalanceT: TBalanceT
         TabOrder = 3
       end
     end
-    object cbClient: TUniFSComboBox
-      Left = 13
-      Top = 31
-      Width = 394
-      Height = 26
-      Hint = ''
-      ShowHint = True
-      Text = ''
-      Anchors = [akLeft, akRight, akBottom]
-      ParentFont = False
-      Font.Height = -12
-      TabOrder = 3
-      AnyMatch = True
-      ClearButton = True
-      IconItems = <>
-      OnSelect = cbClientSelect
-      Value = '-1'
-    end
     object UniLabel6: TUniLabel
       Left = 13
       Top = 8
@@ -238,7 +219,7 @@ object BalanceT: TBalanceT
       Anchors = [akLeft, akRight, akBottom]
       ParentFont = False
       Font.Height = -13
-      TabOrder = 4
+      TabOrder = 3
     end
     object edtDate: TUniDateRangePicker
       Left = 13
@@ -248,7 +229,7 @@ object BalanceT: TBalanceT
       Hint = ''
       ShowHint = True
       Text = 'edtDate'
-      TabOrder = 5
+      TabOrder = 4
       Triggers = <
         item
           ButtonId = 0
@@ -274,23 +255,19 @@ object BalanceT: TBalanceT
           #1055#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'=[moment().subtract(1, "month").startOf("month"), m' +
           'oment().subtract(1, "month").endOf("month")]')
     end
-    object UniADCheckComboBox1: TUniADCheckComboBox
-      Left = 432
+    object cbClient: TUniExComboBox
+      Left = 13
       Top = 31
-      Width = 305
+      Width = 394
       Height = 26
       Hint = ''
       ShowHint = True
-      ShowSearch = True
-      ShowSelectButton = True
-      Text = ''
-      TabOrder = 6
-      ClientEvents.ExtEvents.Strings = (
-        
-          'afterrender=function afterrender(sender, eOpts) {  '#13#10'  initCombo' +
-          'BoxSelectButtons(sender, "id"); '#13#10'  initComboBoxSearch(sender, "' +
-          'id", "val");  '#13#10'}')
+      Text = 'cbClient'
+      TabOrder = 5
+      AnyMatch = True
+      ClearButton = True
       IconItems = <>
+      Value = '-1'
     end
   end
   object DataSource: TDataSource

@@ -11,11 +11,11 @@ uses
   uniComboBox, uniImageList, uniHTMLFrame, uniURLFrame,
   Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer,
   unimURLFrame, uniCheckBox, uniMemo, uniHTMLMemo, uniListBox, uniFieldSet,
-  UniFSCombobox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  uUniExComboBox, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, uniMainMenu,
   System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, uConstant,
-  uUniFSComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton, uSpplitForm,
+  uUniExComboBoxHelper, uMessengerF, uServiceEmex, uniSpeedButton, uSpplitForm,
   Quick.Logger;
 
 type
@@ -95,13 +95,13 @@ type
     edtReliability2: TUniHTMLFrame;
     edtDelivery2: TUniEdit;
     edtCount2: TUniEdit;
-    cbDestinationLogo: TUniFSComboBox;
+    cbDestinationLogo: TUniExComboBox;
     btnOkToCancel: TUniBitBtn;
     btnOkToProc: TUniBitBtn;
     edtNextPart: TUniCheckBox;
     edtDetailNameF: TUniComboBox;
     NotExists: TUniLabel;
-    cbPrice: TUniFSComboBox;
+    cbPrice: TUniExComboBox;
     UniActionList1: TUniActionList;
     actRefreshFormData: TAction;
     UniHTMLFrame1: TUniHTMLFrame;

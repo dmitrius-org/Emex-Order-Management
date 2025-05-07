@@ -29,6 +29,10 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1072#1084
       Layout = 'fit'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
       object UniPanel1: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -102,11 +106,12 @@ object StatisticsT: TStatisticsT
           Caption = #1050#1083#1080#1077#1085#1090':'
           TabOrder = 6
         end
-        object fClient: TUniADCheckComboBox
+        object fClient: TUniExCheckComboBox
           Left = 281
           Top = 34
           Width = 209
           Hint = ''
+          ShowSelectButton = True
           ShowSearch = True
           Text = ''
           TabOrder = 7
@@ -145,6 +150,10 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
       object UniPanel3: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -195,7 +204,7 @@ object StatisticsT: TStatisticsT
           Font.Height = -13
           TabOrder = 6
         end
-        object edtDataType: TUniFSComboBox
+        object edtDataType: TUniExComboBox
           Left = 255
           Top = 23
           Width = 459
@@ -327,7 +336,7 @@ object StatisticsT: TStatisticsT
         Left = 0
         Top = 107
         Width = 1316
-        Height = 414
+        Height = 412
         Hint = ''
         Margins.Bottom = 0
         ShowHint = True
@@ -410,12 +419,20 @@ object StatisticsT: TStatisticsT
       Caption = #1041#1088#1077#1085#1076#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabBrandBeforeFirstActivate
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
     end
     object TabCanceled: TUniTabSheet
       Hint = ''
       Caption = #1054#1090#1082#1072#1079#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabCanceledBeforeFirstActivate
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
     end
   end
   object qAverageCountOrders: TFDQuery

@@ -14,7 +14,7 @@ uses
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
   uUserF, uGrant, uCommonType, uniButton, uniBitBtn, uniColorButton,
-  uniColorPalette, uniWidgets, uniDBComboBox, uniDBLookupComboBox, UniFSCombobox;
+  uniColorPalette, uniWidgets, uniDBComboBox, uniDBLookupComboBox, uUniExComboBox;
 
 type
   TNodesT = class(TUniFrame)

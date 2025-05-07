@@ -6,12 +6,12 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniBitBtn, uniDateTimePicker, uniEdit,
-  uniMultiItem, uniComboBox, UniFSCombobox, uniLabel, uniButton,
+  uniMultiItem, uniComboBox, uUniExComboBox, uniLabel, uniButton,
   uniGUIBaseClasses, uniPanel, uniBasicGrid, uniDBGrid, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniExDateRangePicker, uUniADCheckComboBoxEx;
+  uUniExDateRangePicker, uUniExCheckComboBox;
 
 type
   TEmployeeOrdersProcessedT = class(TUniFrame)
@@ -24,7 +24,7 @@ type
     Query: TFDQuery;
     UniLabel3: TUniLabel;
     edtOrderDate: TUniDateRangePicker;
-    fEmployees: TUniADCheckComboBox;
+    fEmployees: TUniExCheckComboBox;
     QueryEmployeeID: TFMTBCDField;
     QueryEmployeeName: TWideStringField;
     QueryProcessed: TIntegerField;

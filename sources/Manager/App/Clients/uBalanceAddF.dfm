@@ -124,7 +124,7 @@ object BalanceAddF: TBalanceAddF
           ClearButton = True
           EmptyText = #1044#1072#1090#1072' '#1087#1086#1087#1086#1083#1085#1077#1085#1080#1103
         end
-        object cbPayType: TUniFSComboBox
+        object cbPayType: TUniExComboBox
           Left = 128
           Top = 106
           Width = 169
@@ -147,7 +147,7 @@ object BalanceAddF: TBalanceAddF
           Caption = #1058#1080#1087' '#1087#1083#1072#1090#1077#1078#1072':'
           TabOrder = 8
         end
-        object cbClient: TUniFSComboBox
+        object cbClient: TUniExComboBox
           Left = 128
           Top = 20
           Width = 437

@@ -6,10 +6,10 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uCommonType, uMainVar, uniMultiItem, uniComboBox,
-  UniFSCombobox, uniGUIBaseClasses, uniLabel, uniButton, uniBitBtn, uniCheckBox,
+  uUniExComboBox, uniGUIBaseClasses, uniLabel, uniButton, uniBitBtn, uniCheckBox,
   uniPanel, Data.DB, FireDAC.Comp.Client, FireDAC.DApt, FireDAC.Comp.DataSet,
   uEmexUtils, uniTimer, System.Actions, Vcl.ActnList, uniMainMenu, uniImageList,
-  uToast, uUniFSComboBoxHelper, Quick.Logger;
+  uToast, uuUniExComboBoxHelper, Quick.Logger;
 
 type
   TSQLQueryThread = class(TThread)
@@ -31,9 +31,9 @@ type
 
   TReOrder = class(TUniForm)
     UniLabel11: TUniLabel;
-    cbDestinationLogo: TUniFSComboBox;
+    cbDestinationLogo: TUniExComboBox;
     UniLabel12: TUniLabel;
-    cbPrice: TUniFSComboBox;
+    cbPrice: TUniExComboBox;
     UniContainerPanel1: TUniContainerPanel;
     edtNextPart: TUniCheckBox;
     btnOk: TUniBitBtn;

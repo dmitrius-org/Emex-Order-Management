@@ -166,7 +166,7 @@ inherited FragileT: TFragileT
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
         TabOrder = 3
       end
-      object fSupplier: TUniADCheckComboBox
+      object fSupplier: TUniExCheckComboBox
         Left = 15
         Top = 31
         Width = 209

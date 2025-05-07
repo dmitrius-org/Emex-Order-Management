@@ -6,12 +6,12 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniPanel, uBalanceTotalT,
-  uniLabel, uniMultiItem, uniComboBox, UniFSCombobox;
+  uniLabel, uniMultiItem, uniComboBox, uUniExComboBox;
 
 type
   TBalanceTotalT_W = class(TUniForm)
     UniPanel1: TUniPanel;
-    cbClient: TUniFSComboBox;
+    cbClient: TUniExComboBox;
     UniLabel6: TUniLabel;
     procedure UniFormCreate(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

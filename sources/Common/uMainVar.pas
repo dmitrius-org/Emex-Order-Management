@@ -4,7 +4,7 @@ interface
 
 uses
   uAccrualUtils, uSqlUtils, uCommonType, uGrantUtils, uniComboBox,
-  UniFSCombobox, uUniExCheckComboBox;
+  uUniExComboBox, uUniExCheckComboBox;
 
   function Sql: TSql;
 
@@ -16,7 +16,7 @@ uses
 
 
   procedure ComboBoxFill(AComboBox: TUniComboBox; ASQL: string); overload;
-  procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string); overload;
+  procedure ComboBoxFill(AComboBox: TUniExComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniCheckComboBox; ASQL: string); overload;
   procedure ComboBoxFill(AComboBox: TUniExCheckComboBox; ASQL: string); overload;
 
@@ -73,7 +73,7 @@ begin
   end;
 end;
 
-procedure ComboBoxFill(AComboBox: TUniFSComboBox; ASQL: string);
+procedure ComboBoxFill(AComboBox: TUniExComboBox; ASQL: string);
 begin
   Sql.Q.Close;
   Sql.Open(ASQL, [], []);

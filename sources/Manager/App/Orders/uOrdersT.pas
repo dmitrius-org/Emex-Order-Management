@@ -19,7 +19,7 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer,
   uGrant, uCommonType, uSqlUtils,
-  UniFSCombobox, uniHTMLFrame, uUniExDateRangePicker, uUniADCheckComboBoxEx,
+  uUniExComboBox, uniHTMLFrame, uUniExDateRangePicker, uUniExCheckComboBox,
   uOrdersNewDeliveryDateF, uPartProtocol_T, uAllowCreateOrderF, uUserF;
 
 type
@@ -201,8 +201,8 @@ type
     QueryReceiptDate: TSQLTimeStampField;
     QueryOrderDetailSubId: TWideStringField;
     edtOrderDate: TUniDateRangePicker;
-    fClient: TUniADCheckComboBox;
-    fPriceLogo: TUniADCheckComboBox;
+    fClient: TUniExCheckComboBox;
+    fPriceLogo: TUniExCheckComboBox;
     QueryDeliveryPlanDateSupplier2: TSQLTimeStampField;
     QueryDeliveryTermSupplier2: TIntegerField;
     QueryDeliveryDateToCustomer2: TSQLTimeStampField;

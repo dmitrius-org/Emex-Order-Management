@@ -34,7 +34,7 @@ object ReOrder: TReOrder
     Font.Height = -13
     TabOrder = 0
   end
-  object cbDestinationLogo: TUniFSComboBox
+  object cbDestinationLogo: TUniExComboBox
     Left = 112
     Top = 20
     Width = 500
@@ -63,7 +63,7 @@ object ReOrder: TReOrder
     Font.Height = -13
     TabOrder = 2
   end
-  object cbPrice: TUniFSComboBox
+  object cbPrice: TUniExComboBox
     Left = 112
     Top = 69
     Width = 500

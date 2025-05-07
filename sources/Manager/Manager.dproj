@@ -127,8 +127,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventCancelOnError>false</PostBuildEventCancelOnError>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>3</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_DebugInformation>0</DCC_DebugInformation>
@@ -445,7 +445,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <DCCReference Include="..\Common\Common\uUtils.Math.pas"/>
         <DCCReference Include="..\Service\uServiceEmex.pas"/>
         <DCCReference Include="..\Common\Common\uUtils.Strings.pas"/>
-        <DCCReference Include="..\Common\Common\uUniFSComboBoxHelper.pas"/>
+        <DCCReference Include="..\Common\Common\uUniExComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Common\uStringHelper.pas"/>
         <DCCReference Include="App\Clients\uClientPasswordResetF.pas">
             <Form>ClientPasswordResetF</Form>
@@ -484,7 +484,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\Common\uUniADCheckComboBoxHelper.pas"/>
+        <DCCReference Include="..\Common\Common\uUniExCheckComboBoxHelper.pas"/>
         <DCCReference Include="App\Suppliers\uSuppliersT.pas">
             <Form>SuppliersT</Form>
             <FormType>dfm</FormType>

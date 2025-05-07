@@ -11,9 +11,9 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniLabel, uniButton,
   cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
-  UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
+  uUniExComboBox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
   uniGridExporters, uStatisticBrand, uStatisticCanceled, math,
-  uUniADCheckComboBoxEx;
+  uUniExCheckComboBox;
 
 type
   TStatisticsT = class(TUniFrame)
@@ -40,7 +40,7 @@ type
     btnGridStatisticOpen: TUniButton;
     UniLabel6: TUniLabel;
     UniLabel4: TUniLabel;
-    edtDataType: TUniFSComboBox;
+    edtDataType: TUniExComboBox;
     edtDataSize: TUniNumberEdit;
     dsGridStatistics: TDataSource;
     qGridStatistics: TFDQuery;
@@ -60,7 +60,7 @@ type
     fCancel: TUniBitBtn;
     TabBrand: TUniTabSheet;
     TabCanceled: TUniTabSheet;
-    fClient: TUniADCheckComboBox;
+    fClient: TUniExCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure UniButton1Click(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);

@@ -110,7 +110,7 @@ object StatisticCanceled: TStatisticCanceled
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1080#1079' '#1079#1072#1082#1072#1079#1072':'
       TabOrder = 6
     end
-    object fPriceLogo: TUniADCheckComboBox
+    object fPriceLogo: TUniExCheckComboBox
       Left = 430
       Top = 27
       Width = 131
@@ -125,7 +125,7 @@ object StatisticCanceled: TStatisticCanceled
       ClearButton = True
       IconItems = <>
     end
-    object fClient: TUniADCheckComboBox
+    object fClient: TUniExCheckComboBox
       Left = 215
       Top = 27
       Width = 209
@@ -153,7 +153,7 @@ object StatisticCanceled: TStatisticCanceled
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1060#1072#1082#1090'):'
       TabOrder = 9
     end
-    object fPriceLogoF: TUniADCheckComboBox
+    object fPriceLogoF: TUniExCheckComboBox
       Left = 567
       Top = 27
       Width = 131

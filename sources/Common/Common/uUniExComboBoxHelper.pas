@@ -1,12 +1,12 @@
-﻿unit uUniFSComboBoxHelper;
+﻿unit uUniExComboBoxHelper;
 
 interface
 
 uses
-  System.SysUtils, System.Classes, UniFSComboBox, Data.DB, uMainVar;
+  System.SysUtils, System.Classes, uUniExComboBox, Data.DB, uMainVar;
 
 type
-  TUniFSComboBoxHelper = class helper for TUniFSComboBox
+  TUniExComboBoxHelper = class helper for TUniExComboBox
   public
     /// <summary>
     /// FillFromSQL - заполнить по запросу из БД.
@@ -17,7 +17,7 @@ type
 
 implementation
 
-procedure TUniFSComboBoxHelper.FillFromSQL(const ASQL: string);
+procedure TUniExComboBoxHelper.FillFromSQL(const ASQL: string);
 begin
   Sql.Q.Close;
   Sql.Open(ASQL, [], []);

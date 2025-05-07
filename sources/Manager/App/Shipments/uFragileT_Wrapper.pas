@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uEmployeeOrdersProcessedT, uShipmentsBoxesT,
-  uniMultiItem, uniComboBox, uUniADCheckComboBoxEx, uniButton,
+  uniMultiItem, uniComboBox, uUniExCheckComboBox, uniButton,
   uniDateTimePicker, uniLabel, uniGUIBaseClasses, uniPanel, uniBitBtn,
   uniGroupBox, uFragileT;
 

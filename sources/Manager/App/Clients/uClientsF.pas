@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, uniDBComboBox, uniDBLookupComboBox,
-  Vcl.Menus, UniFSCombobox;
+  Vcl.Menus, uUniExComboBox;
 
 type
   TClientsF = class(TUniForm)
@@ -160,7 +160,7 @@ type
     dsDelimiterList: TDataSource;
     lkUploadDelimiter: TUniDBLookupComboBox;
     qProfilesCustomerProfilesDeliveryName: TWideStringField;
-    cbClientType: TUniFSComboBox;
+    cbClientType: TUniExComboBox;
     qProfilesCustomerBrief: TStringField;
     pmProfilesCustomer: TUniPopupMenu;
     UniMenuItem4: TUniMenuItem;

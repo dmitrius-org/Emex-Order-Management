@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
-  System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, UniFSCombobox,
+  System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, uUniExComboBox,
   uUniExDateRangePicker, uConstant;
 
 type
@@ -37,7 +37,6 @@ type
     edtBalance: TUniFormattedNumberEdit;
     UniLabel1: TUniLabel;
     btnBalanceAdd: TUniButton;
-    cbClient: TUniFSComboBox;
     UniLabel6: TUniLabel;
     actEdit: TAction;
     actDelete: TAction;
@@ -48,6 +47,7 @@ type
     N4: TUniMenuItem;
     UpdateSQL: TFDUpdateSQL;
     edtDate: TUniDateRangePicker;
+    cbClient: TUniExComboBox;
 
     procedure actRefreshAllExecute(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
