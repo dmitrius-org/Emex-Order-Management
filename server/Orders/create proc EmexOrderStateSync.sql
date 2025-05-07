@@ -405,6 +405,65 @@ DEALLOCATE my_cur
  
  exec ShipmentsRefresh
 
+
+
+-- ситуация когда деталь разделисась, а после на все пришел отказ одной строкой 
+declare @Archiving ID
+
+;with p as ( SELECT 
+          o.OrderID
+         ,o.OrderNum   
+         ,o.DetailNumber 
+         ,o.CustomerSubId
+         ,o.Reference    
+         --,max(o.EmexQuantity) EmexQuantity
+         --,Sum(o.Quantity)     SumQuantity
+         --,max(o.QuantityOrg)  SumQuantityOrg
+    FROM pMovement p (nolock)
+   inner join tOrders o WITH (NOLOCK)
+           on o.EmexOrderID   = p.OrderNumber 
+          and o.DetailNumber  = p.DetailNum               
+          and o.CustomerSubId = p.CustomerSubId
+          and o.Reference     = p.Reference 
+          and o.StatusID = 9
+          and o.Quantity > 0
+   WHERE p.Spid = @@Spid 
+   group by o.OrderID
+           ,o.OrderNum 
+           ,o.DetailNumber 
+           ,o.CustomerSubId
+           ,o.Reference    
+           ,o.PriceLogo    
+  having  max(o.EmexQuantity)=Sum(o.Quantity)
+)
+insert @Archiving (ID)
+select distinct
+       o.OrderID
+  from p
+ inner join tOrders o (nolock)
+         on o.OrderNum     = p.OrderNum
+        and o.DetailNumber = p.DetailNumber
+        and o.CustomerSubId= p.CustomerSubId
+        and o.Reference    = p.Reference  
+ where not exists (select 1
+                     from p as p2
+                    where p2.OrderID=o.OrderID)
+   and exists (select 1
+                 from tOrders as o (nolock)
+                where o.OrderNum     = p.OrderNum
+                  and o.DetailNumber = p.DetailNumber
+                  and o.CustomerSubId= p.CustomerSubId
+                  and o.Reference    = p.Reference  
+                  and o.Quantity     < 0)
+
+exec OrderArchiving
+      @OrderID = @Archiving
+
+delete o
+  from @Archiving A
+ inner join tOrders o (rowlock)
+         on o.OrderID = a.ID
+
  exit_:
  return @r
 go

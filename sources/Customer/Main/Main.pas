@@ -354,7 +354,7 @@ end;
 
 procedure TMainForm.Version;
 begin
-  lblVersion.Caption := ProductVersion;
+  lblVersion.Caption := FileVersion;
 end;
 
 initialization

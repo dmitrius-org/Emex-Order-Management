@@ -136,6 +136,7 @@ object MainForm: TMainForm
         Align = alLeft
         TabOrder = 3
         BorderStyle = ubsNone
+        ShowCaption = False
         Caption = 'MainMenuPanel'
         Layout = 'fit'
         LayoutAttribs.Pack = 'start'

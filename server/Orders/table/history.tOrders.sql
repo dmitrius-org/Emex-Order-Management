@@ -1,11 +1,13 @@
-if OBJECT_ID('tOrders') is null
+if OBJECT_ID('History.tOrders') is null
 /* **********************************************************
 tOrders - Заказы
+
+drop table History.tOrders
 ********************************************************** */
 begin
-    create table tOrders
+    create table History.tOrders
     (
-     OrderID                         numeric(18,0)  identity --
+     OrderID                         numeric(18,0)  --
     ,ClientID                        numeric(18,0)  not null -- Клиент
     ,SuppliersID                     numeric(18,0)  -- Поставщик tSuppliers.SuppliersID
     ,OrderDate                       datetime       not null -- Дата заказа
@@ -100,7 +102,6 @@ begin
     ,DeliveryTermFromSupplier        int            -- Срок доставки от поставщик
     ,DeliveryTermFromSupplier2       int            -- Срок доставки от поставщик после изменения
     ,ProfilesCustomerID              numeric(18,0)
-    
     -- дополнительные признаки из заказа клиента
     ,CustomerClientNum               varchar(128)   -- № Клиента
     ,CustomerClientSign              varchar(128)   -- Пометки Клиента
@@ -115,92 +116,16 @@ begin
     ,updDatetime                     datetime      default GetDate()--
     );
 
-    create unique index ao1 on tOrders(OrderID);
+    create index ao1 on History.tOrders(OrderID);
 
-    create index ao2 on tOrders(ClientID, OrderNum);
+    --create index ao2 on History.tOrders(ClientID, OrderNum);
 
-    create index ao3 on tOrders(Invoice);
+    --create index ao3 on History.tOrders(Invoice);
 
-    create index ao4 on tOrders(Box);
+    --create index ao4 on History.tOrders(Box);
 end
 go
-grant select on tOrders to public
+grant select on History.tOrders to public
 go
-exec setOV 'tOrders', 'U', '20240101', '0'
+exec setOV 'tOrders', 'U', '20250506', '1', 'History'
 go
-
--- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tOrders', @desc = 'Таблица Заказы'
-
--- Описание полей
-exec dbo.sys_setTableDescription 'tOrders', 'OrderID'                           ,'Уникальный идентификатор '
-exec dbo.sys_setTableDescription 'tOrders', 'ClientID'                          ,'Идентификатор клиента tClients.ClientID'
-exec dbo.sys_setTableDescription 'tOrders', 'OrderDate'                         ,'Дата заказа'
-
-exec dbo.sys_setTableDescription 'tOrders', 'PriceLogo'                         ,'Лого прайса клиента'
-exec dbo.sys_setTableDescription 'tOrders', 'CustomerPriceLogo'                 ,'Наименование прайса клиента по которым заказываются детали'
-exec dbo.sys_setTableDescription 'tOrders', 'OrderNum'                          ,'Номер заказа'
-exec dbo.sys_setTableDescription 'tOrders', 'StatusID'                          ,'Статус tStatus.StatusID'
-exec dbo.sys_setTableDescription 'tOrders', 'isCancel'                          ,'Отказ'
-exec dbo.sys_setTableDescription 'tOrders', 'isCancelToClient'                  ,'Отказ отправлен клиенту'
-exec dbo.sys_setTableDescription 'tOrders', 'Manufacturer'                      ,'Производитель'
-exec dbo.sys_setTableDescription 'tOrders', 'DetailNumber'                      ,'Номер детали'
-exec dbo.sys_setTableDescription 'tOrders', 'DetailName'                        ,'Название детали'
-exec dbo.sys_setTableDescription 'tOrders', 'DetailID'                          ,'ID'
-exec dbo.sys_setTableDescription 'tOrders', 'Quantity'                          ,'Количество'
-exec dbo.sys_setTableDescription 'tOrders', 'Price'                             ,'Цена продажи'
-exec dbo.sys_setTableDescription 'tOrders', 'Amount'                            ,'Сумма продажи'
-exec dbo.sys_setTableDescription 'tOrders', 'PricePurchase'                     ,'Цена закупки с учетом скидки'
-exec dbo.sys_setTableDescription 'tOrders', 'PricePurchaseOrg'                  ,'Исходная цена закупки без учета скидки'
-exec dbo.sys_setTableDescription 'tOrders', 'AmountPurchase'                    ,'Сумма закупки'
-exec dbo.sys_setTableDescription 'tOrders', 'Discount'                          ,'Скидка поставщика на закупку товара'
-exec dbo.sys_setTableDescription 'tOrders', 'PricePurchaseF'                    ,'Цена закупки факт'
-exec dbo.sys_setTableDescription 'tOrders', 'AmountPurchaseF'                   ,'Сумма закупки факт'
-exec dbo.sys_setTableDescription 'tOrders', 'WeightKG'                          ,'Вес Физический из прайса'
-exec dbo.sys_setTableDescription 'tOrders', 'VolumeKG'                          ,'Вес Объемный из прайса'
-exec dbo.sys_setTableDescription 'tOrders', 'Margin'                            ,'Наценка из прайса'
-exec dbo.sys_setTableDescription 'tOrders', 'MarginF'                           ,'Наценка факт'
-exec dbo.sys_setTableDescription 'tOrders', 'Profit'                            ,'Рентабельность'
-exec dbo.sys_setTableDescription 'tOrders', 'Income'                            ,'Доход'
-
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryPlanDateSupplier'          ,'Плановая дата поступления поставщику'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestTermSupplier'          ,'Остаток срока до поступления поставщику'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveredDateToSupplier'           ,'Доставлена поставщику'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryTerm'                      ,'Срок доставки поставщику'
-
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDaysReserve'               ,'Дней запаса до вылета'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate'                  ,'Ближайшая дата вылета'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryNextDate2'                 ,'Ближайшая дата вылета, рассчитывается если прошол срок DeliveryNextDate'    
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryDateToCustomer'            ,'Дата поставки клиенту'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryTermToCustomer'            ,'Срок поставки клиенту'
-exec dbo.sys_setTableDescription 'tOrders', 'DeliveryRestToCustomer'            ,'Остаток срока до поставки клиенту'
-
-exec dbo.sys_setTableDescription 'tOrders', 'ProfilesDeliveryID'                ,'tSupplierDeliveryProfiles.ProfilesDeliveryID - ИД профиля управления выгрузкой'
-exec dbo.sys_setTableDescription 'tOrders', 'ReplacementMakeLogo'               ,'Бренд замены'
-exec dbo.sys_setTableDescription 'tOrders', 'ReplacementDetailNumber'           ,'Номер замены'
-exec dbo.sys_setTableDescription 'tOrders', 'ReplacementPrice'                  ,'Цена замены'
-exec dbo.sys_setTableDescription 'tOrders', 'PriceID'                           ,'Ид детали tPrice.PriceID'
-exec dbo.sys_setTableDescription 'tOrders', 'MakeLogo'                          ,'Лого бренда'
-exec dbo.sys_setTableDescription 'tOrders', 'BasketId'                          ,'Идентификатор строки корзины в emexdwc.ae'
-exec dbo.sys_setTableDescription 'tOrders', 'EmexOrderID'                       ,'Номер заказ в emexdwc.ae'
-exec dbo.sys_setTableDescription 'tOrders', 'EmexQuantity'                      ,'Количество в emexdwc.ae'
-exec dbo.sys_setTableDescription 'tOrders', 'OrderDetailSubId'                  ,'OrderDetailSubId – уникальный идентификатор строки заказа в системе EmEx'
-exec dbo.sys_setTableDescription 'tOrders', 'OverPricing'                       ,'Превышение Цены'
-exec dbo.sys_setTableDescription 'tOrders', 'Warning'                           ,'Предупреждение'
-exec dbo.sys_setTableDescription 'tOrders', 'CustomerSubId'                     ,'Идентификатор запчасти клиента'
-exec dbo.sys_setTableDescription 'tOrders', 'Reference'                         ,'Текстовая информация, позволяющая клиенту идентифицировать запчасть. Часть этой информации может быть распечатана в виде штрих-кода на стикере запчасти'
-exec dbo.sys_setTableDescription 'tOrders', 'ParentID'                          ,'Родительский идентификатор заказа. Проставляется при дроблении заказа.'
-exec dbo.sys_setTableDescription 'tOrders', 'Invoice'                           ,'Инвойс, номер отправки'
-exec dbo.sys_setTableDescription 'tOrders', 'Box'                               ,'Коробка'
-exec dbo.sys_setTableDescription 'tOrders', 'FileDate'                          ,'Дата файла'
-exec dbo.sys_setTableDescription 'tOrders', 'DestinationLogo'                   ,'Направление отгрузки'
-exec dbo.sys_setTableDescription 'tOrders', 'CommissionAmount'                  ,'Комиссия от продажи. Рассчитывается в момент создания заказа и не меняется'
-exec dbo.sys_setTableDescription 'tOrders', 'ClientOrderNum'                    ,'Номер заказа клиента'
-exec dbo.sys_setTableDescription 'tOrders', 'Comment'                           ,'Комментарий'
-exec dbo.sys_setTableDescription 'tOrders', 'Reliability'                       ,'Вероятность поставки'
-exec dbo.sys_setTableDescription 'tOrders', 'Commission'                        ,'Комиссия эквайера'
-exec dbo.sys_setTableDescription 'tOrders', 'ExtraKurs'                         ,'Наценка на курс'
-exec dbo.sys_setTableDescription 'tOrders', 'Taxes'                             ,'Комиссия и налоги'
-exec dbo.sys_setTableDescription 'tOrders', 'WeightKGAmount'                    ,'Стоимость кг физического веса'
-exec dbo.sys_setTableDescription 'tOrders', 'VolumeKGAmount'                    ,'Стоимость кг объемного веса'
-exec dbo.sys_setTableDescription 'tOrders', 'PercentSupped'                     ,'Процент поставки'

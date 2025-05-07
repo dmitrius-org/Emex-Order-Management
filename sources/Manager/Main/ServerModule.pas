@@ -25,6 +25,8 @@ type
     procedure UniGUIServerModuleCreate(Sender: TObject);
     procedure UniGUIServerModuleDestroy(Sender: TObject);
     procedure UniGUIServerModuleBeforeInit(Sender: TObject);
+    procedure UniGUIServerModuleHTTPCommand(ARequestInfo: TIdHTTPRequestInfo;
+      AResponseInfo: TIdHTTPResponseInfo; var Handled: Boolean);
   private
     { Private declarations }
 
@@ -126,6 +128,29 @@ end;
 procedure TUniServerModule.UniGUIServerModuleDestroy(Sender: TObject);
 begin
   FDManager.Close;
+end;
+
+procedure TUniServerModule.UniGUIServerModuleHTTPCommand(
+  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
+  var Handled: Boolean);
+begin
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand ARequestInfo', ARequestInfo.AuthExists.ToString());
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthPassword', ARequestInfo.AuthPassword);
+  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthUsername', ARequestInfo.AuthUsername);
+
+//  if ARequestInfo.AuthExists and
+//    (ARequestInfo.AuthPassword = '123456') and
+//    (ARequestInfo.AuthUsername = 'admin') then
+//  begin
+//    Exit; // Authentication is successful
+//  end
+//  else
+//  begin
+//    // Request authentication
+//    AResponseInfo.AuthRealm := 'Enter credentials for ' + Title;
+//    AResponseInfo.ResponseNo := 401;
+//    Handled := True;
+//  end;
 end;
 
 procedure ExploreWeb(page:PChar);

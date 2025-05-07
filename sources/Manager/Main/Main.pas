@@ -41,6 +41,9 @@ type
     LogoImage: TUniImage;
     LogoPanel: TUniContainerPanel;
     actProfile: TAction;
+    actServerControlPanel: TAction;
+    pnlInfo: TUniContainerPanel;
+    lblVersion: TUniLabel;
     procedure UniFormShow(Sender: TObject);
     procedure MainMenuClick(Sender: TObject);
     procedure TabMainClose(Sender: TObject; var AllowClose: Boolean);
@@ -55,6 +58,7 @@ type
       Params: TUniStrings);
     procedure UniFormBroadcastMessage(const Sender: TComponent;
       const Msg: string; const Params: TUniStrings);
+    procedure actServerControlPanelExecute(Sender: TObject);
   private
     { Private declarations }
     FormNames : TStrings;
@@ -83,6 +87,8 @@ type
     ///  ProfileCallBack - CallBack обработчик действия на форме профили пользователя
     ///</summary>
     procedure ProfileCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure Version();
   public
     { Public declarations }
   end;
@@ -96,7 +102,7 @@ implementation
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule, uGrantUtils,
   LoginEditForm, InfoForm, uLoggerF, uMainVar, uUtils.Varriant,
-  uUserProfile, uCommonType, uUtils.WS, uUtils.Logger;
+  uUserProfile, uCommonType, uUtils.WS, uUtils.Logger, uVersion;
 
 function MainForm: TMainForm;
 begin
@@ -140,6 +146,11 @@ begin
   UserProfile.ID := UniMainModule.AUserID;
   UserProfile.ShowModal(ProfileCallBack);
 
+end;
+
+procedure TMainForm.actServerControlPanelExecute(Sender: TObject);
+begin
+   UniSession.AddJS('window.open("/server", "_blank")');
 end;
 
 procedure TMainForm.ConstructNavigator;
@@ -337,6 +348,15 @@ begin
       Action := actEditPas;
       ImageIndex := 16;
     end;
+
+//    if actServerControlPanel.Tag = 1 then
+//    with MainMenu.Items.Add(Profile, 'Панель управления сервером') do
+//    begin
+//      Tag := -999;
+//      Action := actServerControlPanel;
+//      ImageIndex := 23;
+//    end;
+
   end
 end;
 
@@ -419,6 +439,10 @@ end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
+  {$IFDEF Debug}
+    Grant.GrantTemplateCreate(self);
+  {$ENDIF}
+
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
 
   SetUserLabel();
@@ -448,6 +472,7 @@ begin
   pcMain.Layout := 'fit';
 
   Grant.UserGrantLoad;
+//  Grant.SetGrant(self, ActionList);
 
   MainMenu.Width := 300;
   MainMenu.Items[0].Tag := -1;
@@ -469,8 +494,12 @@ begin
     MainMenuClick(Sender);
   end;
 
+  Version;
+end;
 
-    //Profile.MoveTo(nil, TUniNodeAttachMode.naAdd );
+procedure TMainForm.Version;
+begin
+  lblVersion.Caption := FileVersion;
 end;
 
 initialization

@@ -87,15 +87,15 @@ update tOrders
    and isCancel = 1
   */
 
--- Протоколы без заказа
+/*-- Протоколы без заказа
 Select 'Протоколы без заказа', *
   from tProtocol p (nolock)
  where not exists (select 1
                     from tOrders o (nolock)
 				   where o.OrderID = p.ObjectID
 				   )
---
-/* -- исправление
+
+-- исправление
 delete p
   from tProtocol p
  where not exists (select 1

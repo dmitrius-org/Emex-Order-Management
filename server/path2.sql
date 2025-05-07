@@ -1,1 +1,1 @@
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1045, 1045, 'Api',  'TClientsT.actApi', 40, 1
+insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1047, 1047, 'Панель управления сервером',  'TMainForm.actServerControlPanel', 0, 1

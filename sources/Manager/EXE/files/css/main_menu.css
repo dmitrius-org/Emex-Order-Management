@@ -5,10 +5,10 @@
     line-height: 35px;
 }
 
-.logo-caption  {
+/* .logo-caption  {
     background-color: #32404e;
     color: #fff;
-} 
+}  */
 
 .user-label {
     color: #adb3b8;
@@ -32,6 +32,21 @@
     max-width: 100%;
 } 
 
+
+.x-panel-body-default .logo-caption  {
+    background-color: #32404e;
+    color: #fff;
+} 
+
+.x-panel-body-default .logo-image  {
+    background-color: #32404e;
+}
+
+.x-panel-body-default .logo-version  {
+    background-color: #32404e;
+    color: #adb3b8;
+} 
+
 .main-menu-detail .x-tab-close-btn {
         background-image: url("/files/img/Close.png");
         background-size: 14px auto;
@@ -46,20 +61,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #f0f0f0; Цвет фона для всего контейнера */
+    /* background-color: #f0f0f0; пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
     /* padding: 10px; */
-    white-space: nowrap; /* Запрещает перенос строки */
+    white-space: nowrap; /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 }
 
 .badge-chats-count {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30px; /* Ширина прямоугольника */
-    height: 25px; /* Высота прямоугольника */
-    background-color: #1E90FF; /* Цвет фона для числа */
-    color: white; /* Цвет текста */
-    border-radius: 5px; /* Округлые углы */
+    width: 30px; /* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
+    height: 25px; /* пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
+    background-color: #1E90FF; /* пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
+    color: white; /* пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
+    border-radius: 5px; /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ */
     text-align: center;
     font-size: 14px;
 }

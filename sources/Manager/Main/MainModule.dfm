@@ -11,6 +11,7 @@ object UniMainModule: TUniMainModule
   EnableSynchronousOperations = True
   WebSocketConnection.Enabled = True
   ExtLocale = 'ru'
+  OnSessionTimeout = UniGUIMainModuleSessionTimeout
   OnBeforeLogin = UniGUIMainModuleBeforeLogin
   OnNewComponent = UniGUIMainModuleNewComponent
   Height = 238
@@ -23,6 +24,7 @@ object UniMainModule: TUniMainModule
     FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     LoginPrompt = False
     AfterConnect = FDConnectionAfterConnect
+    AfterDisconnect = FDConnectionAfterDisconnect
     Left = 42
     Top = 14
   end
@@ -32,11 +34,6 @@ object UniMainModule: TUniMainModule
     FetchOptions.RowsetSize = 50000
     Left = 44
     Top = 75
-  end
-  object qSetting: TFDQuery
-    Connection = FDConnection
-    Left = 43
-    Top = 139
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
     EventKinds = [ekCmdExecute, ekCmdDataIn, ekCmdDataOut, ekSQL, ekSQLVarIn, ekSQLVarOut]

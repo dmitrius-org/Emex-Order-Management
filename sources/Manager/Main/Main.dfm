@@ -83,6 +83,7 @@ object MainForm: TMainForm
         Align = alLeft
         TabOrder = 0
         BorderStyle = ubsNone
+        ShowCaption = False
         Caption = 'MainMenuPanel'
         Layout = 'fit'
         LayoutAttribs.Pack = 'start'
@@ -3670,7 +3671,7 @@ object MainForm: TMainForm
           Left = 0
           Top = 41
           Width = 300
-          Height = 368
+          Height = 344
           Hint = ''
           Margins.Left = 0
           Margins.Top = 0
@@ -3681,16 +3682,40 @@ object MainForm: TMainForm
           ParentShowHint = False
           BodyRTL = False
           Align = alClient
-          Items.NodeData = {
-            07010000000A5400580054007200650065004E006F0064006500270000000F00
-            00000F0000000F000000FFFFFFFF0F000000000000000000000000010420002E
-            002E002E00}
           Items.FontData = {
             01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
             53696D53756E}
           Images = MainMenuImage
           MicroWidth = 50
           OnClick = MainMenuClick
+        end
+        object pnlInfo: TUniContainerPanel
+          AlignWithMargins = True
+          Left = 3
+          Top = 388
+          Width = 294
+          Height = 18
+          Hint = ''
+          ParentColor = False
+          Align = alBottom
+          TabOrder = 3
+          Layout = 'hbox'
+          LayoutAttribs.Align = 'top'
+          LayoutAttribs.Pack = 'center'
+          LayoutConfig.ComponentCls = 'logo-version'
+          LayoutConfig.Region = 'center'
+          object lblVersion: TUniLabel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 51
+            Height = 13
+            Hint = ''
+            Alignment = taCenter
+            Caption = 'lblVersion'
+            Align = alClient
+            TabOrder = 1
+          end
         end
       end
     end
@@ -3718,23 +3743,31 @@ object MainForm: TMainForm
     Left = 673
     Top = 94
     object actExit: TAction
+      Tag = -1
       Caption = #1042#1099#1081#1090#1080
       Hint = #1042#1099#1081#1090#1080
       ImageIndex = 17
       OnExecute = actExitExecute
     end
     object actEditPas: TAction
+      Tag = -1
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1074#1093#1086#1076#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1074#1093#1086#1076#1072
       OnExecute = actEditPasExecute
     end
     object actinfo: TAction
+      Tag = -1
       Caption = #1054' '#1089#1080#1089#1090#1077#1084#1077
       OnExecute = actinfoExecute
     end
     object actProfile: TAction
+      Tag = -1
       Caption = #1055#1088#1086#1092#1080#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       OnExecute = actProfileExecute
+    end
+    object actServerControlPanel: TAction
+      Caption = #1055#1072#1085#1077#1083#1100' '#1091#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1089#1077#1088#1074#1077#1088#1086#1084
+      OnExecute = actServerControlPanelExecute
     end
   end
   object MainMenuImage: TUniNativeImageList
@@ -3743,7 +3776,7 @@ object MainForm: TMainForm
     Left = 512
     Top = 166
     Images = {
-      17000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
+      18000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B
       FFFFFF1F060900000075736572733B66613BFFFFFF1F0608000000757365723B
       66613BFFFFFF1F0612000000616464726573732D626F6F6B2D6F3B66613BFFFF
       FF1F06080000006C6F636B3B66613BFFFFFF1F0608000000626F6F6B3B66613B
@@ -3758,7 +3791,7 @@ object MainForm: TMainForm
       3B66613BFFFFFF1F060D0000007265706C792D616C6C3B66613BFFFFFF1F060F
       000000696E666F2D636972636C653B66613BFFFFFF1F0611000000757365722D
       636972636C652D6F3B66613BFFFFFF1F06100000006D696E75732D636972636C
-      653B66613B}
+      653B66613B00FF00FF060A0000007365727665723B66613B}
   end
   object UniNativeImageList1: TUniNativeImageList
     Left = 704

@@ -1,0 +1,211 @@
+if OBJECT_ID('OrderArchiving') is not null
+    drop proc OrderArchiving
+go
+/*
+  OrderArchiving - 
+*/
+Create proc OrderArchiving
+              @OrderID ID readonly
+
+as
+ declare @r int = 0
+
+INSERT INTO [History].[tOrders] with (rowlock)
+      (
+       OrderID
+      ,ClientID
+      ,OrderDate
+      ,OrderNum
+      ,StatusID
+      ,isCancel
+      ,isCancelToClient
+      ,Manufacturer
+      ,CustomerPriceLogo
+      ,PriceLogo
+      ,DetailNumber
+      ,DetailName
+      ,MakeLogo
+      ,DetailID
+      ,Quantity
+      ,Price
+      ,Amount
+      ,PricePurchase
+      ,PricePurchaseOrg
+      ,AmountPurchase
+      ,Discount
+      ,PricePurchaseF
+      ,AmountPurchaseF
+      ,WeightKG
+      ,VolumeKG
+      ,Margin
+      ,MarginF
+      ,Profit
+      ,Income
+      ,ProfilesDeliveryID
+      ,ReplacementMakeLogo
+      ,ReplacementDetailNumber
+      ,PriceID
+      ,BasketId
+      ,EmexOrderID
+      ,CustomerSubId
+      ,OrderDetailSubId
+      ,Reference
+      ,EmexQuantity
+      ,OverPricing
+      ,Warning
+      ,Flag
+      ,UserID
+      ,inDatetime
+      ,updDatetime
+      ,ReplacementPrice
+      ,ParentID
+      ,ID
+      ,Invoice
+      ,FileDate
+      ,IncomePRC
+      ,DestinationLogo
+      ,ClientOrderNum
+      ,Comment
+      ,CommissionAmount
+      ,Reliability
+      ,Commission
+      ,ExtraKurs
+      ,DeliveryPlanDateSupplier
+      ,DeliveryRestTermSupplier
+      ,DeliveredDateToSupplier
+      ,DeliveryDaysReserve
+      ,DeliveryNextDate
+      ,DeliveryDateToCustomer
+      ,DeliveryTermToCustomer
+      ,DeliveryRestToCustomer
+      ,Taxes
+      ,WeightKGAmount
+      ,VolumeKGAmount
+      ,DateDeparture
+      ,DaysInWork
+      ,DeliveryNextDate2
+      ,DeliveryTerm
+      ,SuppliersID
+      ,Kurs
+      ,Fragile
+      ,PercentSupped
+      ,DestinationName
+      ,DeliveryDaysReserve2
+      ,Comment2
+      ,PriceLogoOrg
+      ,DateInWork
+      ,Box
+      ,ProfilesCustomerID
+      ,ItemKey
+      ,Comment3
+      ,DeliveryTermFromSupplier
+      ,DeliveryTermFromSupplier2
+      ,CustomerClientNum
+      ,CustomerClientSign
+      ,CustomerOrder
+      ,QuantityOrg)     
+select o.OrderID
+      ,o.ClientID
+      ,o.OrderDate
+      ,o.OrderNum
+      ,o.StatusID
+      ,o.isCancel
+      ,o.isCancelToClient
+      ,o.Manufacturer
+      ,o.CustomerPriceLogo
+      ,o.PriceLogo
+      ,o.DetailNumber
+      ,o.DetailName
+      ,o.MakeLogo
+      ,o.DetailID
+      ,o.Quantity
+      ,o.Price
+      ,o.Amount
+      ,o.PricePurchase
+      ,o.PricePurchaseOrg
+      ,o.AmountPurchase
+      ,o.Discount
+      ,o.PricePurchaseF
+      ,o.AmountPurchaseF
+      ,o.WeightKG
+      ,o.VolumeKG
+      ,o.Margin
+      ,o.MarginF
+      ,o.Profit
+      ,o.Income
+      ,o.ProfilesDeliveryID
+      ,o.ReplacementMakeLogo
+      ,o.ReplacementDetailNumber
+      ,o.PriceID
+      ,o.BasketId
+      ,o.EmexOrderID
+      ,o.CustomerSubId
+      ,o.OrderDetailSubId
+      ,o.Reference
+      ,o.EmexQuantity
+      ,o.OverPricing
+      ,o.Warning
+      ,o.Flag
+      ,o.UserID
+      ,o.inDatetime
+      ,o.updDatetime
+      ,o.ReplacementPrice
+      ,o.ParentID
+      ,o.ID
+      ,o.Invoice
+      ,o.FileDate
+      ,o.IncomePRC
+      ,o.DestinationLogo
+      ,o.ClientOrderNum
+      ,o.Comment
+      ,o.CommissionAmount
+      ,o.Reliability
+      ,o.Commission
+      ,o.ExtraKurs
+      ,o.DeliveryPlanDateSupplier
+      ,o.DeliveryRestTermSupplier
+      ,o.DeliveredDateToSupplier
+      ,o.DeliveryDaysReserve
+      ,o.DeliveryNextDate
+      ,o.DeliveryDateToCustomer
+      ,o.DeliveryTermToCustomer
+      ,o.DeliveryRestToCustomer
+      ,o.Taxes
+      ,o.WeightKGAmount
+      ,o.VolumeKGAmount
+      ,o.DateDeparture
+      ,o.DaysInWork
+      ,o.DeliveryNextDate2
+      ,o.DeliveryTerm
+      ,o.SuppliersID
+      ,o.Kurs
+      ,o.Fragile
+      ,o.PercentSupped
+      ,o.DestinationName
+      ,o.DeliveryDaysReserve2
+      ,o.Comment2
+      ,o.PriceLogoOrg
+      ,o.DateInWork
+      ,o.Box
+      ,o.ProfilesCustomerID
+      ,o.ItemKey
+      ,o.Comment3
+      ,o.DeliveryTermFromSupplier
+      ,o.DeliveryTermFromSupplier2
+      ,o.CustomerClientNum
+      ,o.CustomerClientSign
+      ,o.CustomerOrder
+      ,o.QuantityOrg     
+  from @OrderID I
+  inner join tOrders o  with (nolock index=ao1)
+          on o.OrderID = I.ID
+
+  exit_:
+
+  return @r
+GO
+grant exec on OrderArchiving to public
+go
+exec setOV 'OrderArchiving', 'P', '20250206', '1'
+go
+ 

@@ -27,7 +27,6 @@ type
   TUniMainModule = class(TUniGUIMainModule)
     FDConnection: TFDConnection;
     Query: TFDQuery;
-    qSetting: TFDQuery;
     FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
     FDMoniSQl: TFDMoniCustomClientLink;
 
@@ -38,6 +37,9 @@ type
     procedure FDMoniSQlOutput(ASender: TFDMoniClientLinkBase;
       const AClassName, AObjName, AMessage: string);
     procedure UniGUIMainModuleNewComponent(AComponent: TComponent);
+    procedure UniGUIMainModuleSessionTimeout(ASession: TObject;
+      var ExtendTimeOut: Integer);
+    procedure FDConnectionAfterDisconnect(Sender: TObject);
   private
     { Private declarations }
 
@@ -260,6 +262,8 @@ begin
       AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
       AAppName := AppManager;
 
+      UniSession.UserString := Title + ' - ' + AUser;
+
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 
       CreateLogger(AUserID, AAppName);
@@ -332,6 +336,11 @@ begin
   ''');
 end;
 
+procedure TUniMainModule.FDConnectionAfterDisconnect(Sender: TObject);
+begin
+  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionAfterDisconnect AUserName', AUserName);
+end;
+
 procedure TUniMainModule.FDMoniSQlOutput(
   ASender: TFDMoniClientLinkBase; const AClassName, AObjName, AMessage: string);
 begin
@@ -401,6 +410,13 @@ begin
 //  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', 'begin');
 //  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', AComponent.Name);
 //  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', 'end');
+end;
+
+procedure TUniMainModule.UniGUIMainModuleSessionTimeout(ASession: TObject;
+  var ExtendTimeOut: Integer);
+begin
+  ALogger.Info('TUniMainModule.UniGUIMainModuleSessionTimeout ExtendTimeOut: ' +
+               ExtendTimeOut.ToString);
 end;
 
 initialization

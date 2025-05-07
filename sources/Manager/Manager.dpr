@@ -140,7 +140,8 @@ uses
   uLoggerF in '..\Common\Logger\uLoggerF.pas' {LoggerF: TUniForm},
   uAPIFormT in 'App\Clients\uAPIFormT.pas' {APIFormT: TUniFrame},
   uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas',
-  utest in 'App\utest.pas' {APIKeyT: TUniFrame};
+  utest in 'App\utest.pas' {APIKeyT: TUniFrame},
+  uVersion in '..\Common\CommonApp\uVersion.pas';
 
 {$R *.res}
 
