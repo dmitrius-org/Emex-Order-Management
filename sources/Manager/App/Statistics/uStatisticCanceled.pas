@@ -11,8 +11,8 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker, uUniADCheckComboBoxEx, uniCheckBox, MainModule,
-  cfs.GCharts.uniGUI, uUniADCheckComboBoxHelper;
+  uUniExDateRangePicker, uUniExCheckComboBox, uniCheckBox, MainModule,
+  cfs.GCharts.uniGUI, uUniExCheckComboBoxHelper;
 
 type
   TStatisticCanceled = class(TUniFrame)
@@ -25,10 +25,10 @@ type
     UniLabel3: TUniLabel;
     edtOrderDate: TUniDateRangePicker;
     UniLabel2: TUniLabel;
-    fPriceLogo: TUniADCheckComboBox;
-    fClient: TUniADCheckComboBox;
+    fPriceLogo: tUniExCheckComboBox;
+    fClient: tUniExCheckComboBox;
     UniLabel1: TUniLabel;
-    fPriceLogoF: TUniADCheckComboBox;
+    fPriceLogoF: tUniExCheckComboBox;
     fPriceLogoCancel: TUniCheckBox;
     qCanceledOrderDate: TSQLTimeStampField;
     qCanceledQuantityCancel: TIntegerField;

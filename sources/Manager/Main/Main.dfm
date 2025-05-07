@@ -3682,9 +3682,11 @@ object MainForm: TMainForm
           ParentShowHint = False
           BodyRTL = False
           Align = alClient
-          Items.FontData = {
-            01010000001D000000000000000600000000080000FFF5FFFFFF000000000000
-            53696D53756E}
+          Items.NodeData = {
+            07010000000A5400580054007200650065004E006F0064006500250000000F00
+            00000500000005000000FFFFFFFF0500000000000000000000000001032E002E
+            002E00}
+          Items.FontData = {0101000000FFFFFFFF00000000}
           Images = MainMenuImage
           MicroWidth = 50
           OnClick = MainMenuClick

@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  UniFSCombobox, Vcl.ExtCtrls, uniSpinEdit;
+  Vcl.ExtCtrls, uniSpinEdit;
 
 type
   TAPIKeyForm_F = class(TUniForm)

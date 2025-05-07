@@ -1,4 +1,4 @@
-unit uStatisticBrand;
+п»їunit uStatisticBrand;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  uUniDateRangePicker, uUniADCheckComboBoxEx
+  uUniExDateRangePicker, uUniExCheckComboBox
 
   ;
 
@@ -34,7 +34,7 @@ type
     qBrandDetailQuantity: TIntegerField;
     qBrandDetailAmount: TCurrencyField;
     qBrandQuantity: TIntegerField;
-    fClient: TUniADCheckComboBox;
+    fClient: TUniExCheckComboBox;
     procedure UniFrameCreate(Sender: TObject);
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure fCancelClick(Sender: TObject);
@@ -47,7 +47,7 @@ type
     { Public declarations }
 
     /// <summary>
-    /// GridOpen - получение данных с сервера
+    /// GridOpen - РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… СЃ СЃРµСЂРІРµСЂР°
     /// </summary>
     procedure GridOpen; overload;
     procedure GridOpen(Key: Word); overload;
@@ -95,7 +95,7 @@ end;
 
 procedure TStatisticBrand.GridOpen;
 begin
-  ShowMask('Ждите, операция выполняется');
+  ShowMask('Р–РґРёС‚Рµ, РѕРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ');
   UniSession.Synchronize;
   try
     qBrand.Close();
@@ -142,7 +142,7 @@ begin
 //  FClients.FieldDefs.Add('ID', ftFMTBcd);
 //  FClients.CreateDataSet;
 
-  // индексы для сортировки
+  // РёРЅРґРµРєСЃС‹ РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
   GridExt.SortColumnCreate(Grid);
 
 end;

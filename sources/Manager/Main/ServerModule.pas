@@ -110,8 +110,6 @@ begin
   date := Now;
   CustomFiles.Add('files/fonts/fontawesome-pro-5.14.0-web/css/all.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
-  CustomFiles.Add('files/tinyMCE5/tinymce.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
-
   CustomFiles.Add('files/css/custom.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/grid.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
   CustomFiles.Add('files/css/main_menu.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
@@ -121,6 +119,7 @@ begin
   CustomFiles.Add('files/css/login.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   CustomFiles.Add('files/js/BadgeText.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/tinyMCE5/tinymce.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;

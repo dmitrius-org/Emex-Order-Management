@@ -1,12 +1,12 @@
-unit uUniADCheckComboBoxHelper;
+unit uUniExCheckComboBoxHelper;
 
 interface
 
 uses
-  System.SysUtils, System.Classes, uUniADCheckComboBoxEx, Data.DB, uMainVar;
+  System.SysUtils, System.Classes, uUniExCheckComboBox, Data.DB, uMainVar;
 
 type
-  TUniADCheckComboBoxHelper  = class helper for TUniADCheckComboBox
+  TUniExCheckComboBoxHelper  = class helper for TUniExCheckComboBox
   public
     /// <summary>
     /// FillFromSQL - заполнить по запросу из БД.
@@ -17,7 +17,7 @@ type
 
 implementation
 
-procedure TUniADCheckComboBoxHelper.FillFromSQL(const ASQL: string);
+procedure TUniExCheckComboBoxHelper.FillFromSQL(const ASQL: string);
 begin
   Sql.Q.Close;
   Sql.Open(ASQL, [], []);
