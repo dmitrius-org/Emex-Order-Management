@@ -12,7 +12,7 @@ uses
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniPanel, uniDateTimePicker, uniButton, uniLabel, uniEdit, uniDBPivotGrid,
   System.ImageList, Vcl.ImgList, uniMultiItem, uniComboBox, UniFSCombobox,
-  uUniDateRangePicker, uConstant;
+  uUniExDateRangePicker, uConstant;
 
 type
   TBalanceT = class(TUniForm)

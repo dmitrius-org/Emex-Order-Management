@@ -10,7 +10,7 @@ uses
   FireDAC.Comp.Client, Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList,
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniToolBar, uniGUIClasses, uniPanel, uniCheckBox, uniEdit,
-  uniMultiItem, uniComboBox, uUniADCheckComboBoxEx, uUniDateRangePicker,
+  uniMultiItem, uniComboBox, uUniADCheckComboBoxEx, uUniExDateRangePicker,
   uniBitBtn, uniLabel, uniButton, uUniADCheckComboBoxHelper, uniGroupBox;
 
 type

@@ -19,7 +19,7 @@ uses
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer,
   uGrant, uCommonType, uSqlUtils,
-  UniFSCombobox, uniHTMLFrame, uUniDateRangePicker, uUniADCheckComboBoxEx,
+  UniFSCombobox, uniHTMLFrame, uUniExDateRangePicker, uUniADCheckComboBoxEx,
   uOrdersNewDeliveryDateF, uPartProtocol_T, uAllowCreateOrderF, uUserF;
 
 type

@@ -19,7 +19,7 @@ uses
   cfs.GCharts.uniGUI, uniMultiItem, uniComboBox, uniPageControl, uniEdit,
   UniFSCombobox, uniBasicGrid, uniDBGrid, uniBitBtn, uniSpeedButton,
   uniGridExporters, math,
-  uUniADCheckComboBoxEx, uUniDateRangePicker;
+  uUniADCheckComboBoxEx, uUniExDateRangePicker;
 
 type
   TStatisticOrders = class(TUniFrame)
