@@ -119,6 +119,8 @@ begin
   CustomFiles.Add('files/css/login.css?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   CustomFiles.Add('files/js/BadgeText.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+  CustomFiles.Add('files/js/crypto-js.min.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
   CustomFiles.Add('files/tinyMCE5/tinymce.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
@@ -133,9 +135,9 @@ procedure TUniServerModule.UniGUIServerModuleHTTPCommand(
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   var Handled: Boolean);
 begin
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand ARequestInfo', ARequestInfo.AuthExists.ToString());
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthPassword', ARequestInfo.AuthPassword);
-  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthUsername', ARequestInfo.AuthUsername);
+//  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand ARequestInfo', ARequestInfo.AuthExists.ToString());
+//  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthPassword', ARequestInfo.AuthPassword);
+//  Logger.AddLog('TUniServerModule.UniGUIServerModuleHTTPCommand AuthUsername', ARequestInfo.AuthUsername);
 
 //  if ARequestInfo.AuthExists and
 //    (ARequestInfo.AuthPassword = '123456') and

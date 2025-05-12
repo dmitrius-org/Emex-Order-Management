@@ -26,7 +26,6 @@ type
     N5: TUniMenuItem;
     MainMenuImage: TUniNativeImageList;
     MainMenu: TUniTreeMenu;
-    UniNativeImageList1: TUniNativeImageList;
     MainMenuPanel: TUniPanel;
     MainMenuPanelDetail: TUniPanel;
     UniContainerPanel: TUniContainerPanel;
@@ -145,12 +144,11 @@ begin
   UserProfile.FormAction := acUpdate;
   UserProfile.ID := UniMainModule.AUserID;
   UserProfile.ShowModal(ProfileCallBack);
-
 end;
 
 procedure TMainForm.actServerControlPanelExecute(Sender: TObject);
 begin
-   UniSession.AddJS('window.open("/server", "_blank")');
+  UniSession.AddJS('window.open("/server", "_blank")');
 end;
 
 procedure TMainForm.ConstructNavigator;

@@ -508,7 +508,11 @@ procedure TOrderF.GetPartDataFromBase();
 var Price, js, r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
+  Log('TOrderF.GetPartDataFromBase Begin', etDebug);
   HintText := '';
+
+  Log('TOrderF.GetPartDataFromBase DetailNum=%s, PriceLogo=%s, MakeLogo=%s, ProfilesDeliveryID=%d',
+     [FDetailNumber, FPriceLogo, FMakeLogo, FProfilesDeliveryID], etDebug);
 
   sql.Open('''
            exec OrderF_GetEditData
@@ -613,7 +617,7 @@ begin
   end
   else
   begin // нет данных
-
+    Log(' TOrderF.GetPartDataFromBase Нет данных', etDebug);
     edtCount2.Clear;
     edtMargin2.Clear;
     edtMarginF2.Clear;
@@ -635,6 +639,7 @@ begin
 
     edtDelivery2.Hint := '';
   end;
+  Log(' TOrderF.GetPartDataFromBase Begin', etDebug);
 end;
 
 procedure TOrderF.GooglePSE;
@@ -852,10 +857,15 @@ end;
 
 procedure TOrderF.cbPriceChange(Sender: TObject);   // var i: Integer;
 begin
+  Log('TOrderF.cbPriceChange Begin', etDebug);
+
   FMakeLogo  := cbPrice.Value.Substring(Pos('.', cbPrice.Value),  4);
   FPriceLogo := cbPrice.Value.Substring(0, Pos('.', cbPrice.Value)-1);
 
+  Log('TOrderF.cbPriceChange FMakeLogo=%s, FPriceLogo=%s', [FMakeLogo, FPriceLogo], etDebug);
+
   GetPartDataFromBase;
+  Log('TOrderF.cbPriceChange End', etDebug);
 end;
 
 procedure TOrderF.btnNumber2Click(Sender: TObject);
@@ -870,6 +880,9 @@ end;
 
 procedure TOrderF.OrdersFinCalc;
 begin
+  Log('TOrderF.OrdersFinCalc Begin', etDebug);
+  Log('TOrderF.OrdersFinCalc FDetailNumber=%s, FID=%d, FProfilesCustomerID=%d, ', [FDetailNumber, FID, FProfilesCustomerID], etDebug);
+
   RetVal.Clear;
 
   Sql.exec(
@@ -889,6 +902,8 @@ begin
    FID,
    edtWeightKGF.Value,
    edtVolumeKGF.Value]);
+
+   Log('TOrderF.OrdersFinCalc End', etDebug);
 end;
 
 procedure TOrderF.OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);

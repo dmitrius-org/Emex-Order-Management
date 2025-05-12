@@ -36,10 +36,12 @@ type
     procedure FDConnectionAfterConnect(Sender: TObject);
     procedure FDMoniSQlOutput(ASender: TFDMoniClientLinkBase;
       const AClassName, AObjName, AMessage: string);
-    procedure UniGUIMainModuleNewComponent(AComponent: TComponent);
     procedure UniGUIMainModuleSessionTimeout(ASession: TObject;
       var ExtendTimeOut: Integer);
     procedure FDConnectionAfterDisconnect(Sender: TObject);
+    procedure UniGUIMainModuleBrowserClose(Sender: TObject);
+    procedure FDConnectionBeforeDisconnect(Sender: TObject);
+    procedure FDConnectionLost(Sender: TObject);
   private
     { Private declarations }
 
@@ -325,6 +327,7 @@ begin
                   ,Total      int
       );
 
+
       -- таблица для параметров действия
       if OBJECT_ID('tempdb..#ActionParams') is not null
           drop table #ActionParams;
@@ -338,14 +341,24 @@ end;
 
 procedure TUniMainModule.FDConnectionAfterDisconnect(Sender: TObject);
 begin
-  UniServerModule.Logger.AddLog('TUniMainModule.FDConnectionAfterDisconnect AUserName', AUserName);
+  ALogger.Debug('TUniMainModule.FDConnectionAfterDisconnect');
+end;
+
+procedure TUniMainModule.FDConnectionBeforeDisconnect(Sender: TObject);
+begin
+  ALogger.Debug('TUniMainModule.FDConnectionBeforeDisconnect');
+end;
+
+procedure TUniMainModule.FDConnectionLost(Sender: TObject);
+begin
+  Log('TUniMainModule.FDConnectionLost', uUtils.Logger.etHeader);
 end;
 
 procedure TUniMainModule.FDMoniSQlOutput(
   ASender: TFDMoniClientLinkBase; const AClassName, AObjName, AMessage: string);
 begin
-  ALogger.Info(Format('[%s:%s]', [AClassName, AObjName]));
-  ALogger.Info(Format('%s', [AMessage]));
+  ALogger.Debug(Format('[%s:%s]', [AClassName, AObjName]));
+  ALogger.Debug(Format('%s', [AMessage]));
 end;
 
 procedure TUniMainModule.UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled: Boolean);
@@ -368,6 +381,11 @@ begin
   end;
 
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleBeforeLogin', 'end');
+end;
+
+procedure TUniMainModule.UniGUIMainModuleBrowserClose(Sender: TObject);
+begin
+  ALogger.Debug('TUniMainModule.UniGUIMainModuleBrowserClose');
 end;
 
 procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
@@ -393,7 +411,7 @@ begin
 
   FDConnection.Close;
 
-  ALogger.Info('Программа остановлена');
+  Log('Программа остановлена', uUtils.Logger.etHeader);
 
   if Assigned(GlobalLogFileProvider) and (GlobalLogFileProvider.RefCount = 0) then
     GlobalLogFileProvider.Free;
@@ -405,18 +423,15 @@ begin
     ALogger.Free;
 end;
 
-procedure TUniMainModule.UniGUIMainModuleNewComponent(AComponent: TComponent);
-begin
-//  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', 'begin');
-//  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', AComponent.Name);
-//  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleNewComponent', 'end');
-end;
-
 procedure TUniMainModule.UniGUIMainModuleSessionTimeout(ASession: TObject;
   var ExtendTimeOut: Integer);
 begin
-  ALogger.Info('TUniMainModule.UniGUIMainModuleSessionTimeout ExtendTimeOut: ' +
+  UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleSessionTimeout');
+
+  ALogger.Debug('TUniMainModule.UniGUIMainModuleSessionTimeout ExtendTimeOut: ' +
                ExtendTimeOut.ToString);
+
+ UniSession.UniApplication.Restart();
 end;
 
 initialization

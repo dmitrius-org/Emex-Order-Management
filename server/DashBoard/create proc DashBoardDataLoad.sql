@@ -37,22 +37,68 @@ as
   
 
   -- Проверка закрузки курсов
-  insert #result (Id, Title, Status, Icon, Detail, Hint) 
+ 
+  /* insert #result (Id, Title, Status, Icon, Detail, Hint) 
   select 1,
          'Загрузка курсов',
          case 
              when datepart(dw, getdate()) = 1 and datediff(dd, t.OnDate, getdate()) >= 3 then 'panel-danger'
-             when datepart(dw, getdate()) <> 1 and datediff(dd, OnDate, getdate()) >= 1 then 'panel-warning'
+             when datepart(dw, getdate()) <> 1 and datediff(dd, t.OnDate, getdate()) >= 1 then 'panel-warning'
              else 'panel-success'
          end,
          'fa4-usd',
-         cast(t.Value as nvarchar) + ', ' + convert(nvarchar, t.OnDate, 104),
+         t.Value,
          'Cтатус загрузки курсов'
-    from
-          (select top 1* 
-             from tCurrencyRate (nolock) 
-            order by OnDate desc
-          ) as t
+    from (select max(t.OnDate) OnDate,
+                 STRING_AGG(cast(Value as varchar) + ', ' + convert(varchar, OnDate, 104), '</br>')  as Value
+            from 
+                 (select top 5 *
+                    from tCurrencyRate (nolock) 
+                   order by OnDate desc
+                 ) as t
+          ) as t*/
+
+    WITH TopRates AS (
+        SELECT TOP 1 *
+          FROM tCurrencyRate (NOLOCK)
+         ORDER BY OnDate DESC
+    ),
+    NumberedRates AS (
+        SELECT 
+              ROW_NUMBER() OVER (ORDER BY OnDate DESC) AS rn,
+              Value,
+              OnDate
+         FROM TopRates
+    ),
+    FormattedRates AS (
+        SELECT 
+            CASE 
+              WHEN rn = 1 
+              THEN '<b>' + CAST(Value AS VARCHAR) + ', ' + CONVERT(VARCHAR, OnDate, 104) + '</b>'
+              ELSE CAST(Value AS VARCHAR) + ', ' + CONVERT(VARCHAR, OnDate, 104)
+            END AS Formatted
+        FROM NumberedRates
+    )
+    insert #result (Id, Title, Status, Icon, Detail, Hint) 
+    SELECT 
+          1,
+          'Загрузка курсов',
+          CASE 
+              WHEN DATEPART(dw, GETDATE()) = 1 AND DATEDIFF(dd, t.OnDate, GETDATE()) >= 3 THEN 'panel-danger'
+              WHEN DATEPART(dw, GETDATE()) <> 1 AND DATEDIFF(dd, t.OnDate, GETDATE()) >= 1 THEN 'panel-warning'
+              ELSE 'panel-success'
+          END,
+          'fa4-usd',
+          (
+            SELECT STRING_AGG(Formatted, '</br>')
+            FROM FormattedRates
+          ),
+          'Cтатус загрузки курсов'
+    FROM (
+         SELECT MAX(OnDate) AS OnDate
+          FROM TopRates
+    ) AS t;
+
   
   -- проверка загрузки прайсов
   insert #result (Id, Title, Status, Icon, Detail, Hint) 
@@ -69,7 +115,7 @@ as
          end,
          'Поставщики - показывает все ли прайс-листы вовремя обновлены и загружены в систему'
     from (select 1 as p) as p
-    left join ( select STRING_AGG (rtrim(PriceName) + ', ' + convert(nvarchar, UpdateDate, 104), '; ') as Price
+    left join ( select STRING_AGG (rtrim(PriceName) + ', ' + convert(nvarchar, UpdateDate, 104), '</br>') as Price
                   from tProfilesPrice
                  where datediff(dd, UpdateDate, Getdate()) > 0
               ) as t on 1=1
@@ -93,7 +139,7 @@ as
   from
       (
       select min(up.OperDate) as OperDate,        
-             STRING_AGG(c.Brief + ': ' + convert(nvarchar, up.OperDate, 104), '; ') as Detail
+             STRING_AGG(c.Brief + ': ' + convert(nvarchar, up.OperDate, 104), '</br>') as Detail
         from tClients c (nolock)
        OUTER APPLY (select top 1 up.OperDate
                       from tUnloadRefusals up (nolock)

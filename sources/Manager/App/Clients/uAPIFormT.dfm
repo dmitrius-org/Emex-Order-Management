@@ -6,6 +6,7 @@ inherited APIFormT: TAPIFormT
     Width = 1139
     Height = 414
     ExplicitTop = 67
+    ExplicitWidth = 1139
     ExplicitHeight = 414
     inherited Grid: TUniDBGrid
       Top = 52
@@ -39,12 +40,16 @@ inherited APIFormT: TAPIFormT
           'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
       RowEditor = False
       Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
+      Images = MainMenuImage
+      LayoutConfig.Cls = 'grid-apikey'
+      OnColumnActionClick = GridColumnActionClick
       Columns = <
         item
           FieldName = 'ApiKeysID'
           Title.Alignment = taCenter
           Title.Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
           Width = 105
+          Visible = False
           ReadOnly = True
         end
         item
@@ -55,17 +60,17 @@ inherited APIFormT: TAPIFormT
           ReadOnly = True
         end
         item
+          FieldName = 'Name'
+          Title.Alignment = taCenter
+          Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+          Width = 271
+        end
+        item
           FieldName = 'ApiKey'
           Title.Alignment = taCenter
           Title.Caption = 'Api '#1082#1083#1102#1095
           Width = 225
           ReadOnly = True
-        end
-        item
-          FieldName = 'Name'
-          Title.Alignment = taCenter
-          Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
-          Width = 271
         end
         item
           FieldName = 'inDatetime'
@@ -80,6 +85,22 @@ inherited APIFormT: TAPIFormT
           Title.Caption = #1044#1072#1090#1072' '#1073#1083#1086#1082#1080#1088#1086#1074#1082#1080
           Width = 208
           ReadOnly = True
+        end
+        item
+          ActionColumn.Enabled = True
+          ActionColumn.Buttons = <
+            item
+              Action = actDelete
+              ButtonId = 0
+              UI = 'confirm'
+              Hint = #1059#1076#1072#1083#1080#1090#1100
+              ImageIndex = 0
+            end>
+          Title.Alignment = taCenter
+          Title.Caption = ' '
+          Width = 64
+          Alignment = taCenter
+          ImageOptions.Visible = True
         end>
     end
     object gbFilter: TUniGroupBox
@@ -96,7 +117,6 @@ inherited APIFormT: TAPIFormT
       Align = alTop
       LayoutConfig.Width = '0'
       TabOrder = 2
-      ExplicitWidth = 903
     end
   end
   object ToolBars: TUniPanel [1]
@@ -119,16 +139,16 @@ inherited APIFormT: TAPIFormT
     LayoutAttribs.Pack = 'start'
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
-    ExplicitWidth = 909
     object ToolBar: TUniToolBar
-      Left = 0
-      Top = 0
-      Width = 1139
-      Height = 67
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 1133
+      Height = 61
       Hint = ''
       ShowHint = True
       ButtonHeight = 53
-      ButtonWidth = 112
+      ButtonWidth = 123
       Images = ImageList32
       ShowCaptions = True
       ButtonAutoWidth = True
@@ -139,7 +159,10 @@ inherited APIFormT: TAPIFormT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitWidth = 909
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1139
+      ExplicitHeight = 67
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -151,7 +174,7 @@ inherited APIFormT: TAPIFormT
       end
       object UniToolButton2: TUniToolButton
         AlignWithMargins = True
-        Left = 118
+        Left = 129
         Top = 3
         Margins.Left = 0
         ShowHint = True
@@ -161,23 +184,23 @@ inherited APIFormT: TAPIFormT
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
-        Left = 233
+        Left = 255
         Top = 3
         Margins.Left = 0
         ShowHint = True
         Action = actDelete
         ImageIndex = 0
         TabOrder = 3
+        ExplicitLeft = 244
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
-        Left = 351
+        Left = 384
         Top = 3
         ShowHint = True
         Action = actRefreshAll
         TabOrder = 4
-        ExplicitLeft = 348
-        ExplicitTop = 0
+        ExplicitLeft = 362
       end
     end
   end
@@ -209,6 +232,7 @@ inherited APIFormT: TAPIFormT
     object QueryApiKey: TStringField
       FieldName = 'ApiKey'
       ReadOnly = True
+      OnGetText = QueryApiKeyGetText
       Size = 255
     end
     object QueryName: TStringField
@@ -232,11 +256,12 @@ inherited APIFormT: TAPIFormT
     Tag = 1043
     object actDelete: TAction
       Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 0
       OnExecute = actDeleteExecute
     end
     object actInsert: TAction
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1081' '#1082#1083#1102#1095
       ImageIndex = 1
       OnExecute = actInsertExecute
     end
@@ -272,5 +297,12 @@ inherited APIFormT: TAPIFormT
       'select * '
       '  from vApiKeys'
       ' where ApiKeysID= :ApiKeysID')
+  end
+  object MainMenuImage: TUniNativeImageList
+    Width = 24
+    Height = 24
+    Left = 512
+    Top = 166
+    Images = {01000000FF0000FF060900000074726173683B66613B}
   end
 end

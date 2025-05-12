@@ -36,10 +36,15 @@ type
     ppDelete: TUniMenuItem;
     N3: TUniMenuItem;
     N1: TUniMenuItem;
+    MainMenuImage: TUniNativeImageList;
     procedure actDeleteExecute(Sender: TObject);
     procedure actInsertExecute(Sender: TObject);
     procedure actUpdateExecute(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
+    procedure GridColumnActionClick(Column: TUniDBGridColumn;
+      ButtonId: Integer);
+    procedure QueryApiKeyGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     FClientID: Integer;
     procedure SetClientID(const Value: Integer);
@@ -66,17 +71,30 @@ uses
 
 procedure TAPIFormT.actDeleteExecute(Sender: TObject);
 begin
-  Sql.Open('''
-    declare @R      int
+  MessageDlg('Вы действительно хотите удалить ключ? ' , mtConfirmation, mbYesNo,
 
-    exec @R =ApiKeyDelete
-              @ApiKeysID = :ApiKeysID
-    select @R as R
-  ''', ['ApiKeysID'], [QueryApiKeysID.AsInteger]
+  procedure(Sender: TComponent; Res: Integer)
+  begin
+    case Res of
+      mrYes :
+      begin
+        Sql.Open('''
+          declare @R      int
+
+          exec @R =ApiKeyDelete
+                    @ApiKeysID = :ApiKeysID
+          select @R as R
+        ''', ['ApiKeysID'], [QueryApiKeysID.AsInteger]
+        );
+
+        if Sql.f('R').value = 0 then
+          DataRefresh;
+      end;
+      mrNo  : Exit;
+    end;
+  end
+
   );
-
-  if Sql.f('R').value = 0 then
-    DataRefresh;
 end;
 
 procedure TAPIFormT.actInsertExecute(Sender: TObject);
@@ -143,10 +161,32 @@ begin
   LogInfo('TAPIKeyT.EditCallBack end');
 end;
 
+procedure TAPIFormT.GridColumnActionClick(Column: TUniDBGridColumn;
+  ButtonId: Integer);
+begin
+  inherited;
+  //
+end;
+
 procedure TAPIFormT.MenuEnabled;
 begin
   actUpdate.Enabled := (Query.recordcount > 0) and (actUpdate.tag = 1);
   actDelete.Enabled := (Query.recordcount > 0) and (actDelete.tag = 1);
+end;
+
+procedure TAPIFormT.QueryApiKeyGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+var
+  Value: string;
+begin
+  Value := Sender.AsString;
+  Text :=
+    '<span class="key-text">' +
+    Value +
+    '<button class="copy-key-button" onclick="copyMd5(this)">&#xf0ea; md5' +
+//    '<i class="fa fa-key"></i>' +
+    '</button>' +
+    '</span>';
 end;
 
 procedure TAPIFormT.SetClientID(const Value: Integer);
@@ -157,12 +197,27 @@ begin
 end;
 
 procedure TAPIFormT.UniFrameCreate(Sender: TObject);
+var js: string;
 begin
   ParentMenu := 'TClientsT.actApi';
 
   inherited;
 
   MenuEnabled;
+
+  // функция для копирования текста в md5
+  js := '''
+    copyMd5 = function(button) {
+      const text = button.parentElement.firstChild.textContent;
+      const hash = CryptoJS.MD5(text).toString();
+      navigator.clipboard.writeText(hash).then(() => {
+          button.innerHTML = "✔"; // Меняем иконку на галочку
+          setTimeout(() => button.innerHTML = "&#xf0ea; md5", 1500); // Возвращаем иконку копирования
+      }).catch(err => console.error('Ошибка копирования:', err));
+
+    } ;
+  ''';
+  UniSession.JSCode(js);
 end;
 
 initialization

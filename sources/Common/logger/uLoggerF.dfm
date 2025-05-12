@@ -114,7 +114,7 @@ object LoggerF: TLoggerF
       end
       object btnCancel: TUniBitBtn
         AlignWithMargins = True
-        Left = 332
+        Left = 340
         Top = 272
         Width = 103
         Height = 38

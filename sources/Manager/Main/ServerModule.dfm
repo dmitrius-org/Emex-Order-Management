@@ -11,6 +11,10 @@ object UniServerModule: TUniServerModule
   SuppressErrors = [errObjectNotFound]
   Bindings = <>
   MainFormDisplayMode = mfPage
+  ServerMessages.UnavailableErrMsg = #1054#1096#1080#1073#1082#1072' '#1089#1074#1103#1079#1080'.'
+  ServerMessages.LoadingMessage = #1047#1072#1075#1088#1091#1079#1082#1072'..'
+  ServerMessages.InvalidSessionMessage = #1048#1089#1090#1077#1082#1083#1086' '#1074#1088#1077#1084#1103' '#1086#1078#1080#1076#1072#1085#1080#1103' '#1089#1077#1072#1085#1089#1072'.'
+  ServerMessages.TerminateMessage = #1042#1077#1073'-'#1089#1077#1072#1085#1089' '#1079#1072#1074#1077#1088#1096#1077#1085'.'
   ExtLocale = 'ru'
   ServerLimits.MaxSessions = 500
   ServerLimits.MaxConnections = 1000
@@ -22,7 +26,7 @@ object UniServerModule: TUniServerModule
   SSL.SSLOptions.Mode = sslmUnassigned
   SSL.SSLOptions.VerifyMode = []
   SSL.SSLOptions.VerifyDepth = 0
-  Options = [soAutoPlatformSwitch, soWipeShadowSessions, soLogSessionCreate, soLogSessionTerminate, soDontCompressDownloads, soTerminateOnSession, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
+  Options = [soAutoPlatformSwitch, soRestartSessionOnTimeout, soWipeShadowSessions, soLogSessionCreate, soLogSessionTerminate, soDontCompressDownloads, soTerminateOnSession, soEnableSessionMonitor, soEnableSessionMonitorAdmin]
   ServerLogger.Options = [logIndyExceptions, logSessionExceptions, logIndySSLExceptions, logIndySSLCryptoExceptions]
   ConnectionFailureRecovery.DetailedLog = True
   ConnectionFailureRecovery.FullSequenceLog = True
