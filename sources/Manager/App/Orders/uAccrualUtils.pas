@@ -9,7 +9,7 @@ uses  Windows, Messages, SysUtils, Variants, Classes, Graphics,
       uniGUIClasses, uniGUIFrame, uniGUIBaseClasses,
       uniGUIDialogs,
 
-      FireDAC.Comp.Client, FireDAC.Comp.Script,
+      FireDAC.Comp.Client, FireDAC.Comp.Script ,FireDAC.Stan.Param,
 
       uCommonType, uSqlUtils, uEmexUtils, Quick.Logger;
 type
@@ -20,6 +20,7 @@ type
     FLogger: tLogger;
     function GetLogger: tLogger;
     procedure SetLogger(const Value: tLogger);
+
   published
     /// <summary>
     /// InsertPartToBasketByPartFromMark - Помещение запчастей в корзину на основе меток tMarks
@@ -45,12 +46,12 @@ type
     /// EmexOrderStateSync - Синхронизация статусов
     /// </summary>
     procedure EmexOrderStateSync();
-
   public
     constructor Create(Value: TFDConnection); overload;
     destructor Destroy; override;
 
     procedure Call(MethodName: string);
+
     property Logger: tLogger read GetLogger write SetLogger;
   end;
 
@@ -304,8 +305,7 @@ begin
       t := TAccrualThread.Create(self, ActionID);
       t.logger:= GetCurrentLogData();//UniMainModule.ALogger;
       t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-      t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
-      t.Resume; // непосредственно ручной запуск потока
+      t.Start; // непосредственно ручной запуск потока
     end
     else
     begin
@@ -334,7 +334,7 @@ begin
                         '             @ActionID = :ActionID'+
                         ' select @r as retcode             ';
 
-      Query.ParamByName('ActionID').Value := AActionID;
+      Query.ParamByName('ActionID').AsInteger := AActionID;
       Query.Open;
 
       Result := Query.FieldByName('retcode').Value;
@@ -357,7 +357,7 @@ begin
   Query := TFDQuery.Create(nil);
   Try
     Query.Connection := FConnection;
-    result:=0;
+
     FRetVal.Clear;
     begin
       // Откат протокола
@@ -500,7 +500,7 @@ end;
 
 constructor TAccrualThread.Create(AAccrual: TAccrual; AActionID: Integer);
 begin
-  inherited Create(False);
+  inherited Create(True); // поток создаётся приостановленным
 
   FAccrual := AAccrual;
   FActionID:= AActionID;
@@ -548,9 +548,9 @@ begin
 
         FLogger.Debug('TAccrualThread.Execute ActionMetod ActionID: ' + qActionMetod.FieldByName('ActionID').AsString);
 
-        qMetod.ParamByName('ActionID').Value:= qActionMetod.FieldByName('ActionID').AsInteger;
-        qMetod.ParamByName('StateID').Value := qActionMetod.FieldByName('StateID').AsInteger;
-        qMetod.ParamByName('MetodType').Value:= Integer(tInstrumentMetodType.mtProc);
+        qMetod.ParamByName('ActionID').AsInteger:= qActionMetod.FieldByName('ActionID').AsInteger;
+        qMetod.ParamByName('StateID').AsInteger := qActionMetod.FieldByName('StateID').AsInteger;
+        qMetod.ParamByName('MetodType').AsInteger:= Integer(tInstrumentMetodType.mtProc);
         qMetod.Open;
 
         FLogger.Debug('TAccrualThread.Проверка наличия настроенной под действием процедур: ' + (qMetod.RecordCount > 0).ToString(True));

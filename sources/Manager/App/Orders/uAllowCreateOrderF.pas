@@ -32,8 +32,6 @@ type
     procedure UniTimerTimer(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
   private
-    FAction: TFormAction;
-
     /// <summary>
     ///  DataCheck - проверка заполнения обязательных полей
     ///</summary>
@@ -67,8 +65,6 @@ begin
 end;
 
 procedure TAllowCreateOrderF.btnOkClick(Sender: TObject);
- var sqltext: string;
-     Field:string;
 begin
   btnOk.Enabled := False;
   UniSession.Synchronize();

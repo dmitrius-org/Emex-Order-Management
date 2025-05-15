@@ -84,9 +84,9 @@ type
     ///<summary>
     ///  FormJSNames - список форм
     ///</summary>
-    FormJSNames : TStrings;
+//    FormJSNames : TStrings;
 
-    function CreateImageIndex(filename: string): Integer;
+//    function CreateImageIndex(filename: string): Integer;
 
     procedure SetMainMenuMicroName;
 
@@ -142,10 +142,10 @@ begin
   pcMain.ActivePageIndex := 1;
 end;
 
-function TMainForm.CreateImageIndex(filename: string): Integer;
-begin
-  Result := ImageList.AddIconFile(filename);
-end;
+//function TMainForm.CreateImageIndex(filename: string): Integer;
+//begin
+//  Result := ImageList.AddIconFile(filename);
+//end;
 
 procedure TMainForm.MainMenuClick(Sender: TObject);
 var  Nd : TUniTreeNode;

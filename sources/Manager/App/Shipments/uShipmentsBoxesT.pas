@@ -75,7 +75,7 @@ type
     procedure QueryWeightKGSGetText(Sender: TField; var Text: string; DisplayText: Boolean);
   private
     FTransporterNumber: String;
-    FGroupFieldValue: Integer;
+//    FGroupFieldValue: Integer;
     FTransporterPhysicalWeight: Real;
     FTransporterVolumetricWeight: Real;
     FWeightKGS, FWeightKGSOld: Real;

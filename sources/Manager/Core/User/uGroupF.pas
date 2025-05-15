@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn,
+  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn, FireDAC.Stan.Param,
   uniGUIBaseClasses, uniPanel, uniEdit, uniCheckBox, uniFieldSet, uniLabel,
   uniDateTimePicker, uCommonType;
 
@@ -93,7 +93,7 @@ begin
                ['Brief','Name'],
                [edtBrief.Text, edtName.Text]);
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
       FID := UniMainModule.Query.FieldByName('GroupID').AsInteger;
     end;
     acUpdate:
@@ -109,9 +109,9 @@ begin
                                       ' select @r as retcode               '+
                                       ' ';
 
-      UniMainModule.Query.ParamByName('GroupID').Value := FID;
-      UniMainModule.Query.ParamByName('Brief').Value := edtBrief.Text;
-      UniMainModule.Query.ParamByName('Name').Value := edtName.Text;
+      UniMainModule.Query.ParamByName('GroupID').AsInteger := FID;
+      UniMainModule.Query.ParamByName('Brief').AsString := edtBrief.Text;
+      UniMainModule.Query.ParamByName('Name').AsString := edtName.Text;
       UniMainModule.Query.Open;
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
     end;
@@ -126,7 +126,7 @@ begin
                                       ' select @r as retcode               '+
                                       ' ';
 
-      UniMainModule.Query.ParamByName('GroupID').Value := FID;
+      UniMainModule.Query.ParamByName('GroupID').AsInteger := FID;
       UniMainModule.Query.Open;
       RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
     end;
@@ -151,7 +151,7 @@ begin
                                   '   from vGroups g   '+
                                   '  where g.GroupID = :GroupID '+
                                   ' ';
-  UniMainModule.Query.ParamByName('GroupID').Value := FID;
+  UniMainModule.Query.ParamByName('GroupID').AsInteger := FID;
   UniMainModule.Query.Open;
 
   // аудит

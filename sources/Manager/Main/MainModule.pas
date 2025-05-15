@@ -21,7 +21,7 @@ uses
   Quick.Logger,
   Quick.Logger.ExceptionHook,
   Quick.Logger.Provider.Files,
-  Quick.Logger.Provider.ADODB;
+  Quick.Logger.Provider.ADODB, uniImageList;
 
 type
   TUniMainModule = class(TUniGUIMainModule)
@@ -29,6 +29,8 @@ type
     Query: TFDQuery;
     FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
     FDMoniSQl: TFDMoniCustomClientLink;
+    BaseImage: TUniNativeImageList;
+    BaseImage16: TUniNativeImageList;
 
     procedure UniGUIMainModuleDestroy(Sender: TObject);
     procedure UniGUIMainModuleBeforeLogin(Sender: TObject; var Handled:Boolean);
@@ -233,7 +235,6 @@ function TUniMainModule.dbConnect(AUser: string; APass: string; ABefore: Boolean
 begin
   UniServerModule.Logger.AddLog('TUniMainModule.dbConnect', 'Begin');
   try
-    result:=False;
     try
       FDConnection.ConnectionDefName:='Connection';
       UniServerModule.Logger.AddLog('TUniMainModule FDConnection DriverID', FDManager.ConnectionDefs.FindConnectionDef(FDConnection.ConnectionDefName).Params.Values['DriverID']);
@@ -264,7 +265,7 @@ begin
       AUserID  := FDConnection.ExecSQLScalar('select dbo.GetUserID()');
       AAppName := AppManager;
 
-      UniSession.UserString := Title + ' - ' + AUser;
+      UniSession.UserString := FDManager.ConnectionDefs.FindConnectionDef('Application').Params.Values['ApplicationName'] + ' - ' + AUser;
 
       Audit.Add(TObjectType.otUser, AUserID, TFormAction.acLogin, 'Вход в систему');
 

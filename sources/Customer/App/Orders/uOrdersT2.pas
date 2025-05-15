@@ -246,7 +246,7 @@ uses
   MainModule, uEmexUtils, uSqlUtils, uMainVar, uOrdersProtocol_T, Main,
   ServerModule, uError_T, uUtils.Grid, uMessengerF, uUtils.Logger;
 
-  var screenmask: Boolean;
+//  var screenmask: Boolean;
   var Marks: TMarks;
 
 {$R *.dfm}
@@ -518,9 +518,6 @@ begin
 end;
 
 procedure TOrdersT2.GridRefresh;
-var FClient:string;
-    FStatus :string;
-    FPriceLogo :string;
 begin
   log('GridOpen Begin', etInfo);
 
@@ -765,7 +762,7 @@ begin
   SetMenuVisible(FIsNotification);
 end;
 
-procedure TOrdersT2.SetMenuVisible(AVisible: boolean); var bJSName: string;
+procedure TOrdersT2.SetMenuVisible(AVisible: boolean);
 begin
   if AVisible then
   begin

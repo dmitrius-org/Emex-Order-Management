@@ -3,11 +3,8 @@ unit uAuditUtils;
 interface
 
 uses System.SysUtils, //Vcl.Dialogs, //System.Variants,
-
-     FireDAC.Comp.Client, FireDAC.Comp.Script,
-
+     FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Param,
      uniGUIApplication,
-
      uCommonType;
 
 Type
@@ -16,10 +13,9 @@ Type
   /// </summary>
   TAudit = class
     private
-      var FConnection: TFDConnection;
-      var FRetVal: TRetVal;
-    private
-    procedure SetRetVal(const Value: TRetVal);
+      FConnection: TFDConnection;
+      FRetVal: TRetVal;
+      procedure SetRetVal(const Value: TRetVal);
 //      function GetConnection: TFDConnection;
 //      procedure SetConnection(const Value: TFDConnection);
     public
@@ -27,8 +23,8 @@ Type
       destructor Destroy; override;
 
       property RetVal: TRetVal read FRetVal write SetRetVal;
-
       //property Connection: TFDConnection read GetConnection write SetConnection;
+
       /// <summary>
       /// Add - добавление аудита
       /// AObjectID     - ИД объекта по которому ведется аудит
@@ -36,19 +32,19 @@ Type
       /// AActionID     - ИД выполняемое дейстие из tAction
       /// AComment      - Комментарий
       /// </summary>
-      function Add(AObjectTypeID:TObjectType; AObjectID: Integer;
-                   AActionID: TFormAction;
-                   AComment: string;
-                   AUserID: integer = 0;
-                   AHostInfoID: string = ''): Integer;   //
-
+      procedure Add(AObjectTypeID: TObjectType;
+                    AObjectID: Integer;
+                    AActionID: TFormAction;
+                    AComment: string;
+                    AUserID: integer = 0;
+                    AHostInfoID: string = '');   //
   end;
 
   function Audit: TAudit;
 
 implementation
 
-uses  MainModule;
+uses MainModule;
 
 function Audit: TAudit;
 begin
@@ -60,25 +56,23 @@ end;
 
 { TAudit }
 
-function TAudit.Add(
-  AObjectTypeID:TObjectType;
-  AObjectID:Integer;
+procedure  TAudit.Add(
+  AObjectTypeID: TObjectType;
+  AObjectID: Integer;
   AActionID: TFormAction;
   AComment: string;
   AUserID: integer;
-  AHostInfoID: string): integer;
-var Qry: TFDQuery;
-Begin
+  AHostInfoID: string);
+var
+  Qry: TFDQuery;
+begin
+  Qry := TFDQuery.Create(nil);
   try
-    Result:= 0;
-    if AHostInfoID = '' then AHostInfoID := UniSession.RemoteIP;
-    
+    if AHostInfoID = '' then
+      AHostInfoID := UniSession.RemoteIP;
 
-    Qry:= TFDQuery.Create(nil);
-    qry.Connection:= FConnection;
-
-    qry.Close;
-    qry.SQL.Text := '''
+    Qry.Connection := FConnection;
+    Qry.SQL.Text := '''
      declare @R      int
             ,@AuditID numeric(18, 0)
 
@@ -93,39 +87,34 @@ Begin
 
      select @r as retcode, @AuditID as AuditID
     ''';
-    qry.ParamByName('ObjectID').Value     := AObjectID;
-    qry.ParamByName('ObjectTypeID').Value := AObjectTypeID ;
-    qry.ParamByName('ActionID').Value     := AActionID;
-    qry.ParamByName('Comment').Value      := AComment;
-    qry.ParamByName('UserID').Value       := AUserID;
-    qry.ParamByName('HostInfoID').Value   := AHostInfoID;
-    qry.Open;
-    RetVal.Code := qry.FieldByName('retcode').Value;
 
+    Qry.ParamByName('ObjectID').AsInteger     := AObjectID;
+    Qry.ParamByName('ObjectTypeID').AsInteger := Ord(AObjectTypeID);
+    Qry.ParamByName('ActionID').AsInteger     := Ord(AActionID);
+    Qry.ParamByName('Comment').AsString       := AComment;
+    Qry.ParamByName('UserID').AsInteger       := AUserID;
+    Qry.ParamByName('HostInfoID').AsString    := AHostInfoID;
 
-    if RetVal.Code = 0 then
-    begin
-      Result:= qry.FieldByName('AuditID').Value;
-    end
-    else
-    begin
-      Result:=0
-    end;
-    qry.Close;
+    Qry.Open;
+
+    RetVal.Code := Qry.FieldByName('retcode').AsInteger;
+//    if RetVal.Code = 0 then
+//      Result := Qry.FieldByName('AuditID').AsInteger
+//    else
+//      Result := 0;
   finally
-   FreeAndNil(Qry);
-  end
-
+    FreeAndNil(Qry);
+  end;
 end;
 
 constructor TAudit.Create(AConnection: TFDConnection);
 begin
-  inherited Create();
+  inherited Create;
 
   if Assigned(AConnection) then
-    FConnection:=AConnection;
+    FConnection := AConnection;
 
-  FRetVal:= TRetVal.Create(FConnection);
+  FRetVal := TRetVal.Create(FConnection);
 end;
 
 destructor TAudit.Destroy;
@@ -140,3 +129,4 @@ begin
 end;
 
 end.
+

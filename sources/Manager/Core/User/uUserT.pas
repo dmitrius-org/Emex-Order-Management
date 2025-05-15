@@ -29,7 +29,6 @@ type
     QueryupdDatetime: TSQLTimeStampField;
     QueryisAdmin: TBooleanField;
     QueryisBlock: TBooleanField;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -40,7 +39,6 @@ type
     N2: TUniMenuItem;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -57,7 +55,6 @@ type
     ToolBar: TUniToolBar;
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
     GridUsers: TUniDBGrid;
@@ -216,8 +213,8 @@ begin
 end;
 
 procedure TUsersT.actLookupExecute(Sender: TObject);
-var BM : TBookmark;
-    i, id:Integer;
+var //BM : TBookmark;
+    i:Integer;
 begin
   if GridUsers.SelectedRows.Count>0 then
   begin

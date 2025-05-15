@@ -111,9 +111,12 @@ begin
 
      --   
     ,ID                              numeric(18,0)  -- техническое поле 
-    ,UserID                          numeric(18,0) default dbo.GetUserID()
+    ,UserID                          numeric(18,0)  
     ,inDatetime                      datetime      default GetDate()--
     ,updDatetime                     datetime      default GetDate()--
+
+    ,HUserID                         numeric(18,0) 
+    ,HinDatetime                     datetime      default GetDate()     
     );
 
     create index ao1 on History.tOrders(OrderID);

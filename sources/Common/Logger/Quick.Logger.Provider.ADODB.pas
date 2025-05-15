@@ -54,6 +54,7 @@ type
     fUserName : string;
     fHost : string;
     fUserID: string;
+    fThreadId: string;
   public
     property EventDate : string read fEventDate write fEventDate;
     property EventType : string read fEventType write fEventType;
@@ -65,6 +66,7 @@ type
     property UserName : string read fUserName write fUserName;
     property UserID : string read fUserID write fUserID;
     property Host : string read fHost write fHost;
+    property ThreadId : string read fThreadId write fThreadId;
   end;
 
   TDBProvider = (dbMSAccess2000, dbMSAccess2007, dbMSSQL, dbMSSQLnc10, dbMSSQLnc11, dbAS400);
@@ -103,8 +105,8 @@ type
     fDBConfig : TDBConfig;
     fFieldsMapping : TFieldsMapping;
     function CreateConnectionString : string;
-    function CreateTable : Boolean;
-    procedure AddColumnToTable(const aColumnName, aDataType : string);
+//    function CreateTable : Boolean;
+//    procedure AddColumnToTable(const aColumnName, aDataType : string);
     procedure AddToQuery(var aFields, aValues : string; const aNewField, aNewValue : string); overload;
     //procedure AddToQuery(var aFields, aValues : string; const aNewField : string; aNewValue : Integer); overload;
   public
@@ -143,6 +145,7 @@ begin
   fFieldsMapping.UserName := 'UserName';
   fFieldsMapping.UserID := 'UserID';
   fFieldsMapping.Host := 'Host';
+  fFieldsMapping.ThreadId := 'ThreadId';
   //set default db config
   fDBConfig := TDBConfig.Create;
   fDBConfig.Provider := dbMSSQL;
@@ -161,8 +164,8 @@ begin
                               fDBConfig.Server]);
 end;
 
-procedure TLogADODBProvider.AddColumnToTable(const aColumnName, aDataType : string);
-begin
+//procedure TLogADODBProvider.AddColumnToTable(const aColumnName, aDataType : string);
+//begin
 //  fDBQuery.SQL.Clear;
 //  //fDBQuery.SQL.Add(Format('IF COL_LENGTH(''%s'', ''%s'') IS NULL',[fDBConfig.Table,aColumnName]));
 //  fDBQuery.SQL.Add('IF COL_LENGTH(:LOGTABLE,:NEWFIELD) IS NULL');
@@ -173,10 +176,10 @@ begin
 //  fDBQuery.Parameters.ParamByName('LOGTABLE').Value := fDBConfig.Table;
 //  fDBQuery.Parameters.ParamByName('NEWFIELD').Value := aColumnName;
 //  if fDBQuery.ExecSQL = 0 then raise Exception.Create('Error creating table fields');
-end;
+//end;
 
-function TLogADODBProvider.CreateTable: Boolean;
-begin
+//function TLogADODBProvider.CreateTable: Boolean;
+//begin
 //  fDBQuery.SQL.Clear;
 //  fDBQuery.SQL.Add('IF NOT EXISTS (SELECT name FROM sys.tables WHERE name = :LOGTABLE)');
 //  fDBQuery.SQL.Add(Format('CREATE TABLE %s (',[fDBConfig.Table]));
@@ -193,7 +196,7 @@ begin
 //  if iiUserName in IncludedInfo then AddColumnToTable(fFieldsMapping.UserName,'varchar(50)');
 //  if iiAppName in IncludedInfo then AddColumnToTable(fFieldsMapping.AppName,'varchar(70)');
 //  Result := True;
-end;
+//end;
 
 destructor TLogADODBProvider.Destroy;
 begin
@@ -244,13 +247,14 @@ begin
 
   AddToQuery(fields,values,fFieldsMapping.EventType,EventTypeName[cLogItem.EventType]);
 
-  if iiHost in IncludedInfo        then AddToQuery(fields,values,fFieldsMapping.Host, Host);
-  if iiAppName in IncludedInfo     then AddToQuery(fields,values,fFieldsMapping.AppName, AppName);
-  if iiEnvironment in IncludedInfo then AddToQuery(fields,values,fFieldsMapping.Environment,Environment);
-  if iiOSVersion in IncludedInfo   then AddToQuery(fields,values,fFieldsMapping.OSVersion,OS);
+  if iiHost in IncludedInfo        then AddToQuery(fields,values,fFieldsMapping.Host,        Host);
+  if iiAppName in IncludedInfo     then AddToQuery(fields,values,fFieldsMapping.AppName,     AppName);
+  if iiEnvironment in IncludedInfo then AddToQuery(fields,values,fFieldsMapping.Environment, Environment);
+  if iiOSVersion in IncludedInfo   then AddToQuery(fields,values,fFieldsMapping.OSVersion,   OS);
   if iiPlatform in IncludedInfo    then AddToQuery(fields,values,fFieldsMapping.PlatformInfo,PlatformInfo);
-  if iiUserName in IncludedInfo    then AddToQuery(fields,values,fFieldsMapping.UserName, UserName);
-  if iiUserID in IncludedInfo      then AddToQuery(fields,values,fFieldsMapping.UserID, UserID.ToString);
+  if iiUserName in IncludedInfo    then AddToQuery(fields,values,fFieldsMapping.UserName,    UserName);
+  if iiUserID in IncludedInfo      then AddToQuery(fields,values,fFieldsMapping.UserID,      UserID.ToString);
+  if iiThreadId in IncludedInfo   then AddToQuery(fields,values,fFieldsMapping.ThreadId,    cLogItem.ThreadId.ToString);
 
   AddToQuery(fields,values,fFieldsMapping.Msg,StringReplace(cLogItem.Msg,'''','"',[rfReplaceAll]));
 

@@ -103,9 +103,6 @@ Coordinates=625,826,141,36
 [QueryShipmentsType]
 Coordinates=625,881,139,36
 
-[UniImageListAdapter]
-Coordinates=625,936,135,36
-
 [gbFilter]
 Coordinates=801,782,58,36
 
@@ -253,9 +250,6 @@ Coordinates=1027,661,124,36
 [QueryTransporterAmount]
 Coordinates=1027,716,160,36
 
-[UniImageList32]
-Coordinates=1027,826,104,36
-
 [QueryShipmentsAmount]
 Coordinates=1027,881,154,36
 
@@ -272,9 +266,6 @@ Coordinates=1027,1046,40,36
 [actSetTransporterData]
 Coordinates=1027,1101,145,36
 
-[UniImageList]
-Coordinates=928,1121,90,36
-
 []
-Coordinates=10,782,66,36
+Coordinates=625,936,135,36
 

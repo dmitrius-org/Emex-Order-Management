@@ -51,14 +51,14 @@
 
 
 .menu-item-cancel {
-    background-color: #f8d7da; /* Зеленоватый оттенок */
+    background-color: #f8d7da;
     height: 25px; /* Увеличенная высота */
     line-height: 25px; /* Центрирование текста по вертикали */
     font-weight: bold; /* Жирный шрифт */
 }
 
 .menu-item-cancel:hover {
-    background-color: #f5c6cb; /* Более светлый зеленый при наведении */
+    background-color: #f5c6cb; 
 }
 
 

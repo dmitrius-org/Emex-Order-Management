@@ -2,9 +2,9 @@
 
 interface
 
-uses System.SysUtils, System.UITypes, Variants,  Data.DB,//System.Rtti,
+uses System.SysUtils, System.UITypes, Variants,  Data.DB, FireDAC.Stan.Param,
      FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Intf,
-     FireDAC.Stan.Async,  System.Threading, uUtils.Varriant
+     FireDAC.Stan.Async,  System.Threading, uUtils.Varriant, System.Classes
     // uniGUIForm, uniGUITypes
      ;
 
@@ -17,8 +17,8 @@ Type
     var FQuery: TFDQuery;
     var FConnection: TFDConnection;
 
-    function GetConnection: TFDConnection;
-    procedure SetConnection(const Value: TFDConnection);
+//    function GetConnection: TFDConnection;
+//    procedure SetConnection(const Value: TFDConnection);
     function GetCount: integer;
 
     procedure Prepare(AQuery: TFDQuery; AParams: array of string; AArgs: array of variant);
@@ -84,10 +84,10 @@ begin
                        FROM [tSettings] with (Nolock index=ao2)
                       WHERE Brief = :ASetting), '') as val
     ''';
-    Query.ParamByName('ASetting').Value := ASetting;
+    Query.ParamByName('ASetting').AsString := ASetting;
     Query.Open();
 
-    result:= Query.FieldByName('Val').Value;
+    result:= Query.FieldByName('Val').AsString;
     Query.Close;
   Finally
     FreeAndNil(Query);
@@ -166,7 +166,7 @@ begin
 end;
 
 procedure TSql.ExecAsync(ASql: String; AParams: array of string; AArgs: array of variant);
-VAR SQL: string; FQueryTMP:TFDQuery;
+var FQueryTMP:TFDQuery;
 begin
 
   FQueryTMP := TFDQuery.Create(nil);
@@ -222,10 +222,10 @@ begin
   end;
 end;
 
-function TSql.GetConnection: TFDConnection;
-begin
-  Result:= FConnection;
-end;
+//function TSql.GetConnection: TFDConnection;
+//begin
+//  Result:= FConnection;
+//end;
 
 function TSql.GetCount: integer;
 begin
@@ -235,16 +235,16 @@ begin
     Result := 0;
 end;
 
-procedure TSql.SetConnection(const Value: TFDConnection);
-begin
-  if Assigned(Value) then
-  begin
-    FConnection:= Value;
-
-    if not Assigned(FQuery) then FQuery := TFDQuery.Create(nil);
-
-    FQuery.Connection :=FConnection;
-  end;
-end;
+//procedure TSql.SetConnection(const Value: TFDConnection);
+//begin
+//  if Assigned(Value) then
+//  begin
+//    FConnection:= Value;
+//
+//    if not Assigned(FQuery) then FQuery := TFDQuery.Create(nil);
+//
+//    FQuery.Connection :=FConnection;
+//  end;
+//end;
 
 end.

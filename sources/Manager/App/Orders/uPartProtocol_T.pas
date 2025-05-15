@@ -48,7 +48,6 @@ type
     procedure UniFormCreate(Sender: TObject);
   private
     FID: integer;
-    FFilterTextProtocol: string;
 
     procedure SetID(const Value: integer);
 
@@ -82,11 +81,10 @@ begin
 end;
 
 procedure TPartProtocol_T.DataRefresh;
-var FProtocol:string;
 begin
-    ProtocolQuery.Close();
-    ProtocolQuery.ParamByName('OrderID').AsLargeInt := FID;
-    ProtocolQuery.Open();
+  ProtocolQuery.Close();
+  ProtocolQuery.ParamByName('OrderID').AsLargeInt := FID;
+  ProtocolQuery.Open();
 end;
 
 procedure TPartProtocol_T.GridAjaxEvent(Sender: TComponent; EventName: string;
@@ -163,7 +161,7 @@ begin
   GridExt.SortColumnCreate(Grid);
 end;
 
-procedure TPartProtocol_T.UniFormShow(Sender: TObject);  var i: Integer;
+procedure TPartProtocol_T.UniFormShow(Sender: TObject);
 begin
 // sql.Open('Select OrderID, Manufacturer, DetailNumber from tOrders (nolock) where OrderID=:OrderID',['OrderID'] , [FID]);
 //

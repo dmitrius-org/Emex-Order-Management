@@ -44,7 +44,6 @@ type
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
     UniToolButton4: TUniToolButton;
-    ImageList16: TUniImageList;
     UniPanel1: TUniPanel;
     Grid: TUniDBGrid;
     ActionList: TUniActionList;

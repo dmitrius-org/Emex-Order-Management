@@ -32,6 +32,10 @@ object HomeF: THomeF
       Layout = 'fit'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 256
+      ExplicitHeight = 128
     end
   end
 end

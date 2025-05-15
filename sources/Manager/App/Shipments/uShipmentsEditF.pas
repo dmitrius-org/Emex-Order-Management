@@ -95,7 +95,7 @@ end;
 
 procedure TShipmentsEditF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
+//     Field:string;
 begin
   DataCheck();
 

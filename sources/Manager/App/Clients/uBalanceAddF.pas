@@ -11,7 +11,7 @@ uses
   uniDBGrid, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
+  FireDAC.Comp.Client, uniToolBar, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, uniWidgets, uniDBComboBox,
   uniDBLookupComboBox, Vcl.Menus, uniMemo, uUniExComboBox;
 
@@ -26,7 +26,6 @@ type
     lblName: TUniLabel;
     tabAudit: TUniTabSheet;
     Query: TFDQuery;
-    ImageList16: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;

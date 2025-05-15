@@ -30,7 +30,7 @@ type
     { Private declarations }
 
     function dbConnect(): Boolean;
-    function ClientRegistrationRequest(AHash: string): Integer;
+//    function ClientRegistrationRequest(AHash: string): Integer;
 
   protected
     procedure FirstInit; override;
@@ -173,25 +173,24 @@ begin
   FDManager.Close;
 end;
 
-function TUniServerModule.ClientRegistrationRequest(AHash: string): Integer;
-var Query: TFDQuery;
-begin
-  Result := 0;
-  try  
-    Query:= TFDQuery.Create(nil);
-    Query.Connection := FDConnection;
-    Query.SQL.Text:=
-             ' declare @R int '+
-             ' exec @R= ClientRegistrationConfirmed @Hash = :Hash '+
-             ' Select @R as R';
-             
-    Query.ParamByName('Hash').AsString := AHash;
-    Query.Open();
-    Result := Query.FieldByName('R').AsInteger
-  finally
-    FreeAndNil(Query);	
-  end;
-end;
+//function TUniServerModule.ClientRegistrationRequest(AHash: string): Integer;
+//var Query: TFDQuery;
+//begin
+//  try
+//    Query:= TFDQuery.Create(nil);
+//    Query.Connection := FDConnection;
+//    Query.SQL.Text:=
+//             ' declare @R int '+
+//             ' exec @R= ClientRegistrationConfirmed @Hash = :Hash '+
+//             ' Select @R as R';
+//
+//    Query.ParamByName('Hash').AsString := AHash;
+//    Query.Open();
+//    Result := Query.FieldByName('R').AsInteger
+//  finally
+//    FreeAndNil(Query);
+//  end;
+//end;
 
 procedure ExploreWeb(page:PChar);
 var Returnvalue: Integer;

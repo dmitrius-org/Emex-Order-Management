@@ -19,7 +19,6 @@ type
   TSuppliersT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -28,7 +27,6 @@ type
     N1: TUniMenuItem;
     N2: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -67,8 +65,6 @@ type
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
-    FAction: tFormaction;
-
     procedure DataRefresh();
   public
     { Public declarations }

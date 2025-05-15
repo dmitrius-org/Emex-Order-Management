@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, FireDAC.Stan.Param,
   uniGUIClasses, uniGUIForm, uniPanel, uniEdit, uniGUIBaseClasses, uniLabel,
   uniButton;
 

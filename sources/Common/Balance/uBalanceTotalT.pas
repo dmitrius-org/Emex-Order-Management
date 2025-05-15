@@ -50,8 +50,6 @@ type
     UniPanel1: TUniPanel;
     actMain: TUniActionList;
     actRefreshAll: TAction;
-    UniImageList: TUniImageList;
-    UniImageListAdapter: TUniImageListAdapter;
     actShippmentReportPrint: TAction;
     qShipmentsReceiptDate: TSQLTimeStampField;
     qShipmentsReceiptDate2: TSQLTimeStampField;
@@ -59,6 +57,7 @@ type
     actLegend: TAction;
     QuerySep: TStringField;
     qShipmentsSep: TStringField;
+    ImageList: TUniNativeImageList;
     procedure GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actShippmentReportPrintExecute(Sender: TObject);

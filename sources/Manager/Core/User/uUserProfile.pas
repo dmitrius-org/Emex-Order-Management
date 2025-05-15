@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, FireDAC.Stan.Param,
   uniGUIClasses, uniGUIForm, uCommonType, uniLabel, uniGUIBaseClasses, uniEdit,
   uniButton, uniBitBtn, uniPanel;
 
@@ -86,7 +86,7 @@ begin
                 Email.Text]
                 );
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
     end;
   end;
 
@@ -107,7 +107,7 @@ begin
                                   '   from vUsers u   '+
                                   '  where u.UserID = :UserID '+
                                   ' ';
-  UniMainModule.Query.ParamByName('UserID').Value := FID;
+  UniMainModule.Query.ParamByName('UserID').AsInteger := FID;
   UniMainModule.Query.Open;
 
 

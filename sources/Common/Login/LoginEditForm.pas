@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, FireDAC.Stan.Param,
   uniGUIClasses, uniGUIForm, uniPanel, uniEdit, uniGUIBaseClasses, uniLabel,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
   uniButton;
@@ -76,10 +76,10 @@ begin
                                   '       ,dbo.GetLogin() as USR    '+
                                   ' ';
 
-  UniMainModule.Query.ParamByName('OldPas').Value := edtPas.Text;
-  UniMainModule.Query.ParamByName('NewPas').Value := edtNewPas.Text;
+  UniMainModule.Query.ParamByName('OldPas').AsString := edtPas.Text;
+  UniMainModule.Query.ParamByName('NewPas').AsString := edtNewPas.Text;
   UniMainModule.Query.Open;
-  RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+  RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
 
   if RetVal.Code = 0 then
   begin

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
-  Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
+  Controls, Forms, uniGUITypes, uniGUIAbstractClasses, FireDAC.Stan.Param,
   uniGUIClasses, uniGUIFrame, uniTreeView, uniGUIBaseClasses, uniPanel,
   Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList, uniImageList;
 
@@ -43,8 +43,8 @@ type
     N2: TUniMenuItem;
     ActInstrumentDelete: TAction;
     N3: TUniMenuItem;
-    UniImageList: TUniImageList;
     ActInstrumentShow: TAction;
+    InstrumentImage: TUniNativeImageList;
     procedure twInstrumentCellContextClick(ANode: TUniTreeNode; X, Y: Integer);
     procedure ActInstrumentAddExecute(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
@@ -62,7 +62,7 @@ type
     FState: Pointer;
     FAction: Pointer;
 
-    function FindNodeByID(AID: Integer): TUniTreeNode;
+//    function FindNodeByID(AID: Integer): TUniTreeNode;
 
     function FindNodeByType(AID: Integer; AType: Integer): TUniTreeNode;
 
@@ -161,19 +161,19 @@ begin
   UnstrumentF.IType := InstData.IType;
 end;
 
-function TInstrumentT.FindNodeByID(AID: Integer): TUniTreeNode;
-var i:integer;
-begin
-  result := nil;
-  for i:=0 to twInstrument.Items.Count-1 do
-  begin
-    if twInstrument.Items[i].Tag = AID then
-    begin
-      result := twInstrument.Items.Item[i];
-      break;
-    end;
-  end;
-end;
+//function TInstrumentT.FindNodeByID(AID: Integer): TUniTreeNode;
+//var i:integer;
+//begin
+//  result := nil;
+//  for i:=0 to twInstrument.Items.Count-1 do
+//  begin
+//    if twInstrument.Items[i].Tag = AID then
+//    begin
+//      result := twInstrument.Items.Item[i];
+//      break;
+//    end;
+//  end;
+//end;
 
 function TInstrumentT.FindNodeByType(AID, AType: Integer): TUniTreeNode;
 var i:integer;
@@ -238,18 +238,18 @@ begin
     end;
     5:    //StateModel
     begin
-      Nd.ImageIndex := 6;
+      Nd.ImageIndex := 3;
     end;
     6:   // State
     begin
       if  ((PInstrumentData(Nd.Data).Flag and Integer(tInstrumentFlag.isStartState)) > 0) then
-        Nd.ImageIndex := 7
+        Nd.ImageIndex := 4
       else
-        Nd.ImageIndex := 3;
+        Nd.ImageIndex := 4;
     end;
     7:  //Action
     begin
-      Nd.ImageIndex := 4;
+      Nd.ImageIndex := 6;
     end
   else
     Nd.ImageIndex := -1;
@@ -426,7 +426,7 @@ begin
                        ' ';
 
 
-    Sql.Q.ParamByName('PID').Value      := twInstrument.Selected.Tag;
+    Sql.Q.ParamByName('PID').Value := twInstrument.Selected.Tag;
     Sql.Q.Open;
     Sql.Q.First;
     for I := 0 to Sql.Q.RecordCount - 1 do

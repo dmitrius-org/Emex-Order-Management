@@ -217,8 +217,8 @@ begin
 end;
 
 procedure TClientsT.actLookupExecute(Sender: TObject);
-var BM : TBookmark;
-    i, id:Integer;
+var //BM : TBookmark;
+    i:Integer;
 begin
   if Grid.SelectedRows.Count>0 then
   begin

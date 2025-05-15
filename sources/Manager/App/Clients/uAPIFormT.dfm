@@ -140,11 +140,10 @@ inherited APIFormT: TAPIFormT
     LayoutConfig.Width = '100'
     LayoutConfig.Region = 'north'
     object ToolBar: TUniToolBar
-      AlignWithMargins = True
-      Left = 3
-      Top = 3
-      Width = 1133
-      Height = 61
+      Left = 0
+      Top = 0
+      Width = 1139
+      Height = 67
       Hint = ''
       ShowHint = True
       ButtonHeight = 53
@@ -152,6 +151,7 @@ inherited APIFormT: TAPIFormT
       Images = ImageList32
       ShowCaptions = True
       ButtonAutoWidth = True
+      LayoutConfig.Padding = '0px 0px 0px 5px'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
       Align = alClient
@@ -159,10 +159,10 @@ inherited APIFormT: TAPIFormT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1139
-      ExplicitHeight = 67
+      ExplicitLeft = 3
+      ExplicitTop = 3
+      ExplicitWidth = 1133
+      ExplicitHeight = 61
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -191,7 +191,6 @@ inherited APIFormT: TAPIFormT
         Action = actDelete
         ImageIndex = 0
         TabOrder = 3
-        ExplicitLeft = 244
       end
       object UniToolButton3: TUniToolButton
         AlignWithMargins = True
@@ -200,7 +199,6 @@ inherited APIFormT: TAPIFormT
         ShowHint = True
         Action = actRefreshAll
         TabOrder = 4
-        ExplicitLeft = 362
       end
     end
   end

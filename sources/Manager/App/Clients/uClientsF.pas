@@ -62,7 +62,6 @@ type
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
     UniToolButton4: TUniToolButton;
-    ImageList16: TUniImageList;
     QueryOrderFileFormatID: TFMTBCDField;
     QueryClientID: TFMTBCDField;
     QueryID: TFMTBCDField;

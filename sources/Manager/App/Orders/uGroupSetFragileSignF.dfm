@@ -22,8 +22,6 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     TabOrder = 0
-    ExplicitWidth = 460
-    ExplicitHeight = 310
     DesignSize = (
       384
       161)
@@ -50,7 +48,6 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       TabStop = False
       TabOrder = 3
       OnClick = btnCancelClick
-      ExplicitTop = 134
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
@@ -65,7 +62,6 @@ object GroupSetFragileSignF: TGroupSetFragileSignF
       Anchors = [akRight, akBottom]
       TabOrder = 4
       OnClick = btnOkClick
-      ExplicitTop = 134
     end
     object cbRestrictions: TUniComboBox
       Left = 21

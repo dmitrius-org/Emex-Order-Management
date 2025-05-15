@@ -4,7 +4,7 @@
 }
 interface
 
-uses System.SysUtils, System.Classes,
+uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
 
      FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Option,
 
@@ -20,8 +20,6 @@ uses System.SysUtils, System.Classes,
   TEmex= class
     private
       FConnection: TFDConnection;
-
-      FEmex: ServiceSoap;
 
       FSQl: TSQL;
       FQuery: TFDQuery;
@@ -300,10 +298,10 @@ begin
 
       FQuery.Close;
       FQuery.SQL.Text := ' Update p '+
-                      '    set p.Retval=:Retval           '+
-                      '   from pAccrualAction p (updlock) '+
-                      '  where p.spid   = @@spid '+
-                      '    and p.Retval = 0      ';
+                         '    set p.Retval=:Retval           '+
+                         '   from pAccrualAction p (updlock) '+
+                         '  where p.spid   = @@spid '+
+                         '    and p.Retval = 0      ';
       FQuery.ParamByName('Retval').AsInteger := retval;
       FQuery.ExecSQL;
     end;
@@ -354,9 +352,6 @@ begin
 end;
 
 procedure TEmex.DeleteFromBasketByBasketID(ABasketID: Integer);
-var part: BasketDetails;
-    outBasket: ArrayOfBasketDetails;
-    I, R: Integer;
 begin
 end;
 
@@ -579,13 +574,12 @@ end;
 function TEmex.InsertPartToBasketByMarks: integer;
 var part: partstobasket;
     outBasket: ArrayOfPartstobasket;
-    I, RCount, r:  Integer;
+    I, RCount, R:  Integer;
 
   Suppliers : TStringList;
     Supplier: string;
 begin
-    R :=0;
-
+    Result:=0;
     // Получаем список поставщиков
     Suppliers := ForSupplierByMarks ();
 
@@ -661,8 +655,6 @@ begin
     end;
 
     FreeAndNil(Suppliers);
-
-    Result := R;
 end;
 
 procedure TEmex.InsertPartToBasketRollbackByMarks;
@@ -672,6 +664,8 @@ var part: BasketDetails;
     I, RCount, R: Integer;
     dat: TXSDateTime;
 begin
+  part := nil;
+  OrderID := 0;
   try
     FQuery.Close;
     FQuery.Open('Select o.OrderID,  o.BasketId, o.ClientID '+
@@ -739,9 +733,10 @@ end;
 procedure TEmex.InsertPartToBasketCancelByMarks;
 var part: BasketDetails;
     outBasket: ArrayOfBasketDetails;
-    I, RCount, R: Integer;
+    I, RCount: Integer;
     dat: TXSDateTime;
 begin
+  part := nil;
   try
     FQuery.Close;
     FQuery.Open('''
@@ -772,7 +767,7 @@ begin
         outBasket[0]:= part;
 
 
-        R:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SupplierID').AsInteger), outBasket);
+        Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SupplierID').AsInteger), outBasket);
 
 //        if R <> 1 then
 //        begin
@@ -1076,7 +1071,6 @@ end;
 
 procedure TEmex.GetBasketDetailsByMarks;
 var Basket : ArrayOfBasketDetails_v2;
-    part   : BasketDetails;
 
   Suppliers: TStringList;
    Supplier: string;

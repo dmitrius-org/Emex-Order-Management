@@ -61,20 +61,44 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #f0f0f0; ���� ���� ��� ����� ���������� */
-    /* padding: 10px; */
-    white-space: nowrap; /* ��������� ������� ������ */
+    white-space: nowrap; 
 }
 
 .badge-chats-count {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30px; /* ������ �������������� */
-    height: 25px; /* ������ �������������� */
-    background-color: #1E90FF; /* ���� ���� ��� ����� */
-    color: white; /* ���� ������ */
-    border-radius: 5px; /* �������� ���� */
+    width: 30px; 
+    height: 25px; 
+    background-color: #1E90FF; 
+    color: white; 
+    border-radius: 5px; 
     text-align: center;
     font-size: 14px;
 }
+
+.order-menu-item-execute {
+    /* background-color: #f8d7da;  */
+    height: 30px; /* Увеличенная высота */
+    line-height: 30px; /* Центрирование текста по вертикали */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.order-menu-item-rollback {
+    background-color: #f8d7dac0; 
+}
+
+.order-menu-item-edit {
+    /* background-color: #f8d7da;  */
+    height: 30px; /* Увеличенная высота */
+    line-height: 30px; /* Центрирование текста по вертикали */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+.order-menu-item-delete {
+    background-color: #f8d7dac0; 
+}
+
+/* .order-menu-item-delete:hover {
+    background-color: #f8d7dade; 
+} */

@@ -29,14 +29,6 @@ type
     FAction: TFormAction;
     FID: Integer;
 
-    FDetailNumber: string;
-    FDetailNumber2: string;
-    FPriceLogo: string;
-    FManufacturer:string;
-
-//    FWeightKGF: Double;
-//    FVolumeKGF: Double;
-
     procedure SetAction(const Value: TFormAction);
     /// <summary>
     ///  DataLoad - получение данных с сервера, для отображения на форме
@@ -79,7 +71,6 @@ end;
 
 procedure TGroupSetFragileSignF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
 begin
   DataCheck();
 
@@ -168,8 +159,6 @@ begin
   else
 
   end;
-
-  //cbRestrictions.Clear;
 end;
 
 end.

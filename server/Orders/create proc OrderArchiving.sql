@@ -103,7 +103,10 @@ INSERT INTO [History].[tOrders] with (rowlock)
       ,CustomerClientNum
       ,CustomerClientSign
       ,CustomerOrder
-      ,QuantityOrg)     
+      ,QuantityOrg
+      ,HUserID     
+      ,HinDatetime 
+      )     
 select o.OrderID
       ,o.ClientID
       ,o.OrderDate
@@ -195,7 +198,9 @@ select o.OrderID
       ,o.CustomerClientNum
       ,o.CustomerClientSign
       ,o.CustomerOrder
-      ,o.QuantityOrg     
+      ,o.QuantityOrg  
+      ,dbo.GetUserID()
+      ,GetDate() 
   from @OrderID I
   inner join tOrders o  with (nolock index=ao1)
           on o.OrderID = I.ID

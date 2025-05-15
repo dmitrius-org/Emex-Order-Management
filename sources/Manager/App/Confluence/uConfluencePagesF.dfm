@@ -18,8 +18,6 @@ object ConfluencePagesF: TConfluencePagesF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 212
-    ExplicitWidth = 613
     DesignSize = (
       617
       44)
@@ -96,7 +94,7 @@ object ConfluencePagesF: TConfluencePagesF
     TabOrder = 1
     object UniFieldContainer1: TUniFieldContainer
       Left = 2
-      Top = 17
+      Top = 15
       Width = 613
       Height = 122
       Hint = ''

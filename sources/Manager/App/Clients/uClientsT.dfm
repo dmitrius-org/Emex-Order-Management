@@ -104,6 +104,7 @@ object ClientsT: TClientsT
       Images = ImageList32
       ShowCaptions = True
       ButtonAutoWidth = True
+      LayoutConfig.Padding = '0px 0px 0px 5px'
       LayoutConfig.IgnorePosition = False
       LayoutConfig.DockWhenAligned = False
       Align = alClient

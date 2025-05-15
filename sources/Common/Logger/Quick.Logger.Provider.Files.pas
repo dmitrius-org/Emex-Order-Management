@@ -438,3 +438,4 @@ end;
 //  if Assigned(GlobalLogFileProvider) and (GlobalLogFileProvider.RefCount = 0) then GlobalLogFileProvider.Free;
 
 end.
+

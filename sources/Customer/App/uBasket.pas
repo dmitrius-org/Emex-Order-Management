@@ -38,7 +38,6 @@ type
 
   TBasketF = class(TUniFrame)
     MainPanel: TUniPanel;
-    UniImageList1: TUniImageList;
     Grid: TUniDBGrid;
     DataSource: TDataSource;
     Query: TFDQuery;
@@ -82,6 +81,7 @@ type
     QueryIsUpdatingExists: TIntegerField;
     QueryPacking: TIntegerField;
     QueryComment2: TStringField;
+    ImageList: TUniNativeImageList;
 
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -134,7 +134,6 @@ end;
 procedure TBasketF.addOrderClick(Sender: TObject);
 var f:TOrderF;
 var sqltext: string;
-     Field:string;
 begin
   try
     RetVal.Clear;
@@ -159,8 +158,8 @@ begin
       exit;
     end;
 
+    f := TOrderF.Create(UniApplication);
     try
-      f := TOrderF.Create(UniApplication);
       if f.ShowModal = mrOk then
       begin
         GridRefresh;

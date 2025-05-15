@@ -20,12 +20,10 @@ type
   TNodesT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actEdit: TAction;
     PopupMenu: TUniPopupMenu;
     N2: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -51,7 +49,6 @@ type
     actDelete: TAction;
     actView: TAction;
     UniToolButton1: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     N1: TUniMenuItem;
     N3: TUniMenuItem;
@@ -218,9 +215,9 @@ end;
 
 procedure TNodesT.GridDropRowsEvent(SrcGrid, DstGrid: TUniDBGrid;
   Rows: TUniBookmarkList; Params: TUniDragDropParams; var Handled: Boolean);
-
 var
-  SourceRowNumber, TargetRowNumber: Integer;
+ // SourceRowNumber,
+  TargetRowNumber: Integer;
   Bookmark: TBookmark;
   i: Integer;
 begin
@@ -237,7 +234,8 @@ begin
     SrcGrid.DataSource.DataSet.GotoBookmark(Bookmark);
 
     // ѕолучаем пор€дковый номер перемещаемой строки
-    SourceRowNumber := SrcGrid.DataSource.DataSet.FieldByName('N').AsInteger;
+    // SourceRowNumber :=
+    SrcGrid.DataSource.DataSet.FieldByName('N').AsInteger;
 
     // ѕереходим к строке перед которой происходит вставка
     DstGrid.DataSource.DataSet.RecNo := Params.OverIndex;
@@ -267,8 +265,6 @@ begin
 end;
 
 procedure TNodesT.RecalculateRowNumbers();
-var
-  i: Integer;
 begin
   // ѕереиндексаци€ строк в гриде после завершени€ перетаскивани€
 //  Grid.DataSource.DataSet.DisableControls;

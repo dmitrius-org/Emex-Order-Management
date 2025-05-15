@@ -92,7 +92,6 @@ uses uMainVar, uDashBoardItem;
 
 procedure TDashBoardFrame.AddProductFrameSinglePage;
 var   i:integer;
-      Product:TDashBoardItem;
 begin
 
   i:=FCaseItems.Add( TDashBoardItem.Create(Self) );
@@ -211,10 +210,7 @@ end;
 procedure TDashBoardFrame.LoadDashBoardDataFromDB;
 var
   i: integer;
-  thumbnailLink:string;
-
 begin
-//
 
   HideAllProductFrames;
   ProductsOL.Clear;

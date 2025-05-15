@@ -31,7 +31,7 @@ as
       Status   nvarchar(30), 
       Icon     nvarchar(30), 
       Hint     nvarchar(256),
-      Detail   nvarchar(128),
+      Detail   nvarchar(500),
   );
   
   

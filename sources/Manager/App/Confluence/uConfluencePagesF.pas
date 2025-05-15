@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn,
+  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn, FireDAC.Stan.Param,
   uniGUIBaseClasses, uniPanel, uniEdit, uniCheckBox, uniFieldSet, uniLabel,
   uniDateTimePicker, uCommonType, uniRadioGroup, uniMemo;
 

@@ -32,8 +32,6 @@ uses
 
 
 procedure THomeF.UniFrameCreate(Sender: TObject);
-var fr : TPriceUpdateT;
-  tmp : TStringList;
 begin
 
   FDashBoard:=TDashBoardFrame.Create(Self);
@@ -49,16 +47,6 @@ begin
   FDashBoard.MaxWidth:=Self.Width;
   FDashBoard.LoadDashBoardDataFromDB;
   FDashBoard.OpenPage(0);
-
- // lPages.Text:=FCurrentPage.ToString+ ' / '+FUniShowCaseFrame.PagesCount.ToString;
-
-
-//FUniShowCaseFrameAlign;
-//
-//
-//CenterElements;
-
-
 end;
 
 initialization

@@ -85,13 +85,10 @@ end;
 
 function tUploadingRefusals.Uploading(ASpid: Integer):Integer;
 var
-TemplateFile, ExelOtch : String;
-     I: Integer;
+   TemplateFile, ExelOtch : String;
    cmd: string;
     rc: word;
 begin
-  result:=0;
-
   FQuery.Close;
   FQuery.Open('Select Val from tSettings (nolock) where Brief = ''TemplateOrderRefusals''');
   TemplateFile:= FQuery.FieldByName('Val').AsString;

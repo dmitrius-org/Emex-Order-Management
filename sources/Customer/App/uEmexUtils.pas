@@ -20,8 +20,6 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
     private
       FConnection: TFDConnection;
 
-      FEmex: ServiceSoap;
-
       FSQl: TSQL;
       FQuery: TFDQuery;
 
@@ -31,7 +29,7 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       function GetEmex: ServiceSoap;
       function GetSQl: TSQL;
 
-      function ForClients: TStringList;
+//      function ForClients: TStringList;
 
       /// <summary>
       /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
@@ -95,29 +93,28 @@ begin
   end;
 end;
 
-function TEmex.ForClients: TStringList;
-var i: Integer;
-begin
-  result := TStringList.Create;
-  FQuery.Close;
-  FQuery.Open('''
-            Select distinct o.ClientID
-             from pAccrualAction p with (nolock index=ao2)
-            inner join tOrders o with (nolock)
-                    on o.OrderID=p.ObjectID
-            where p.Spid = @@spid
-              and p.Retval = 0
-           ''', [], []);
-  FQuery.First;
-  for I := 0 to FQuery.RecordCount - 1 do
-  begin
-    result.Add(FQuery.FieldByName('ClientID').AsString);
-    FQuery.Next;
-  end;
-end;
+//function TEmex.ForClients: TStringList;
+//var i: Integer;
+//begin
+//  result := TStringList.Create;
+//  FQuery.Close;
+//  FQuery.Open('''
+//            Select distinct o.ClientID
+//             from pAccrualAction p with (nolock index=ao2)
+//            inner join tOrders o with (nolock)
+//                    on o.OrderID=p.ObjectID
+//            where p.Spid = @@spid
+//              and p.Retval = 0
+//           ''', [], []);
+//  FQuery.First;
+//  for I := 0 to FQuery.RecordCount - 1 do
+//  begin
+//    result.Add(FQuery.FieldByName('ClientID').AsString);
+//    FQuery.Next;
+//  end;
+//end;
 
 function TEmex.getCustomer(AAccount: Integer): Customer;
-var SuppliersID: Integer;
 begin
   begin
       //данные для интеграции берем из справочника "Клиенты"
@@ -170,9 +167,8 @@ begin
 end;
 
 procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
-var part: FindByNumber;
+var
    parts: ArrayOfFindByNumber;
-       I: Integer;
  ShowSubsts: Boolean;
 begin
   // Показывать аналоги в поиске

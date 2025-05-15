@@ -16,7 +16,7 @@ type
 
   public
     constructor Create(AObjectType, AObjectID: string);
-    destructor Destroy();
+    destructor Destroy(); override;
 
     procedure Send(Args: string);
     /// <summary>
@@ -26,8 +26,6 @@ type
     procedure FormUnRegister(JSFormName: string);
 
     procedure CheckOnline(AObjectType, AObjectID: string);
-
-  published
   end;
 
 implementation
@@ -112,6 +110,8 @@ begin
   );
 
   FEventForm.Free;
+
+  inherited; // обязательно вызывать базовый Destroy
 end;
 
 function tWS.GetRegisterJSON(AObjectType, AObjectID: string): string;

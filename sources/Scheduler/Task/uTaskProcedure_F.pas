@@ -75,7 +75,6 @@ end;
 
 procedure TTaskProcedure_F.btnOkClick(Sender: TObject);
  var sqltext: string;
-       Field: string;
 begin
   DataCheck();
 

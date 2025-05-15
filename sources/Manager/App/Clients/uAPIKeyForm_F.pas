@@ -20,7 +20,6 @@ type
     UniPanel: TUniPanel;
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
-    ImageList16: TUniImageList;
     pcCommon: TUniPageControl;
     tabCommon: TUniTabSheet;
     UniFieldContainer1: TUniFieldContainer;

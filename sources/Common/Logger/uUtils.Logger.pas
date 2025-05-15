@@ -34,13 +34,15 @@ uses
 
 function GetCurrentLogData: TLogger;
 begin
+  Result := nil;
   try
-     Result := UniMainModule.ALogger;
+    Result := UniMainModule.ALogger;
   except
     on E: Exception do
-      UniServerModule.Logger.AddLog('GetCurrentLogData', e.Message);
+      UniServerModule.Logger.AddLog('GetCurrentLogData', E.Message);
   end;
 end;
+
 
 function MyToQuickEventType(E: TmyEventType): TEventType;
 begin
@@ -57,6 +59,8 @@ begin
     etDone:     Result := Quick.Logger.etDone;
     etCustom1:  Result := Quick.Logger.etCustom1;
     etCustom2:  Result := Quick.Logger.etCustom2;
+  else
+    Result := Quick.Logger.etInfo; // или любое значение по умолчанию
   end;
 end;
 

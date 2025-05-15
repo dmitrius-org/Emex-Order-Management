@@ -29,14 +29,6 @@ type
     FAction: TFormAction;
     FID: Integer;
 
-    FDetailNumber: string;
-    FDetailNumber2: string;
-    FPriceLogo: string;
-    FManufacturer:string;
-
-//    FWeightKGF: Double;
-//    FVolumeKGF: Double;
-
     procedure SetAction(const Value: TFormAction);
     /// <summary>
     ///  DataLoad - получение данных с сервера, для отображения на форме
@@ -79,11 +71,7 @@ end;
 
 procedure TGroupDetailNameEditF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
 begin
-  //if UniTimer1.Enabled  then
-  //  UniTimer1.Destroy;
-
   DataCheck();
 
   if RetVal.Code = 0 then

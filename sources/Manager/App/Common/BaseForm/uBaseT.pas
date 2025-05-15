@@ -9,8 +9,8 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniBasicGrid, uniDBGrid,
-  uniGUIBaseClasses, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
-  uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
+  uniGUIBaseClasses, uniToolBar, System.Actions, Vcl.ActnList,
+  uniMainMenu, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
   uUserF, uGrant, uCommonType, uUtils.Grid;
 
@@ -18,10 +18,8 @@ type
   TBaseT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     PopupMenu: TUniPopupMenu;
-    ImageList16: TUniImageList;
     actRefreshAll: TAction;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
@@ -38,7 +36,7 @@ type
     procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
   private
     { Private declarations }
-    FAction: tFormaction;
+//    FAction: tFormaction;
     FParentMenu: string;
 
   public

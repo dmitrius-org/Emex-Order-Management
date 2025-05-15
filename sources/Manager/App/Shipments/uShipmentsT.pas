@@ -40,9 +40,6 @@ type
     UpdateSQL: TFDUpdateSQL;
     pFilter: TUniPanel;
     gbFilter: TUniGroupBox;
-    UniImageListAdapter: TUniImageListAdapter;
-    UniImageList: TUniImageList;
-    UniImageList32: TUniImageList;
     actFilter: TAction;
     actFilterClear: TAction;
     actGridSettingDefault: TAction;
@@ -162,10 +159,10 @@ type
   private
     { Private declarations }
     FAction: tFormaction;
-    FAccrual: TAccrual;
+//    FAccrual: TAccrual;
 
-    ACurrColumn: TUniDBGridColumn;
-    FID: Integer;  //текущая колонка
+//    ACurrColumn: TUniDBGridColumn;
+//    FID: Integer;  //текущая колонка
 
     Marks: TMarks;                  // отметки
 
@@ -179,8 +176,6 @@ type
 
     procedure DoShowMask();
     procedure DoHideMask();
-
-    function Accrual :TAccrual;
 
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
@@ -202,15 +197,6 @@ uses
 
 {$R *.dfm}
 
-function TShipmentsT.Accrual: TAccrual;
-begin
-  if not Assigned(FAccrual) then
-  begin
-    FAccrual := TAccrual.Create(TFDConnection(Query.Connection));
-  end;
-
-  Result := FAccrual;
-end;
 
 procedure TShipmentsT.actDataEditExecute(Sender: TObject);
 begin
@@ -493,10 +479,6 @@ begin
 end;
 
 procedure TShipmentsT.UniFrameCreate(Sender: TObject);
-var
-  I: Integer;
-  IndexnameAsc : string;
-  IndexnameDes : string;
 begin
   {$IFDEF Debug}
   Grant.GrantTemplateCreate(self);

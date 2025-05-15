@@ -58,7 +58,6 @@ end;
 
 procedure TShipmentsReceivedStatusF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
 begin
   DataCheck();
 

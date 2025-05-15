@@ -2,7 +2,7 @@ object NodesF: TNodesF
   Left = 0
   Top = 0
   ClientHeight = 291
-  ClientWidth = 621
+  ClientWidth = 611
   Caption = #1057#1090#1072#1090#1091#1089#1099
   OnShow = UniFormShow
   OldCreateOrder = False
@@ -12,20 +12,21 @@ object NodesF: TNodesF
     AlignWithMargins = True
     Left = 3
     Top = 244
-    Width = 615
+    Width = 605
     Height = 44
     Hint = ''
     Align = alBottom
     TabOrder = 0
     Caption = ''
+    ExplicitWidth = 615
     DesignSize = (
-      615
+      605
       44)
     object btnOk: TUniBitBtn
-      Left = 498
-      Top = 10
+      Left = 496
+      Top = 7
       Width = 82
-      Height = 25
+      Height = 30
       Hint = ''
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
       Anchors = [akTop, akRight]
@@ -33,10 +34,10 @@ object NodesF: TNodesF
       OnClick = btnOkClick
     end
     object btnCancel: TUniBitBtn
-      Left = 411
-      Top = 10
-      Width = 81
-      Height = 25
+      Left = 401
+      Top = 7
+      Width = 86
+      Height = 30
       Hint = ''
       Caption = #1054#1090#1084#1077#1085#1072
       Anchors = [akTop, akRight]
@@ -47,31 +48,34 @@ object NodesF: TNodesF
   object PageBase: TUniPageControl
     Left = 0
     Top = 0
-    Width = 621
+    Width = 611
     Height = 241
     Hint = ''
-    ActivePage = TabStateAdditionally
+    ActivePage = TabCommon
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 621
     object TabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
+      ExplicitWidth = 613
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
-        Width = 613
+        Width = 603
         Height = 217
         Hint = ''
         ParentColor = False
         Align = alTop
         TabOrder = 0
+        ExplicitWidth = 613
         DesignSize = (
-          613
+          603
           217)
         object edtBrief: TUniEdit
           Left = 150
           Top = 70
-          Width = 429
+          Width = 427
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
@@ -81,7 +85,7 @@ object NodesF: TNodesF
         object edtName: TUniEdit
           Left = 150
           Top = 98
-          Width = 429
+          Width = 427
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
@@ -91,7 +95,7 @@ object NodesF: TNodesF
         object edtComment: TUniEdit
           Left = 150
           Top = 126
-          Width = 429
+          Width = 427
           Hint = ''
           Text = ''
           Anchors = [akLeft, akTop, akRight]
@@ -162,6 +166,7 @@ object NodesF: TNodesF
     object TabStateAdditionally: TUniTabSheet
       Hint = ''
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1087#1088#1080#1079#1085#1072#1082#1080' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
+      ExplicitWidth = 613
       object cbSyncEmex: TUniCheckBox
         Left = 18
         Top = 15

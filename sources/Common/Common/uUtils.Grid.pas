@@ -2,7 +2,7 @@
 
 interface
 
-uses System.SysUtils, System.UITypes, System.Rtti,
+uses System.SysUtils, System.UITypes, System.Rtti, System.Classes,
      FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Phys.Intf, FireDAC.Stan.Intf
      ,uniDBGrid, uCommonType, uniGUITypes ;
 

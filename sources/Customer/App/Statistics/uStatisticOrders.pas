@@ -44,7 +44,7 @@ type
     procedure UniFrameCreate(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
     procedure GridStatisticsKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure btnExcelExportButtonClick(Sender: TObject);
+//    procedure btnExcelExportButtonClick(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
   private
     { Private declarations }
@@ -154,14 +154,14 @@ begin
   GridStatisticsRefresh;
 end;
 
-procedure TStatisticOrders.btnExcelExportButtonClick(Sender: TObject); var js : string;
-begin
+//procedure TStatisticOrders.btnExcelExportButtonClick(Sender: TObject); var js : string;
+//begin
 //  if qGridStatistics.RecordCount > 0 then
 //  begin
 //    GridStatistics.Exporter.Title := edtDataType.Text;
 //    GridStatistics.Exporter.ExportGrid;
 //  end;
-end;
+//end;
 
 procedure TStatisticOrders.UniFrameCreate(Sender: TObject);
 begin

@@ -97,9 +97,6 @@ Coordinates=662,284,72,36
 [UniGroupBox5]
 Coordinates=553,284,99,36
 
-[ImageList16]
-Coordinates=842,56,85,36
-
 [actRefreshFormData]
 Coordinates=842,111,134,36
 
@@ -243,7 +240,7 @@ Coordinates=605,10,62,36
 Coordinates=505,10,90,36
 
 []
-Coordinates=1014,111,91,36
+Coordinates=842,56,85,36
 
 [cbNLA]
 Coordinates=858,1,53,36

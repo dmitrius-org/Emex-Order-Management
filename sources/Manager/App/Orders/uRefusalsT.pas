@@ -19,21 +19,18 @@ uses
 type
   TRefusalsT = class(TUniFrame)
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actDelete: TAction;
     actUpload: TAction;
     PopupMenu: TUniPopupMenu;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     actRefreshAll: TAction;
     N5: TUniMenuItem;
     N6: TUniMenuItem;
     TopPanel: TUniPanel;
     ToolBar: TUniToolBar;
     UniToolButton2: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     Grid: TUniDBGrid;
     Query: TFDQuery;
@@ -77,11 +74,11 @@ type
     procedure PopupMenuPopup(Sender: TObject);
   private
     { Private declarations }
-    FAction: tFormaction;
+//    FAction: tFormaction;
 
     procedure GridRefresh();
 
-    procedure FileList();
+//    procedure FileList();
   public
     { Public declarations }
     /// <summary>
@@ -157,7 +154,7 @@ end;
 
 procedure TRefusalsT.actToArchiveExecute(Sender: TObject);
 var i, id:Integer;
-    SqlText, Fn, Fp: string;
+    Fn, Fp: string;
     BM : TBookmark;
 
     AFnabled: LongBool;
@@ -222,10 +219,10 @@ begin
    UniFileUpload.Execute;
 end;
 
-procedure TRefusalsT.FileList;
-var sr: TSearchRec;
-    filedir: string;
-begin
+//procedure TRefusalsT.FileList;
+//var sr: TSearchRec;
+//    filedir: string;
+//begin
 //  MemTable.EmptyDataSet;
 //  filedir := sql.GetSetting('UploadingRefusalsCatalog');
 //
@@ -246,7 +243,7 @@ begin
 //    until FindNext(sr) <> 0;
 //    FindClose(sr);
 //  end;
-end;
+//end;
 
 procedure TRefusalsT.GridCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
@@ -301,7 +298,7 @@ var f:TUniFileInfoClass;
     DestName : string;
     DestFolder : string;
 
-    AFnabled : Boolean;
+    e:tUploadingRefusals;
 begin
   for f in Files do
   begin
@@ -310,7 +307,8 @@ begin
     DestFolder:= UniServerModule.StartPath+'temp\';
     DestName  := DestFolder+ExtractFileName(f.FileName);
 
-    AFnabled  := CopyFile(PChar(f.Stream.FileName), PChar(DestName), False);
+//    AFnabled  :=
+    CopyFile(PChar(f.Stream.FileName), PChar(DestName), False);
 
     Sql.Q.Close;
     Sql.Open(' declare @R      int                  ' +
@@ -326,7 +324,6 @@ begin
     if RetVal.Code = 0 then
     begin
 
-      var e:tUploadingRefusals;
       e:= tUploadingRefusals.Create(UniMainModule.FDConnection);
       try
 

@@ -58,7 +58,6 @@ end;
 
 procedure TShipmentsReceiptDateF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
 begin
   DataCheck();
 

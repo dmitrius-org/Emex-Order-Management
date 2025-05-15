@@ -61,7 +61,6 @@ end;
 
 procedure TShipmentsTransporterNumberF.btnOkClick(Sender: TObject);
  var sqltext: string;
-     Field:string;
 begin
   DataCheck();
 

@@ -19,13 +19,11 @@ type
     ToolBar: TUniToolBar;
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
     GridTasks: TUniDBGrid;
     qTask: TFDQuery;
     dsTask: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -39,7 +37,6 @@ type
     N4: TUniMenuItem;
     N5: TUniMenuItem;
     N6: TUniMenuItem;
-    ImageList16: TUniImageList;
     FDUpdateSQL: TFDUpdateSQL;
     qTaskTaskID: TFMTBCDField;
     qTaskBrief: TWideStringField;
@@ -90,7 +87,7 @@ type
     { Private declarations }
 
     IsActive: Boolean;
-    IsRefreshInterface: Boolean;
+//    IsRefreshInterface: Boolean;
     /// <summary>
     ///  UserFCallBack - CallBack обработчик действия на форме редактирования данных
     ///</summary>
@@ -266,12 +263,12 @@ begin
   if IsActive then
   begin
     actTaskActive.Caption:= 'Выполнение задач включено';
-    actTaskActive.ImageIndex := 5;
+    actTaskActive.ImageIndex := 14;
   end
   else
   begin
     actTaskActive.Caption:= 'Выполнение задач выключено';
-    actTaskActive.ImageIndex := 4;
+    actTaskActive.ImageIndex := 13;
   end;
 end;
 

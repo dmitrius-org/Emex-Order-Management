@@ -49,7 +49,6 @@ type
     actEdit: TAction;
     actDelete: TAction;
     actRefreshAll: TAction;
-    ILAction16: TUniImageList;
     pmTaskAction: TUniPopupMenu;
     N1: TUniMenuItem;
     N2: TUniMenuItem;
@@ -226,7 +225,6 @@ end;
 
 procedure TTask_F.btnOkClick(Sender: TObject);
  var sqltext: string;
-       Field: string;
 begin
   DataCheck();
 

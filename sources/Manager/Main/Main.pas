@@ -76,7 +76,7 @@ type
     ///</summary>
     procedure ProfileMenuAdd();
 
-    function CreateImageIndex(filename: string): Integer;
+//    function CreateImageIndex(filename: string): Integer;
 
     function FindNodeByID(AID: Integer): TUniTreeNode;
 
@@ -156,7 +156,7 @@ var
   c, Path: string;
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
-  iconfile: string;
+//  iconfile: string;
 begin
   FormNames := TStringList.Create;
 
@@ -222,10 +222,10 @@ begin
   end;
 end;
 
-function TMainForm.CreateImageIndex(filename: string): Integer;
-begin
-  Result := MainMenuImage.AddImageFile(filename);
-end;
+//function TMainForm.CreateImageIndex(filename: string): Integer;
+//begin
+//  Result := MainMenuImage.AddImageFile(filename);
+//end;
 
 procedure TMainForm.MainMenuClick(Sender: TObject);
 var
@@ -398,8 +398,8 @@ end;
 
 procedure TMainForm.UniFormAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
-var
-  JSONData, EventType: string;
+//var
+//  JSONData, EventType: string;
 begin
 //  Log('TMainForm.UniFormAjaxEvent Begin ' + EventType, etWarning);
 //  if EventName = 'ws_message' then

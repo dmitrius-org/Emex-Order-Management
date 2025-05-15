@@ -115,6 +115,7 @@ object StatisticCanceled: TStatisticCanceled
       Top = 27
       Width = 131
       Hint = ''
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 7
@@ -130,6 +131,7 @@ object StatisticCanceled: TStatisticCanceled
       Top = 27
       Width = 209
       Hint = ''
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 8
@@ -158,6 +160,7 @@ object StatisticCanceled: TStatisticCanceled
       Top = 27
       Width = 131
       Hint = ''
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 10
@@ -186,7 +189,6 @@ object StatisticCanceled: TStatisticCanceled
     Hint = ''
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 282
   end
   object dsCanceled: TDataSource
     DataSet = qCanceled

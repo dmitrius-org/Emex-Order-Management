@@ -26,7 +26,6 @@ type
     lblName: TUniLabel;
     tabAudit: TUniTabSheet;
     Query: TFDQuery;
-    ImageList16: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;

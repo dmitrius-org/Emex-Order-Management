@@ -57,7 +57,6 @@ begin
 end;
 
 procedure TOrdersNewDeliveryDateF.btnOkClick(Sender: TObject);
- var Field:string;
 begin
   DataCheck();
 

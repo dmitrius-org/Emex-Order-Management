@@ -19,7 +19,6 @@ type
   TPricesT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -28,7 +27,6 @@ type
     N1: TUniMenuItem;
     N2: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -70,7 +68,7 @@ type
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
   private
     { Private declarations }
-    FAction: tFormaction;
+//    FAction: tFormaction;
 
     procedure DataRefresh();
 

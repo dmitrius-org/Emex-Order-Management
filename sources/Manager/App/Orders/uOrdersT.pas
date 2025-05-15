@@ -15,7 +15,6 @@ uses
   uniButton, uniBitBtn, uniLabel, uniDBComboBox,
   uniGroupBox, uniDBLookupComboBox, Vcl.StdActns, Vcl.StdCtrls, Vcl.Clipbrd,
   uAccrualUtils, uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
-
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer,
   uGrant, uCommonType, uSqlUtils,
@@ -102,13 +101,9 @@ type
     fOk: TUniBitBtn;
     qStatus: TFDQuery;
     qPriceLogo: TFDQuery;
-    qClient: TFDQuery;
     dsStatus: TDataSource;
     dsPriceLogo: TDataSource;
     dsClient: TDataSource;
-    qClientClientID: TFMTBCDField;
-    qClientBrief: TWideStringField;
-    qClientName: TWideStringField;
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     lblOrderNumber: TUniLabel;
@@ -117,7 +112,7 @@ type
     actExecuteActionEnabled: TAction;
     QueryStatusID: TFMTBCDField;
     actExecuteActionRollback: TAction;
-    N3: TUniMenuItem;
+    ppExecuteActionRollback: TUniMenuItem;
     QueryFlag: TIntegerField;
     QueryOverPricing: TCurrencyField;
     QueryWarning: TWideStringField;
@@ -127,12 +122,9 @@ type
     QueryReplacementDetailNumber: TWideStringField;
     QueryMakeLogo: TWideStringField;
     QueryReplacementManufacturer: TWideStringField;
-    UniImageListAdapter: TUniImageListAdapter;
     actProtocol: TAction;
     N1: TUniMenuItem;
     N2: TUniMenuItem;
-    UniImageList: TUniImageList;
-    UniImageList32: TUniImageList;
     actFilter: TAction;
     actFilterClear: TAction;
     actSelect: TAction;
@@ -143,7 +135,7 @@ type
     QueryDetailName: TWideStringField;
     fStatus2: TUniCheckComboBox;
     qPriceLogoPriceLogo: TWideStringField;
-    N12: TUniMenuItem;
+    ppEdit: TUniMenuItem;
     N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
     lblDEtailNumber: TUniLabel;
@@ -217,6 +209,8 @@ type
     QueryDeliveryTermFromSupplier: TIntegerField;
     QueryDeliveryTermFromSupplier2: TIntegerField;
     QueryNoAir: TBooleanField;
+    actDelete: TAction;
+    ppDelete: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -296,7 +290,7 @@ type
     ///</summary>
     procedure OrdersFCallBack(Sender: TComponent; AResult:Integer);
 
-    procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
+    //procedure OrdersMessageFCallBack(Sender: TComponent; AResult:Integer);
     /// <summary>
     ///  GroupDetailNameEditCallBack - CallBack обработчик группового изменения наименования детали
     ///</summary>
@@ -346,18 +340,21 @@ type
     /// </summary>
     procedure GetNotificationOrders();
 
-    procedure SetNotificationIcon();
+//    procedure SetNotificationIcon();
 
     /// <summary>
     /// SetNotificationCount - количество уведомлений
     /// </summary>
     procedure SetNotificationCount();
 
-    procedure SetMenuVisible(AVisible: boolean);overload;
+    procedure SetMenuVisible(AVisible: boolean); //overload;
 
-    procedure SetMenuVisible(); overload;
+//    procedure SetMenuVisible(); overload;
 
     procedure MessageCallBack(Sender: TComponent; AResult: Integer);
+
+    /// <summary>OrderDelete - Удаление заказа</summary>
+    procedure OrderDelete();
 
   public
     { Public declarations }
@@ -375,7 +372,7 @@ uses
   MainModule, uGrantUtils, uEmexUtils, uUtils.Logger, uError_T, uMainVar,
   uOrdersProtocol_T, Main, uOrdersF, ServerModule, uToast,uGroupDetailNameEditF,
   uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date,
-  uConstant, uMessengerMessage, uMessengerF, uSpplitForm;
+  uConstant, uMessengerMessage, uMessengerF, uSpplitForm, uUniExCheckComboBoxHelper;
 
 {$R *.dfm}
 
@@ -394,6 +391,41 @@ begin
   );
 end;
 
+procedure TOrdersT.OrderDelete;
+var sqltext: string;
+begin
+  RetVal.Clear;
+
+  FAction:=TFormAction.acDelete;
+
+  case FAction of
+    acDelete:
+    begin
+      sqltext :=  '''
+       declare @R      int
+
+       exec @r = OrderDelete
+                   @OrderID   = :OrderID
+
+       select @r as retcode
+      ''';
+
+      Sql.Open(sqltext, ['OrderID'], [QueryOrderID.AsInteger]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+    end;
+  end;
+
+  if RetVal.Code = 0 then
+  begin
+    Query.Delete;
+  end
+  else
+  begin
+    MessageDlg(RetVal.Message, mtError, [mbOK]);
+  end;
+end;
+
 procedure TOrdersT.OrderSetCancellation;
 begin
   log('TOrdersT.OrderSetCancellation Begin', etDebug) ;
@@ -408,7 +440,6 @@ begin
 
   if (ServerErr = 0) then
   begin
-
     Marks.DataRefresh;
     ToastOK ('Операция успешно выполнена!', UniSession);
     //OrdersMessageFCallBack(self, mrOk)
@@ -460,7 +491,6 @@ begin
 
   if (ServerErr = 0) then
   begin
-
     Marks.DataRefresh;
     ToastOK ('Операция успешно выполнена!', UniSession);
     //OrdersMessageFCallBack(self, mrOk)
@@ -474,8 +504,15 @@ end;
 
 procedure TOrdersT.actDeleteExecute(Sender: TObject);
 begin
-  FAction:=TFormAction.acDelete;
-  Query.Delete;
+  MessageDlg('Вы действительно хотите удалить заказ? ' , mtConfirmation, mbYesNo,
+    procedure(Sender: TComponent; Res: Integer)
+    begin
+      case Res of
+        mrYes : OrderDelete;
+        mrNo  : Exit;
+      end;
+    end
+  );
 end;
 
 procedure TOrdersT.actEditExecute(Sender: TObject);
@@ -587,12 +624,11 @@ begin
     Query.RecNo:=RecNo;
     Query.EnableControls;
   end;
-    log('TOrdersT.actExecuteActionExecute end', etDebug) ;
+  log('TOrdersT.actExecuteActionExecute End', etDebug) ;
 end;
 
 procedure TOrdersT.ActionExecute(ActionID: Integer);
 var Action: string;
-    DateValue: TDateTime;
 begin
   log('TOrdersT.ActionExecute Begin', etDebug);
 
@@ -857,17 +893,14 @@ end;
 
 procedure TOrdersT.FilterClientsCreate;
 begin
-  qClient.Open(); // используется в фильтре Клиент
+  fClient.FillFromSQL('''
+    DECLARE @R table (ID numeric(18, 0), Brief varchar(256), Name varchar(256)) ;
 
-  fClient.Clear;
-  qClient.First;
-  while not qClient.Eof do
-  begin
-    fClient.Items.AddObject( qClient.FieldByName('Brief').AsString, Pointer(qClient.FieldByName('ClientID').AsInteger) );
-    qClient.Next;
-  end;
+    insert @R
+      EXEC OrderFilter_Client
 
-  fClient.Refresh;
+    SELECT ID, Brief as Name from @R;
+  ''');
 end;
 
 procedure TOrdersT.FilterPriceLogoCreate;
@@ -1174,6 +1207,9 @@ begin
   actRequestClosed.Enabled:= (actRequestClosed.Tag = 1) and(marks.Count > 0);
 
   actSupplierSpecifyDeliveryTime.Enabled:= (actSupplierSpecifyDeliveryTime.Tag = 1) and(marks.Count = 1);
+
+  actDelete.Enabled := (actDelete.Tag=1) and (Query.RecordCount>0);
+  actDelete.Visible := (actDelete.Tag=1) and (Query.RecordCount>0);
 end;
 
 procedure TOrdersT.QueryDateDeliveryToCustomerGetText(Sender: TField;
@@ -1543,10 +1579,10 @@ begin
    Grid.JSInterface.JSCall('getSelectionModel().selectAll', []);
 end;
 
-procedure TOrdersT.SetMenuVisible;
-begin
-  SetMenuVisible(FIsNotification);
-end;
+//procedure TOrdersT.SetMenuVisible;
+//begin
+//  SetMenuVisible(FIsNotification);
+//end;
 
 procedure TOrdersT.SetMenuVisible(AVisible: boolean);
 begin
@@ -1583,10 +1619,10 @@ begin
   end;
 end;
 
-procedure TOrdersT.SetNotificationIcon;
-begin
-  //
-end;
+//procedure TOrdersT.SetNotificationIcon;
+//begin
+//  //
+//end;
 
 procedure TOrdersT.DeliveryDaysReserveGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
@@ -1729,10 +1765,6 @@ begin
 end;
 
 procedure TOrdersT.UniFrameCreate(Sender: TObject);
-var
-  I: Integer;
-  IndexnameAsc : string;
-  IndexnameDes : string;
 begin
   log('TOrdersT.UniFrameCreate Begin', etDebug);
 
@@ -1773,7 +1805,8 @@ begin
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
 
 
-//  Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
+  Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
+
   log('TOrdersT.UniFrameCreate End', etDebug);
 end;
 
@@ -1793,6 +1826,13 @@ begin
   {$ENDIF}
 
   SetNotificationCount;
+
+  UniSession.AddJS('Ext.getCmp("' + ppExecuteAction.JSId + '").addCls("order-menu-item-edit");');
+  UniSession.AddJS('Ext.getCmp("' + ppExecuteActionRollback.JSId + '").addCls("order-menu-item-rollback");');
+
+  UniSession.AddJS('Ext.getCmp("' + ppEdit.JSId + '").addCls("order-menu-item-edit");');
+  UniSession.AddJS('Ext.getCmp("' + ppDelete.JSId + '").addCls("order-menu-item-delete");');
+
   log('TOrdersT.UniFrameReady End', etDebug);
 end;
 
@@ -1863,10 +1903,10 @@ begin
   end;
 end;
 
-procedure TOrdersT.OrdersMessageFCallBack(Sender: TComponent; AResult: Integer);
-begin
-  if AResult <> mrOK then Exit;
-  try
+//procedure TOrdersT.OrdersMessageFCallBack(Sender: TComponent; AResult: Integer);
+//begin
+//  if AResult <> mrOK then Exit;
+//  try
 //    if OrdersMessageF.FormAction = acUpdate then
 //    begin
 //      Query.Edit ;
@@ -1874,11 +1914,11 @@ begin
 //
 //      ToastOK('Комментарий успешно сохранен!', unisession);
 //    end;
-  except
-    on E: Exception do
-      log('TOrdersT.OrdersMessageFCallBack Ошибка: ' + e.Message, etException);
-  end;
-end;
+//  except
+//    on E: Exception do
+//      log('TOrdersT.OrdersMessageFCallBack Ошибка: ' + e.Message, etException);
+//  end;
+//end;
 
 procedure TOrdersT.GridKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin

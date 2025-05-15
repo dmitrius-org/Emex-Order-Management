@@ -77,7 +77,6 @@ end;
 
 procedure TTaskBAT_F.btnOkClick(Sender: TObject);
  var sqltext: string;
-       Field: string;
 begin
   DataCheck();
 

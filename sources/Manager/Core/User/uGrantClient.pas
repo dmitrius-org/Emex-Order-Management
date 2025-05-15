@@ -33,7 +33,6 @@ type
     UniToolButton2: TUniToolButton;
     UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
-    ImageList16: TUniImageList;
     procedure actRefreshAllExecute(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
     procedure acInsertExecute(Sender: TObject);

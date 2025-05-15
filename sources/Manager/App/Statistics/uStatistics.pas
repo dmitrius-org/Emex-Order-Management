@@ -392,7 +392,7 @@ begin
   GridStatisticsRefresh
 end;
 
-procedure TStatisticsT.btnExcelExportButtonClick(Sender: TObject); var js : string;
+procedure TStatisticsT.btnExcelExportButtonClick(Sender: TObject);
 begin
   if qGridStatistics.RecordCount > 0 then
   begin

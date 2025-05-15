@@ -57,7 +57,6 @@ type
     btnZZAP: TUniButton;
     btnEmEx: TUniButton;
     UniLabel1: TUniLabel;
-    ImageList16: TUniImageList;
     UniBitBtn1: TUniBitBtn;
     UniTimer: TUniTimer;
     btnNumber: TUniButton;
@@ -333,7 +332,7 @@ end;
 
 constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
 begin
-  inherited Create(False);
+  inherited Create(True); // поток создаётся приостановленным
 
   FConnection  := AConnection;
   FClientID    := AClientID;
@@ -455,9 +454,9 @@ begin
 
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+//    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
     t.Logger := GetCurrentLogData();
-    t.Resume; // непосредственно ручной запуск потока
+    t.start; // непосредственно ручной запуск потока
 
     UniTimer.Enabled := True;
   finally
@@ -466,7 +465,7 @@ end;
 
 procedure TOrderF.GetSupplierList;   // список поставщиков
 var Price: String;
-        i: Integer;
+        //i: Integer;
 begin
   Price:=cbPrice.Value;
 
@@ -487,7 +486,7 @@ begin
     First;
     while not Eof do
       begin
-        i:=cbPrice.Items.Add(FieldByName('Name').AsString);
+        cbPrice.Items.Add(FieldByName('Name').AsString);
 //ломает itemindex почему? не понятно
 //        cbPrice.JSInterface.JSCall('store.getAt(' + i.ToString + ').set',
 //                ['tag',
@@ -505,7 +504,7 @@ begin
 end;
 
 procedure TOrderF.GetPartDataFromBase();
-var Price, js, r, HintText: string;
+var r, HintText: string;
     DeliveryTermFromSupplierProfile: Integer;
 begin
   Log('TOrderF.GetPartDataFromBase Begin', etDebug);
@@ -1275,7 +1274,6 @@ begin
 end;
 
 procedure TOrderF.UniTimerTimer(Sender: TObject);
-var Price: string;
 begin
   try
     Sql.Open('select 1 from #IsPart (nolock)', [],[]);

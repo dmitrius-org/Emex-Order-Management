@@ -31,14 +31,8 @@ type
     FID: Integer;
 
     FDetailNumber: string;
-    FDetailNumber2: string;
-    FPriceLogo: string;
-    FManufacturer:string;
     FQuantity: Integer;
 
-
-//    FWeightKGF: Double;
-//    FVolumeKGF: Double;
 
     procedure SetAction(const Value: TFormAction);
     /// <summary>
@@ -131,15 +125,10 @@ begin
              ,Quantity
          from tOrders (nolock)
         where OrderID = :OrderID
-
   ''', ['OrderID'], [FID]);
 
-  FDetailNumber      := sql.f('DetailNumber').AsString;
-//  FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
-  FQuantity         := sql.f('Quantity').AsInteger;
-
-
-//  edtQuantity.MaxValue:= FQuantity-1;
+  FDetailNumber := sql.f('DetailNumber').AsString;
+  FQuantity     := sql.f('Quantity').AsInteger;
 end;
 
 function TSpplitForm.GetQuantity: Integer;

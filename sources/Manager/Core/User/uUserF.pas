@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
-  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn,
+  uniGUIClasses, uniGUIForm, uniButton, uniBitBtn, FireDAC.Stan.Param,
   uniGUIBaseClasses, uniPanel, uniEdit, uniCheckBox, uniFieldSet, uniLabel,
   uniDateTimePicker, uCommonType;
 
@@ -119,7 +119,7 @@ begin
                 edtPass.Text,
                 Email.Text]);
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
 
     end;
     acUpdate:
@@ -150,7 +150,7 @@ begin
                // edtPass.Text,
                 Email.Text]);
 
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
     end;
     acDelete:
     begin
@@ -163,9 +163,9 @@ begin
                                       ' select @r as retcode               '+
                                       ' ';
 
-      UniMainModule.Query.ParamByName('UserID').Value := FID;
+      UniMainModule.Query.ParamByName('UserID').AsInteger := FID;
       UniMainModule.Query.Open;
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
     end;
   end;
 

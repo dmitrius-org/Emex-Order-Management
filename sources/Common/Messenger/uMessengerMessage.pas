@@ -190,9 +190,7 @@ begin
 end;
 
 procedure TMessage.SendMessage();
-var Flag: Integer;
 begin
-
   if Trim(MessageText.Text) = '' then exit;
 
   if FChatID = 0 then AddChat;
@@ -254,9 +252,7 @@ procedure TMessage.AddMessageToChat(
    MDate: TDateTime;
    MReadDate: string = ''
    );
-var
-  i: integer;
-  Message : string;
+var Message : string;
 begin
    Message := StringReplace(FMessageItem, 'message_id', MID.ToString, []);
    Message := StringReplace(Message, 'message_text', MText, []);
@@ -289,7 +285,7 @@ begin
 
    Message := StringReplace(Message, 'message_DateRead', MReadDate, []);
 
-   i:=MessageEditor.Items.Add( Message );
+   MessageEditor.Items.Add( Message );
 end;
 
 procedure TMessage.btnSendClick(Sender: TObject);
@@ -404,9 +400,6 @@ begin
 end;
 
 procedure TMessage.LoadMessageByChatID(AChatID: integer);
-var
-  i: integer;
-  Message : string;
 begin
   MessageText.Clear;
 
@@ -451,9 +444,6 @@ begin
 end;
 
 procedure TMessage.LoadMessageByOrderID(AOrderID: integer); //
-var
-  i: integer;
-  Message : string;
 begin
   MessageText.Clear;
 
@@ -496,8 +486,7 @@ end;
 
 procedure TMessage.ContentChatContainerAjaxEvent(Sender: TComponent;
   EventName: string; Params: TUniStrings);
-  var i:Integer;
-  JSONObject: TJSONObject;
+var JSONObject: TJSONObject;
 begin
   Log('TMessage.ContentChatContainerAjaxEvent', etInfo);
   Log(EventName, etInfo);
@@ -552,7 +541,7 @@ begin
   LoadMessageByOrderID(FOrderID);
 end;
 
-procedure TMessage.SetUserStatus(AEvent: string; ClientID: integer; Status: Boolean=false);  var i:Integer;
+procedure TMessage.SetUserStatus(AEvent: string; ClientID: integer; Status: Boolean=false);
 begin
   Log('TMessage.SetUserStatus Begin', etInfo);
   if AEvent = 'connection' then

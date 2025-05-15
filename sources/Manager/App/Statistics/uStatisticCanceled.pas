@@ -117,7 +117,7 @@ begin
 
   max1 := max1 + IfThen(max1>10, 15, 10);
 
-// Ã1
+  // Ã1
   with ChartCount do
   begin
     LibraryLanguage := UniSession.Language;

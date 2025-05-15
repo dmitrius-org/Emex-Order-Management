@@ -3,7 +3,7 @@
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics,FireDAC.Stan.Param,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIFrame, uniPanel, uniHTMLFrame, uniTreeView,
   uniGUIBaseClasses, uniImageList, Vcl.Menus, uniMainMenu, System.Actions,
@@ -204,10 +204,10 @@ end;
 
 procedure TConfluenceT.ConstructNavigator;
 var
-  c, Path: string;
+  c: string;
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
-  iconfile: string;
+//  iconfile: string;
 begin
   SelectedNode := nil;
 
@@ -289,7 +289,6 @@ end;
 
 procedure TConfluenceT.edt1AjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
-var sqltext: string;
 begin
   if EventName = 'myCustomSaveButton' then
   begin
@@ -340,7 +339,7 @@ begin
                 '          on i.ArticleID = d.ArticleID ' +
                 '  where i.ArticleID = :ArticleID       ';
 
-    ParamByName('ArticleID').Value := SelectedNode.Tag;
+    ParamByName('ArticleID').AsInteger := SelectedNode.Tag;
     Open;
 
     lblArticle.Caption := FieldByName('Name').asstring;

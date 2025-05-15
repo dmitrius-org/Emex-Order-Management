@@ -6,7 +6,7 @@ uses System.SysUtils, //Vcl.Dialogs, //System.Variants,
      System.UITypes, Variants,  Data.DB,
      Winapi.ShellAPI, Windows, Messages,
 
-     FireDAC.Comp.Client, FireDAC.Comp.Script,
+     FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Param,
 
      uCommonType, uSqlUtils, uniGUIApplication, uniGUITypes;
 
@@ -239,7 +239,7 @@ var
 
   i, a: Integer;
   Proc: TProcExec;
-    rc: word;
+//    rc: word;
      M: string;
 TaskID: Integer;
    Msg: string;
@@ -473,8 +473,8 @@ begin
 
     //WorkDir := Work;
 
-    Handle := CreateProcess(nil, PChar('cmd.exe /C' + CommandLine),    // /C
-                            nil, nil, True, 0, nil, nil, SI, PI);  // PChar(WorkDir), SI, PI);
+    Handle := CreateProcess(nil, PChar('cmd.exe /C' + CommandLine), // /C
+                            nil, nil, True, 0, nil, nil, SI, PI);   // PChar(WorkDir), SI, PI);
 
     CloseHandle(StdOutPipeWrite);
 
@@ -485,7 +485,7 @@ begin
           if BytesRead > 0 then
           begin
             Buffer[BytesRead] := #0;
-            Result := Result + Buffer;
+            Result := Result + string(Buffer);
           end;
         until not WasOK or (BytesRead = 0);
 

@@ -663,8 +663,8 @@
           Width = 288
           Hint = ''
           ShowHint = True
-          ShowSearch = True
           ShowSelectButton = True
+          ShowSearch = True
           Text = ''
           TabOrder = 14
           ClientEvents.ExtEvents.Strings = (

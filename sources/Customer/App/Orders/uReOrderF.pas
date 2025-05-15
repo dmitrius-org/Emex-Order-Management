@@ -9,7 +9,7 @@ uses
   uUniExComboBox, uniGUIBaseClasses, uniLabel, uniButton, uniBitBtn, uniCheckBox,
   uniPanel, Data.DB, FireDAC.Comp.Client, FireDAC.DApt, FireDAC.Comp.DataSet,
   uEmexUtils, uniTimer, System.Actions, Vcl.ActnList, uniMainMenu, uniImageList,
-  uToast, uuUniExComboBoxHelper, Quick.Logger;
+  uToast, uUniExComboBoxHelper, Quick.Logger, FireDAC.Stan.Param;
 
 type
   TSQLQueryThread = class(TThread)
@@ -163,7 +163,6 @@ begin
 end;
 
 procedure TReOrder.DataLoad;
-var js: string;
 begin
   UniMainModule.Query.Close;
   UniMainModule.Query.SQL.Text := '''
@@ -215,9 +214,9 @@ begin
 
     t := TSQLQueryThread.Create(UniMainModule.FDConnection, UniMainModule.AUserID, FDetailNumber, FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
+//    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
     t.Logger := GetCurrentLogData();
-    t.Resume; // непосредственно ручной запуск потока
+    t.Start; // непосредственно ручной запуск потока
 
     UniTimer.Enabled := True;
   finally
@@ -379,7 +378,6 @@ begin
 end;
 
 procedure TReOrder.UniTimerTimer(Sender: TObject);
-var Price: string;
 begin
   try
     Sql.Open('select 1 from #IsPart (nolock)', [],[]);
@@ -401,7 +399,7 @@ end;
 constructor TSQLQueryThread.Create(AConnection: TFDConnection;
   AClientID: Integer; ADetailNumber, APriceLogo: string);
 begin
-  inherited Create(False);
+  inherited Create(True);
 
   FConnection  := AConnection;
   FClientID    := AClientID;

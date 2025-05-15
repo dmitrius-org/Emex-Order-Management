@@ -24,7 +24,6 @@ type
     QueryName: TWideStringField;
     QueryinDatetime: TSQLTimeStampField;
     QueryupdDatetime: TSQLTimeStampField;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -35,7 +34,6 @@ type
     N2: TUniMenuItem;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fGroupID: TUniEdit;
     fName: TUniEdit;
@@ -50,7 +48,6 @@ type
     ToolBar: TUniToolBar;
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
     GridGroups: TUniDBGrid;
@@ -255,9 +252,8 @@ end;
 procedure TGroupsT.GridUserCellContextClick(Column: TUniDBGridColumn; X,
   Y: Integer);
 begin
-  PopupMenu.Popup(x, y, ppUser);
+  ppUser.Popup(x, y, GridUser);
 end;
-
 
 procedure TGroupsT.GridGroupsClearFilters(Sender: TObject);
 var i:Integer;

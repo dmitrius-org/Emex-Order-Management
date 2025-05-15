@@ -9,8 +9,8 @@ uses
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniBasicGrid, uniDBGrid,
-  uniGUIBaseClasses, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
-  uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
+  uniGUIBaseClasses, uniToolBar, System.Actions, Vcl.ActnList,
+  uniMainMenu, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
   uUserF, uGrant, uCommonType;
@@ -19,7 +19,6 @@ type
   TClientsTypeT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -30,7 +29,6 @@ type
     N2: TUniMenuItem;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -44,12 +42,10 @@ type
     ToolBar: TUniToolBar;
     UniToolButton1: TUniToolButton;
     UniToolButton2: TUniToolButton;
-    UniToolButton3: TUniToolButton;
     UniToolButton4: TUniToolButton;
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
-    UniHiddenPanel: TUniHiddenPanel;
     QueryClientTypeID: TFMTBCDField;
     QueryName: TWideStringField;
     QueryComment: TWideStringField;
@@ -165,7 +161,7 @@ begin
   if FAction = acInsert then  Query.Refresh;
 end;
 
-procedure TClientsTypeT.UniFrameCreate(Sender: TObject); var Index: Integer;
+procedure TClientsTypeT.UniFrameCreate(Sender: TObject);
 begin
   {$IFDEF Debug}
   Grant.GrantTemplateCreate(self);

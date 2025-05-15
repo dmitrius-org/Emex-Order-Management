@@ -8,8 +8,8 @@ unit  uCommonType;
 
 interface
 
-uses System.SysUtils, System.UITypes, System.Rtti,
-     FireDAC.Comp.Client, FireDAC.Comp.Script;
+uses System.SysUtils, System.UITypes, System.Rtti, Data.DB,
+     FireDAC.Comp.Client, FireDAC.Comp.Script, FireDAC.Stan.Param;
 
 Type
   /// <summary> Типы действий </summary>
@@ -219,6 +219,8 @@ begin
   FCode    := 0;
   FMessage := '';
   FID      := 0;
+
+  Result := Self;
 end;
 
 constructor TRetVal.Create(AConnection: TFDConnection);
@@ -255,7 +257,7 @@ Begin
       Qry.Connection := FConnection;
 
       Qry.SQL.Text := 'select dbo.GetRetMsg(:RetCode)';
-      Qry.ParamByName('RetCode').Value := FCode;
+      Qry.ParamByName('RetCode').AsInteger := FCode;
       Qry.Open;
 
       if not Qry.IsEmpty then
