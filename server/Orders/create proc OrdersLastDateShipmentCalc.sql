@@ -107,19 +107,18 @@ update p
                              when n.flag&32 > 0 
                              then datediff(dd, getdate(), p.LastDateShipment) 
                              else o.LastTermShipment
-                           end
- from pDeliveryTerm p with (updlock index=ao1)
-inner join tOrders o with (nolock index=ao1)
-        on o.OrderID=p.OrderID 
-inner join tNodes n (nolock)
-        on n.NodeID = o.StatusID
-where p.Spid   = @@spid
-  and p.RetVal = 0
+                           end 
+  from pDeliveryTerm p with (updlock index=ao1)
+ inner join tOrders o with (nolock index=ao1)
+         on o.OrderID=p.OrderID 
+ inner join tNodes n (nolock)
+         on n.NodeID = o.StatusID
+ where p.Spid   = @@spid
+   and p.RetVal = 0
 --*/
 
 if @IsSave = 1
 begin
-
   update o
      set o.LastDateShipment = p.LastDateShipment -- Крайняя дата отгрузки со склада в ОАЭ
         ,o.LastTermShipment = p.LastTermShipment -- Дней до крайней даты отгрузки со склада в ОАЭ       
@@ -127,30 +126,6 @@ begin
    inner join tOrders o with (updlock index=ao1)
            on o.OrderID=p.OrderID 
    where p.Spid = @@spid
-
-  --update o
-  --   set o.DeliveryDateToCustomer = p.DeliveryDateToCustomer 
-  --      ,o.DeliveryRestToCustomer = p.DeliveryRestToCustomer 
-  --      ,o.DeliveryTermToCustomer = p.DeliveryTermToCustomer
-  --  from pDeliveryTerm p (nolock)
-  -- inner join tOrdersDeliveryCustomer o with (updlock index=PK_tOrdersDeliveryCustomer_OrderID)
-  --         on o.OrderID=p.OrderID 
-  -- where p.Spid = @@spid
-
-  --insert tOrdersDeliveryCustomer with (rowlock)
-  --      (OrderID,
-  --       DeliveryDateToCustomer,
-  --       DeliveryRestToCustomer,
-  --       DeliveryTermToCustomer)
-  --select p.OrderID 
-  --      ,p.DeliveryDateToCustomer
-  --      ,p.DeliveryRestToCustomer 
-  --      ,p.DeliveryTermToCustomer
-  --  from pDeliveryTerm p with (nolock index=ao1)
-  -- where p.Spid = @@spid
-  --   and not exists ( select 1
-  --                      from tOrdersDeliveryCustomer o with (nolock index=PK_tOrdersDeliveryCustomer_OrderID)
-  --                     where o.OrderID = p.OrderID )
 end
 
  exit_:
