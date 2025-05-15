@@ -100,7 +100,9 @@ INSERT INTO [tOrders] with (rowlock)
       ,Kurs
       ,Fragile
       ,PercentSupped
-      ,Comment2   
+      ,Comment2 
+      ,LastDateShipment
+      ,LastTermShipment      
       ,ID)     
        --                         o.OrderID                  
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID
@@ -183,6 +185,8 @@ select o.ClientID
       ,o.Fragile -- Наценка за страховку SupplierDeliveryProfiles.Fragile
       ,o.PercentSupped
       ,o.Comment2    
+      ,o.LastDateShipment
+      ,o.LastTermShipment
       ,null
   from tOrders o  with (nolock index=ao1)
  where o.OrderID = @OrderID
@@ -238,7 +242,7 @@ Select i.OrderID
          on p.ObjectID=i.ParentID
  order by p.ProtocolID
 
-  select @AuditComment =  'Добавлен в результате разделения заказа'
+  select @AuditComment = 'Добавлен в результате разделения заказа'
 
 
   -- аудит
@@ -255,6 +259,6 @@ Select i.OrderID
 GO
 grant exec on OrderSplitting to public
 go
-exec setOV 'OrderSplitting', 'P', '20250206', '1'
+exec setOV 'OrderSplitting', 'P', '20250515', '2'
 go
  

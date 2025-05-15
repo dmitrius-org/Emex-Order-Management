@@ -1,6 +1,6 @@
 drop proc if exists OrdersDeliveryCustomerTermCalcNext
 /*
-  OrdersDeliveryCustomerTermCalcNext - расчет сроков доставки :
+  OrdersDeliveryCustomerTermCalcNext - расчет сроков доставки клиента :
     @IsSave - сохраняет данные
               0 - нет
               1 - да
@@ -44,6 +44,7 @@ update p
  inner join vSupplierDeliveryParam sdp
          on sdp.ProfilesDeliveryID = o.ProfilesDeliveryID
  where p.Spid = @@Spid
+
 
 if @IsSave = 1
 begin

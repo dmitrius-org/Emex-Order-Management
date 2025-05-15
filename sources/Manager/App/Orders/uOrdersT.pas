@@ -211,6 +211,8 @@ type
     QueryNoAir: TBooleanField;
     actDelete: TAction;
     ppDelete: TUniMenuItem;
+    QueryLastTermShipment: TIntegerField;
+    QueryLastDateShipment: TSQLTimeStampField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);

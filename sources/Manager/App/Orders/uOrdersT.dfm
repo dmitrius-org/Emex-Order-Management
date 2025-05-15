@@ -619,6 +619,18 @@ object OrdersT: TOrdersT
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
           Width = 169
+        end
+        item
+          FieldName = 'LastDateShipment'
+          Title.Alignment = taCenter
+          Title.Caption = #1050#1088#1072#1081#1085#1103#1103' '#1076#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1074' '#1054#1040#1069
+          Width = 112
+        end
+        item
+          FieldName = 'LastTermShipment'
+          Title.Alignment = taCenter
+          Title.Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1088#1072#1081#1085#1077#1081' '#1076#1072#1090#1099' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1074' '#1054#1040#1069
+          Width = 129
         end>
     end
     object pFilter: TUniPanel
@@ -1276,6 +1288,8 @@ object OrdersT: TOrdersT
         '      ,o.DeliveryTermFromSupplier  -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082 +
         #1072' '#1089' '#1087#1088#1086#1092#1080#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       '      ,o.DeliveryTermFromSupplier2'
+      '      ,o.LastDateShipment'
+      '      ,o.LastTermShipment'
       '  FROM !Form  '
       ' where 1=1'
       '          '
@@ -1672,6 +1686,12 @@ object OrdersT: TOrdersT
     end
     object QueryNoAir: TBooleanField
       FieldName = 'NoAir'
+    end
+    object QueryLastTermShipment: TIntegerField
+      FieldName = 'LastTermShipment'
+    end
+    object QueryLastDateShipment: TSQLTimeStampField
+      FieldName = 'LastDateShipment'
     end
   end
   object DataSource: TDataSource

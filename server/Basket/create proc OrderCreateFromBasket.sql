@@ -330,6 +330,9 @@ declare @r int = 0
   
   exec OrdersSupplierDeliveryCalc @IsSave = 1
 
+  /*Расчет сроков доставки при создании заказа: 
+     - Ближайшая дата вылета DeliveryNextDate
+     - Дней запаса до вылета*/
   delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
   insert pDeliveryTerm  with (rowlock)
         (Spid, OrderID)
@@ -338,6 +341,16 @@ declare @r int = 0
   
   exec OrdersDeliveryTermCalc @IsSave = 1
 
+  /*Расчет сроков доставки при создании заказа: 
+     - Крайняя дата отгрузки со склада в ОАЭ
+     - Дней до крайней даты отгрузки со склада в ОАЭ*/
+  delete pDeliveryTerm from pDeliveryTerm with (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock)
+        (Spid, OrderID)
+  Select @@spid, OrderID
+    from @ID
+
+  exec OrdersLastDateShipmentCalc @IsSave = 1
 
   --declare @Orders as ID
   --insert @Orders (ID)
@@ -353,6 +366,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250423', '27'
+exec setOV 'OrderCreateFromBasket', 'P', '20250515', '28'
 go
  

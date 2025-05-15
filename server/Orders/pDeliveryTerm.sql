@@ -21,17 +21,22 @@ create table pDeliveryTerm
 ,DeliveryDaysReserve       int            -- Дней запаса до вылета	
 ,DeliveryNextDate          datetime       -- Ближайшая дата вылета	
 ,DeliveryNextDate2         datetime       -- Ближайшая дата вылета	
+
 ,DeliveryDateToCustomer    datetime       -- Дата поставки клиенту	
 ,DeliveryTermToCustomer    int            -- Срок поставки клиенту	
 ,DeliveryRestToCustomer    int            -- Остаток срока до поставки клиенту
-,RetVal                    int
+
+,LastDateShipment          datetime       -- Крайняя дата отгрузки со склада
+,LastTermShipment          int            -- Дней до крайней даты отгрузки со склада
+
+,RetVal                    int default 0           
 )
 go
 create unique index ao1 on pDeliveryTerm(Spid, OrderID)
 go
 grant select on pDeliveryTerm to public
 go
-exec setOV 'pDeliveryTerm', 'U', '20240322', '1'
+exec setOV 'pDeliveryTerm', 'U', '20250515', '2'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pDeliveryTerm', @desc = 'Сроки поставки'

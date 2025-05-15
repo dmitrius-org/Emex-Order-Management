@@ -103,7 +103,11 @@ INSERT INTO [tOrders] with (rowlock)
 
       ,CustomerClientNum  
       ,CustomerClientSign 
-      ,CustomerOrder      
+      ,CustomerOrder   
+      
+      ,LastDateShipment
+      ,LastTermShipment
+
 	  ,ID)	 
        --                         o.OrderID                    p.ID
 OUTPUT INSERTED.OrderID, INSERTED.ParentID, INSERTED.StatusID, INSERTED.ID
@@ -194,6 +198,9 @@ select o.ClientID
       ,o.CustomerClientNum  
       ,o.CustomerClientSign 
       ,o.CustomerOrder 
+      ,o.LastDateShipment
+      ,o.LastTermShipment
+
 	  ,p.ID
   from pMovement p (nolock) -- тут детали, которые не найдены в нашей системе
  inner join tOrders o  (nolock)
@@ -284,6 +291,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20250408', '6'
+exec setOV 'CloneOrders', 'P', '20250515', '7'
 go
  

@@ -31,6 +31,7 @@ type
     cbRecalClientDelivery: TUniCheckBox;
     cbRecalSupplierDelivery: TUniCheckBox;
     cbSyncSupplier: TUniCheckBox;
+    cbLastTermShipment: TUniCheckBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -93,6 +94,8 @@ var sqltext: string;
       FFlag := FFlag + 8;
     if cbSyncSupplier.Checked then
       FFlag := FFlag + 16;
+    if cbLastTermShipment.Checked then
+      FFlag := FFlag + 32;
   end;
 begin
   RetVal.Clear;
@@ -248,6 +251,8 @@ begin
   cbRecalClientDelivery.Checked := FFlag and 4 > 0;
   cbRecalSupplierDelivery.Checked := FFlag and 8 > 0;
   cbSyncSupplier.Checked := FFlag and 16 > 0;
+  cbLastTermShipment.Checked := FFlag and 32 > 0; //Пересчитывать: Дней до крайней даты отгрузки со склада
+
 end;
 
 procedure TNodesF.edtTypeChangeValue(Sender: TObject);

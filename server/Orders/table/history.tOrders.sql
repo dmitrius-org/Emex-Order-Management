@@ -50,9 +50,13 @@ begin
     ,DeliveryDaysReserve2            int            -- Дней запаса до вылета, рассчитывается если прошел срок DeliveryNextDate
     ,DeliveryNextDate                datetime       -- Ближайшая дата вылета
     ,DeliveryNextDate2               datetime       -- Ближайшая дата вылета, рассчитывается если прошел срок DeliveryNextDate
+
     ,DeliveryDateToCustomer          datetime       -- Дата поставки клиенту
     ,DeliveryTermToCustomer          int            -- Срок поставки клиенту
     ,DeliveryRestToCustomer          int            -- Остаток срока до поставки клиенту
+
+    ,LastDateShipment                datetime       -- Крайняя  дата отгрузки со склада в ОАЭ
+    ,LastTermShipment                int            -- Дней до крайней даты отгрузки со склада в ОАЭ
 
     ,DateDeparture                   datetime       -- Добавить дату вылета 
     ,DaysInWork                      int            -- Дней в работе
@@ -108,8 +112,7 @@ begin
     ,CustomerOrder                   varchar(128)   -- Заказ
     -- апи
     ,ClientOrderNum                  int            -- Номер заказа клиента 
-
-     --   
+    --   
     ,ID                              numeric(18,0)  -- техническое поле 
     ,UserID                          numeric(18,0)  
     ,inDatetime                      datetime      default GetDate()--

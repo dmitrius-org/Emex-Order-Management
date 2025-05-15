@@ -2,6 +2,8 @@ drop proc if exists DeliveryDateCalc
 /*
   DeliveryDateCalc - расчет ближайшей дата вылета
 
+            @ToDay - учитывать текущий день. По умолчанию расчет со следующего дня
+
   вызываем из LoadOrdersDeliveryTermCalc -> DeliveryDateCalc
   
   Входящий набор данных: pDeliveryDate
@@ -9,18 +11,21 @@ drop proc if exists DeliveryDateCalc
 */
 go
 create proc DeliveryDateCalc
+             @ToDay bit = null
                   
 as
   SET NOCOUNT ON; SET DATEFIRST 1 ;  
   
   declare @r int = 0
+
+  select @ToDay = isnull(@ToDay, 0)
   
   /*В системе можно выставить несколько дней доставки, поэтому обрабатываем в курсоре*/
   declare @N int
          ,@Name nvarchar(15)
   
   Declare @DeliveryNextDate table (OrderID        numeric(18,0) 
-                                  ,DeliveryDate   datetime       -- Ближайшая дата вылета	
+                                  ,DeliveryDate   datetime -- Ближайшая дата вылета	
                                    )
   
   DECLARE cr_Ekv1  CURSOR
@@ -45,7 +50,8 @@ as
   		  ,DeliveryDate)
       select p.ID
   	      ,case 
-  			 when DATEPART(dw, p.OrderDate) < @N
+  			 when ((@ToDay = 0 and DATEPART(dw, p.OrderDate) < @N) 
+                or (@ToDay = 1 and DATEPART(dw, p.OrderDate) <= @N))
   			 -- успеваем на этой неделе
   			 then DATEADD(dd, @N - DATEPART(dw, p.OrderDate), p.OrderDate)
   
@@ -83,6 +89,6 @@ as
 go
   grant exec on DeliveryDateCalc to public
 go
-exec setOV 'DeliveryDateCalc', 'P', '20250320', '3'
+exec setOV 'DeliveryDateCalc', 'P', '20250515', '4'
 go
   

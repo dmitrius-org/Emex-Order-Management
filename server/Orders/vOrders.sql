@@ -121,6 +121,8 @@ SELECT o.[OrderID]
       ,o.BasketId
       ,o.Reference
       ,o.CustomerSubID
+      ,o.LastDateShipment
+      ,o.LastTermShipment
   FROM vUserAccess ua 
 
  inner join tOrders o with (nolock index=ao2)
@@ -187,7 +189,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250320', '24'
+exec setOV 'vOrders', 'V', '20250515', '25'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

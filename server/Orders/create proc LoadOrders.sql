@@ -148,8 +148,8 @@ as
         ,o.CustomerClientNum   -- № Клиента
         ,o.CustomerClientSign  -- Пометки Клиента
         ,o.CustomerOrder       -- Заказ
-    from pOrders o (nolock)
-   inner join tClients c (nolock)
+    from pOrders o with (nolock index=ao1)
+   inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = o.ClientID
    inner join tSuppliers s with (nolock index=ao1)
            on s.SuppliersID = c.SuppliersID 
@@ -208,7 +208,7 @@ as
     from @ID i
    inner join tOrders o with (updlock)
            on o.OrderID = i.ID
-   inner join tPrice p (nolock) 
+   inner join tPrice p with (nolock) 
            on p.PriceID = o.PriceID
                         
   Update o
@@ -223,8 +223,8 @@ as
     from tNodes (nolock)
    Where Brief = 'ToNew'
 
-  delete pAccrualAction from pAccrualAction (rowlock) where spid = @@spid
-  insert into pAccrualAction
+  delete pAccrualAction from pAccrualAction with (rowlock) where spid = @@spid
+  insert into pAccrualAction with (rowlock)
         (Spid,
 		 ObjectID,
 		 ActionID,
@@ -253,8 +253,9 @@ as
   exec OrdersFinCalc @IsSave = 1
   
   --! расчет сроков дотавки
-  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-  insert pDeliveryTerm (Spid, OrderID)
+  delete pDeliveryTerm from pDeliveryTerm with (rowlock) where spid = @@Spid
+  insert pDeliveryTerm  with (rowlock)
+        (Spid, OrderID)
   Select @@spid, ID
     from @ID
 
@@ -263,19 +264,33 @@ as
   /*Расчет сроков доставки при создании заказа: 
      - Ближайшая дата вылета DeliveryNextDate
      - Дней запаса до вылета*/
-  delete pDeliveryTerm from pDeliveryTerm (rowlock) where spid = @@Spid
-  insert pDeliveryTerm (Spid, OrderID)
+  delete pDeliveryTerm from pDeliveryTerm with (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock)
+        (Spid, OrderID)
   Select @@spid, ID
     from @ID
 
   exec OrdersDeliveryTermCalc @IsSave = 1
+
+  /*Расчет сроков доставки при создании заказа: 
+     - Крайняя дата отгрузки со склада в ОАЭ
+     - Дней до крайней даты отгрузки со склада в ОАЭ*/
+  delete pDeliveryTerm from pDeliveryTerm with (rowlock) where spid = @@Spid
+  insert pDeliveryTerm with (rowlock)
+        (Spid, OrderID)
+  Select @@spid, ID
+    from @ID
+
+  exec OrdersLastDateShipmentCalc @IsSave = 1
 
 
   --! Автоматический перевод в Проверено при загрузке заказа
   if OBJECT_ID('tempdb..#Order') is not null drop table #Order
   CREATE TABLE #Order ( OrderID  numeric(18,0) );
 
-  insert #Order (OrderID) Select ID from @ID
+  insert #Order  with (rowlock)
+        (OrderID)
+  Select ID from @ID
 
   exec OrderAutoSetStatus
 
@@ -288,6 +303,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250408', '13'
+exec setOV 'LoadOrders', 'P', '20250515', '14'
 go
  

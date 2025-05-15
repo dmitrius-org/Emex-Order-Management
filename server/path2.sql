@@ -1,10 +1,8 @@
---insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1047, 1047, 'ѕанель управлени€ сервером',  'TMainForm.actServerControlPanel', 0, 1
-
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1051, 1051, '»зменить',  'TAPIFormT.actUpdate', 1047, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1050, 1050, '—оздать новый ключ',  'TAPIFormT.actInsert', 1047, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1049, 1049, '”далить',  'TAPIFormT.actDelete', 1047, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1048, 1048, 'ќбновить таблицу',  'TAPIFormT.actRefreshAll', 1047, 1
+alter table tOrders
+add  LastDateShipment                datetime       --  райн€€  дата отгрузки со склада в ќјЁ
+    ,LastTermShipment                int            -- ƒней до крайней даты отгрузки со склада в ќјЁ
 
 
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1053, 1053, '¬ключение/выключение задани€',  'TTask_T.actTaskEnabled', 200, 1
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1052, 1052, '”далить запись',  'TOrdersT.actDelete', 20, 1
+alter table history.tOrders
+add   LastDateShipment                datetime       --  райн€€  дата отгрузки со склада в ќјЁ
+     ,LastTermShipment                int            -- ƒней до крайней даты отгрузки со склада в ќјЁ

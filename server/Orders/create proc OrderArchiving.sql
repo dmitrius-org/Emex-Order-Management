@@ -106,6 +106,8 @@ INSERT INTO [History].[tOrders] with (rowlock)
       ,QuantityOrg
       ,HUserID     
       ,HinDatetime 
+      ,LastDateShipment
+      ,LastTermShipment
       )     
 select o.OrderID
       ,o.ClientID
@@ -201,6 +203,8 @@ select o.OrderID
       ,o.QuantityOrg  
       ,dbo.GetUserID()
       ,GetDate() 
+      ,o.LastDateShipment
+      ,o.LastTermShipment
   from @OrderID I
   inner join tOrders o  with (nolock index=ao1)
           on o.OrderID = I.ID
@@ -211,6 +215,6 @@ select o.OrderID
 GO
 grant exec on OrderArchiving to public
 go
-exec setOV 'OrderArchiving', 'P', '20250206', '1'
+exec setOV 'OrderArchiving', 'P', '20250515', '2'
 go
  

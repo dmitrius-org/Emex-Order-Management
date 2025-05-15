@@ -1,6 +1,6 @@
 drop proc if exists OrdersCustomerDeliveryTermRecalc
 /*
-  OrdersCustomerDeliveryTermRecalc - - Пересчет сроков доставки клиента (Дней в работе, Остаток срока до поставки клиенту)
+  OrdersCustomerDeliveryTermRecalc - Пересчет сроков доставки клиента (Дней в работе, Остаток срока до поставки клиенту)
                      
   Использую в автоматических заданиях для ежедневного пересчета
 */
@@ -34,14 +34,22 @@ Update o
  where isnull(o.isCancel, 0) = 0
    and o.DeliveryTermToCustomer is not null
 
-  
- exit_:
 
+-- Дней до крайней даты отгрузки со склада в ОАЭ
+update o    
+   set o.LastTermShipment = datediff(dd, getdate(), o.LastDateShipment) 
+  from tOrders o with (nolock index=ao1)
+ inner join tNodes n (nolock)
+         on n.NodeID = o.StatusID
+        and n.flag&32 > 0
+ where o.isCancel = 0
+
+ exit_:
  return @r
 go
   grant exec on OrdersCustomerDeliveryTermRecalc to public
 go
-exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250320', '4'
+exec setOV 'OrdersCustomerDeliveryTermRecalc', 'P', '20250515', '5'
 go
   
 
