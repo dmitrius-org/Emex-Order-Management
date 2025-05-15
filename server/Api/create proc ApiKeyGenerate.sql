@@ -6,7 +6,7 @@ go
 -------------------------------------------------------- */
 create proc ApiKeyGenerate 
               @ClientID numeric(18, 0)
-             ,@ApiKey   NVARCHAR(32) = null out
+             ,@ApiKey   VARCHAR(32) = null out
 as
 BEGIN
 set nocount on;
@@ -24,11 +24,12 @@ insert tApiKeys
       (ClientID
       ,Name
       ,ApiKey
+      ,ApiKeyMD5
       )
 select @ClientID
       ,''
       ,@ApiKey
-
+      ,CONVERT(VARCHAR(32), HASHBYTES('MD5', @ApiKey),2)
 END
     
 exit_:
@@ -36,5 +37,5 @@ return @RetVal
 go
 grant exec on ApiKeyGenerate to public
 go
-exec setOV 'ApiKeyGenerate', 'P', '20250423', '0'
+exec setOV 'ApiKeyGenerate', 'P', '20250515', '1'
 go

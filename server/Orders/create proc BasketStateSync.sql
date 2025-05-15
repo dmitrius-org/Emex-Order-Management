@@ -92,24 +92,23 @@ as
   
 
  Update o
-    set o.flag = o.Flag & ~1      -- превышение цены
+    set o.flag = isnull(o.Flag, 0)
+                        & ~1      -- превышение цены
                         & ~2      -- нет цены
                         & ~16384  -- Несоответствие упаковке
                         & ~32768  -- Нет в наличии
-                        & ~262144 -- Измените метод отправки         
-                        |case
-                          when p.WarnCode = -1 then 1       -- превышение цены
-                          when p.WarnCode = -2 then 2       -- нет цены
-                          when p.WarnCode = -4 then 16384   -- Несоответствие упаковке
-                          when p.WarnCode = -5 then 32768   -- Нет в наличии
-                          when p.WarnCode = 99 then 262144  -- Измените метод отправки
-	                      else 0
-	                    end
+                        & ~262144 -- Измените метод отправки     
+                        
+                        | iif(p.WarnCode = -1, 1     , 0)  -- превышение цены
+                        | iif(p.WarnCode = -2, 2     , 0)  -- нет цены
+                        | iif(p.WarnCode = -4, 16384 , 0)  -- Несоответствие упаковке
+                        | iif(p.WarnCode = -5, 32768 , 0)  -- Нет в наличии
+                        | iif(p.WarnCode = 99, 262144, 0)  -- Измените метод отправки
        ,o.updDatetime = GetDate()
    from pBasketDetails p (nolock)        
   inner join tOrders o (Updlock) 
           on o.OrderID = p.OrderID     
- where p.Spid   = @@SPID
+ where p.Spid = @@SPID
 
 
 Update p 

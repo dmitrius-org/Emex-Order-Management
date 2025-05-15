@@ -31,13 +31,13 @@ as
   -- WHERE ClientID = @ClientID 
   --   AND MethodName = @MethodName;
  -- BEGIN TRANSACTION;
-    -- Попытка обновления существующей записи
+    -- РџРѕРїС‹С‚РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµР№ Р·Р°РїРёСЃРё
     --UPDATE tApiMethodCalls WITH (ROWLOCK)
     --   SET CallCount = CallCount + 1
     -- WHERE ClientID = @ClientID
     --   AND MethodName = @MethodName;
 
-    ---- Если запись не была обновлена (не существует), выполняем вставку
+    ---- Р•СЃР»Рё Р·Р°РїРёСЃСЊ РЅРµ Р±С‹Р»Р° РѕР±РЅРѕРІР»РµРЅР° (РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚), РІС‹РїРѕР»РЅСЏРµРј РІСЃС‚Р°РІРєСѓ
     --IF @@ROWCOUNT = 0
     --BEGIN
     --    INSERT INTO tApiMethodCalls WITH (ROWLOCK)

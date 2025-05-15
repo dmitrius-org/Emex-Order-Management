@@ -14,6 +14,8 @@ begin
     ,ClientID             numeric(18,0) NOT NULL 
     ,Name                 VARCHAR(255)  
     ,ApiKey               VARCHAR(255)  NOT NULL
+    ,ApiKeyMD5            VARCHAR(32)  NOT NULL
+
     ,Flag                 int
 	,inDatetime           datetime      default GetDate() --
     ,EndDatetime          datetime      --default GetDate() --
@@ -29,7 +31,7 @@ begin
 
 	create index ao1 on tApiKeys(ClientID);-- include (Brief, Name);
 
-    create unique index ao2 on tApiKeys(ApiKey);-- include (Brief, Name);
+    create unique index ao2 on tApiKeys(ApiKeyMD5);-- include (Brief, Name);
 
 	grant all on tApiKeys to public;
 end

@@ -94,7 +94,7 @@ inherited APIFormT: TAPIFormT
               ButtonId = 0
               UI = 'confirm'
               Hint = #1059#1076#1072#1083#1080#1090#1100
-              ImageIndex = 0
+              ImageIndex = 2
             end>
           Title.Alignment = taCenter
           Title.Caption = ' '
@@ -131,7 +131,6 @@ inherited APIFormT: TAPIFormT
     BorderStyle = ubsNone
     Caption = ''
     Color = clBtnShadow
-    Images = ImageList32
     AlignmentControl = uniAlignmentClient
     ParentAlignmentControl = False
     Layout = 'fit'
@@ -148,7 +147,7 @@ inherited APIFormT: TAPIFormT
       ShowHint = True
       ButtonHeight = 53
       ButtonWidth = 123
-      Images = ImageList32
+      Images = MainMenuImage
       ShowCaptions = True
       ButtonAutoWidth = True
       LayoutConfig.Padding = '0px 0px 0px 5px'
@@ -159,17 +158,13 @@ inherited APIFormT: TAPIFormT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitLeft = 3
-      ExplicitTop = 3
-      ExplicitWidth = 1133
-      ExplicitHeight = 61
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
         Top = 3
         ShowHint = True
         Action = actInsert
-        ImageIndex = 1
+        ImageIndex = 0
         TabOrder = 1
       end
       object UniToolButton2: TUniToolButton
@@ -179,7 +174,7 @@ inherited APIFormT: TAPIFormT
         Margins.Left = 0
         ShowHint = True
         Action = actUpdate
-        ImageIndex = 3
+        ImageIndex = 1
         TabOrder = 2
       end
       object UniToolButton4: TUniToolButton
@@ -189,7 +184,7 @@ inherited APIFormT: TAPIFormT
         Margins.Left = 0
         ShowHint = True
         Action = actDelete
-        ImageIndex = 0
+        ImageIndex = 2
         TabOrder = 3
       end
       object UniToolButton3: TUniToolButton
@@ -198,6 +193,7 @@ inherited APIFormT: TAPIFormT
         Top = 3
         ShowHint = True
         Action = actRefreshAll
+        ImageIndex = 3
         TabOrder = 4
       end
     end
@@ -255,17 +251,17 @@ inherited APIFormT: TAPIFormT
     object actDelete: TAction
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 0
+      ImageIndex = 2
       OnExecute = actDeleteExecute
     end
     object actInsert: TAction
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1081' '#1082#1083#1102#1095
-      ImageIndex = 1
+      ImageIndex = 0
       OnExecute = actInsertExecute
     end
     object actUpdate: TAction
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ImageIndex = 3
+      ImageIndex = 1
       OnExecute = actUpdateExecute
     end
   end
