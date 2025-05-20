@@ -4,4 +4,3 @@
  - Delphi 12
  - UniGui
  - Delphi-GCharts-main
- - UniFalcon
