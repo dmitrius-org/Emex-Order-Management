@@ -26,7 +26,7 @@ object BasketF: TBasketF
     TabOrder = 1
     BorderStyle = ubsNone
     ShowCaption = False
-    Caption = 'MainPanel'
+    Caption = ''
     LayoutConfig.Width = '0'
     object Grid: TUniDBGrid
       Left = 0
@@ -62,7 +62,7 @@ object BasketF: TBasketF
           'g)'#13#10'{'#13#10'   config.displayInfo=true;'#13#10'}')
       ClicksToEdit = 1
       DataSource = DataSource
-      Options = [dgEditing, dgTitles, dgIndicator, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgConfirmDelete, dgMultiSelect, dgTabs, dgAutoRefreshRow, dgDontShowSelected]
+      Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgRowLines, dgRowSelect, dgCheckSelect, dgCheckSelectCheckOnly, dgAlwaysShowSelection, dgConfirmDelete, dgMultiSelect, dgTabs, dgAutoRefreshRow, dgDontShowSelected]
       WebOptions.Paged = False
       WebOptions.CustomizableCells = False
       WebOptions.AppendPosition = tpCurrentRow
@@ -72,6 +72,7 @@ object BasketF: TBasketF
       EmptyText = 
         '<div style="text-align: center;"><i class="fas fa-shopping-baske' +
         't"></i> '#1050#1086#1088#1079#1080#1085#1072' '#1087#1091#1089#1090#1072'</div>'#13#10
+      ForceFit = True
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-basket'
       LayoutConfig.Width = '0'
@@ -80,6 +81,7 @@ object BasketF: TBasketF
       TabOrder = 0
       ParentColor = False
       Color = clBtnFace
+      PreventWrap = True
       OnKeyDown = GridKeyDown
       OnAjaxEvent = GridAjaxEvent
       OnSelectionChange = GridSelectionChange
@@ -110,6 +112,7 @@ object BasketF: TBasketF
           Title.Alignment = taCenter
           Title.Caption = #1054#1087#1080#1089#1072#1085#1080#1077
           Width = 200
+          ForceStringFormat = True
           ReadOnly = True
           Menu.MenuEnabled = False
           Menu.ColumnHideable = False
@@ -176,6 +179,7 @@ object BasketF: TBasketF
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
           Width = 350
+          ForceStringFormat = True
         end
         item
           WidgetColumn.Enabled = True
@@ -466,6 +470,8 @@ object BasketF: TBasketF
           Hint = ''
           Caption = #1056#1072#1079#1084#1077#1089#1090#1080#1090#1100' '#1079#1072#1082#1072#1079
           Anchors = [akTop, akRight, akBottom]
+          ParentFont = False
+          Font.Height = -16
           TabOrder = 2
           LayoutConfig.ColumnWidth = 150.000000000000000000
           OnClick = addOrderClick

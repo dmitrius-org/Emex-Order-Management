@@ -220,6 +220,6 @@ return @RetVal
 go
 grant exec on ApiBasketInsert to public
 go
-exec setOV 'ApiBasketInsert', 'P', '20240605', '0'
+exec setOV 'ApiBasketInsert', 'P', '20250516', '1'
 go
  

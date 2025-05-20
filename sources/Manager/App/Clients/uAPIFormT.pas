@@ -65,7 +65,7 @@ var
 implementation
 
 uses
-  uUtils.Logger, uAPIKeyForm_F, uMainVar;
+  uUtils.Logger, uAPIKeyForm_F, uMainVar, MainModule;
 
 {$R *.dfm}
 

@@ -37,6 +37,7 @@ SELECT o.OrderID
   left join tOrders o with (nolock index=ao2)
          on o.ClientID = @ClientID
         and o.OrderNum = num.Name
+
   left join tNodes n with (nolock index=ao1)
          on n.NodeID = o.StatusID  
   --left join tMakes b with (nolock index=ao2) -- брент замены

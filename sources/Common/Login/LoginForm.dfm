@@ -43,8 +43,6 @@ object LoginF: TLoginF
     ParentAlignmentControl = False
     TabOrder = 0
     LayoutConfig.Cls = 'login-box'
-    ExplicitWidth = 533
-    ExplicitHeight = 391
     DesignSize = (
       400
       400)
@@ -96,17 +94,17 @@ object LoginF: TLoginF
     object UniCheckBox1: TUniCheckBox
       AlignWithMargins = True
       Left = 95
-      Top = 214
+      Top = 224
       Width = 97
       Height = 17
       Hint = ''
-      Caption = #1047#1072#1087#1086#1084#1085#1080#1090#1100
+      Caption = '0'
       TabOrder = 4
       LayoutConfig.Cls = 'remember-checkbox'
     end
     object lblReset: TUniLabel
       Left = 234
-      Top = 214
+      Top = 224
       Width = 246
       Height = 17
       Cursor = crHandPoint

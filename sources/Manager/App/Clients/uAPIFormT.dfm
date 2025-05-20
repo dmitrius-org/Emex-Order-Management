@@ -147,7 +147,7 @@ inherited APIFormT: TAPIFormT
       ShowHint = True
       ButtonHeight = 53
       ButtonWidth = 123
-      Images = MainMenuImage
+      Images = UniMainModule.BaseImage
       ShowCaptions = True
       ButtonAutoWidth = True
       LayoutConfig.Padding = '0px 0px 0px 5px'
@@ -266,6 +266,7 @@ inherited APIFormT: TAPIFormT
     end
   end
   inherited PopupMenu: TUniPopupMenu
+    Images = UniMainModule.BaseImage
     object ppInsert: TUniMenuItem
       Action = actInsert
     end
@@ -297,6 +298,9 @@ inherited APIFormT: TAPIFormT
     Height = 24
     Left = 512
     Top = 166
-    Images = {01000000FF0000FF060900000074726173683B66613B}
+    Images = {
+      03000000FFFFFF1F060F0000004E657749636F6E436C733B66615F3BFFFFFF1F
+      060F0000004E657749636F6E436C733B66615F3BFF0000FF0609000000747261
+      73683B66613B}
   end
 end

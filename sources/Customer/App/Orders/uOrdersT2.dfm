@@ -475,8 +475,8 @@
           1723
           74)
         object UniLabel1: TUniLabel
-          Left = 17
-          Top = 16
+          Left = 15
+          Top = 20
           Width = 36
           Height = 13
           Hint = ''
@@ -485,8 +485,8 @@
           TabOrder = 1
         end
         object fCancel: TUniBitBtn
-          Left = 990
-          Top = 35
+          Left = 988
+          Top = 39
           Width = 100
           Height = 24
           ShowHint = True
@@ -495,8 +495,8 @@
           TabOrder = 7
         end
         object fOk: TUniBitBtn
-          Left = 1095
-          Top = 35
+          Left = 1093
+          Top = 39
           Width = 100
           Height = 24
           ShowHint = True
@@ -506,8 +506,8 @@
           IconPosition = ipButtonEdge
         end
         object UniLabel5: TUniLabel
-          Left = 894
-          Top = 16
+          Left = 892
+          Top = 20
           Width = 34
           Height = 13
           Hint = ''
@@ -516,8 +516,8 @@
           TabOrder = 4
         end
         object cbCancel: TUniComboBox
-          Left = 894
-          Top = 35
+          Left = 892
+          Top = 39
           Width = 81
           Hint = ''
           ShowHint = True
@@ -526,13 +526,14 @@
             #1053#1077#1090
             #1044#1072)
           TabOrder = 6
+          EmptyText = #1054#1090#1082#1072#1079
           ClearButton = True
           IconItems = <>
           OnSelect = cbCancelSelect
         end
         object UniLabel6: TUniLabel
-          Left = 513
-          Top = 16
+          Left = 511
+          Top = 20
           Width = 78
           Height = 13
           Hint = ''
@@ -541,8 +542,8 @@
           TabOrder = 3
         end
         object fDetailNum: TUniEdit
-          Left = 513
-          Top = 35
+          Left = 511
+          Top = 39
           Width = 171
           Hint = ''
           ShowHint = True
@@ -553,8 +554,8 @@
           ClearButton = True
         end
         object UniLabel8: TUniLabel
-          Left = 311
-          Top = 16
+          Left = 309
+          Top = 20
           Width = 65
           Height = 13
           Hint = ''
@@ -565,7 +566,7 @@
         object btnCancel: TUniBitBtn
           AlignWithMargins = True
           Left = 1600
-          Top = 35
+          Top = 12
           Width = 113
           Height = 24
           ShowHint = True
@@ -574,8 +575,8 @@
           TabOrder = 9
         end
         object edtComment2: TUniEdit
-          Left = 690
-          Top = 35
+          Left = 688
+          Top = 39
           Width = 198
           Hint = ''
           ShowHint = True
@@ -586,8 +587,8 @@
           ClearButton = True
         end
         object UniLabel2: TUniLabel
-          Left = 690
-          Top = 16
+          Left = 688
+          Top = 20
           Width = 77
           Height = 13
           Hint = ''
@@ -596,8 +597,8 @@
           TabOrder = 11
         end
         object fOrderDate: TUniDateRangePicker
-          Left = 311
-          Top = 35
+          Left = 309
+          Top = 39
           Width = 196
           Hint = ''
           ShowHint = True
@@ -634,7 +635,7 @@
         object btnNotification: TUniBitBtn
           AlignWithMargins = True
           Left = 1475
-          Top = 35
+          Top = 12
           Width = 119
           Height = 24
           Hint = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103#1084
@@ -658,8 +659,8 @@
           OnClick = btnNotificationClick
         end
         object fStatus2: TUniExCheckComboBox
-          Left = 17
-          Top = 35
+          Left = 15
+          Top = 39
           Width = 288
           Hint = ''
           ShowHint = True
@@ -672,6 +673,7 @@
               'afterrender=function afterrender(sender, eOpts) {  '#13#10'  initCombo' +
               'BoxSelectButtons(sender, "id");'#13#10'  initComboBoxSearch(sender, "i' +
               'd", "val");  '#13#10'}')
+          EmptyText = #1057#1090#1072#1090#1091#1089
           ClearButton = True
           IconItems = <>
         end
@@ -888,7 +890,6 @@
             Left = 79
             Top = 8
             Width = 69
-            Height = 18
             Hint = ''
             Margins.Top = 8
             Margins.Bottom = 8

@@ -40,7 +40,7 @@ end
 exec @RetVal = OrderCreateFromBasket
                  @OrderNum = @OrderNum out
 
-if isnull(@OrderNum, '') <> ''
+if @RetVal = 0 and isnull(@OrderNum, '') <> ''
   Update tOrders
      set flag       = isnull(flag, 0) | 1048576 -- Заказ через АПИ
         ,Comment3   = @Comment

@@ -110,6 +110,7 @@ insert tRetCode (RetCode, Message) select 544, 'Вес Физический из
 insert tRetCode (RetCode, Message) select 545, 'Заказ в работе!'
 insert tRetCode (RetCode, Message) select 546, 'Запрос существует!'
 insert tRetCode (RetCode, Message) select 547, 'Необходимо выбрать другого поставщика, так как выбран тот же поставщик, что и в основном заказе!'
+
 --
 
 -- tPrices - Прайслисты автозапчастей
@@ -125,3 +126,9 @@ insert tRetCode (RetCode, Message) select 705, 'Деталь не найдена
 insert tRetCode (RetCode, Message) select 706, 'Нет позиций для заказа!'
 insert tRetCode (RetCode, Message) select 707, 'Корзина пуста!'
 insert tRetCode (RetCode, Message) select 708, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.'
+
+
+-- API
+-- order
+
+insert tRetCode (RetCode, Message) select 10001, 'Список заказов пуст'

@@ -169,6 +169,7 @@ object SearchF: TSearchF
       LoadMask.Message = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093'...'
       LoadMask.Color = clInactiveCaption
       EmptyText = #1053#1077#1090' '#1076#1072#1085#1085#1099#1093
+      ForceFit = True
       EnableColumnHide = False
       LayoutConfig.ComponentCls = 'grid-search'
       BorderStyle = ubsNone
@@ -176,6 +177,7 @@ object SearchF: TSearchF
       TabOrder = 0
       ParentColor = False
       Color = clBtnFace
+      PreventWrap = True
       OnKeyDown = SearchGridKeyDown
       OnAjaxEvent = SearchGridAjaxEvent
       OnCellClick = SearchGridCellClick
@@ -406,12 +408,14 @@ object SearchF: TSearchF
         WebOptions.Paged = False
         WebOptions.CustomizableCells = False
         LoadMask.Message = 'Loading data...'
+        ForceFit = True
         EnableColumnHide = False
         Align = alClient
         ParentFont = False
         TabOrder = 1
         ParentColor = False
         Color = clBtnFace
+        PreventWrap = True
         OnDblClick = MakeLogoGridDblClick
         Columns = <
           item
