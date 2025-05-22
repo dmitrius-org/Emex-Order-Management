@@ -85,7 +85,6 @@ object Task_T: TTask_T
         Action = actDelete
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 504
       end
       object UniToolButton5: TUniToolButton
         Left = 504
@@ -94,7 +93,6 @@ object Task_T: TTask_T
         Action = actRefreshAll
         ImageIndex = 3
         TabOrder = 5
-        ExplicitLeft = 672
       end
       object tbActive: TUniToolButton
         Left = 672
@@ -103,7 +101,6 @@ object Task_T: TTask_T
         Action = actTaskActive
         ImageIndex = 13
         TabOrder = 4
-        ExplicitLeft = 840
       end
     end
   end

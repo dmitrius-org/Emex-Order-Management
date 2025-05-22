@@ -18,9 +18,6 @@ type
   private
     Emex: TEmex;
     FLogger: tLogger;
-    function GetLogger: tLogger;
-    procedure SetLogger(const Value: tLogger);
-
   published
     /// <summary>
     /// InsertPartToBasketByPartFromMark - Помещение запчастей в корзину на основе меток tMarks
@@ -47,12 +44,10 @@ type
     /// </summary>
     procedure EmexOrderStateSync();
   public
-    constructor Create(Value: TFDConnection); overload;
+    constructor Create(Value: TFDConnection;  Logger: tLogger); overload;
     destructor Destroy; override;
 
     procedure Call(MethodName: string);
-
-    property Logger: tLogger read GetLogger write SetLogger;
   end;
 
 /// <summary>
@@ -61,15 +56,16 @@ type
 TAccrual = class
   private
     var FConnection: TFDConnection;
-    function GetShowProgress: Boolean;
-    procedure SetShowProgress(const Value: Boolean);
-    procedure SetFinished(const Value: Boolean);
 
     var FFinished: Boolean;
     var FShowProgress:  Boolean;   // показывать ход выполнения операции
 
     var FSQl: TSql;
     var FRetVal: tRetVal;
+
+    function GetShowProgress: Boolean;
+    procedure SetShowProgress(const Value: Boolean);
+    procedure SetFinished(const Value: Boolean);
 
     function GetSQL: TSql;
     function GetFinished: Boolean;
@@ -111,6 +107,7 @@ protected
     FAccrual : TAccrual;
     FActionID: Integer;
     FLogger: tLogger;
+
     function GetLogger: tLogger;
     procedure SetLogger(const Value: tLogger);
   protected
@@ -144,20 +141,22 @@ begin
       Emex.SQL.Exec('Update pAccrualAction set retval = 506, Message =:Message where spid = @@spid',
                    ['Message'],[e.Message]);
 
-
       FLogger.&Except('TProcExec.Call ' + E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
     end;
   end;
 end;
 
-constructor TProcExec.Create(Value: TFDConnection);
+constructor TProcExec.Create(Value: TFDConnection; Logger: tLogger);
 begin
-  Emex := TEmex.Create(Value);
+  FLogger := Logger;
+
+  Emex := TEmex.Create(Value, FLogger);
 end;
 
 destructor TProcExec.Destroy;
 begin
   Emex.Destroy;
+
   inherited;
 end;
 
@@ -197,11 +196,6 @@ begin
   Emex.OrderStateSyncByOrderNum;
 end;
 
-function TProcExec.GetLogger: tLogger;
-begin
-  Result:=FLogger;
-end;
-
 procedure TProcExec.InsertPartToBasketByPartFromMark; var R: Integer;
 begin
   FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark Begin');
@@ -225,12 +219,6 @@ end;
 procedure TProcExec.InsertPartToBasketByPartRollBack;
 begin
   Emex.InsertPartToBasketRollbackByMarks;
-end;
-
-procedure TProcExec.SetLogger(const Value: tLogger);
-begin
-  if Assigned(Value) then
-    FLogger := Value;
 end;
 
 { TAccrual }
@@ -393,8 +381,8 @@ begin
         begin
           log('Процедура: ' + Sql.Q.FieldByName('MetodRollback').AsString, etInfo);
 
-          Proc := TProcExec.Create(FConnection);
-          Proc.Logger := GetCurrentLogData();
+          Proc := TProcExec.Create(FConnection, GetCurrentLogData());
+
           if Sql.Q.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
           begin
             Proc.Call(Sql.Q.FieldByName('MetodRollback').AsString);
@@ -562,8 +550,8 @@ begin
           begin
             FLogger.Debug('TAccrualThread.Execute ActionMetod Процедура: ' + qMetod.FieldByName('Metod').AsString);
 
-            Proc := TProcExec.Create(FAccrual.FConnection);
-            Proc.Logger := FLogger;
+            Proc := TProcExec.Create(FAccrual.FConnection, FLogger);
+
             if qMetod.FieldByName('MetodType').AsInteger = Integer(tInstrumentMetodType.mtProc) then
             begin
               Proc.Call(qMetod.FieldByName('Metod').AsString);

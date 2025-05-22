@@ -343,16 +343,13 @@ end;
 procedure TSQLQueryThread.Execute();
 var Emex:TEmex;
 begin
-//  SetCurrentLogData(Flogger);
   FLogger.Debug('TSQLQueryThread.Execute Begin');
-  Emex := TEmex.Create(FConnection);
+  Emex := TEmex.Create(FConnection, FLogger);
   try
-    FLogger.Info('TEmex.FindByDetailNumber Begin');
     FLogger.Debug('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber]);
 
     Emex.FindByDetailNumber(FClientID, FDetailNumber);
 
-    FLogger.info('TEmex.FindByDetailNumber End');
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
   finally
     Emex.Destroy;
@@ -977,7 +974,7 @@ begin
         // если заказа в корзине, нужно его удалить
         if (FStatusID = 3)	{InBasket	В корзине}  then
         begin
-            Emex := TEmex.Create(UniMainModule.FDConnection);
+            Emex := TEmex.Create(UniMainModule.FDConnection, GetCurrentLogData());
             try
               RetVal.Code := Emex.DeleteFromBasketByOrderID(FID);
 
@@ -1002,7 +999,7 @@ begin
         // Добавление а корзину emex
         if (RetVal.Code = 0) and (FStatusID = 3) and (ATargetStateID = 0) then
         begin
-            Emex := TEmex.Create(UniMainModule.FDConnection);
+            Emex := TEmex.Create(UniMainModule.FDConnection, GetCurrentLogData());
             try
               BasketID := Emex.InsertFromBasketByOrderID(FID);
 

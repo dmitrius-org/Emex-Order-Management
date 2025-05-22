@@ -548,6 +548,12 @@
     color: red
 }
 
+.grid-clients .pass-lock {
+    overflow: visible;
+    width: 100%;
+    color: #FF8C00;
+}
+
 .grid-users .logger-enabled {
     overflow: visible;
     width: 100%;

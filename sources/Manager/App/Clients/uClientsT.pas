@@ -19,7 +19,6 @@ type
   TClientsT = class(TUniFrame)
     Query: TFDQuery;
     DataSource: TDataSource;
-    ImageList32: TUniImageList;
     ActionList: TUniActionList;
     actAdd: TAction;
     actEdit: TAction;
@@ -30,7 +29,6 @@ type
     N2: TUniMenuItem;
     N3: TUniMenuItem;
     N4: TUniMenuItem;
-    ImageList16: TUniImageList;
     hdFilter: TUniHiddenPanel;
     fUserID: TUniEdit;
     fName: TUniEdit;
@@ -90,6 +88,8 @@ type
     actLogger: TAction;
     N17: TUniMenuItem;
     QueryStatus: TIntegerField;
+    ImageList: TUniNativeImageList;
+    ImageList16: TUniNativeImageList;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -392,10 +392,15 @@ end;
 
 procedure TClientsT.QueryStatusGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
+
 begin
   if (Sender.AsInteger and 1) > 0 then
   begin
-      Text := '<span class="logger-enabled" data-qtip="Включено логирование"><i class="fa fa-bug"></i></span> ';
+    Text := '<span class="logger-enabled" data-qtip="Включено логирование"><i class="fa fa-bug"></i></span> ';
+  end;
+  if (Sender.AsInteger and 2) > 0 then
+  begin
+    Text := Text + '<span class="pass-lock" data-qtip="Доступ заблокирован из-за превышения попыток ввода пароля"><i class="fa fa-lock"></i></span> ';
   end;
 end;
 

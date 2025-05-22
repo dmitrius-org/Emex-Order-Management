@@ -10,7 +10,7 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
 
      uCommonType, uConstant,
 
-     uServiceEmex, Soap.XSBuiltIns, uSqlUtils;
+     uServiceEmex, Soap.XSBuiltIns, uSqlUtils, Quick.Logger;
 
   Type
 
@@ -26,6 +26,8 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
 
       FLang:string;
       FUrl:string;
+
+      FLogger: tLogger;
 
       function GetEmex: ServiceSoap;
       function GetSQl: TSQL;
@@ -54,9 +56,8 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
       /// DeleteBasketDetails - Удаление детали из корзины
       /// </summary>
       procedure DeleteBasketDetails(AQry: TFDQuery; ASupplier: Integer = 0);
-
     public
-      constructor Create(Value: TFDConnection); overload;
+      constructor Create(Value: TFDConnection; Logger: tLogger); overload;
       destructor Destroy; override;
 
       property Emex: ServiceSoap read GetEmex;
@@ -180,12 +181,16 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
 
 implementation
 
+
 { TEmex }
 
-constructor TEmex.Create(Value: TFDConnection);
+constructor TEmex.Create(Value: TFDConnection; Logger: tLogger);
 begin
   if Assigned(Value) then
     FConnection:= Value;
+
+  if Assigned(Logger) then
+    FLogger:= Logger;
 
   if not Assigned(FSQl) then
     FSQl:=TSQl.Create(FConnection);
@@ -861,6 +866,7 @@ end;
 procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongInt = 0);
 var I: Integer;
 begin
+  FLogger.Info('TEmex.FillFindByNumber Begin');
   FSQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
@@ -930,12 +936,14 @@ begin
               APparts[i].bitWeightMeasured
               ]);
   end;
+  FLogger.Info('TEmex.FillFindByNumber End');
 end;
 
 procedure TEmex.FillMovement(AParts: ArrayOfMovement);
 var part: Movement;
        I: Integer;
 begin
+  FLogger.Info('TEmex.FillMovement Begin');
   for I := 0 to Length(Aparts)-1 do
   begin
     part:= Movement.Create;
@@ -973,12 +981,15 @@ begin
 
     freeandnil(part);
   end;
+  FLogger.Info('TEmex.FillMovement End');
 end;
 
 procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum: string);
 var parts: ArrayOfFindByNumber;
 begin
+  FLogger.Info('Emex.SearchPart Begin');
   parts:=Emex.SearchPart(getCustomerByClient(AClientID), ADetailNum, False);
+  FLogger.Info('Emex.SearchPart End');
 
   FillFindByNumber(parts, AClientID);
 end;

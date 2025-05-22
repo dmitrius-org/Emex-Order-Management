@@ -704,7 +704,7 @@ object OrdersT: TOrdersT
           Action = actFilterClear
           TabOrder = 9
           Images = UniMainModule.BaseImage16
-          ImageIndex = 15
+          ImageIndex = 16
         end
         object fOk: TUniBitBtn
           Left = 794
@@ -719,7 +719,7 @@ object OrdersT: TOrdersT
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
           ScreenMask.Target = Owner
           Images = UniMainModule.BaseImage16
-          ImageIndex = 16
+          ImageIndex = 15
         end
         object fOrderNum: TUniEdit
           Left = 527
@@ -1716,11 +1716,6 @@ object OrdersT: TOrdersT
       ImageIndex = 3
       OnExecute = actRefreshAllExecute
     end
-    object actExecuteAction: TAction
-      Tag = -1
-      Category = 'Action'
-      OnExecute = actExecuteActionExecute
-    end
     object actExecuteActionEnabled: TAction
       Category = 'Action'
       Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
@@ -1730,6 +1725,11 @@ object OrdersT: TOrdersT
       Category = 'Action'
       Caption = #1054#1090#1084#1077#1085#1072' '#1076#1077#1081#1089#1090#1074#1080#1103
       OnExecute = actExecuteActionRollbackExecute
+    end
+    object actExecuteAction: TAction
+      Tag = -1
+      Category = 'Action'
+      OnExecute = actExecuteActionExecute
     end
     object actProtocol: TAction
       Category = 'Grid'

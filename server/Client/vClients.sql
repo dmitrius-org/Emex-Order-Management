@@ -22,7 +22,12 @@ select c.ClientID
       ,case 
          when isnull(ls.LogDestination, '') <> '' and (isnull(ls.FileLogLevel, '') <> '' or isnull(ls.DBLogLevel, '') <> '') then 1
          else 0
-       end Status
+       end |
+       case 
+         when isnull(ua.CNT, 0) >= 3 then 2
+         else 0
+       end  
+       Status
   from tClients c (nolock)
   left join tSuppliers s (nolock)
          on s.SuppliersID = c.SuppliersID
@@ -35,10 +40,16 @@ select c.ClientID
   left join tLoggerSettings ls (nolock) 
          on ls.UserID = c.ClientID 
         and ls.AppName = 'Customer'
+  left join tUsersAuthorization ua (nolock)
+         on ua.UserName = c.Email
+
 go
 grant all on vClients to public
 go
-exec setOV 'vClients', 'V', '20250414', '3'
+exec setOV 'vClients', 'V', '20250522', '4'
 go
 
 select * from vClients
+
+
+select * from tUsersAuthorization
