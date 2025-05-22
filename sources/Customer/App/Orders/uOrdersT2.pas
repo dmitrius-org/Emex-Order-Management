@@ -533,9 +533,9 @@ begin
     lblRow.Text := ''
   else
     lblRow.Text:= Format('Отображаются записи с %d по %d, всего %d',
-    [(edtPage.Value-1) * Grid.WebOptions.PageSize + 1,
-     (edtPage.Value-1) * Grid.WebOptions.PageSize + Query.RecordCount,
-     FAllPage]);
+              [(edtPage.Value-1) * Grid.WebOptions.PageSize + 1,
+               (edtPage.Value-1) * Grid.WebOptions.PageSize + Query.RecordCount,
+               FAllPage]);
 
   log('GridOpen End', etInfo);
 end;
@@ -751,7 +751,6 @@ end;
 
 procedure TOrdersT2.GetNotificationOrders;
 begin
-  btnCancel.Enabled := FIsNotification;
   cbCancel.Enabled := FIsNotification;
 
   FIsNotification := not FIsNotification;

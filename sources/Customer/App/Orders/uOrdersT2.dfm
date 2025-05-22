@@ -636,7 +636,7 @@
           Height = 24
           Hint = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103#1084
           ShowHint = True
-          Caption = '<i class="icon-notification"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+          Caption = '<i class="icon-notification"> </i>'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           TabOrder = 13
           ClientEvents.UniEvents.Strings = (
             
@@ -885,6 +885,7 @@
             Left = 79
             Top = 8
             Width = 69
+            Height = 18
             Hint = ''
             Margins.Top = 8
             Margins.Bottom = 8

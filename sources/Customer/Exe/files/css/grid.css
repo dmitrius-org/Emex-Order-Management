@@ -399,8 +399,9 @@
 
 .icon-notification.color {
     color: orange;
-    font-size: 16px;
+    font-size: 14px;
     animation: blink 1s infinite;
+    font-style: normal; 
 }
 
 .grid-order .mail-envelope::before {

@@ -21,7 +21,7 @@ begin
 	
 	,DetailNameF       varchar(256)   -- Наименование детали 
 	,WeightKGF         float          -- Вес физический кг 
-	,VolumeKGf         float          -- Вес объемный кг  
+	,VolumeKGF         float          -- Вес объемный кг  
 
      -- Ограничения
 	,NoAir             bit   
