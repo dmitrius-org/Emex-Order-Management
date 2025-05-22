@@ -67,17 +67,17 @@ as
        ,3        
        ,2 -- acUpdate        
        ,'Установка признака: Обращение открыто' 
-  from pAccrualAction p (nolock)
-   where p.Spid   = @@spid
-	 and p.Retval = 0
+   from pAccrualAction p (nolock)
+  where p.Spid   = @@spid
+    and p.Retval = 0
         
-   exec MassAuditInsert
+  exec MassAuditInsert
 
-   if exists (select 1
-                from pAccrualAction (nolock)
-               where Spid   = @@SPID
-                 and RetVal <> 0)
-     set @r = 506 -- 'Ошибка!'
+  if exists (select 1
+               from pAccrualAction (nolock)
+              where Spid   = @@SPID
+                and RetVal <> 0)
+    set @r = 506 -- 'Ошибка!'
 
  exit_:
  return @r

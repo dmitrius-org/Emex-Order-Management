@@ -112,12 +112,10 @@ SELECT o.[OrderID]
       --      end as bit)         as NoAir
       ,p.Fragile                                -- признак: хрупкий
       ,p.NLA                                    -- No longer available или Более недоступно
-      ,cast(Case 
-              when p.Restrictions = 'NOAIR' then 1
-              else 0
-            end as bit)         as NoAir
+      ,p.NoAir
       ,o.OrderDetailSubId
-	  ,m.Flag&1 /*1 - начальное состояние */ as IsStartState -- где использую?
+	  --,m.Flag&1 /*1 - начальное состояние */ 
+      --,iif(o.StatusID=1, 1, 0) as IsStartState 
       ,o.BasketId
       ,o.Reference
       ,o.CustomerSubID
@@ -141,12 +139,12 @@ SELECT o.[OrderID]
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 -- состояние/статус
 
- inner join tModel m with (nolock)
-         on m.StateID = s.NodeID
-        and m.ActionID= 0 -- только состояния
- inner join tInstrument i with (nolock index=ao1)
-         on i.InstrumentID = m.InstrumentID
-		and i.ObjectTypeID = 3
+ --inner join tModel m with (nolock)
+ --        on m.StateID = s.NodeID
+ --       and m.ActionID= 0 -- только состояния
+ --inner join tInstrument i with (nolock index=ao1)
+ --        on i.InstrumentID = m.InstrumentID
+	--	and i.ObjectTypeID = 3
 
   left join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
@@ -174,9 +172,13 @@ SELECT o.[OrderID]
   left join tMakes b with (nolock index=ao2) -- брент замены
          on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
 
-  left join tPrice p with (nolock index=ao1)
+  left join vPrice p 
          on p.PriceID = o.PriceID	
-         
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
+
   left join tPartsStatistics ps with (nolock index=ao1)
          on ps.Make      = o.MakeLogo
         and ps.DetailNum = o.DetailNumber
@@ -189,7 +191,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250515', '25'
+exec setOV 'vOrders', 'V', '20250531', '26'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'

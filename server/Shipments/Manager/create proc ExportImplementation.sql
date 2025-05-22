@@ -68,8 +68,12 @@ as
       from tOrders o with (nolock)
      inner join tClients c (nolock)
              on c.ClientID = o.ClientID     
-      left join tPrice p with (nolock index=ao1)
-             on p.PriceID = o.PriceID 
+     left join vPrice p 
+            on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
 
@@ -91,7 +95,7 @@ return @r
 GO
 grant exec on ExportImplementation to public
 go
-exec setOV 'ExportImplementation', 'P', '20240819', '2'
+exec setOV 'ExportImplementation', 'P', '20250531', '3'
 go
 
 exec ExportImplementation @Invoice = '239771'

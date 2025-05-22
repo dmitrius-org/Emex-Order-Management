@@ -719,7 +719,7 @@ object OrdersT: TOrdersT
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
           ScreenMask.Target = Owner
           Images = UniMainModule.BaseImage16
-          ImageIndex = 16
+          ImageIndex = 15
         end
         object fOrderNum: TUniEdit
           Left = 527

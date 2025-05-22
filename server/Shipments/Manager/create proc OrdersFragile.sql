@@ -67,8 +67,12 @@ as
       from tOrders o with (nolock)
       LEFT JOIN @Suppliers c
              ON o.SuppliersID = c.ID
-     inner join tPrice p with (nolock index=ao1)
-             on p.PriceID = o.PriceID
+     inner join vPrice p 
+             on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
             and p.Fragile = 1
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
@@ -87,7 +91,7 @@ return @r
 GO
 grant exec on OrdersFragile to public
 go
-exec setOV 'OrdersFragile', 'P', '20250313', '0'
+exec setOV 'OrdersFragile', 'P', '20250531', '1'
 go
 
 exec OrdersFragile 

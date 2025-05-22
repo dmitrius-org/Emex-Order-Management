@@ -406,8 +406,8 @@ begin
 
     Sql.Open('Select ShipmentsAmount, ShipmentsAmountR from vShipmentsMarkSum', [], []);
 
-    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('ShipmentsAmountR').Value );
-    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('ShipmentsAmount').Value);
+    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('ShipmentsAmountR').AsFloat );
+    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('ShipmentsAmount').AsFloat);
   end
   else
   begin

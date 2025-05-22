@@ -1,6 +1,3 @@
-if OBJECT_ID('History.tPartsHistory') is not null
-  drop table History.tPartsHistory
-go
 if OBJECT_ID('tParts') is null
 /*
   ALTER TABLE tParts SET ( SYSTEM_VERSIONING = OFF )
@@ -8,35 +5,46 @@ if OBJECT_ID('tParts') is null
   DROP TABLE History.tParts
 --*/
 /* ********************************************************** 						
-History.tPartsHistory - таблица цен
+History.tParts - таблица деталей
 ********************************************************** */
 begin
 	create table tParts
-	( 
-	 DetailNum	       varchar(40)    -- Номер детали 
-    ,MakeLogo          varchar(30)    -- Зашифрованное название бренда
-	,Brand             varchar(60)    -- Бренд
-	,DetailName        varchar(256)   -- Наименование детали 
-	,WeightKG          float          -- Вес физический кг 
-	,VolumeKG          float          -- Вес объемный кг  
-	,Restrictions      varchar(30)    -- Ограничения
-    ,Fragile	       bit
-    ,NLA               bit            -- No longer available или Более недоступно
-	--
-    ,InDatetime	       datetime
-    ,UserID            numeric(18, 0)   
-    ,ValidFrom         DATETIME2 GENERATED ALWAYS AS ROW START
-    ,ValidTo           DATETIME2 GENERATED ALWAYS AS ROW END
-    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+	(
+     PartID            numeric(18,0)  identity --  
+    ,Brand             varchar(10)    -- Зашифрованное название бренда MakeLogo
+    ,BrandName         varchar(60)    -- Бренд
+    ,DetailNum	       varchar(40)    -- Номер детали 
 
-    ,CONSTRAINT PK_tParts_ID PRIMARY KEY CLUSTERED (MakeLogo, DetailNum)
+	,DetailName        varchar(256)   -- Наименование детали
+    ,WeightKG          float          -- Вес физический кг 
+	,VolumeKG          float          -- Вес объемный кг  
+	
+	,DetailNameF       varchar(256)   -- Наименование детали 
+	,WeightKGF         float          -- Вес физический кг 
+	,VolumeKGf         float          -- Вес объемный кг  
+
+     -- Ограничения
+	,NoAir             bit   
+    ,NLA               bit            -- No longer available или Более недоступно
+    ,Fragile	       bit
+
+    --,InUserID          numeric(18, 0)   
+    ,UserID          numeric(18, 0)  
+	--,InDateTime        datetime       default GetDate()
+    ,UpDatetime        DATETIME2 GENERATED ALWAYS AS ROW START
+    ,ValidTo           DATETIME2 GENERATED ALWAYS AS ROW END
+    ,PERIOD FOR SYSTEM_TIME (UpDatetime, ValidTo)
+
+    ,CONSTRAINT PK_tParts_ID PRIMARY KEY CLUSTERED (PartID)
 	)
     WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tParts));
 
-	grant select on History.tParts to public;
+	create index ao2 on tParts(Brand, DetailNum);
+
+ 	grant select on History.tParts to public;
 end
 go
-exec setOV 'tParts', 'U', '20240101', '0'
+exec setOV 'tParts', 'U', '20250520', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tParts', @desc = 'Таблицы деталей (измененных)'
+exec dbo.sys_setTableDescription @table = 'tParts', @desc = 'Таблицы деталей'

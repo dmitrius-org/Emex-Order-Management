@@ -1,7 +1,3 @@
-if OBJECT_ID('vMarkOrderSelect') is not null
-    drop view vMarkOrderSelect
-
-go
 if OBJECT_ID('vMarkOrderState') is not null
     drop view vMarkOrderState
 go
@@ -13,16 +9,17 @@ as
 
 select --o.OrderID,
        o.StatusID,
-	   o.IsStartState,
+	   iif(o.StatusID=1, 1, 0) as IsStartState,
 	   m.Spid,
 	   m.Type
-  from tMarks m (nolock)
- inner join vOrders o
+  from tMarks m with (nolock index=pk_tMarks)
+ inner join tOrders o with (nolock index=ao1) 
          on o.OrderID = m.ID
-
+ where Spid = @@Spid 
+   and Type = 3
 go
 grant all on vMarkOrderState to public
 go
-
-Select distinct StatusID, IsStartState from vMarkOrderState
+exec setOV 'vMarkOrderState', 'V', '20250531', '0'
+go
 

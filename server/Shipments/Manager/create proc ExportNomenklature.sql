@@ -40,8 +40,12 @@ select o.OrderID
   from tOrders o with (nolock index=ao3)
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
-  left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID 
+  left join vPrice p 
+         on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
  where o.Invoice = @Invoice
  -- and o.OrderID= 133499
  union all
@@ -69,8 +73,12 @@ select o.OrderID
   from tOrders o with (nolock index=ao3)
  inner join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
-  left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID 
+  left join vPrice p 
+         on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
  inner join tMakes m (nolock)
          on m.Code = o.ReplacementMakeLogo
  where o.Invoice = @Invoice 
@@ -85,7 +93,7 @@ return @r
 GO
 grant exec on ExportNomenklature to public
 go
-exec setOV 'ExportNomenklature', 'P', '20241218', '4'
+exec setOV 'ExportNomenklature', 'P', '20250531', '5'
 go
 
 exec ExportNomenklature @Invoice = '240126'

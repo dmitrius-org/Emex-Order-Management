@@ -6,39 +6,30 @@ tPrice - таблица цен
 begin
 	create table tPrice
 	(
-	 PriceID           numeric(18,0)  identity --  
-	,MakeLogo          varchar(30)    -- Зашифрованное название бренда
-	,Brand             varchar(60)    -- Бренд
-	,DetailNum	       varchar(40)    -- Номер детали 
-	,DetailPrice       float          -- Цена
-	,DetailName	       varchar(128)   -- Название было 255
+	 PriceID           numeric(18,0)  identity -- 
+    ,PartID            numeric(18,0)
 	,PriceLogo         varchar(30)    -- Название прайса 
-	,Quantity          float          -- Количество
-	,PackQuantity      float          -- Количество в упаковке
+	,Quantity          int            -- Количество
+	,PackQuantity      int            -- Количество в упаковке
 	,Reliability       float          -- Вероятность поставки
-	,WeightKG          float          -- Вес физический кг 
-	,VolumeKG          float          -- Вес объемный кг  
+    ,DetailPrice       float
 	,MOSA              float          -- Цена MOSA
-	,DetailNameF       varchar(512)   -- Наименование детали 
-	,WeightKGF         float          -- Вес физический кг 
-	,VolumeKGf         float          -- Вес объемный кг  
-	,Restrictions      nvarchar(30)   -- Ограничения
-    ,NLA               bit            -- No longer available или Более недоступно
+    ,isDelete          bit
 	--
-	,inDatetime        datetime default GetDate()      --
-	,updDatetime       datetime default GetDate()      --
+	,InDateTime        datetime default GetDate()      --
+	,UpDateTime        datetime default GetDate()      --
+
+    ,CONSTRAINT PK_tPrice_ID PRIMARY KEY CLUSTERED (PriceID)
 	);
 
-	create unique index ao1 on tPrice(PriceID) include (DetailNameF, WeightKGF, VolumeKGf, Restrictions);
+	create index ao2 on tPrice(PriceLogo, PartID);
 
-	create index ao2 on tPrice(DetailNum);
-
-	create unique CLUSTERED  index ao3 on tPrice(PriceLogo, DetailNum, MakeLogo);
+--	create unique CLUSTERED  index ao3 on tPrice(PriceLogo, DetailNum, MakeLogo);
 
 	grant all on tPrice to public;
 end
 go
-exec setOV 'tPrice', 'U', '20240101', '0'
+exec setOV 'tPrice', 'U', '20250531', '0'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tPrice', @desc = 'таблица цен/прайсов'

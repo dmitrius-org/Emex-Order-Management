@@ -5,9 +5,14 @@ go
 create proc MarksDelete - 
 */
 create proc MarksDelete
-              @Type int
+              @Type int = null
 as
-
+ 
+if @Type is null
+  Delete tMarks 
+    from tMarks with (rowlock index=pk_tMarks) 
+   where Spid=@@Spid 
+else
   Delete tMarks 
     from tMarks with (rowlock index=pk_tMarks) 
    where Spid=@@Spid 
@@ -16,5 +21,5 @@ as
 go
 grant execute on MarksDelete to public
 go
-exec setOV 'MarksDelete', 'P', '20241212', '0'
+exec setOV 'MarksDelete', 'P', '20250531', '1'
 go

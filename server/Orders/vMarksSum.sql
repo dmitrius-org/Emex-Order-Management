@@ -19,13 +19,17 @@ select round( Sum(o.Amount), 2)           as Amount,
   from tMarks m with (nolock index=pk_tMarks)
  inner join tOrders o with (nolock index=ao1)
          on o.OrderID = m.ID
-  left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID 
+  left join vPrice p 
+         on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
 where m.Spid   = @@spid
   and m.Type   = 3
 
 go
-exec setOV 'vMarksSum', 'V', '20240606', '3'
-go
 grant select on vMarksSum to public
+go
+exec setOV 'vMarksSum', 'V', '20250531', '4'
 go

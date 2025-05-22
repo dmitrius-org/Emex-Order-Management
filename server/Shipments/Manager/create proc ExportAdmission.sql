@@ -65,8 +65,12 @@ as
           ,o.AmountPurchaseF
 
       from tOrders o with (nolock)
-      left join tPrice p with (nolock index=ao1)
-             on p.PriceID = o.PriceID 
+     left join vPrice p 
+            on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
           
@@ -80,7 +84,7 @@ return @r
 GO
 grant exec on ExportAdmission to public
 go
-exec setOV 'ExportAdmission', 'P', '20240819', '2'
+exec setOV 'ExportAdmission', 'P', '20250531', '3'
 go
 
 exec ExportAdmission @Invoice = '239771'

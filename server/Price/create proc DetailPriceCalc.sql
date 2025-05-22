@@ -113,7 +113,7 @@ insert #Price
 	  )
 select-- top 200000 
        t.PriceID,
-       t.Brand, 
+       t.BrandName, 
        t.DetailNum, 
 	   t.DetailPrice,
 	   t.DetailName, 
@@ -133,8 +133,9 @@ select-- top 200000
 	   t.MOSA,
        t.Fragile
   from vClientProfilesParam pc
-  inner join tPrice t with (nolock index=ao3)
-          on t.PriceLogo = pc.UploadPriceName
+ inner join vPrice t
+         on t.PriceLogo = pc.UploadPriceName
+
 		 --and 1=1
              /*Если в форме была установлена галочка "Игнорировать детали без веса", то убираем все строки,
                у которых сразу в двух ячейках WeightKG и VolumeKG значение 0.*/
@@ -143,10 +144,10 @@ select-- top 200000
              --Убираем все строки, у которых значения в столбце Reliability строго меньше, чем reliability из формы
          and t.Reliability >= @Reliability
 		 --and t.Quantity > 0
-		 and  isnull(t.Restrictions, '') = case --если проставлен признак не выгружать с ограничениями
-		                                     when isnull(pc.Restrictions, 0) = 1 and isnull(t.Restrictions, '') = 'NOAIR' then ''  
-											 else isnull(t.Restrictions, '')
-                                           end
+		 and isnull(t.NoAir, 0) = case --если проставлен признак не выгружать с ограничениями
+		                            when isnull(pc.Restrictions, 0) = 1 and isnull(t.NoAir, '') = 1 then 1 
+			                        else isnull(t.NoAir, 0)
+                                  end
          and isnull(t.NLA, 0) = 0
 
  where pc.ClientProfileName =  @ProfileName
@@ -241,7 +242,7 @@ select Brand,
 	   PackQuantity, 
 	   cast(FinalPrice as int) as FinalPrice
   from #Price (nolock)
- order by PriceLogo
+ order by Brand, DetailNum
  --*/
 
 
@@ -250,4 +251,4 @@ return @RetVal
 go
 grant exec on DetailPriceCalc to public
 go
-exec setOV 'DetailPriceCalc', 'P', '20250320', '5'
+exec setOV 'DetailPriceCalc', 'P', '20250531', '6'

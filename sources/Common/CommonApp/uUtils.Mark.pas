@@ -31,6 +31,9 @@ type
 
     procedure Load;
     procedure DataRefresh(ARowDelete: Boolean = False);
+    /// <summary>
+    /// SaveMarksToDB - заполняет tMarks идентификаторами выделенных элементов ;
+    /// </summary>
     procedure SaveMarksToDB;
 
     property Count: Integer read GetCount;
@@ -102,7 +105,7 @@ end;
 
 procedure tMarks.DeleteInDB;
 begin
-  FQuery.SQL.Text := 'delete tMarks from tMarks with (rowlock index=pk_tMarks) where spid=@@Spid';
+  FQuery.SQL.Text := 'MarksDelete';
   FQuery.ExecSQL;
 end;
 

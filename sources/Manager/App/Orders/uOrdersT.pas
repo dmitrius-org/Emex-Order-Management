@@ -19,30 +19,31 @@ uses
   uniDateTimePicker, uniScreenMask, uniTimer, uniThreadTimer,
   uGrant, uCommonType, uSqlUtils,
   uUniExComboBox, uniHTMLFrame, uUniExDateRangePicker, uUniExCheckComboBox,
-  uOrdersNewDeliveryDateF, uPartProtocol_T, uAllowCreateOrderF, uUserF;
+  uOrdersNewDeliveryDateF, uPartProtocol_T, uAllowCreateOrderF, uUserF,
+  uUtils.Mark;
 
 type
-  tMarks = class
-  private
-    FConnection: TFDConnection;
-    FQuery: TFDQuery;
-    FGrid: TUniDBGrid;
-
-    FMarks: TDictionary <Integer, Integer>;
-
-    procedure DeleteInDB();
-    function GetCount: Integer;
-
-    property Count: Integer read GetCount;
-  public
-    constructor Create(AGrid: TUniDBGrid);
-    destructor Destroy; override;
-
-    procedure Select();
-    procedure Clear();
-
-    procedure DataRefresh();
-  end;
+//  tMarks = class
+//  private
+//    FConnection: TFDConnection;
+//    FQuery: TFDQuery;
+//    FGrid: TUniDBGrid;
+//
+//    FMarks: TDictionary <Integer, Integer>;
+//
+//    procedure DeleteInDB();
+//    function GetCount: Integer;
+//
+//    property Count: Integer read GetCount;
+//  public
+//    constructor Create(AGrid: TUniDBGrid);
+//    destructor Destroy; override;
+//
+//    procedure Select();
+//    procedure Clear();
+//
+//    procedure DataRefresh();
+//  end;
 
 
   TOrdersT = class(TUniFrame)
@@ -238,7 +239,6 @@ type
     procedure GridDblClick(Sender: TObject);
     procedure fStatus2Select(Sender: TObject);
     procedure actEditExecute(Sender: TObject);
-
     procedure actSetCommentExecute(Sender: TObject);
     procedure actGroupDetailNameEditExecute(Sender: TObject);
     procedure GridAjaxEvent(Sender: TComponent; EventName: string; Params: TUniStrings);
@@ -429,15 +429,18 @@ begin
 end;
 
 procedure TOrdersT.OrderSetCancellation;
+var ServerErr: integer;
 begin
   log('TOrdersT.OrderSetCancellation Begin', etDebug) ;
+
+  Marks.SaveMarksToDB;
 
   Sql.Exec(' exec OrderSetCancellation  ', [], []);
 
   // ОБРАБОТКА ОШИБОК
   // проверка наличия серверных ошибок
   Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
-  var ServerErr:integer;
+
   ServerErr := Sql.Q.RecordCount;
 
   if (ServerErr = 0) then
@@ -456,6 +459,8 @@ end;
 procedure TOrdersT.OrderSetRequestClosed;
 begin
   log('TOrdersT.OrderSetRequestClosed Begin', etDebug);
+
+  Marks.SaveMarksToDB;
 
   Sql.Exec(' exec OrderSetRequestClosed  ', [], []);
 
@@ -482,6 +487,8 @@ end;
 procedure TOrdersT.OrderSetRequestOpen;
 begin
   log('TOrdersT.OrderSetRequestOpen Begin', etDebug) ;
+
+  Marks.SaveMarksToDB;
 
   Sql.Exec(' exec OrderSetRequestOpen ', [], []);
 
@@ -634,6 +641,8 @@ var Action: string;
 begin
   log('TOrdersT.ActionExecute Begin', etDebug);
 
+  Marks.SaveMarksToDB;
+
   Sql.Open('''
     delete from #ActionParams;
 
@@ -746,6 +755,8 @@ begin
 
     DoShowMask;
 
+    Marks.SaveMarksToDB;
+
     Accrual := TAccrual.Create(UniMainModule.FDConnection);
     if Accrual.ActionExecuteRollback() = 0 then
     begin
@@ -805,6 +816,8 @@ end;
 procedure TOrdersT.actGroupDetailNameEditExecute(Sender: TObject);
 begin
   // групповое изменение наименования детали
+  Marks.SaveMarksToDB;
+
   GroupDetailNameEditF.FormAction := TFormAction.acUpdate;
   GroupDetailNameEditF.ShowModal(GroupDetailNameEditCallBack);
 end;
@@ -812,6 +825,8 @@ end;
 procedure TOrdersT.actGroupSetFragileSignExecute(Sender: TObject);
 begin
   //Групповое изменение признака Fragile
+  Marks.SaveMarksToDB;
+
   GroupSetFragileSignF.FormAction := TFormAction.acUpdate;
   GroupSetFragileSignF.ShowModal(GroupSetFragileSignCallBack);
 end;
@@ -822,7 +837,7 @@ begin
   //добавляем метки в таблицу
   try
     Sql.Q.Close;
-    Sql.Open('Select distinct StatusID, IsStartState from vMarkOrderState where spid = :Spid and Type = 3', ['Spid'], [SPID]);
+    Sql.Open('Select distinct StatusID, IsStartState from vMarkOrderState ', [], []);
 
     // контроль доступности меню действий, если 2 разных состояния, то меню не доступно
     actExecuteActionEnabled.Enabled := (actExecuteActionEnabled.Tag = 1) and (marks.Count > 0) and (Sql.Q.RecordCount = 1);
@@ -1159,10 +1174,12 @@ begin
 
   if Marks.Count > 0 then
   begin
+    Marks.SaveMarksToDB;
+
     Sql.Open('Select Amount, AmountPurchase, WeightKG, VolumeKG, OverVolume from vMarksSum', [], []);
 
-    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('Amount').Value );
-    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('AmountPurchase').Value);
+    lblRowSum1.Caption := FormatFloat('###,##0.00 ₽', Sql.Q.FieldByName('Amount').AsFloat );
+    lblRowSum2.Caption := FormatFloat('###,##0.00 $', Sql.Q.FieldByName('AmountPurchase').AsFloat);
 
     lblWeightKG.Caption := Sql.Q.FieldByName('WeightKG').AsString+  ' Кг';
     lblVolumeKG.Caption := Sql.Q.FieldByName('VolumeKG').AsString+  ' V';
@@ -1681,6 +1698,8 @@ procedure TOrdersT.SupplierSpecifyDeliveryTime;
 begin
   log('SupplierSpecifyDeliveryTime Begin', etDebug) ;
 
+  Marks.SaveMarksToDB;
+
   Sql.Exec(' exec SupplierSpecifyDeliveryTime ', [], []);
 
   // ОБРАБОТКА ОШИБОК
@@ -1797,7 +1816,7 @@ begin
   GridLayout(Self, Grid, tGridLayout.glLoad, False);
 
   // объект для упраления метками
-  Marks := tMarks.Create(Grid);
+  Marks := tMarks.Create(Grid, 3);
   Marks.Clear;
 
   GetMarksInfo;
@@ -1805,7 +1824,6 @@ begin
   FSql:= tSQL.Create(UniMainModule.FDConnection);
 
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
-
 
   Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
 
@@ -1974,103 +1992,103 @@ begin
 end;
 
 { tMarks }
-constructor tMarks.Create(AGrid: TUniDBGrid);
-begin
-  log('tMarks.Create Begin', etDebug);
-  if Assigned(AGrid) then
-  begin
-    FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
-    FQuery := TFDQuery.Create(nil);
-    FQuery.Connection := FConnection;
-    FGrid := AGrid;
-  end;
-  FMarks := TDictionary <integer, integer>.Create();
-  log('tMarks.Create End', etDebug);
-end;
+//constructor tMarks.Create(AGrid: TUniDBGrid);
+//begin
+//  log('tMarks.Create Begin', etDebug);
+//  if Assigned(AGrid) then
+//  begin
+//    FConnection := TFDConnection(TFDQuery(AGrid.DataSource.DataSet).Connection);
+//    FQuery := TFDQuery.Create(nil);
+//    FQuery.Connection := FConnection;
+//    FGrid := AGrid;
+//  end;
+//  FMarks := TDictionary <integer, integer>.Create();
+//  log('tMarks.Create End', etDebug);
+//end;
 
-procedure tMarks.DataRefresh;
-var Key: Integer;
-    BM : TBookmark;
-begin
-  log('tMarks.DataRefresh Begin', etDebug);
-  begin
-    FGrid.DataSource.DataSet.DisableControls;
-    BM := FGrid.DataSource.DataSet.GetBookmark;
-    try
-      for Key in FMarks.Keys  do
-      begin
-        if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
-        begin
-          tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
-          FGrid.RefreshCurrentRow();
-        end;
-      end;
-    finally
-      FGrid.DataSource.DataSet.GotoBookmark(BM);
-      FGrid.DataSource.DataSet.FreeBookmark(BM);
-      FGrid.DataSource.DataSet.EnableControls;
-    end;
-  end;
-  log('tMarks.DataRefresh End', etDebug);
-end;
+//procedure tMarks.DataRefresh;
+//var Key: Integer;
+//    BM : TBookmark;
+//begin
+//  log('tMarks.DataRefresh Begin', etDebug);
+//  begin
+//    FGrid.DataSource.DataSet.DisableControls;
+//    BM := FGrid.DataSource.DataSet.GetBookmark;
+//    try
+//      for Key in FMarks.Keys  do
+//      begin
+//        if FGrid.DataSource.DataSet.Locate('OrderID', Key, [loCaseInsensitive, loPartialKey]) then
+//        begin
+//          tFDQuery(FGrid.DataSource.DataSet).RefreshRecord(False) ;
+//          FGrid.RefreshCurrentRow();
+//        end;
+//      end;
+//    finally
+//      FGrid.DataSource.DataSet.GotoBookmark(BM);
+//      FGrid.DataSource.DataSet.FreeBookmark(BM);
+//      FGrid.DataSource.DataSet.EnableControls;
+//    end;
+//  end;
+//  log('tMarks.DataRefresh End', etDebug);
+//end;
 
-procedure tMarks.DeleteInDB();
-begin
-  Sql.Exec('exec MarksDelete @Type = 3 ', [], [])
-end;
+//procedure tMarks.DeleteInDB();
+//begin
+//  Sql.Exec('exec MarksDelete @Type = 3 ', [], [])
+//end;
+//
+//procedure tMarks.Clear;
+//begin
+//  DeleteInDB();
+//  FMarks.Clear;
+//end;
+//
+//destructor tMarks.Destroy;
+//begin
+// FMarks.Free;
+// inherited;
+//end;
 
-procedure tMarks.Clear;
-begin
-  DeleteInDB();
-  FMarks.Clear;
-end;
-
-destructor tMarks.Destroy;
-begin
- FMarks.Free;
- inherited;
-end;
-
-function tMarks.GetCount: Integer;
-begin
-  Result := FMarks.Count;
-end;
-
-procedure tMarks.Select();
-var i, id:Integer;
-    SqlText: string;
-    BM : TBookmark;
-begin
-  log('tMarks.Select Begin', etDebug);
-
-  SqlText:='';
-  Clear;
-
-  if FGrid.SelectedRows.Count>0 then
-  begin
-    BM := FGrid.DataSource.DataSet.GetBookmark;
-    try
-      for I := 0 to FGrid.SelectedRows.Count - 1 do
-      begin
-        FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
-        id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
-        FMarks.Add(id, id);
-        if i = 0 then
-          SqlText:= SqlText + ' Insert into tMarks with (rowlock) (Spid, Type, ID) select @@Spid, 3, '
-        else
-          SqlText:= SqlText + ' Union all select @@Spid, 3, ';
-
-        SqlText:= SqlText + id.ToString;
-      end;
-      if SqlText <> '' then Sql.Exec(SqlText ,[], []);
-
-    finally
-      FGrid.DataSource.DataSet.GotoBookmark(BM);
-      FGrid.DataSource.DataSet.FreeBookmark(BM);
-    end;
-  end;
-  log('tMarks.Select End', etDebug);
-end;
+//function tMarks.GetCount: Integer;
+//begin
+//  Result := FMarks.Count;
+//end;
+//
+//procedure tMarks.Select();
+//var i, id:Integer;
+//    SqlText: string;
+//    BM : TBookmark;
+//begin
+//  log('tMarks.Select Begin', etDebug);
+//
+//  SqlText:='';
+//  Clear;
+//
+//  if FGrid.SelectedRows.Count>0 then
+//  begin
+//    BM := FGrid.DataSource.DataSet.GetBookmark;
+//    try
+//      for I := 0 to FGrid.SelectedRows.Count - 1 do
+//      begin
+//        FGrid.DataSource.DataSet.Bookmark := FGrid.SelectedRows[I];
+//        id := FGrid.DataSource.DataSet.FieldByName('OrderID').AsInteger;
+//        FMarks.Add(id, id);
+//        if i = 0 then
+//          SqlText:= SqlText + ' Insert into tMarks with (rowlock) (Spid, Type, ID) select @@Spid, 3, '
+//        else
+//          SqlText:= SqlText + ' Union all select @@Spid, 3, ';
+//
+//        SqlText:= SqlText + id.ToString;
+//      end;
+//      if SqlText <> '' then Sql.Exec(SqlText ,[], []);
+//
+//    finally
+//      FGrid.DataSource.DataSet.GotoBookmark(BM);
+//      FGrid.DataSource.DataSet.FreeBookmark(BM);
+//    end;
+//  end;
+//  log('tMarks.Select End', etDebug);
+//end;
 
 initialization
   RegisterClass(TOrdersT);

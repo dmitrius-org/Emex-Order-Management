@@ -75,8 +75,12 @@ Select
          on s.SuppliersID = o.SuppliersID
   left join vSupplierDeliveryParam sdp
          on sdp.ProfilesDeliveryID = o.ProfilesDeliveryID
-  left join tPrice p with (nolock index=ao1)
-         on p.PriceID = o.PriceID
+  left join vPrice p 
+         on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
  where n.NodeID in (
                      6--ReceivedOnStock	Получено на склад в ОАЭ
                     ,7--ReadyToSend	Готово к отправке из ОАЭ
@@ -97,5 +101,5 @@ return @r
 GO
 grant exec on ShipmentsPlanned to public
 go
-exec setOV 'ShipmentsPlanned', 'P', '20250320', '4'
+exec setOV 'ShipmentsPlanned', 'P', '20250531', '5'
 go

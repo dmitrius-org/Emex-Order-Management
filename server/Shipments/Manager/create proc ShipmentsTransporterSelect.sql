@@ -118,8 +118,12 @@ as
            on c.ClientID = o.ClientID
     left join tMakes b with (nolock index=ao2) -- брент замены
            on cast(b.Code as nvarchar)= o.ReplacementMakeLogo
-    left join tPrice p with (nolock index=ao1)
-           on p.PriceID = o.PriceID	
+  left join vPrice p 
+         on p.PriceID = o.PriceID	
+  --left join tPrice p with (nolock index=PK_tPrice_ID)
+  --       on p.PriceID = o.PriceID	
+  --left join tParts pt with (nolock index=PK_tParts_ID)
+  --       on pt.PartID = p.PartID
    where r.spid = @@spid 
 
    Update r
@@ -186,7 +190,7 @@ as
 go
 grant exec on ShipmentsTransporterSelect to public
 go
-exec setOV 'ShipmentsTransporterSelect', 'P', '20250312', '3'
+exec setOV 'ShipmentsTransporterSelect', 'P', '20250531', '5'
 go
 
 exec ShipmentsTransporterSelect @TransporterNumber= 'QBLS169C', @Invoice = '250219'
