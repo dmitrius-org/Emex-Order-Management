@@ -100,7 +100,7 @@ NotificationMethod       int  -- Способ оповещения
 
 ------------------------------
 tClientReliation              Связь с клиентами, значение из tObjectType.ObjectTypeID    
-LinkType                     -- тип связи 
+LinkType                 int  -- тип связи 
                                5 - Связь клиентов и сотрудников
 
 ------------------------------

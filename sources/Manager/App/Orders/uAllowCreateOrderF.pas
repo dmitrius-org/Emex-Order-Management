@@ -50,7 +50,7 @@ implementation
 
 uses
   MainModule, uniGUIApplication, uSqlUtils, uMainVar, uEmexUtils,
-  System.Math;
+  System.Math, uUtils.Logger;
 
 function AllowCreateOrderF: TAllowCreateOrderF;
 begin
@@ -157,7 +157,7 @@ begin
 
   if sql.Count > 0 then
   begin
-    emex := TEmex.Create(UniMainModule.FDConnection);
+    emex := TEmex.Create(UniMainModule.FDConnection, GetCurrentLogData());
 
     sql.Q.First;
     for i:=0 to sql.Count - 1 do // Цикл по поставщикам

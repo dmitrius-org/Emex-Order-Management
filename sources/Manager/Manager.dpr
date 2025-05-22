@@ -72,7 +72,6 @@ uses
   uToast in '..\Common\CommonApp\uToast.pas',
   uTask_F in '..\Scheduler\Task\uTask_F.pas' {Task_F: TUniForm},
   uTask_T in '..\Scheduler\Task\uTask_T.pas' {Task_T: TUniFrame},
-  uTaskUtils in '..\Scheduler\Task\uTaskUtils.pas',
   uClientsTypeT in 'App\Clients\uClientsTypeT.pas' {ClientsTypeT: TUniFrame},
   uShipmentsProtocol_T in 'App\Shipments\uShipmentsProtocol_T.pas' {ShipmentsProtocol_T: TUniForm},
   uTaskBat_F in '..\Scheduler\Task\uTaskBat_F.pas' {TaskBAT_F: TUniForm},

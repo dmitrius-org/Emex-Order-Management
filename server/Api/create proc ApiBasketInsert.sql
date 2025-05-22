@@ -49,7 +49,7 @@ insert into pBasket with (rowlock)
 
 --delete
 --  from @tID
- -- При добавлении brand - number - itemKey - supplierCode позиции, которая уже была ранее добавлена в корзину, значение quantity будет прибавлено к существующему.
+ -- С•СЂРё РґРѕР±Р°РІР»РµРЅРёРё brand - number - itemKey - supplierCode РїРѕР·РёС†РёРё, РєРѕС‚РѕСЂР°В¤ СѓР¶Рµ Р±С‹Р»Р° СЂР°РЅРµРµ РґРѕР±Р°РІР»РµРЅР° РІ РєРѕСЂР·РёРЅСѓ, Р·РЅР°С‡РµРЅРёРµ quantity Р±СѓРґРµС‚ РїСЂРёР±Р°РІР»РµРЅРѕ Рє СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРјСѓ.
 
 
 
@@ -73,7 +73,7 @@ begin
           ,PartNameRus
           --,PartNameEng
           ,PriceLogo
-	      ,OurDelivery   -- срок поставки клиенту
+	      ,OurDelivery   -- СЃСЂРѕРє РїРѕСЃС‚Р°РІРєРё РєР»РёРµРЅС‚Сѓ
           ,GuaranteedDay
           ,Quantity
           ,Price
@@ -127,7 +127,7 @@ begin
 
           ,p.Flag
 
-          ,p.Packing -- количество деталей в упаковке
+          ,p.Packing -- РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµС‚Р°Р»РµР№ РІ СѓРїР°РєРѕРІРєРµ
           ,b.Comment2
           ,b.ItemKey
       from pBasket b (nolock)
@@ -212,7 +212,7 @@ end
   --                      and t.Make               = p.Make
 		--			    and t.DetailNum          = p.DetailNum
 		--				and t.PriceLogo          = p.PriceLogo
-  --                      and t.ProfilesCustomerID = p.ProfilesCustomerID -- способов доставки с одним номером может быть несколько, поэтому проверяем по ИД
+  --                      and t.ProfilesCustomerID = p.ProfilesCustomerID 
   --                   )
        
 exit_:

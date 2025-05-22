@@ -10,8 +10,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
   Vcl.Menus, uniMainMenu, System.Actions, Vcl.ActnList, uniGUIBaseClasses,
   uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid, uniDBGrid,
-  uniToolBar, uniPanel, uTaskUtils, System.ImageList, Vcl.ImgList,
-  uniGUIApplication;
+  uniToolBar, uniPanel, System.ImageList, Vcl.ImgList,  uniGUIApplication;
 
 type
   TTask_T = class(TUniFrame)
@@ -112,7 +111,8 @@ type
 implementation
 
 uses
-  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils, ServerModule, uAuditUtils;
+  uTask_F, uCommonType, uSqlUtils, MainModule, uMainVar, uGrantUtils,
+  ServerModule, uAuditUtils;
 
 {$R *.dfm}
 

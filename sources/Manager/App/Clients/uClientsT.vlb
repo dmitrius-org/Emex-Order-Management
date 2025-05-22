@@ -16,9 +16,6 @@ Coordinates=119,10,142,58
 [actEdit]
 Coordinates=255,265,54,36
 
-[ImageList32]
-Coordinates=236,305,85,36
-
 [Grid]
 Coordinates=224,324,40,36
 
@@ -118,9 +115,6 @@ Coordinates=257,453,40,36
 [QueryinDatetime]
 Coordinates=138,453,111,36
 
-[ImageList16]
-Coordinates=49,453,85,36
-
 [N4]
 Coordinates=0,417,40,36
 
@@ -156,7 +150,7 @@ Coordinates=10,232,103,36
 Coordinates=436,10,103,36
 
 []
-Coordinates=654,527,91,36
+Coordinates=49,453,85,36
 
 [tbSeparator]
 Coordinates=549,10,103,36

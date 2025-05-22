@@ -38,7 +38,7 @@ type
 implementation
 
 uses
-  uMainVar, uEmexUtils, MainModule, uUtils.Varriant, uServiceEmex;
+  uMainVar, uEmexUtils, MainModule, uUtils.Varriant, uServiceEmex, uUtils.Logger;
 
 {$R *.dfm}
 
@@ -49,7 +49,7 @@ begin
    SQl.Exec('delete pMovement where spid = @@spid', [],[]);
    if (edtclient.Value > 0) and (edtOrderNum.Value > 0) then
    begin
-     Emex := TEmex.Create(UniMainModule.FDConnection);
+     Emex := TEmex.Create(UniMainModule.FDConnection, GetCurrentLogData());
 //     Emex.
      Emex.MovementByOrderNumber(vartoint(edtclient.Value), vartoint(edtOrderNum.Value));
      FreeAndNil(Emex);
@@ -78,7 +78,7 @@ begin
 
   if (edtSuppliersID.Value > 0) then
   begin
-    Emex := TEmex.Create(UniMainModule.FDConnection);
+    Emex := TEmex.Create(UniMainModule.FDConnection, GetCurrentLogData());
 
     inBasket := Emex.Emex.GetBasketDetails(Ctm);
 

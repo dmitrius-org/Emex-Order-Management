@@ -1419,7 +1419,6 @@ end;
 procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
-  log(EventName, etInfo);
   if (EventName = '_columnhide')
   then
   begin
@@ -1453,6 +1452,7 @@ begin
     StatusForm.StatusFile := UniServerModule.StartPath + '\files\html\OrderStatus.html';
 
     StatusForm.ShowModal();
+    StatusForm.Free;
   end
 end;
 
