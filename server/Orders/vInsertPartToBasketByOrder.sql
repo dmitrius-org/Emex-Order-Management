@@ -31,12 +31,12 @@ Select c.ClientID,
   from tOrders o with (nolock index=ao1)    
  inner join tClients c with (nolock index=PK_tClients_ClientID)
          on c.ClientID = o.ClientID
-  left join tPrice pr with (nolock index=ao1)
+  left join vPrice pr
          on pr.PriceID = o.PriceID          
 go
 grant all on vInsertPartToBasketByOrder to public
 go
-exec setOV 'vInsertPartToBasketByOrder', 'V', '20250402', '1'
+exec setOV 'vInsertPartToBasketByOrder', 'V', '20250531', '2'
 go
 select *
   from vInsertPartToBasketByOrder

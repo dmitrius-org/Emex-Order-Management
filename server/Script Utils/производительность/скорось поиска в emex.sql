@@ -5,7 +5,9 @@ declare @UserID int = null
            UserName, 
            LogMsgID,
            EventDate AS BeginTime,
-           ROW_NUMBER() OVER (ORDER BY EventDate DESC) AS rn
+           ROW_NUMBER() OVER ( partition by ThreadId ORDER BY EventDate DESC) AS rn,
+           ThreadId
+
       FROM tLogMsg (NOLOCK)
      WHERE 1=1--UserID = isnull(@UserID , UserID)
        AND Msg = 'Emex.SearchPart Begin'
@@ -15,7 +17,8 @@ cte_end AS (
            UserName,
            LogMsgID,
            EventDate AS EndTime,
-           ROW_NUMBER() OVER (ORDER BY EventDate DESC) AS rn
+           ROW_NUMBER() OVER (partition by ThreadId ORDER BY EventDate DESC) AS rn,
+           ThreadId
       FROM tLogMsg (NOLOCK)
      WHERE 1=1--UserID = isnull(@UserID , UserID) 
        AND Msg = 'Emex.SearchPart End'
@@ -34,4 +37,5 @@ SELECT b.UserName,
   JOIN cte_end e 
     ON b.UserID = e.UserID
    and b.rn = e.rn
+   and b.ThreadId = e.ThreadId
  ORDER BY b.UserName, b.BeginTime DESC

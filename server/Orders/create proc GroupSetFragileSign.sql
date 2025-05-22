@@ -4,22 +4,26 @@ drop proc if exists GroupSetFragileSign
 */
 go
 create proc GroupSetFragileSign
-              @Fragile            nvarchar(512) = null -- Наименование факт            
+              @Fragile bit          
 as
   set nocount on;
-  declare @r       int = 0
-		 ,@AuditID  numeric(18,0)
+  declare @r int = 0  
 
-  declare @PriceID as table(PriceID numeric(18, 0))
+  declare @PartsUpdate as TABLE 
+  (  OrderID           numeric(18, 0)
+    ,Fragile	       bit
+    ,FragileOld	       bit);
 
   update p
-     set p.Restrictions	   = nullif(@Fragile, '')
+     set p.Fragile = @Fragile
+  OUTPUT t.OrderID, INSERTED.Fragile, Deleted.Fragile INTO @PartsUpdate( OrderID, Fragile, FragileOld )  
 	from tMarks m (nolock)
    inner join tOrders t (nolock)
            on t.OrderID = m.ID
-   inner join tPrice p (updlock)
-           on p.DetailNum = t.DetailNumber
-		  and p.MakeLogo  = t.MakeLogo -- производитель
+   inner join vPartsUpdate p
+           on p.Brand     = t.MakeLogo -- производитель
+          and p.DetailNum = t.DetailNumber
+		   
    where m.Spid = @@SPID
      and m.Type = 3
 
@@ -30,10 +34,12 @@ as
         ,o.OrderID       	         
         ,3        
         ,2      
-        ,'Изменение признака Fragile: [' + isnull(@Fragile, '') + ']'
+        ,'Fragile: ''' +  cast(isnull(pu.FragileOld, 0) as varchar)  + ''' -> '''+ cast(isnull(pu.Fragile, 0) as varchar)  + ''''
     from tMarks m (nolock)
    inner join tOrders o (nolock)
-           on o.OrderID     = m.ID
+           on o.OrderID  = m.ID
+   inner join @PartsUpdate pu
+           on pu.OrderID = o.OrderID
    where m.Spid = @@SPID
      and m.Type = 3
           
@@ -44,6 +50,6 @@ as
 go
 grant exec on GroupSetFragileSign to public
 go
-exec setOV 'GroupSetFragileSign', 'P', '20240314', '1'
+exec setOV 'GroupSetFragileSign', 'P', '20250531', '1'
 go
  

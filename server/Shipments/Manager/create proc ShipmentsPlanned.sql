@@ -77,10 +77,6 @@ Select
          on sdp.ProfilesDeliveryID = o.ProfilesDeliveryID
   left join vPrice p 
          on p.PriceID = o.PriceID	
-  --left join tPrice p with (nolock index=PK_tPrice_ID)
-  --       on p.PriceID = o.PriceID	
-  --left join tParts pt with (nolock index=PK_tParts_ID)
-  --       on pt.PartID = p.PartID
  where n.NodeID in (
                      6--ReceivedOnStock	Получено на склад в ОАЭ
                     ,7--ReadyToSend	Готово к отправке из ОАЭ

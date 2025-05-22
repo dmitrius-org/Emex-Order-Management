@@ -13,60 +13,60 @@ create proc CustomerReOrder
 as
   declare @r             int = 0
 
-  declare @P table 
-         (PriceID   numeric(18, 0));
-  insert into tPrice with (rowlock) -- если детали нет в нашей системе, то добавим его
-        (     
-         MakeLogo 
-        ,Brand    
-        ,DetailNum      
-        ,DetailName      
-        ,DetailNameF
-        ,PriceLogo    
-        ,WeightKG     
-        ,VolumeKG 
-        ,WeightKGF    
-        ,VolumeKGf
-        ,Fragile
-        ,Restrictions
-         ) 
-  OUTPUT INSERTED.PriceID INTO @P(PriceID)
-  select distinct 
-         pr2.MakeLogo
-        ,pr2.Brand
-        ,pr2.DetailNum     
-        ,pr2.DetailName --DetailName
-        ,pr2.DetailNameF
+  --declare @P table 
+  --       (PriceID   numeric(18, 0));
+
+  if OBJECT_ID('tempdb..#Price') is not null
+    drop table #Price
+  CREATE TABLE #Price
+  (
+          OrderID   numeric(18, 0) 
+         ,PartID    numeric(18, 0)
+         ,PriceID   numeric(18, 0)
+         ,Brand     varchar(30)
+         ,DetailNum varchar(128)
+         ,PriceLogo varchar(30)
+         ,PartNameRus varchar(256)
+         ,WeightKG  float
+         ,VolumeKG  float
+  );
+
+  insert #Price
+        (OrderID,
+         PartID,
+         Brand, 
+         DetailNum, 
+         PriceLogo,
+         PartNameRus,
+         WeightKG,
+         VolumeKG
+        )
+  select o.OrderID
+        ,pr2.PartID
+        ,isnull(pr2.Brand, o.MakeLogo)
+        ,isnull(pr2.DetailNum, o.DetailNumber)       
         ,@PriceLogo
+        ,isnull(pr2.DetailName, o.DetailName) 
         ,pr2.WeightKG
         ,case
            when pr2.VolumeKG = 0 then pr2.WeightKG
            else pr2.VolumeKG
          end 
-        ,pr2.WeightKG
-        ,pr2.VolumeKG
-        ,pr2.Fragile
-        ,pr2.Restrictions
-    from tOrders t with (nolock index=ao1)
-   inner join tPrice pr2 with (nolock index=ao3)
-           on pr2.PriceLogo  = t.PriceLogo
-          and pr2.DetailNum  = t.DetailNumber
-          and pr2.MakeLogo   = t.MakeLogo 
-  --cross apply ( select top 1 *
-  --                 from pFindByNumber p with (nolock index=ao3)
-  --                where p.Spid = @@spid
-  --                  and p.Make      = @MakeLogo
-  --                  and p.DetailNum = t.DetailNumber
-  --                  and p.PriceLogo = @PriceLogo
-  --              ) as p
-    left join tPrice pr with (nolock index=ao3)
-           on pr.PriceLogo  = @PriceLogo
-          and pr.DetailNum  = t.DetailNumber
-          and pr.MakeLogo   = @MakeLogo 
+    from tOrders o with (nolock index=ao1)
+    left join vParts pr2 
+           on pr2.Brand     = o.MakeLogo 
+          and pr2.DetailNum = o.DetailNumber
+    left join tPrice pr with (nolock index=ao1)
+           on pr.PartID    = pr2.PartID
+          and pr.PriceLogo = @PriceLogo
 
-   where t.OrderID = @OrderID
+   where o.OrderID = @OrderID
      and pr.PriceID is null
+  
+  exec PriceInsert
 
+
+        
   update t
      set t.Price                  = p.PriceRub
         ,t.Amount                 = p.PriceRub * t.Quantity
@@ -140,8 +140,8 @@ as
            on S.SuppliersID = c.SuppliersID
    inner join vClientProfilesParam cp
            on cp.ProfilesCustomerID = @ProfilesCustomerID
-   left join @P pp
-          on 1=1 
+   left join #Price pp (nolock)
+          on pp.OrderID = t.OrderID
    where t.OrderID = @OrderID
 
   delete from tOrdersDeliverySupplier with (rowlock) where OrderID = @OrderID
@@ -195,7 +195,6 @@ as
   Select @@spid, @OrderID
   
   exec OrdersDeliveryTermCalc @IsSave = 1
- 
 
   exit_:
   return @r
@@ -203,6 +202,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20250320', '9'
+exec setOV 'CustomerReOrder', 'P', '20250531', '10'
 go
  

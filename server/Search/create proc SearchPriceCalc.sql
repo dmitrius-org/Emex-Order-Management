@@ -63,7 +63,7 @@ create table #Price
       ,RetVal              int
       )
 
--- для получения даных с таблицы tPrice
+-- для получения даных с таблицы tParts
 declare @Num as table
        (DetailNum nvarchar(40)
        ,Make      nvarchar(40));
@@ -105,12 +105,12 @@ select
        max(pp.VolumeKGf),
        max( cast(isnull(pp.Fragile, 0) as int) ),
        max( cast(isnull(pp.NLA, 0) as int) ),
-       max( cast(iif(isnull(pp.Restrictions, '')='NOAIR', 1, 0) as int) ),
+       max( cast(isnull(pp.NoAir, 0) as int) ),
        max(pp.DetailNameF)
   from @Num p 
- inner join tPrice pp with (nolock index=ao2) 
+ inner join tParts pp with (nolock index=ao2) 
          on pp.DetailNum = p.DetailNum
-        and pp.MakeLogo  = p.Make
+        and pp.Brand     = p.Make
 group by p.DetailNum, p.Make
 
 -- расчет цены
@@ -294,5 +294,5 @@ return @RetVal
 go
 grant exec on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250320', '16'
+exec setOV 'SearchPriceCalc', 'P', '20250531', '17'
 go

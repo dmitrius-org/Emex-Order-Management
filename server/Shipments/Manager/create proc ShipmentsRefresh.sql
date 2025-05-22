@@ -55,8 +55,8 @@ as
                    left join vSupplierDeliveryParam sdp
                           on sdp.ProfilesDeliveryID = o.ProfilesDeliveryID
 
-                   left join tPrice p with (nolock index=ao1)
-                          on p.PriceID = o.PriceID	
+                   left join vPrice p 
+                          on p.PriceID = o.PriceID
                   where o.Invoice = s.Invoice 
                 ) o
    where s.Spid = @@SPID
@@ -210,5 +210,5 @@ return @r
 GO
 grant exec on ShipmentsRefresh to public
 go
-exec setOV 'ShipmentsRefresh', 'P', '20250320', '4'
+exec setOV 'ShipmentsRefresh', 'P', '20250531', '5'
 go

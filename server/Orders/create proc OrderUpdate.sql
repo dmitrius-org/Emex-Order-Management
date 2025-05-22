@@ -1,3 +1,5 @@
+drop proc if exists PartHistoryInsert
+go
 drop proc if exists OrderUpdate
 go
 create proc OrderUpdate
@@ -111,34 +113,24 @@ as
         ) as pd
   where t.OrderID = @OrderID
  
-  if OBJECT_ID('tempdb..#PartsUpdate') is not null
-    drop table #PartsUpdate
-  CREATE TABLE #PartsUpdate
+  declare @PartsUpdate as TABLE 
   (
-  	 DetailNum	       varchar(40)    -- Номер детали 
-    ,MakeLogo          varchar(30)    -- Зашифрованное название бренда
-  	,Brand             varchar(60)    -- Бренд
-  	,DetailName        varchar(256)   -- Наименование детали 
+  	 DetailName        varchar(256)   -- Наименование детали 
   	,WeightKG          float          -- Вес физический кг 
   	,VolumeKG          float          -- Вес объемный кг  
-  	,Restrictions      varchar(30)    -- Ограничения
+  	,NoAir             bit            -- 
     ,Fragile	       bit
     ,NLA               bit            -- No longer available или Более недоступно
-    ,UpdDatetime       datetime
-
-  	--,DetailNumOld	   varchar(40)    -- Номер детали 
-    --,MakeLogoOld       varchar(30)    -- Зашифрованное название бренда
-  	--,BrandOld          varchar(60)    -- Бренд
+ 
   	,DetailNameOld     varchar(256)   -- Наименование детали 
   	,WeightKGOld       float          -- Вес физический кг 
   	,VolumeKGOld       float          -- Вес объемный кг  
-  	,RestrictionsOld   varchar(30)    -- Ограничения
+  	,NoAirOld          bit   
     ,FragileOld	       bit
     ,NLAOld            bit            -- No longer available или Более недоступно
-    ,InDatetime        datetime
   );
 
-  delete from #PartsUpdate
+  --delete from #PartsUpdate
   -- сохранение данных на позиции/детали
   update p
      set p.DetailNameF	= nullif(@DetailNameF, '')
@@ -152,61 +144,46 @@ as
                             when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
                             else @VolumeKGF
                           end  
-        ,p.Restrictions = case
-                            when @NoAir = 1 then 'NOAIR'
+        ,p.NoAir        = case
+                            when @NoAir = 1 then 1
                             else null
                           end
         ,p.Fragile      = nullif(@Fragile, 0) 
         ,p.NLA          = nullif(@NLA, 0)  
-        ,p.updDatetime  = getdate()  
         
-  OUTPUT 
-         INSERTED.DetailNum
-        ,INSERTED.MakeLogo
-        ,INSERTED.Brand
-        ,INSERTED.DetailNameF
+  OUTPUT INSERTED.DetailNameF
         ,INSERTED.WeightKGF
         ,INSERTED.VolumeKGF
-        ,INSERTED.Restrictions
+        ,INSERTED.NoAir
         ,INSERTED.Fragile
         ,INSERTED.NLA
-        ,INSERTED.updDatetime
 
         ,Deleted.DetailNameF
         ,Deleted.WeightKGF
         ,Deleted.VolumeKGF
-        ,Deleted.Restrictions
+        ,Deleted.NoAir
         ,Deleted.Fragile
         ,Deleted.NLA
-        ,Deleted.InDatetime
-    INTO #PartsUpdate(
-         DetailNum	   
-        ,MakeLogo      
-        ,Brand         
-        ,DetailName    
+    INTO @PartsUpdate(      
+         DetailName    
         ,WeightKG      
         ,VolumeKG      
-        ,Restrictions  
+        ,NoAir  
         ,Fragile	   
         ,NLA  
-        ,UpdDatetime 
-       
+  
         ,DetailNameOld    
         ,WeightKGOld      
         ,VolumeKGOld      
-        ,RestrictionsOld  
+        ,NoAirOld  
         ,FragileOld	      
-        ,NLAOld 
-        ,InDatetime
+        ,NLAOld
         )  
-
 	from tOrders t  with (nolock index=ao1)
-   inner join tPrice p with (updlock index=ao2)
-           on p.DetailNum = t.DetailNumber
-		  and p.MakeLogo  = t.MakeLogo -- производитель
+   inner join tParts p with (updlock index=ao2)
+           on p.Brand  = t.MakeLogo -- производитель 
+		  and p.DetailNum = t.DetailNumber
    where t.OrderID = @OrderID
-
-  exec PartHistoryInsert
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
@@ -304,10 +281,10 @@ as
   select @AuditComment =  'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>' + 
                           'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>' +
                           'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>' +
-                          'Restrictions: ''' +  isnull(RestrictionsOLD,'') + ''' -> '''+ isnull(Restrictions,'') + '''<br>' +
+                          'NoAir: ''' +  cast(isnull(NoAirOld, 0) as varchar)  + ''' -> '''+ cast(isnull(NoAir, 0) as varchar)  + '''<br>' +
                           'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>' +
                           'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +''''
-    from #PartsUpdate pu (nolock)
+    from @PartsUpdate
 
   -- аудит
   exec AuditInsert
@@ -328,8 +305,6 @@ as
         ,VolumeKG   = @VolumeKGF
         ,VolumeKGs  = @VolumeKGF * Quantity
 
-
-
    where spid    = @@spid
      and OrderID = @OrderID
   
@@ -339,6 +314,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250320', '21'
+exec setOV 'OrderUpdate', 'P', '20250531', '22'
 go
  

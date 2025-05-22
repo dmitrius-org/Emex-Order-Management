@@ -62,22 +62,25 @@ as
 
 /**
 И еще момент который мы проговаривали, но еще не реализовали: если деталь попала в статус "в работе", а поля WeightKGF и VolumeKGF пустые, то их нужно заполнять из WeightKG и VolumeKG соответственно*/
- Update pr
-    set pr.WeightKGF = isnull(pr.WeightKGF, o.WeightKG)
-	   ,pr.VolumeKGf = isnull(pr.VolumeKGf, o.VolumeKG)
+ Update pp
+    set pp.WeightKGF = isnull(pp.WeightKGF, o.WeightKG)
+	   ,pp.VolumeKGf = isnull(pp.VolumeKGf, o.VolumeKG)
    from pMovement p (nolock)
   inner join tOrders o (nolock)
           on o.OrderID = p.OrderID
-  inner join tPrice pr (updlock)
+  inner join tPrice pr (nolock)
           on pr.PriceID = o.PriceID
+  inner join tParts pp (updlock)
+          on pp.PartID = pr.PartID
+         and (pp.WeightKGF is null
+	       or pp.VolumeKGf is null)
  where p.Spid       = @@SPID
  
-
   exit_:
   return @r
 go
 grant exec on EmexOrderCreateSync to public
 go
-exec setOV 'EmexOrderCreateSync', 'P', '20240521', '4'
+exec setOV 'EmexOrderCreateSync', 'P', '20250531', '5'
 go
   

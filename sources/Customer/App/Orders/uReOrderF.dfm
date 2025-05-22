@@ -84,9 +84,9 @@ object ReOrder: TReOrder
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
-    Top = 163
+    Top = 152
     Width = 620
-    Height = 37
+    Height = 48
     Hint = ''
     ShowHint = True
     ParentShowHint = False
@@ -96,11 +96,11 @@ object ReOrder: TReOrder
     LayoutConfig.Padding = '2'
     DesignSize = (
       620
-      37)
+      48)
     object edtNextPart: TUniCheckBox
       AlignWithMargins = True
       Left = 16
-      Top = 10
+      Top = 17
       Width = 359
       Height = 16
       Hint = ''
@@ -112,10 +112,10 @@ object ReOrder: TReOrder
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 521
-      Top = 5
-      Width = 91
-      Height = 27
+      Left = 489
+      Top = 7
+      Width = 123
+      Height = 34
       Hint = ''
       Margins.Right = 30
       Enabled = False
@@ -129,10 +129,10 @@ object ReOrder: TReOrder
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 434
-      Top = 5
+      Left = 402
+      Top = 7
       Width = 81
-      Height = 27
+      Height = 34
       Hint = ''
       ShowHint = True
       Caption = #1047#1072#1082#1088#1099#1090#1100

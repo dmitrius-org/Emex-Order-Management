@@ -195,6 +195,7 @@ object BasketF: TBasketF
           WidgetColumn.Enabled = True
           WidgetColumn.Widget = btnDeleteBasket
           WidgetColumn.Height = 25
+          Title.Alignment = taCenter
           Title.Caption = ' '
           MinWidth = 50
           Width = 59

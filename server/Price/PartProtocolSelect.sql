@@ -11,32 +11,33 @@ create proc PartProtocolSelect
 as
 
 SELECT t.DetailNum	 
-      ,t.MakeLogo    
-      ,t.Brand       
-      ,t.DetailName  
-      ,t.WeightKG    
-      ,t.VolumeKG    
-      ,t.Restrictions
+      ,t.Brand    
+      ,t.BrandName       
+      ,isnull(t.DetailNameF, t.DetailName) DetailName
+      ,isnull(t.WeightKGF, t.WeightKG)     WeightKG   
+      ,isnull(t.VolumeKGF, t.VolumeKG)     VolumeKG   
+      ,t.NoAir
       ,t.Fragile
       ,t.NLA
       ,cast(u.Name as varchar) as UserName      
-      ,t.InDatetime  as updDateTime
+      ,t.UpDatetime
 
   FROM tOrders o with (nolock index=ao1)
- inner join tParts for system_time all t with (nolock index=PK_tParts_ID) 
-         on t.DetailNum = /*isnull(o.ReplacementDetailNumber,*/ o.DetailNumber--)
-        and t.MakeLogo  = /*isnull(o.ReplacementMakeLogo,    */ o.MakeLogo--)
+ inner join vPartHistory t
+         on t.Brand  = /*isnull(o.ReplacementMakeLogo,    */ o.MakeLogo--) 
+        and t.DetailNum = /*isnull(o.ReplacementDetailNumber,*/ o.DetailNumber--)
+  
        
  inner join tUser u with (nolock index=ao1)
          on u.UserID = t.UserID
  where o.OrderID=@OrderID
 
- order by t.ValidFrom desc
+ order by t.UpDatetime desc
  
 go
 grant exec on PartProtocolSelect to public
 go
-exec setOV 'PartProtocolSelect', 'P', '20250227', '1'
+exec setOV 'PartProtocolSelect', 'P', '20250531', '2'
 go
 
 

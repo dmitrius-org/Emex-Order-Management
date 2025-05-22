@@ -63,88 +63,60 @@ declare @r int = 0
     from tOrders with (nolock index=ao2)
    where ClientID = @ClientID  
 
-  declare @P table -- тут детали которые сужествуют в нашей базе
-         (BasketID  numeric(18, 0) 
+  if OBJECT_ID('tempdb..#Price') is not null
+    drop table #Price
+  CREATE TABLE #Price
+  (
+          BasketID  numeric(18, 0) 
+         ,PartID    numeric(18, 0)
          ,PriceID   numeric(18, 0)
-         ,Make      nvarchar(30)
-         ,DetailNum nvarchar(128)
-         ,PriceLogo nvarchar(30)
-         );
+         ,Brand     varchar(30)
+         ,DetailNum varchar(128)
+         ,PriceLogo varchar(30)
+         ,PartNameRus varchar(256)
+         ,WeightKG  float
+         ,VolumeKG  float
+  );
 
-  declare @PNew table -- новые детали
-         (BasketID  numeric(18, 0) 
-         ,PriceID   numeric(18, 0)
-         ,Make      nvarchar(30)
-         ,DetailNum nvarchar(128)
-         ,PriceLogo nvarchar(30)
-         );
-
-  insert @P
+  insert #Price
         (BasketID,
+         PartID,
          PriceID,
-         Make, 
+         Brand, 
          DetailNum, 
-         PriceLogo
+         PriceLogo,
+         PartNameRus,
+         WeightKG,
+         VolumeKG
         )
   select b.BasketID,
+         p.PartID,
          pp.PriceID,
          b.Make,
          b.DetailNum,
-         b.PriceLogo
-    from tMarks m with (nolock index=pk_tMarks)
-   inner join tBasket b with (nolock index=PK_tBasket_BasketID)
-           on b.BasketID = m.ID
-    left join tPrice pp with (nolock index=ao3) 
-           on pp.PriceLogo = b.PriceLogo 
-          and pp.DetailNum = b.DetailNum
-          and pp.MakeLogo  = b.Make
-   where m.spid = @@spid   
-     and m.Type = 6 -- Корзина
-     
-  insert into tPrice with (rowlock) -- если детали нет в нашей системе, то добавим его
-        (     
-         MakeLogo 
-        ,Brand    
-        ,DetailNum      
-        ,DetailName      
-        ,PriceLogo    
-        ,WeightKG     
-        ,VolumeKG 
-        ,WeightKGF    
-        ,VolumeKGf
-        --,Fragile
-        --,Restrictions
-         ) 
-  OUTPUT INSERTED.PriceID, INSERTED.MakeLogo, INSERTED.DetailNum, INSERTED.PriceLogo 
-    INTO @PNew(PriceID, Make, DetailNum, PriceLogo)
-  select distinct 
-         b.Make 
-        ,b.MakeName
-        ,b.DetailNum     
-        ,b.PartNameRus --DetailName
-        ,b.PriceLogo  
-        ,b.WeightKG
-        ,case
+         b.PriceLogo,
+         b.PartNameRus, --DetailName
+         b.WeightKG,
+         case
            when b.VolumeKG = 0 then b.WeightKG
            else b.VolumeKG
          end 
-        ,b.WeightKG
-        ,b.VolumeKG
-        --,b.Price
-        --,b.Price
-    from @P p
-   inner join tBasket b (nolock)
-           on b.BasketID = p.BasketID
-   where p.PriceID is null
+    from tMarks m with (nolock index=pk_tMarks)
+   inner join tBasket b with (nolock index=PK_tBasket_BasketID)
+           on b.BasketID = m.ID
+    left join vParts p
+           on p.Brand     = b.Make           
+          and p.DetailNum = b.DetailNum 
+
+    left join tPrice pp  (Nolock) 
+           on pp.PartID    = p.PartID      
+          and pp.PriceLogo = b.PriceLogo 
+
+   where m.spid = @@spid   
+     and m.Type = 6 -- Корзина
   
-  Update p
-     set p.PriceID = b.PriceID
-    from @P p
-   inner join @PNew b 
-           on b.Make      = p.Make 
-          and b.DetailNum = p.DetailNum
-          and b.PriceLogo = p.PriceLogo
-   where p.PriceID is null
+  exec PriceInsert
+
 
   declare @ID as table (OrderID numeric(18, 0), ID numeric(18, 0), OrderNum	varchar(32))
   insert tOrders with (rowlock)
@@ -274,7 +246,7 @@ declare @r int = 0
            from vClientProfilesParam cp
           where cp.ProfilesCustomerID = b.ProfilesCustomerID
        ) as pd
-   inner join @P p
+   inner join #Price p (nolock)
            on p.BasketID = b.BasketID
    where m.spid = @@spid   
      and m.Type = 6--Корзина
@@ -366,6 +338,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250515', '28'
+exec setOV 'OrderCreateFromBasket', 'P', '20250531', '29'
 go
  

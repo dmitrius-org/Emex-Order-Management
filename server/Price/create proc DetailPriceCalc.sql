@@ -135,7 +135,7 @@ select-- top 200000
   from vClientProfilesParam pc
  inner join vPrice t
          on t.PriceLogo = pc.UploadPriceName
-
+        and t.isDelete  = 0
 		 --and 1=1
              /*Если в форме была установлена галочка "Игнорировать детали без веса", то убираем все строки,
                у которых сразу в двух ячейках WeightKG и VolumeKG значение 0.*/

@@ -17,7 +17,6 @@ if OBJECT_ID('ExportImplementationByClient') is not null
 12 Штрихкод	
 13 Коробка
 
-
 */
 go
 
@@ -64,7 +63,7 @@ as
       from tOrders o with (nolock)
      inner join tClients c (nolock)
              on c.ClientID = o.ClientID     
-      left join tPrice p with (nolock index=ao1)
+      left join vPrice p 
              on p.PriceID = o.PriceID 
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
@@ -88,7 +87,7 @@ return @r
 GO
 grant exec on ExportImplementationByClient to public
 go
-exec setOV 'ExportImplementationByClient', 'P', '20240819', '2'
+exec setOV 'ExportImplementationByClient', 'P', '20250531', '3'
 go
 
 exec ExportImplementationByClient @Invoice = '241329', @ClientID = 57

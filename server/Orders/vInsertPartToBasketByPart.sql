@@ -33,7 +33,7 @@ Select c.ClientID,
          on o.OrderID  = p.ObjectID
  inner join tClients c (nolock)
          on c.ClientID = o.ClientID
-  left join tPrice pr with (nolock index=ao1)
+  left join vPrice pr
          on pr.PriceID = o.PriceID
  where p.Spid   = @@spid          
    and p.Retval = 0               
@@ -41,5 +41,5 @@ Select c.ClientID,
 go
 grant select on vInsertPartToBasketByPart to public
 go
-exec setOV 'vInsertPartToBasketByPart', 'V', '20250402', '6'
+exec setOV 'vInsertPartToBasketByPart', 'V', '20250531', '7'
 go

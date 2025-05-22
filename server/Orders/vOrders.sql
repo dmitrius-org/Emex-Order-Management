@@ -139,13 +139,6 @@ SELECT o.[OrderID]
          on s.NodeID = o.[StatusID]
         and s.Type   = 0 -- состояние/статус
 
- --inner join tModel m with (nolock)
- --        on m.StateID = s.NodeID
- --       and m.ActionID= 0 -- только состояния
- --inner join tInstrument i with (nolock index=ao1)
- --        on i.InstrumentID = m.InstrumentID
-	--	and i.ObjectTypeID = 3
-
   left join tClients c with (nolock index=ao1)
          on c.ClientID = o.ClientID
 
@@ -174,10 +167,6 @@ SELECT o.[OrderID]
 
   left join vPrice p 
          on p.PriceID = o.PriceID	
-  --left join tPrice p with (nolock index=PK_tPrice_ID)
-  --       on p.PriceID = o.PriceID	
-  --left join tParts pt with (nolock index=PK_tParts_ID)
-  --       on pt.PartID = p.PartID
 
   left join tPartsStatistics ps with (nolock index=ao1)
          on ps.Make      = o.MakeLogo

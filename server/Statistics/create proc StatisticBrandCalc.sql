@@ -54,7 +54,7 @@ from (
         from @Orders os
        inner join tOrders o with (nolock index=ao1)
                on o.OrderID = os.OrderID  
-        left join tPrice p with (nolock index=ao1)
+        left join vPrice p 
                on p.PriceID = o.PriceID
 
       ) as o
@@ -65,7 +65,7 @@ group by o.Manufacturer
 go
 grant exec on StatisticBrandCalc to public
 go
-exec setOV 'StatisticBrandCalc', 'P', '20241107', '1'
+exec setOV 'StatisticBrandCalc', 'P', '20250531', '2'
 go
  
-exec StatisticBrandCalc
+--exec StatisticBrandCalc

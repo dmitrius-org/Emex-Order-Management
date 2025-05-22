@@ -97,7 +97,7 @@ as
            on sb.ShipmentsBoxesID = r.ID
    inner join tOrders o with (nolock index=ao3)
            on o.box = sb.BoxNumber          
-    left join tPrice p with (nolock index=ao1)
+    left join vPrice p
            on p.PriceID = o.PriceID	
   end
 

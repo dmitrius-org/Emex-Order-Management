@@ -66,7 +66,7 @@ object OrderF: TOrderF
       TabOrder = 19
     end
     object cbFragile: TUniCheckBox
-      Left = 168
+      Left = 171
       Top = 182
       Width = 61
       Height = 17
@@ -106,7 +106,7 @@ object OrderF: TOrderF
       TabOrder = 4
     end
     object UniGroupBox1: TUniGroupBox
-      Left = 272
+      Left = 280
       Top = 87
       Width = 104
       Height = 124
@@ -366,7 +366,7 @@ object OrderF: TOrderF
     end
     object UniGroupBox5: TUniGroupBox
       AlignWithMargins = True
-      Left = 117
+      Left = 125
       Top = 87
       Width = 72
       Height = 42
@@ -390,7 +390,7 @@ object OrderF: TOrderF
       end
     end
     object UniGroupBox6: TUniGroupBox
-      Left = 193
+      Left = 201
       Top = 87
       Width = 70
       Height = 42
@@ -415,7 +415,7 @@ object OrderF: TOrderF
       end
     end
     object UniGroupBox7: TUniGroupBox
-      Left = 117
+      Left = 125
       Top = 129
       Width = 72
       Height = 42
@@ -439,7 +439,7 @@ object OrderF: TOrderF
       end
     end
     object UniGroupBox8: TUniGroupBox
-      Left = 193
+      Left = 201
       Top = 129
       Width = 70
       Height = 42
@@ -463,7 +463,7 @@ object OrderF: TOrderF
       end
     end
     object UniLabel11: TUniLabel
-      Left = 382
+      Left = 390
       Top = 163
       Width = 52
       Height = 13
@@ -473,7 +473,7 @@ object OrderF: TOrderF
       TabOrder = 11
     end
     object UniLabel12: TUniLabel
-      Left = 382
+      Left = 390
       Top = 191
       Width = 62
       Height = 13
@@ -938,9 +938,10 @@ object OrderF: TOrderF
       end
     end
     object cbDestinationLogo: TUniExComboBox
-      Left = 471
+      Left = 479
       Top = 159
-      Width = 397
+      Width = 389
+      Height = 23
       Hint = ''
       Enabled = False
       ShowHint = True
@@ -953,9 +954,9 @@ object OrderF: TOrderF
       Value = '-1'
     end
     object edtDetailNameF: TUniComboBox
-      Left = 116
+      Left = 125
       Top = 63
-      Width = 875
+      Width = 866
       Hint = ''
       ShowHint = True
       Text = ''
@@ -967,9 +968,9 @@ object OrderF: TOrderF
       OnRemoteQuery = edtDetailNameFRemoteQuery
     end
     object cbPrice: TUniExComboBox
-      Left = 471
+      Left = 479
       Top = 187
-      Width = 397
+      Width = 389
       Hint = ''
       Enabled = False
       ShowHint = True
@@ -996,7 +997,7 @@ object OrderF: TOrderF
       Value = '-1'
     end
     object lblKurs: TUniLabel
-      Left = 382
+      Left = 390
       Top = 94
       Width = 83
       Height = 13
@@ -1009,8 +1010,8 @@ object OrderF: TOrderF
       TabOrder = 23
     end
     object edtKurs: TUniNumberEdit
-      Left = 471
-      Top = 94
+      Left = 479
+      Top = 93
       Width = 94
       Hint = ''
       Margins.Left = 0
@@ -1092,7 +1093,7 @@ object OrderF: TOrderF
       TabOrder = 28
     end
     object lblExtraKurs: TUniLabel
-      Left = 382
+      Left = 390
       Top = 119
       Width = 86
       Height = 27
@@ -1105,7 +1106,7 @@ object OrderF: TOrderF
       TabOrder = 29
     end
     object edtExtraKurs: TUniNumberEdit
-      Left = 471
+      Left = 479
       Top = 119
       Width = 94
       Hint = ''
@@ -1135,8 +1136,8 @@ object OrderF: TOrderF
       OnClick = btnMessageClick
     end
     object lblChangeW: TUniHTMLFrame
-      Left = 74
-      Top = 121
+      Left = 90
+      Top = 119
       Width = 32
       Height = 28
       Hint = ''
@@ -1161,7 +1162,7 @@ object OrderF: TOrderF
       OnClick = btnSplitClick
     end
     object cbNLA: TUniCheckBox
-      Left = 227
+      Left = 232
       Top = 182
       Width = 42
       Height = 17

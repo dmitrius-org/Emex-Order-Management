@@ -126,7 +126,7 @@ SELECT o.[OrderID]
   left join tMakes b with (nolock index=ao2)
          on b.Code = o.ReplacementMakeLogo
 
-  left join tPrice p with (nolock index=ao1)
+  left join vPrice p
          on p.PriceID = o.PriceID	
          
   left join tShipments sh with (nolock index=ao2)
@@ -148,5 +148,5 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250320', '37'
+exec setOV 'vCustomerOrders', 'V', '20250531', '38'
 go

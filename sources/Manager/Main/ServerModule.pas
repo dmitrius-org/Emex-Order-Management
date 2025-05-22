@@ -62,7 +62,6 @@ begin
   InitServerModule(Self);
 end;
 
-
 procedure TUniServerModule.UniGUIServerModuleBeforeInit(Sender: TObject);
 begin
 //{$ifndef UNIGUI_VCL}

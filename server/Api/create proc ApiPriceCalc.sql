@@ -61,7 +61,7 @@ create table #Price
       ,RetVal              int
       )
 
--- для получения даных с таблицы tPrice
+-- для получения даных с таблицы tParts
 declare @Num as table
        (DetailNum nvarchar(40)
        ,Make      nvarchar(40));
@@ -95,18 +95,18 @@ insert @Price
         NLA,
         DetailName)
 select 
-       p.DetailNum,
-       p.Make,
-       max(pp.WeightKGF),
-       max(pp.VolumeKGf),
-       max( cast(isnull(pp.Fragile, 0) as int) ),
-       max( cast(isnull(pp.NLA, 0) as int) ),
-       max(pp.DetailNameF)
-  from @Num p 
- inner join tPrice pp with (nolock index=ao2) 
-         on pp.DetailNum = p.DetailNum
-        and pp.MakeLogo  = p.Make
-group by p.DetailNum, p.Make
+       n.DetailNum,
+       n.Make,
+       max(p.WeightKGF),
+       max(p.VolumeKGf),
+       max( cast(isnull(p.Fragile, 0) as int) ),
+       max( cast(isnull(p.NLA, 0) as int) ),
+       max(p.DetailNameF)
+  from @Num n 
+ inner join vParts p
+         on p.Brand     = n.Make 
+        and p.DetailNum = n.DetailNum
+group by n.DetailNum, n.Make
 
 -- расчет цены
 insert #Price with (rowlock)
@@ -286,5 +286,5 @@ return @RetVal
 go
 grant exec on ApiPriceCalc to public
 go
-exec setOV 'ApiPriceCalc', 'P', '20250303', '0'
+exec setOV 'ApiPriceCalc', 'P', '20250531', '1'
 go

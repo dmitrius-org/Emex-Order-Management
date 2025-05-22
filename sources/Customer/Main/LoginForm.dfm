@@ -78,7 +78,7 @@ object LoginF: TLoginF
     end
     object UniCheckBox1: TUniCheckBox
       Left = 82
-      Top = 214
+      Top = 224
       Width = 97
       Height = 17
       Hint = ''
@@ -88,7 +88,7 @@ object LoginF: TLoginF
     end
     object lblReset: TUniLabel
       Left = 221
-      Top = 228
+      Top = 238
       Width = 86
       Height = 17
       Cursor = crHandPoint

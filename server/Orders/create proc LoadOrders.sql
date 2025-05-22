@@ -110,7 +110,7 @@ as
         ,pc.ProfilesDeliveryID  -- SupplierDeliveryProfiles.ProfilesDeliveryID
         ,0                      -- isCancel
 		,p.PriceID              -- 
-		,p.MakeLogo				-- Код бренда
+		,p.Brand				-- Код бренда MakeLogo
 		,coalesce(pd.Name_RUS, o.DetailName) -- наименование детали
         ,o.FileDate  
         ,pc.Margin              -- Наценка из прайса
@@ -141,7 +141,7 @@ as
            else 0
          end
         +case 
-           when isnull(p.Restrictions, '')='NOAIR' 
+           when p.NoAir = 1
            then 4194304--NOAIR    
            else 0
          end 
@@ -163,7 +163,7 @@ as
          ) pc
    -- - - -
    outer apply (select top 1 *
-                  from tPrice p with (nolock index=ao2) 
+                  from vPrice p 
                  where p.DetailNum= o.DetailNumber
                  order by case
 				            when p.Brand = o.Manufacturer then 0
@@ -177,7 +177,7 @@ as
 			    ) p
    -- - - -
     left join tPartDescription pd with (nolock index=ao2)     
-           on pd.Make   = p.MakeLogo	
+           on pd.Make   = p.Brand	
           and pd.Number = p.DetailNum 
 
    outer apply (select top 1 *
@@ -208,7 +208,7 @@ as
     from @ID i
    inner join tOrders o with (updlock)
            on o.OrderID = i.ID
-   inner join tPrice p with (nolock) 
+   inner join vPrice p 
            on p.PriceID = o.PriceID
                         
   Update o
@@ -303,6 +303,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250515', '14'
+exec setOV 'LoadOrders', 'P', '20250531', '15'
 go
  

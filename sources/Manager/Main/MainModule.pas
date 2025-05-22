@@ -430,7 +430,7 @@ begin
   UniServerModule.Logger.AddLog('TUniMainModule.UniGUIMainModuleSessionTimeout');
 
   ALogger.Debug('TUniMainModule.UniGUIMainModuleSessionTimeout ExtendTimeOut: ' +
-               ExtendTimeOut.ToString);
+                ExtendTimeOut.ToString);
 
  UniSession.UniApplication.Restart();
 end;

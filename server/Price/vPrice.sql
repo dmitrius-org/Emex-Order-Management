@@ -17,6 +17,7 @@ Select p.PriceID
       ,p.Reliability
       ,p.DetailPrice
       ,p.MOSA
+      ,p.isDelete
       
       ,ps.Brand
       ,ps.BrandName
@@ -34,10 +35,10 @@ Select p.PriceID
       --,ps.UpDatetime
       --,ps.ValidTo
 
-  from tPrice p with (nolock)-- index=ao2)
- inner join tParts ps with (nolock index=PK_tParts_ID)
+  from tPrice p with (nolock)
+ inner join vParts ps 
          on ps.PartID=p.PartID
- where p.isDelete = 0
+
 
 go
 grant select on vPrice to public

@@ -9,7 +9,8 @@ uses
   uniLabel, uniEdit, uCommonType, Vcl.ExtCtrls, uniGroupBox, Math, uniMultiItem,
   uniComboBox, uniImageList, uniHTMLFrame, uniURLFrame,
 
-  Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer;
+  Data.DB,FireDAC.Comp.Client, FireDAC.Comp.Script, uniThreadTimer, uniTimer,
+  uniCheckBox;
 
 type
 
@@ -17,10 +18,9 @@ type
 
   TGroupSetFragileSignF = class(TUniForm)
     tabCommon: TUniFieldContainer;
-    lblDetailNameF: TUniLabel;
     btnCancel: TUniBitBtn;
     btnOk: TUniBitBtn;
-    cbRestrictions: TUniComboBox;
+    chFragile: TUniCheckBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -86,7 +86,7 @@ begin
                   ' '+
                   ' select @r as retcode ';
 
-        Sql.Open(sqltext, ['Fragile'], [cbRestrictions.Text]);
+        Sql.Open(sqltext, ['Fragile'], [chFragile.Checked]);
 
         RetVal.Code := Sql.Q.FieldByName('retcode').Value;
       end;

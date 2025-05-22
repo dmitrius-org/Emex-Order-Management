@@ -94,7 +94,7 @@ object PartProtocol_T: TPartProtocol_T
     OnColumnResize = GridColumnResize
     Columns = <
       item
-        FieldName = 'MakeLogo'
+        FieldName = 'Brand'
         Title.Alignment = taCenter
         Title.Caption = #1050#1086#1076' '#1073#1088#1077#1085#1076#1072
         Width = 99
@@ -103,7 +103,7 @@ object PartProtocol_T: TPartProtocol_T
         Sortable = True
       end
       item
-        FieldName = 'Brand'
+        FieldName = 'BrandName'
         Title.Alignment = taCenter
         Title.Caption = #1041#1088#1077#1085#1076
         Width = 235
@@ -143,18 +143,18 @@ object PartProtocol_T: TPartProtocol_T
         Sortable = True
       end
       item
-        FieldName = 'Restrictions'
+        FieldName = 'NoAir'
         Title.Alignment = taCenter
-        Title.Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103
-        Width = 184
+        Title.Caption = 'NoAir'
+        Width = 60
         ReadOnly = True
         Sortable = True
       end
       item
         FieldName = 'Fragile'
         Title.Alignment = taCenter
-        Title.Caption = #1055#1088#1080#1079#1085#1072#1082': '#1061#1088#1091#1087#1082#1080#1081
-        Width = 98
+        Title.Caption = 'Fragile'
+        Width = 58
         ReadOnly = True
         Sortable = True
       end
@@ -173,7 +173,7 @@ object PartProtocol_T: TPartProtocol_T
         Sortable = True
       end
       item
-        FieldName = 'updDateTime'
+        FieldName = 'UpDatetime'
         Title.Alignment = taCenter
         Title.Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
         Width = 159
@@ -213,12 +213,12 @@ object PartProtocol_T: TPartProtocol_T
         Name = 'ORDERID'
         ParamType = ptInput
       end>
-    object ProtocolQueryMakeLogo: TStringField
-      FieldName = 'MakeLogo'
-      Size = 30
-    end
     object ProtocolQueryBrand: TStringField
       FieldName = 'Brand'
+      Size = 30
+    end
+    object ProtocolQueryBrandName: TStringField
+      FieldName = 'BrandName'
       Size = 60
     end
     object ProtocolQueryDetailNum: TStringField
@@ -237,10 +237,6 @@ object PartProtocol_T: TPartProtocol_T
       FieldName = 'VolumeKG'
       DisplayFormat = '###,##0.000 '#1082#1075
     end
-    object ProtocolQueryRestrictions: TStringField
-      FieldName = 'Restrictions'
-      Size = 30
-    end
     object ProtocolQueryFragile: TBooleanField
       FieldName = 'Fragile'
     end
@@ -248,11 +244,14 @@ object PartProtocol_T: TPartProtocol_T
       FieldName = 'UserName'
       Size = 256
     end
-    object ProtocolQueryupdDateTime: TSQLTimeStampField
-      FieldName = 'updDateTime'
+    object ProtocolQueryUpDatetime: TSQLTimeStampField
+      FieldName = 'UpDatetime'
     end
     object ProtocolQueryNLA: TBooleanField
       FieldName = 'NLA'
+    end
+    object ProtocolQueryNoAir: TBooleanField
+      FieldName = 'NoAir'
     end
   end
   object actMain: TUniActionList

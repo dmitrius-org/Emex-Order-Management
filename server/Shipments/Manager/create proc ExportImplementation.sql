@@ -70,10 +70,6 @@ as
              on c.ClientID = o.ClientID     
      left join vPrice p 
             on p.PriceID = o.PriceID	
-  --left join tPrice p with (nolock index=PK_tPrice_ID)
-  --       on p.PriceID = o.PriceID	
-  --left join tParts pt with (nolock index=PK_tParts_ID)
-  --       on pt.PartID = p.PartID
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
 

@@ -21,10 +21,9 @@ type
     QueryDetailNameF: TStringField;
     QueryWeightKGF: TFloatField;
     QueryVolumeKGf: TFloatField;
-    QueryRestrictions: TStringField;
     QueryFragile: TBooleanField;
     QueryNLA: TBooleanField;
-    QueryPriceID: TFMTBCDField;
+    QueryPartID: TFMTBCDField;
     gbFilter: TUniGroupBox;
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
@@ -33,6 +32,7 @@ type
     fDetailNum: TUniEdit;
     UniLabel1: TUniLabel;
     N1: TUniMenuItem;
+    QueryNoAir: TBooleanField;
     procedure UniFrameCreate(Sender: TObject);
     procedure fCancelClick(Sender: TObject);
     procedure fOkClick(Sender: TObject);

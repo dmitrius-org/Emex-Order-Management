@@ -69,10 +69,6 @@ as
              ON o.SuppliersID = c.ID
      inner join vPrice p 
              on p.PriceID = o.PriceID	
-  --left join tPrice p with (nolock index=PK_tPrice_ID)
-  --       on p.PriceID = o.PriceID	
-  --left join tParts pt with (nolock index=PK_tParts_ID)
-  --       on pt.PartID = p.PartID
             and p.Fragile = 1
       left join tMakes m (nolock)
              on m.Code = o.ReplacementMakeLogo
@@ -94,4 +90,4 @@ go
 exec setOV 'OrdersFragile', 'P', '20250531', '1'
 go
 
-exec OrdersFragile 
+--exec OrdersFragile 

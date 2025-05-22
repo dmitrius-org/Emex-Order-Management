@@ -45,6 +45,7 @@ inherited ExceptionsT: TExceptionsT
       Width = 329
       Hint = ''
       ShowHint = True
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 4
@@ -53,6 +54,7 @@ inherited ExceptionsT: TExceptionsT
         
           'afterrender=function afterrender(sender, eOpts) {'#13#10'   initComboB' +
           'oxSearch(sender, "id", "val");'#13#10'}')
+      EmptyText = #1058#1080#1087
       ClearButton = True
       IconItems = <>
     end
@@ -64,7 +66,9 @@ inherited ExceptionsT: TExceptionsT
       ShowHint = True
       Text = ''
       TabOrder = 5
+      EmptyText = #1053#1086#1084#1077#1088
       ClearButton = True
+      InputType = 'text'
     end
     object UniLabel1: TUniLabel
       Left = 350
@@ -162,9 +166,9 @@ inherited ExceptionsT: TExceptionsT
           Width = 92
         end
         item
-          FieldName = 'Restrictions'
+          FieldName = 'NoAir'
           Title.Alignment = taCenter
-          Title.Caption = 'Restrictions'
+          Title.Caption = 'NoAir'
           Width = 118
         end
         item
@@ -182,9 +186,9 @@ inherited ExceptionsT: TExceptionsT
     end
   end
   inherited Query: TFDQuery
-    UpdateOptions.UpdateTableName = 'dbo.tPrice'
-    UpdateOptions.KeyFields = 'PriceID'
-    UpdateOptions.AutoIncFields = 'PriceID'
+    UpdateOptions.UpdateTableName = 'dbo.tParts'
+    UpdateOptions.KeyFields = 'PartID'
+    UpdateOptions.AutoIncFields = 'PartID'
     SQL.Strings = (
       ''
       'DECLARE @Type as ID'
@@ -215,8 +219,9 @@ inherited ExceptionsT: TExceptionsT
         Value = Null
       end>
     object QueryBrand: TStringField
+      DisplayWidth = 256
       FieldName = 'Brand'
-      Size = 60
+      Size = 256
     end
     object QueryDetailNum: TStringField
       FieldName = 'DetailNum'
@@ -238,18 +243,17 @@ inherited ExceptionsT: TExceptionsT
       FieldName = 'VolumeKGf'
       DisplayFormat = '###,##0.000 '#1082#1075
     end
-    object QueryRestrictions: TStringField
-      FieldName = 'Restrictions'
-      Size = 60
-    end
     object QueryFragile: TBooleanField
       FieldName = 'Fragile'
     end
     object QueryNLA: TBooleanField
       FieldName = 'NLA'
     end
-    object QueryPriceID: TFMTBCDField
-      FieldName = 'PriceID'
+    object QueryPartID: TFMTBCDField
+      FieldName = 'PartID'
+    end
+    object QueryNoAir: TBooleanField
+      FieldName = 'NoAir'
     end
   end
   inherited DataSource: TDataSource

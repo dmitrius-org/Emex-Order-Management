@@ -21,10 +21,6 @@ select round( Sum(o.Amount), 2)           as Amount,
          on o.OrderID = m.ID
   left join vPrice p 
          on p.PriceID = o.PriceID	
-  --left join tPrice p with (nolock index=PK_tPrice_ID)
-  --       on p.PriceID = o.PriceID	
-  --left join tParts pt with (nolock index=PK_tParts_ID)
-  --       on pt.PartID = p.PartID
 where m.Spid   = @@spid
   and m.Type   = 3
 

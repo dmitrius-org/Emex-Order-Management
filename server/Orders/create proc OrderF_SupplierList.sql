@@ -14,7 +14,7 @@ Select
        s.Brief + ' | ' + 
        o.PriceLogo + ' | ' +
        '$' + convert(varchar, coalesce(o.PricePurchaseF, o.PricePurchase, 0)) + ' | ' + 
-       convert(varchar, o.Quantity) + '/' + isnull(convert(varchar, p.Quantity), '-') + ' | ' + -- количество
+       convert(varchar, o.Quantity) + '/' + isnull(convert(varchar, iif(p.isDelete = 1, 0, p.Quantity)), '-') + ' | ' + -- количество
        convert(varchar, coalesce(o.DeliveryRestTermSupplier, datediff(dd,getdate(), o.DeliveryPlanDateSupplier), '999')) + ' дней ' +' | ' + 
        convert(varchar, o.Reliability) + '%' as Name
        ,0 as Price
@@ -22,7 +22,7 @@ Select
   from tOrders o (nolock)
  inner join tSuppliers s (nolock)
          on s.SuppliersID = o.SuppliersID
-  left join tPrice p with (nolock index=ao1)
+  left join vPrice p 
          on p.PriceID = o.PriceID	
  where o.OrderID =@OrderID
    and not exists (select 1
@@ -81,5 +81,5 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250320', '10'
+exec setOV 'OrderF_SupplierList', 'P', '20250531', '11'
 go
