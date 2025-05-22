@@ -8,7 +8,7 @@ declare @UserID int = null
            ROW_NUMBER() OVER (ORDER BY EventDate DESC) AS rn
       FROM tLogMsg (NOLOCK)
      WHERE 1=1--UserID = isnull(@UserID , UserID)
-       AND Msg = 'TEmex.FillFindByNumber Begin'
+       AND Msg = 'Emex.SearchPart Begin'
 ),
 cte_end AS (
     SELECT UserID,
@@ -18,7 +18,7 @@ cte_end AS (
            ROW_NUMBER() OVER (ORDER BY EventDate DESC) AS rn
       FROM tLogMsg (NOLOCK)
      WHERE 1=1--UserID = isnull(@UserID , UserID) 
-       AND Msg = 'TEmex.FillFindByNumber End'
+       AND Msg = 'Emex.SearchPart End'
 )
 
 SELECT b.UserName,
