@@ -43,7 +43,7 @@ from (
              o.Manufacturer 
             ,o.DetailNumber 
             ,ltrim(rtrim(Replace( case 
-                                    when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                                    when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('РђРІС‚РѕРґРµС‚Р°Р»СЊ', 'РђРІС‚РѕР·Р°РїС‡Р°СЃС‚СЊ', 'Р”РµС‚Р°Р»СЊ', 'Р—Р°РїС‡Р°СЃС‚СЊ')
                                     then p.DetailName
                                     else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
                                   end  

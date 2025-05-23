@@ -81,5 +81,5 @@ select
 go
 grant exec on OrderF_SupplierList to public
 go
-exec setOV 'OrderF_SupplierList', 'P', '20250531', '11'
+exec setOV 'OrderF_SupplierList', 'P', '20250531', '12'
 go

@@ -21,7 +21,7 @@ as
 	from tMarks m (nolock)
    inner join tOrders t (nolock)
            on t.OrderID = m.ID
-   inner join vPartsUpdate p (updlock)
+   inner join vPartsUpdate p
            on p.Brand     = t.MakeLogo -- производитель
           and p.DetailNum = t.DetailNumber
    where m.Spid = @@SPID

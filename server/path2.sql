@@ -3,7 +3,7 @@ if OBJECT_ID('tRestrictions') is not null
   drop table tRestrictions
 --*/
 
-
+--15 минут
 INSERT INTO tParts with (tablock)
       (Brand, BrandName, DetailNum, DetailName, WeightKG, VolumeKG, DetailNameF, WeightKGF, VolumeKGf, NoAir, NLA, Fragile, UserID) 
 SELECT
@@ -38,3 +38,9 @@ SET IDENTITY_INSERT tPrice OFF;
 
 select Count(*) from tParts (nolock);
 select Count(*) from tPrice (nolock);
+
+
+/*
+drop table tPrice2
+
+*/

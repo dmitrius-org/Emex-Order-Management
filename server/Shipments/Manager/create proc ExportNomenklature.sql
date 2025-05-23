@@ -17,14 +17,14 @@ select o.OrderID
       ,o.Manufacturer
       ,o.DetailNumber
       ,ltrim(rtrim(Replace( case 
-                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('РђРІС‚РѕРґРµС‚Р°Р»СЊ', 'РђРІС‚РѕР·Р°РїС‡Р°СЃС‚СЊ', 'Р”РµС‚Р°Р»СЊ', 'Р—Р°РїС‡Р°СЃС‚СЊ')
                               then p.DetailName
                               else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
                             end  
                            ,o.[DetailNumber]  
                            ,'')))    as DetailName
       ,o.DetailNumber + ' ' + ltrim(rtrim(Replace( case 
-                                                     when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                                                     when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('РђРІС‚РѕРґРµС‚Р°Р»СЊ', 'РђРІС‚РѕР·Р°РїС‡Р°СЃС‚СЊ', 'Р”РµС‚Р°Р»СЊ', 'Р—Р°РїС‡Р°СЃС‚СЊ')
                                                      then p.DetailName
                                                      else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
                                                    end  
@@ -49,14 +49,14 @@ select o.OrderID
       ,m.Name
       ,o.ReplacementDetailNumber
       ,ltrim(rtrim(Replace( case 
-                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                              when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('РђРІС‚РѕРґРµС‚Р°Р»СЊ', 'РђРІС‚РѕР·Р°РїС‡Р°СЃС‚СЊ', 'Р”РµС‚Р°Р»СЊ', 'Р—Р°РїС‡Р°СЃС‚СЊ')
                               then p.DetailName
                               else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
                             end  
                            ,o.[DetailNumber]  
                            ,'')))
       ,o.ReplacementDetailNumber + ' ' + ltrim(rtrim(Replace( case 
-                                                                when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('Автодеталь', 'Автозапчасть', 'Деталь', 'Запчасть')
+                                                                when coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) in ('РђРІС‚РѕРґРµС‚Р°Р»СЊ', 'РђРІС‚РѕР·Р°РїС‡Р°СЃС‚СЊ', 'Р”РµС‚Р°Р»СЊ', 'Р—Р°РїС‡Р°СЃС‚СЊ')
                                                                 then p.DetailName
                                                                 else coalesce(nullif(p.[DetailNameF], ''), nullif(o.[DetailName], '')) 
                                                               end  

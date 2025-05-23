@@ -144,12 +144,10 @@ as
                             when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
                             else @VolumeKGF
                           end  
-        ,p.NoAir        = case
-                            when @NoAir = 1 then 1
-                            else null
-                          end
-        ,p.Fragile      = nullif(@Fragile, 0) 
-        ,p.NLA          = nullif(@NLA, 0)  
+        ,p.NoAir        = @NoAir
+        ,p.Fragile      = @Fragile
+        ,p.NLA          = @NLA 
+        ,p.UserID       = dbo.GetUserID()
         
   OUTPUT INSERTED.DetailNameF
         ,INSERTED.WeightKGF
@@ -184,6 +182,22 @@ as
            on p.Brand  = t.MakeLogo -- производитель 
 		  and p.DetailNum = t.DetailNumber
    where t.OrderID = @OrderID
+     and (isnull(p.DetailNameF, '')	<> nullif(@DetailNameF, '')
+       or isnull(p.WeightKGF, 0)	<> case
+                                         when isnull(@WeightKGF, 0) = 0 and t.WeightKG>p.WeightKG and t.Flag&512 > 0 then t.WeightKG
+                                         when isnull(@WeightKGF, 0) = 0 and p.WeightKG>0 then p.WeightKG
+                                         else @WeightKGF
+                                       end  
+       or isnull(p.VolumeKGF, 0)	<> case 
+                                         when isnull(@VolumeKGF, 0) = 0 and t.VolumeKG>p.VolumeKG and t.Flag&512 > 0 then t.VolumeKG
+                                         when isnull(@VolumeKGF, 0) = 0 and p.VolumeKG>0 then p.VolumeKG
+                                         else @VolumeKGF
+                                       end  
+       or isnull(p.NoAir, 0)        <> isnull(@NoAir, 0)
+       or isnull(p.Fragile, 0)      <> isnull(@Fragile, 0) 
+       or isnull(p.NLA, 0)          <> isnull(@NLA, 0)  
+       )
+
 
   -- расчет финнасовых показателей
   delete pOrdersFinIn from pOrdersFinIn with (rowlock index=ao1) where spid = @@Spid
@@ -218,7 +232,7 @@ as
 
 
   if exists (select 1
-               from tOrders  with (nolock index=ao1)
+               from tOrders with (nolock index=ao1)
               where OrderID = @OrderID
                 and DeliveryTermFromSupplier <> DeliveryTermFromSupplier2
                 and DeliveryTermFromSupplier2 is not null)
@@ -278,12 +292,12 @@ as
       exec ProtocolAdd
   end
 
-  select @AuditComment =  'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>' + 
-                          'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>' +
-                          'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>' +
-                          'NoAir: ''' +  cast(isnull(NoAirOld, 0) as varchar)  + ''' -> '''+ cast(isnull(NoAir, 0) as varchar)  + '''<br>' +
-                          'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>' +
-                          'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +''''
+  select @AuditComment = iif(isnull(DetailNameOld,'')<>isnull(DetailName,''), 'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>', '') + 
+                         iif(isnull(WeightKGOLD  , 0)<>isnull(WeightKG  , 0), 'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>', '') + 
+                         iif(isnull(VolumeKGOLD  , 0)<>isnull(VolumeKG  , 0), 'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>', '') + 
+                         iif(isnull(NoAirOld     , 0)<>isnull(NoAir     , 0), 'NoAir: ''' +  cast(isnull(NoAirOld, 0) as varchar)  + ''' -> '''+ cast(isnull(NoAir, 0) as varchar)  + '''<br>', '') + 
+                         iif(isnull(FragileOLD   , 0)<>isnull(Fragile   , 0), 'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>', '') + 
+                         iif(isnull(NLAOLD       , 0)<>isnull(NLA       , 0), 'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +'''', '') 
     from @PartsUpdate
 
   -- аудит
