@@ -98,7 +98,7 @@ object LoginF: TLoginF
       Width = 97
       Height = 17
       Hint = ''
-      Caption = '0'
+      Caption = #1047#1072#1087#1086#1084#1085#1080#1090#1100
       TabOrder = 4
       LayoutConfig.Cls = 'remember-checkbox'
     end
