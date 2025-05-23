@@ -20,7 +20,7 @@ uses
 
   System.Generics.Collections, System.MaskUtils, uniFileUpload,
   uniDateTimePicker, uniGridExporters, uniMenuButton, uConstant,
-  uShipmentsBoxesT_Wrapper, uUniExCheckComboBoxHelper, uUniExCheckComboBox,
+  uShipmentsBoxesT_Wrapper, uUtils.BusinessComboBoxHelper, uUniExCheckComboBox,
   uUtils.Mark, uFragileT_Wrapper;
 
 

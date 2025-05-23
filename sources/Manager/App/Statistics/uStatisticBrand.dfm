@@ -4,7 +4,6 @@ object StatisticBrand: TStatisticBrand
   Width = 1199
   Height = 480
   OnCreate = UniFrameCreate
-  OnDestroy = UniFrameDestroy
   Layout = 'fit'
   TabOrder = 0
   object UniPanel3: TUniPanel
@@ -135,6 +134,7 @@ object StatisticBrand: TStatisticBrand
       Top = 27
       Width = 209
       Hint = ''
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 8

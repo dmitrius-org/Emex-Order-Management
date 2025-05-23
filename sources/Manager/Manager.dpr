@@ -122,7 +122,6 @@ uses
   uEmployeeOrdersProcessedT_Wrapper in 'App\Employees\uEmployeeOrdersProcessedT_Wrapper.pas' {EmployeeOrdersProcessedT_Wrapper: TUniForm},
   uEmployeeOrdersProcessedT in 'App\Employees\uEmployeeOrdersProcessedT.pas' {EmployeeOrdersProcessedT: TUniFrame},
   uOrdersProtocol_T in 'App\Orders\uOrdersProtocol_T.pas' {OrdersProtocol_T: TUniForm},
-  uUniExCheckComboBoxHelper in '..\Common\Common\uUniExCheckComboBoxHelper.pas',
   uSuppliersT in 'App\Suppliers\uSuppliersT.pas' {SuppliersT: TUniFrame},
   uExceptionsT in 'App\Exceptions\uExceptionsT.pas' {ExceptionsT: TUniFrame},
   uSpplitForm in 'App\Orders\uSpplitForm.pas' {SpplitForm: TUniForm},
@@ -140,7 +139,8 @@ uses
   uAPIFormT in 'App\Clients\uAPIFormT.pas' {APIFormT: TUniFrame},
   uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas',
   utest in 'App\utest.pas' {APIKeyT: TUniFrame},
-  uVersion in '..\Common\CommonApp\uVersion.pas';
+  uVersion in '..\Common\CommonApp\uVersion.pas',
+  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas';
 
 {$R *.res}
 

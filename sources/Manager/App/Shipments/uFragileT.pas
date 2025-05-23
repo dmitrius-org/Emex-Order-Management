@@ -11,7 +11,7 @@ uses
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniGUIClasses, uniPanel, uniCheckBox, uniEdit, uniLabel,
   uniMultiItem, uniComboBox, uniButton, uniBitBtn, uniGroupBox, uniGridExporters,
-  uUniExCheckComboBoxHelper, uUniExCheckComboBox;
+  uUtils.BusinessComboBoxHelper, uUniExCheckComboBox;
 
 type
   TFragileT = class(TBaseT)

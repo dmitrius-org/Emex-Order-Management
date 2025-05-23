@@ -156,7 +156,6 @@ var
   c, Path: string;
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
-//  iconfile: string;
 begin
   FormNames := TStringList.Create;
 
@@ -180,6 +179,7 @@ begin
      ''';
 
     Open;
+
     if RecordCount = 0 then
     begin
       Exit
@@ -487,7 +487,7 @@ begin
   begin
     MainMenu.Selected := MainMenu.Items[1];
     {$IFDEF Debug}
-       MainMenu.Selected := MainMenu.Items[2];
+       MainMenu.Selected := MainMenu.Items[5];
     {$ENDIF}
     MainMenuClick(Sender);
   end;

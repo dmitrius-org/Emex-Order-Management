@@ -39,7 +39,6 @@ type
     procedure edtOrderDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure fCancelClick(Sender: TObject);
     procedure GridColumnSort(Column: TUniDBGridColumn; Direction: Boolean);
-    procedure UniFrameDestroy(Sender: TObject);
     procedure btnGridStatisticOpenClick(Sender: TObject);
   private
     { Private declarations }
@@ -57,7 +56,7 @@ implementation
 
 {$R *.dfm}
 
-uses uUtils.Grid, uMainVar, uConstant;
+uses uUtils.Grid, uMainVar, uConstant, uUtils.BusinessComboBoxHelper;
 
 procedure TStatisticBrand.btnGridStatisticOpenClick(Sender: TObject);
 begin
@@ -128,28 +127,10 @@ end;
 
 procedure TStatisticBrand.UniFrameCreate(Sender: TObject);
 begin
-
-  ComboBoxFill(fClient,'''
-    DECLARE @R table (ID numeric(18, 0), Brief varchar(256), Name varchar(256)) ;
-
-    insert @R
-    EXEC OrderFilter_Client
-
-    SELECT ID, Brief as Name from @R;
-  ''');
-
-//  FClients := TFDMemTable.Create(nil);
-//  FClients.FieldDefs.Add('ID', ftFMTBcd);
-//  FClients.CreateDataSet;
+  fClient.FillClients;
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
-
-end;
-
-procedure TStatisticBrand.UniFrameDestroy(Sender: TObject);
-begin
-//  FClients.Free;
 end;
 
 initialization
