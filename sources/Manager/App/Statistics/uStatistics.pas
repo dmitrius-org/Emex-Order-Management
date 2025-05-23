@@ -129,9 +129,9 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано поставщиком'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано менеджером'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано поставщиком'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
