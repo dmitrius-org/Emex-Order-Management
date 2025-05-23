@@ -27,11 +27,6 @@ type
     UniButton1: TUniButton;
     UniPanel2: TUniPanel;
     ChartAverage: TuniGChartsFrame;
-    qClient: TFDQuery;
-    qClientClientID: TFMTBCDField;
-    qClientBrief: TWideStringField;
-    qClientName: TWideStringField;
-    dsClient: TDataSource;
     UniLabel3: TUniLabel;
     PageCommon: TUniPageControl;
     TabOrderChart: TUniTabSheet;
@@ -69,32 +64,31 @@ type
     procedure fCancelClick(Sender: TObject);
     procedure TabBrandBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
     procedure TabCanceledBeforeFirstActivate(Sender: TObject; var AllowActivate: Boolean);
+    procedure UniFrameReady(Sender: TObject);
   private
     { Private declarations }
     StatisticBrand :TStatisticBrand;
     StatisticCanceled :TStatisticCanceled;
 
-    procedure FilterClientsCreate();
-
     procedure GridStatisticsRefresh();
   public
     { Public declarations }
-
+    /// <summary>
+    /// AverageCountOrders - Статистика по заказам. Количество и сумма заказов за период.
+    /// </summary>
     procedure AverageCountOrders();
   end;
 
 implementation
 
 uses
-  MainModule, cfs.GCharts;
+  MainModule, cfs.GCharts, uUtils.BusinessComboBoxHelper;
 
 {$R *.dfm}
 
 
 procedure TStatisticsT.AverageCountOrders;
 var
-  //Defined as TInterfacedObject. No need try..finally
-//  AreaChart: IcfsGChartProducer;
   ChartCount: IcfsGChartProducer;
   ChartSum:   IcfsGChartProducer;
   Series: TArray<string>;
@@ -118,17 +112,16 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано менеджером'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано поставщиком'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)//,
-    //TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка')
-    //TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
   ]);
 
   if fClient.SelCount = 1 then
     ChartCount.Data.Columns.Add(TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Наценка %'));
-
 
   ChartSum := TcfsGChartProducer.Create;
   ChartSum.ClassChartType := TcfsGChartProducer.CLASS_COLUMN_CHART;
@@ -136,7 +129,9 @@ begin
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, 'День'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'В работе'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
-    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано поставщиком'),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
+    TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Отказано менеджером'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtNumber, 'Всего'),
     TcfsGChartDataCol.Create(TcfsGChartDataType.gcdtString, '', TcfsGChartDataCol.ROLE_ANOTATION)
@@ -150,8 +145,10 @@ begin
       ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
-                              qAverageCountOrders.FieldByName('CancelCount').Value,
-                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelOurCount').Value,
+                              qAverageCountOrders.FieldByName('CancelOurCount').Value,
                               0,
                               qAverageCountOrders.FieldByName('TotalCount').Value,
                               qAverageCountOrders.FieldByName('Margin').Value  // Наценка
@@ -160,8 +157,10 @@ begin
       ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
-                              qAverageCountOrders.FieldByName('CancelCount').Value,
-                              qAverageCountOrders.FieldByName('CancelCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelOurCount').Value,
+                              qAverageCountOrders.FieldByName('CancelOurCount').Value,
                               0,
                               qAverageCountOrders.FieldByName('TotalCount').Value
                               ]);
@@ -169,8 +168,10 @@ begin
     ChartSum.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
-                          qAverageCountOrders.FieldByName('CancelSum').Value,
-                          qAverageCountOrders.FieldByName('CancelSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
+                          qAverageCountOrders.FieldByName('CancelOurSum').Value,
+                          qAverageCountOrders.FieldByName('CancelOurSum').Value,
                           0,
                           qAverageCountOrders.FieldByName('TotalSum').Value
                           ]);
@@ -182,7 +183,7 @@ begin
   end;
 
 
-  max1 := max1 + IfThen(max1>1000, 50, 10);
+  max1 := max1 + IfThen(max1>1000, round(max1*0.1), round(max1*0.25));
   max2 := max2 + IfThen(max2>10, 2, 1);
 
 // Г1
@@ -194,30 +195,7 @@ begin
 
     Options.hAxis('minValue', 0);
 
-    SetLength(Series, IfThen(fClient.SelCount = 1, 4, 3));
-
-    Series[0] := 'annotations: {    '+
-                 '  stem: {         '+
-                 '     length: 2  '+
-                 '  } '+
-                 '} ';
-
-    Series[1] := 'annotations: {    '+
-                 '  stem: {         '+
-                 '     length: 15  '+
-                 '  } '+
-                 '} ';
-
-    Series[2] := 'annotations: {    '+
-                 '  stem: {         '+
-                // '     color: "transparent",'+
-                 '     length: 30  '+
-                 '  }  '+
-                 '} '+
-                 '';
-
-    Options.Series(Series);
-
+    SetLength(Series, IfThen(fClient.SelCount = 1, 5, 4));
 
     Options.hAxis('title', 'Дни');
 
@@ -227,20 +205,23 @@ begin
        '0: {type: "bars", targetAxisIndex: 0}',
        '1: {type: "bars", targetAxisIndex: 0}',
        '2: {type: "bars", targetAxisIndex: 0}',
-       '3: {type: "line", targetAxisIndex: 1}'
+       '3: {type: "bars", targetAxisIndex: 0}',
+       '4: {type: "line", targetAxisIndex: 1}'
       ]);
 
       Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString,
-                     'title: "Наценка %" , maxValue: ' +  max2.ToString])
+                     'title: "Наценка %" , maxValue: ' +  max2.ToString]);
+     // Options.VAxis('viewWindowMode', 'pretty');
     end
     else
     begin
       Options.Series([
        '0: {type: "bars", targetAxisIndex: 0}',
        '1: {type: "bars", targetAxisIndex: 0}',
-       '2: {type: "bars", targetAxisIndex: 0}'
+       '2: {type: "bars", targetAxisIndex: 0}',
+       '3: {type: "bars", targetAxisIndex: 0}'
       ]);
-      Options.VAxes(['title: "Заказы (Количество)", maxValue: ' + max1.ToString])
+      Options.VAxes(['title: "Заказы (Количество)", viewWindowMode: "pretty", maxValue: ' + max1.ToString]); //
     end;
   end;
 
@@ -296,21 +277,6 @@ begin
   cbCancel.ItemIndex:= 0;
   HideMask;
   UniSession.Synchronize;
-end;
-
-procedure TStatisticsT.FilterClientsCreate;
-begin
-  qClient.Open(); // используется в фильтре Клиент
-
-  fClient.Clear;
-  qClient.First;
-  while not qClient.Eof do
-  begin
-    fClient.Items.AddObject( qClient.FieldByName('Brief').AsString, Pointer(qClient.FieldByName('ClientID').AsInteger) );
-    qClient.Next;
-  end;
-
-  fClient.Refresh;
 end;
 
 procedure TStatisticsT.GridStatisticsKeyDown(Sender: TObject; var Key: Word;
@@ -403,7 +369,6 @@ end;
 
 procedure TStatisticsT.UniFrameCreate(Sender: TObject);
 begin
-
   {$IFDEF Debug}
      edtDateBegin.DateTime := IncDay(now(), -10);
   {$ELSE}
@@ -416,9 +381,12 @@ begin
   edtEndDate2.DateTime := now();
   edtBeginDate2.DateTime :=EnCodeDate(YearOf(Date), MonthOf(Date), 1);
 
-  FilterClientsCreate;
-
   AverageCountOrders;
+end;
+
+procedure TStatisticsT.UniFrameReady(Sender: TObject);
+begin
+  fClient.FillClients;
 end;
 
 procedure TStatisticsT.TabCanceledBeforeFirstActivate(Sender: TObject;

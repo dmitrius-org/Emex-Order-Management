@@ -45,6 +45,7 @@ inherited ExceptionsT: TExceptionsT
       Width = 329
       Hint = ''
       ShowHint = True
+      ShowSelectButton = True
       ShowSearch = True
       Text = ''
       TabOrder = 4

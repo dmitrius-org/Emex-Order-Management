@@ -374,7 +374,7 @@ uses
   MainModule, uGrantUtils, uEmexUtils, uUtils.Logger, uError_T, uMainVar,
   uOrdersProtocol_T, Main, uOrdersF, ServerModule, uToast,uGroupDetailNameEditF,
   uGroupSetFragileSignF, uUtils.Grid, uUtils.Varriant, uStatusForm, uUtils.Date,
-  uConstant, uMessengerMessage, uMessengerF, uSpplitForm, uUniExCheckComboBoxHelper;
+  uConstant, uMessengerMessage, uMessengerF, uSpplitForm, uUtils.BusinessComboBoxHelper;
 
 {$R *.dfm}
 

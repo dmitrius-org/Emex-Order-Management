@@ -12,7 +12,9 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   uniGridExporters, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   uUniExDateRangePicker, uUniExCheckComboBox, uniCheckBox, MainModule,
-  cfs.GCharts.uniGUI, uUniExCheckComboBoxHelper;
+  cfs.GCharts.uniGUI,
+
+  uUtils.BusinessComboBoxHelper;
 
 type
   TStatisticCanceled = class(TUniFrame)
@@ -26,7 +28,7 @@ type
     edtOrderDate: TUniDateRangePicker;
     UniLabel2: TUniLabel;
     fPriceLogo: tUniExCheckComboBox;
-    fClient: tUniExCheckComboBox;
+    fClient: TUniExCheckComboBox;
     UniLabel1: TUniLabel;
     fPriceLogoF: tUniExCheckComboBox;
     fPriceLogoCancel: TUniCheckBox;
@@ -242,14 +244,8 @@ end;
 procedure TStatisticCanceled.UniFrameCreate(Sender: TObject);
 begin
   fClient.IsValue := True;
-  fClient.FillFromSQL('''
-    DECLARE @R table (ID numeric(18, 0), Brief varchar(256), Name varchar(256)) ;
 
-    insert @R
-    EXEC OrderFilter_Client
-
-    SELECT ID, Brief as Name from @R;
-  ''');
+  fClient.FillClients;
 
   fPriceLogo.FillFromSQL('''
     DECLARE @R table (Name varchar(256)) ;

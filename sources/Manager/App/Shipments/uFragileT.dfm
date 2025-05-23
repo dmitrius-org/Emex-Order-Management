@@ -6,7 +6,6 @@ inherited FragileT: TFragileT
   inherited UniPanel2: TUniPanel
     Width = 1400
     Height = 498
-    ExplicitTop = 0
     ExplicitWidth = 1400
     ExplicitHeight = 498
     inherited Grid: TUniDBGrid
@@ -39,7 +38,6 @@ inherited FragileT: TFragileT
         
           'pagingBar.beforeInit=function pagingBar.beforeInit(sender, confi' +
           'g)'#13#10'{'#13#10'  config.displayInfo = true'#13#10'}')
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgConfirmDelete, dgFilterClearButton]
       LayoutConfig.ComponentCls = 'grid-order'
       Columns = <
         item
@@ -172,6 +170,7 @@ inherited FragileT: TFragileT
         Width = 209
         Hint = ''
         ShowHint = True
+        ShowSelectButton = True
         ShowSearch = True
         Text = ''
         TabOrder = 4

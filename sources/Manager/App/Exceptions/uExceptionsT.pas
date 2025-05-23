@@ -11,7 +11,7 @@ uses
   uniGUIBaseClasses, uniImageList, Data.DB, FireDAC.Comp.DataSet, uniBasicGrid,
   uniDBGrid, uniToolBar, uniGUIClasses, uniPanel, uniCheckBox, uniEdit,
   uniMultiItem, uniComboBox, uUniExCheckComboBox, uUniExDateRangePicker,
-  uniBitBtn, uniLabel, uniButton, uUniExCheckComboBoxHelper, uniGroupBox;
+  uniBitBtn, uniLabel, uniButton, uUtils.BusinessComboBoxHelper, uniGroupBox;
 
 type
   TExceptionsT = class(TBaseT)

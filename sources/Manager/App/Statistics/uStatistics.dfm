@@ -6,6 +6,7 @@ object StatisticsT: TStatisticsT
   Height = 549
   Margins.Bottom = 0
   OnCreate = UniFrameCreate
+  OnReady = UniFrameReady
   Layout = 'fit'
   LayoutConfig.IgnorePosition = False
   LayoutConfig.Width = '0'
@@ -29,10 +30,6 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1086' '#1079#1072#1082#1072#1079#1072#1084
       Layout = 'fit'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 256
-      ExplicitHeight = 128
       object UniPanel1: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -86,9 +83,9 @@ object StatisticsT: TStatisticsT
           TabOrder = 4
         end
         object UniButton1: TUniButton
-          Left = 496
+          Left = 552
           Top = 34
-          Width = 75
+          Width = 97
           Height = 25
           Hint = ''
           Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100
@@ -109,7 +106,7 @@ object StatisticsT: TStatisticsT
         object fClient: TUniExCheckComboBox
           Left = 281
           Top = 34
-          Width = 209
+          Width = 265
           Hint = ''
           ShowSelectButton = True
           ShowSearch = True
@@ -150,10 +147,6 @@ object StatisticsT: TStatisticsT
       Hint = ''
       Caption = #1052#1086#1085#1080#1090#1086#1088' '#1079#1072#1082#1072#1079#1086#1074
       Layout = 'fit'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 256
-      ExplicitHeight = 128
       object UniPanel3: TUniPanel
         AlignWithMargins = True
         Left = 3
@@ -336,7 +329,7 @@ object StatisticsT: TStatisticsT
         Left = 0
         Top = 107
         Width = 1316
-        Height = 412
+        Height = 414
         Hint = ''
         Margins.Bottom = 0
         ShowHint = True
@@ -419,20 +412,12 @@ object StatisticsT: TStatisticsT
       Caption = #1041#1088#1077#1085#1076#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabBrandBeforeFirstActivate
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 256
-      ExplicitHeight = 128
     end
     object TabCanceled: TUniTabSheet
       Hint = ''
       Caption = #1054#1090#1082#1072#1079#1099
       Layout = 'fit'
       OnBeforeFirstActivate = TabCanceledBeforeFirstActivate
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 256
-      ExplicitHeight = 128
     end
   end
   object qAverageCountOrders: TFDQuery
@@ -461,8 +446,8 @@ object StatisticsT: TStatisticsT
       '       '
       '    '
       '       ')
-    Left = 186
-    Top = 422
+    Left = 234
+    Top = 414
     ParamData = <
       item
         Name = 'CLIENTS'
@@ -485,52 +470,8 @@ object StatisticsT: TStatisticsT
   end
   object dsAverageCountOrders: TDataSource
     DataSet = qAverageCountOrders
-    Left = 46
-    Top = 424
-  end
-  object qClient: TFDQuery
-    AutoCalcFields = False
-    Connection = UniMainModule.FDConnection
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
-    UpdateOptions.UpdateChangedFields = False
-    UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
-    UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.CheckUpdatable = False
-    SQL.Strings = (
-      'exec OrderFilter_Client')
-    Left = 572
-    Top = 433
-    object qClientClientID: TFMTBCDField
-      AutoGenerateValue = arAutoInc
-      FieldName = 'ClientID'
-      Origin = 'ClientID'
-      ProviderFlags = [pfInWhere]
-      ReadOnly = True
-      Precision = 18
-      Size = 0
-    end
-    object qClientBrief: TWideStringField
-      FieldName = 'Brief'
-      Origin = 'Brief'
-      Required = True
-      Size = 256
-    end
-    object qClientName: TWideStringField
-      FieldName = 'Name'
-      Origin = 'Name'
-      Size = 512
-    end
-  end
-  object dsClient: TDataSource
-    DataSet = qClient
-    Left = 652
-    Top = 432
+    Left = 86
+    Top = 416
   end
   object dsGridStatistics: TDataSource
     DataSet = qGridStatistics
