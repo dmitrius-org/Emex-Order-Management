@@ -4,7 +4,8 @@ if OBJECT_ID('tRestrictions') is not null
 --*/
 
 
-INSERT INTO tParts (Brand, BrandName, DetailNum, DetailName, WeightKG, VolumeKG, DetailNameF, WeightKGF, VolumeKGf, NoAir, NLA, Fragile, UserID)
+INSERT INTO tParts with (tablock)
+      (Brand, BrandName, DetailNum, DetailName, WeightKG, VolumeKG, DetailNameF, WeightKGF, VolumeKGf, NoAir, NLA, Fragile, UserID) 
 SELECT
        MakeLogo, 
        max(Brand), 
@@ -19,22 +20,21 @@ SELECT
       max(cast(NLA as int)), 
       max(cast(Fragile as int)), 
       1
- FROM testdb.dbo.tPrice (nolock)
-where Restrictions='NOAIR'
+ FROM tPrice2 (nolock)
 group by MakeLogo, DetailNum
 
 
-
-INSERT INTO tPrice 
-      (PartID, PriceLogo, Quantity, PackQuantity, Reliability, DetailPrice, MOSA, isDelete)
-SELECT p.PartID, t.PriceLogo, t.Quantity, t.PackQuantity, t.Reliability, t.DetailPrice, t.MOSA, 0 
+SET IDENTITY_INSERT tPrice ON;
+INSERT INTO tPrice with (tablock)
+      (PriceID, PartID, PriceLogo, Quantity, PackQuantity, Reliability, DetailPrice, MOSA, isDelete)
+SELECT t.PriceID, p.PartID, t.PriceLogo, t.Quantity, t.PackQuantity, t.Reliability, t.DetailPrice, t.MOSA, 0 
   FROM tParts p (nolock)
-  JOIN testdb.dbo.tPrice  t  (nolock)
+  JOIN tPrice2  t  (nolock)
     ON t.MakeLogo = p.Brand 
    AND t.DetailNum = p.DetailNum;
 
+SET IDENTITY_INSERT tPrice OFF;
 
 
-
-select * from tParts
-select * from tPrice
+select Count(*) from tParts (nolock);
+select Count(*) from tPrice (nolock);
