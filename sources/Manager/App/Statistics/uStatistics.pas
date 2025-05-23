@@ -145,10 +145,10 @@ begin
       ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
-                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
-                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
                               qAverageCountOrders.FieldByName('CancelOurCount').Value,
                               qAverageCountOrders.FieldByName('CancelOurCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
                               0,
                               qAverageCountOrders.FieldByName('TotalCount').Value,
                               qAverageCountOrders.FieldByName('Margin').Value  // Наценка
@@ -157,10 +157,10 @@ begin
       ChartCount.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
                               qAverageCountOrders.FieldByName('WorkCount').Value,
-                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
-                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
                               qAverageCountOrders.FieldByName('CancelOurCount').Value,
                               qAverageCountOrders.FieldByName('CancelOurCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
+                              qAverageCountOrders.FieldByName('CancelSupplierCount').Value,
                               0,
                               qAverageCountOrders.FieldByName('TotalCount').Value
                               ]);
@@ -168,10 +168,10 @@ begin
     ChartSum.Data.AddRow([qAverageCountOrders.FieldByName('OrderDate').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
                           qAverageCountOrders.FieldByName('WorkSum').Value,
-                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
-                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
                           qAverageCountOrders.FieldByName('CancelOurSum').Value,
                           qAverageCountOrders.FieldByName('CancelOurSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
+                          qAverageCountOrders.FieldByName('CancelSupplierSum').Value,
                           0,
                           qAverageCountOrders.FieldByName('TotalSum').Value
                           ]);

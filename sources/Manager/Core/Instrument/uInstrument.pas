@@ -384,8 +384,9 @@ begin
       end;
 
       FtargetName := FClassName;
+
       FtargetForm := Fr;
-      Fr.Parent := UniPanelCenter;
+      FtargetForm.Parent := UniPanelCenter;
 
       FtargetForm.Tag:=PInstrumentData(Nd.Data).ID;
       TMultiProp.Objects([FtargetForm])['ID']:=PInstrumentData(Nd.Data).ID;
