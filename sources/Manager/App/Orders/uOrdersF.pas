@@ -635,7 +635,7 @@ begin
 
     edtDelivery2.Hint := '';
   end;
-  Log(' TOrderF.GetPartDataFromBase Begin', etDebug);
+  Log('TOrderF.GetPartDataFromBase End', etDebug);
 end;
 
 procedure TOrderF.GooglePSE;
@@ -824,10 +824,10 @@ begin
 end;
 
 procedure TOrderF.cbDestinationLogoChange(Sender: TObject);
-begin
-  if (FFlag and 16 {Онлайн заказ}) > 0 then  // направления отгрузки
+begin // направления отгрузки
+  if (FFlag and 16 {Онлайн заказ}) > 0 then
   begin
-    FProfilesCustomerID:= cbDestinationLogo.Value.ToInteger;
+    FProfilesCustomerID:=cbDestinationLogo.Value.ToInteger;
 
     Sql.Open('''
       Select ProfilesDeliveryID
@@ -840,8 +840,24 @@ begin
     FProfilesDeliveryID := Sql.F('ProfilesDeliveryID').AsInteger;
   end
   else
-  begin // если не онлайн, то у нас тут cbDestinationLogo=ProfilesDeliveryID
-    FProfilesDeliveryID:= cbDestinationLogo.Value.ToInteger;
+  begin
+    // если не онлайн, то у нас тут cbDestinationLogo=ProfilesDeliveryID
+    FProfilesDeliveryID:=cbDestinationLogo.Value.ToInteger;
+
+    Sql.Open('''
+      Select top 1
+             ProfilesCustomerID
+        from vClientProfilesParam
+       where ClientID           = :ClientID
+         and ProfilesDeliveryID = :ProfilesDeliveryID
+    ''',
+    ['ClientID', 'ProfilesDeliveryID'],
+    [FClientID, FProfilesDeliveryID]);
+
+    // если не онлайн, то у таких клиентов может не быть настроенного профиля с выбранным направоением,
+    // то тогда оставляем старый
+    if Sql.F('ProfilesCustomerID').AsInteger <> 0 then
+      FProfilesCustomerID := Sql.F('ProfilesCustomerID').AsInteger;
   end;
 
   OrdersFinCalc();
@@ -884,18 +900,18 @@ begin
   Sql.exec(
   '''
     exec SearchPriceCalc
-           @ProfilesCustomerID=:ProfilesCustomerID,
-           @DetailNum         =:DetailNum
+           @ProfilesCustomerID=:ProfilesCustomerID
 
     exec OrderF_OrdersFinCalc
            @OrderID  =:OrderID
           ,@WeightKGF=:Weight
           ,@VolumeKGF=:Volume
+          ,@ProfilesDeliveryID=:ProfilesDeliveryID
   ''',
-  ['ProfilesCustomerID', 'DetailNum', 'OrderID', 'Weight', 'Volume'],
-  [FProfilesCustomerID,
-   FDetailNumber,
-   FID,
+  ['OrderID', 'ProfilesCustomerID', 'ProfilesDeliveryID', 'Weight', 'Volume'],
+  [FID,
+   FProfilesCustomerID,
+   FProfilesDeliveryID,
    edtWeightKGF.Value,
    edtVolumeKGF.Value]);
 
@@ -905,6 +921,10 @@ end;
 procedure TOrderF.OrderUpdate(AOrderID: integer; ATargetStateID: integer = 0);
 var sqltext: string;
 begin
+  Log('TOrderF.OrderUpdate Begin', etDebug);
+  Log('TOrderF.OrderUpdate FID=%d, FProfilesCustomerID=%d, FProfilesDeliveryID=%d, ',
+     [AOrderID, FProfilesCustomerID, FProfilesDeliveryID], etDebug);
+
   if RetVal.Code = 0 then
   begin
     sqltext :=
@@ -954,6 +974,7 @@ begin
 
     RetVal.Code := Sql.Q.FieldByName('retcode').Value;
   end;
+  Log('TOrderF.OrderUpdate End', etDebug);
 end;
 
 procedure TOrderF.OrderSave(ATargetStateID: integer = 0);

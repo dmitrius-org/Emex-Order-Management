@@ -193,17 +193,15 @@ procedure TSearchF.PriceCalc;
 begin
   log('TSearchF.PriceCalc begin', etInfo);
   log('TSearchF.PriceCalc FProfilesCustomerID: ' + FProfilesCustomerID.ToString, etInfo);
-  log('TSearchF.PriceCalc FDetailNum: ' + FDetailNum, etInfo);
 
   RetVal.Clear;
 
   Sql.exec('''
     exec SearchPriceCalc
-           @ProfilesCustomerID=:ProfilesCustomerID,
-           @DetailNum         =:DetailNum
+           @ProfilesCustomerID=:ProfilesCustomerID
   ''',
-  ['ProfilesCustomerID', 'DetailNum'],
-  [FProfilesCustomerID,   FDetailNum]);
+  ['ProfilesCustomerID'],
+  [FProfilesCustomerID]);
 
   log('TSearchF.PriceCalc end', etInfo);
 end;

@@ -17,7 +17,7 @@ uses
   uniSweetAlert, unimSelect, unimDBSelect, uniSegmentedButton,
   System.Generics.Collections, System.MaskUtils, uniDateTimePicker,
   uUniExDateRangePicker, uConstant, uToast, uReOrderF, uUtils.Mark,
-  uUniExCheckComboBox, uUniExCheckComboBoxHelper, uniSpinEdit;
+  uUniExCheckComboBox, uniSpinEdit;
 
 
 type
@@ -244,7 +244,7 @@ implementation
 
 uses
   MainModule, uEmexUtils, uSqlUtils, uMainVar, uOrdersProtocol_T, Main,
-  ServerModule, uError_T, uUtils.Grid, uMessengerF, uUtils.Logger;
+  ServerModule, uError_T, uUtils.Grid, uMessengerF, uUtils.Logger, uUtils.BusinessComboBoxHelper;
 
 //  var screenmask: Boolean;
   var Marks: TMarks;

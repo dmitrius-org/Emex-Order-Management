@@ -14,7 +14,7 @@ as
         ,cp.DestinationName      as Name
     FROM tOrders o (nolock)
    inner join vClientProfilesParam cp
-           on cp.ClientID                = o.ClientID
+           on cp.ClientID = o.ClientID
    where o.OrderID = @OrderID
      and isnull(o.Flag, 0)&16 >0
    union all
@@ -23,7 +23,7 @@ as
         ,cp.ProfileName          as Name
     FROM tOrders o (nolock)
    inner join vSupplierDeliveryParam cp
-           on cp.SuppliersID             = o.SuppliersID
+           on cp.SuppliersID = o.SuppliersID
    where o.OrderID = @OrderID
      and isnull(o.Flag, 0)&16 =0
 

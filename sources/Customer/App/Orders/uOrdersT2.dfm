@@ -471,9 +471,6 @@
         Align = alClient
         LayoutConfig.Width = '0'
         TabOrder = 1
-        DesignSize = (
-          1723
-          74)
         object UniLabel1: TUniLabel
           Left = 15
           Top = 20
@@ -565,13 +562,12 @@
         end
         object btnCancel: TUniBitBtn
           AlignWithMargins = True
-          Left = 1600
-          Top = 12
+          Left = 1336
+          Top = 39
           Width = 113
           Height = 24
           ShowHint = True
           Action = actCancelRequest
-          Anchors = [akTop, akRight]
           TabOrder = 9
         end
         object edtComment2: TUniEdit
@@ -634,14 +630,13 @@
         end
         object btnNotification: TUniBitBtn
           AlignWithMargins = True
-          Left = 1475
-          Top = 12
+          Left = 1211
+          Top = 39
           Width = 119
           Height = 24
           Hint = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103#1084
           ShowHint = True
           Caption = '<i class="icon-notification"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
-          Anchors = [akTop, akRight]
           TabOrder = 13
           ClientEvents.UniEvents.Strings = (
             

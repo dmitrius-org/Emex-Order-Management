@@ -5,8 +5,7 @@ go
   SearchPriceCalc - расчет цены 
 -------------------------------------------------------- */
 create proc SearchPriceCalc
-              @ProfilesCustomerID  numeric(18, 0)  
-             ,@DetailNum           nvarchar(40)  -- не использую зачем добавлял не помню        
+              @ProfilesCustomerID numeric(18, 0)     
 as
 set nocount on;
 
@@ -90,14 +89,14 @@ select distinct p.DetailNum, p.Make
  where p.Spid = @@spid
 
 insert @Price
-       (DetailNum, 
-        MakeLogo, 
-        WeightKGF, 
-        VolumeKGf,
-        FragileSign,
-        NLA,
-        NOAIR,
-        DetailName)
+      (DetailNum, 
+       MakeLogo, 
+       WeightKGF, 
+       VolumeKGf,
+       FragileSign,
+       NLA,
+       NOAIR,
+       DetailName)
 select 
        p.DetailNum,
        p.Make,
@@ -180,16 +179,12 @@ select p.ID,
        @Kurs, 
        s.ExtraKurs,
        s.Commission,
-       --case 
-       --  when p.flag&1>0 then s.Discount
-       --  else 0 -- по АПИ цена приходит с учетом скидки
-       --end,
        0,
        pd.WeightKG,
        pd.VolumeKG,
        pd.DestinationLogo,
        pd.ProfilesDeliveryID,
-       @ProfilesCustomerID,
+       pd.ProfilesCustomerID,
        isnull(pd.DeliveryTermFromSupplier, 0),
        p.GuaranteedDay,
        isnull(pp.FragileSign, 0),
@@ -204,8 +199,8 @@ select p.ID,
 
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
       select top 1 *
-        from vClientProfilesParam
-       where ProfilesCustomerID = @ProfilesCustomerID
+        from vClientProfilesParam pd
+       where pd.ProfilesCustomerID = @ProfilesCustomerID
      ) as pd
 
  left join @Price pp

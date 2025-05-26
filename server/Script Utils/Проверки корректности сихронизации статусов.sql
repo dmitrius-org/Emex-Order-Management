@@ -107,9 +107,18 @@ delete p
 
 --
 select 'Заказы, которые не удалось разбить на части',*
-  from tMovement (nolock)
- where OrderID is null
- order by OrderNumber
+  from tMovement t (nolock)
+ where t.OrderID is null
+   and not exists (select 1 -- исключаем перезаказанные детали
+                     from tMovement p (nolock)
+                    where p.MakeLogo = t.MakeLogo
+                      and p.DetailNum = t.DetailNum
+                      and p.Reference = t.Reference
+                     -- and p.Quantity  = t.Quantity
+                      and p.OrderNumber <> t.OrderNumber
+                     )
+ order by t.OrderNumber
+
 
 
 ----delete

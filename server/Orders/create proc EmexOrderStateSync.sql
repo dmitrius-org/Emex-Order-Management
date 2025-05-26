@@ -406,7 +406,7 @@ DEALLOCATE my_cur
  exec ShipmentsRefresh
 
 
-
+/*
 -- ситуация когда деталь разделисась, а после на все пришел отказ одной строкой 
 declare @Archiving ID
 
@@ -463,7 +463,7 @@ delete o
   from @Archiving A
  inner join tOrders o (rowlock)
          on o.OrderID = a.ID
-
+*/
  exit_:
  return @r
 go

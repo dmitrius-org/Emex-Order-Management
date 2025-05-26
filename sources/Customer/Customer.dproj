@@ -261,9 +261,9 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TUniForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\Common\Common\uUniExCheckComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Common\uUniExComboBoxHelper.pas"/>
         <DCCReference Include="..\Common\Logger\uUtils.Logger.pas"/>
+        <DCCReference Include="..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas"/>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

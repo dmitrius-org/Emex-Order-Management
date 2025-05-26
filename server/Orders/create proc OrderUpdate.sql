@@ -79,6 +79,9 @@ as
                                          when t.DeliveryTermFromSupplier = pd.DeliveryTermFromSupplier then null
                                          else pd.DeliveryTermFromSupplier
                                        end
+
+        ,t.VolumeKGAmount     = iif(t.ProfilesDeliveryID <> pd.ProfilesDeliveryID, pd.VolumeKG, t.VolumeKGAmount)-- если изменили способ доставки
+        ,t.WeightKGAmount     = iif(t.ProfilesDeliveryID <> pd.ProfilesDeliveryID, pd.WeightKG, t.WeightKGAmount)-- если изменили способ доставки
 	from tOrders t with (updlock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -93,7 +96,9 @@ as
                 pc.ProfilesDeliveryID,
                 pc.DestinationLogo, 
                 pc.DestinationName,
-                pc.DeliveryTermFromSupplier-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+                pc.DeliveryTermFromSupplier,-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+                pc.VolumeKG,
+                pc.WeightKG
            from vClientProfilesParam pc
           where isnull(t.Flag, 0)&16 >0
             and pc.ClientID           = t.ClientID
@@ -103,7 +108,9 @@ as
                 pc.ProfilesDeliveryID,
                 pc.DestinationLogo, 
                 pc.ProfileName,
-                pc.DeliveryTermFromSupplier-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+                pc.DeliveryTermFromSupplier,-- Срок поставки клиента, для заказов из файла берем из профилей доставки
+                pc.VolumeKG,
+                pc.WeightKG
            from vSupplierDeliveryParam pc
           where isnull(t.Flag, 0)&16  = 0
             and pc.ProfilesDeliveryID = @ProfilesDeliveryID
