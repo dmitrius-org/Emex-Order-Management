@@ -188,6 +188,7 @@ object BasketF: TBasketF
           ShowToolTip = True
           FieldName = 'IsUpdating'
           Title.Caption = ' '
+          MinWidth = 130
           Width = 137
           Alignment = taLeftJustify
         end
