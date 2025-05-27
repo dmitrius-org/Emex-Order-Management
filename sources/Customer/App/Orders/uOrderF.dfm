@@ -142,6 +142,8 @@ object OrderF: TOrderF
     ParentShowHint = False
     Caption = #1057#1086#1079#1076#1072#1090#1100
     Anchors = [akRight, akBottom]
+    ParentFont = False
+    Font.Height = -16
     TabOrder = 2
     OnClick = btnOkClick
   end

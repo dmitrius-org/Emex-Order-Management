@@ -227,12 +227,10 @@ procedure TReOrder.LoadPriceList;  var Price: string;
 begin
   sql.Exec('''
     exec SearchPriceCalc
-           @ProfilesCustomerID = :ProfilesCustomerID,
-           @DetailNum = :DetailNum
+           @ProfilesCustomerID = :ProfilesCustomerID
  ''',
- ['ProfilesCustomerID', 'DetailNum'],
- [cbDestinationLogo.Value.ToInteger, FDetailNumber]);
-
+ ['ProfilesCustomerID'],
+ [cbDestinationLogo.Value.ToInteger]);
 
   Price:=cbPrice.Value;
   // список поставщиков

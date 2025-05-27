@@ -65,9 +65,9 @@ uses
   LoginEditForm in 'Main\LoginEditForm.pas' {LoginEditF: TUniForm},
   uUniMemoHelper in '..\Common\Common\uUniMemoHelper.pas',
   uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
-  uUniExCheckComboBoxHelper in '..\Common\Common\uUniExCheckComboBoxHelper.pas',
   uUniExComboBoxHelper in '..\Common\Common\uUniExComboBoxHelper.pas',
-  uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas';
+  uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas',
+  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas';
 
 {$R *.res}
 

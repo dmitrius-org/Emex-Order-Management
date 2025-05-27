@@ -11,16 +11,13 @@ set nocount on;
 
 declare @RetVal             int
        ,@ProfilesCustomerID numeric(18, 0)
-	   ,@DetailNum          nvarchar(40)
 
 select @ProfilesCustomerID = b.ProfilesCustomerID
-      ,@DetailNum          = b.DetailNum
   from tBasket b (nolock)
  where b.BasketID=@BasketID
 
 exec SearchPriceCalc
        @ProfilesCustomerID = @ProfilesCustomerID
-      ,@DetailNum          = @DetailNum
 
 update b
    set b.PriceRub        = o.PriceRub

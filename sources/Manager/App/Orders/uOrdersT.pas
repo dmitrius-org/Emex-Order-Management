@@ -1825,7 +1825,9 @@ begin
 
   FAccrual := TAccrual.Create(UniMainModule.FDConnection);
 
-  Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
+// bufferedRenderer = False при большом количестве записей таблица начинает сильно тормозить
+// Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
+
 
   log('TOrdersT.UniFrameCreate End', etDebug);
 end;

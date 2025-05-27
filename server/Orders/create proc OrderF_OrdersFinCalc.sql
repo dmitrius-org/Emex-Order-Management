@@ -7,7 +7,8 @@ if OBJECT_ID('OrderF_OrdersFinCalc') is not null
 */
 go
 create proc OrderF_OrdersFinCalc
-              @OrderID   numeric(18, 0)  
+              @OrderID             numeric(18, 0)  
+             ,@ProfilesDeliveryID  numeric(18, 0)  
              ,@WeightKGF float = null -- Вес Физический факт	
              ,@VolumeKGF float = null -- Вес Объемный факт
 as
@@ -50,11 +51,11 @@ Select @@spid
       ,coalesce(@VolumeKGF, p.VolumeAdd, 0)
       ,c.Taxes    -- Комиссия + Налоги
       ,isnull(p.Commission, 0)/100 -- Комиссия за оплату  Comission ExtraKurs
-      ,isnull(p.Margin, 0)/100     -- Наценка             Margin
+      ,isnull(p.Margin, 0)    /100 -- Наценка             Margin
       ,isnull(p.Kurs, o.Kurs)
-      ,isnull(p.ExtraKurs, 0)/100  -- Комиссия на курс    ExtraKurs
-      ,pd.WeightKG                 -- Стоимость кг
-      ,pd.VolumeKG                 -- Стоимость vкг
+      ,isnull(p.ExtraKurs, 0) /100 -- Комиссия на курс    ExtraKurs
+      ,sd.WeightKG                 -- Стоимость кг
+      ,sd.VolumeKG                 -- Стоимость vкг
       ,o.CommissionAmount          -- Комиссия от продажи
   from pFindByNumber p with (nolock index=ao2)
  inner join tOrders o with (nolock index=ao1)
@@ -63,12 +64,11 @@ Select @@spid
          on c.ClientID  = o.ClientID
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
         select top 1
-                pd.WeightKG,
-                pd.VolumeKG
-         from vClientProfilesParam pd
-        where pd.ClientID           = c.ClientID
-          and pd.ProfilesCustomerID = p.ProfilesCustomerID   
-        ) as pd
+               sd.WeightKG,
+               sd.VolumeKG
+          from vSupplierDeliveryParam sd
+         where sd.ProfilesDeliveryID = @ProfilesDeliveryID   
+        ) as sd
   where p.spid = @@spid
     and p.Flag&2=0  -- 2=No longer available Более недоступно
 

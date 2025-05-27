@@ -562,7 +562,7 @@
         end
         object btnCancel: TUniBitBtn
           AlignWithMargins = True
-          Left = 1334
+          Left = 1336
           Top = 39
           Width = 113
           Height = 24
@@ -630,13 +630,13 @@
         end
         object btnNotification: TUniBitBtn
           AlignWithMargins = True
-          Left = 1209
+          Left = 1211
           Top = 39
           Width = 119
           Height = 24
           Hint = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103#1084
           ShowHint = True
-          Caption = '<i class="icon-notification"> </i>'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
+          Caption = '<i class="icon-notification"></i> '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103
           TabOrder = 13
           ClientEvents.UniEvents.Strings = (
             

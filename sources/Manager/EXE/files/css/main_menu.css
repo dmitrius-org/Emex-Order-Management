@@ -84,8 +84,12 @@
     font-weight: bold; /* Жирный шрифт */
 }
 
-.order-menu-item-rollback {
+/* .order-menu-item-rollback {
     background-color: #f8d7dac0; 
+} */
+
+.order-menu-item-rollback:hover  {
+    background-color: #f8d7dade; 
 }
 
 .order-menu-item-edit {
@@ -95,10 +99,10 @@
     font-weight: bold; /* Жирный шрифт */
 }
 
-.order-menu-item-delete {
+/* .order-menu-item-delete {
     background-color: #f8d7dac0; 
-}
-
-/* .order-menu-item-delete:hover {
-    background-color: #f8d7dade; 
 } */
+
+.order-menu-item-delete:hover {
+    background-color: #f8d7dade; 
+}

@@ -54,8 +54,8 @@ begin
         ,isnull(p.VolumeKGF, 0)
         ,isnull(o.Taxes, c.Taxes)            -- Комиссия + Налоги
         ,isnull(o.Commission, 0)/100         -- Комиссия за оплату  Comission ExtraKurs
-        ,isnull(o.Margin, 0)/100             -- Наценка             Margin
-        ,isnull(o.ExtraKurs, 0)/100          -- Комиссия на курс    ExtraKurs
+        ,isnull(o.Margin, 0)    /100         -- Наценка             Margin
+        ,isnull(o.ExtraKurs, 0) /100         -- Комиссия на курс    ExtraKurs
         ,isnull(o.WeightKGAmount, pd.WeightKG)              -- Стоимость кг	
         ,isnull(o.VolumeKGAmount, pd.VolumeKG)              -- Стоимость vкг
         ,o.CommissionAmount       -- Комиссия от продажи	 
