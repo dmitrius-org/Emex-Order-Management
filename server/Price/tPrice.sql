@@ -34,6 +34,6 @@ go
 exec setOV 'tPrice', 'U', '20250531', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tPrice', @desc = 'таблица цен/прайсов'
+exec dbo.sys_setTableDescription @table = 'tPrice', @desc = 'Таблица цен, прайсов'
 -- Описание полей
 exec dbo.sys_setTableDescription 'tPrice', 'PriceID'                 ,'Уникальный идентификатор '

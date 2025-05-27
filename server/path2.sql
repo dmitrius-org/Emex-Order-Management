@@ -1,9 +1,11 @@
 /*
 if OBJECT_ID('tRestrictions') is not null
   drop table tRestrictions
+
+EXEC sp_rename 'tPrice', 'tPrice2';
 --*/
 
---15 �����
+--3.5 минут
 INSERT INTO tParts with (tablock)
       (Brand, BrandName, DetailNum, DetailName, WeightKG, VolumeKG, DetailNameF, WeightKGF, VolumeKGf, NoAir, NLA, Fragile, UserID) 
 SELECT
@@ -23,7 +25,7 @@ SELECT
  FROM tPrice2 (nolock)
 group by MakeLogo, DetailNum
 
-
+--11 минут
 SET IDENTITY_INSERT tPrice ON;
 INSERT INTO tPrice with (tablock)
       (PriceID, PartID, PriceLogo, Quantity, PackQuantity, Reliability, DetailPrice, MOSA, isDelete)
