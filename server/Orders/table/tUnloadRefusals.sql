@@ -1,11 +1,17 @@
 if OBJECT_ID('tUnloadRefusals') is null
+/*
+  ALTER TABLE tUnloadRefusals SET ( SYSTEM_VERSIONING = OFF )
+  drop table tUnloadRefusals
+  DROP TABLE History.tUnloadRefusals
+--*/
 /* **********************************************************
 tUnloadRefusals - Таблица отказов
 ********************************************************** */
 begin
 	create table tUnloadRefusals
-	(
-	 OperDate             datetime -- дата выгрузки ответа
+	( 
+     UnloaRefusalID       numeric(18,0) identity--
+	,OperDate             datetime -- дата выгрузки ответа
 	,FileName             nvarchar(256)  
 	,ClientID             numeric(18, 0)
 	,ClientName           nvarchar(512)
@@ -18,8 +24,13 @@ begin
 	,PricePurchase        money
 	,AmountPurchase       money
 	,Flag                 int
-	,InDateTime           DateTime default GetDate()
+    ,ValidFrom            DATETIME2 GENERATED ALWAYS AS ROW START
+    ,ValidTo              DATETIME2 GENERATED ALWAYS AS ROW END
+    ,PERIOD FOR SYSTEM_TIME (ValidFrom, ValidTo)
+
+    ,CONSTRAINT PK_tUnloadRefusals_OrderID PRIMARY KEY CLUSTERED (UnloaRefusalID)
 	)
+    WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = history.tUnloadRefusals));
 
 	create index ao2 on tUnloadRefusals(OperDate)
 
@@ -31,4 +42,4 @@ go
 exec setOV 'tUnloadRefusals', 'U', '20240101', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'tUnloadRefusals', @desc = 'Таблица отказов'
+exec dbo.sys_setTableDescription @table = 'tUnloadRefusals', @desc = 'Таблица истории отказов'
