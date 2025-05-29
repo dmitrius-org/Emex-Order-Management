@@ -128,7 +128,17 @@
           'ide(); '#13#10'  toolbar.items.getAt(5).hide(); '#13#10'  toolbar.items.getA' +
           't(6).hide(); '#13#10'  toolbar.items.getAt(7).hide(); '#13#10'  toolbar.item' +
           's.getAt(8).hide(); '#13#10'  toolbar.items.getAt(9).hide(); '#13#10'  toolba' +
-          'r.items.getAt(10).hide();   '#13#10'}'
+          'r.items.getAt(10).hide();   '#13#10#13#10'  sender.addPlugin('#39'gridexporter' +
+          #39');'#13#10'    '#13#10'  var exporterCfg = new Object({'#13#10'            type: "' +
+          'xlsx",'#13#10'            mimeType: "application/vnd.openxmlformats-of' +
+          'ficedocument.spreadsheetml.sheet",'#13#10'            title: '#39#1047#1072#1082#1072#1079#1099#39',' +
+          #13#10'            fileName: "'#1047#1072#1082#1072#1079#1099'.xlsx"'#13#10'        }); '#13#10#13#10'  // '#1044#1086#1073#1072 +
+          #1074#1083#1103#1077#1084' '#1082#1085#1086#1087#1082#1091' '#1074' '#1087#1072#1085#1077#1083#1100' '#1085#1072#1074#1080#1075#1072#1094#1080#1080#13#10'  if (!toolbar.exportBtn) {'#13#10'  ' +
+          '   toolbar.exportBtn = toolbar.insert('#13#10'       0, '#13#10'       //{ x' +
+          'type: '#39'tbseparator'#39' }'#13#10'       {xtype: '#39'button'#39', text: '#39#39', toolti' +
+          'p : '#39#1069#1082#1089#1087#1086#1088#1090' '#1074' Excel'#39', handler: function() {'#13#10'          sender.s' +
+          'aveDocumentAs(exporterCfg);'#13#10'       }}'#13#10'     );'#13#10'     toolbar.ex' +
+          'portBtn.setIconCls('#39'ToExcel'#39');// icon...     '#13#10'  }  '#13#10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'    sender.co' +
           'pyToClipboard = str => {'#13#10'        const el = document.createElem' +
@@ -442,6 +452,12 @@
           Width = 148
           ReadOnly = True
           Sortable = True
+        end
+        item
+          FieldName = 'Invoice'
+          Title.Alignment = taCenter
+          Title.Caption = #1048#1085#1074#1086#1081#1089
+          Width = 100
         end>
     end
     object pFilter: TUniPanel
@@ -482,17 +498,17 @@
           TabOrder = 1
         end
         object fCancel: TUniBitBtn
-          Left = 988
+          Left = 1088
           Top = 39
           Width = 100
           Height = 24
           ShowHint = True
           Action = actFilterClear
-          Caption = '<i class="fa fa-times red"></i> '#1054#1095#1080#1089#1090#1080#1090#1100
+          Caption = '<i class="fa fa-filter red"></i> '#1054#1095#1080#1089#1090#1080#1090#1100
           TabOrder = 7
         end
         object fOk: TUniBitBtn
-          Left = 1093
+          Left = 1193
           Top = 39
           Width = 100
           Height = 24
@@ -503,7 +519,7 @@
           IconPosition = ipButtonEdge
         end
         object UniLabel5: TUniLabel
-          Left = 892
+          Left = 994
           Top = 20
           Width = 34
           Height = 13
@@ -513,7 +529,7 @@
           TabOrder = 4
         end
         object cbCancel: TUniComboBox
-          Left = 892
+          Left = 994
           Top = 39
           Width = 81
           Hint = ''
@@ -562,7 +578,7 @@
         end
         object btnCancel: TUniBitBtn
           AlignWithMargins = True
-          Left = 1336
+          Left = 1432
           Top = 39
           Width = 113
           Height = 24
@@ -571,7 +587,7 @@
           TabOrder = 9
         end
         object edtComment2: TUniEdit
-          Left = 688
+          Left = 790
           Top = 39
           Width = 198
           Hint = ''
@@ -583,7 +599,7 @@
           ClearButton = True
         end
         object UniLabel2: TUniLabel
-          Left = 688
+          Left = 790
           Top = 20
           Width = 77
           Height = 13
@@ -630,7 +646,7 @@
         end
         object btnNotification: TUniBitBtn
           AlignWithMargins = True
-          Left = 1211
+          Left = 1307
           Top = 39
           Width = 119
           Height = 24
@@ -671,6 +687,28 @@
           EmptyText = #1057#1090#1072#1090#1091#1089
           ClearButton = True
           IconItems = <>
+        end
+        object lblInvoce: TUniLabel
+          Left = 688
+          Top = 20
+          Width = 87
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1053#1086#1084#1077#1088' '#1080#1085#1074#1086#1081#1089#1072':'
+          TabOrder = 15
+        end
+        object edtInvoice: TUniEdit
+          Left = 688
+          Top = 39
+          Width = 96
+          Hint = ''
+          ShowHint = True
+          Text = ''
+          TabOrder = 16
+          EmptyText = #1048#1085#1074#1086#1081#1089
+          CheckChangeDelay = 200
+          ClearButton = True
         end
       end
     end
@@ -735,6 +773,7 @@
         ParentColor = False
         Align = alRight
         TabOrder = 2
+        LayoutConfig.ComponentCls = #1077#1091#1099#1077
         object pnlPageR: TUniPanel
           Left = 280
           Top = 0
@@ -1204,6 +1243,10 @@
     end
     object QueryisCancel: TBooleanField
       FieldName = 'isCancel'
+    end
+    object QueryInvoice: TStringField
+      FieldName = 'Invoice'
+      Size = 32
     end
   end
   object DataSource: TDataSource

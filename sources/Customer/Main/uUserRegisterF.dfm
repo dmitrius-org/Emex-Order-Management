@@ -1,13 +1,9 @@
-object UserRegisterF: TUserRegisterF
-  Left = 0
-  Top = 0
+inherited UserRegisterF: TUserRegisterF
   ClientHeight = 500
   ClientWidth = 500
   Caption = #1056#1077#1075#1080#1089#1090#1088#1072#1094#1080#1103' '#1074' '#1089#1080#1089#1090#1077#1084#1077
   OnShow = UniFormShow
   BorderStyle = bsNone
-  OldCreateOrder = False
-  MonitoredKeys.Keys = <>
   Visible = True
   AlignmentControl = uniAlignmentClient
   ClientEvents.ExtEvents.Strings = (
@@ -24,6 +20,8 @@ object UserRegisterF: TUserRegisterF
       #10'    config.shadow=false;'#13#10'}')
   LayoutConfig.Cls = 'login-form login-container'
   LayoutConfig.Region = 'center'
+  ExplicitWidth = 500
+  ExplicitHeight = 500
   TextHeight = 15
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
@@ -134,7 +132,7 @@ object UserRegisterF: TUserRegisterF
       Text = ''
       ParentFont = False
       TabOrder = 6
-      EmptyText = #1048#1084#1103'/'#1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103':'
+      EmptyText = #1048#1084#1103'/'#1054#1088#1075#1072#1085#1080#1079#1072#1094#1080#1103
       FieldLabelWidth = 5
       FieldLabelAlign = laRight
       FieldLabelFont.Color = clCrimson
@@ -168,7 +166,7 @@ object UserRegisterF: TUserRegisterF
     end
     object UniLabel2: TUniLabel
       Left = 56
-      Top = 45
+      Top = 53
       Width = 395
       Height = 13
       Hint = ''

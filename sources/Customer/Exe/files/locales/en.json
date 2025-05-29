@@ -1,0 +1,67 @@
+﻿{
+    "language": {
+        "Name": "en",
+        "Caption": "En",
+        "Author": "",
+        "ImageIndex": 1
+    },
+    "Messages": {
+        "ErrorInvalidLogin": "Invalid username or password",
+        "WelcomeUser": "Welcome, %s!",
+        "FillRequiredFields": "Please fill in all required fields!",
+        "FillFields": "Please fill in all fields!",
+        "AccountActivated": "Congratulations, your account has been successfully activated."
+    },
+    "Registration": {
+        "Subject": "Confirm your Email",
+        "Body": "<html> <head> <title>Confirm your Email (search.booster.ae)</title></head> <body> <p>To complete your registration, click the following link: <a href=\"%sconfirmed?tokken=%s\">link</a></p> </body></html>",
+        "Information": "A confirmation link has been sent to your email!"
+    },
+    "ResetPassword": {
+        "Subject": "Password Reset (search.booster.ae)",
+        "Body": "<html><head>  <title>Password Reset (search.booster.ae)</title></head> <body>  <p>To complete the password reset process, please follow the link: <a href=\"%sreset?tokken=%s\">link</a></p> </body></html>",
+        "Information": "A link to reset your password has been sent to your email!"
+    },
+    "LoginF": {
+        "LoginF.Caption": "System Login",
+        "btnOk.Caption": "Log In",
+        "edtUser.Hint": "Username",
+        "edtUser.EmptyText": "Username",
+        "edtPassword.Hint": "Password",
+        "edtPassword.EmptyText": "Password",
+        "cbRemember.Caption": "Remember me",
+        "lblReset.Caption": "Forgot password",
+        "lblReg.Caption": "Register",
+        "lblLoginTitle.Caption": "System Login"
+    },
+    "UserResetF": {
+        "UserResetF.Caption": "System Registration",
+        "btnCancel.Caption": "Back",
+        "btnOk.Caption": "Reset Password",
+        "edtEmail.Hint": "Email",
+        "edtEmail.EmptyText": "Email",
+        "UniLabel2.Caption": "Enter your email address below and we will send you a link to reset your password.",
+        "UniLabel1.Caption": "Password Recovery"
+    },
+    "UserRegisterF": {
+        "UserRegisterF.Caption": "System Registration",
+        "UniLabel6.Caption": "* - required field",
+        "edtPhone.Hint": "Phone",
+        "edtPhone.EmptyText": "Phone",
+        "edtPassword.Hint": "Password",
+        "edtPassword.EmptyText": "Password",
+        "edtEmail.Hint": "Email",
+        "edtEmail.EmptyText": "Email",
+        "edtContactPerson.Hint": "Contact person",
+        "edtContactPerson.EmptyText": "Contact person",
+        "edtBrief.Hint": "Name/Organization",
+        "edtBrief.EmptyText": "Name/Organization",
+        "btnOk.Caption": "Register",
+        "btnCancel.Caption": "Back",
+        "UniLabel2.Caption": "Registration",
+        "UniLabel1.Caption": "*",
+        "UniLabel3.Caption": "*",
+        "UniLabel4.Caption": "*",
+        "UniLabel5.Caption": "*"
+    }
+}

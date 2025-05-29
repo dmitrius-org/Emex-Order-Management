@@ -6,10 +6,10 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel,
-  uniPanel;
+  uniPanel, uBaseForm;
 
 type
-  TUserResetF = class(TUniForm)
+  TUserResetF = class(TBaseForm)
     edtEmail: TUniEdit;
     btnCancel: TUniButton;
     btnOk: TUniButton;
@@ -29,7 +29,7 @@ type
 implementation
 
 uses
-  uniGUIApplication, uMainVar, MainModule, ServerModule, uEmail.gmail, uFileU;
+  uniGUIApplication, uMainVar, MainModule, ServerModule, uEmail.gmail, uFileU, uUtils.Localizer;
 
 {$R *.dfm}
 
@@ -45,7 +45,8 @@ begin
 
   if (edtEmail.Text = '')then
   begin
-    MessageDlg('Заполните все поля!', mtError, [mbOK]);
+    //Заполните все поля!
+    ShowError(l('Messages', 'FillFields'));
     Exit;
   end;
 
@@ -87,29 +88,21 @@ begin
         var htmlBody: string;
         RegLink := GetSpecialPath(RegLink, '/');
 
-        htmlBody :=      ''+
-          '<html>  '+
-          '<head>  '+
-          '<title>Сброс пароля (search.booster.ae)</title>'+
-          '</head> '+
-          '<body>  '+
-          '<p>Для завершения процедуры сброса пароля перейдите по ссылке: <a href="' +RegLink + 'reset?tokken=' + sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
-          '</body> '+
-          '</html> ';
+        htmlBody :=Format(L('ResetPassword', 'Body'), [RegLink, sql.Q.FieldByName('Hash').AsWideString]);
 
         Gmail := TxtGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
         try
-            try
-              Gmail.Connect;
-              Gmail.Send([edtEmail.Text], 'Сброс пароля', '', htmlBody, '');
-
-              MessageDlg('На вашу почту отправлена ссылка для сброса пароля!', mtInformation, [mbOK]);
-            except
-              on E: Exception do
-                 raise Exception.Create(E.Message);
-            end;
+          try
+            Gmail.Connect;
+            Gmail.Send([edtEmail.Text], L('ResetPassword', 'Subject'), '', htmlBody, '');
+            // На вашу почту отправлена ссылка для сброса пароля!
+            MessageDlg(L('ResetPassword', 'Information'), mtInformation, [mbOK]);
+          except
+            on E: Exception do
+               raise Exception.Create(E.Message);
+          end;
         finally
-            Gmail.Free;
+          Gmail.Free;
         end;
       end;
     end

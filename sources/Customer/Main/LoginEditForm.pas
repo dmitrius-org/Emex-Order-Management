@@ -6,10 +6,10 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses, FireDAC.Stan.Param,
   uniGUIClasses, uniGUIForm, uniPanel, uniEdit, uniGUIBaseClasses, uniLabel,
-  uniButton;
+  uniButton, uBaseForm;
 
 type
-  TLoginEditF = class(TUniForm)
+  TLoginEditF = class(TBaseForm)
     btnOk: TUniButton;
     btnCancel: TUniButton;
     loginbox: TUniContainerPanel;
@@ -31,7 +31,7 @@ implementation
 {$R *.dfm}
 
 uses
-  MainModule, uniGUIApplication, uCommonType, Main, uMainVar;
+  MainModule, uniGUIApplication, uCommonType, Main, uMainVar, uUtils.Localizer;
 
 function LoginEditF: TLoginEditF;
 begin

@@ -151,12 +151,13 @@ Type
   /// <summary> Тип для обработки ошибок </summary>
   TRetVal = class
   private
-    var FCode: Integer;
-    var FMessage: string;          // сообщение
-    var FID     : Integer;         // для тех нужд
+    FCode: Integer;
+    FMessage: string;          // сообщение
+    FID     : Integer;         // для тех нужд
 
-    var FErrType: TMsgDlgType;     // тип ошибки
-    var FConnection: TFDConnection;
+    FErrType: TMsgDlgType;     // тип ошибки
+    FConnection: TFDConnection;
+    FLanguage: String;
 
     function GetCode: Integer;     // код ошибки
     function GetID: Integer;
@@ -183,6 +184,9 @@ Type
     property ErrType: TMsgDlgType read FErrType write FErrType ;
      /// <summary> Clear - очистка текущих значений</summary>
     function Clear:TRetVal;
+
+
+    property Language: String read FLanguage write FLanguage ;
   end;
 
 
@@ -256,8 +260,15 @@ Begin
       Qry := TFDQuery.Create(nil);
       Qry.Connection := FConnection;
 
-      Qry.SQL.Text := 'select dbo.GetRetMsg(:RetCode)';
+      Qry.SQL.Text := '''
+        EXEC sys.sp_set_session_context
+               @key   = 'language',
+               @value = :Language;
+
+        select dbo.GetRetMsg(:RetCode)
+      ''';
       Qry.ParamByName('RetCode').AsInteger := FCode;
+      Qry.ParamByName('Language').AsString := FLanguage;
       Qry.Open;
 
       if not Qry.IsEmpty then

@@ -13,6 +13,7 @@ create proc CustomerOrdersPage
               ,@isCancel         int         
               ,@IsNotification   bit 
               ,@PageSize         int
+              ,@Invoice          varchar(32) 
 as
   SET NOCOUNT ON; 
   declare @r             int = 0
@@ -22,6 +23,7 @@ as
         ,@DetailNum     = nullif(@DetailNum, '')
         ,@Comment2      = nullif(@Comment2, '')
         ,@isCancel      = nullif(@isCancel, -1)
+        ,@Invoice       = nullif(@Invoice, '')
   
   delete from #OrderPage
   insert #OrderPage 
@@ -29,9 +31,10 @@ as
   select o.OrderID
         ,(ROW_NUMBER() OVER (ORDER BY o.ClientID, o.OrderID desc) - 1) / @PageSize + 1 AS PageNumber
     from tOrders o with (nolock index=ao2)
-
+   inner join tNodes n (nolock)
+           on n.NodeID = o.StatusID
     left JOIN @Status c
-           ON o.StatusID = c.ID
+           ON c.ID = n.SearchID
 
     left join vCustomerOrderNotificationFilter cl
            on cl.OrderID  = o.OrderID
@@ -54,6 +57,7 @@ as
      and (@isCancel is null or o.isCancel = @isCancel)
 
      and (@Comment2 is null or o.Comment2 like '%' + @Comment2 + '%')
+     and (@Invoice is null or o.Invoice = @Invoice)
 
      and ( @IsNotification = 0 or
           (@IsNotification = 1 and cl.OrderID is not null)
@@ -71,6 +75,6 @@ as
 go
 grant exec on CustomerOrdersPage to public
 go
-exec setOV 'CustomerOrdersPage', 'P', '20250224', '0'
+exec setOV 'CustomerOrdersPage', 'P', '20250529', '1'
 go
  

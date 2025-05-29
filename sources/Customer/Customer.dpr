@@ -67,7 +67,9 @@ uses
   uStatusForm in 'App\Common\uStatusForm.pas' {StatusForm: TUniForm},
   uUniExComboBoxHelper in '..\Common\Common\uUniExComboBoxHelper.pas',
   uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas',
-  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas';
+  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas',
+  uUtils.Localizer in '..\Common\Common\uUtils.Localizer.pas',
+  uBaseForm in 'App\Common\uBaseForm.pas' {BaseForm: TUniForm};
 
 {$R *.res}
 

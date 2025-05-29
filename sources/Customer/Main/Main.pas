@@ -105,7 +105,7 @@ implementation
 
 uses
   uniGUIVars, MainModule, uniGUIApplication, ServerModule,
-  LoginEditForm, InfoForm, uLoggerF, uApp, uMainVar, uUtils.Varriant;
+  LoginEditForm, InfoForm, uLoggerF, uApp, uMainVar, uUtils.Varriant, uUtils.Localizer;
 
 function MainForm: TMainForm;
 begin
@@ -313,6 +313,8 @@ end;
 
 procedure TMainForm.UniFormCreate(Sender: TObject);
 begin
+
+
   LogoLabel.Caption := sql.GetSetting('AppProfilesName');
   UserLabel.Caption := UniMainModule.FDConnection.ExecSQLScalar('select case when Brief <> email then Brief + '' (''+ email + '')'' else Brief  end from tClients (nolock) where ClientID=' + UniMainModule.AUserID.ToString );
 

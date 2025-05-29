@@ -1,33 +1,35 @@
 delete from tRetCode
 -- tUsers
-insert tRetCode (RetCode, Message) select 1,   'Пользователь с заданным логином существует!'
-insert tRetCode (RetCode, Message) select 2,   'Пользователь должен иметь права [sysadmin]!'
-insert tRetCode (RetCode, Message) select 3,   'Ошибка при добавлении пользователя!'
-insert tRetCode (RetCode, Message) select 4,   'Ошибка при удалении пользователя!'
-insert tRetCode (RetCode, Message) select 5,   'Старый и новый пароли не должны совпадать!'
-insert tRetCode (RetCode, Message) select 6,   'Удаление запрещено, пользователь используется в таблице заказов!'
-insert tRetCode (RetCode, Message) select 7,   'Группа с заданным сокращением существует!'
-insert tRetCode (RetCode, Message) select 8,   'Удаление запрещено, в группе имеются пользователи!'
-insert tRetCode (RetCode, Message) select 9,   'Связь пользователя и группы существет!'
-insert tRetCode (RetCode, Message) select 10,  'Клиент существует!'
-insert tRetCode (RetCode, Message) select 11,  'Удаление запрещено, пользователь входит в группу прав!'
-insert tRetCode (RetCode, Message) select 12,  'Не заполнено обязательное поле!'
-insert tRetCode (RetCode, Message) select 13,  'Email в системе не зарегистрирован!'
-insert tRetCode (RetCode, Message) select 14,  'Ошибка сброса пароля!'
-insert tRetCode (RetCode, Message) select 15,  'Пароль не может быть пустым!'
-insert tRetCode (RetCode, Message) select 16,  'Пользователь заблокирован из-за неудачных попыток входа, повторите попытку через 30 минут!'
-insert tRetCode (RetCode, Message) select 17,  'Имя пользователя или пароль неверны!'
-insert tRetCode (RetCode, Message) select 18,  'Доступ отключен!'
+exec RetCodeInsert 1,  'Пользователь с заданным логином существует!', 'A user with the specified login already exists!'
+exec RetCodeInsert 2,  'Пользователь должен иметь права [sysadmin]!', 'The user must have [sysadmin] privileges!'
+exec RetCodeInsert 3,  'Ошибка при добавлении пользователя!', 'Error adding the user!'
+exec RetCodeInsert 4,  'Ошибка при удалении пользователя!', 'Error deleting the user!'
+exec RetCodeInsert 5,  'Старый и новый пароли не должны совпадать!', 'Old and new passwords must not be the same!'
+exec RetCodeInsert 6,  'Удаление запрещено, пользователь используется в таблице заказов!', 'Deletion is not allowed; the user is referenced in the orders table!'
+exec RetCodeInsert 7,  'Группа с заданным сокращением существует!', 'A group with the specified abbreviation already exists!'
+exec RetCodeInsert 8,  'Удаление запрещено, в группе имеются пользователи!', 'Deletion is not allowed; the group contains users!'
+exec RetCodeInsert 9,  'Связь пользователя и группы существет!', 'The user-group association already exists!'
+exec RetCodeInsert 10, 'Клиент существует!', 'The client already exists!'
+exec RetCodeInsert 11, 'Удаление запрещено, пользователь входит в группу прав!', 'Deletion is not allowed; the user is part of a rights group!'
+exec RetCodeInsert 12, 'Не заполнено обязательное поле!', 'A required field is not filled in!'
+exec RetCodeInsert 13, 'Email в системе не зарегистрирован!', 'The email is not registered in the system!'
+exec RetCodeInsert 14, 'Ошибка сброса пароля!', 'Password reset error!'
+exec RetCodeInsert 15, 'Пароль не может быть пустым!', 'Password cannot be empty!'
+exec RetCodeInsert 16, 'Пользователь заблокирован из-за неудачных попыток входа, повторите попытку через 30 минут!', 'The user is locked due to failed login attempts. Please try again in 30 minutes!'
+exec RetCodeInsert 17, 'Имя пользователя или пароль неверны!', 'Incorrect username or password!'
+exec RetCodeInsert 18, 'Доступ отключен!', 'Access is disabled!'
+
 
 -- tClients
-insert tRetCode (RetCode, Message) select 100, 'Клиент с заданным наименованием существует!'
-insert tRetCode (RetCode, Message) select 101, 'Удаление запрещено, Клиент используется в таблице заказов!'
-insert tRetCode (RetCode, Message) select 102, 'В системе уже зарегистрирован клиент с заданной почтой!'
-insert tRetCode (RetCode, Message) select 103, 'Нет данных!'
-insert tRetCode (RetCode, Message) select 104, 'Удаление запрещено, пользователь используется в справочнике клиентов!'
-insert tRetCode (RetCode, Message) select 105, 'Необходимо заполнить поле [Наименование профиля]!'
-insert tRetCode (RetCode, Message) select 106, 'Необходимо заполнить поле [Способ доставки]!'
-insert tRetCode (RetCode, Message) select 107, 'Наименование профиля существует!'
+exec RetCodeInsert 100, 'Клиент с заданным наименованием существует!', 'A client with the specified name already exists!'
+exec RetCodeInsert 101, 'Удаление запрещено, Клиент используется в таблице заказов!', 'Deletion is not allowed, the client is used in the orders table!'
+exec RetCodeInsert 102, 'В системе уже зарегистрирован клиент с заданной почтой!', 'A client with the specified email is already registered in the system!'
+exec RetCodeInsert 103, 'Нет данных!', 'No data found!'
+exec RetCodeInsert 104, 'Удаление запрещено, пользователь используется в справочнике клиентов!', 'Deletion is not allowed, the user is used in the client directory!'
+exec RetCodeInsert 105, 'Необходимо заполнить поле [Наименование профиля]!', 'The [Profile Name] field is required!'
+exec RetCodeInsert 106, 'Необходимо заполнить поле [Способ доставки]!', 'The [Delivery Method] field is required!'
+exec RetCodeInsert 107, 'Наименование профиля существует!', 'A profile with the same name already exists!'
+
 
 
 --tClientType
@@ -118,17 +120,18 @@ insert tRetCode (RetCode, Message) select 600, 'Прайслист с задан
 
 
 -- tBasket 701 - 800
-insert tRetCode (RetCode, Message) select 701, 'Имеются позиции по которым необходимо обновить цену!'
-insert tRetCode (RetCode, Message) select 702, 'Пожалуйста заполните поле "Описание"!'
-insert tRetCode (RetCode, Message) select 703, 'Пожалуйста заполните поле "Вес"!'
-insert tRetCode (RetCode, Message) select 704, 'Пожалуйста заполните поле "Объём"!'
-insert tRetCode (RetCode, Message) select 705, 'Деталь не найдена в корзине!'
-insert tRetCode (RetCode, Message) select 706, 'Нет позиций для заказа!'
-insert tRetCode (RetCode, Message) select 707, 'Корзина пуста!'
-insert tRetCode (RetCode, Message) select 708, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.'
+exec RetCodeInsert 701, 'Имеются позиции по которым необходимо обновить цену!', 'There are items that require a price update!'
+exec RetCodeInsert 702, 'Пожалуйста заполните поле "Описание"!', 'Please fill in the "Description" field!'
+exec RetCodeInsert 703, 'Пожалуйста заполните поле "Вес"!', 'Please fill in the "Weight" field!'
+exec RetCodeInsert 704, 'Пожалуйста заполните поле "Объём"!', 'Please fill in the "Volume" field!'
+exec RetCodeInsert 705, 'Деталь не найдена в корзине!', 'The item was not found in the cart!'
+exec RetCodeInsert 706, 'Нет позиций для заказа!', 'There are no items to order!'
+exec RetCodeInsert 707, 'Корзина пуста!', 'The cart is empty!'
+exec RetCodeInsert 708, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.', 'The item is prohibited from being shipped by the selected delivery method! Please choose another delivery method.'
+
 
 
 -- API
 -- order
 
-insert tRetCode (RetCode, Message) select 10001, 'Список заказов пуст'
+exec RetCodeInsert 10001, 'Список заказов пуст', 'The order list is empty'

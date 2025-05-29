@@ -40,5 +40,5 @@ return @RetVal
 go
 grant all on BasketPriceCalc to public
 go
-exec setOV 'BasketPriceCalc', 'P', '20250323', '2'
+exec setOV 'BasketPriceCalc', 'P', '20250529', '3'
 go

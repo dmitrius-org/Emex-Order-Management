@@ -6,10 +6,10 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics,
   Controls, Forms, uniGUITypes, uniGUIAbstractClasses,
   uniGUIClasses, uniGUIForm, uniGUIBaseClasses, uniEdit, uniButton, uniLabel,
-  uniPanel;
+  uniPanel, uBaseForm;
 
 type
-  TUserRegisterF = class(TUniForm)
+  TUserRegisterF = class(TBaseForm)
     edtEmail: TUniEdit;
     edtPassword: TUniEdit;
     btnCancel: TUniButton;
@@ -36,7 +36,7 @@ type
 implementation
 
 uses
-  uniGUIApplication, uMainVar, MainModule, ServerModule, uEmail.gmail, uFileU;
+  uniGUIApplication, uMainVar, MainModule, ServerModule, uEmail.gmail, uFileU, uUtils.Localizer;
 
 {$R *.dfm}
 
@@ -53,7 +53,8 @@ begin
   if (edtEmail.Text = '') or (edtPassword.text = '') or (edtBrief.text = '') or (edtPhone.text = '')
   then
   begin
-    MessageDlg('Заполните все обязательные поля!', mtError, [mbOK]);
+    //'Заполните все обязательные поля!'
+    ShowError(l('Messages', 'FillRequiredFields'));
     Exit;
   end;
 
@@ -108,25 +109,16 @@ begin
         var htmlBody: string;
          RegLink := GetSpecialPath(RegLink, '/');
 
-        htmlBody :=      ''+
-          '<html>  '+
-          '<head>  '+
-          '<title>Подтвердите Email (search.booster.ae)</title>'+
-          '</head> '+
-          '<body>  '+
-          '<p>Для завершения регистрации перейдите по ссылке: <a href="' +
-            RegLink + 'confirmed?tokken=' +
-            sql.Q.FieldByName('Hash').AsWideString + '">ссылка</a></p> '+
-          '</body> '+
-          '</html> ';
+        htmlBody :=Format(L('Registration', 'Body'), [RegLink, sql.Q.FieldByName('Hash').AsWideString]);
 
         Gmail := TxtGmail.Create(Username, Password, FromName, FromAlias, Host, Port);
         try
             try
               Gmail.Connect;
-              Gmail.Send([edtEmail.Text], 'Подтвердите Email', '', htmlBody, '');
+              Gmail.Send([edtEmail.Text], L('Registration', 'Subject'), '', htmlBody, '');
 
-              MessageDlg('На вашу почту отправлена ссылка для подтверждения регистрации!', mtInformation, [mbOK]);
+              //На вашу почту отправлена ссылка для подтверждения регистрации!
+              MessageDlg(L('Registration', 'Information'), mtInformation, [mbOK]);
 
               UniSession.UrlRedirect('/');
             except

@@ -38,7 +38,6 @@ go
 exec setOV 'tNodes', 'U', '20240101', '0'
 go
 
-
 alter table tNodes alter column EName            nvarchar(64) 
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'tNodes', @desc = 'Справочник состояний и действий'

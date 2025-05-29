@@ -71,6 +71,7 @@ type
 
     const _loginname = '_loginname2D02D0BF';
     const _pwd = '_pwd2D02D0BF';
+    const _lang = '__lang2D02D0BF';
 
     /// <summary> CustomerAuthorization - авторизация пользователя.
     ///  IsSaveSession:Boolean - подключение используя сохраненные данные
@@ -95,7 +96,7 @@ implementation
 {$R *.dfm}
 
 uses UniGUIVars, ServerModule, uniGUIApplication, uMainVar,
-     uConstant, uUtils.Logger;
+     uConstant, uUtils.Logger, uUtils.Localizer;
 
 function UniMainModule: TUniMainModule;
 begin
@@ -126,21 +127,34 @@ begin
       FDConnection.Open;
 
       ASPID := FDConnection.ExecSQLScalar('Select @@Spid');
-
+      UniServerModule.Logger.AddLog('TUniMainModule.dbConnect ASPID', ASPID.ToString);
     except
       on E: EFDDBEngineException do
-      case E.Kind of
-        ekUserPwdInvalid:
-          raise Exception.Create('Имя технического пользователя или пароль неверны! '+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
-        ekUserPwdExpired:
-          raise Exception.Create('Ошибка подключения к БД. Срок действия пароля пользователя истек! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
-        ekServerGone:
-          raise Exception.Create('Ошибка соединения с базой данных. СУБД недоступна по какой-то причине! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
-      else // other issues
-        raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
-      end;
-      on E : Exception do
-        raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
+        case E.Kind of
+          ekUserPwdInvalid:
+            raise Exception.Create('The technical username or password is incorrect!' + #13#10 + #13#10 + E.ClassName + ' exception raised with message: ' + E.Message);
+          ekUserPwdExpired:
+            raise Exception.Create('Database connection error. The user password has expired!' + #13#10 + #13#10 + E.ClassName + ' exception raised with message: ' + E.Message);
+          ekServerGone:
+            raise Exception.Create('Database connection error. The database server is unavailable for some reason!' + #13#10 + #13#10 + E.ClassName + ' exception raised with message: ' + E.Message);
+        else // other issues
+          raise Exception.Create('Database connection error. Unknown error!' + #13#10 + #13#10 + E.ClassName + ' exception raised with message: ' + E.Message);
+        end;
+      on E: Exception do
+        raise Exception.Create(E.ClassName + ' exception raised with message: ' + #13#10 + #13#10 + E.Message);
+
+//      case E.Kind of
+//        ekUserPwdInvalid:
+//          raise Exception.Create('Имя технического пользователя или пароль неверны! '+ #13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+//        ekUserPwdExpired:
+//          raise Exception.Create('Ошибка подключения к БД. Срок действия пароля пользователя истек! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+//        ekServerGone:
+//          raise Exception.Create('Ошибка соединения с базой данных. СУБД недоступна по какой-то причине! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+//      else // other issues
+//        raise Exception.Create('Ошибка соединения с базой данных. Неизвестная ошибка! ' +#13#10+#13#10+E.ClassName+' Поднята ошибка, с сообщением: '+E.Message);
+//      end;
+//      on E : Exception do
+//        raise Exception.Create(E.ClassName+' поднята ошибка, с сообщением: '+#13#10+#13#10+E.Message);
     end;
 
   finally
@@ -365,6 +379,8 @@ begin
     AUserName:= AU;
     AAppName := AppCustomer;
 
+    UniSession.UserString := AAppName + ' - ' + AUserName;
+
     Audit.Add(TObjectType.otSearchAppUser, AUserID, TFormAction.acLogin, 'Вход в систему', AUserID, UniSession.RemoteIP);
 
     CreateLogger(AUserID, AAppName);
@@ -374,6 +390,10 @@ begin
     WS :=TWS.Create('customer', AUserID.ToString);
 
     Result := True;
+
+    {$IFDEF RELEASE}
+      BackButtonAction := TUniBackButtonAction.bbaWarnUser;
+    {$ENDIF}
   end
   else
   begin
@@ -409,10 +429,6 @@ end;
 
 procedure TUniMainModule.UniGUIMainModuleCreate(Sender: TObject);
 begin
-  {$IFDEF RELEASE}
-  BackButtonAction := TUniBackButtonAction.bbaWarnUser;
-  {$ENDIF}
-
   // Инициация объекта для логирования
   if Assigned(ALogger) then
     ALogger.Free;

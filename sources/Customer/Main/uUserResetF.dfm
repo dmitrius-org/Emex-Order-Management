@@ -1,13 +1,9 @@
-object UserResetF: TUserResetF
-  Left = 0
-  Top = 0
+inherited UserResetF: TUserResetF
   ClientHeight = 400
   ClientWidth = 400
   Caption = #1056#1077#1075#1080#1089#1090#1088#1072#1094#1080#1103' '#1074' '#1089#1080#1089#1090#1077#1084#1077
   OnShow = UniFormShow
   BorderStyle = bsNone
-  OldCreateOrder = False
-  MonitoredKeys.Keys = <>
   AlignmentControl = uniAlignmentClient
   ClientEvents.ExtEvents.Strings = (
     
@@ -24,6 +20,8 @@ object UserResetF: TUserResetF
   Layout = 'fit'
   LayoutConfig.Cls = 'login-form login-container'
   LayoutConfig.Region = 'center'
+  ExplicitWidth = 400
+  ExplicitHeight = 400
   TextHeight = 15
   object loginbox: TUniContainerPanel
     Left = 0
@@ -42,7 +40,7 @@ object UserResetF: TUserResetF
       400)
     object btnCancel: TUniButton
       Left = 55
-      Top = 295
+      Top = 303
       Width = 143
       Height = 33
       Hint = ''
@@ -54,7 +52,7 @@ object UserResetF: TUserResetF
     end
     object btnOk: TUniButton
       Left = 217
-      Top = 295
+      Top = 303
       Width = 140
       Height = 33
       Hint = ''
@@ -68,7 +66,7 @@ object UserResetF: TUserResetF
     end
     object edtEmail: TUniEdit
       Left = 55
-      Top = 186
+      Top = 194
       Width = 302
       Hint = #1055#1086#1095#1090#1072
       ShowHint = True
@@ -106,7 +104,7 @@ object UserResetF: TUserResetF
     end
     object UniLabel1: TUniLabel
       Left = 58
-      Top = 45
+      Top = 53
       Width = 299
       Height = 13
       Hint = ''

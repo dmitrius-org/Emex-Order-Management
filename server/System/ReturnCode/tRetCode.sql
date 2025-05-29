@@ -7,7 +7,8 @@ begin
 	create table tRetCode
 	(
 	 RetCode           numeric(18,0)   --  
-	,Message           nvarchar(512)       --
+	,Message           varchar(512)       --
+    ,MessageEn         varchar(512)       --
 	);
 
 	create unique index ao1 on tRetCode(RetCode);

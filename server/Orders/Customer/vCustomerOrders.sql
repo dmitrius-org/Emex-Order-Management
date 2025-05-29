@@ -14,7 +14,7 @@ SELECT o.[OrderID]
       ,o.[PriceLogo]
       ,o.[OrderNum]
       ,o.[StatusID]
-      ,s.[Name]          as StatusName -- статус/состояние
+      ,s.[SearchBrief]   as StatusName -- статус/состояние
       ,o.[isCancel]
       ,o.[Manufacturer]
       ,o.[DetailNumber]
@@ -57,11 +57,11 @@ SELECT o.[OrderID]
       ,nullif(oc.DeliveryTermToCustomer, o.DeliveryTermToCustomer) as DeliveryTermToCustomer2 --
       ,o.DeliveryRestToCustomer                -- Остаток срока до поставки клиенту
 	 
-     ,o.OverPricing                            -- превышение
+      ,o.OverPricing                            -- превышение
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
-      ,o.Invoice                               -- номер инвойса
+      ,cast(o.Invoice as varchar) Invoice      -- номер инвойса
       ,coalesce(o.DestinationName, pd.DestinationName) as DestinationName -- Направление отгрузки       
       ,coalesce(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo -- используем в форме редактирования
       ,coalesce(o.ProfilesCustomerID, pd.ProfilesCustomerID) ProfilesCustomerID
@@ -148,5 +148,5 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250320', '37'
+exec setOV 'vCustomerOrders', 'V', '20250529', '38'
 go

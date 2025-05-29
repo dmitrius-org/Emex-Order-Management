@@ -1,0 +1,67 @@
+﻿{
+    "language": {
+        "Name": "ru",
+        "Caption": "RU",
+        "Author": "",
+        "ImageIndex": 0
+    },
+    "Registration": {
+        "Subject": "Подтвердите Email",
+        "Body": "<html> <head>  <title>Подтвердите Email (search.booster.ae)</title></head> <body>  <p>Для завершения регистрации перейдите по ссылке: <a href=\"%sconfirmed?tokken=%s\">ссылка</a></p> </body></html>",
+        "Information": "На вашу почту отправлена ссылка для подтверждения регистрации!"
+    },
+    "ResetPassword": {
+        "Subject": "Сброс пароля (search.booster.ae)",
+        "Body": "<html><head>  <title>Сброс пароля (search.booster.ae)</title></head> <body>  <p>Для завершения процедуры сброса пароля перейдите по ссылке: <a href=\"%sreset?tokken=%s\">ссылка</a></p> </body></html>",
+        "Information": "На вашу почту отправлена ссылка для сброса пароля!"
+    },
+    "Messages": {
+        "ErrorInvalidLogin": "Неверный логин или пароль",
+        "WelcomeUser": "Добро пожаловать, %s!",
+        "FillRequiredFields": "Заполните все обязательные поля!",
+        "FillFields": "Пожалуйста, заполните все поля!",
+        "AccountActivated": "Поздравляем, ваша учетная запись успешно активирована."
+    },    
+    "LoginF": {
+        "LoginF.Caption": "Вход в систему",
+        "btnOk.Caption": "Войти",
+        "edtUser.Hint": "Логин",
+        "edtUser.EmptyText": "Логин",
+        "edtPassword.Hint": "Пароль",
+        "edtPassword.EmptyText": "Пароль",
+        "cbRemember.Caption": "Запомнить",
+        "lblReset.Caption": "Забыл пароль",
+        "lblReg.Caption": "Зарегистрироваться",
+        "lblLoginTitle.Caption": "Вход в систему"
+    },
+    "UserResetF": {
+        "UserResetF.Caption": "Регистрация в системе",
+        "btnCancel.Caption": "Назад",
+        "btnOk.Caption": "Сброс пароля",
+        "edtEmail.Hint": "Почта",
+        "edtEmail.EmptyText": "Почта",
+        "UniLabel2.Caption": "Введите свой адрес электронной почты ниже, и мы вышлем вам ссылку для сброса пароля.",
+        "UniLabel1.Caption": "Восстановление пароля"
+    },
+    "UserRegisterF": {
+        "UserRegisterF.Caption": "Регистрация в системе",
+        "UniLabel6.Caption": "* - поле обязательно к заполнению",
+        "edtPhone.Hint": "Телефон",
+        "edtPhone.EmptyText": "Телефон",
+        "edtPassword.Hint": "Пароль",
+        "edtPassword.EmptyText": "Пароль",
+        "edtEmail.Hint": "Почта",
+        "edtEmail.EmptyText": "Почта",
+        "edtContactPerson.Hint": "Контактное лицо",
+        "edtContactPerson.EmptyText": "Контактное лицо",
+        "edtBrief.Hint": "Имя\/Организация",
+        "edtBrief.EmptyText": "Имя\/Организация",
+        "btnOk.Caption": "Зарегистрироваться",
+        "btnCancel.Caption": "Назад",
+        "UniLabel2.Caption": "Регистрация",
+        "UniLabel1.Caption": "*",
+        "UniLabel3.Caption": "*",
+        "UniLabel4.Caption": "*",
+        "UniLabel5.Caption": "*"
+    }
+}
