@@ -13,7 +13,7 @@ create proc CustomerOrdersPage
               ,@isCancel         int         
               ,@IsNotification   bit 
               ,@PageSize         int
-              ,@Invoice          varchar(32) 
+              ,@Invoice          varchar(32) = null
 as
   SET NOCOUNT ON; 
   declare @r             int = 0

@@ -130,6 +130,9 @@ exec RetCodeInsert 707, 'Корзина пуста!', 'The cart is empty!'
 exec RetCodeInsert 708, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.', 'The item is prohibited from being shipped by the selected delivery method! Please choose another delivery method.'
 
 
+exec RetCodeInsert 810, 'Товар запрещен к перевозке по выбранному способу доставки! Выберите другой способ доставки.', 'The item is prohibited from being shipped by the selected delivery method! Please choose another delivery method.'
+
+
 
 -- API
 -- order
