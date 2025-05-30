@@ -35,6 +35,8 @@ update b
         
  where b.BasketID=@BasketID
 
+ --WAITFOR DELAY '00:00:1'
+
 exit_:
 return @RetVal    
 go

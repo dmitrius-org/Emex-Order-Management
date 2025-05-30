@@ -77,7 +77,6 @@ begin
   if not assigned(FQuery) then
   begin
     FQuery:= TFDQuery.Create(nil);
-    FQuery.Connection := FConnection;
     FQuery.FetchOptions.RowsetSize := 1000000;
     FQuery.Connection := FConnection;
   end;
@@ -168,7 +167,7 @@ end;
 
 procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
 var
-   parts: ArrayOfFindByNumber;
+      parts: ArrayOfFindByNumber;
  ShowSubsts: Boolean;
 begin
   // Показывать аналоги в поиске
@@ -191,7 +190,7 @@ procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumbe
 var part: FindByNumber;
     I: Integer;
 begin
-  SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+  FSQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
     part:= FindByNumber.Create;

@@ -187,10 +187,10 @@ type
     /// <summary>
     /// StateActionMenuCreate - Формирование списка меню/действий для состояния
     /// </summary>
-    procedure StateActionMenuCreate();
+//    procedure StateActionMenuCreate();
 
-    procedure DoShowMask();
-    procedure DoHideMask();
+//    procedure DoShowMask();
+//    procedure DoHideMask();
 
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
@@ -417,15 +417,15 @@ begin
   GetNotificationOrders;
 end;
 
-procedure TOrdersT2.DoHideMask;
-begin
-  UniSession.Synchronize;
-end;
-
-procedure TOrdersT2.DoShowMask;
-begin
-  UniSession.Synchronize;
-end;
+//procedure TOrdersT2.DoHideMask;
+//begin
+//  UniSession.Synchronize;
+//end;
+//
+//procedure TOrdersT2.DoShowMask;
+//begin
+//  UniSession.Synchronize;
+//end;
 
 procedure TOrdersT2.edtPageKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -883,10 +883,10 @@ begin
   end;
 end;
 
-procedure TOrdersT2.StateActionMenuCreate;
-begin
-
-end;
+//procedure TOrdersT2.StateActionMenuCreate;
+//begin
+//
+//end;
 
 procedure TOrdersT2.cbCancelSelect(Sender: TObject);
 begin
