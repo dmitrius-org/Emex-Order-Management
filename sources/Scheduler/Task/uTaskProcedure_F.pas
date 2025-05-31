@@ -88,7 +88,6 @@ begin
                 '                                     '+
                 ' exec @r = TaskActionAdd             '+
                 '             @ID       = @ID    out  '+
-                '            ,@TaskID   = :TaskID     '+
                 '            ,@Number   = :Number     '+
                 '            ,@Comment  = :Comment    '+
                 '            ,@TaskType = 0           '+
@@ -99,9 +98,8 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['TaskID','Number','Comment', 'LinkID', 'IsActive'],
-               [null,
-                edtNumber.Text,
+               ['Number','Comment', 'LinkID', 'IsActive'],
+               [edtNumber.Text,
                 edtComment.Text,
                 vartoint(edtLinkID.KeyValue),
                 edtIsActive.Checked
