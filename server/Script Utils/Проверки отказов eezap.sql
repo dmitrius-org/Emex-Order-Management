@@ -47,7 +47,7 @@ Select dateadd(dd, 0, p.OperDate)
       --,p.NotificationAddress  
       ,ur.UnloaRefusalID
       --,ur.Quantity, ur.OperDate 
-  from (Select cast(GetDate() as Date)	 as OperDate -- Дата ответа
+  from (Select cast(GetDate() as Date)	 as OperDate -- Р”Р°С‚Р° РѕС‚РІРµС‚Р°
               ,c.ClientID
               ,c.Brief                   as ClientName
               ,c.Brief +' '+ REPLACE(convert(varchar(10), dateadd(dd, 0, getdate()), 3), '/', '') as FileName
@@ -57,9 +57,9 @@ Select dateadd(dd, 0, p.OperDate)
          	  ,o.Reference
               ,o.CustomerSubId
               ,o.DetailID
-           	  ,sum( iif(o.isCancel=1, 0, 1) *  iif(o.Quantity > 0, o.Quantity, 0)) as Quantity -- всего количество в обработке
+           	  ,sum( iif(o.isCancel=1, 0, 1) *  iif(o.Quantity > 0, o.Quantity, 0)) as Quantity -- РІСЃРµРіРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РѕР±СЂР°Р±РѕС‚РєРµ
               
-              ,sum(o.Quantity)                       as QuantityOrg -- всего количество деталей на нашей стороне
+              ,sum(o.Quantity)                       as QuantityOrg -- РІСЃРµРіРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РґРµС‚Р°Р»РµР№ РЅР° РЅР°С€РµР№ СЃС‚РѕСЂРѕРЅРµ
          	  ,max(isnull(o.PricePurchase, 0))       as PricePurchase
          	  ,sum(isnull(o.AmountPurchase, 0))      as AmountPurchase  
               ,max(c.NotificationAddress) as NotificationAddress           
@@ -69,8 +69,8 @@ Select dateadd(dd, 0, p.OperDate)
                 and o.MakeLogo is not null
                 --and o.OrderNum = '512966'
                 --and o.DetailNumber = '263172F001'
-         where c.NotificationMethod = 0 -- автоматическое оповещение
-           and c.ResponseType       = 1 -- файл           
+         where c.NotificationMethod = 0 -- Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ РѕРїРѕРІРµС‰РµРЅРёРµ
+           and c.ResponseType       = 1 -- С„Р°Р№Р»           
          
          group by c.ClientID, c.Brief, o.OrderNum, o.MakeLogo, o.DetailNumber, o.Reference, o.DetailID, o.CustomerSubId 
          ) as p
