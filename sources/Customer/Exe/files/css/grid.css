@@ -355,6 +355,24 @@
     color: #FF033E
 }
 
+.basket-clear {
+    margin-left: 15px;
+    border-bottom: 1px dotted #369;
+    color: #369;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+.basket-price-update {
+    margin-left: 15px;
+    border-bottom: 1px dotted #369;
+    color: #369;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
 /* Иконка: Нобходимо обновить цену*/
 /* .grid-basket .fa-exclamation-triangle { */
 /* width: 100%; */

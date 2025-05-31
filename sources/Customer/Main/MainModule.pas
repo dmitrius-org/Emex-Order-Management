@@ -176,6 +176,16 @@ begin
           OrderID  numeric(18,0)
          ,Page     int
       );
+
+    -- таблица для возврата количества обработанных записей
+    if OBJECT_ID('tempdb..#ProcessedRecords') is not null
+        drop table #ProcessedRecords;
+
+    CREATE TABLE #ProcessedRecords (
+                 Processed  int
+                ,Total      int
+    );
+
   ''');
 end;
 

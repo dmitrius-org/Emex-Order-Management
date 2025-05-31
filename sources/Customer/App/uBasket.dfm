@@ -149,7 +149,7 @@ object BasketF: TBasketF
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
           Width = 126
-          Editor = UniSpinEdit1
+          Editor = edtCountEdit
           CheckBoxField.AutoPost = True
           CheckBoxField.Enabled = False
           CheckBoxField.BooleanFieldOnly = False
@@ -205,7 +205,7 @@ object BasketF: TBasketF
           Menu.ColumnHideable = False
         end>
     end
-    object UniHiddenPanel1: TUniHiddenPanel
+    object HiddenPanel: TUniHiddenPanel
       Left = 69
       Top = 286
       Width = 160
@@ -227,7 +227,7 @@ object BasketF: TBasketF
         OnClick = btnDeleteBasketClick
         Caption = ''
       end
-      object UniSpinEdit1: TUniSpinEdit
+      object edtCountEdit: TUniSpinEdit
         Left = 17
         Top = 120
         Width = 121
@@ -267,7 +267,7 @@ object BasketF: TBasketF
     Caption = 'TopPanel'
     Layout = 'fit'
     LayoutConfig.Width = '0'
-    object UniContainerPanel1: TUniContainerPanel
+    object BaseTopContainer: TUniContainerPanel
       Left = 0
       Top = 0
       Width = 1541
@@ -277,17 +277,17 @@ object BasketF: TBasketF
       Align = alClient
       TabOrder = 1
       LayoutAttribs.Columns = 2
-      object UniPanel1: TUniPanel
+      object PriceInfoContainer: TUniPanel
         Left = 0
         Top = 0
-        Width = 1123
+        Width = 904
         Height = 80
         Hint = ''
         Align = alClient
         TabOrder = 0
         BorderStyle = ubsNone
         ShowCaption = False
-        Caption = 'UniPanel1'
+        Caption = 'PriceInfoContainer'
         LayoutConfig.Region = 'center'
         object UniLabel4: TUniLabel
           Left = 436
@@ -313,7 +313,7 @@ object BasketF: TBasketF
           Font.Height = -13
           TabOrder = 2
         end
-        object UniContainerPanel2: TUniContainerPanel
+        object PriceInfo: TUniContainerPanel
           AlignWithMargins = True
           Left = 3
           Top = 3
@@ -447,27 +447,27 @@ object BasketF: TBasketF
           end
         end
       end
-      object UniPanel2: TUniPanel
-        Left = 1123
+      object ButtonContainer: TUniPanel
+        Left = 904
         Top = 0
-        Width = 418
+        Width = 637
         Height = 80
         Hint = ''
         Align = alRight
         TabOrder = 2
         BorderStyle = ubsNone
         ShowCaption = False
-        Caption = 'UniPanel2'
+        Caption = 'ButtonContainer'
         LayoutConfig.Region = 'east'
         DesignSize = (
-          418
+          637
           80)
         object addOrder: TUniButton
           AlignWithMargins = True
-          Left = 244
+          Left = 475
           Top = 8
-          Width = 160
-          Height = 62
+          Width = 150
+          Height = 55
           Hint = ''
           Caption = #1056#1072#1079#1084#1077#1089#1090#1080#1090#1100' '#1079#1072#1082#1072#1079
           Anchors = [akTop, akRight, akBottom]
@@ -479,15 +479,42 @@ object BasketF: TBasketF
         end
         object btnRefresh: TUniButton
           AlignWithMargins = True
-          Left = 78
+          Left = 319
           Top = 8
-          Width = 160
-          Height = 62
+          Width = 150
+          Height = 55
           Action = actRefreshAll
           Anchors = [akTop, akRight, akBottom]
           TabOrder = 1
           ImageIndex = 5
           LayoutConfig.ColumnWidth = 150.000000000000000000
+        end
+        object btnPriceRefreshAll: TUniLabel
+          Left = 60
+          Top = 8
+          Width = 82
+          Height = 13
+          Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086' '#1074#1099#1076#1077#1083#1077#1085#1085#1099#1084' '#1087#1086#1079#1080#1094#1080#1103#1084
+          ShowHint = True
+          ParentShowHint = False
+          Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091
+          TabOrder = 3
+          LayoutConfig.Cls = 'basket-price-update'
+          OnClick = btnPriceRefreshAllClick
+        end
+        object btnBasketClear: TUniLabel
+          Left = 175
+          Top = 8
+          Width = 98
+          Height = 13
+          Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1082#1086#1088#1079#1080#1085#1091
+          TextConversion = txtHTML
+          Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1082#1086#1088#1079#1080#1085#1091
+          ParentColor = False
+          Color = clWindow
+          TabOrder = 4
+          LayoutConfig.Cls = 'basket-clear'
+          OnClick = btnBasketClearClick
         end
       end
     end
@@ -655,28 +682,7 @@ object BasketF: TBasketF
       '  FROM tBasket (updlock)'
       ' WHERE BasketID = :BasketID')
     DeleteSQL.Strings = (
-      'declare @Comment   nvarchar(1024)'
-      '       ,@AuditID   numeric(18, 0)'
-      ''
-      
-        'select @Comment = '#39#1059#1076#1072#1083#1077#1085#1080#1077' '#1076#1077#1090#1072#1083#1080': ClientID= '#39' + convert(varcha' +
-        'r, ClientID) + '#39', Make='#39' + Make + '#39', MakeName='#39' + MakeName + '#39', ' +
-        'DetailNum='#39' + DetailNum'
-      '  from tBasket (nolock)'
-      ' where BasketID=:OLD_BasketID'
-      ''
-      '-- '#1072#1091#1076#1080#1090
-      'exec AuditInsert'
-      '         @AuditID        = @AuditID out'
-      '        ,@ObjectID       = :OLD_BasketID'
-      '        ,@ObjectTypeID   = 6'#9'-- '#1050#1086#1088#1079#1080#1085#1072
-      '        ,@ActionID       = 3'#9'-- acDelete'
-      '        ,@Comment        = @Comment'
-      ''
-      ''
-      
-        'Delete tBasket from tBasket (rowlock) where BasketID=:OLD_Basket' +
-        'ID')
+      'select 0')
     FetchRowSQL.Strings = (
       'SELECT Quantity'
       '      ,Amount'
@@ -810,5 +816,17 @@ object BasketF: TBasketF
       00000000000000000000000000000000000000000000000000FFFF0000FFFF00
       00800100008001000080010000C0030000E0070000E0070000F00F0000F81F00
       00F81F0000FC3F0000FC3F0000FE7F0000FEFF0000FFFF0000}
+  end
+  object TimerProcessed: TUniTimer
+    Interval = 500
+    Enabled = False
+    ClientEvent.Strings = (
+      'function(sender)'
+      '{'
+      ' '
+      '}')
+    OnTimer = TimerProcessedTimer
+    Left = 862
+    Top = 169
   end
 end

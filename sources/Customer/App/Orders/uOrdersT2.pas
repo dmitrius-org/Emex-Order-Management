@@ -190,7 +190,7 @@ type
     /// <summary>
     /// StateActionMenuCreate - Формирование списка меню/действий для состояния
     /// </summary>
-    procedure StateActionMenuCreate();
+//    procedure StateActionMenuCreate();
 
 //    procedure DoShowMask();
 //    procedure DoHideMask();
@@ -890,10 +890,10 @@ begin
   end;
 end;
 
-procedure TOrdersT2.StateActionMenuCreate;
-begin
-
-end;
+//procedure TOrdersT2.StateActionMenuCreate;
+//begin
+//
+//end;
 
 procedure TOrdersT2.cbCancelSelect(Sender: TObject);
 begin

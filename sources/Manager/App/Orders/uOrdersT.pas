@@ -1720,7 +1720,7 @@ end;
 
 procedure TOrdersT.actSupplierSpecifyDeliveryTimeExecute(Sender: TObject);
 begin
-  MessageDlg('Вы действительно хотите создать запрос на уточнение срока поставки"? ' , mtConfirmation, mbYesNo,
+  MessageDlg('Вы действительно хотите создать запрос на уточнение срока поставки?' , mtConfirmation, mbYesNo,
     procedure(Sender: TComponent; Res: Integer)
     begin
       case Res of

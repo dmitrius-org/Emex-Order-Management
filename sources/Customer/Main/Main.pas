@@ -118,7 +118,9 @@ begin
 end;
 
 procedure TMainForm.actExitExecute(Sender: TObject);
+{$IFDEF Release}
 var UrlRedirect: string;
+{$ENDIF}
 begin  // выход из программы
   UniApplication.Cookies.SetCookie(UniMainModule._loginname,'',Date-1);
   UniApplication.Cookies.SetCookie(UniMainModule._pwd,'',      Date-1);
