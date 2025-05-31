@@ -120,3 +120,24 @@
     padding-left: 30px;
     padding-top: 15px;
 } 
+
+.language-combobox {
+    padding: 0px 0px;
+    /* border-radius: 8px; */
+    /* border: 1px solid #ccc !important; */
+    font-size: 12px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    left: auto !important;
+}
+
+.language-combobox .x-form-trigger-wrap-default {
+    border-width: 0px;
+}
+
+.language-combobox .x-form-field {
+    padding: 6px;
+    border: none !important;
+}

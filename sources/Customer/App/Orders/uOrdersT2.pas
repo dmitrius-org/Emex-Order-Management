@@ -127,6 +127,9 @@ type
     pnlInfo: TUniContainerPanel;
     lblRow: TUniLabel;
     pnlNavigation: TUniContainerPanel;
+    QueryInvoice: TStringField;
+    lblInvoce: TUniLabel;
+    edtInvoice: TUniEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -300,8 +303,10 @@ begin
   fDetailNum.Clear;
 
   edtComment2.Clear;
+  edtInvoice.Clear;
 
   Page;
+
   GridRefresh();
 end;
 
@@ -459,6 +464,7 @@ begin
           ,@isCancel        = :isCancel
           ,@IsNotification  = :IsNotification
           ,@PageSize        = :PageSize
+          ,@Invoice         = :Invoice
 
     select
            count(OrderID)  as AllRow,
@@ -466,7 +472,7 @@ begin
            min(Page) as MinPage
       from #OrderPage with (nolock)
   ''',
-  ['ClientID', 'Status', 'DetailNum', 'Comment2', 'OrderDateStart', 'OrderDateEnd', 'isCancel', 'IsNotification', 'PageSize'],
+  ['ClientID', 'Status', 'DetailNum', 'Comment2', 'OrderDateStart', 'OrderDateEnd', 'isCancel', 'IsNotification', 'PageSize', 'Invoice'],
   [UniMainModule.AUserID,
    fStatus2.SelectedKeys,
    fDetailNum.Text,
@@ -475,7 +481,8 @@ begin
    fOrderDate.DateEnd,
    cbCancel.ItemIndex,
    FIsNotification,
-   Grid.WebOptions.PageSize
+   Grid.WebOptions.PageSize,
+   edtInvoice.Text
   ]);
 
   FAllPage := sql.F('AllRow').AsInteger;
@@ -937,12 +944,7 @@ begin
   fOrderDate.Text     := '';
 
   fStatus2.FillFromSQL('''
-    DECLARE @R table (NodeID numeric(18, 0), Name varchar(256)) ;
-
-    insert @R
-    exec OrderFilter_Status
-
-    SELECT NodeID as ID, Name from @R;
+    exec CustomerOrderFilter_Status
   '''
   );
 

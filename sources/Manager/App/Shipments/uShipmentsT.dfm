@@ -434,7 +434,6 @@ object ShipmentsT: TShipmentsT
           ShowHint = True
           Action = actFilterClear
           TabOrder = 1
-          Images = UniMainModule.BaseImage16
           ImageIndex = 16
         end
         object fOk: TUniBitBtn
@@ -446,7 +445,6 @@ object ShipmentsT: TShipmentsT
           Action = actFilter
           TabOrder = 2
           IconPosition = ipButtonEdge
-          Images = UniMainModule.BaseImage16
           ImageIndex = 15
         end
         object fShipmentsDate: TUniDateTimePicker
@@ -990,9 +988,18 @@ object ShipmentsT: TShipmentsT
       Hint = #1055#1086#1079#1074#1086#1083#1103#1077#1090' '#1087#1088#1086#1089#1084#1072#1090#1080#1088#1080#1074#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1076#1077#1090#1072#1083#1077#1081' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1061#1088#1091#1087#1082#1086#1077'"'
       OnExecute = actFrigileDataExecute
     end
+    object actSet1C: TAction
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': 1'#1057
+      Hint = #1055#1088#1080#1079#1085#1072#1082' '#1074#1085#1077#1089#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1074' 1'#1057
+      OnExecute = actSet1CExecute
+    end
+    object actUnSet1C: TAction
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082': 1'#1057
+      Hint = #1055#1088#1080#1079#1085#1072#1082' '#1074#1085#1077#1089#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1074' 1'#1057
+      OnExecute = actUnSet1CExecute
+    end
   end
   object ppMain: TUniPopupMenu
-    Images = UniMainModule.BaseImage
     OnPopup = ppMainPopup
     ScreenMask.Enabled = True
     Left = 101
@@ -1016,6 +1023,15 @@ object ShipmentsT: TShipmentsT
       end
       object N12: TUniMenuItem
         Action = actSetTransporterData
+      end
+      object N9: TUniMenuItem
+        Caption = '-'
+      end
+      object pp1C: TUniMenuItem
+        Action = actSet1C
+      end
+      object N18: TUniMenuItem
+        Action = actUnSet1C
       end
     end
     object N17: TUniMenuItem
@@ -1067,6 +1083,8 @@ object ShipmentsT: TShipmentsT
       '      '
       '       DeliverySumF,'
       '       StatusName,'
+      '       '
+      '       Flag,'
       '       '
       '       updDatetime      '
       ''

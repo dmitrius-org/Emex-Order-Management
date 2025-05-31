@@ -333,6 +333,17 @@
     text-align: left
 }
 
+.grid-shipments .icon-1c {
+    background-image: url("/files/img/icon-1c.svg") !important; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-block;
+}
+
+
+
 .x-column-header-teh-hint{
     white-space: normal;
     text-align: center;
@@ -373,7 +384,7 @@
     background-color: #dff0d8;
 }
 
-/* Перенос строки в заголовке таблицы */
+/* Перенос строки в заголовке таблицы *
 .grid-employee-orders-processed .x-column-header-inner .x-column-header-text {
     white-space: normal;
     text-align: center;

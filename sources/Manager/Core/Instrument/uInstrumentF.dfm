@@ -18,7 +18,6 @@ object UnstrumentF: TUnstrumentF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 338
     DesignSize = (
       698
       44)
@@ -56,7 +55,6 @@ object UnstrumentF: TUnstrumentF
     FieldLabelWidth = 0
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 272
     object fInstrumentType: TUniFieldContainer
       AlignWithMargins = True
       Left = 5
@@ -294,7 +292,6 @@ object UnstrumentF: TUnstrumentF
     Align = alBottom
     LayoutConfig.Region = 'south'
     TabOrder = 2
-    ExplicitTop = 281
     object UniFieldContainer2: TUniFieldContainer
       Left = 2
       Top = 15

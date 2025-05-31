@@ -112,9 +112,12 @@ object InstrumentT: TInstrumentT
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1077#1090#1100
       OnExecute = ActInstrumentShowExecute
     end
+    object actInstrumetRefresh: TAction
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+      OnExecute = actInstrumetRefreshExecute
+    end
   end
   object PMInstrument: TUniPopupMenu
-    Images = UniMainModule.BaseImage
     OnPopup = PMInstrumentPopup
     Left = 609
     Top = 203
@@ -127,6 +130,12 @@ object InstrumentT: TInstrumentT
     object N3: TUniMenuItem
       Action = ActInstrumentDelete
     end
+    object N4: TUniMenuItem
+      Caption = '-'
+    end
+    object N5: TUniMenuItem
+      Action = actInstrumetRefresh
+    end
   end
   object InstrumentImage: TUniNativeImageList
     Width = 32
@@ -134,10 +143,10 @@ object InstrumentT: TInstrumentT
     Left = 257
     Top = 169
     Images = {
-      07000000000000FF060A000000666F6C6465723B66613B000000FF0608000000
+      08000000000000FF060A000000666F6C6465723B66613B000000FF0608000000
       636F67733B66613B000000FF0607000000636F673B66613B008000FF060D0000
       006D61702D7369676E733B66613B000000FF060B00000074682D6C6973743B66
       613B000000FF06080000006C6973743B66613B000000FF060F0000006172726F
-      772D72696768743B66613B}
+      772D72696768743B66613B008080FF060B000000726566726573683B66613B}
   end
 end

@@ -16,6 +16,7 @@ select i.InstrumentID      as ID
 	  ,0                   as ModelID
 	  ,0                   as TStateID
 	  ,i.Flag              as Flag
+      ,0                   as N
   from tInstrument i (nolock)   
   left join tInstrument ii (nolock) 
          on ii.InstrumentID = i.PID
@@ -30,6 +31,7 @@ select m.ModelID           as ID
 	  ,m.InstrumentID      as ModelID
 	  ,0                   as TStateID
 	  ,m.Flag              as Flag
+      ,m.Number            as N
   from tModel m (nolock) 
  inner join tInstrument i (nolock)
          on i.InstrumentID = m.InstrumentID 
@@ -48,6 +50,7 @@ select m.ModelID           as ID
 	  ,m.InstrumentID      as ModelID
 	  ,m.TargetStateID     as TStateID
 	  ,m.Flag              as Flag
+      ,m.Number            as N
   from tModel m (nolock) 
  inner join tNodes n (nolock)
          on n.NodeID = m.ActionID

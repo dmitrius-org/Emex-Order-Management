@@ -703,6 +703,7 @@ object OrdersT: TOrdersT
           ShowHint = True
           Action = actFilterClear
           TabOrder = 9
+          Images = UniMainModule.BaseImage16
           ImageIndex = 16
         end
         object fOk: TUniBitBtn
@@ -717,6 +718,7 @@ object OrdersT: TOrdersT
           ScreenMask.ShowMessage = False
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
           ScreenMask.Target = Owner
+          Images = UniMainModule.BaseImage16
           ImageIndex = 15
         end
         object fOrderNum: TUniEdit
@@ -1812,6 +1814,7 @@ object OrdersT: TOrdersT
     end
   end
   object ppMain: TUniPopupMenu
+    Images = UniMainModule.BaseImage
     OnPopup = ppMainPopup
     Left = 101
     Top = 218

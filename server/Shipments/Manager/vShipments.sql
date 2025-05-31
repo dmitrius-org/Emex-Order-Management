@@ -52,7 +52,8 @@ SELECT s.ShipmentsID
       ,case
          when isnull(sb.ShipmentsBoxesID, 0) > 0 then 1  /* Flag не занимать значение 2. уже используется */
          else 0
-       end Flag
+       end |
+       isnull(s.Flag, 0) Flag
       ,sb.BoxNumber
   FROM tShipments s (nolock)
   left join tSuppliers sp (nolock)
@@ -80,10 +81,10 @@ SELECT s.ShipmentsID
 go
 grant select on vShipments to public
 go
-exec setOV 'vShipments', 'V', '20250403', '7'
+exec setOV 'vShipments', 'V', '20250531', '8'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vShipments', @desc = 'Отгрузки'
 go
-select Flag,  * 
-  from vShipments--- where Invoice = '241002'
+--select Flag,  * 
+--  from vShipments--- where Invoice = '241002'

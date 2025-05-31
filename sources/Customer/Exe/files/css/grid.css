@@ -1,3 +1,5 @@
+
+
 /*для всех таблиц по умолчанию*/
 /* вид чекбоксов в гриде */
 .x-item-disabled .x-grid-checkcolumn {
@@ -405,7 +407,7 @@
     display: none;
 }
 
-.fa-times.red {
+.fa-filter.red {
     color: crimson
 }
 
@@ -439,6 +441,10 @@
     font-size: 1.2em;
 }
 
+.grid-order .x-toolbar-default {
+    padding: 0px 0px 0px 2px;
+}
+
 .mail-envelope + sup {
     position: relative;
     vertical-align: baseline;
@@ -451,4 +457,19 @@
     align-items: center; /* Выравнивание по вертикали */
     justify-content: space-between; /* Распределение элементов по горизонтали */
     height: 100vh; /* Высота контейнера (можно изменить по необходимости) */
+}
+
+/* .ToExcel{
+    background-image:url("/files/img/ToExcel.png") !important; 
+    width:24px !important;
+    height:24px !important;
+} */
+
+.ToExcel {
+  background-image: url("/files/img/icon-xlsx.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-block;
 }
