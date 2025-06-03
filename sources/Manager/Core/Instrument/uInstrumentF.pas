@@ -193,8 +193,14 @@ begin
        ''';
 
         Sql.Open(sqltext,
-                 ['InstrumentID','StateID','ActionID', 'InstrumentTypeID', 'Flag', 'TargetStateID', 'Number'],
-                 [FPID,
+                 ['InstrumentID',
+                  'StateID',
+                  'ActionID',
+                  'InstrumentTypeID',
+                  'Flag',
+                  'TargetStateID',
+                  'Number'],
+                 [FPID, // идентификатор модели
                   VarToInt(lkpState.KeyValue),
                   VarToInt(lkpNode.KeyValue),
                   lkpInstType.KeyValue,
@@ -316,7 +322,6 @@ begin
 
 end;
 
-
 procedure TUnstrumentF.DataCheck;
 begin
   RetVal.Clear;
@@ -418,13 +423,13 @@ begin
 
     edtBrief.Text       := UniMainModule.Query.FieldValues['Brief'];
     edtName.Text        := UniMainModule.Query.FieldValues['Name'];
-    lkpObject.KeyValue  := UniMainModule.Query.FieldValues['ObjectTypeID'];
+    lkpObject.KeyValue  := UniMainModule.Query.FieldByName('ObjectTypeID').AsInteger;
   end;
 
   if IType in [6, 7] then // состояния и действия
   begin
     UniMainModule.Query.SQL.Text := ' select * FROM [tModel] (nolock) where ModelID = :ModelID ';
-    UniMainModule.Query.ParamByName('ModelID').Value := FID;
+    UniMainModule.Query.ParamByName('ModelID').AsInteger := FID;
     UniMainModule.Query.Open;
 
     FFlag := UniMainModule.Query.FieldByName('Flag').AsInteger;
@@ -432,9 +437,9 @@ begin
     cbIsStart.Checked   := ((FFlag and Integer(tInstrumentFlag.isStartState)) > 0);
     cbIsCancel.Checked  := ((FFlag and Integer(tInstrumentFlag.isCanceled)) > 0);
 
-    lkpInstType.KeyValue:= UniMainModule.Query.FieldValues['InstrumentTypeID'];
-    lkpState.KeyValue   := UniMainModule.Query.FieldValues['StateID'];
-    lkpNode.KeyValue    := UniMainModule.Query.FieldValues['ActionID'];
+    lkpInstType.KeyValue:= UniMainModule.Query.FieldByName('InstrumentTypeID').AsInteger;
+    lkpState.KeyValue   := UniMainModule.Query.FieldByName('StateID').AsInteger;
+    lkpNode.KeyValue    := UniMainModule.Query.FieldByName('ActionID').AsInteger;
     edtN.Value          := UniMainModule.Query.FieldByName('Number').AsInteger;
   end;
 

@@ -27,16 +27,15 @@ begin
      Result := Value = '';
 end;
 
-function VarToIntDef(vVar : Variant; Default : Integer) : Integer;
+function VarToIntDef(vVar: Variant; Default: Integer): Integer;
 begin
-  if VarType(vVar) in [varEmpty or varNull] then
-    Result := Default
-  else
   try
-    if vVar='' then
+    if VarIsEmpty(vVar) or VarIsNull(vVar) then
+      Result := Default
+    else if VarIsStr(vVar) and (Trim(vVar) = '') then
       Result := Default
     else
-      Result := vVar;
+      Result := StrToIntDef(VarToStr(vVar), Default);
   except
     Result := Default;
   end;

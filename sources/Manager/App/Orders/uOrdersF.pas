@@ -45,10 +45,10 @@ type
     btnCancel: TUniBitBtn;
     btnOk: TUniBitBtn;
     UniGroupBox1: TUniGroupBox;
-    edtL: TUniNumberEdit;
-    edtW: TUniNumberEdit;
-    edtH: TUniNumberEdit;
-    edtVKG: TUniNumberEdit;
+    edtL: TUniFormattedNumberEdit;
+    edtW: TUniFormattedNumberEdit;
+    edtH: TUniFormattedNumberEdit;
+    edtVKG: TUniFormattedNumberEdit;
     UniGroupBox2: TUniGroupBox;
     UniGroupBox3: TUniGroupBox;
     btnGoogleImages: TUniButton;
@@ -67,11 +67,11 @@ type
     UniGroupBox5: TUniGroupBox;
     edtWeightKG: TUniNumberEdit;
     UniGroupBox6: TUniGroupBox;
-    edtWeightKGF: TUniNumberEdit;
+    edtWeightKGF: TUniFormattedNumberEdit;
     UniGroupBox7: TUniGroupBox;
     edtVolumeKG: TUniNumberEdit;
     UniGroupBox8: TUniGroupBox;
-    edtVolumeKGF: TUniNumberEdit;
+    edtVolumeKGF: TUniFormattedNumberEdit;
     UniLabel11: TUniLabel;
     UniLabel12: TUniLabel;
     UniGroupBox9: TUniGroupBox;
@@ -1077,8 +1077,8 @@ begin
     //
   end;
 
-  btnOkToCancel.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22]);
-  btnOkToProc.Enabled   := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 22]);
+  btnOkToCancel.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22, 50 {CancelPreliminary}, 51 {AdditionalCheck}]);
+  btnOkToProc.Enabled   := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 22, 50, 51]);
   btnOk.Enabled := IsExistNext;
 
   btnSplit.Enabled := (FAction <> acUpdateShipments) and (FStatusID in [1, 2]) and (FQuantity > 1);

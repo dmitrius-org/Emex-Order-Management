@@ -46,10 +46,7 @@ object BasketF: TBasketF
           'ach = function(column, widget, record) {'#13#10'        widget.setHidd' +
           'en(record.get(widgetColIndx) == 0);'#13#10'    };'#13#10'}')
       ClientEvents.UniEvents.Strings = (
-        
-          'afterCreate=function afterCreate(sender)'#13#10'{'#13#10' // var toolbar=sen' +
-          'der.getDockedItems()[1]; '#13#10' // toolbar.items.getAt(10).hide(); '#13 +
-          #10'}'
+        'afterCreate=function afterCreate(sender)'#13#10'{'#13#10'  '#13#10'}'
         
           'beforeInit=function beforeInit(sender, config)'#13#10'{'#13#10'      sender.' +
           'copyToClipboard = str => {'#13#10'        const el = document.createEl' +
@@ -82,6 +79,13 @@ object BasketF: TBasketF
       ParentColor = False
       Color = clBtnFace
       PreventWrap = True
+      Exporter.Enabled = True
+      Exporter.IncludeGroups = True
+      Exporter.IncludeSummary = True
+      Exporter.UseColumnRenderer = True
+      Exporter.FileName = #1050#1086#1088#1079#1080#1085#1072
+      Exporter.Exporter = UniGridExcelExporter
+      Exporter.Title = #1050#1086#1088#1079#1080#1085#1072
       OnKeyDown = GridKeyDown
       OnAjaxEvent = GridAjaxEvent
       OnSelectionChange = GridSelectionChange
@@ -280,7 +284,7 @@ object BasketF: TBasketF
       object PriceInfoContainer: TUniPanel
         Left = 0
         Top = 0
-        Width = 904
+        Width = 776
         Height = 80
         Hint = ''
         Align = alClient
@@ -289,6 +293,7 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'PriceInfoContainer'
         LayoutConfig.Region = 'center'
+        ExplicitWidth = 904
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -448,9 +453,9 @@ object BasketF: TBasketF
         end
       end
       object ButtonContainer: TUniPanel
-        Left = 904
+        Left = 776
         Top = 0
-        Width = 637
+        Width = 765
         Height = 80
         Hint = ''
         Align = alRight
@@ -459,12 +464,13 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'ButtonContainer'
         LayoutConfig.Region = 'east'
+        ExplicitLeft = 782
         DesignSize = (
-          637
+          765
           80)
         object addOrder: TUniButton
           AlignWithMargins = True
-          Left = 475
+          Left = 603
           Top = 8
           Width = 150
           Height = 55
@@ -476,10 +482,11 @@ object BasketF: TBasketF
           TabOrder = 2
           LayoutConfig.ColumnWidth = 150.000000000000000000
           OnClick = addOrderClick
+          ExplicitLeft = 475
         end
         object btnRefresh: TUniButton
           AlignWithMargins = True
-          Left = 319
+          Left = 447
           Top = 8
           Width = 150
           Height = 55
@@ -488,9 +495,10 @@ object BasketF: TBasketF
           TabOrder = 1
           ImageIndex = 5
           LayoutConfig.ColumnWidth = 150.000000000000000000
+          ExplicitLeft = 319
         end
         object btnPriceRefreshAll: TUniLabel
-          Left = 60
+          Left = 172
           Top = 8
           Width = 82
           Height = 13
@@ -503,7 +511,7 @@ object BasketF: TBasketF
           OnClick = btnPriceRefreshAllClick
         end
         object btnBasketClear: TUniLabel
-          Left = 175
+          Left = 290
           Top = 8
           Width = 98
           Height = 13
@@ -515,6 +523,19 @@ object BasketF: TBasketF
           TabOrder = 4
           LayoutConfig.Cls = 'basket-clear'
           OnClick = btnBasketClearClick
+        end
+        object lblToExcel: TUniLabel
+          Left = 46
+          Top = 8
+          Width = 81
+          Height = 13
+          Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074' excel'
+          ShowHint = True
+          ParentShowHint = False
+          Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074' excel'
+          TabOrder = 5
+          LayoutConfig.Cls = 'basket-price-update'
+          OnClick = lblToExcelClick
         end
       end
     end
@@ -828,5 +849,14 @@ object BasketF: TBasketF
     OnTimer = TimerProcessedTimer
     Left = 862
     Top = 169
+  end
+  object UniGridExcelExporter: TUniGridExcelExporter
+    FileExtention = 'xlsx'
+    MimeType = 
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.shee' +
+      't'
+    CharSet = 'UTF-8'
+    Left = 672
+    Top = 136
   end
 end

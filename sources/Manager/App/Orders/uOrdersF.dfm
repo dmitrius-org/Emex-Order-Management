@@ -122,7 +122,7 @@ object OrderF: TOrderF
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
       TabOrder = 7
-      object edtL: TUniNumberEdit
+      object edtL: TUniFormattedNumberEdit
         Left = 3
         Top = 15
         Width = 86
@@ -140,9 +140,10 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '0'
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnKeyDown = edtLKeyDown
       end
-      object edtW: TUniNumberEdit
+      object edtW: TUniFormattedNumberEdit
         Left = 3
         Top = 38
         Width = 86
@@ -156,9 +157,10 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '1'
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnKeyDown = edtLKeyDown
       end
-      object edtH: TUniNumberEdit
+      object edtH: TUniFormattedNumberEdit
         Left = 3
         Top = 61
         Width = 86
@@ -172,9 +174,10 @@ object OrderF: TOrderF
         LayoutConfig.Padding = '0'
         LayoutConfig.Margin = '1'
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnKeyDown = edtLKeyDown
       end
-      object edtVKG: TUniNumberEdit
+      object edtVKG: TUniFormattedNumberEdit
         Left = 3
         Top = 84
         Width = 86
@@ -191,6 +194,7 @@ object OrderF: TOrderF
         LayoutConfig.Margin = '1'
         DecimalPrecision = 1
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnKeyDown = edtVKGKeyDown
       end
     end
@@ -344,7 +348,6 @@ object OrderF: TOrderF
       TabOrder = 13
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
-      Images = UniMainModule.BaseImage16
       ImageIndex = 1
       OnClick = UniBitBtn1Click
     end
@@ -360,7 +363,6 @@ object OrderF: TOrderF
       TabOrder = 9
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
-      Images = UniMainModule.BaseImage16
       ImageIndex = 1
       OnClick = btnDestinationLogoClick
     end
@@ -399,7 +401,7 @@ object OrderF: TOrderF
       Caption = #1060#1072#1082#1090
       Layout = 'vbox'
       TabOrder = 6
-      object edtWeightKGF: TUniNumberEdit
+      object edtWeightKGF: TUniFormattedNumberEdit
         Left = 3
         Top = 14
         Width = 66
@@ -410,6 +412,7 @@ object OrderF: TOrderF
         BlankValue = 0
         DecimalPrecision = 3
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnChange = edtWeightKGFChange
         OnKeyDown = edtWeightKGFKeyDown
       end
@@ -448,7 +451,7 @@ object OrderF: TOrderF
       Caption = #1060#1072#1082#1090
       Layout = 'vbox'
       TabOrder = 15
-      object edtVolumeKGF: TUniNumberEdit
+      object edtVolumeKGF: TUniFormattedNumberEdit
         Left = 2
         Top = 15
         Width = 66
@@ -459,6 +462,7 @@ object OrderF: TOrderF
         BlankValue = 0
         DecimalPrecision = 3
         DecimalSeparator = ','
+        ThousandSeparator = #160
         OnChange = edtVolumeKGFChange
       end
     end
@@ -1021,6 +1025,7 @@ object OrderF: TOrderF
       ParentFont = False
       Font.Height = -13
       TabOrder = 24
+      ReadOnly = True
       FieldLabelWidth = 50
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
@@ -1053,6 +1058,7 @@ object OrderF: TOrderF
       ParentFont = False
       Font.Height = -13
       TabOrder = 26
+      ReadOnly = True
       FieldLabelWidth = 50
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
@@ -1072,6 +1078,7 @@ object OrderF: TOrderF
       ParentFont = False
       Font.Height = -13
       TabOrder = 27
+      ReadOnly = True
       FieldLabelWidth = 50
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
@@ -1117,6 +1124,7 @@ object OrderF: TOrderF
       ParentFont = False
       Font.Height = -13
       TabOrder = 30
+      ReadOnly = True
       FieldLabelWidth = 15
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'

@@ -45,6 +45,9 @@ type
     N3: TUniMenuItem;
     ActInstrumentShow: TAction;
     InstrumentImage: TUniNativeImageList;
+    actInstrumetRefresh: TAction;
+    N4: TUniMenuItem;
+    N5: TUniMenuItem;
     procedure twInstrumentCellContextClick(ANode: TUniTreeNode; X, Y: Integer);
     procedure ActInstrumentAddExecute(Sender: TObject);
     procedure UniFrameCreate(Sender: TObject);
@@ -54,6 +57,7 @@ type
     procedure twInstrumentClick(Sender: TObject);
     procedure ActInstrumentShowExecute(Sender: TObject);
     procedure twInstrumentDblClick(Sender: TObject);
+    procedure actInstrumetRefreshExecute(Sender: TObject);
   private
     FtargetForm : TUniFrame;
     FtargetName : String;
@@ -114,7 +118,7 @@ begin
   UnstrumentF.FormAction := acinsert;
   UnstrumentF.PID   := InstData.ID;
   UnstrumentF.PType := InstData.IType;
-  UnstrumentF.PID   := InstData.ID;
+  UnstrumentF.ID   := InstData.ID;
 
   if InstData.IType = Integer(tInstrumentType.State) then
   begin
@@ -161,6 +165,34 @@ begin
   UnstrumentF.IType := InstData.IType;
 end;
 
+procedure TInstrumentT.actInstrumetRefreshExecute(Sender: TObject);
+var
+  ID, FType: integer;
+  FoundNode: TUniTreeNode;
+begin
+  // Сохраняем выбранный узел
+  if twInstrument.Selected <> nil then
+  begin
+    ID := twInstrument.Selected.Tag;
+    FType := PInstrumentData(twInstrument.Selected.Data).IType;
+  end
+  else
+  begin
+    ID := 0; FType := 0;
+  end;
+
+  // Обновляем дерево
+  twCreate;
+
+  // Ищем узел с таким же текстом
+  if ID > 0 then
+  begin
+    FoundNode := FindNodeByType(ID, FType);
+    if FoundNode <> nil then
+      twInstrument.Selected := FoundNode;
+  end;
+end;
+
 //function TInstrumentT.FindNodeByID(AID: Integer): TUniTreeNode;
 //var i:integer;
 //begin
@@ -198,7 +230,6 @@ begin
   ActInstrumentEdit.Enabled :=  PInstrumentData(twInstrument.Selected.Data).IType > 2;
   ActInstrumentDelete.Enabled :=  PInstrumentData(twInstrument.Selected.Data).IType > 2;
 end;
-
 
 function TInstrumentT.SetNodeEditFormName(InstrumentType: integer): string;
 begin
@@ -262,6 +293,7 @@ var
   PID, I, ID: Integer;
   Nd : TUniTreeNode;
 begin
+  twInstrument.Items.Clear;
 
   with Sql.Q do
   begin
@@ -269,7 +301,7 @@ begin
     sql.Clear;
     sql.Add( '  select *'+
              '    from vInstrumentTree   '+
-             '   order by ITypeID, ID, PID ');
+             '   order by ITypeID, N, PID ');
 
     open;
     if RecordCount = 0 then

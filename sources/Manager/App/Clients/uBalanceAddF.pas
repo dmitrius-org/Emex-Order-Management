@@ -50,7 +50,7 @@ type
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
     UniLabel4: TUniLabel;
-    edtAmount: TUniNumberEdit;
+    edtAmount: TUniFormattedNumberEdit;
     edtComment: TUniMemo;
     lblDate: TUniLabel;
     edtDate: TUniDateTimePicker;

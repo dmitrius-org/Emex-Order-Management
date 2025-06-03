@@ -315,7 +315,6 @@ object ClientsF: TClientsF
           ImageIndex = 1
           IconAlign = iaLeft
           TabOrder = 2
-          ExplicitHeight = 53
         end
         object UniToolButton4: TUniToolButton
           Left = 180
@@ -325,7 +324,6 @@ object ClientsF: TClientsF
           ImageIndex = 2
           IconAlign = iaLeft
           TabOrder = 3
-          ExplicitHeight = 53
         end
       end
       object UniPanel1: TUniPanel
@@ -495,6 +493,7 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = #1050#1086#1084#1080#1089#1089#1080#1103' ('#1085#1077' '#1080#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103')'
               Width = 86
+              Editor = edtCommission
             end
             item
               FieldName = 'CustomerSubID'
@@ -690,6 +689,7 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = 'Margin'
               Width = 95
+              Editor = edtMargin
               Sortable = True
             end
             item
@@ -697,6 +697,7 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = 'Reliability'
               Width = 96
+              Editor = edtReliability
               Sortable = True
             end
             item
@@ -753,7 +754,7 @@ object ClientsF: TClientsF
           Visible = True
           object lkPriceProfiles: TUniDBLookupComboBox
             Left = 3
-            Top = 68
+            Top = 132
             Width = 145
             Height = 23
             Hint = ''
@@ -780,6 +781,33 @@ object ClientsF: TClientsF
             DataSource = dsProfilesCustomer
             TabOrder = 2
             Color = clWindow
+          end
+          object edtCommission: TUniFormattedNumberEdit
+            Left = 24
+            Top = 16
+            Width = 121
+            Hint = ''
+            TabOrder = 3
+            DecimalSeparator = ','
+            ThousandSeparator = #160
+          end
+          object edtMargin: TUniFormattedNumberEdit
+            Left = 24
+            Top = 47
+            Width = 121
+            Hint = ''
+            TabOrder = 4
+            DecimalSeparator = ','
+            ThousandSeparator = #160
+          end
+          object edtReliability: TUniFormattedNumberEdit
+            Left = 24
+            Top = 75
+            Width = 121
+            Hint = ''
+            TabOrder = 5
+            DecimalSeparator = ','
+            ThousandSeparator = #160
           end
         end
       end
@@ -913,7 +941,7 @@ object ClientsF: TClientsF
         Caption = #1050#1086#1084#1080#1089#1089#1080#1103' '#1080' '#1085#1072#1083#1086#1075#1080' (%):'
         TabOrder = 1
       end
-      object edtTaxes: TUniNumberEdit
+      object edtTaxes: TUniFormattedNumberEdit
         Left = 217
         Top = 35
         Width = 121
@@ -921,6 +949,7 @@ object ClientsF: TClientsF
         TabOrder = 0
         MaxValue = 100.000000000000000000
         DecimalSeparator = ','
+        ThousandSeparator = #160
       end
     end
     object tabManager: TUniTabSheet

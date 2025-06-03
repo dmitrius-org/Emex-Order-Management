@@ -53,6 +53,21 @@ as
    from pAccrualAction p (updlock)
   inner join tNodes n (nolock)
 	      on n.NodeID = p.StateID
+         and n.Type   = 0
+  where p.Spid        = @@spid
+    and p.retval      = 0
+
+ Update p 
+    set p.retval = 548 -- Отмена операции запрещена: по заказу уже отправлены ответы (отказы)
+   from pAccrualAction p (updlock)
+  inner join tNodes n with (nolock index=ao1)
+	      on n.NodeID = p.StateID
+         and n.Brief  = 'InCancel'
+         and n.Type   = 0
+  inner join tAudit a with (nolock index=ao2)
+          on a.ObjectTypeID = 3
+         and a.ObjectID = p.ObjectID
+         and a.ActionID = 5
   where p.Spid        = @@spid
     and p.retval      = 0
 
@@ -61,7 +76,7 @@ as
 go
 grant exec on ProtocolRollBackCheck to public
 go
-exec setOV 'ProtocolRollBackCheck', 'P', '20240704', '1'
+exec setOV 'ProtocolRollBackCheck', 'P', '20250531', '2'
 go
 
  

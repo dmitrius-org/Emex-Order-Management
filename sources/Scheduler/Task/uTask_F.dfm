@@ -52,7 +52,7 @@ object Task_F: TTask_F
     Width = 897
     Height = 445
     Hint = ''
-    ActivePage = TaskPage
+    ActivePage = MainSheet
     Align = alClient
     TabOrder = 1
     object MainSheet: TUniTabSheet
@@ -218,7 +218,7 @@ object Task_F: TTask_F
           end
           object PeriodType1: TUniPanel
             Left = 110
-            Top = 54
+            Top = 48
             Width = 315
             Height = 33
             Hint = ''
@@ -389,7 +389,6 @@ object Task_F: TTask_F
         ParentShowHint = False
         ButtonHeight = 40
         ButtonWidth = 110
-        Images = UniMainModule.BaseImage16
         ShowCaptions = True
         LayoutConfig.IgnorePosition = False
         LayoutConfig.DockWhenAligned = False
@@ -584,7 +583,6 @@ object Task_F: TTask_F
     end
   end
   object pmTaskAction: TUniPopupMenu
-    Images = UniMainModule.BaseImage16
     Left = 489
     Top = 257
     object N1: TUniMenuItem
@@ -616,7 +614,6 @@ object Task_F: TTask_F
     end
   end
   object pmTaskActionAdd: TUniPopupMenu
-    Images = UniMainModule.BaseImage16
     Left = 489
     Top = 153
     object N6: TUniMenuItem

@@ -19,7 +19,6 @@ object ShipmentsTransporterDataF: TShipmentsTransporterDataF
     Align = alBottom
     TabOrder = 0
     Caption = ''
-    ExplicitTop = 94
     DesignSize = (
       278
       44)
@@ -55,7 +54,7 @@ object ShipmentsTransporterDataF: TShipmentsTransporterDataF
     Caption = #1042#1077#1089' '#1092#1080#1079' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
     TabOrder = 1
   end
-  object edtTransporterWeightKG: TUniNumberEdit
+  object edtTransporterWeightKG: TUniFormattedNumberEdit
     Left = 19
     Top = 37
     Width = 121
@@ -65,8 +64,9 @@ object ShipmentsTransporterDataF: TShipmentsTransporterDataF
     Font.Height = -13
     TabOrder = 2
     DecimalSeparator = ','
+    ThousandSeparator = #160
   end
-  object edtTransporterVolumeKG: TUniNumberEdit
+  object edtTransporterVolumeKG: TUniFormattedNumberEdit
     Left = 19
     Top = 97
     Width = 121
@@ -76,6 +76,7 @@ object ShipmentsTransporterDataF: TShipmentsTransporterDataF
     Font.Height = -13
     TabOrder = 3
     DecimalSeparator = ','
+    ThousandSeparator = #160
   end
   object UniLabel2: TUniLabel
     Left = 19

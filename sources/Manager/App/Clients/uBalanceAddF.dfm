@@ -85,7 +85,7 @@ object BalanceAddF: TBalanceAddF
           Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081':'
           TabOrder = 5
         end
-        object edtAmount: TUniNumberEdit
+        object edtAmount: TUniFormattedNumberEdit
           Left = 128
           Top = 50
           Width = 169
@@ -93,6 +93,7 @@ object BalanceAddF: TBalanceAddF
           TabOrder = 2
           EmptyText = #1057#1091#1084#1084#1072' '
           DecimalSeparator = ','
+          ThousandSeparator = #160
           OnKeyPress = edtAmountKeyPress
         end
         object edtComment: TUniMemo

@@ -89,6 +89,5 @@ Select dateadd(dd, 0, p.OperDate)
         -- and m.Quantity        <> p.QuantityOrg
 
   where (ur.Quantity < p.Quantity)
-
-
   order by p.OrderNum    
+

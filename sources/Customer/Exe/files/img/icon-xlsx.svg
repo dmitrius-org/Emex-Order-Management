@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Серая рамка -->
+  <rect x="8" y="8" width="32" height="32" rx="2" ry="2" fill="none" stroke="#555" stroke-width="3"></rect>
+  
+  <!-- Зелёный прямоугольник -->
+  <rect x="4" y="16" width="40" height="16" rx="2" ry="2" fill="#2e7d32"></rect>
+  
+  <!-- Текст XLSX -->
+  <text x="24" y="28" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle">XLSX</text>
+</svg>

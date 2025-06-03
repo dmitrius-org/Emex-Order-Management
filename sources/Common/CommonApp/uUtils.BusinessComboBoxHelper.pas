@@ -28,9 +28,20 @@ type
     /// </summary>
     procedure FillPrices;
 
+    /// <summary>
+    /// FillCustomerPrices - получение списка прайсов клиента.
+    /// </summary>
+    procedure FillCustomerPrices;
   end;
 
 implementation
+
+procedure TBusinessComboBoxHelper.FillCustomerPrices;
+begin
+  Self.FillFromSQL('''
+    EXEC CustomerPriceLogoList;
+  ''');
+end;
 
 procedure TBusinessComboBoxHelper.FillClients;
 begin
@@ -49,17 +60,9 @@ end;
 
 procedure TBusinessComboBoxHelper.FillPrices;
 begin
-//  Self.FillFromSQL('''
-//    DECLARE @R table (ID     numeric(18, 0),
-//                      Brief  varchar(256),
-//                      Name   varchar(256));
-//
-//    INSERT @R EXEC OrderFilter_Client;
-//
-//    SELECT ID,
-//           Brief as Name
-//      FROM @R;
-//  ''');
+  Self.FillFromSQL('''
+    EXEC OrderPriceLogoList;
+  ''');
 end;
 
 

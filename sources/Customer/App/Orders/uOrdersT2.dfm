@@ -924,6 +924,7 @@
             Left = 79
             Top = 8
             Width = 69
+            Height = 18
             Hint = ''
             Margins.Top = 8
             Margins.Bottom = 8

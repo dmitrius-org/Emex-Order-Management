@@ -73,7 +73,7 @@ type
     actDelete: TAction;
     actRefreshAll: TAction;
     UniLabel6: TUniLabel;
-    edtTaxes: TUniNumberEdit;
+    edtTaxes: TUniFormattedNumberEdit;
     UniLabel7: TUniLabel;
     UniLabel8: TUniLabel;
     UniLabel9: TUniLabel;
@@ -189,6 +189,9 @@ type
     QueryCustomerClientNum: TIntegerField;
     QueryCustomerClientSign: TIntegerField;
     QueryCustomerOrder: TIntegerField;
+    edtCommission: TUniFormattedNumberEdit;
+    edtMargin: TUniFormattedNumberEdit;
+    edtReliability: TUniFormattedNumberEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

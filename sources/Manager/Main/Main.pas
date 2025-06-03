@@ -487,7 +487,7 @@ begin
   begin
     MainMenu.Selected := MainMenu.Items[1];
     {$IFDEF Debug}
-       MainMenu.Selected := MainMenu.Items[5];
+       MainMenu.Selected := MainMenu.Items[2];
     {$ENDIF}
     MainMenuClick(Sender);
   end;

@@ -121,6 +121,11 @@ type
     actFrigileData: TAction;
     N8: TUniMenuItem;
     fSupplier: TUniExCheckComboBox;
+    actSet1C: TAction;
+    pp1C: TUniMenuItem;
+    actUnSet1C: TAction;
+    N18: TUniMenuItem;
+    N9: TUniMenuItem;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -155,6 +160,8 @@ type
     procedure actFrigileDataExecute(Sender: TObject);
     procedure GridDrawColumnCell(Sender: TObject; ACol, ARow: Integer;
       Column: TUniDBGridColumn; Attribs: TUniCellAttribs);
+    procedure actSet1CExecute(Sender: TObject);
+    procedure actUnSet1CExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -182,6 +189,8 @@ type
     procedure FilterSupplierCreate();
 
     procedure ShipmentsTransporterNumberFCallBack(Sender: TComponent; AResult:Integer);
+
+    procedure ShipmentsSetFlag1C(IsFlag: Boolean);
   public
     { Public declarations }
   end;
@@ -193,7 +202,7 @@ uses
   Main, ServerModule, uToast, uUtils.Grid, uExportForm,
   uShipmentsTransporterNumberF, uShipmentsReceiptDateF,
   uShipmentsReceiptStatusF, uShipmentsTransporterDataF, uShipmentsProtocol_T,
-  uShipmentsEditF;
+  uShipmentsEditF, uUtils.Logger, uError_T;
 
 {$R *.dfm}
 
@@ -257,6 +266,13 @@ begin
   GridOpen();
 end;
 
+procedure TShipmentsT.actSet1CExecute(Sender: TObject);
+begin
+  log('TShipmentsT.actSet1CExecute Begin', etDebug) ;
+  ShipmentsSetFlag1C(True);
+  log('TShipmentsT.actSectCExecute End', etDebug) ;
+end;
+
 procedure TShipmentsT.actSetReceiptDateExecute(Sender: TObject);
 begin
   ShipmentsReceiptDateF.FormAction := TFormAction.acUpdate;
@@ -295,6 +311,13 @@ begin
   ShipmentsBoxesT_Wrapper.Invoice:=QueryInvoice.Value;
   ShipmentsBoxesT_Wrapper.TransporterNumber:=QueryTransporterNumber.Value;
   ShipmentsBoxesT_Wrapper.ShowModal;
+end;
+
+procedure TShipmentsT.actUnSet1CExecute(Sender: TObject);
+begin
+  log('TShipmentsT.actUnSet1CExecute Begin', etDebug) ;
+  ShipmentsSetFlag1C(False);
+  log('TShipmentsT.actUnSet1CExecute End', etDebug) ;
 end;
 
 procedure TShipmentsT.DoHideMask;
@@ -355,19 +378,20 @@ begin
 //
 //  actGroupDetailNameEdit.Enabled := (actGroupDetailNameEdit.Tag=1) and (Marks.Count>0);
 
-
   actSetTransporterNumber.Enabled := (actSetTransporterNumber.Tag=1) and (Query.RecordCount>0);
 
   actSetReceiptDate.Enabled := (actSetReceiptDate.Tag=1) and (Query.RecordCount>0);
 
   actShipmentsBoxes.Enabled := (actShipmentsBoxes.Tag=1) and (Query.RecordCount>0) and ((QueryFlag.Value and 1) = 1);
 
-
   N3.Enabled := ((QueryFlag.Value and 2) = 0);
-  N16.Enabled := ((QueryFlag.Value and 2) = 0);
+  N16.Enabled:= ((QueryFlag.Value and 2) = 0);
   N2.Enabled := ((QueryFlag.Value and 2) = 0);
   N8.Enabled := ((QueryFlag.Value and 2) = 0);
-  N13.Enabled := ((QueryFlag.Value and 2) = 0);
+  N13.Enabled:= ((QueryFlag.Value and 2) = 0);
+
+  actSet1C.Enabled:= (actSet1C.Tag=1) and (Marks.Count>0);
+  actUnSet1C.Enabled:= (actUnSet1C.Tag=1) and (Marks.Count>0);
 end;
 
 procedure TShipmentsT.QueryFlagGetText(Sender: TField; var Text: string;
@@ -379,6 +403,10 @@ begin
   if (Sender.AsInteger and 1) > 0 then
   begin
     t := t + '<span class="" data-qtip="Загружена информаци о коробках"><i class="shipments-box"></i></span> ';
+  end;
+  if (Sender.AsInteger and 4) > 0 then
+  begin
+    t := t + '<span class="" data-qtip="Информация внесена в 1С"><i class="icon-1c"></i></span> ';
   end;
 
   Text := t;
@@ -431,6 +459,28 @@ begin
 //  ACurrColumn := Column;
 
   ppMain.Popup(X, Y, Grid);
+end;
+
+procedure TShipmentsT.ShipmentsSetFlag1C(IsFlag: Boolean);
+var ServerErr:integer;
+begin
+  Sql.Exec(' exec ShipmentsSetFlag1C @IsFlag=:IsFlag', ['IsFlag'], [IsFlag]);
+
+  // ОБРАБОТКА ОШИБОК
+  // проверка наличия серверных ошибок
+  Sql.Open('select 1 from pAccrualAction p (nolock) where p.Spid = @@spid and p.Retval <> 0', [], []);
+
+  ServerErr := Sql.Q.RecordCount;
+
+  if (ServerErr = 0) then
+  begin
+    Marks.DataRefresh;
+    ToastOK ('Операция успешно выполнена!', UniSession);
+  end
+  else
+  begin
+    Error_T.ShowModal;
+  end;
 end;
 
 procedure TShipmentsT.ShipmentsTransporterNumberFCallBack(Sender: TComponent;

@@ -193,9 +193,6 @@ Coordinates=340,1047,117,36
 [N11]
 Coordinates=291,1047,40,36
 
-[UniMainModule.qSetting]
-Coordinates=516,10,155,58
-
 [QueryWeightKGAmount]
 Coordinates=132,1047,152,36
 
@@ -237,9 +234,6 @@ Coordinates=814,10,86,36
 
 [UniLabel3]
 Coordinates=731,10,73,36
-
-[UniMainModule.Query]
-Coordinates=364,10,142,58
 
 [QuerySupplierDiffVolumeWeigh]
 Coordinates=192,782,196,36

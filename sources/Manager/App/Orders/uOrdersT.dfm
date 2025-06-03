@@ -676,8 +676,8 @@ object OrdersT: TOrdersT
           TabOrder = 13
         end
         object lblPrice: TUniLabel
-          Left = 219
-          Top = 58
+          Left = 794
+          Top = 14
           Width = 36
           Height = 13
           Hint = ''
@@ -696,17 +696,18 @@ object OrdersT: TOrdersT
           TabOrder = 17
         end
         object fCancel: TUniBitBtn
-          Left = 794
+          Left = 1037
           Top = 33
           Width = 146
           Height = 24
           ShowHint = True
           Action = actFilterClear
           TabOrder = 9
+          Images = UniMainModule.BaseImage16
           ImageIndex = 16
         end
         object fOk: TUniBitBtn
-          Left = 794
+          Left = 1037
           Top = 75
           Width = 146
           Height = 24
@@ -717,6 +718,7 @@ object OrdersT: TOrdersT
           ScreenMask.ShowMessage = False
           ScreenMask.Message = #1046#1076#1080#1090#1077', '#1086#1087#1077#1088#1072#1094#1080#1103' '#1074#1099#1087#1086#1083#1085#1103#1077#1090#1089#1103
           ScreenMask.Target = Owner
+          Images = UniMainModule.BaseImage16
           ImageIndex = 15
         end
         object fOrderNum: TUniEdit
@@ -813,7 +815,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object lblDEtailNumber: TUniLabel
-          Left = 478
+          Left = 472
           Top = 58
           Width = 78
           Height = 13
@@ -835,7 +837,7 @@ object OrdersT: TOrdersT
         object edtUpdDate: TUniDateTimePicker
           Left = 322
           Top = 75
-          Width = 150
+          Width = 144
           Hint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
           ShowHint = True
           DateTime = 45257.000000000000000000
@@ -880,9 +882,9 @@ object OrdersT: TOrdersT
           TabOrder = 16
         end
         object fDetailNum: TUniEdit
-          Left = 478
+          Left = 472
           Top = 75
-          Width = 197
+          Width = 203
           Hint = #1053#1086#1084#1077#1088' '#1076#1077#1090#1072#1083#1080
           ShowHint = True
           Text = ''
@@ -928,7 +930,7 @@ object OrdersT: TOrdersT
         object fClient: TUniExCheckComboBox
           Left = 6
           Top = 75
-          Width = 203
+          Width = 306
           Hint = ''
           ShowHint = True
           ShowSelectButton = True
@@ -946,9 +948,9 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object fPriceLogo: TUniExCheckComboBox
-          Left = 219
-          Top = 75
-          Width = 97
+          Left = 794
+          Top = 33
+          Width = 114
           Hint = ''
           ShowHint = True
           ShowSelectButton = True
@@ -966,7 +968,7 @@ object OrdersT: TOrdersT
           OnKeyDown = fStatus2KeyDown
         end
         object btnNotification: TUniBitBtn
-          Left = 1098
+          Left = 1226
           Top = 75
           Width = 127
           Height = 24
@@ -990,6 +992,84 @@ object OrdersT: TOrdersT
           LayoutConfig.Cls = 'order-notification-btn'
           LayoutConfig.DockWhenAligned = False
           OnClick = btnNotificationClick
+        end
+        object fCustomerPriceLogo: TUniExCheckComboBox
+          Left = 794
+          Top = 75
+          Width = 114
+          Hint = ''
+          ShowHint = True
+          ShowSelectButton = True
+          ShowSearch = True
+          Text = ''
+          TabOrder = 22
+          ClientEvents.ExtEvents.Strings = (
+            
+              'afterrender=function afterrender(sender, eOpts) {  '#13#10'initComboBo' +
+              'xSelectButtons(sender, "id");'#13#10'initComboBoxSearch(sender, "id", ' +
+              '"val");  '#13#10'}')
+          EmptyText = #1055#1088#1072#1081#1089
+          ClearButton = True
+          IconItems = <>
+          OnKeyDown = fStatus2KeyDown
+        end
+        object UniLabel1: TUniLabel
+          Left = 794
+          Top = 58
+          Width = 82
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1055#1088#1072#1081#1089' '#1082#1083#1080#1077#1085#1090#1072':'
+          TabOrder = 23
+        end
+        object edtAmountCondition: TUniExComboBox
+          Left = 914
+          Top = 33
+          Width = 21
+          Hint = ''
+          ShowHint = True
+          Style = csOwnerDrawFixed
+          Text = ''
+          Items.Strings = (
+            '='
+            '>'
+            '<')
+          ParentFont = False
+          Font.Style = [fsBold]
+          TabOrder = 24
+          AnyMatch = True
+          HideTrigger = True
+          IconItems = <>
+          Value = '-1'
+          ValueList.Strings = (
+            '='
+            '>'
+            '<')
+        end
+        object UniLabel2: TUniLabel
+          Left = 914
+          Top = 14
+          Width = 74
+          Height = 13
+          Hint = ''
+          ShowHint = True
+          Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072':'
+          TabOrder = 25
+        end
+        object edtAmount: TUniFormattedNumberEdit
+          Left = 934
+          Top = 33
+          Width = 97
+          Hint = ''
+          ShowHint = True
+          TabOrder = 26
+          ClientEvents.ExtEvents.Strings = (
+            
+              'afterrender=function afterrender(sender, eOpts)'#13#10'{'#13#10'//sender.get' +
+              'El().dom.setAttribute('#39'data-autonumeric'#39', '#39#39');'#13#10'}')
+          DecimalSeparator = ','
+          ThousandSeparator = #160
         end
       end
     end
@@ -1293,7 +1373,9 @@ object OrdersT: TOrdersT
       '          '
       '   !Status'
       '   '
-      '   !PriceLogo'
+      '   !PriceLogo     '
+      '   '
+      '   !CustomerPriceLogo'
       '   '
       '   !Client'
       '   '
@@ -1310,6 +1392,8 @@ object OrdersT: TOrdersT
       '   !Invoice   '
       '   '
       '   !Flags   '
+      '   '
+      '   !Amount'
       '               '
       '  order by  o.[OrderID]  '
       '   ')
@@ -1327,6 +1411,10 @@ object OrdersT: TOrdersT
       item
         Value = ''
         Name = 'PRICELOGO'
+      end
+      item
+        Value = ''
+        Name = 'CUSTOMERPRICELOGO'
       end
       item
         Value = ''
@@ -1359,6 +1447,10 @@ object OrdersT: TOrdersT
       item
         Value = Null
         Name = 'FLAGS'
+      end
+      item
+        Value = Null
+        Name = 'AMOUNT'
       end>
     object QueryOrderID: TFMTBCDField
       AutoGenerateValue = arAutoInc
@@ -1812,6 +1904,7 @@ object OrdersT: TOrdersT
     end
   end
   object ppMain: TUniPopupMenu
+    Images = UniMainModule.BaseImage
     OnPopup = ppMainPopup
     Left = 101
     Top = 218
@@ -1910,46 +2003,10 @@ object OrdersT: TOrdersT
     Left = 575
     Top = 316
   end
-  object qPriceLogo: TFDQuery
-    AutoCalcFields = False
-    Connection = UniMainModule.FDConnection
-    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable]
-    UpdateOptions.EnableDelete = False
-    UpdateOptions.EnableInsert = False
-    UpdateOptions.EnableUpdate = False
-    UpdateOptions.UpdateChangedFields = False
-    UpdateOptions.LockWait = True
-    UpdateOptions.RefreshMode = rmAll
-    UpdateOptions.CountUpdatedRecords = False
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.CheckUpdatable = False
-    SQL.Strings = (
-      'SELECT distinct'
-      '       PriceLogo PriceLogo'
-      '  FROM [tOrders] (nolock)'
-      ' where PriceLogo is not null'
-      ' order by PriceLogo')
-    Left = 574
-    Top = 379
-    object qPriceLogoPriceLogo: TWideStringField
-      FieldName = 'PriceLogo'
-      Size = 64
-    end
-  end
   object dsStatus: TDataSource
     DataSet = qStatus
     Left = 649
     Top = 315
-  end
-  object dsPriceLogo: TDataSource
-    DataSet = qPriceLogo
-    Left = 650
-    Top = 377
-  end
-  object dsClient: TDataSource
-    Left = 652
-    Top = 432
   end
   object TimerProcessedShow: TUniTimer
     Enabled = False

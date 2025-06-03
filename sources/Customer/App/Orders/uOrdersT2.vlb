@@ -81,7 +81,7 @@ Coordinates=586,331,196,36
 Coordinates=904,892,73,36
 
 [Query]
-Coordinates=10,10,155,1004
+Coordinates=10,10,155,1026
 
 [QueryOrderDate]
 Coordinates=586,496,109,36
@@ -187,6 +187,7 @@ Coordinates=820,1046,92,36
 
 [Grid]
 Coordinates=955,10,40,36
+Visible=True
 
 [QueryWeightKGF]
 Coordinates=701,1135,116,36
@@ -243,7 +244,7 @@ Coordinates=1062,551,107,36
 Coordinates=1062,606,57,36
 
 []
-Coordinates=184,430,109,36
+Coordinates=455,1013,91,36
 
 [actCancelСonfirm]
 Coordinates=562,1135,117,36
@@ -292,11 +293,44 @@ Coordinates=184,760,77,36
 Visible=True
 
 [pnlPageL]
-Coordinates=584,938,62,36
+Coordinates=584,938,69,36
 
 [pnlPageR]
-Coordinates=987,892,74,36
+Coordinates=987,892,71,36
 
 [btnPrevious]
 Coordinates=184,540,83,36
+
+[edtInvoice]
+Coordinates=184,78,73,36
+
+[pnlGridInfo]
+Coordinates=184,430,78,36
+
+[QueryInvoice]
+Coordinates=184,485,90,36
+
+[pnlPage]
+Coordinates=184,815,62,36
+
+[pnlInfo]
+Coordinates=101,1055,53,36
+
+[UniContainerPanel2]
+Coordinates=455,463,130,36
+
+[pnlNavigation]
+Coordinates=455,683,93,36
+
+[lblInvoce]
+Coordinates=32,1055,66,36
+
+[lblRow]
+Coordinates=403,738,53,36
+
+[edtPage]
+Coordinates=403,793,62,36
+
+[UniContainerPanel1]
+Coordinates=789,111,130,36
 

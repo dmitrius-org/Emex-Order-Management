@@ -88,7 +88,6 @@ begin
                 '                                     '+
                 ' exec @r = TaskActionAdd             '+
                 '             @ID       = @ID    out  '+
-                '            ,@TaskID   = :TaskID     '+
                 '            ,@Number   = :Number     '+
                 '            ,@Comment  = :Comment    '+
                 '            ,@TaskType = 2           '+
@@ -99,17 +98,16 @@ begin
                 ' ';
 
       Sql.Open(sqltext,
-               ['TaskID','Number','Comment', 'Field', 'IsActive'],
-               [null,
-                edtNumber.Text,
+               ['Number','Comment', 'Field', 'IsActive'],
+               [edtNumber.Text,
                 edtComment.Text,
                 edtSQL.Text,
                 edtIsActive.Checked
                 ]);
 
-      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+      RetVal.Code := Sql.Q.FieldByName('retcode').AsInteger;
 
-      FID :=  Sql.Q.FieldByName('ID').Value;
+      FID := Sql.Q.FieldByName('ID').AsInteger;
     end;
     acUpdate:
     begin
@@ -134,7 +132,7 @@ begin
                 edtIsActive.Checked
                 ]);
 
-      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+      RetVal.Code := Sql.Q.FieldByName('retcode').AsInteger;
     end;
     acDelete:
     begin
@@ -147,9 +145,9 @@ begin
                                       ' select @r as retcode               '+
                                       ' ';
 
-      UniMainModule.Query.ParamByName('ID').Value := FID;
+      UniMainModule.Query.ParamByName('ID').AsInteger := FID;
       UniMainModule.Query.Open;
-      RetVal.Code := UniMainModule.Query.FieldByName('retcode').Value;
+      RetVal.Code := UniMainModule.Query.FieldByName('retcode').AsInteger;
     end;
    end;
   end;

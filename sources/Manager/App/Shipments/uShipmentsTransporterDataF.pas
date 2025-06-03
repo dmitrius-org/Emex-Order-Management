@@ -15,8 +15,8 @@ type
     btnOk: TUniBitBtn;
     btnCancel: TUniBitBtn;
     UniLabel1: TUniLabel;
-    edtTransporterWeightKG: TUniNumberEdit;
-    edtTransporterVolumeKG: TUniNumberEdit;
+    edtTransporterWeightKG: TUniFormattedNumberEdit;
+    edtTransporterVolumeKG: TUniFormattedNumberEdit;
     UniLabel2: TUniLabel;
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);

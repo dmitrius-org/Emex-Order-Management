@@ -45,6 +45,7 @@ begin
 
 
     ,StatusID                        int
+    ,Flag                            int           -- дополнительные признаки  
 	,UserID                          numeric(18,0) default dbo.GetUserID()
 	,inDatetime                      datetime      default GetDate()      --
 	,updDatetime                     datetime      default GetDate()      --
