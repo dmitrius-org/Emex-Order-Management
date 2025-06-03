@@ -132,6 +132,8 @@ begin
   else
     cmbLanguage.Value := 'en';
 
+  cmbLanguage.Visible := UserLang = 'ru';
+
   TLocalizer.Instance.ApplyLocalization(self);
 
   {$IFDEF DEBUG}

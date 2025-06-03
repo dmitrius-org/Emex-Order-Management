@@ -23,7 +23,7 @@
         "Information": "A link to reset your password has been sent to your email!"
     },
     "LoginF": {
-        "LoginF.Caption": "System Login",
+        "LoginF.Caption": "Authentication",
         "btnOk.Caption": "Log In",
         "edtUser.Hint": "Username",
         "edtUser.EmptyText": "Username",
@@ -32,7 +32,7 @@
         "cbRemember.Caption": "Remember me",
         "lblReset.Caption": "Forgot password",
         "lblReg.Caption": "Register",
-        "lblLoginTitle.Caption": "System Login"
+        "lblLoginTitle.Caption": "Authentication"
     },
     "UserResetF": {
         "UserResetF.Caption": "System Registration",
