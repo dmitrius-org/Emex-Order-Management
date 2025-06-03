@@ -78,7 +78,7 @@ object EmployeeParametersF: TEmployeeParametersF
           Caption = #1053#1072#1075#1088#1072#1076#1072' '#1079#1072' '#1086#1073#1088#1072#1073#1086#1090#1072#1085#1085#1091#1102' '#1076#1077#1090#1072#1083#1100':'
           TabOrder = 1
         end
-        object edtProcessedVal: TUniNumberEdit
+        object edtProcessedVal: TUniFormattedNumberEdit
           Left = 359
           Top = 18
           Width = 169
@@ -86,8 +86,9 @@ object EmployeeParametersF: TEmployeeParametersF
           TabOrder = 2
           EmptyText = #1057#1091#1084#1084#1072' '
           DecimalSeparator = ','
+          ThousandSeparator = #160
         end
-        object edtIncorrectVal: TUniNumberEdit
+        object edtIncorrectVal: TUniFormattedNumberEdit
           Left = 359
           Top = 46
           Width = 169
@@ -95,6 +96,7 @@ object EmployeeParametersF: TEmployeeParametersF
           TabOrder = 3
           EmptyText = #1057#1091#1084#1084#1072' '
           DecimalSeparator = ','
+          ThousandSeparator = #160
         end
         object UniLabel4: TUniLabel
           Left = 26
@@ -114,7 +116,7 @@ object EmployeeParametersF: TEmployeeParametersF
           Caption = #1053#1072#1075#1088#1072#1076#1072' '#1079#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1085#1091#1102' '#1076#1077#1090#1072#1083#1100':'
           TabOrder = 5
         end
-        object edtConfirmedVal: TUniNumberEdit
+        object edtConfirmedVal: TUniFormattedNumberEdit
           Left = 359
           Top = 74
           Width = 169
@@ -122,6 +124,7 @@ object EmployeeParametersF: TEmployeeParametersF
           TabOrder = 6
           EmptyText = #1057#1091#1084#1084#1072' '
           DecimalSeparator = ','
+          ThousandSeparator = #160
         end
       end
     end

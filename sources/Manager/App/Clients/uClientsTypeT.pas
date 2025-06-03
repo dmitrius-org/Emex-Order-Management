@@ -54,6 +54,10 @@ type
     QueryMargin: TCurrencyField;
     QueryIsActive: TBooleanField;
     QueryReliability: TCurrencyField;
+    UniHiddenPanel3: TUniHiddenPanel;
+    edtPrepaymentAmount: TUniFormattedNumberEdit;
+    edtMargin: TUniFormattedNumberEdit;
+    edtReliability: TUniFormattedNumberEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

@@ -136,7 +136,6 @@ object ClientsTypeT: TClientsTypeT
         Action = actDelete
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 291
       end
     end
   end
@@ -236,12 +235,14 @@ object ClientsTypeT: TClientsTypeT
           Title.Alignment = taCenter
           Title.Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
           Width = 107
+          Editor = edtPrepaymentAmount
         end
         item
           FieldName = 'Margin'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1094#1077#1085#1082#1072
           Width = 95
+          Editor = edtMargin
         end
         item
           FieldName = 'Reliability'
@@ -249,6 +250,7 @@ object ClientsTypeT: TClientsTypeT
           Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
           Width = 104
           Hint = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080' '
+          Editor = edtReliability
         end
         item
           FieldName = 'IsActive'
@@ -256,6 +258,45 @@ object ClientsTypeT: TClientsTypeT
           Title.Caption = #1040#1082#1090#1080#1074#1077#1085
           Width = 75
         end>
+    end
+    object UniHiddenPanel3: TUniHiddenPanel
+      Left = 89
+      Top = 139
+      Width = 160
+      Height = 256
+      Hint = ''
+      Visible = True
+      ShowHint = True
+      object edtPrepaymentAmount: TUniFormattedNumberEdit
+        Left = 24
+        Top = 16
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        TabOrder = 1
+        DecimalSeparator = ','
+        ThousandSeparator = #160
+      end
+      object edtMargin: TUniFormattedNumberEdit
+        Left = 24
+        Top = 47
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        TabOrder = 2
+        DecimalSeparator = ','
+        ThousandSeparator = #160
+      end
+      object edtReliability: TUniFormattedNumberEdit
+        Left = 24
+        Top = 75
+        Width = 121
+        Hint = ''
+        ShowHint = True
+        TabOrder = 3
+        DecimalSeparator = ','
+        ThousandSeparator = #160
+      end
     end
   end
   object Query: TFDQuery

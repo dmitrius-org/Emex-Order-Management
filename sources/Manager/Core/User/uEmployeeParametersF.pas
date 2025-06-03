@@ -49,11 +49,11 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
-    edtProcessedVal: TUniNumberEdit;
-    edtIncorrectVal: TUniNumberEdit;
+    edtProcessedVal: TUniFormattedNumberEdit;
+    edtIncorrectVal: TUniFormattedNumberEdit;
     UniLabel4: TUniLabel;
     UniLabel5: TUniLabel;
-    edtConfirmedVal: TUniNumberEdit;
+    edtConfirmedVal: TUniFormattedNumberEdit;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);

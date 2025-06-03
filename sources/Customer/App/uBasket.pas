@@ -13,7 +13,7 @@ uses
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, Vcl.Menus, uniButton, uniLabel,
   System.Generics.Collections, uniSpinEdit, uniDBEdit, uniScreenMask,
-  uUtils.Mark, uniTimer;
+  uUtils.Mark, uniTimer, uniGridExporters;
 
 type
  TBasketItem = record
@@ -87,6 +87,8 @@ type
     btnPriceRefreshAll: TUniLabel;
     btnBasketClear: TUniLabel;
     TimerProcessed: TUniTimer;
+    lblToExcel: TUniLabel;
+    UniGridExcelExporter: TUniGridExcelExporter;
 
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -103,6 +105,7 @@ type
     procedure btnBasketClearClick(Sender: TObject);
     procedure btnPriceRefreshAllClick(Sender: TObject);
     procedure TimerProcessedTimer(Sender: TObject);
+    procedure lblToExcelClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -416,6 +419,11 @@ end;
 procedure TBasketF.GridSelectionChange(Sender: TObject);
 begin
   Marks.Select;
+end;
+
+procedure TBasketF.lblToExcelClick(Sender: TObject);
+begin
+  Grid.Exporter.ExportGrid;
 end;
 
 procedure TBasketF.PartPriceRefresh;

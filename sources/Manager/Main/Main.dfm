@@ -3775,7 +3775,7 @@ object MainForm: TMainForm
   object MainMenuImage: TUniNativeImageList
     Width = 24
     Height = 24
-    Left = 512
+    Left = 520
     Top = 158
     Images = {
       18000000FFFFFF1F061300000073686F7070696E672D6261736B65743B66613B

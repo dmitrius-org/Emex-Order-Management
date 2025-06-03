@@ -26,12 +26,11 @@ declare @r int = 0
    cross apply ( select top 1 *
                    from tProtocol p with (nolock)
                   where p.ObjectID   = o.OrderID
-                    and p.NewStateID = o.StatusID
-                    and p.InDateTime <= dateadd(mi, -20, getdate())
-                   order by p.InDateTime desc
+                  order by p.InDateTime desc
                 ) as p
   where n.Brief = 'CancelPreliminary'
-
+    and p.NewStateID = o.StatusID
+    and p.InDateTime <= dateadd(hh, -48, getdate())
   exec ProtocolAdd
 
  exit_:

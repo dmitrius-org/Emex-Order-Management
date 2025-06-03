@@ -94,5 +94,3 @@ Select dateadd(dd, 0, p.OperDate)
 
   order by p.OrderNum    
 
-
-  select *from tNodes

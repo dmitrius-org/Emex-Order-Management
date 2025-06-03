@@ -290,9 +290,13 @@ as
       select @@Spid, 
              o.OrderID, 
              o.StatusID, 
-             @TargetStateID,
+             case 
+               when @TargetStateID = 12 and o.StatusID in (1, 2, 3)  then 50 --CancelPreliminary	Отказано предварительно
+               else @TargetStateID
+             end,
              case
                when @TargetStateID = 2  then 13	--ToChecked	Проверка выполнена 
+               when @TargetStateID = 12 and o.StatusID in (1, 2, 3) then 49	--ToCancelPreliminary	Отказано предварительно
                when @TargetStateID = 12 then 16	--ToCancel	Отказать
                else 0
              end,
@@ -346,6 +350,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250320', '21'
+exec setOV 'OrderUpdate', 'P', '20250601', '22'
 go
  

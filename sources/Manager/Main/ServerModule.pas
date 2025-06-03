@@ -123,6 +123,8 @@ begin
 
   CustomFiles.Add('files/tinyMCE5/tinymce.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
 
+//  CustomFiles.Add('files/js/data-autonumeric.js?v=' + FormatDateTime('yyyymmddhhnnss', date));
+
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'End');
 end;
 

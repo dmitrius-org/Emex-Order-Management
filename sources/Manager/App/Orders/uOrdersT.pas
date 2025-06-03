@@ -100,10 +100,7 @@ type
     fCancel: TUniBitBtn;
     fOk: TUniBitBtn;
     qStatus: TFDQuery;
-    qPriceLogo: TFDQuery;
     dsStatus: TDataSource;
-    dsPriceLogo: TDataSource;
-    dsClient: TDataSource;
     QueryStatusName: TWideStringField;
     fOrderNum: TUniEdit;
     lblOrderNumber: TUniLabel;
@@ -134,7 +131,6 @@ type
     N11: TUniMenuItem;
     QueryDetailName: TWideStringField;
     fStatus2: TUniCheckComboBox;
-    qPriceLogoPriceLogo: TWideStringField;
     ppEdit: TUniMenuItem;
     N4: TUniMenuItem;
     pnlGridSelectedCount: TUniPanel;
@@ -213,6 +209,11 @@ type
     ppDelete: TUniMenuItem;
     QueryLastTermShipment: TIntegerField;
     QueryLastDateShipment: TSQLTimeStampField;
+    fCustomerPriceLogo: TUniExCheckComboBox;
+    UniLabel1: TUniLabel;
+    edtAmountCondition: TUniExComboBox;
+    UniLabel2: TUniLabel;
+    edtAmount: TUniFormattedNumberEdit;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -316,7 +317,6 @@ type
     procedure SortColumn(const FieldName: string; Dir: Boolean);
 
     procedure FilterStatusCreate();
-    procedure FilterPriceLogoCreate();
     procedure FilterClientsCreate();
 
     /// <summary>Select - выделить/ снять выделение с записи</summary>
@@ -767,16 +767,19 @@ begin
 
   fStatus2.ClearSelection;
   fPriceLogo.ClearSelection;
+  fCustomerPriceLogo.ClearSelection;
   fClient.ClearSelection;
 
   FFilterTextStatus := '';
-  fOrderNum.Text := '';
-  fDetailNum.Text:='';
+  fOrderNum.Clear;
+  fDetailNum.Clear;
+
+  edtAmount.Clear;
 
   edtOrderDate.ClearDateRange;
 
-  edtUpdDate.Text := '';
-  edtInvoice.Text := '';
+  edtUpdDate.Text :='';
+  edtInvoice.Clear;
 
   DoHideMask;
   log('TOrdersT.actFilterClearExecute End', etInfo);
@@ -905,21 +908,6 @@ begin
   ''');
 end;
 
-procedure TOrdersT.FilterPriceLogoCreate;
-begin
-  qPriceLogo.Open(); // используется в фильтре PriceLogo
-
-  fPriceLogo.Clear;
-  qPriceLogo.First;
-  while not qPriceLogo.Eof do
-  begin
-    fPriceLogo.Items.AddObject( qPriceLogo.FieldByName('PriceLogo').AsString, Pointer(qPriceLogo.FieldByName('PriceLogo').AsString) );
-    qPriceLogo.Next;
-  end;
-
-  fPriceLogo.Refresh;
-end;
-
 procedure TOrdersT.FilterStatusCreate;
 begin
   qStatus.Open(); // используется в фильтре Статус
@@ -1013,6 +1001,11 @@ begin
     else
       Query.MacroByName('PriceLogo').Value := '';
 
+    if fCustomerPriceLogo.SelCount > 0 then
+      Query.MacroByName('CustomerPriceLogo').Value := ' and CustomerPriceLogo in (' + fCustomerPriceLogo.SelectedNames(True) + ')'
+    else
+      Query.MacroByName('CustomerPriceLogo').Value := '';
+
     if (FStatus <> '') or (not edtInvoice.IsBlank )then
     begin
       Grid.Refresh;
@@ -1084,6 +1077,11 @@ begin
       Query.MacroByName('Invoice').Value := ' and o.Invoice like ''' + edtInvoice.Text + ''''
     else
       Query.MacroByName('Invoice').Value := '';
+
+    if edtAmount.Text <> '' then
+      Query.MacroByName('Amount').Value := ' and o.Amount ' + edtAmountCondition.Value +  ' ' + FloatToStr(edtAmount.Value).Replace(',','.')
+    else
+      Query.MacroByName('Amount').Value := '';
 
     Query.Open();
 
@@ -1783,8 +1781,10 @@ begin
   edtUpdDate.Text     := '';
 
   FilterStatusCreate;
-  FilterPriceLogoCreate();
   FilterClientsCreate();
+
+  fPriceLogo.FillPrices;
+  fCustomerPriceLogo.FillCustomerPrices;
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
@@ -1809,7 +1809,7 @@ begin
 // bufferedRenderer = False при большом количестве записей таблица начинает сильно тормозить
 // Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
 
-  log('TOrdersT.UniFrameCreate End', etDebug);
+
 end;
 
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);
@@ -1826,6 +1826,9 @@ begin
     // fClient.Text := 'egud@mail.ru';
     // fDetailNum.Text := '32008XJ';
   {$ENDIF}
+
+  edtAmountCondition.ItemIndex := 0; // по умолчанию
+  edtAmount.Clear;
 
   SetNotificationCount;
 
