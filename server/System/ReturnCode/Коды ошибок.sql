@@ -29,7 +29,7 @@ exec RetCodeInsert 104, 'Удаление запрещено, пользоват
 exec RetCodeInsert 105, 'Необходимо заполнить поле [Наименование профиля]!', 'The [Profile Name] field is required!'
 exec RetCodeInsert 106, 'Необходимо заполнить поле [Способ доставки]!', 'The [Delivery Method] field is required!'
 exec RetCodeInsert 107, 'Наименование профиля существует!', 'A profile with the same name already exists!'
-
+exec RetCodeInsert 108, 'Необходимо заполнить поле [Поставщик]!'
 
 
 --tClientType

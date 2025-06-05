@@ -66,7 +66,6 @@ type
     UniToolButton6: TUniToolButton;
     UniToolButton7: TUniToolButton;
     tbSeparator: TUniToolButton;
-    QuerySupplier: TWideStringField;
     UniToolButton9: TUniToolButton;
     actClientType: TAction;
     flClientBrief: TUniEdit;

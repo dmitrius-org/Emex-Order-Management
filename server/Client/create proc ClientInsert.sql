@@ -8,7 +8,6 @@ create proc ClientInsert
               @ClientID               numeric(18,0) output --  
              ,@Brief                  nvarchar(256)  --
              ,@Name	                  nvarchar(1024)  -- 
-			 ,@SuppliersID            numeric(18,0)=null--поставщик
 			 ,@IsActive               bit
 			 ,@Taxes                  money        -- налоги
              ,@ResponseType           int          -- Тип ответа
@@ -20,11 +19,6 @@ create proc ClientInsert
              ,@Phone                  varchar(32)= null
              ,@ContactPerson          varchar(256) = null
              ,@NotificationScript     varchar(256) = null -- Скрипт оповещения
-            -- ,@Margin               money       =null -- Наценка в процентах
-            -- ,@Reliability          money       =null -- Вероятность поставки 
-            -- ,@Discount             money       =null -- Скидка Discount - Скидка поставщика на закупку товара
-           --  ,@Commission           money       =null -- Комиссия эквайера 
-
 as
   declare @r int = 0
 
@@ -46,7 +40,6 @@ as
 		      (
 		       Brief
 		      ,Name
-		      ,SuppliersID
 		      ,IsActive 
 		      ,UserID
 			  ,Taxes 
@@ -62,7 +55,6 @@ as
 		OUTPUT INSERTED.ClientID INTO @ID
 		select @Brief     
 		      ,@Name	
-		      ,@SuppliersID
 		      ,@IsActive
 		      ,dbo.GetUserID()	
 			  ,@Taxes -- налоги %
@@ -115,6 +107,6 @@ return @r
 go
 grant exec on ClientInsert to public
 go
-exec setOV 'ClientInsert', 'P', '20250408', '4'
+exec setOV 'ClientInsert', 'P', '20250604', '4'
 go
 

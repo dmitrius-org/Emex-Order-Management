@@ -35,7 +35,8 @@ as
            ,[isActive]
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]
-           ,[DeliveryTermCustomer])                       
+           ,[DeliveryTermCustomer]
+           ,SuppliersID)                       
      select @@SPID
            ,[ProfilesCustomerID]
            ,[ClientID]
@@ -50,6 +51,7 @@ as
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]
            ,[DeliveryTermCustomer]
+           ,SuppliersID
        from tProfilesCustomer (nolock)
       where ClientID = @ClientID
   end
@@ -79,6 +81,7 @@ as
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]   
            ,[DeliveryTermCustomer]
+           ,SuppliersID
 			)
      select
             [ClientID]
@@ -93,6 +96,7 @@ as
            ,[ClientPriceLogo]
            ,[UploadDelimiterID]  
            ,[DeliveryTermCustomer]
+           ,SuppliersID
        from pProfilesCustomer (nolock)
       where Spid = @@Spid 
 	    and isnull(ProfilesCustomerID, 0) = 0
@@ -110,9 +114,10 @@ as
            ,t.[ClientPriceLogo]      = p.[ClientPriceLogo]
            ,t.[UploadDelimiterID]    = p.[UploadDelimiterID] 
            ,t.[DeliveryTermCustomer] = p.[DeliveryTermCustomer]
+           ,t.SuppliersID            = p.SuppliersID
        from pProfilesCustomer p (nolock)
       inner join tProfilesCustomer t (updlock)
-              on t.ClientID        = @ClientID
+              on t.ClientID           = @ClientID
              and t.ProfilesCustomerID = p.ProfilesCustomerID
       where p.Spid = @@Spid 
   end
@@ -122,5 +127,5 @@ return @r
 go
 grant exec on ProfilesCustomerLoad to public
 go
-exec setOV 'ProfilesCustomerLoad', 'P', '20240906', '3'
+exec setOV 'ProfilesCustomerLoad', 'P', '20250603', '4'
 go

@@ -121,6 +121,9 @@ type
     btnSplit: TUniBitBtn;
     pnlSplitMessage: TUniContainerPanel;
     lblSplit: TUniLabel;
+    edtAmount: TUniFormattedNumberEdit;
+    UniLabel2: TUniLabel;
+    btnAdditionalCheck: TUniBitBtn;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -150,6 +153,7 @@ type
     procedure edtVolumeKGFChange(Sender: TObject);
     procedure btnMessageClick(Sender: TObject);
     procedure btnSplitClick(Sender: TObject);
+    procedure btnAdditionalCheckClick(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -947,6 +951,7 @@ begin
                   ,@NLA               = :NLA
                   ,@IsSplit           = :IsSplit
                   ,@SplitQuality      = :SplitQuality
+                  ,@Amount            = :Amount
 
        select @r as retcode
     ''';
@@ -954,7 +959,7 @@ begin
     Sql.Open(sqltext,
              ['WeightKGF','VolumeKGF','DetailNameF', 'OrderID', 'Price', 'MakeLogo',
               'ProfilesCustomerID', 'ProfilesDeliveryID', 'Fragile', 'NoAir',
-              'TargetStateID', 'ReplacementPrice', 'NLA', 'IsSplit', 'SplitQuality'],
+              'TargetStateID', 'ReplacementPrice', 'NLA', 'IsSplit', 'SplitQuality', 'Amount'],
              [edtWeightKGF.Value,
               edtVolumeKGF.Value,
               edtDetailNameF.Text,
@@ -969,7 +974,8 @@ begin
               FPrice2,
               cbNLA.Checked, //-- No longer available Более недоступно
               FIsSplit,
-              FSplitQuantity
+              FSplitQuantity,
+              edtAmount.value
               ]);
 
     RetVal.Code := Sql.Q.FieldByName('retcode').Value;
@@ -1079,6 +1085,7 @@ begin
 
   btnOkToCancel.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22, 50 {CancelPreliminary}, 51 {AdditionalCheck}]);
   btnOkToProc.Enabled   := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 22, 50, 51]);
+  btnAdditionalCheck.Enabled := (FAction <> acUpdateShipments) and (IsExistNext) and (FStatusID in [1, 2, 3, 22, 50]);
   btnOk.Enabled := IsExistNext;
 
   btnSplit.Enabled := (FAction <> acUpdateShipments) and (FStatusID in [1, 2]) and (FQuantity > 1);
@@ -1323,10 +1330,31 @@ begin
   btnOk.Enabled := False;
   btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
+  btnAdditionalCheck.Enabled := False;
 
   UniSession.Synchronize();
 
   OrderSave();
+
+  if RetVal.Code = 0 then
+  begin
+    IsExistNext := LoadNextPart();
+  end;
+
+  SetBtnEnabled;
+end;
+
+
+procedure TOrderF.btnAdditionalCheckClick(Sender: TObject);
+begin
+  btnOk.Enabled := False;
+  btnOkToCancel.Enabled := False;
+  btnOkToProc.Enabled := False;
+  btnAdditionalCheck.Enabled := False;
+
+  UniSession.Synchronize();
+
+  OrderSave(51 {AdditionalCheck	Дополнительная проверка});
 
   if RetVal.Code = 0 then
   begin
@@ -1341,6 +1369,7 @@ begin
   btnOk.Enabled := False;
   btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
+  btnAdditionalCheck.Enabled := False;
 
   UniSession.Synchronize();
 
@@ -1359,6 +1388,7 @@ begin
   btnOk.Enabled := False;
   btnOkToCancel.Enabled := False;
   btnOkToProc.Enabled := False;
+  btnAdditionalCheck.Enabled := False;
 
   UniSession.Synchronize();
 
@@ -1539,6 +1569,7 @@ begin
              ,v.Reference
              ,v.CustomerSubID
              ,v.BasketId
+             ,v.Amount
          from vOrders v
         where v.OrderID = :OrderID
   ''';
@@ -1566,6 +1597,7 @@ begin
 
   edtWeightKG.Text   := UniMainModule.Query.FieldByName('WeightKG').AsString;
   edtVolumeKG.Text   := UniMainModule.Query.FieldByName('VolumeKG').AsString;
+  edtAmount.value    := UniMainModule.Query.FieldByName('Amount').AsFloat;
 
   lblChangeW.visible := FFlag and 512 > 0;
 

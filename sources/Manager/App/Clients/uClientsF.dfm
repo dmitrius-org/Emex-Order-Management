@@ -642,7 +642,9 @@ object ClientsF: TClientsF
           ParentColor = False
           Color = clBtnFace
           OnKeyDown = GridKeyDown
+          OnAjaxEvent = ProfilesCustomerGridAjaxEvent
           OnColumnSort = ProfilesCustomerGridColumnSort
+          OnSetCellValue = ProfilesCustomerGridSetCellValue
           OnCellContextClick = ProfilesCustomerGridCellContextClick
           Columns = <
             item
@@ -658,6 +660,16 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103
               Width = 166
+              Sortable = True
+            end
+            item
+              FieldName = 'SupplierName'
+              Filtering.Enabled = True
+              Title.Alignment = taCenter
+              Title.Caption = ' '#1055#1086#1089#1090#1072#1074#1097#1080#1082
+              Width = 150
+              Editor = lkSupplier
+              Sortable = True
             end
             item
               FieldName = 'ProfilesCustomerID'
@@ -681,13 +693,13 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = #1057#1087#1086#1089#1086#1073' '#1076#1086#1089#1090#1072#1074#1082#1080
               Width = 172
-              Editor = lkPriceProfiles
+              Editor = lkProfilesDelivery
               Sortable = True
             end
             item
               FieldName = 'Margin'
               Title.Alignment = taCenter
-              Title.Caption = 'Margin'
+              Title.Caption = #1053#1072#1094#1077#1085#1082#1072
               Width = 95
               Editor = edtMargin
               Sortable = True
@@ -695,8 +707,8 @@ object ClientsF: TClientsF
             item
               FieldName = 'Reliability'
               Title.Alignment = taCenter
-              Title.Caption = 'Reliability'
-              Width = 96
+              Title.Caption = #1042#1077#1088#1086#1103#1090#1085#1086#1089#1090#1100' '#1087#1086#1089#1090#1072#1074#1082#1080
+              Width = 107
               Editor = edtReliability
               Sortable = True
             end
@@ -704,28 +716,28 @@ object ClientsF: TClientsF
               ShowToolTip = True
               FieldName = 'UploadFolder'
               Title.Alignment = taCenter
-              Title.Caption = 'UploadFolder'
+              Title.Caption = #1055#1072#1087#1082#1072' '#1076#1083#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1086#1074
               Width = 301
               Sortable = True
             end
             item
               FieldName = 'UploadPriceName'
               Title.Alignment = taCenter
-              Title.Caption = 'UploadPriceName'
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1076#1083#1103' '#1079#1072#1075#1088#1091#1079#1082#1080
               Width = 185
               Sortable = True
             end
             item
               FieldName = 'UploadFileName'
               Title.Alignment = taCenter
-              Title.Caption = 'UploadFileName'
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080
               Width = 201
               Sortable = True
             end
             item
               FieldName = 'ClientPriceLogo'
               Title.Alignment = taCenter
-              Title.Caption = 'ClientPriceLogo'
+              Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1091' '#1082#1083#1080#1077#1085#1090#1072
               Width = 196
               Sortable = True
             end
@@ -733,7 +745,7 @@ object ClientsF: TClientsF
               FieldName = 'UploadDelimiter'
               Title.Alignment = taCenter
               Title.Caption = #1056#1072#1079#1076#1077#1083#1080#1090#1077#1083#1100
-              Width = 290
+              Width = 207
               Hint = #1056#1072#1079#1076#1077#1083#1080#1090#1077#1083#1100' '#1089#1090#1086#1083#1073#1094#1086#1074' (UploadDelimiter)'
               Editor = lkUploadDelimiter
               Sortable = True
@@ -743,6 +755,7 @@ object ClientsF: TClientsF
               Title.Alignment = taCenter
               Title.Caption = #1057#1088#1086#1082' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1082#1083#1080#1077#1085#1090#1072
               Width = 100
+              Sortable = True
             end>
         end
         object UniHiddenPanel3: TUniHiddenPanel
@@ -752,25 +765,26 @@ object ClientsF: TClientsF
           Height = 256
           Hint = ''
           Visible = True
-          object lkPriceProfiles: TUniDBLookupComboBox
-            Left = 3
+          object lkProfilesDelivery: TUniDBLookupComboBox
+            Left = 24
             Top = 132
-            Width = 145
+            Width = 121
             Height = 23
             Hint = ''
-            ListField = 'DestinationName'
-            ListSource = dsProfilesDeliveryList
+            ListField = 'ProfileName'
+            ListSource = dslkProfilesDelivery
             KeyField = 'ProfilesDeliveryID'
             ListFieldIndex = 0
             DataField = 'ProfilesDeliveryID'
             DataSource = dsProfilesCustomer
             TabOrder = 1
             Color = clWindow
+            Style = csOwnerDrawFixed
           end
           object lkUploadDelimiter: TUniDBLookupComboBox
-            Left = 3
+            Left = 24
             Top = 161
-            Width = 145
+            Width = 121
             Height = 23
             Hint = ''
             ListField = 'Name'
@@ -781,6 +795,7 @@ object ClientsF: TClientsF
             DataSource = dsProfilesCustomer
             TabOrder = 2
             Color = clWindow
+            Style = csOwnerDrawFixed
           end
           object edtCommission: TUniFormattedNumberEdit
             Left = 24
@@ -808,6 +823,24 @@ object ClientsF: TClientsF
             TabOrder = 5
             DecimalSeparator = ','
             ThousandSeparator = #160
+          end
+          object lkSupplier: TUniDBLookupComboBox
+            Left = 24
+            Top = 190
+            Width = 121
+            Height = 23
+            Hint = ''
+            ListField = 'Brief'
+            ListSource = qslkSupplierslist
+            KeyField = 'SuppliersID'
+            ListFieldIndex = 0
+            DataField = 'SuppliersID'
+            DataSource = dsProfilesCustomer
+            TabOrder = 6
+            Color = clWindow
+            Style = csOwnerDrawFixed
+            OnChange = lkSupplierChange
+            OnSelect = lkSupplierSelect
           end
         end
       end
@@ -899,34 +932,6 @@ object ClientsF: TClientsF
         Hint = ''
         Caption = #1055#1091#1090#1100' '#1082' '#1089#1082#1088#1080#1087#1090#1091':'
         TabOrder = 7
-      end
-    end
-    object pcSuppliers: TUniTabSheet
-      Hint = ''
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-      object UniLabel4: TUniLabel
-        Left = 33
-        Top = 37
-        Width = 62
-        Height = 13
-        Hint = ''
-        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-        TabOrder = 1
-      end
-      object cbSuppliers: TUniDBLookupComboBox
-        Left = 170
-        Top = 35
-        Width = 290
-        Height = 23
-        Hint = ''
-        ListField = 'Brief'
-        ListSource = dsSuppliers
-        KeyField = 'SuppliersID'
-        ListFieldIndex = 0
-        ClearButton = True
-        TabOrder = 0
-        Color = clWindow
-        OnChange = cbSuppliersChange
       end
     end
     object pcCommision: TUniTabSheet
@@ -1472,26 +1477,21 @@ object ClientsF: TClientsF
       OnExecute = actReliabilityEditExecute
     end
   end
-  object qSuppliers: TFDQuery
+  object qlkSupplierslist: TFDQuery
     Connection = UniMainModule.FDConnection
     SQL.Strings = (
       'select SuppliersID'
       '      ,Brief '
       '  from tSuppliers (nolock)')
-    Left = 438
-    Top = 273
-    object qSuppliersSuppliersID: TFMTBCDField
+    Left = 310
+    Top = 313
+    object qlkSupplierslistSuppliersID: TFMTBCDField
       FieldName = 'SuppliersID'
     end
-    object qSuppliersBrief: TWideStringField
+    object qlkSupplierslistBrief: TWideStringField
       FieldName = 'Brief'
       Size = 255
     end
-  end
-  object dsSuppliers: TDataSource
-    DataSet = qSuppliers
-    Left = 435
-    Top = 333
   end
   object dsManagerList: TDataSource
     DataSet = qManagerList
@@ -1674,20 +1674,30 @@ object ClientsF: TClientsF
     UpdateOptions.AutoCommitUpdates = True
     UpdateObject = uProfilesCustomer
     SQL.Strings = (
-      'select p.*'
-      '      ,sp.Name   ProfilesDeliveryName'
-      '      ,d.Name    UploadDelimiter'
-      '  from pProfilesCustomer p (nolock)'
-      '  left join tSupplierDeliveryProfiles sp (nolock)'
-      '         on sp.ProfilesDeliveryID = p.ProfilesDeliveryID'
-      '  left join tDelimiter d (nolock)'
-      '         on d.DelimiterID = p.UploadDelimiterID'
-      ' where p.Spid = @@Spid')
+      'select *'
+      '  from vProfilesCustomer')
     Left = 736
     Top = 260
+    object qProfilesCustomerID: TFMTBCDField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+      Precision = 18
+      Size = 0
+    end
+    object qProfilesCustomerisActive: TBooleanField
+      FieldName = 'isActive'
+      Origin = 'isActive'
+    end
     object qProfilesCustomerSpid: TIntegerField
       FieldName = 'Spid'
       Origin = 'Spid'
+    end
+    object qProfilesCustomerBrief: TStringField
+      FieldName = 'Brief'
+      Size = 60
     end
     object qProfilesCustomerProfilesCustomerID: TIntegerField
       FieldName = 'ProfilesCustomerID'
@@ -1704,6 +1714,11 @@ object ClientsF: TClientsF
       FieldName = 'ProfilesDeliveryID'
       LookupCache = True
       Origin = 'ProfilesDeliveryID'
+    end
+    object qProfilesCustomerProfilesDeliveryName: TWideStringField
+      FieldName = 'ProfilesDeliveryName'
+      KeyFields = 'ProfilesDeliveryID'
+      Size = 60
     end
     object qProfilesCustomerMargin: TCurrencyField
       FieldName = 'Margin'
@@ -1732,10 +1747,6 @@ object ClientsF: TClientsF
       Origin = 'UploadFileName'
       Size = 255
     end
-    object qProfilesCustomerisActive: TBooleanField
-      FieldName = 'isActive'
-      Origin = 'isActive'
-    end
     object qProfilesCustomerClientPriceLogo: TWideStringField
       FieldName = 'ClientPriceLogo'
       Origin = 'ClientPriceLogo'
@@ -1749,25 +1760,18 @@ object ClientsF: TClientsF
       FieldName = 'UploadDelimiter'
       Size = 60
     end
-    object qProfilesCustomerID: TFMTBCDField
-      AutoGenerateValue = arAutoInc
-      FieldName = 'ID'
-      Origin = 'ID'
-      ProviderFlags = [pfInWhere]
-      ReadOnly = True
-      Precision = 18
-      Size = 0
-    end
-    object qProfilesCustomerProfilesDeliveryName: TWideStringField
-      FieldName = 'ProfilesDeliveryName'
-      Size = 60
-    end
-    object qProfilesCustomerBrief: TStringField
-      FieldName = 'Brief'
-      Size = 60
-    end
     object qProfilesCustomerDeliveryTermCustomer: TIntegerField
       FieldName = 'DeliveryTermCustomer'
+    end
+    object qProfilesCustomerSuppliersID: TFMTBCDField
+      FieldName = 'SuppliersID'
+      KeyFields = 'SuppliersID'
+    end
+    object qProfilesCustomerSupplierName: TStringField
+      FieldName = 'SupplierName'
+      KeyFields = 'SuppliersID'
+      OnChange = qProfilesCustomerSupplierNameChange
+      Size = 26
     end
   end
   object dsProfilesCustomer: TDataSource
@@ -1782,15 +1786,22 @@ object ClientsF: TClientsF
       'declare @R                  numeric(18, 0)'
       '       ,@Brief              nvarchar(60)'
       '       ,@ProfilesDeliveryID numeric(18, 0)'
+      '       ,@SuppliersID        numeric(18, 0)'
       ''
       'select @Brief              = :NEW_Brief'
       '      ,@ProfilesDeliveryID = :NEW_ProfilesDeliveryID '
+      '      ,@SuppliersID        = :NEW_SuppliersID '
       ''
       'if isnull(@Brief, '#39#39') = '#39#39
       'begin'
       
         ' RAISERROR ('#39#1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1083#1077' ['#1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1086#1092#1080#1083#1103']'#39', ' +
         '16, 1); '
+      'end'
+      ''
+      'if isnull(@SuppliersID , 0) = 0'
+      'begin'
+      ' RAISERROR ('#39#1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1083#1077' ['#1055#1086#1089#1090#1072#1074#1097#1080#1082#39', 16, 1); '
       'end'
       ''
       'if isnull(@ProfilesDeliveryID, 0) = 0'
@@ -1839,6 +1850,7 @@ object ClientsF: TClientsF
       '           ,[ClientPriceLogo]'
       '           ,[UploadDelimiterID]'
       '           ,DeliveryTermCustomer'
+      '           ,SuppliersID'
       '           )   '
       'VALUES (@@Spid, '
       '        0, '
@@ -1853,7 +1865,9 @@ object ClientsF: TClientsF
       '        :NEW_isActive,  '
       '        :NEW_ClientPriceLogo,  '
       '        :NEW_UploadDelimiterID,'
-      '        :NEW_DeliveryTermCustomer);'
+      '        :NEW_DeliveryTermCustomer,'
+      '        :NEW_SuppliersID'
+      '        );'
       ''
       'SELECT SCOPE_IDENTITY() AS ID')
     ModifySQL.Strings = (
@@ -1874,6 +1888,7 @@ object ClientsF: TClientsF
       '     ,@ClientPriceLogo     = :NEW_ClientPriceLogo'
       '     ,@UploadDelimiterID   = :NEW_UploadDelimiterID'
       '     ,@DeliveryTermCustomer= :NEW_DeliveryTermCustomer'
+      '     ,@SuppliersID         = :NEW_SuppliersID'
       ''
       'if isnull(@R, 0) > 0'
       'begin'
@@ -1899,23 +1914,13 @@ object ClientsF: TClientsF
         'delete pProfilesCustomer from pProfilesCustomer (rowlock) where ' +
         'ID = :ID')
     FetchRowSQL.Strings = (
-      'select p.*'
-      '      ,sp.Name   ProfilesDeliveryName'
-      '      ,d.Name    UploadDelimiter'
-      
-        '      ,sp.isMyDelivery                           -- '#1057#1095#1080#1090#1072#1090#1100' '#1089' '#1091#1095 +
-        #1077#1090#1086#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
-      '      ,sp.isIgnore '
-      '  from pProfilesCustomer p (nolock)'
-      ' left join tSupplierDeliveryProfiles sp (nolock)'
-      '         on sp.ProfilesDeliveryID = p.ProfilesDeliveryID'
-      ' left join tDelimiter d (nolock)'
-      '         on d.DelimiterID = p.UploadDelimiterID'
-      ' where p.ID = :ID')
+      'select *'
+      '  from vProfilesCustomer'
+      ' where ID = :ID')
     Left = 627
     Top = 258
   end
-  object qProfilesDeliveryList: TFDQuery
+  object qlkProfilesDeliveryList: TFDQuery
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvCheckUpdatable]
     UpdateOptions.EnableDelete = False
@@ -1924,11 +1929,11 @@ object ClientsF: TClientsF
     UpdateOptions.CheckUpdatable = False
     UpdateOptions.KeyFields = 'ProfilesDeliveryID'
     SQL.Strings = (
-      'select ProfilesDeliveryID, Name as DestinationName '
-      '  from tSupplierDeliveryProfiles (nolock)'
+      'select ProfilesDeliveryID, ProfileName '
+      '  from vSupplierDeliveryParam '
       ' where SuppliersID = :SuppliersID')
-    Left = 609
-    Top = 408
+    Left = 473
+    Top = 312
     ParamData = <
       item
         Name = 'SUPPLIERSID'
@@ -1936,15 +1941,15 @@ object ClientsF: TClientsF
         ParamType = ptInput
         Value = Null
       end>
-    object qProfilesDeliveryListProfilesDeliveryID: TFDAutoIncField
+    object qlkProfilesDeliveryListProfilesDeliveryID: TFDAutoIncField
       FieldName = 'ProfilesDeliveryID'
       KeyFields = 'ProfilesDeliveryID'
       Origin = 'ProfilesDeliveryID'
     end
-    object qProfilesDeliveryListDestinationName: TWideStringField
+    object qlkProfilesDeliveryListProfileName: TWideStringField
       DisplayWidth = 60
-      FieldName = 'DestinationName'
-      Origin = 'DestinationName'
+      FieldName = 'ProfileName'
+      Origin = 'ProfileName'
       Required = True
       Size = 60
     end
@@ -1974,10 +1979,10 @@ object ClientsF: TClientsF
       Size = 60
     end
   end
-  object dsProfilesDeliveryList: TDataSource
-    DataSet = qProfilesDeliveryList
-    Left = 740
-    Top = 407
+  object dslkProfilesDelivery: TDataSource
+    DataSet = qlkProfilesDeliveryList
+    Left = 476
+    Top = 375
   end
   object dsDelimiterList: TDataSource
     DataSet = qDelimiterList
@@ -2012,5 +2017,10 @@ object ClientsF: TClientsF
     object UniMenuItem5: TUniMenuItem
       Action = actPriceProfilesRefresh
     end
+  end
+  object qslkSupplierslist: TDataSource
+    DataSet = qlkSupplierslist
+    Left = 316
+    Top = 383
   end
 end

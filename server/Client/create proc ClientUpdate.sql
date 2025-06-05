@@ -8,7 +8,6 @@ create proc ClientUpdate
               @ClientID               numeric(18,0)  --  
              ,@Brief                  nvarchar(256)  --
              ,@Name	                  nvarchar(512)  -- 
-			 ,@SuppliersID            numeric(18,0)=null--поставщик
 			 ,@IsActive               bit
 			 ,@Taxes                  money
              ,@ResponseType           int          -- Тип ответа
@@ -63,7 +62,6 @@ as
 	    Update tClients
 		   set Brief                  = @Brief
 		   	  ,Name                   = @Name
-		      ,SuppliersID            = @SuppliersID
 		      ,IsActive               = @IsActive 
 			  ,updDatetime            = GetDate()
 			  ,Taxes                  = @Taxes
@@ -118,5 +116,5 @@ return @r
 go
 grant exec on ClientUpdate to public
 go
-exec setOV 'ClientUpdate', 'P', '20250408', '5'
+exec setOV 'ClientUpdate', 'P', '20250604', '6'
 go

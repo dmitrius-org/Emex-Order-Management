@@ -47,6 +47,8 @@ Select dateadd(dd, 0, p.OperDate)
       --,p.NotificationAddress  
       ,ur.UnloaRefusalID
       --,ur.Quantity, ur.OperDate 
+
+     , m.*
   from (Select cast(GetDate() as Date)	 as OperDate -- Дата ответа
               ,c.ClientID
               ,c.Brief                   as ClientName
@@ -94,3 +96,7 @@ Select dateadd(dd, 0, p.OperDate)
 
   order by p.OrderNum    
 
+  --select * from tUnloadRefusals where 
+  --OrderNum = '514085'
+  --and DetailNumber = '5216333902'
+	

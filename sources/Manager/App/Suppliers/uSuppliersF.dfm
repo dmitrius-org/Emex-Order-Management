@@ -21,6 +21,8 @@ object SuppliersF: TSuppliersF
     TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
+    ExplicitLeft = 387
+    ExplicitTop = 408
     DesignSize = (
       1278
       44)
