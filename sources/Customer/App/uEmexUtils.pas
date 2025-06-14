@@ -29,8 +29,6 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       function GetEmex: ServiceSoap;
       function GetSQl: TSQL;
 
-//      function ForClients: TStringList;
-
       /// <summary>
       /// FillFindByNumber - Вспомогательная процедура для заполнения pFindByNumber
       /// </summary>
@@ -53,13 +51,13 @@ uses System.SysUtils, System.Classes, //Vcl.Dialogs, //System.Variants,
       /// getCustomer - описание клиента. Подготовка авторизационных данных (пользователь, пароль)
       /// </summary>
       /// <returns> объект Customer</returns>
-      function getCustomer(AAccount: Integer): Customer;
+      function getCustomer(ASupplierID: Integer): Customer;
 
       /// <summary>Login - Авторизация </summary>
       function Login(AAccount: Integer): String;
 
       /// <summary>FindByDetailNumber - поиск детали по номеру</summary>
-      procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
+      procedure FindByDetailNumber(AClientID:LongInt; ASupplierID:LongInt; ADetailNum:string);
   end;
 
 implementation
@@ -92,39 +90,16 @@ begin
   end;
 end;
 
-//function TEmex.ForClients: TStringList;
-//var i: Integer;
-//begin
-//  result := TStringList.Create;
-//  FQuery.Close;
-//  FQuery.Open('''
-//            Select distinct o.ClientID
-//             from pAccrualAction p with (nolock index=ao2)
-//            inner join tOrders o with (nolock)
-//                    on o.OrderID=p.ObjectID
-//            where p.Spid = @@spid
-//              and p.Retval = 0
-//           ''', [], []);
-//  FQuery.First;
-//  for I := 0 to FQuery.RecordCount - 1 do
-//  begin
-//    result.Add(FQuery.FieldByName('ClientID').AsString);
-//    FQuery.Next;
-//  end;
-//end;
-
-function TEmex.getCustomer(AAccount: Integer): Customer;
+function TEmex.getCustomer(ASupplierID: Integer): Customer;
 begin
   begin
       //данные для интеграции берем из справочника "Клиенты"
     SQl.Open('''
              Select s.emexUsername, s.emexPassword
-               from tClients c with (nolock index=PK_tClients_ClientID)
-               join tSuppliers  s with (nolock)
-                 on s.SuppliersID = c.SuppliersID
-              where c.ClientID = :ClientID
+               from tSuppliers  s with (nolock)
+              where s.SuppliersID = :SuppliersID
     ''',
-    ['ClientID'], [AAccount]);
+    ['SuppliersID'], [ASupplierID]);
 
     result := Customer.Create;
     result.UserName      := SQl.Q.FieldByName('emexUsername').AsString;
@@ -165,15 +140,14 @@ begin
   end;
 end;
 
-procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
-var
-      parts: ArrayOfFindByNumber;
+procedure TEmex.FindByDetailNumber(AClientID:LongInt; ASupplierID:LongInt; ADetailNum:string);
+var   parts: ArrayOfFindByNumber;
  ShowSubsts: Boolean;
 begin
   // Показывать аналоги в поиске
   ShowSubsts := SQl.GetSetting('ShowSubsts', false);
 
-  parts:=Emex.SearchPart(getCustomer(AClientID), ADetailNum, ShowSubsts);
+  parts:=Emex.SearchPart(getCustomer(ASupplierID), ADetailNum, ShowSubsts);
 
   FillFindByNumber(AClientID, parts);
 end;
@@ -190,7 +164,6 @@ procedure TEmex.FillFindByNumber(AClientID: LongInt; APparts: ArrayOfFindByNumbe
 var part: FindByNumber;
     I: Integer;
 begin
-  FSQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
   for I := 0 to Length(APparts)-1 do
   begin
     part:= FindByNumber.Create;

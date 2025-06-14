@@ -24,6 +24,7 @@ type
   private
     FConnection: TFDConnection;
     FClientID: Integer;
+    FSupplierID: Integer;
     FDetailNumber: string;
     FPriceLogo: string;
     FLogger: tLogger;
@@ -32,7 +33,7 @@ type
   protected
     procedure Execute(); override;
   public
-    constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+    constructor Create(AConnection: TFDConnection; AClientID, ASupplierID: Integer; ADetailNumber, APriceLogo: string);
     // передаем логгер в поток
     property Logger: tLogger read GetLogger write SetLogger;
   end;
@@ -334,12 +335,13 @@ end;
 
 { TSQLQueryThread }
 
-constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+constructor TSQLQueryThread.Create(AConnection: TFDConnection; AClientID, ASupplierID: Integer; ADetailNumber, APriceLogo: string);
 begin
   inherited Create(True); // поток создаётся приостановленным
 
   FConnection  := AConnection;
   FClientID    := AClientID;
+  FSupplierID  := ASupplierID;
   FPriceLogo   := APriceLogo;
   FDetailNumber:= ADetailNumber;
 end;
@@ -352,7 +354,7 @@ begin
   try
     FLogger.Debug('TSQLQueryThread.Execute FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber]);
 
-    Emex.FindByDetailNumber(FClientID, FDetailNumber);
+    Emex.FindByDetailNumber(FClientID, FSupplierID, FDetailNumber);
 
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);
   finally
@@ -377,8 +379,7 @@ end;
 procedure TOrderF.edtDetailNameFRemoteQuery(const QueryString: string;
   Result: TStrings);
 begin
-   sql.Open(
-   '''
+   sql.Open('''
      exec OrderF_PartDescription
              @Number = :Number
    ''',
@@ -432,8 +433,7 @@ end;
 
 function TOrderF.GetOrderCount: Integer;
 begin
-  sql.Open(
-  '''
+  sql.Open('''
     declare @CNT as Int = 0
 
     if OBJECT_ID('tempdb..#CounterPart') is not null
@@ -453,9 +453,12 @@ begin
   try
     sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
 
-    t := TSQLQueryThread.Create(UniMainModule.FDConnection, FClientID, FDetailNumber, FPriceLogo);
+    t := TSQLQueryThread.Create(UniMainModule.FDConnection,
+                                FClientID,
+                                FSuppliersID,
+                                FDetailNumber,
+                                FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-//    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
     t.Logger := GetCurrentLogData();
     t.start; // непосредственно ручной запуск потока
 
@@ -520,9 +523,9 @@ begin
                  ,@DetailNum = :DetailNum
                  ,@PriceLogo = :PriceLogo
                  ,@ProfilesDeliveryID = :ProfilesDeliveryID
-           ''',
-           ['DetailNum', 'PriceLogo', 'MakeLogo', 'ProfilesDeliveryID'],
-           [FDetailNumber, FPriceLogo, FMakeLogo,  FProfilesDeliveryID]);
+  ''',
+  ['DetailNum', 'PriceLogo', 'MakeLogo', 'ProfilesDeliveryID'],
+  [FDetailNumber, FPriceLogo, FMakeLogo,  FProfilesDeliveryID]);
 
   if sql.Count>0 then
   begin
@@ -658,8 +661,7 @@ begin
 
   UniHTMLFrame1.HTML.clear;
 
-  UniHTMLFrame1.HTML.Text := Format(
-  '''
+  UniHTMLFrame1.HTML.Text := Format('''
     <script async src="https://cse.google.com/cse.js?cx=%s"></script>
     <div class="gcse-search" data-gname="search"></div>
 
@@ -742,17 +744,17 @@ begin
   else
   begin
     sql.open('''
-               Update #CounterPart
-                  set Processed = 1
-                where OrderID   = :OrderID
+       Update #CounterPart
+          set Processed = 1
+        where OrderID   = :OrderID
 
-               Select top 1 OrderID
-                 from #CounterPart (nolock)
-                where isnull(Processed, 0) = 0
-                order by N
-             ''',
-             ['OrderID'],
-             [FID]);
+       Select top 1 OrderID
+         from #CounterPart (nolock)
+        where isnull(Processed, 0) = 0
+        order by N
+    ''',
+    ['OrderID'],
+    [FID]);
 
     sql.q.first;
     if sql.Q.RecordCount > 0 then
@@ -901,8 +903,7 @@ begin
 
   RetVal.Clear;
 
-  Sql.exec(
-  '''
+  Sql.exec('''
     exec SearchPriceCalc
            @ProfilesCustomerID=:ProfilesCustomerID
 
@@ -931,8 +932,7 @@ begin
 
   if RetVal.Code = 0 then
   begin
-    sqltext :=
-    '''
+    sqltext := '''
        declare @R int
 
        exec @r = OrderUpdate
@@ -1155,8 +1155,7 @@ begin
       r:= 'star';
     end;
 
-    js :=
-    '''
+    js := '''
     function setRatingVal2(AVal, APercent)
     {
      document.getElementById(AVal).checked = true;
@@ -1495,8 +1494,7 @@ procedure TOrderF.DataLoad;
 var js: string;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text :=
-  '''
+  UniMainModule.Query.SQL.Text := '''
        Declare @Kurs         money
               ,@ExtraKurs    money
               ,@CurKurs      money
@@ -1506,10 +1504,8 @@ begin
              ,@ExtraKurs    = o.ExtraKurs
              ,@CurExtraKurs = s.ExtraKurs
          from tOrders o with (nolock index=ao1)
-        inner join tClients c with (nolock index=PK_tClients_ClientID)
-                on c.ClientID    = o.ClientID
         inner join tSuppliers s with (nolock index=ao1)
-                on S.SuppliersID = c.SuppliersID
+                on S.SuppliersID = o.SuppliersID
         where o.OrderID = :OrderID
 
        select @CurKurs = dbo.GetCurrencyRate('840', null)

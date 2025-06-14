@@ -21,8 +21,6 @@ object SuppliersF: TSuppliersF
     TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
-    ExplicitLeft = 387
-    ExplicitTop = 408
     DesignSize = (
       1278
       44)
@@ -75,7 +73,7 @@ object SuppliersF: TSuppliersF
           143)
         object edtBrief: TUniEdit
           Left = 160
-          Top = 16
+          Top = 10
           Width = 1096
           Hint = ''
           Text = ''
@@ -91,6 +89,28 @@ object SuppliersF: TSuppliersF
           Hint = ''
           Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
           TabOrder = 2
+        end
+        object lblGroupName: TUniLabel
+          Left = 25
+          Top = 51
+          Width = 114
+          Height = 13
+          Hint = ''
+          Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074':'
+          TabOrder = 3
+        end
+        object edtGroupName: TUniExComboBox
+          Left = 160
+          Top = 47
+          Width = 405
+          Hint = ''
+          Style = csOwnerDrawFixed
+          Text = ''
+          TabOrder = 4
+          AnyMatch = True
+          ClearButton = True
+          IconItems = <>
+          Value = '-1'
         end
       end
       object fsAudit: TUniFieldSet
@@ -185,7 +205,7 @@ object SuppliersF: TSuppliersF
         383)
       object edtEmexUsername: TUniEdit
         Left = 238
-        Top = 26
+        Top = 58
         Width = 506
         Hint = ''
         Text = ''
@@ -195,7 +215,7 @@ object SuppliersF: TSuppliersF
       end
       object UniLabel4: TUniLabel
         Left = 33
-        Top = 29
+        Top = 62
         Width = 165
         Height = 13
         Hint = ''
@@ -204,7 +224,7 @@ object SuppliersF: TSuppliersF
       end
       object UniLabel5: TUniLabel
         Left = 33
-        Top = 65
+        Top = 93
         Width = 131
         Height = 13
         Hint = ''
@@ -213,7 +233,7 @@ object SuppliersF: TSuppliersF
       end
       object edtDiscount: TUniNumberEdit
         Left = 238
-        Top = 118
+        Top = 148
         Width = 121
         Hint = ''
         TabOrder = 3
@@ -222,7 +242,7 @@ object SuppliersF: TSuppliersF
       end
       object UniLabel6: TUniLabel
         Left = 33
-        Top = 120
+        Top = 150
         Width = 108
         Height = 13
         Hint = ''
@@ -231,7 +251,7 @@ object SuppliersF: TSuppliersF
       end
       object edtCommission: TUniNumberEdit
         Left = 238
-        Top = 148
+        Top = 178
         Width = 121
         Hint = ''
         TabOrder = 5
@@ -240,7 +260,7 @@ object SuppliersF: TSuppliersF
       end
       object edtExtraKurs: TUniNumberEdit
         Left = 238
-        Top = 178
+        Top = 208
         Width = 121
         Hint = ''
         TabOrder = 6
@@ -249,7 +269,7 @@ object SuppliersF: TSuppliersF
       end
       object UniLabel7: TUniLabel
         Left = 33
-        Top = 149
+        Top = 179
         Width = 106
         Height = 13
         Hint = ''
@@ -258,7 +278,7 @@ object SuppliersF: TSuppliersF
       end
       object UniLabel8: TUniLabel
         Left = 33
-        Top = 177
+        Top = 207
         Width = 91
         Height = 13
         Hint = ''
@@ -267,11 +287,30 @@ object SuppliersF: TSuppliersF
       end
       object edtEmexPassword: TUniEdit
         Left = 238
-        Top = 57
-        Width = 240
+        Top = 88
+        Width = 506
         Hint = ''
         Text = ''
         TabOrder = 9
+      end
+      object UniLabel10: TUniLabel
+        Left = 33
+        Top = 32
+        Width = 131
+        Height = 13
+        Hint = ''
+        Caption = #1040#1076#1088#1077#1089#1089' '#1080#1085#1090#1077#1075#1088#1072#1094#1080#1080' (API):'
+        TabOrder = 10
+      end
+      object edtApiAddress: TUniEdit
+        Left = 238
+        Top = 28
+        Width = 1035
+        Hint = ''
+        Text = ''
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 11
+        ClearButton = True
       end
     end
     object tabDelivery: TUniTabSheet

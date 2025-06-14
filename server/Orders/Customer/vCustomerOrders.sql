@@ -9,6 +9,7 @@ create view vCustomerOrders
 as
 SELECT o.[OrderID]
       ,o.[ClientID]
+      ,o.[SuppliersID]
       ,c.[Brief]         as ClientName
       ,o.[OrderDate]
       ,o.[PriceLogo]
@@ -61,7 +62,7 @@ SELECT o.[OrderID]
       ,o.Comment                
 	  ,cast(b.Name as nvarchar(128)) as ReplacementManufacturer -- наименование бренда замены
 	  ,o.ReplacementDetailNumber               -- номер замены
-      ,o.Invoice                               -- номер инвойса
+      ,cast(o.Invoice as varchar(64)) as Invoice -- номер инвойса
       ,coalesce(o.DestinationName, pd.DestinationName) as DestinationName -- Направление отгрузки       
       ,coalesce(o.DestinationLogo, pd.DestinationLogo) as DestinationLogo -- используем в форме редактирования
       ,coalesce(o.ProfilesCustomerID, pd.ProfilesCustomerID) ProfilesCustomerID
@@ -148,5 +149,5 @@ SELECT o.[OrderID]
 go
 grant select on vCustomerOrders to public
 go
-exec setOV 'vCustomerOrders', 'V', '20250320', '37'
+exec setOV 'vCustomerOrders', 'V', '20250613', '38'
 go

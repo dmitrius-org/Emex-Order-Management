@@ -12,7 +12,6 @@ as
 select c.ClientID      
       ,c.Brief       
       ,c.Name	     
-	  ,c.SuppliersID
       ,c.inDatetime  
       ,c.updDatetime 
 	  ,isnull(c.IsActive, 0) IsActive
@@ -40,7 +39,7 @@ select c.ClientID
 go
 grant all on vClientEdit to public
 go
-exec setOV 'vClientEdit', 'V', '20250408', '6'
+exec setOV 'vClientEdit', 'V', '20250613', '7'
 go
 
 select * from vClientEdit

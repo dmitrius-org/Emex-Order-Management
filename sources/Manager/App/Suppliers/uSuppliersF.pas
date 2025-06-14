@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  uUniExComboBox, Vcl.ExtCtrls, uniSpinEdit;
+  uUniExComboBox, Vcl.ExtCtrls, uniSpinEdit, uUniExComboBoxHelper;
 
 type
   TSuppliersF = class(TUniForm)
@@ -94,6 +94,10 @@ type
     qDeliveryFragile: TFloatField;
     qDeliveryBrief: TWideStringField;
     edtDelivery: TUniSpinEdit;
+    lblGroupName: TUniLabel;
+    UniLabel10: TUniLabel;
+    edtApiAddress: TUniEdit;
+    edtGroupName: TUniExComboBox;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -122,6 +126,11 @@ type
     procedure DeliveryDataLoad();
 
     procedure RefreshDeliveryMenu;
+
+    /// <summary>
+    ///  DataCheck - проверка заполнения обязательных полей
+    ///</summary>
+    procedure DataCheck();
   public
     { Public declarations }
     property FormAction: TFormAction read FAction write SetAction;
@@ -175,60 +184,34 @@ end;
 procedure TSuppliersF.btnOkClick(Sender: TObject);
 var sqltext: string;
 begin
-  RetVal.Clear;
+  DataCheck;
 
+  if RetVal.Code = 0 then
   case FAction of
     acInsert:
     begin
-      sqltext :=' declare @R           int                     '+
-                '        ,@SuppliersID numeric(18, 0)          '+
-                '                                              '+
-                ' exec @r = SupplierInsert                     '+
-                '             @SuppliersID  = @SuppliersID out '+
-                '            ,@Brief        = :Brief           '+
-                '            ,@Name         = :Name            '+
-                '            ,@emexUsername = :emexUsername    '+
-                '            ,@emexPassword = :emexPassword    '+
-                '            ,@Discount     = :Discount        '+
-                '            ,@Commission   = :Commission      '+
-                '            ,@ExtraKurs    = :ExtraKurs       '+
-                '   '+
-                '   '+
-                ' select @r as retcode      ';
+      sqltext :='''
+                 declare @R           int
+                        ,@SuppliersID numeric(18, 0)
+
+                 exec @r = SupplierInsert
+                             @SuppliersID  = @SuppliersID out
+                            ,@Brief        = :Brief
+                            ,@Name         = :Name
+                            ,@emexUsername = :emexUsername
+                            ,@emexPassword = :emexPassword
+                            ,@Discount     = :Discount
+                            ,@Commission   = :Commission
+                            ,@ExtraKurs    = :ExtraKurs
+                            ,@GroupName    = :GroupName
+                            ,@ApiAddress   = :ApiAddress
+
+                 select @r as retcode
+      ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs'],
-               [edtBrief.Text,
-               '',
-               edtEmexUsername.text,
-               edtEmexPassword.text,
-               edtDiscount.Value,
-               edtCommission.Value,
-               edtExtraKurs.Value
-               ]);
-
-      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
-
-    end;
-    acUpdate:
-    begin
-      sqltext :=' declare @R      int                        '+
-                '                                            '+
-                ' exec @r = SupplierUpdate                   '+
-                '             @SuppliersID   = :SuppliersID  '+
-                '            ,@Brief         = :Brief        '+
-                '            ,@Name          = :Name         '+
-                '            ,@emexUsername  = :emexUsername '+
-                '            ,@emexPassword  = :emexPassword '+
-                '            ,@Discount      = :Discount     '+
-                '            ,@Commission    = :Commission   '+
-                '            ,@ExtraKurs     = :ExtraKurs    '+
-                '   '+
-                '   '+
-                ' select @r as retcode      ';
-
-      Sql.Open(sqltext,
-               ['Brief','Name','emexUsername', 'emexPassword', 'Discount', 'Commission', 'ExtraKurs', 'SuppliersID'],
+               ['Brief','Name','emexUsername', 'emexPassword', 'Discount',
+                'Commission', 'ExtraKurs', 'GroupName', 'ApiAddress'],
                [edtBrief.Text,
                '',
                edtEmexUsername.text,
@@ -236,20 +219,59 @@ begin
                edtDiscount.Value,
                edtCommission.Value,
                edtExtraKurs.Value,
-               FID
+               edtGroupName.Text,
+               edtApiAddress.text
+               ]);
+
+      RetVal.Code := Sql.Q.FieldByName('retcode').Value;
+
+    end;
+    acUpdate:
+    begin
+      sqltext :='''
+                declare @R      int
+
+                 exec @r = SupplierUpdate
+                             @SuppliersID   = :SuppliersID
+                            ,@Brief         = :Brief
+                            ,@Name          = :Name
+                            ,@emexUsername  = :emexUsername
+                            ,@emexPassword  = :emexPassword
+                            ,@Discount      = :Discount
+                            ,@Commission    = :Commission
+                            ,@ExtraKurs     = :ExtraKurs
+                            ,@GroupName     = :GroupName
+                            ,@ApiAddress    = :ApiAddress
+
+                 select @r as retcode
+     ''';
+
+      Sql.Open(sqltext,
+               ['Brief','Name','emexUsername', 'emexPassword', 'Discount',
+                'Commission', 'ExtraKurs', 'SuppliersID', 'GroupName', 'ApiAddress'],
+               [edtBrief.Text,
+               '',
+               edtEmexUsername.text,
+               edtEmexPassword.text,
+               edtDiscount.Value,
+               edtCommission.Value,
+               edtExtraKurs.Value,
+               FID,
+               edtGroupName.Text,
+               edtApiAddress.text
                ]);
 
       RetVal.Code := Sql.Q.FieldByName('retcode').Value;
     end;
     acDelete:
     begin
-      sqltext :=  ' declare @R      int                 '+
-                  '                                     '+
-                  ' exec @r = SupplierDelete            '+
-                  '         @SuppliersID = :SuppliersID '+
-                  '                                     '+
-                  ' select @r as retcode                '+
-                  ' ';
+      sqltext :=  '''
+                   declare @R      int
+
+                   exec @r = SupplierDelete @SuppliersID = :SuppliersID
+
+                   select @r as retcode
+      ''';
 
       Sql.Open(sqltext, ['SuppliersID'], [FID]);
 
@@ -268,13 +290,39 @@ begin
 
 end;
 
+procedure TSuppliersF.DataCheck;
+begin
+ RetVal.Clear;
+
+  case FAction of
+    acInsert, acReportCreate, acUpdate, acReportEdit:
+    begin
+      if edtBrief.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Наименование] обязательно к заполнению!';
+        edtBrief.SetFocus;
+        Exit();
+      end
+      else if edtGroupName.IsBlank then
+      begin
+        RetVal.Code := 1;
+        RetVal.Message := 'Поле [Группа поставщиков] обязательно к заполнению!';
+        edtGroupName.SetFocus;
+        Exit();
+      end
+    end;
+  end;
+end;
+
 procedure TSuppliersF.DataLoad;
 begin
   UniMainModule.Query.Close;
-  UniMainModule.Query.SQL.Text := ' select *  '+
-                                  '   from tSuppliers (nolock) '+
-                                  '  where SuppliersID = :SuppliersID '+
-                                  ' ';
+  UniMainModule.Query.SQL.Text := '''
+                                   select *
+                                     from vSuppliers
+                                    where SuppliersID = :SuppliersID
+  ''';
   UniMainModule.Query.ParamByName('SuppliersID').Value := FID;
   UniMainModule.Query.Open;
 
@@ -286,6 +334,9 @@ begin
 
   edtEmexUsername.Text:= UniMainModule.Query.FieldByName('emexUsername').AsString;
   edtEmexPassword.Text:= UniMainModule.Query.FieldByName('emexPassword').AsString;
+  edtGroupName.Text:= UniMainModule.Query.FieldByName('GroupName').AsString;
+  edtApiAddress.Text:= UniMainModule.Query.FieldByName('ApiAddress').AsString;
+
 
   // аудит
   edtID.Text         := UniMainModule.Query.FieldValues['UserID'];
@@ -322,26 +373,22 @@ end;
 
 procedure TSuppliersF.qDeliveryAfterDelete(DataSet: TDataSet);
 begin
-
-RefreshDeliveryMenu
+  RefreshDeliveryMenu
 end;
 
 procedure TSuppliersF.qDeliveryAfterEdit(DataSet: TDataSet);
 begin
-
-RefreshDeliveryMenu
+  RefreshDeliveryMenu
 end;
 
 procedure TSuppliersF.qDeliveryAfterInsert(DataSet: TDataSet);
 begin
-
-RefreshDeliveryMenu
+  RefreshDeliveryMenu
 end;
 
 procedure TSuppliersF.qDeliveryAfterPost(DataSet: TDataSet);
 begin
-
-RefreshDeliveryMenu;
+  RefreshDeliveryMenu;
 end;
 
 procedure TSuppliersF.RefreshDeliveryMenu;
@@ -372,6 +419,8 @@ begin
   fsAudit.Visible:= FAction <> acInsert;
 
   pcCommon.ActivePage := tabCommon;
+
+  edtGroupName.FillFromSQL('select Brief ID, Brief Name  from tProperty (nolock) where ObjectTypeID = 14');
 
   case FAction of
     acInsert, acReportCreate:

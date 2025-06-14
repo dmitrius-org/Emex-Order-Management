@@ -12,7 +12,9 @@ create proc SupplierInsert
              ,@emexPassword         nvarchar(32)=null--Пароль для интеграции
              ,@Discount             money  
              ,@Commission           money  
-             ,@ExtraKurs            money  
+             ,@ExtraKurs            money 
+             ,@GroupName	        varchar(64 ) 
+             ,@ApiAddress           varchar(256) = null 
 
 as
   declare @r int = 0
@@ -31,7 +33,7 @@ as
       delete tRetMessage from tRetMessage (rowlock) where spid=@@spid
       Begin tran
 
-		insert into tSuppliers
+		insert into tSuppliers with (rowlock)
 		      (
 		       Brief
 		      ,Name
@@ -40,6 +42,8 @@ as
               ,Discount  
               ,Commission
               ,ExtraKurs 
+              ,GroupName
+              ,ApiAddress
 		       )
 		OUTPUT INSERTED.SuppliersID INTO @ID
 		select @Brief     
@@ -49,6 +53,8 @@ as
               ,@Discount  
               ,@Commission
               ,@ExtraKurs 
+              ,@GroupName
+              ,@ApiAddress
 
 		Select @SuppliersID = ID from @ID	
         
@@ -78,5 +84,5 @@ return @r
 go
 grant exec on SupplierInsert to public
 go
-exec setOV 'SupplierInsert', 'P', '20240618', '1'
+exec setOV 'SupplierInsert', 'P', '20250613', '2'
 go

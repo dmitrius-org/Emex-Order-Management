@@ -74,7 +74,7 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
       function TestConnect(): string;
 
       /// <summary>FindByDetailNumber - поиск детали по номеру </summary>
-      procedure FindByDetailNumber(AClientID:LongInt; ADetailNum:string);
+      procedure FindByDetailNumber(AClientID, ASuppliersID:LongInt; ADetailNum:string);
 
       /// <summary>
       /// getCustomer -Подготовка авторизационных данных (пользователь, пароль).
@@ -88,7 +88,7 @@ uses System.SysUtils, System.Classes, FireDAC.Stan.Param,
       /// </summary>
       /// <param name="AClientID">идентификатор клиента</param>
       /// <returns> объект Customer</returns>
-      function getCustomerByClient(AClientID: Integer): Customer;
+//      function getCustomerByClient(AClientID: Integer): Customer;
 
       /// <summary>
       /// InsertPartToBasketByMarks - Помещение запчастей в корзину
@@ -438,10 +438,8 @@ begin
         from pAccrualAction p with (nolock index=ao2)
        inner join tOrders o with (nolock)
                on o.OrderID = p.ObjectID
-       inner join tClients c with (nolock)
-               on c.ClientID = o.ClientID
        inner join tSuppliers s with (nolock)
-               on s.SuppliersID = c.SuppliersID
+               on s.SuppliersID = o.SuppliersID
        where p.Spid   = @@spid
          and p.Retval = 0
     ''', [], []);
@@ -473,24 +471,24 @@ begin
   end;
 end;
 
-function TEmex.getCustomerByClient(AClientID: Integer): Customer;
-begin
-  begin
-    FSQL.Open('Select s.emexUsername, s.emexPassword        '+
-             '  from tClients c with (nolock index=ao1)    '+
-             '  join tSuppliers  s with (nolock index=ao1) '+
-             '    on s.SuppliersID = c.SuppliersID         '+
-             ' where c.ClientID = :ClientID',
-            ['ClientID'], [AClientID]);
-
-    result := Customer.Create;
-    result.UserName      := FSQL.Q.FieldByName('emexUsername').AsString;
-    result.Password      := FSQL.Q.FieldByName('emexPassword').AsString;
-
-    result.SubCustomerId := '0';
-    result.CustomerId    := '0';
-  end;
-end;
+//function TEmex.getCustomerByClient(AClientID: Integer): Customer;
+//begin
+//  begin
+//    FSQL.Open('Select s.emexUsername, s.emexPassword        '+
+//             '  from tClients c with (nolock index=ao1)    '+
+//             '  join tSuppliers  s with (nolock index=ao1) '+
+//             '    on s.SuppliersID = c.SuppliersID         '+
+//             ' where c.ClientID = :ClientID',
+//            ['ClientID'], [AClientID]);
+//
+//    result := Customer.Create;
+//    result.UserName      := FSQL.Q.FieldByName('emexUsername').AsString;
+//    result.Password      := FSQL.Q.FieldByName('emexPassword').AsString;
+//
+//    result.SubCustomerId := '0';
+//    result.CustomerId    := '0';
+//  end;
+//end;
 
 function TEmex.GetEmex: ServiceSoap;
 begin
@@ -673,7 +671,7 @@ begin
   OrderID := 0;
   try
     FQuery.Close;
-    FQuery.Open('Select o.OrderID,  o.BasketId, o.ClientID '+
+    FQuery.Open('Select o.OrderID, o.BasketId, o.SuppliersID '+
              '  from pAccrualAction p (nolock)'+
              ' inner join tOrders o (nolock)  '+
              '         on o.OrderID=p.ObjectID'+
@@ -700,7 +698,7 @@ begin
 
         outBasket[0]:= part;
 
-        R:=Emex.DeleteFromBasket(getCustomerByClient(FQuery.FieldByName('ClientID').AsInteger), outBasket);
+        R:=Emex.DeleteFromBasket(getCustomer(FQuery.FieldByName('SuppliersID').AsInteger), outBasket);
 
         if R = 1 then
         begin
@@ -867,7 +865,9 @@ procedure TEmex.FillFindByNumber(APparts: ArrayOfFindByNumber; AClientID: LongIn
 var I: Integer;
 begin
   FLogger.Info('TEmex.FillFindByNumber Begin');
+
   FSQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
+
   for I := 0 to Length(APparts)-1 do
   begin
     FSQL.Exec('''
@@ -913,7 +913,6 @@ begin
               'GuaranteedDay',
               'bitECO',
               'bitWeightMeasured'],
-
              [AClientID,
               APparts[i].Available,
               APparts[i].bitOldNum,
@@ -984,11 +983,13 @@ begin
   FLogger.Info('TEmex.FillMovement End');
 end;
 
-procedure TEmex.FindByDetailNumber(AClientID:LongInt; ADetailNum: string);
+procedure TEmex.FindByDetailNumber(AClientID, ASuppliersID:LongInt; ADetailNum: string);
 var parts: ArrayOfFindByNumber;
 begin
   FLogger.Info('Emex.SearchPart Begin');
-  parts:=Emex.SearchPart(getCustomerByClient(AClientID), ADetailNum, False);
+
+  parts:=Emex.SearchPart(getCustomer(ASuppliersID), ADetailNum, False);
+
   FLogger.Info('Emex.SearchPart End');
 
   FillFindByNumber(parts, AClientID);

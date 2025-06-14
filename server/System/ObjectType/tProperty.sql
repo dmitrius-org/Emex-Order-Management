@@ -51,3 +51,8 @@ insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 4, 12, 0, 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 0, 13, 0, 'Эмекс.ру', 'Эмекс.ру' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 1, 13, 0, 'Файл',     'Файл' 
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 13, 0, 'Скрипт',   'Скрипт' 
+
+
+-- тип ответа на отказы
+insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 0, 14, 0, 'Emex', 'Emex' 
+

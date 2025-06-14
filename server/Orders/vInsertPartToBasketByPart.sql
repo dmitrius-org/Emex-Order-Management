@@ -7,7 +7,7 @@ vInsertPartToBasketByPart - получение списка деталей дл�
 create view vInsertPartToBasketByPart
 as
 Select c.ClientID,
-       c.SuppliersID,
+       o.SuppliersID,
        o.OrderID,  
 	   o.StatusID,    
        o.OrderNum, 
@@ -41,5 +41,5 @@ Select c.ClientID,
 go
 grant select on vInsertPartToBasketByPart to public
 go
-exec setOV 'vInsertPartToBasketByPart', 'V', '20250402', '6'
+exec setOV 'vInsertPartToBasketByPart', 'V', '20250613', '7'
 go

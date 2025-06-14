@@ -32,6 +32,17 @@ begin
  goto exit_
 end
 
+if exists (select 1
+             from [pProfilesCustomer](nolock)
+            where Spid            = @@spid
+              and Brief           = @Brief
+              and ID             <> @ID
+)
+begin
+   select @r=107 --Наименование профиля существует
+   goto exit_
+end
+
 if isnull(@SuppliersID, 0) = 0
 begin
   select @r=108 --'Необходимо заполнить поле [Поставщик]!'
@@ -44,29 +55,17 @@ begin
   goto exit_
 end
 
-
-if exists (select 1
-             from [pProfilesCustomer](nolock)
-            where Spid            = @@spid
-              and Brief           = @Brief
-              and ID             <> @ID
-)
-begin
-   select @r=107 --Наименование профиля существует
-   goto exit_
-end
-
-/*
 -- 
-if exists (select 1
-             from [pProfilesCustomer](nolock)
-            where Spid            = @@spid
-              and Brief           = @Brief
-              and ProfilesDeliveryID = @ProfilesDeliveryID
-              and ID             <> :ID
+if not exists (select 1
+                 from tSupplierDeliveryProfiles sd with (nolock)
+                where SuppliersID        = @SuppliersID
+                  and ProfilesDeliveryID = @ProfilesDeliveryID
+
 )
 begin
-   RAISERROR ('Сочетание "Наименование профиля/Способ доставки" существует!', 16, 1); 
+   --RAISERROR ('Сочетание "Наименование профиля/Способ доставки" существует!', 16, 1); 
+  select @r=109 -- 'Профиль доставки не соответствует поставщику!'
+  goto exit_
 end
 --*/
 
@@ -91,5 +90,5 @@ return @r
 go
 grant exec on ClientDeliveryProfilesUpdate to public
 go
-exec setOV 'ClientDeliveryProfilesUpdate', 'P', '20250603', '1'
+exec setOV 'ClientDeliveryProfilesUpdate', 'P', '20250613', '2'
 go

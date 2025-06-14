@@ -644,7 +644,6 @@ object ClientsF: TClientsF
           OnKeyDown = GridKeyDown
           OnAjaxEvent = ProfilesCustomerGridAjaxEvent
           OnColumnSort = ProfilesCustomerGridColumnSort
-          OnSetCellValue = ProfilesCustomerGridSetCellValue
           OnCellContextClick = ProfilesCustomerGridCellContextClick
           Columns = <
             item
@@ -826,7 +825,7 @@ object ClientsF: TClientsF
           end
           object lkSupplier: TUniDBLookupComboBox
             Left = 24
-            Top = 190
+            Top = 104
             Width = 121
             Height = 23
             Hint = ''
@@ -838,9 +837,15 @@ object ClientsF: TClientsF
             DataSource = dsProfilesCustomer
             TabOrder = 6
             Color = clWindow
+            ClientEvents.ExtEvents.Strings = (
+              
+                'select=function select(combo, record, eOpts)'#13#10'{'#13#10'    var keyValu' +
+                'e = record.get(combo.valueField); // combo.valueField '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085 +
+                #1080#1102' '#8212' '#1101#1090#1086' KeyField'#13#10'    console.log("KeyValue: " + keyValue);'#13#10'  ' +
+                '  '#13#10'    // '#1054#1090#1087#1088#1072#1074#1083#1103#1077#1084' '#1085#1072' '#1089#1077#1088#1074#1077#1088#13#10'    ajaxRequest(combo, '#39'lookup_' +
+                'selected'#39', ['#39'key='#39' + keyValue]); '#13#10'}')
             Style = csOwnerDrawFixed
-            OnChange = lkSupplierChange
-            OnSelect = lkSupplierSelect
+            OnAjaxEvent = lkSupplierAjaxEvent
           end
         end
       end
@@ -1478,7 +1483,9 @@ object ClientsF: TClientsF
     end
   end
   object qlkSupplierslist: TFDQuery
+    IndexFieldNames = 'SuppliersID'
     Connection = UniMainModule.FDConnection
+    UpdateOptions.KeyFields = 'SuppliersID'
     SQL.Strings = (
       'select SuppliersID'
       '      ,Brief '
@@ -1663,6 +1670,7 @@ object ClientsF: TClientsF
   end
   object qProfilesCustomer: TFDQuery
     AutoCalcFields = False
+    BeforeEdit = qProfilesCustomerBeforeEdit
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvRefreshDelete, uvCountUpdatedRecords, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
     UpdateOptions.UpdateChangedFields = False
@@ -1770,7 +1778,6 @@ object ClientsF: TClientsF
     object qProfilesCustomerSupplierName: TStringField
       FieldName = 'SupplierName'
       KeyFields = 'SuppliersID'
-      OnChange = qProfilesCustomerSupplierNameChange
       Size = 26
     end
   end
@@ -1921,6 +1928,7 @@ object ClientsF: TClientsF
     Top = 258
   end
   object qlkProfilesDeliveryList: TFDQuery
+    IndexFieldNames = 'ProfilesDeliveryID'
     Connection = UniMainModule.FDConnection
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvCheckUpdatable]
     UpdateOptions.EnableDelete = False
@@ -1931,13 +1939,13 @@ object ClientsF: TClientsF
     SQL.Strings = (
       'select ProfilesDeliveryID, ProfileName '
       '  from vSupplierDeliveryParam '
-      ' where SuppliersID = :SuppliersID')
+      ' where SuppliersBrief = :SuppliersBrief')
     Left = 473
     Top = 312
     ParamData = <
       item
-        Name = 'SUPPLIERSID'
-        DataType = ftFMTBcd
+        Name = 'SUPPLIERSBRIEF'
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end>

@@ -7,7 +7,7 @@ vInsertPartToBasketByOrder - получение списка деталей дл
 create view vInsertPartToBasketByOrder
 as
 Select c.ClientID,
-       c.SuppliersID,
+       o.SuppliersID,
        o.OrderID,  
        o.StatusID,    
        o.OrderNum, 
@@ -36,9 +36,11 @@ Select c.ClientID,
 go
 grant all on vInsertPartToBasketByOrder to public
 go
-exec setOV 'vInsertPartToBasketByOrder', 'V', '20250402', '1'
+exec setOV 'vInsertPartToBasketByOrder', 'V', '20250613', '2'
 go
+/*
 select *
   from vInsertPartToBasketByOrder
  where ClientID=149
+--*/
  

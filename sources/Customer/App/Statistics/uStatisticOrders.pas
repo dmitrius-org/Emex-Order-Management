@@ -87,6 +87,13 @@ end;
 
 procedure TStatisticOrders.GridStatisticsRefresh;
 begin
+  if edtDataType.ItemIndex = -1 then
+  begin
+    ShowToast('Выберите "Тип данных"');
+    edtDataType.SetFocus;
+    Exit;
+  end;
+
   ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize();
   try

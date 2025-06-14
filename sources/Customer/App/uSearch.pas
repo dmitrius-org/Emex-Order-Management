@@ -12,9 +12,18 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, uniWidgets, System.Actions,
   Vcl.ActnList, uniMainMenu, uniHTMLFrame, uniButton, uniMultiItem, uniComboBox,
-  uniCheckBox, uniLabel, uniSpinEdit, uniGroupBox, Math;
+  uniCheckBox, uniLabel, uniSpinEdit, uniGroupBox, Math,
+  System.Generics.Collections;
 
 type
+
+  TSupplierInfo = record
+    SuppliersID: Integer;
+    GroupName: string;
+  end;
+
+  TSupplierInfoList = TList<TSupplierInfo>;
+
   TSearchF = class(TUniFrame)
     TopPanel: TUniPanel;
     MainPanel: TUniPanel;
@@ -164,6 +173,7 @@ type
 
     procedure VolumeCalc();
 
+    function GetSupplierInfoList(AClientID: Integer): TSupplierInfoList;
   public
     { Public declarations }
   end;
@@ -184,7 +194,11 @@ end;
 procedure TSearchF.btnSearchClick(Sender: TObject);
 begin
   if edtSearch.Text = '' then
+  begin
+    ShowToast('Введите номер детали для поиска');
+    edtSearch.SetFocus;
     Exit;
+  end;
 
   PartSearch;
 end;
@@ -355,45 +369,113 @@ begin
     ''')
 end;
 
+function TSearchF.GetSupplierInfoList(AClientID: Integer): TSupplierInfoList;
+var
+  Query: TFDQuery;
+  Info: TSupplierInfo;
+  ResultList: TSupplierInfoList;
+begin
+  ResultList := TSupplierInfoList.Create;
+  Query := TFDQuery.Create(nil);
+  try
+    try
+      Query.Connection := UniMainModule.FDConnection;
+      Query.SQL.Text := '''
+        SELECT DISTINCT s.SuppliersID, s.GroupName
+        FROM tProfilesCustomer pc WITH (NOLOCK)
+        INNER JOIN tSuppliers s WITH (NOLOCK)
+          ON s.SuppliersID = pc.SuppliersID
+         AND ISNULL(s.emexUsername, '') <> ''
+         AND ISNULL(s.emexPassword, '') <> ''
+         AND ISNULL(s.ApiAddress, '') <> ''
+        WHERE pc.ClientID = :ClientID
+          AND pc.isActive = 1
+      ''';
+
+      Query.ParamByName('ClientID').AsInteger := AClientID;
+      Query.Open;
+
+      while not Query.Eof do
+      begin
+        Info.SuppliersID := Query.FieldByName('SuppliersID').AsInteger;
+        Info.GroupName := Query.FieldByName('GroupName').AsString;
+        ResultList.Add(Info);
+        Query.Next;
+      end;
+
+      Result := ResultList;
+    except
+      ResultList.Free;
+      raise;
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+
 procedure TSearchF.PartSearch;
 var
   emex: TEmex;
+  SupplierIDs: TSupplierInfoList;
+  Item: TSupplierInfo;
 begin
   log('TSearchF.PartSearch %s', ['Begin'], etInfo);
   ShowMask('Поиск...');
   UniSession.Synchronize();
+
+  SupplierIDs := GetSupplierInfoList(UniMainModule.AUserID);
   try
-    emex := TEmex.Create(UniMainModule.FDConnection);
-    emex.FindByDetailNumber(UniMainModule.AUserID, Trim(edtSearch.Text));
-    log('TSearchF.PartSearch %s', ['Получили данные с эмекс'], etInfo);
 
-    SetMakeName;
+    try
+      SQL.Exec('Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid', [], []);
 
-    PriceCalc;
+      for Item in SupplierIDs do
+      begin
+        if Item.GroupName = 'Emex' then
+        begin
+          emex := TEmex.Create(UniMainModule.FDConnection);
+          emex.FindByDetailNumber(UniMainModule.AUserID, Item.SuppliersID, Trim(edtSearch.Text));
 
-    log('TSearchF.PartSearch %s', ['Расcчитали цены'], etInfo);
+          log('TSearchF.PartSearch %s', ['Получили данные с эмекс'], etInfo);
+        end;
+      end;
 
-    GridRefresh();
+      SetMakeName;
 
-    log('TSearchF.PartSearch %s', ['Обновили таблицу'], etInfo);
+      PriceCalc;
 
-    if (Query.RecordCount > 1) then
-    begin
+      log('TSearchF.PartSearch %s', ['Расcчитали цены'], etInfo);
 
-      if (edtSearch.Items.IndexOf(FDetailNum) < 0 ) then
-        edtSearch.Items.Add(FDetailNum);
+      GridRefresh();
 
-      SearchHistorySave;
+      log('TSearchF.PartSearch %s', ['Обновили таблицу'], etInfo);
 
-      log('TSearchF.PartSearch %s', ['Обновили историю поиска'], etInfo);
+      if (Query.RecordCount > 1) then
+      begin
+
+        if (edtSearch.Items.IndexOf(FDetailNum) < 0 ) then
+          edtSearch.Items.Add(FDetailNum);
+
+        SearchHistorySave;
+
+        log('TSearchF.PartSearch %s', ['Обновили историю поиска'], etInfo);
+      end;
+
+    finally
+      FreeAndNil(emex);
+      HideMask;
+      UniSession.Synchronize();
+
+      log('TSearchF.PartSearch %s', ['End'], etInfo);
     end;
-  finally
-    FreeAndNil(emex);
-    HideMask;
-    UniSession.Synchronize();
 
-    log('TSearchF.PartSearch %s', ['End'], etInfo);
+
+  finally
+    SupplierIDs.Free;
   end;
+
+
 end;
 
 procedure TSearchF.SetMakeName;

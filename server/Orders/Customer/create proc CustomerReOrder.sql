@@ -134,12 +134,12 @@ as
                     and p.PriceLogo = @PriceLogo
                 ) as p
 
-   inner join tClients c with (nolock index=PK_tClients_ClientID)
-           on c.ClientID = t.ClientID 
-   inner join tSuppliers s with (nolock index=ao1)
-           on S.SuppliersID = c.SuppliersID
+   --inner join tClients c with (nolock index=PK_tClients_ClientID)
+   --        on c.ClientID = t.ClientID 
    inner join vClientProfilesParam cp
            on cp.ProfilesCustomerID = @ProfilesCustomerID
+   --inner join tSuppliers s with (nolock index=ao1)
+   --        on S.SuppliersID = c.SuppliersID
    left join @P pp
           on 1=1 
    where t.OrderID = @OrderID
@@ -203,6 +203,6 @@ as
 go
 grant exec on CustomerReOrder to public
 go
-exec setOV 'CustomerReOrder', 'P', '20250320', '9'
+exec setOV 'CustomerReOrder', 'P', '20250614', '10'
 go
  

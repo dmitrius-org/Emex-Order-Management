@@ -222,4 +222,38 @@ where isnull(m.OrderDetailSubId, '') <> ''
 
 --select * from tOrders
 --where DetailNumber = '86300D9700'
+/*
 
+select * from tNodes
+
+
+
+select 'Смапили не те детали',  m.OrderNumber, o.OrderNum, o.DetailNumber, o.Quantity, m.Quantity QuantityEmex, n.Name
+  from tMovement m (nolock)
+ inner join tOrders o (nolock)
+         on o.MakeLogo     = m.MakeLogo
+        and o.DetailNumber = m.DetailNum
+        and o.Reference    = m.Reference
+      --  and o.DetailID     = m.
+        and o.EmexOrderID  = m.OrderNumber
+       
+ inner join tNodes n
+         on n.NodeID = o.StatusID
+        and n.EID = m.StatusId
+where 1=1
+ and o.Quantity     <> m.Quantity
+ order by o.OrderNum, o.DetailNumber
+
+
+ select 'Смапили не те детали',  m.OrderNumber, o.OrderNum, o.DetailNumber, o.Quantity, m.Quantity QuantityEmex, n.Name
+  from tMovement m (nolock)
+ inner join tOrders o (nolock)
+         on o.OrderID     = m.OrderID      
+ inner join tNodes n
+         on n.NodeID = o.StatusID
+        and n.EID <> m.StatusId
+where 1=1
+ --and o.Quantity     <> m.Quantity
+ order by o.OrderNum, o.DetailNumber
+
+ */

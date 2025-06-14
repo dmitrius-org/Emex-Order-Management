@@ -229,13 +229,11 @@ type
     procedure ManagerGridCellClick(Column: TUniDBGridColumn);
     procedure pmManagerPopup(Sender: TObject);
     procedure cbResponseTypeChange(Sender: TObject);
-    procedure lkSupplierChange(Sender: TObject);
-    procedure qProfilesCustomerSupplierNameChange(Sender: TField);
-    procedure ProfilesCustomerGridSetCellValue(Sender: TObject; ACol,
-      ARow: Integer; AField: TField; var Value: Variant);
+    procedure lkSupplierAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure qProfilesCustomerBeforeEdit(DataSet: TDataSet);
     procedure ProfilesCustomerGridAjaxEvent(Sender: TComponent;
       EventName: string; Params: TUniStrings);
-    procedure lkSupplierSelect(Sender: TObject);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -258,7 +256,7 @@ type
     /// <summary>
     ///  ProfilesDeliveryList - получение списка поставщиков
     ///</summary>
-    procedure ProfilesDeliveryList();
+//    procedure ProfilesDeliveryList();
     /// <summary>
     ///  DelimiterList - Список разделителей
     ///</summary>
@@ -340,7 +338,7 @@ end;
 
 procedure TClientsF.actPriceProfilesAddExecute(Sender: TObject);
 begin
-  ProfilesDeliveryList;
+//  ProfilesDeliveryList;
 
   qProfilesCustomer.Insert;
   qProfilesCustomer.FieldByName('ClientID').AsInteger := FID;
@@ -353,7 +351,7 @@ end;
 
 procedure TClientsF.actPriceProfilesEditExecute(Sender: TObject);
 begin
- ProfilesDeliveryList;
+// ProfilesDeliveryList;
  qProfilesCustomer.Edit;
 end;
 
@@ -583,47 +581,16 @@ begin
   end;
 end;
 
-procedure TClientsF.lkSupplierChange(Sender: TObject);
- var  FEditor : TControl;
+procedure TClientsF.lkSupplierAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
 begin
-    LogInfo('TClientsF.lkSupplierChange');
-             // LogInfo(Sender.ClassName);
-            //   LogInfo( ProfilesCustomerGrid.ColumnByName('SupplierName').FieldName);
-                     //         (xCol.Editor as IUniDBLookupControl).KeyValue
-      FEditor:=  ProfilesCustomerGrid.Columns.ColumnFromFieldName('SupplierName').Editor;
-//             if Supports(FEditor,  IUniDBLookupControl)  then
-//   // Result := (FEditor as IUniDBLookupControl).KeyValue
-       LogInfo( 'KeyValue ' +VarToStr (ProfilesCustomerGrid.Columns.ColumnFromFieldName('SupplierName').AuxValue));
-      LogInfo( 'KeyValue ' +VarToStr ((FEditor as IUniDBLookupControl).KeyValue));
-
-
-        LogInfo('KeyValue ' +  VarToStr((FEditor as TUniDBLookupComboBox).KeyValue));
-        LogInfo('Text ' +  (FEditor as TUniDBLookupComboBox).Text);
-        LogInfo(  ( ProfilesCustomerGrid.Columns.ColumnFromFieldName('SupplierName').Editor as IUniDBLookupControl).KeyValue);
-        LogInfo( qProfilesCustomer.FieldByName('SupplierName').AsString);
-  lkProfilesDelivery.Clear;
-
-  ProfilesDeliveryList; // способ доставки
+  if EventName = 'lookup_selected' then
+  begin
+    qlkProfilesDeliveryList.Close;
+    qlkProfilesDeliveryList.ParamByName('SuppliersBrief').AsString:=Params.Values['key'];
+    qlkProfilesDeliveryList.Open;
+  end;
 end;
-
-procedure TClientsF.lkSupplierSelect(Sender: TObject);
-begin
-  LogInfo('TClientsF.lkSupplierSelect');
-//    LogInfo('KeyValueStr ' + (sender as TUniDBLookupComboBox).KeyValueStr);
-//  LogInfo('Text ' + (sender as TUniDBLookupComboBox).Text);
-////  LogInfo( (sender as TUniDBLookupComboBox).ItemIndex.ToString);
-//    LogInfo('CurValue ' + VarToStr( (sender as TUniDBLookupComboBox).Field.CurValue));
-//    LogInfo('Value ' + VarToStr( (sender as TUniDBLookupComboBox).Field.Value));
-//     LogInfo('OldValue ' +VarToStr(  (sender as TUniDBLookupComboBox).Field.OldValue));
-//      LogInfo('NewValue ' +VarToStr(  (sender as TUniDBLookupComboBox).Field.NewValue));
-//       LogInfo('KeyField ' + VarToStr( (sender as TUniDBLookupComboBox).KeyField));
-// LogInfo('SuppliersID ' + ( (sender as TUniDBLookupComboBox).ListSource.DataSet.FieldByName('SuppliersID').AsString));
-//
-//      LogInfo('SuppliersID ' + VarToStr( qlkSupplierslist.FieldByName('SuppliersID').AsString));
-//    LogInfo('SuppliersID ' + VarToStr( qlkSupplierslist.FieldByName('SuppliersID').AsString));
-
-end;
-
 
 procedure TClientsF.ManagerEditEnabled;
 begin
@@ -671,22 +638,6 @@ begin
   qProfilesCustomer.Open;
 end;
 
-procedure TClientsF.ProfilesDeliveryList;
-
-begin
-
-  LogInfo('TClientsF.ProfilesDeliveryList');
-
-  //LogInfo(TUniDBLookupComboBox(Grid.Columns.ColumnFromFieldName('SupplierName').Editor).KeyValueStr);
-
-  LogInfo(lkSupplier.KeyValueStr);
-  LogInfo(lkSupplier.Text);
-
-  qlkProfilesDeliveryList.Close;
-  qlkProfilesDeliveryList.ParamByName('SuppliersID').AsInteger :=lkSupplier.KeyValue;
-  qlkProfilesDeliveryList.Open;
-end;
-
 procedure TClientsF.PromptMarginEditCallBack(Sender: TComponent; AResult: Integer);
 begin
   if AResult = mrOK then
@@ -711,9 +662,9 @@ begin
     Text := '';
 end;
 
-procedure TClientsF.qProfilesCustomerSupplierNameChange(Sender: TField);
+procedure TClientsF.qProfilesCustomerBeforeEdit(DataSet: TDataSet);
 begin
-  //LogInfo('TClientsF.qProfilesCustomerSupplierNameChange');
+  LogInfo('TClientsF.qProfilesCustomerBeforeEdit');
 end;
 
 procedure TClientsF.SetAction(const Value: TFormAction);
@@ -736,10 +687,11 @@ end;
 procedure TClientsF.ProfilesCustomerGridAjaxEvent(Sender: TComponent;
   EventName: string; Params: TUniStrings);
 begin
- if EventName = 'lookup_changed' then
+  if EventName = 'beforeedit' then
   begin
-    ShowMessage('Новое значение: ' + Params.Values['value']);
-    // или сохрани куда нужно, например в переменную
+    qlkProfilesDeliveryList.Close;
+    qlkProfilesDeliveryList.ParamByName('SuppliersBrief').AsString:=qProfilesCustomerSupplierName.AsString;
+    qlkProfilesDeliveryList.Open;
   end;
 end;
 
@@ -759,13 +711,6 @@ begin
       qProfilesCustomer.IndexName := Column.FieldName+'_index_asc'
   else
     qProfilesCustomer.IndexName := Column.FieldName+'_index_des';
-end;
-
-procedure TClientsF.ProfilesCustomerGridSetCellValue(Sender: TObject; ACol,
-  ARow: Integer; AField: TField; var Value: Variant);
-begin
-  LogInfo('TClientsF.ProfilesCustomerGridSetCellValue');
-    LogInfo(Value);
 end;
 
 procedure TClientsF.UniFormClose(Sender: TObject; var Action: TCloseAction);
@@ -820,6 +765,9 @@ begin
 
   qlkSupplierslist.Close;
   qlkSupplierslist.Open;
+
+//  qlkProfilesDeliveryList.Close;
+//  qlkProfilesDeliveryList.Open;
 
   GridExt.SortColumnCreate(ProfilesCustomerGrid);//(qPriceProfiles);
   GridExt.SortColumnCreate(ManagerGrid);//(qManager);

@@ -26,4 +26,4 @@ go
 exec setOV 'vProfilesCustomer', 'V', '20250604', '1'
 go
 
---select * from vProfilesCustomer
+select * from vProfilesCustomer
