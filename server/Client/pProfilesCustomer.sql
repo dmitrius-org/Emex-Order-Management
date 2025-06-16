@@ -10,6 +10,7 @@ create table pProfilesCustomer
 ,Spid                int
 ,ProfilesCustomerID  int            -- 
 ,ClientID            numeric(18, 0) -- Клиент   
+,SuppliersID	     numeric(18, 0) -- Поставщик
 ,Brief               varchar(60)    --
 ,Margin              money          -- Наценка в процентах (margin, текстовое поле, по умолчанию установить значение "25" 
 ,Reliability         money          -- Вероятность поставки (reliability, текстовое поле, по умолчанию установить значение "70" 
@@ -32,7 +33,7 @@ create unique index ao2 on pProfilesCustomer(Spid, ClientID, Brief)
 go
 grant all on pProfilesCustomer to public
 go
-exec setOV 'pProfilesCustomer', 'U', '20240906', '2'
+exec setOV 'pProfilesCustomer', 'U', '20250603', '3'
 go
 -- Описание таблицы
 exec dbo.sys_setTableDescription @table = 'pProfilesCustomer', @desc = 'Профили управления выгрузкой прайсов'

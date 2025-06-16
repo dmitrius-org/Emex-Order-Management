@@ -401,6 +401,12 @@ object OrdersT: TOrdersT
           Sortable = True
         end
         item
+          FieldName = 'SuppliersBrief'
+          Title.Alignment = taCenter
+          Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          Width = 100
+        end
+        item
           FieldName = 'DeliveryTermSupplier'
           Title.Alignment = taCenter
           Title.Caption = #1057#1088#1086#1082' '#1076#1086' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1085#1072' '#1089#1082#1083#1072#1076' '#1074' '#1054#1040#1069
@@ -1282,6 +1288,7 @@ object OrdersT: TOrdersT
       '      ,o.[ClientID]'
       '      ,o.[ClientName]'
       '      ,o.[OrderDate]'
+      '      ,o.[SuppliersBrief]'
       '      ,o.[PriceLogo]'
       '      ,o.[CustomerPriceLogo] -- '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       '      ,o.[OrderNum]'
@@ -1363,11 +1370,11 @@ object OrdersT: TOrdersT
       '      ,o.[ReceiptDate]     -- '#1054#1078#1080#1076#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103
       '      ,o.[OrderDetailSubId]'
       
-        '      ,o.DeliveryTermFromSupplier  -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082 +
-        #1072' '#1089' '#1087#1088#1086#1092#1080#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      '      ,o.DeliveryTermFromSupplier2'
-      '      ,o.LastDateShipment'
-      '      ,o.LastTermShipment'
+        '      ,o.[DeliveryTermFromSupplier]  -- '#1057#1088#1086#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097 +
+        #1080#1082#1072' '#1089' '#1087#1088#1086#1092#1080#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      '      ,o.[DeliveryTermFromSupplier2]'
+      '      ,o.[LastDateShipment]'
+      '      ,o.[LastTermShipment]'
       '  FROM !Form  '
       ' where 1=1'
       '          '
@@ -1782,6 +1789,10 @@ object OrdersT: TOrdersT
     end
     object QueryLastDateShipment: TSQLTimeStampField
       FieldName = 'LastDateShipment'
+    end
+    object QuerySuppliersBrief: TStringField
+      FieldName = 'SuppliersBrief'
+      Size = 128
     end
   end
   object DataSource: TDataSource

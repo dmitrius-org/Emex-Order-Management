@@ -293,7 +293,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'PriceInfoContainer'
         LayoutConfig.Region = 'center'
-        ExplicitWidth = 904
         object UniLabel4: TUniLabel
           Left = 436
           Top = 7
@@ -464,7 +463,6 @@ object BasketF: TBasketF
         ShowCaption = False
         Caption = 'ButtonContainer'
         LayoutConfig.Region = 'east'
-        ExplicitLeft = 782
         DesignSize = (
           765
           80)
@@ -482,7 +480,6 @@ object BasketF: TBasketF
           TabOrder = 2
           LayoutConfig.ColumnWidth = 150.000000000000000000
           OnClick = addOrderClick
-          ExplicitLeft = 475
         end
         object btnRefresh: TUniButton
           AlignWithMargins = True
@@ -495,7 +492,6 @@ object BasketF: TBasketF
           TabOrder = 1
           ImageIndex = 5
           LayoutConfig.ColumnWidth = 150.000000000000000000
-          ExplicitLeft = 319
         end
         object btnPriceRefreshAll: TUniLabel
           Left = 172
@@ -657,6 +653,9 @@ object BasketF: TBasketF
     object QueryComment2: TStringField
       FieldName = 'Comment2'
       Size = 128
+    end
+    object QuerySuppliersID: TFMTBCDField
+      FieldName = 'SuppliersID'
     end
   end
   object qStatus: TFDQuery

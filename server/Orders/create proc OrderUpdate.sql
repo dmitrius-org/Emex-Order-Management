@@ -17,6 +17,7 @@ create proc OrderUpdate
               -- параметры для дробления заказа
               ,@IsSplit                 bit           = null
               ,@SplitQuality            int           = null
+              ,@Amount                  float         = null 
 
 /*
   OrderUpdate - изменение данных по заказу/детали
@@ -30,6 +31,7 @@ as
          ,@AuditComment nvarchar(2048)
          ,@DeliveryTermSupplier    int -- Срок доставки поставщику
          ,@DeliveryTermSupplierNew int -- Срок доставки поставщику
+         ,@CurrentAmount           float  -- текущая сумма
 
   if @IsSplit = 1 
   begin
@@ -41,6 +43,7 @@ as
 
   select @DeliveryTermSupplier    = t.DeliveryTerm
         ,@DeliveryTermSupplierNew = p.GuaranteedDay
+        ,@CurrentAmount           = t.Amount
 	from tOrders t with (nolock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -58,10 +61,15 @@ as
         ,t.DestinationName    = pd.DestinationName        
         ,t.ProfilesDeliveryID = @ProfilesDeliveryID
         ,t.ProfilesCustomerID = @ProfilesCustomerID
-		,t.Flag               = isnull(t.Flag, 0) | case  
-		                                               when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
-							                           else 0
-                                                    end
+		,t.Flag               = isnull(t.Flag, 0)  
+                              | case  
+		                           when t.PriceLogo <> nullif(@Price, '') then 256 --Был изменен Прайс-лист
+							       else 0
+                                end 
+                              | case 
+                                  when @Amount is not null and @Amount <> t.Amount then 8388608 -- Ручная корректировка стоимости
+                                  else 0
+                                end  
         ,t.ReplacementPrice   = case  
 		                          when /*t.PriceLogo <> nullif(@Price, '') and*/ @ReplacementPrice <> isnull(t.PricePurchase, 0) then nullif(@ReplacementPrice, 0)
 							      else nullif(t.ReplacementPrice, 0)
@@ -82,6 +90,10 @@ as
 
         ,t.VolumeKGAmount     = iif(t.ProfilesDeliveryID <> pd.ProfilesDeliveryID, pd.VolumeKG, t.VolumeKGAmount)-- если изменили способ доставки
         ,t.WeightKGAmount     = iif(t.ProfilesDeliveryID <> pd.ProfilesDeliveryID, pd.WeightKG, t.WeightKGAmount)-- если изменили способ доставки
+        ,t.Amount             = case 
+                                  when @Amount is not null and @Amount <> t.Amount then @Amount 
+                                  else t.Amount 
+                                end 
 	from tOrders t with (updlock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -296,6 +308,7 @@ as
              end,
              case
                when @TargetStateID = 2  then 13	--ToChecked	Проверка выполнена 
+               when @TargetStateID = 51  then 52 --ToAdditionalCheck	Дополнительная проверка
                when @TargetStateID = 12 and o.StatusID in (1, 2, 3) then 49	--ToCancelPreliminary	Отказано предварительно
                when @TargetStateID = 12 then 16	--ToCancel	Отказать
                else 0
@@ -312,12 +325,14 @@ as
       exec ProtocolAdd
   end
 
-  select @AuditComment =  'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>' + 
-                          'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>' +
-                          'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>' +
-                          'Restrictions: ''' +  isnull(RestrictionsOLD,'') + ''' -> '''+ isnull(Restrictions,'') + '''<br>' +
-                          'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>' +
-                          'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +''''
+  select @AuditComment = iif(isnull(DetailNameOld,'')<>isnull(DetailName,''), 'Изменение названия: ''' + isnull(DetailNameOld,'') + ''' -> '''+ isnull(DetailName,'') +  '''<br>', '') + 
+                         iif(isnull(WeightKGOLD  , 0)<>isnull(WeightKG  , 0), 'Изменение физического веса: ''' + cast(isnull(WeightKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(WeightKG, 0.00) as varchar) + '''<br>', '') + 
+                         iif(isnull(VolumeKGOLD  , 0)<>isnull(VolumeKG  , 0), 'Изменение объемного веса: ''' + cast(isnull(VolumeKGOLD, 0.00) as varchar) + ''' -> '''+ cast(isnull(VolumeKG, 0.00) as varchar) + '''<br>', '') + 
+                         --iif(isnull(NoAirOld     , 0)<>isnull(NoAir     , 0), 'NoAir: ''' +  cast(isnull(NoAirOld, 0) as varchar)  + ''' -> '''+ cast(isnull(NoAir, 0) as varchar)  + '''<br>', '') + 
+                         iif(isnull(RestrictionsOLD,'')<>isnull(Restrictions,''), 'Restrictions: ''' + isnull(RestrictionsOLD,'') + ''' -> '''+ isnull(Restrictions,'') +  '''<br>', '') + 
+                         iif(isnull(FragileOLD   , 0)<>isnull(Fragile   , 0), 'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>', '') + 
+                         iif(isnull(NLAOLD       , 0)<>isnull(NLA       , 0), 'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +'''', '') + 
+                         iif(isnull(@CurrentAmount, 0)<>isnull(@Amount       , 0), 'Сумма руб.: ''' + cast(isnull(@CurrentAmount, 0) as varchar) + ''' -> '''+ cast(isnull(@Amount, 0) as varchar) +'''', '') 
     from #PartsUpdate pu (nolock)
 
   -- аудит
@@ -350,6 +365,6 @@ as
 go
 grant exec on OrderUpdate to public
 go
-exec setOV 'OrderUpdate', 'P', '20250601', '22'
+exec setOV 'OrderUpdate', 'P', '20250603', '23'
 go
  

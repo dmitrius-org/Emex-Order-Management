@@ -180,8 +180,7 @@ select p.ID,
   from pFindByNumber p with (nolock index=ao1)
  inner join tClients c  with (nolock index=ao1)
          on c.ClientID = p.ClientID 
- inner join tSuppliers s  with (nolock index=ao1)
-         on S.SuppliersID = c.SuppliersID
+
 
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
       select top 1
@@ -200,7 +199,8 @@ select p.ID,
              pd.VolumeKG_Rate2,
              pd.VolumeKG_Rate3,
              pd.VolumeKG_Rate4,
-             pd.Fragile
+             pd.Fragile,
+             pc.SuppliersID
 
         from tProfilesCustomer pc with (nolock index=ao2)
         left join tSupplierDeliveryProfiles pd with (nolock index=ao1)
@@ -208,7 +208,8 @@ select p.ID,
        where pc.ClientID = c.ClientID
          and pd.DestinationLogo    = @DestinationLogo   
      ) as pd
-
+      inner join tSuppliers s  with (nolock index=ao1)
+         on S.SuppliersID = pd.SuppliersID
  left join @Price pp
         on pp.DetailNum = p.DetailNum
 	   and pp.MakeLogo  = p.Make	

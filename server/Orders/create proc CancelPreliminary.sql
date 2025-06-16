@@ -31,6 +31,8 @@ declare @r int = 0
   where n.Brief = 'CancelPreliminary'
     and p.NewStateID = o.StatusID
     and p.InDateTime <= dateadd(hh, -48, getdate())
+  order by p.InDateTime
+
   exec ProtocolAdd
 
  exit_:

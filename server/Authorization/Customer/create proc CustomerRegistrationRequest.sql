@@ -69,7 +69,7 @@ as
             ,ClientTypeID
             ,Hash
             ,HashDate
-            ,SuppliersID
+            --,SuppliersID
             ,StatusRequiringPayment
             --,Name 
             ,Phone
@@ -83,7 +83,7 @@ as
             ,@ClientTypeID
             ,@Hash
             ,getdate()
-            ,@SuppliersID
+            --,@SuppliersID
             ,'3;4;5;7'
             --,@Name 
             ,@Phone
@@ -102,6 +102,7 @@ as
                ,Reliability
                ,isActive
                ,ClientID
+               ,SuppliersID
                )
          select sdp.ProfileName
                ,sdp.ProfilesDeliveryID
@@ -109,6 +110,7 @@ as
                ,ct.Reliability
                ,1
                ,@ClientID
+               ,@SuppliersID
            from vSupplierDeliveryParam sdp 
            left join tClientType ct with (nolock index=PK_tClientType_ClientTypeID)
                   on ct.ClientTypeID=@ClientTypeID
@@ -139,5 +141,5 @@ return @r
 go
 grant exec on CustomerRegistrationRequest to public
 go
-exec setOV 'CustomerRegistrationRequest', 'P', '20250320', '5'
+exec setOV 'CustomerRegistrationRequest', 'P', '20250613', '6'
 go

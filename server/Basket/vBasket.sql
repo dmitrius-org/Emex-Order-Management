@@ -7,7 +7,8 @@ create view vBasket
 as
 select 
        t.BasketID         -- 
-      ,t.ClientID         -- 
+      ,t.ClientID         --
+      ,p.SuppliersID
       ,t.Make             -- 
       ,t.MakeName         -- 
       ,t.DetailNum        -- 
@@ -24,9 +25,10 @@ select
               else 0
             end ) IsUpdating -- прошло 24 часа, необходимо обновить цену
 
-
   from tBasket t (nolock)
+  left join vClientProfilesParam p 
+         on p.ProfilesCustomerID = t.ProfilesCustomerID
 go
 grant all on vBasket to public
 go
-exec setOV 'vBasket', 'V', '20241024', '10'
+exec setOV 'vBasket', 'V', '20250613', '11'

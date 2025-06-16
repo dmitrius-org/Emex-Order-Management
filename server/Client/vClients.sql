@@ -17,7 +17,6 @@ select c.ClientID
 	  ,c.IsActive
 	  ,c.UserID
       ,ct.Name  as ClientTypeName --
-	  ,s.Brief  as Supplier
       ,r.Amount as Rest
       ,case 
          when isnull(ls.LogDestination, '') <> '' and (isnull(ls.FileLogLevel, '') <> '' or isnull(ls.DBLogLevel, '') <> '') then 1
@@ -29,8 +28,6 @@ select c.ClientID
        end  
        Status
   from tClients c (nolock)
-  left join tSuppliers s (nolock)
-         on s.SuppliersID = c.SuppliersID
   left join tClientType ct (nolock)
          on ct.ClientTypeID = c.ClientTypeID
   left join tOrderFileFormat o (nolock)
@@ -46,10 +43,5 @@ select c.ClientID
 go
 grant all on vClients to public
 go
-exec setOV 'vClients', 'V', '20250522', '4'
+exec setOV 'vClients', 'V', '20250604', '5'
 go
-
-select * from vClients
-
-
-select * from tUsersAuthorization

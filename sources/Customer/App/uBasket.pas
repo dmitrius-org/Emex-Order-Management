@@ -89,6 +89,7 @@ type
     TimerProcessed: TUniTimer;
     lblToExcel: TUniLabel;
     UniGridExcelExporter: TUniGridExcelExporter;
+    QuerySuppliersID: TFMTBCDField;
 
     procedure GridKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -433,8 +434,12 @@ begin
   ShowMask('Ждите, операция выполняется');
   UniSession.Synchronize;
   try
+    SQL.Exec('''
+      Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid
+    ''', [], []);
+
     emex := TEmex.Create(UniMainModule.FDConnection);
-    emex.FindByDetailNumber( UniMainModule.AUserID, Query.FieldByName('DetailNum').AsString );
+    emex.FindByDetailNumber( UniMainModule.AUserID, QuerySuppliersID.AsLargeInt, Query.FieldByName('DetailNum').AsString );
 
     PriceCalc;
 
@@ -524,7 +529,17 @@ begin
   try
     for i := 0 to Length(FItems) - 1 do
     begin
-      emex.FindByDetailNumber(FUserID, FItems[i].DetailNum);
+      emex.SQL.Open('''
+        Delete pFindByNumber from pFindByNumber (rowlock) where spid = @@spid
+
+        select top 1 pc.SuppliersID
+          From tBasket b (nolock)
+         inner join vClientProfilesParam pc
+                 on pc.ProfilesCustomerID = b.ProfilesCustomerID
+         where b.BasketID = :BasketID
+      ''', ['BasketID'], [FItems[i].BasketID]);
+
+      emex.FindByDetailNumber(FUserID, emex.SQL.Q.Fields[0].AsInteger, FItems[i].DetailNum);
 
       emex.SQL.Exec('''
         exec BasketPriceCalc @BasketID = :BasketID;

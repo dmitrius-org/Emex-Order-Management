@@ -201,6 +201,7 @@ begin
   FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark Begin');
 
   R := Emex.InsertPartToBasketByMarks;
+
   FLogger.Debug('TProcExec.InsertPartToBasketByPartFromMark Количество добавленных позиций: ' + R.ToString);
 
   if R > 0 then

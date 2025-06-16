@@ -94,7 +94,7 @@ as
         )
   output inserted.OrderID into @ID (ID)
   select o.ClientID
-        ,c.SuppliersID
+        ,s.SuppliersID
         ,o.Manufacturer
         ,o.DetailNumber
         ,o.Quantity
@@ -151,9 +151,7 @@ as
     from pOrders o with (nolock index=ao1)
    inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = o.ClientID
-   inner join tSuppliers s with (nolock index=ao1)
-           on s.SuppliersID = c.SuppliersID 
-   outer apply (
+   cross apply (
          select top 1
                 cp.*
            from vClientProfilesParam cp
@@ -161,6 +159,8 @@ as
             and cp.ClientPriceLogo = o.PriceNum -- CustomerPriceLogo
           order by cp.ProfilesCustomerID
          ) pc
+   inner join tSuppliers s with (nolock index=ao1)
+           on s.SuppliersID = pc.SuppliersID 
    -- - - -
    outer apply (select top 1 *
                   from tPrice p with (nolock index=ao2) 
@@ -303,6 +303,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250515', '14'
+exec setOV 'LoadOrders', 'P', '20250614', '15'
 go
  

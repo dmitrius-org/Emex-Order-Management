@@ -10,12 +10,15 @@ begin
 	,Name	           nvarchar(512)  null  -- 
 	,PriceName         nvarchar(32)   null  -- 
 
+    ,ApiAddress        varchar(256 ) -- 
 	,EmexUsername      nvarchar(32)   null  --Пользователь для интеграции
 	,EmexPassword      nvarchar(32)   null  --Пароль для интеграции
 
 	,Discount          money        -- Скидка (discount, текстовое поле, по умолчанию установить значение "5", -- Discount -- Скидка поставщика на закупку товара
 	,Commission        money        --  
 	,ExtraKurs         money        -- Комиссия эквайера
+    ,GroupName	       varchar(64 ) -- 
+
 	--
 	,UserID            numeric(18,0) default dbo.GetUserID()
 	,inDatetime        datetime      default GetDate()      --

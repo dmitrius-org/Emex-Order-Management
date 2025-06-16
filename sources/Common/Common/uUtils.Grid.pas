@@ -98,10 +98,15 @@ begin
 
      try
        Column := AGrid.Columns.ColumnFromFieldName(Sql.Q.FieldByName('Column').AsString);
-       Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
-       Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
-       Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
+
+       if Assigned(Column) then
+       begin
+
+         Column.Index  := Sql.Q.FieldByName('Position').AsInteger;
+         Column.Width  := Sql.Q.FieldByName('Width').AsInteger;
+         Column.Visible:= Sql.Q.FieldByName('Visible').AsBoolean;
      // Column.Locked := Sql.Q.FieldByName('Locking').AsBoolean;
+       end
 
      except
        on E: Exception do

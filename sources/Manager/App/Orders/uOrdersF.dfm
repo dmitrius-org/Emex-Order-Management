@@ -959,7 +959,7 @@ object OrderF: TOrderF
     object edtDetailNameF: TUniComboBox
       Left = 116
       Top = 63
-      Width = 875
+      Width = 709
       Hint = ''
       ShowHint = True
       Text = ''
@@ -1178,6 +1178,38 @@ object OrderF: TOrderF
       Caption = 'NLA'
       TabOrder = 32
     end
+    object edtAmount: TUniFormattedNumberEdit
+      Left = 888
+      Top = 62
+      Width = 103
+      Hint = #1056#1091#1073#1083#1077#1074#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1077#1090#1072#1083#1080
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      ShowHint = True
+      ParentFont = False
+      Font.Height = -13
+      Anchors = [akTop, akRight]
+      TabOrder = 35
+      FieldLabelWidth = 15
+      LayoutConfig.Padding = '0'
+      LayoutConfig.Margin = '0'
+      DecimalSeparator = ','
+      ThousandSeparator = #160
+      OnKeyDown = edtLKeyDown
+    end
+    object UniLabel2: TUniLabel
+      Left = 840
+      Top = 66
+      Width = 37
+      Height = 13
+      Hint = ''
+      ShowHint = True
+      Caption = #1057#1091#1084#1084#1072':'
+      Anchors = [akTop, akRight]
+      TabOrder = 36
+    end
   end
   object UniContainerPanel1: TUniContainerPanel
     Left = 0
@@ -1223,7 +1255,7 @@ object OrderF: TOrderF
     end
     object btnOkToCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 679
+      Left = 680
       Top = 6
       Width = 144
       Height = 27
@@ -1237,7 +1269,7 @@ object OrderF: TOrderF
     end
     object btnOk: TUniBitBtn
       AlignWithMargins = True
-      Left = 592
+      Left = 489
       Top = 6
       Width = 82
       Height = 27
@@ -1251,7 +1283,7 @@ object OrderF: TOrderF
     end
     object btnCancel: TUniBitBtn
       AlignWithMargins = True
-      Left = 505
+      Left = 403
       Top = 6
       Width = 81
       Height = 27
@@ -1262,6 +1294,20 @@ object OrderF: TOrderF
       TabStop = False
       TabOrder = 4
       OnClick = btnCancelClick
+    end
+    object btnAdditionalCheck: TUniBitBtn
+      AlignWithMargins = True
+      Left = 576
+      Top = 6
+      Width = 99
+      Height = 27
+      Hint = ''
+      Margins.Right = 30
+      ShowHint = True
+      Caption = #1044#1086#1087'. '#1087#1088#1086#1074#1077#1088#1082#1072
+      Anchors = [akRight, akBottom]
+      TabOrder = 6
+      OnClick = btnAdditionalCheckClick
     end
   end
   object UniHTMLFrame1: TUniHTMLFrame

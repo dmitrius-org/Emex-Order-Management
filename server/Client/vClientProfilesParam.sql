@@ -49,4 +49,4 @@ go
 exec setOV 'vClientProfilesParam', 'V', '20250320', '0'
 go
 
-select * from vClientProfilesParam
+--select * from vClientProfilesParam

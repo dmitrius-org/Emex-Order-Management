@@ -121,7 +121,6 @@ object SuppliersT: TSuppliersT
       ParentColor = False
       Color = clBtnFace
       OverflowHandler = ohMenu
-      ExplicitHeight = 70
       object UniToolButton1: TUniToolButton
         AlignWithMargins = True
         Left = 3
@@ -168,8 +167,6 @@ object SuppliersT: TSuppliersT
     LayoutConfig.Flex = 1
     LayoutConfig.Width = '0'
     LayoutConfig.Region = 'center'
-    ExplicitTop = 72
-    ExplicitHeight = 430
     object Grid: TUniDBGrid
       Left = 0
       Top = 0
@@ -235,6 +232,13 @@ object SuppliersT: TSuppliersT
           Visible = False
         end
         item
+          FieldName = 'GroupName'
+          Title.Alignment = taCenter
+          Title.Caption = #1043#1088#1091#1087#1087#1072
+          Width = 388
+          Sortable = True
+        end
+        item
           FieldName = 'UserID'
           Title.Alignment = taCenter
           Title.Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
@@ -278,11 +282,11 @@ object SuppliersT: TSuppliersT
       'SELECT [SuppliersID]'
       '      ,[Brief]'
       '      ,[Name]'
-      '      ,[PriceName]'
+      '      ,[GroupName]'
       '      ,[UserID]'
       '      ,[inDatetime]'
       '      ,[updDatetime]'
-      '  FROM [dbo].[tSuppliers] (nolock)')
+      '  FROM vSuppliers')
     Left = 686
     Top = 102
     object QuerySuppliersID: TFMTBCDField
@@ -305,11 +309,6 @@ object SuppliersT: TSuppliersT
       Origin = 'Name'
       Size = 512
     end
-    object QueryPriceName: TWideStringField
-      FieldName = 'PriceName'
-      Origin = 'PriceName'
-      Size = 32
-    end
     object QueryUserID: TFMTBCDField
       FieldName = 'UserID'
       Origin = 'UserID'
@@ -326,6 +325,10 @@ object SuppliersT: TSuppliersT
       FieldName = 'updDatetime'
       Origin = 'updDatetime'
       ReadOnly = True
+    end
+    object QueryGroupName: TStringField
+      FieldName = 'GroupName'
+      Size = 64
     end
   end
   object DataSource: TDataSource
@@ -479,9 +482,9 @@ object SuppliersT: TSuppliersT
       '--*/')
     FetchRowSQL.Strings = (
       
-        'SELECT SuppliersID, Brief, Name, PriceName, UserID, inDatetime, ' +
+        'SELECT SuppliersID, Brief, Name, GroupName, UserID, inDatetime, ' +
         'updDatetime'
-      '  FROM dbo.tSuppliers (nolock)'
+      '  FROM vSuppliers'
       ' WHERE SuppliersID = :SuppliersID')
     Left = 794
     Top = 101

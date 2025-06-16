@@ -16,6 +16,7 @@ type
   private
     FConnection: TFDConnection;
     FClientID: Integer;
+    FSupplierID: Integer;
     FDetailNumber: string;
     FPriceLogo: string;
     FLogger: tLogger;
@@ -24,7 +25,7 @@ type
   protected
     procedure Execute(); override;
   public
-    constructor Create(AConnection: TFDConnection; AClientID: Integer; ADetailNumber, APriceLogo: string);
+    constructor Create(AConnection: TFDConnection; AClientID: Integer; ASupplierID: Integer; ADetailNumber, APriceLogo: string);
     // передаем логгер в поток
     property Logger: tLogger read GetLogger write SetLogger;
   end;
@@ -60,7 +61,7 @@ type
     FPriceLogo: string;
     FManufacturer: string;
     FMakeLogo: string;
-   // FPrice: Real;
+    FSupplierID: Integer;
 
     procedure SetAction(const Value: TFormAction);
 
@@ -176,8 +177,7 @@ begin
              ,v.MakeLogo
              ,v.DestinationLogo
              ,v.ProfilesCustomerID
-             --,v.PricePurchase
-             --,v.Price
+             ,v.SuppliersID
          from vCustomerOrders v
         where v.OrderID = :OrderID
   ''';
@@ -188,6 +188,7 @@ begin
   FManufacturer      := UniMainModule.Query.FieldByName('Manufacturer').AsString;
   FMakeLogo          := UniMainModule.Query.FieldByName('MakeLogo').AsString;
   FPriceLogo         := UniMainModule.Query.FieldByName('PriceLogo').AsString;
+  FSupplierID        := UniMainModule.Query.FieldByName('SuppliersID').AsInteger;
 
   ComboBoxFill(cbPrice,
   '''
@@ -212,9 +213,8 @@ begin
   try
     sql.Exec('if OBJECT_ID(''tempdb..#IsPart'') is not null drop table #IsPart CREATE TABLE #IsPart (IsPart bit);', [], []);
 
-    t := TSQLQueryThread.Create(UniMainModule.FDConnection, UniMainModule.AUserID, FDetailNumber, FPriceLogo);
+    t := TSQLQueryThread.Create(UniMainModule.FDConnection, UniMainModule.AUserID, FSupplierID, FDetailNumber, FPriceLogo);
     t.FreeOnTerminate := True; // Экземпляр должен само уничтожиться после выполнения
-//    t.Priority := tThreadPriority.tpNormal; // Выставляем приоритет потока
     t.Logger := GetCurrentLogData();
     t.Start; // непосредственно ручной запуск потока
 
@@ -395,12 +395,13 @@ end;
 { TSQLQueryThread }
 
 constructor TSQLQueryThread.Create(AConnection: TFDConnection;
-  AClientID: Integer; ADetailNumber, APriceLogo: string);
+  AClientID: Integer; ASupplierID: Integer; ADetailNumber, APriceLogo: string);
 begin
   inherited Create(True);
 
   FConnection  := AConnection;
   FClientID    := AClientID;
+  FSupplierID  := ASupplierID;
   FPriceLogo   := APriceLogo;
   FDetailNumber:= ADetailNumber;
 end;
@@ -414,7 +415,7 @@ begin
     FLogger.Info('TEmex.FindByDetailNumber Begin');
     FLogger.Info('TEmex.FindByDetailNumber Begin FClientID=%s, FDetailNumber=%s ', [FClientID.ToString, FDetailNumber]);
 
-    Emex.FindByDetailNumber(FClientID, FDetailNumber);
+    Emex.FindByDetailNumber(FClientID, FSupplierID, FDetailNumber);
 
     FLogger.Info('TEmex.FindByDetailNumber End');
     Emex.SQl.Exec('insert #IsPart (IsPart)  select 1', [],[]);

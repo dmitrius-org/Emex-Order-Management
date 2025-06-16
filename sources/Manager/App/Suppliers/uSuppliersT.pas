@@ -47,10 +47,10 @@ type
     QuerySuppliersID: TFMTBCDField;
     QueryBrief: TWideStringField;
     QueryName: TWideStringField;
-    QueryPriceName: TWideStringField;
     QueryUserID: TFMTBCDField;
     QueryinDatetime: TSQLTimeStampField;
     QueryupdDatetime: TSQLTimeStampField;
+    QueryGroupName: TStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);

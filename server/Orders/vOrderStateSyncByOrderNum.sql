@@ -13,7 +13,6 @@ Select o.ClientID,
 	   o.StatusID,
        o.EmexOrderID as EmexOrderID,
        o.SuppliersID
-
   from tOrders o (nolock)   
  inner join tClients c (nolock)
          on c.ClientID = o.ClientID 
@@ -32,4 +31,4 @@ exec setOV 'vOrderStateSyncByOrderNum', 'V', '20240914', '2'
 go
 
 
-select * from vOrderStateSyncByOrderNum
+--select * from vOrderStateSyncByOrderNum

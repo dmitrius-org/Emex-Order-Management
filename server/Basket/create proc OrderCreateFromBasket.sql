@@ -35,14 +35,14 @@ declare @r int = 0
     goto exit_
   end
 
-  if exists (Select 1
-               from tClients with (nolock index=PK_tClients_ClientID)
-              where ClientID = @ClientID
-                and isnull(SuppliersID, 0) = 0)
-  begin
-    set @r = 533-- '[OrderCreateFromBasket] Не определен поставщик, обратитесь к администратору системы!'
-    goto exit_
-  end
+  --if exists (Select 1
+  --             from tClients with (nolock index=PK_tClients_ClientID)
+  --            where ClientID = @ClientID
+  --              and isnull(SuppliersID, 0) = 0)
+  --begin
+  --  set @r = 533-- '[OrderCreateFromBasket] Не определен поставщик, обратитесь к администратору системы!'
+  --  goto exit_
+  --end
 
   -- формирование номера заказа 
   if isnull(@OrderNum, '') = ''
@@ -203,7 +203,7 @@ declare @r int = 0
         )
   output inserted.OrderID, inserted.ID, inserted.OrderNum into @ID (OrderID, ID, OrderNum)
   select b.ClientID
-        ,c.SuppliersID
+        ,s.SuppliersID
         ,b.MakeName              -- Manufacturer
         ,b.DetailNum
         ,b.Quantity
@@ -265,15 +265,17 @@ declare @r int = 0
            on b.BasketID = m.ID
    inner join tClients c with (nolock index=PK_tClients_ClientID)
            on c.ClientID = b.ClientID 
-   inner join tSuppliers s with (nolock index=ao1)
-           on S.SuppliersID = c.SuppliersID
 
-   outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
+   cross apply ( -- для клиентов работающих через файл, профилей может быть несколько
          select top 1
                 cp.*
            from vClientProfilesParam cp
           where cp.ProfilesCustomerID = b.ProfilesCustomerID
        ) as pd
+
+   inner join tSuppliers s with (nolock index=ao1)
+           on S.SuppliersID = pd.SuppliersID
+
    inner join @P p
            on p.BasketID = b.BasketID
    where m.spid = @@spid   
@@ -366,6 +368,6 @@ declare @r int = 0
 GO
 grant exec on OrderCreateFromBasket to public
 go
-exec setOV 'OrderCreateFromBasket', 'P', '20250515', '28'
+exec setOV 'OrderCreateFromBasket', 'P', '20250613', '29'
 go
  

@@ -214,6 +214,7 @@ type
     edtAmountCondition: TUniExComboBox;
     UniLabel2: TUniLabel;
     edtAmount: TUniFormattedNumberEdit;
+    QuerySuppliersBrief: TStringField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X, Y: Integer);
     procedure actRefreshAllExecute(Sender: TObject);
@@ -1851,7 +1852,7 @@ begin
       FSql.Open('''
           select top 1 Processed, Total
             from #ProcessedRecords (nolock)
-        ''', [], []);
+      ''', [], []);
 
       if FSql.q.RecordCount > 0 then
       begin
@@ -1872,6 +1873,7 @@ begin
       // ОБРАБОТКА ОШИБОК
       // проверка наличия серверных ошибок
       Sql.Open('select 1 from pAccrualAction (nolock) where Spid = @@spid and Retval <> 0', [], []);
+
       var ServerErr:integer;
       ServerErr := Sql.Q.RecordCount;
 

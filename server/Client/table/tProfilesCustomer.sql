@@ -13,6 +13,7 @@ begin
 	 ProfilesCustomerID      int  identity  -- 
 	,ClientID                numeric(18, 0) -- Клиент   
 	,Brief                   varchar(60)    --
+    ,SuppliersID	         numeric(18, 0) -- Поставщик
 	,ProfilesDeliveryID      int   
                              
 	,Margin                  money          -- Наценка в процентах (margin, текстовое поле, по умолчанию установить значение "25"

@@ -17,6 +17,7 @@ insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  10, 'Shipments',   
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  11, 'Task',                          'Автоматические задания', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  12, 'PayType',                       'Типы платежей', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  13, 'CancelResponseType',            'Типы ответов на отказы', 0
+insert tObjectType (ObjectTypeID, Brief, Name, Flag) select  14, 'Supplier',                      'Поставщики (группы)', 0
 
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 101, 'TaskProc',                      'Процедуры автоматических заданий', 0
 insert tObjectType (ObjectTypeID, Brief, Name, Flag) select 102, 'ModelMetod',                    'Процедуры для модели состояния', 0

@@ -1,5 +1,5 @@
 if OBJECT_ID('ClientDeliveryProfilesUpdate') is not null
-    drop proc SupplierDeliveryProfilesUpdate
+    drop proc ClientDeliveryProfilesUpdate
 /*
   ClientDeliveryProfilesUpdate - 
 */
@@ -18,6 +18,7 @@ create proc ClientDeliveryProfilesUpdate
              ,@DeliveryTermCustomer	int             = null
              ,@ProfilesCustomerID   numeric(18, 0)  = null
              ,@ID	                numeric(18, 0)
+             ,@SuppliersID	        numeric(18, 0)  = null
 as
   set nocount on;
   declare @r int
@@ -31,13 +32,6 @@ begin
  goto exit_
 end
 
-if isnull(@ProfilesDeliveryID, 0) = 0
-begin
-  select @r=106 --'Необходимо заполнить поле [Наименование профиля]'
-  goto exit_
-end
-
-
 if exists (select 1
              from [pProfilesCustomer](nolock)
             where Spid            = @@spid
@@ -49,17 +43,29 @@ begin
    goto exit_
 end
 
-/*
+if isnull(@SuppliersID, 0) = 0
+begin
+  select @r=108 --'Необходимо заполнить поле [Поставщик]!'
+  goto exit_
+end
+
+if isnull(@ProfilesDeliveryID, 0) = 0
+begin
+  select @r=106 --'Необходимо заполнить поле [Способ доставки]
+  goto exit_
+end
+
 -- 
-if exists (select 1
-             from [pProfilesCustomer](nolock)
-            where Spid            = @@spid
-              and Brief           = @Brief
-              and ProfilesDeliveryID = @ProfilesDeliveryID
-              and ID             <> :ID
+if not exists (select 1
+                 from tSupplierDeliveryProfiles sd with (nolock)
+                where SuppliersID        = @SuppliersID
+                  and ProfilesDeliveryID = @ProfilesDeliveryID
+
 )
 begin
-   RAISERROR ('Сочетание "Наименование профиля/Способ доставки" существует!', 16, 1); 
+   --RAISERROR ('Сочетание "Наименование профиля/Способ доставки" существует!', 16, 1); 
+  select @r=109 -- 'Профиль доставки не соответствует поставщику!'
+  goto exit_
 end
 --*/
 
@@ -76,14 +82,13 @@ Update pProfilesCustomer
       ,[ClientPriceLogo]     = @ClientPriceLogo
       ,[UploadDelimiterID]   = @UploadDelimiterID
       ,[DeliveryTermCustomer]= @DeliveryTermCustomer
+      ,[SuppliersID]         = @SuppliersID
 where ID=@ID
-
-
 
 exit_:
 return @r
 go
 grant exec on ClientDeliveryProfilesUpdate to public
 go
-exec setOV 'ClientDeliveryProfilesUpdate', 'P', '20250226', '0'
+exec setOV 'ClientDeliveryProfilesUpdate', 'P', '20250613', '2'
 go

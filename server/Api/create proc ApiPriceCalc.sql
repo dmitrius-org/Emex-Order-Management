@@ -192,8 +192,6 @@ select p.ID,
   from pFindByNumber p with (nolock index=ao1)
  inner join tClients c  with (nolock index=PK_tClients_ClientID)
          on c.ClientID = p.ClientID 
- inner join tSuppliers s  with (nolock index=ao1)
-         on S.SuppliersID = c.SuppliersID
 
  outer apply ( -- для клиентов работающих через файл, профилей может быть несколько
        select top 1
@@ -201,6 +199,9 @@ select p.ID,
          from vClientProfilesParam cp
         where cp.ProfilesCustomerID = p.ProfilesCustomerID
      ) as pd
+     
+ inner join tSuppliers s  with (nolock index=ao1)
+         on S.SuppliersID = pd.SuppliersID
 
  left join @Price pp
         on pp.DetailNum = p.DetailNum
@@ -286,5 +287,5 @@ return @RetVal
 go
 grant exec on ApiPriceCalc to public
 go
-exec setOV 'ApiPriceCalc', 'P', '20250303', '0'
+exec setOV 'ApiPriceCalc', 'P', '20250613', '1'
 go

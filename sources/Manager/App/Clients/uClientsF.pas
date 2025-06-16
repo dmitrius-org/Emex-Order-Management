@@ -13,7 +13,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, uniDBComboBox, uniDBLookupComboBox,
-  Vcl.Menus, uUniExComboBox;
+  Vcl.Menus, uUniExComboBox, uniGUIInterfaces;
 
 type
   TClientsF = class(TUniForm)
@@ -28,7 +28,6 @@ type
     lblName: TUniLabel;
     pcOrders: TUniTabSheet;
     pcRefusals: TUniTabSheet;
-    pcSuppliers: TUniTabSheet;
     pcCommision: TUniTabSheet;
     fsAudit: TUniFieldSet;
     UniFieldContainer2: TUniFieldContainer;
@@ -38,7 +37,6 @@ type
     UniLabel1: TUniLabel;
     UniLabel2: TUniLabel;
     UniLabel3: TUniLabel;
-    UniLabel4: TUniLabel;
     Query: TFDQuery;
     QueryFolder: TWideStringField;
     QueryFirstline: TIntegerField;
@@ -80,11 +78,9 @@ type
     cbResponseType: TUniComboBox;
     cbNotificationMethod: TUniComboBox;
     edtNotificationAddress: TUniEdit;
-    cbSuppliers: TUniDBLookupComboBox;
-    qSuppliers: TFDQuery;
-    dsSuppliers: TDataSource;
-    qSuppliersSuppliersID: TFMTBCDField;
-    qSuppliersBrief: TWideStringField;
+    qlkSupplierslist: TFDQuery;
+    qlkSupplierslistSuppliersID: TFMTBCDField;
+    qlkSupplierslistBrief: TWideStringField;
     tabManager: TUniTabSheet;
     UniPanel2: TUniPanel;
     UniHiddenPanel1: TUniHiddenPanel;
@@ -147,15 +143,15 @@ type
     actPriceProfilesRefresh: TAction;
     UniToolButton10: TUniToolButton;
     qProfilesCustomerUploadDelimiter: TStringField;
-    qProfilesDeliveryList: TFDQuery;
-    qProfilesDeliveryListProfilesDeliveryID: TFDAutoIncField;
-    qProfilesDeliveryListDestinationName: TWideStringField;
+    qlkProfilesDeliveryList: TFDQuery;
+    qlkProfilesDeliveryListProfilesDeliveryID: TFDAutoIncField;
+    qlkProfilesDeliveryListProfileName: TWideStringField;
     qDelimiterList: TFDQuery;
     qDelimiterListDelimiterID: TFDAutoIncField;
     qDelimiterListName: TStringField;
     UniHiddenPanel3: TUniHiddenPanel;
-    lkPriceProfiles: TUniDBLookupComboBox;
-    dsProfilesDeliveryList: TDataSource;
+    lkProfilesDelivery: TUniDBLookupComboBox;
+    dslkProfilesDelivery: TDataSource;
     dsDelimiterList: TDataSource;
     lkUploadDelimiter: TUniDBLookupComboBox;
     qProfilesCustomerProfilesDeliveryName: TWideStringField;
@@ -192,6 +188,10 @@ type
     edtCommission: TUniFormattedNumberEdit;
     edtMargin: TUniFormattedNumberEdit;
     edtReliability: TUniFormattedNumberEdit;
+    lkSupplier: TUniDBLookupComboBox;
+    qProfilesCustomerSuppliersID: TFMTBCDField;
+    qProfilesCustomerSupplierName: TStringField;
+    qslkSupplierslist: TDataSource;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -229,6 +229,11 @@ type
     procedure ManagerGridCellClick(Column: TUniDBGridColumn);
     procedure pmManagerPopup(Sender: TObject);
     procedure cbResponseTypeChange(Sender: TObject);
+    procedure lkSupplierAjaxEvent(Sender: TComponent; EventName: string;
+      Params: TUniStrings);
+    procedure qProfilesCustomerBeforeEdit(DataSet: TDataSet);
+    procedure ProfilesCustomerGridAjaxEvent(Sender: TComponent;
+      EventName: string; Params: TUniStrings);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -251,7 +256,7 @@ type
     /// <summary>
     ///  ProfilesDeliveryList - получение списка поставщиков
     ///</summary>
-    procedure ProfilesDeliveryList();
+//    procedure ProfilesDeliveryList();
     /// <summary>
     ///  DelimiterList - Список разделителей
     ///</summary>
@@ -274,7 +279,7 @@ implementation
 
 uses
   MainModule, uniGUIApplication, uAuditUtils, uSqlUtils, uMainVar, uUtils.Grid,
-  uPromptMarginEdit, uPromptReliabilityEdit;
+  uPromptMarginEdit, uPromptReliabilityEdit, uUtils.Logger;
 
 function ClientsF: TClientsF;
 begin
@@ -333,7 +338,7 @@ end;
 
 procedure TClientsF.actPriceProfilesAddExecute(Sender: TObject);
 begin
-  ProfilesDeliveryList;
+//  ProfilesDeliveryList;
 
   qProfilesCustomer.Insert;
   qProfilesCustomer.FieldByName('ClientID').AsInteger := FID;
@@ -346,7 +351,7 @@ end;
 
 procedure TClientsF.actPriceProfilesEditExecute(Sender: TObject);
 begin
- ProfilesDeliveryList;
+// ProfilesDeliveryList;
  qProfilesCustomer.Edit;
 end;
 
@@ -388,7 +393,6 @@ begin
                             ,@Brief     = :Brief
                             ,@Name      = :Name
                             ,@IsActive  = :IsActive
-                            ,@SuppliersID   = :SuppliersID
                             ,@Taxes         = :Taxes
                             ,@ResponseType  = :ResponseType
                             ,@NotificationMethod  = :NotificationMethod
@@ -403,13 +407,12 @@ begin
       ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID', 'Taxes', 'ResponseType',
+               ['Brief','Name','IsActive', 'Taxes', 'ResponseType',
                 'NotificationMethod', 'NotificationAddress', 'ClientTypeID', 'Email',
                 'Phone', 'ContactPerson', 'NotificationScript'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
-               cbSuppliers.KeyValue,
                edtTaxes.Value,
                cbResponseType.ItemIndex,
                cbNotificationMethod.ItemIndex,
@@ -434,7 +437,6 @@ begin
                             ,@Brief                 = :Brief
                             ,@Name                  = :Name
                             ,@IsActive              = :IsActive
-                            ,@SuppliersID           = :SuppliersID
                             ,@Taxes                 = :Taxes
                             ,@ResponseType          = :ResponseType
                             ,@NotificationMethod    = :NotificationMethod
@@ -449,14 +451,13 @@ begin
       ''';
 
       Sql.Open(sqltext,
-               ['Brief','Name','IsActive','SuppliersID','ClientID', 'Taxes',
+               ['Brief','Name','IsActive','ClientID', 'Taxes',
                'ResponseType', 'NotificationMethod', 'NotificationAddress',
                'ClientTypeID', 'StatusRequiringPayment', 'Email',
                 'Phone', 'ContactPerson', 'NotificationScript'],
                [edtBrief.Text,
                '',
                cbIsActive.Checked,
-               cbSuppliers.KeyValue,
                FID,
                edtTaxes.Value,
                cbResponseType.ItemIndex,
@@ -506,15 +507,15 @@ end;
 
 procedure TClientsF.cbSuppliersChange(Sender: TObject);
 begin
-  Sql.Exec(' exec ProfilesCustomerRefresh @SuppliersID = :SuppliersID, @ClientID = :ClientID',
-           ['SuppliersID', 'ClientID'], [cbSuppliers.KeyValue, FID ]);
-
-  PriceProfilesGridRefresh;
-
-  ProfilesDeliveryList;
-
-  MessageDlg('При изменении поставщика автоматически обновляются способы доставки, проверьте настройки на вкладке "' +
-             tabPriceProfiles.Caption + '" ', TMsgDlgType.mtWarning, [mbOK]);
+//  Sql.Exec(' exec ProfilesCustomerRefresh @SuppliersID = :SuppliersID, @ClientID = :ClientID',
+//           ['SuppliersID', 'ClientID'], [cbSuppliers.KeyValue, FID ]);
+//
+//  PriceProfilesGridRefresh;
+//
+//  ProfilesDeliveryList;
+//
+//  MessageDlg('При изменении поставщика автоматически обновляются способы доставки, проверьте настройки на вкладке "' +
+//             tabPriceProfiles.Caption + '" ', TMsgDlgType.mtWarning, [mbOK]);
 end;
 
 procedure TClientsF.DataLoad;
@@ -547,7 +548,6 @@ begin
   edtBrief.Text        := UniMainModule.Query.FieldValues['Brief'];
   cbIsActive.Checked   := UniMainModule.Query.FieldValues['IsActive'];
   edtTaxes.Value       := UniMainModule.Query.FieldByName('Taxes').AsFloat; // налоги
-  cbSuppliers.KeyValue := UniMainModule.Query.FieldValues['SuppliersID'];
   cbResponseType.ItemIndex       := UniMainModule.Query.FieldByName('ResponseType').AsInteger;
   cbNotificationMethod.ItemIndex := UniMainModule.Query.FieldByName('NotificationMethod').AsInteger;
   edtNotificationAddress.Text    := UniMainModule.Query.FieldByName('NotificationAddress').AsString;
@@ -578,6 +578,17 @@ begin
     begin
       Grid.JSInterface.JSCall('copyToClipboard', []);
     end;
+  end;
+end;
+
+procedure TClientsF.lkSupplierAjaxEvent(Sender: TComponent; EventName: string;
+  Params: TUniStrings);
+begin
+  if EventName = 'lookup_selected' then
+  begin
+    qlkProfilesDeliveryList.Close;
+    qlkProfilesDeliveryList.ParamByName('SuppliersBrief').AsString:=Params.Values['key'];
+    qlkProfilesDeliveryList.Open;
   end;
 end;
 
@@ -627,13 +638,6 @@ begin
   qProfilesCustomer.Open;
 end;
 
-procedure TClientsF.ProfilesDeliveryList;
-begin
-  qProfilesDeliveryList.Close;
-  qProfilesDeliveryList.ParamByName('SuppliersID').Value :=cbSuppliers.KeyValue;
-  qProfilesDeliveryList.Open;
-end;
-
 procedure TClientsF.PromptMarginEditCallBack(Sender: TComponent; AResult: Integer);
 begin
   if AResult = mrOK then
@@ -658,6 +662,11 @@ begin
     Text := '';
 end;
 
+procedure TClientsF.qProfilesCustomerBeforeEdit(DataSet: TDataSet);
+begin
+  LogInfo('TClientsF.qProfilesCustomerBeforeEdit');
+end;
+
 procedure TClientsF.SetAction(const Value: TFormAction);
 begin
   FAction := Value;
@@ -675,6 +684,17 @@ begin
  // qProfilesCustomerProfilesDeliveryID.ReadOnly := cbClientType.Value <> '3';
 end;
 
+procedure TClientsF.ProfilesCustomerGridAjaxEvent(Sender: TComponent;
+  EventName: string; Params: TUniStrings);
+begin
+  if EventName = 'beforeedit' then
+  begin
+    qlkProfilesDeliveryList.Close;
+    qlkProfilesDeliveryList.ParamByName('SuppliersBrief').AsString:=qProfilesCustomerSupplierName.AsString;
+    qlkProfilesDeliveryList.Open;
+  end;
+end;
+
 procedure TClientsF.ProfilesCustomerGridCellContextClick(
   Column: TUniDBGridColumn; X, Y: Integer);
 begin
@@ -685,7 +705,10 @@ procedure TClientsF.ProfilesCustomerGridColumnSort(Column: TUniDBGridColumn;
   Direction: Boolean);
 begin
   if Direction then
-    qProfilesCustomer.IndexName := Column.FieldName+'_index_asc'
+//    if Column.Field.FieldKind = fkLookup then
+//      qProfilesCustomer.IndexName := Column.FieldName+'_index_asc'
+//    else
+      qProfilesCustomer.IndexName := Column.FieldName+'_index_asc'
   else
     qProfilesCustomer.IndexName := Column.FieldName+'_index_des';
 end;
@@ -693,9 +716,7 @@ end;
 procedure TClientsF.UniFormClose(Sender: TObject; var Action: TCloseAction);
 begin
   {$IFDEF Release}
-  Sql.Exec('delete pOrderFileFormat  from pOrderFileFormat  (rowlock) where spid = @@spid;' +
-           'delete pClientReliation  from pClientReliation  (rowlock) where spid = @@spid;' +
-           'delete pProfilesCustomer from pProfilesCustomer (rowlock) where spid = @@spid;', [], []);
+  Sql.Exec('exec ProfilesCustomerClearPTabledelete ', [], []);
   {$ENDIF}
 end;
 
@@ -716,7 +737,6 @@ end;
 
 procedure TClientsF.UniFormShow(Sender: TObject);
 begin
- // edtBrief.ReadOnly:= FAction <> acInsert;
   fsAudit.Visible:= FAction <> acInsert;
   pcCommon.ActivePage := tabHome;
 
@@ -743,8 +763,11 @@ begin
     btnOk.Caption   := ' Выполнить';
   end;
 
-  qSuppliers.Close;
-  qSuppliers.Open;
+  qlkSupplierslist.Close;
+  qlkSupplierslist.Open;
+
+//  qlkProfilesDeliveryList.Close;
+//  qlkProfilesDeliveryList.Open;
 
   GridExt.SortColumnCreate(ProfilesCustomerGrid);//(qPriceProfiles);
   GridExt.SortColumnCreate(ManagerGrid);//(qManager);
@@ -757,7 +780,6 @@ begin
 
   Self.Caption := 'Клиент: ' + edtBrief.Text;
 
-  ProfilesDeliveryList; // способ доставки
   DelimiterList;
   PriceProfilesGridRefresh; // профили выгрузки/загрузки
   ManagerGridRefresh;

@@ -111,14 +111,15 @@ as
 		  and n.NodeID    = p.NewStateID
    inner join tOrders op with (nolock)
            on op.OrderID  = p.ObjectID 
-   inner join tClients cp with (nolock)
-           on cp.ClientID = op.ClientID
+   --inner join tClients cp with (nolock)
+   --        on cp.ClientID = op.ClientID
 
 
-   inner join tClients c with (nolock)
-           on c.SuppliersID = cp.SuppliersID
+   --inner join tClients c with (nolock)
+   --        on c.SuppliersID = op.SuppliersID
    inner join tOrders o with (nolock)
-           on o.ClientID    = c.ClientID
+           on o.ClientID    = op.ClientID
+          and o.SuppliersID = op.SuppliersID
    inner join tNodes n2 with (nolock)
            on n2.NodeID     = o.StatusID
 		  and n2.Brief      = 'InBasket'-- В корзине
@@ -172,7 +173,7 @@ as
      AND p.RetVal = 0;
 
                          
-  if exists (select count(distinct cp.SuppliersID)
+  if exists (select count(distinct o.SuppliersID)
                from pAccrualAction p with (nolock)
               inner join tNodes n2 with (nolock)
                       on n2.NodeID = p.NewStateID
@@ -182,7 +183,7 @@ as
               inner join tClients cp with (nolock)
                       on cp.ClientID = o.ClientID
 	          where p.Spid = @@spid
-			 Having count(distinct cp.SuppliersID)  > 1
+			 Having count(distinct o.SuppliersID)  > 1
 	        )
   begin
     set @r = 526 -- невозможно разместить заказы так как выбраны детали разных клиентов
@@ -262,5 +263,5 @@ as
 go
 grant exec on ActionExecuteCheck to public
 go
-exec setOV 'ActionExecuteCheck', 'P', '20250320', '6'
+exec setOV 'ActionExecuteCheck', 'P', '20250613', '7'
 go

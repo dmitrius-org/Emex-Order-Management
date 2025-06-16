@@ -355,13 +355,6 @@ object ClientsT: TClientsT
           Sortable = True
         end
         item
-          FieldName = 'Supplier'
-          Title.Alignment = taCenter
-          Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-          Width = 200
-          Sortable = True
-        end
-        item
           FieldName = 'Rest'
           Title.Alignment = taCenter
           Title.Caption = #1041#1072#1083#1072#1085#1089
@@ -473,10 +466,6 @@ object ClientsT: TClientsT
     object QueryClientTypeName: TWideStringField
       FieldName = 'ClientTypeName'
       Size = 200
-    end
-    object QuerySupplier: TWideStringField
-      FieldName = 'Supplier'
-      Size = 512
     end
     object QueryRest: TCurrencyField
       FieldName = 'Rest'

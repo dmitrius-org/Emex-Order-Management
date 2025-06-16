@@ -99,6 +99,11 @@ as
            on o.box = sb.BoxNumber          
     left join tPrice p with (nolock index=ao1)
            on p.PriceID = o.PriceID	
+   where not exists (select 1
+                       from tShipmentsBoxesDetail d (nolock)
+                      where d.OrderID          = o.OrderID
+                        and d.TransporterNumber= sb.TransporterNumber)
+
   end
 
 

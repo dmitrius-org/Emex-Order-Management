@@ -1,11 +1,44 @@
-alter table tShipments add Flag                            int           -- дополнительные признаки  
+alter table tProfilesCustomer
+add SuppliersID	         numeric(18, 0) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1054, 1054, 'Признак внесения данных в 1С',  'TShipmentsT.actSet1C', 63, 1
+alter table tSuppliers
+add GroupName	         varchar(64) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+update tSuppliers
+set GroupName = 'Emex'
 
-insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1055, 1055, 'Снять признак: 1С',  'TShipmentsT.actUnSet1C', 63, 1
 
 
-update tmenu
-  set Caption = 'Установить признак: 1С'
-  where name = 'TShipmentsT.actSet1C'
+-- update tmenu
+--   set Caption = 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: 1пїЅ'
+--   where name = 'TShipmentsT.actSet1C'
+
+alter table tSuppliers
+add ApiAddress        varchar(256 ) -- 
+
+update tSuppliers
+set ApiAddress = 'http://soap.emexdwc.ae:3000/service.asmx'
+
+delete
+               from GridOptionsSelect
+              where [Column]='Rest'
+
+
+
+update tProfilesCustomer
+   set SuppliersID = c.SuppliersID
+  from tProfilesCustomer p
+ inner join tClients c
+         on c.ClientID = p.ClientID
+
+
+--select SuppliersID, * from tProfilesCustomer
+
+--update tClients
+--set SuppliersID = cc.SuppliersID
+--from tClients c
+--inner join testdb.dbo.tClients cc
+--on cc.ClientID = c.ClientID
+
+-- alter table tClients
+-- drop column SuppliersID     
 

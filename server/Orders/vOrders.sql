@@ -99,8 +99,8 @@ SELECT o.[OrderID]
       ,u.[Name]                 as UserName
       ,o.[inDatetime]
       ,o.[updDatetime]
-      ,c.[SuppliersID]
-      ,su.Brief                 as SuppliersBrief
+      ,o.[SuppliersID]                as SuppliersID
+      ,cast(su.Brief as varchar(128)) as SuppliersBrief
       ,ps.[OrderUniqueCount]                    -- количество уникальных заказов
       ,o.[PercentSupped]                        -- процент поставки детали
 	  ,isnull(o.Flag, 0)        as Flag
@@ -152,7 +152,7 @@ SELECT o.[OrderID]
          on c.ClientID = o.ClientID
 
   left join tSuppliers su with (nolock index=ao1)
-         on su.SuppliersID = isnull(o.SuppliersID, c.SuppliersID)
+         on su.SuppliersID = o.SuppliersID
 
  outer apply (
        select top 1 
@@ -189,7 +189,7 @@ SELECT o.[OrderID]
 go
 grant select on vOrders to public
 go
-exec setOV 'vOrders', 'V', '20250515', '25'
+exec setOV 'vOrders', 'V', '20250613', '26'
 go
 -- Описание таблицы
 --exec dbo.sys_setTableDescription @table = 'vOrders', @desc = 'Список заказов'
