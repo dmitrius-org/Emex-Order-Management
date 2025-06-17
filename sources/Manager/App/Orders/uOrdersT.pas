@@ -267,6 +267,8 @@ type
     procedure actSupplierSpecifyDeliveryTimeExecute(Sender: TObject);
     procedure QueryDeliveryTermFromSupplierGetText(Sender: TField;
       var Text: string; DisplayText: Boolean);
+    procedure GridBeforeLoad(Sender: TUniCustomDBGrid);
+    procedure GridAfterLoad(Sender: TUniCustomDBGrid);
   private
     { Private declarations }
     FAction: tFormaction;
@@ -823,7 +825,7 @@ end;
  procedure TOrdersT.ActionExecuteEnabled;
 begin
   log('TOrdersT.ActionExecuteEnabled Begin', etDebug);
-  //добавляем метки в таблицу
+
   try
     Sql.Q.Close;
     Sql.Open('Select distinct StatusID, IsStartState from vMarkOrderState where spid = :Spid and Type = 3', ['Spid'], [SPID]);
@@ -1007,18 +1009,6 @@ begin
     else
       Query.MacroByName('CustomerPriceLogo').Value := '';
 
-    if (FStatus <> '') or (not edtInvoice.IsBlank )then
-    begin
-      Grid.Refresh;
-      Grid.WebOptions.Paged := True;
-      Grid.WebOptions.PageSize:=100000;
-    end
-    else
-    begin
-      Grid.WebOptions.Paged := True;
-      Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
-    end;
-
     Query.MacroByName('Status').Value    := FStatus;
     //Query.MacroByName('PriceLogo').Value := FPriceLogo;
     //Query.MacroByName('Client').Value    := FClient;
@@ -1085,6 +1075,18 @@ begin
       Query.MacroByName('Amount').Value := '';
 
     Query.Open();
+//
+//    if (FStatus <> '') or (not edtInvoice.IsBlank )then
+//    begin
+//      Grid.Refresh;
+//      Grid.WebOptions.Paged    := True;
+//      Grid.WebOptions.PageSize := 100000;
+//    end
+//    else
+//    begin
+//      Grid.WebOptions.Paged    := True;
+//      Grid.WebOptions.PageSize := sql.GetSetting('OrdersGridRowCount', 100);
+//    end;
 
     StateActionMenuCreate;
 
@@ -1398,6 +1400,11 @@ begin
     Text := Sender.AsString;
 end;
 
+procedure TOrdersT.GridAfterLoad(Sender: TUniCustomDBGrid);
+begin
+  log('TOrdersT.GridAfterLoad Begin', etDebug);
+end;
+
 procedure TOrdersT.GridAjaxEvent(Sender: TComponent; EventName: string;
   Params: TUniStrings);
 begin
@@ -1436,6 +1443,11 @@ begin
     StatusForm.ShowModal();
     StatusForm.Free;
   end
+end;
+
+procedure TOrdersT.GridBeforeLoad(Sender: TUniCustomDBGrid);
+begin
+  log('TOrdersT.GridBeforeLoad Begin', etDebug);
 end;
 
 procedure TOrdersT.GridCellClick(Column: TUniDBGridColumn);
@@ -1809,8 +1821,6 @@ begin
 
 // bufferedRenderer = False при большом количестве записей таблица начинает сильно тормозить
 // Grid.JSInterface.JSConfig('bufferedRenderer', [False]);
-
-
 end;
 
 procedure TOrdersT.UniFrameDestroy(Sender: TObject);

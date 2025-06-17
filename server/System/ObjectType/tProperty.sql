@@ -56,3 +56,6 @@ insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 2, 13, 0, 
 -- тип ответа на отказы
 insert tProperty (PropertyID, ObjectTypeID, Flag, Brief, Name) select 0, 14, 0, 'Emex', 'Emex' 
 
+
+select * from tProperty
+

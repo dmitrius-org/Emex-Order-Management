@@ -25,9 +25,9 @@ SELECT b.UserName,
        b.BeginTime,
        e.EndTime,
        DATEDIFF(MILLISECOND, b.BeginTime, e.EndTime) AS DurationMs,
-       CONCAT(
-            DATEDIFF(MINUTE, b.BeginTime, e.EndTime), 'm ',
-            DATEPART(SECOND, DATEADD(MILLISECOND, DATEDIFF(MILLISECOND, b.BeginTime, e.EndTime), 0)), 's ',
+        CONCAT(
+            DATEDIFF(SECOND, b.BeginTime, e.EndTime) / 60, 'm ',
+            DATEDIFF(SECOND, b.BeginTime, e.EndTime) % 60, 's ',
             RIGHT('000' + CAST(DATEDIFF(MILLISECOND, b.BeginTime, e.EndTime) % 1000 AS VARCHAR), 3), 'ms'
         ) AS FormattedDuration
   FROM cte_begin b

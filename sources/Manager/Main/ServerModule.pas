@@ -76,7 +76,7 @@ var date: TDateTime;
 begin
   Logger.AddLog('TUniServerModule.UniGUIServerModuleCreate', 'Begin');
 
-  Title := 'Emex Manager';
+  Title := 'Manager';
 
   {$IFDEF UNIGUI_VCL}
   ExploreWeb('http://127.0.0.1:8087');

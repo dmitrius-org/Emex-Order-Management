@@ -290,5 +290,5 @@ return @RetVal
 go
 grant exec on SearchPriceCalc to public
 go
-exec setOV 'SearchPriceCalc', 'P', '20250320', '16'
+exec setOV 'SearchPriceCalc', 'P', '20250616', '17'
 go

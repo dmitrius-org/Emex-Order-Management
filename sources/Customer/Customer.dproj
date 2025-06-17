@@ -1,8 +1,8 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Application</AppType>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Customer.dpr</MainSource>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
@@ -134,11 +134,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.43;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.21;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Booster LLC;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.44;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.Booster.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.21;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>43</VerInfo_Build>
+        <VerInfo_Build>44</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -1362,8 +1362,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0
-</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1371,8 +1370,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0
-</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1380,8 +1378,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0
-</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -1389,8 +1386,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0
-</PreBuildEvent>
+        <PreBuildEvent>Taskkill /F /im $(OUTPUTFILENAME) 2&gt;1 || exit /b 0</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>

@@ -3,26 +3,19 @@ add SuppliersID	         numeric(18, 0) -- ���������
 
 alter table tSuppliers
 add GroupName	         varchar(64) -- ���������
-update tSuppliers
-set GroupName = 'Emex'
-
-
-
--- update tmenu
---   set Caption = '���������� �������: 1�'
---   where name = 'TShipmentsT.actSet1C'
 
 alter table tSuppliers
 add ApiAddress        varchar(256 ) -- 
-
-update tSuppliers
-set ApiAddress = 'http://soap.emexdwc.ae:3000/service.asmx'
 
 delete
                from GridOptionsSelect
               where [Column]='Rest'
 
+update tSuppliers
+   set GroupName = 'Emex'
 
+update tSuppliers
+   set ApiAddress = 'http://soap.emexdwc.ae:3000/service.asmx'
 
 update tProfilesCustomer
    set SuppliersID = c.SuppliersID

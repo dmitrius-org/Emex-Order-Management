@@ -348,12 +348,13 @@ object OrderF: TOrderF
       TabOrder = 13
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
+      Images = UniMainModule.BaseImage16
       ImageIndex = 1
       OnClick = UniBitBtn1Click
     end
     object btnDestinationLogo: TUniBitBtn
       Left = 874
-      Top = 159
+      Top = 157
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -363,6 +364,7 @@ object OrderF: TOrderF
       TabOrder = 9
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
+      Images = UniMainModule.BaseImage16
       ImageIndex = 1
       OnClick = btnDestinationLogoClick
     end
@@ -1319,6 +1321,8 @@ object OrderF: TOrderF
     ShowHint = True
     AutoScroll = True
     Align = alClient
+    ExplicitLeft = 48
+    ExplicitTop = 411
     ScrollHeight = 397
     ScrollWidth = 1007
   end

@@ -2,7 +2,7 @@ if OBJECT_ID('GetMarkOrderStateAction') is not null
     drop proc GetMarkOrderStateAction
 go
 /* **********************************************************
-GetMarkOrderStateAction - список действий для состоянии отмеченных заказов
+GetMarkOrderStateAction - список действий для состояний отмеченных заказов
 ********************************************************** */
 create proc GetMarkOrderStateAction
 as 
@@ -41,22 +41,21 @@ select distinct
          on n.NodeID = mo.ActionID
         and n.Type   = 1 -- действие
 
-delete  
-  from @State 
- where exists (select 1 -- если выбрано 2 состояния
-                 from @State s2
-                group by s2.StatusID
-                having count(distinct s2.StatusID)>1
-               )
+DELETE FROM @State
+ WHERE (
+       SELECT COUNT(DISTINCT StatusID) 
+         FROM @State
+        ) > 1;
 
 
-Select StatusID, ActionID, ActionName
+Select ActionID, ActionName
   from @State
 order by Number
+
 go
 grant exec on GetMarkOrderStateAction to public
 go
-exec setOV 'GetMarkOrderStateAction', 'P', '20250210', '0'
+exec setOV 'GetMarkOrderStateAction', 'P', '20250616', '1'
 go
 
-exec GetMarkOrderStateAction
+--exec GetMarkOrderStateAction

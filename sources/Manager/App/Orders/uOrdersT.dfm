@@ -116,6 +116,8 @@ object OrdersT: TOrdersT
       OnCellContextClick = GridCellContextClick
       OnDrawColumnCell = GridDrawColumnCell
       OnColumnResize = GridColumnResize
+      OnAfterLoad = GridAfterLoad
+      OnBeforeLoad = GridBeforeLoad
       Columns = <
         item
           FieldName = 'Flag'

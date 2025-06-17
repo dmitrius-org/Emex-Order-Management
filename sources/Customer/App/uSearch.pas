@@ -148,8 +148,12 @@ type
     /// <summary>
     /// SearchHistorySave - сохранение истории поиска
     /// </summary>
+
     procedure SearchHistorySave();
 
+    /// </summary>
+    /// SetMakeName - получение бренда и детали для показа пользователю
+    /// </summary>
     procedure SetMakeName();
 
     /// <summary>
@@ -480,12 +484,10 @@ end;
 
 procedure TSearchF.SetMakeName;
 begin
-  log('TSearchF.SetMakeName begin', etInfo);
+  log('TSearchF.SetMakeName begin', etDebug);
   sql.Open('''
            select top 1 p.DetailNum, p.MakeName
-             from pFindByNumber p with (nolock index=ao2)
-            where p.Spid = @@spid
-              and p.Flag&2=0  -- 2=No longer available Более недоступно
+             from vFindByNumber p
             order by case
                        when p.DetailNum = :DetailNum then 0
                        else 2
@@ -496,9 +498,9 @@ begin
   FMakeName := sql.Q.FieldByName('MakeName').AsString;
   FDetailNum:= sql.Q.FieldByName('DetailNum').AsString;
 
-  log('TSearchF.SetMakeName MakeName: ' + FMakeName, etInfo);
-  log('TSearchF.SetMakeName DetailNum: ' + FDetailNum, etInfo);
-  log('TSearchF.SetMakeName end', etInfo);
+  log('TSearchF.SetMakeName MakeName: ' + FMakeName, etDebug);
+  log('TSearchF.SetMakeName DetailNum: ' + FDetailNum, etDebug);
+  log('TSearchF.SetMakeName end', etDebug);
 end;
 
 procedure TSearchF.PartToBasket;
@@ -574,7 +576,7 @@ begin
   if FMakeCount > 1 then
   begin
     Text := '<form method="post" action="">' +
-            '<span class="makelogo-caret-down"><a>'+
+            '<span class="makelogo-caret-down" data-qtip="Замены"><a>'+
             '<button type="button" onclick="setMakelogo()" style="border: 0; background: none;"> '+
             '  <i class="fa fa-caret-down fa-lg"></i>'+
             '</button>'+

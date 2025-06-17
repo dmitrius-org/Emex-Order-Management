@@ -68,4 +68,4 @@ grant all on vFindByNumber to public
 go
 exec setOV 'vFindByNumber', 'V', '20250226', '12'
 go
-select * from vFindByNumber
+--select * from vFindByNumber

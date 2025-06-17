@@ -1,10 +1,10 @@
-if OBJECT_ID('ProfilesCustomerClearPTable') is not null
-    drop proc ProfilesCustomerClearPTable
+if OBJECT_ID('ProfilesCustomerClearPTabledelete') is not null
+    drop proc ProfilesCustomerClearPTabledelete
 /*
-  ProfilesCustomerClearPTable -
+  ProfilesCustomerClearPTabledelete -
 */
 go
-create proc ProfilesCustomerClearPTable
+create proc ProfilesCustomerClearPTabledelete
 as
   set nocount on
   declare @r int
@@ -18,7 +18,7 @@ as
 exit_:
 return @r
 go
-grant exec on ProfilesCustomerClearPTable to public
+grant exec on ProfilesCustomerClearPTabledelete to public
 go
-exec setOV 'ProfilesCustomerClearPTable', 'P', '20250603', '0'
+exec setOV 'ProfilesCustomerClearPTabledelete', 'P', '20250603', '0'
 go
