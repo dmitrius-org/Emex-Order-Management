@@ -211,6 +211,7 @@ select o.ClientID
 where p.Spid = @@SPID
   and p.N    = @N
   and isnull(p.Flag, 0)&1 =0
+  and isnull(p.Flag, 0)&2 =0 -- 2 мы отказались от заказа
 order by p.DetailNum
 
 -- сроки доставки поставщика
@@ -291,6 +292,6 @@ Select i.OrderID
 GO
 grant exec on CloneOrders to public
 go
-exec setOV 'CloneOrders', 'P', '20250515', '7'
+exec setOV 'CloneOrders', 'P', '20250619', '8'
 go
  

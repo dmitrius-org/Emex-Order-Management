@@ -116,7 +116,6 @@ type
     lblCurExtraKurs: TUniLabel;
     lblExtraKurs: TUniLabel;
     edtExtraKurs: TUniNumberEdit;
-    btnMessage: TUniButton;
     cbNLA: TUniCheckBox;
     lblChangeW: TUniHTMLFrame;
     btnSplit: TUniBitBtn;
@@ -127,6 +126,8 @@ type
     btnAdditionalCheck: TUniBitBtn;
     btnAmountEnabled: TUniBitBtn;
     actAmountEnabled: TAction;
+    UniGroupBox10: TUniGroupBox;
+    btnMessage: TUniButton;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);

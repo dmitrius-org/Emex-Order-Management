@@ -254,16 +254,15 @@ object OrderF: TOrderF
     object UniGroupBox3: TUniGroupBox
       Left = 250
       Top = 3
-      Width = 741
+      Width = 582
       Height = 56
       Hint = ''
       ShowHint = True
       Caption = #1055#1086#1080#1089#1082':'
-      Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
       object btnGoogleImages: TUniButton
         AlignWithMargins = True
-        Left = 13
+        Left = 9
         Top = 20
         Width = 107
         Height = 25
@@ -276,9 +275,9 @@ object OrderF: TOrderF
       end
       object btnYandexImages: TUniButton
         AlignWithMargins = True
-        Left = 126
+        Left = 123
         Top = 20
-        Width = 107
+        Width = 105
         Height = 25
         Hint = ''
         ShowHint = True
@@ -289,7 +288,7 @@ object OrderF: TOrderF
       end
       object btnExist: TUniButton
         AlignWithMargins = True
-        Left = 239
+        Left = 235
         Top = 20
         Width = 107
         Height = 25
@@ -302,7 +301,7 @@ object OrderF: TOrderF
       end
       object btnZZAP: TUniButton
         AlignWithMargins = True
-        Left = 352
+        Left = 349
         Top = 20
         Width = 107
         Height = 25
@@ -315,7 +314,7 @@ object OrderF: TOrderF
       end
       object btnEmEx: TUniButton
         AlignWithMargins = True
-        Left = 465
+        Left = 463
         Top = 20
         Width = 107
         Height = 25
@@ -1134,17 +1133,6 @@ object OrderF: TOrderF
       DecimalSeparator = ','
       OnKeyDown = edtLKeyDown
     end
-    object btnMessage: TUniButton
-      Left = 824
-      Top = 94
-      Width = 91
-      Height = 25
-      Hint = ''
-      ShowHint = True
-      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
-      TabOrder = 31
-      OnClick = btnMessageClick
-    end
     object lblChangeW: TUniHTMLFrame
       Left = 74
       Top = 121
@@ -1166,7 +1154,7 @@ object OrderF: TOrderF
       ShowHint = True
       Caption = #1056#1072#1079#1076#1077#1083#1080#1090#1100'<br>'#1079#1072#1082#1072#1079
       Anchors = [akTop, akRight]
-      TabOrder = 34
+      TabOrder = 33
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       OnClick = btnSplitClick
@@ -1179,12 +1167,12 @@ object OrderF: TOrderF
       Hint = 'No longer available ('#1041#1086#1083#1077#1077' '#1085#1077#1076#1086#1089#1090#1091#1087#1085#1086')'
       ShowHint = True
       Caption = 'NLA'
-      TabOrder = 32
+      TabOrder = 31
     end
     object edtAmount: TUniFormattedNumberEdit
-      Left = 824
+      Left = 838
       Top = 63
-      Width = 140
+      Width = 125
       Hint = #1056#1091#1073#1083#1077#1074#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1077#1090#1072#1083#1080
       Margins.Left = 0
       Margins.Top = 0
@@ -1195,7 +1183,7 @@ object OrderF: TOrderF
       ParentFont = False
       Font.Height = -13
       Anchors = [akTop, akRight]
-      TabOrder = 35
+      TabOrder = 34
       FieldLabelWidth = 15
       LayoutConfig.Padding = '0'
       LayoutConfig.Margin = '0'
@@ -1204,7 +1192,7 @@ object OrderF: TOrderF
       OnKeyDown = edtLKeyDown
     end
     object UniLabel2: TUniLabel
-      Left = 780
+      Left = 791
       Top = 66
       Width = 37
       Height = 13
@@ -1212,7 +1200,7 @@ object OrderF: TOrderF
       ShowHint = True
       Caption = #1057#1091#1084#1084#1072':'
       Anchors = [akTop, akRight]
-      TabOrder = 36
+      TabOrder = 35
     end
     object btnAmountEnabled: TUniBitBtn
       Left = 969
@@ -1222,11 +1210,38 @@ object OrderF: TOrderF
       ShowHint = True
       Action = actAmountEnabled
       Anchors = [akTop, akRight]
-      TabOrder = 37
+      TabOrder = 36
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
       Images = UniNativeImageList1
       ImageIndex = 2
+    end
+    object UniGroupBox10: TUniGroupBox
+      Left = 838
+      Top = 4
+      Width = 153
+      Height = 56
+      Hint = ''
+      ShowHint = True
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103':'
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 37
+      DesignSize = (
+        153
+        56)
+      object btnMessage: TUniButton
+        Left = 11
+        Top = 19
+        Width = 129
+        Height = 25
+        Hint = ''
+        ShowHint = True
+        Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 1
+        OnClick = btnMessageClick
+        ExplicitWidth = 127
+      end
     end
   end
   object UniContainerPanel1: TUniContainerPanel

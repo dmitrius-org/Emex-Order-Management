@@ -536,9 +536,10 @@ begin
     for i:= 0 to fStatus2.Items.Count-1 do
     begin
       if ((fStatus2.Selected[i] = True) and
-          (integer(fStatus2.Items.Objects[i]) in [1, //	New	Новый
-                                                  2, //	InChecked	Проверено
-                                                  22 //	Preparation	Предварительный
+          (integer(fStatus2.Items.Objects[i]) in [1,  // New         Новый
+                                                  2,  // InChecked   Проверено
+                                                  22, // Preparation Предварительный
+                                                  50  // CancelPreliminary
                                                   ]))
       then
       begin

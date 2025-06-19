@@ -1,9 +1,8 @@
-drop table if exists pMovement
+drop table if exists pMovementOur
 go
-/* pMovement
-   Движения по номеру заказа. Результат вызова сервиса MovementByOrderNumber
+/* pMovementOur
 */
-create table pMovement
+create table pMovementOur
 (
  ID                      numeric(18,0)  identity   
 ,Spid                    numeric(18,0)  default @@spid--  
@@ -32,15 +31,15 @@ create table pMovement
 ,Flag                    int            -- технические поля
 ,Tag                     int            -- технические поля
 ,N                       int            -- технические поля
-,RowCounts               int  
+,RowCounts               int 
 ,TotalQuantity           int
 )
 go
-create index ao1 on pMovement(Spid, OrderNumber)
+create index ao1 on pMovementOur(Spid, OrderNumber)
 go
-grant all on pMovement to public
+grant all on pMovementOur to public
 go
-exec setOV 'pMovement', 'U', '20240101', '0'
+exec setOV 'pMovementOur', 'U', '20240101', '0'
 go
 -- Описание таблицы
-exec dbo.sys_setTableDescription @table = 'pMovement', @desc = 'Движения по номеру заказа. Результат вызова сервиса MovementByOrderNumber'
+exec dbo.sys_setTableDescription @table = 'pMovementOur', @desc = 'Заказы'

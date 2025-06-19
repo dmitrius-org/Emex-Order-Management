@@ -14,7 +14,7 @@ object TexT: TTexT
     Height = 81
     Hint = ''
     AlignmentControl = uniAlignmentClient
-    Caption = #1047#1072#1087#1088#1086#1089' '#1089#1090#1072#1090#1091#1089#1072' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1079#1072#1103#1074#1082#1080
+    Caption = #1047#1072#1087#1088#1086#1089' '#1089#1090#1072#1090#1091#1089#1072' '#1087#1086' '#1086#1076#1085#1086#1084#1091' '#1079#1072#1082#1072#1079#1091
     Align = alTop
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Width = '0'
@@ -31,10 +31,10 @@ object TexT: TTexT
     object UniLabel1: TUniLabel
       Left = 167
       Top = 24
-      Width = 40
+      Width = 62
       Height = 13
       Hint = ''
-      Caption = #1050#1083#1080#1077#1085#1090':'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
       TabOrder = 5
     end
     object UniButton1: TUniButton
@@ -138,7 +138,6 @@ object TexT: TTexT
     LayoutConfig.IgnorePosition = False
     LayoutConfig.Width = '0'
     TabOrder = 2
-    ExplicitTop = 89
     object UniButton3: TUniButton
       Left = 270
       Top = 34

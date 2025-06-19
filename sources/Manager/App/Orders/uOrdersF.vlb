@@ -240,7 +240,7 @@ Coordinates=605,10,62,36
 Coordinates=505,10,90,36
 
 []
-Coordinates=842,56,85,36
+Coordinates=1014,1,84,36
 
 [cbNLA]
 Coordinates=858,1,53,36
@@ -250,9 +250,6 @@ Coordinates=858,166,58,36
 
 [lblSplit]
 Coordinates=858,221,53,36
-
-[btnMessage]
-Coordinates=1014,1,84,36
 
 [lblChangeW]
 Coordinates=1014,56,84,36
