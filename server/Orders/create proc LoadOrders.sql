@@ -161,6 +161,13 @@ as
          ) pc
    inner join tSuppliers s with (nolock index=ao1)
            on s.SuppliersID = pc.SuppliersID 
+
+   outer apply (select top 1 *
+                  from tSupplierPrices t (nolock) 
+                 where t.SuppliersID = pc.SuppliersID
+                   and t.Name        = pc.UploadPriceName
+                ) as Prices
+
    -- - - -
    outer apply (select top 1 *
                   from tPrice p with (nolock index=ao2) 
@@ -179,11 +186,6 @@ as
     left join tPartDescription pd with (nolock index=ao2)     
            on pd.Make   = p.MakeLogo	
           and pd.Number = p.DetailNum 
-
-   outer apply (select top 1 *
-                  from tPrices t (nolock) 
-                 where t.Name = pc.UploadPriceName
-                ) as Prices
 
    cross apply ( select top 1 Value
                    from tCurrencyRate with (nolock index=ao2)
@@ -303,6 +305,6 @@ return @r
 go
 grant exec on LoadOrders to public
 go
-exec setOV 'LoadOrders', 'P', '20250614', '15'
+exec setOV 'LoadOrders', 'P', '20250618', '16'
 go
  

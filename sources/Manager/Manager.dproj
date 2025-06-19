@@ -149,8 +149,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Build>67</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.67;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.18;Comments=</VerInfo_Keys>
+        <VerInfo_Build>68</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.68;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.18;Comments=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <ItemGroup>
@@ -562,6 +562,11 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </DCCReference>
         <DCCReference Include="..\Common\CommonApp\uVersion.pas"/>
         <DCCReference Include="..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas"/>
+        <DCCReference Include="App\Suppliers\uSuppliersPriceT.pas">
+            <Form>SuppliersPriceT</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TUniFrame</DesignClass>
+        </DCCReference>
         <None Include="..\compile.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

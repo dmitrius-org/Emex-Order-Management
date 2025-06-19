@@ -23,7 +23,7 @@ object StatisticsT: TStatisticsT
     Width = 1324
     Height = 549
     Hint = ''
-    ActivePage = TabOrderChart
+    ActivePage = TabOrders
     Align = alClient
     TabOrder = 0
     object TabOrderChart: TUniTabSheet

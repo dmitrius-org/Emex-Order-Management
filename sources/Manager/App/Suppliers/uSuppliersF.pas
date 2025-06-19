@@ -13,7 +13,8 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, uniToolBar, uniImageList, System.Actions, Vcl.ActnList,
   uniMainMenu, uniMultiItem, uniComboBox, Vcl.Menus, uniDBComboBox,
-  uUniExComboBox, Vcl.ExtCtrls, uniSpinEdit, uUniExComboBoxHelper;
+  uUniExComboBox, Vcl.ExtCtrls, uniSpinEdit, uUniExComboBoxHelper,
+  uSuppliersPriceT;
 
 type
   TSuppliersF = class(TUniForm)
@@ -98,6 +99,7 @@ type
     UniLabel10: TUniLabel;
     edtApiAddress: TUniEdit;
     edtGroupName: TUniExComboBox;
+    tabPrices: TUniTabSheet;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure UniFormShow(Sender: TObject);
@@ -113,6 +115,8 @@ type
     procedure qDeliveryAfterEdit(DataSet: TDataSet);
     procedure qDeliveryAfterPost(DataSet: TDataSet);
     procedure UniFormCreate(Sender: TObject);
+    procedure tabPricesBeforeFirstActivate(Sender: TObject;
+      var AllowActivate: Boolean);
   private
     { Private declarations }
     FAction: TFormAction;
@@ -402,9 +406,27 @@ begin
   FAction := Value;
 end;
 
+procedure TSuppliersF.tabPricesBeforeFirstActivate(Sender: TObject;
+  var AllowActivate: Boolean);
+//  var SuppliersPriceT:TSuppliersPriceT;
+begin
+  if not Assigned(SuppliersPriceT) then
+  begin
+    SuppliersPriceT :=  TSuppliersPriceT.Create(Self);
+  end;
+
+  SuppliersPriceT.Align := alClient;
+  SuppliersPriceT.Parent := tabPrices;
+
+  SuppliersPriceT.DataRefresh();
+
+end;
+
 procedure TSuppliersF.UniFormClose(Sender: TObject; var Action: TCloseAction);
 begin
- // Sql.Exec('delete pOrderFileFormat from pOrderFileFormat (rowlock) where spid = @@spid', [], []);
+  FreeAndNil(SuppliersPriceT);
+
+  Sql.Exec('exec SupplierPTableClear', [], []);
 end;
 
 procedure TSuppliersF.UniFormCreate(Sender: TObject);
@@ -448,6 +470,7 @@ begin
   Self.Caption := 'Поставщик: ' + edtBrief.Text;
 
   Sql.Exec('exec SupplierDeliveryProfilesLoad @SuppliersID = :SuppliersID', ['SuppliersID'], [FID]);
+  Sql.Exec('exec SupplierPricesLoad @SuppliersID = :SuppliersID', ['SuppliersID'], [FID]);
 
   DeliveryDataLoad;
 end;

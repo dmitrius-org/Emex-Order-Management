@@ -334,7 +334,7 @@ end;
 
 procedure TShipmentsT.FilterSupplierCreate;
 begin
-  fSupplier.FillFromSQL('select SuppliersID as ID, Brief as Name from tSuppliers (nolock) where SuppliersID<>8');
+  fSupplier.FillFromSQL('exec SupplierFilterList');
 end;
 
 procedure TShipmentsT.GridOpen;

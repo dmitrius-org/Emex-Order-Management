@@ -1,7 +1,7 @@
 object SuppliersF: TSuppliersF
   Left = 0
   Top = 0
-  ClientHeight = 461
+  ClientHeight = 575
   ClientWidth = 1284
   Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
   OnShow = UniFormShow
@@ -13,7 +13,7 @@ object SuppliersF: TSuppliersF
   object UniPanel: TUniPanel
     AlignWithMargins = True
     Left = 3
-    Top = 414
+    Top = 528
     Width = 1278
     Height = 44
     Hint = ''
@@ -21,6 +21,7 @@ object SuppliersF: TSuppliersF
     TabOrder = 0
     BorderStyle = ubsNone
     Caption = ''
+    ExplicitTop = 414
     DesignSize = (
       1278
       44)
@@ -51,14 +52,16 @@ object SuppliersF: TSuppliersF
     Left = 0
     Top = 0
     Width = 1284
-    Height = 411
+    Height = 525
     Hint = ''
-    ActivePage = tabCommon
+    ActivePage = tabPrices
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 411
     object tabCommon: TUniTabSheet
       Hint = ''
       Caption = #1043#1083#1072#1074#1085#1072#1103
+      ExplicitHeight = 383
       object UniFieldContainer1: TUniFieldContainer
         Left = 0
         Top = 0
@@ -116,7 +119,7 @@ object SuppliersF: TSuppliersF
       object fsAudit: TUniFieldSet
         AlignWithMargins = True
         Left = 3
-        Top = 300
+        Top = 414
         Width = 1270
         Height = 80
         Hint = ''
@@ -125,6 +128,7 @@ object SuppliersF: TSuppliersF
         Align = alBottom
         LayoutConfig.Region = 'south'
         TabOrder = 1
+        ExplicitTop = 300
         object UniFieldContainer2: TUniFieldContainer
           Left = 2
           Top = 15
@@ -200,9 +204,10 @@ object SuppliersF: TSuppliersF
     object tabSuppliers: TUniTabSheet
       Hint = ''
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
+      ExplicitHeight = 383
       DesignSize = (
         1276
-        383)
+        497)
       object edtEmexUsername: TUniEdit
         Left = 238
         Top = 58
@@ -319,6 +324,7 @@ object SuppliersF: TSuppliersF
       ParentAlignmentControl = False
       Caption = #1055#1088#1086#1092#1080#1083#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
       LayoutConfig.Width = '100'
+      ExplicitHeight = 383
       object ToolBar: TUniToolBar
         AlignWithMargins = True
         Left = 3
@@ -372,7 +378,7 @@ object SuppliersF: TSuppliersF
         Left = 0
         Top = 48
         Width = 1276
-        Height = 335
+        Height = 449
         Hint = ''
         Align = alClient
         TabOrder = 1
@@ -381,11 +387,12 @@ object SuppliersF: TSuppliersF
         Color = clYellow
         Layout = 'fit'
         LayoutConfig.Width = '100'
+        ExplicitHeight = 335
         object Grid: TUniDBGrid
           Left = 0
           Top = 0
           Width = 1276
-          Height = 335
+          Height = 449
           Hint = ''
           ShowHint = True
           ParentShowHint = False
@@ -611,6 +618,15 @@ object SuppliersF: TSuppliersF
           end
         end
       end
+    end
+    object tabPrices: TUniTabSheet
+      Hint = ''
+      Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      OnBeforeFirstActivate = tabPricesBeforeFirstActivate
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1284
+      ExplicitHeight = 411
     end
   end
   object DataSource: TDataSource

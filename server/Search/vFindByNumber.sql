@@ -59,13 +59,17 @@ select ROW_NUMBER() over (partition by p.DetailNum order by p.PercentSupped desc
    -- фильтры по вероятности поставки
    and p.PercentSupped   >= isnull(cast(st.Val as int), 0)
    and not exists (select 1
-                     from tPrices sp with (nolock index=a1)
-                    where sp.Name         = p.PriceLogo
-					  and sp.ShowInSearch = 1)
+                     from vClientProfilesParam cp 
+                    inner join tSupplierPrices sp with (nolock index=a2)
+                            on sp.SuppliersID  = cp.SuppliersID
+                           and sp.Name         = p.PriceLogo
+					       and sp.ShowInSearch = 1
+                    where cp.ProfilesCustomerID = p.ProfilesCustomerID 
+                    )
 
 go
 grant all on vFindByNumber to public
 go
-exec setOV 'vFindByNumber', 'V', '20250226', '12'
+exec setOV 'vFindByNumber', 'V', '20250618', '13'
 go
 --select * from vFindByNumber

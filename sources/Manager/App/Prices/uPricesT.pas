@@ -13,7 +13,7 @@ uses
   uniMainMenu, System.ImageList, Vcl.ImgList, Vcl.Menus,
   uniEdit, uniPanel, uniCheckBox, uniMultiItem, uniComboBox, uniDBEdit,
 
-  uUserF, uGrant, uCommonType;
+  uUserF, uGrant, uCommonType, uUniExComboBoxHelper, uUniExComboBox;
 
 type
   TPricesT = class(TUniFrame)
@@ -44,14 +44,18 @@ type
     UniPanel2: TUniPanel;
     Grid: TUniDBGrid;
     UpdateSQL: TFDUpdateSQL;
-    QueryName: TWideStringField;
-    CommentName: TWideStringField;
+    QueryName: TStringField;
+    CommentName: TStringField;
     QueryDeliveryTerm: TIntegerField;
-    QueryDeliveryType: TWideStringField;
+    QueryDeliveryType: TStringField;
     UniHiddenPanel1: TUniHiddenPanel;
     cbDeliveryType: TUniComboBox;
     QueryInWorkingDays: TBooleanField;
     QueryShowInSearch: TBooleanField;
+    QuerySupplierBrief: TStringField;
+    cbSuppliers: TUniExComboBox;
+    QuerySupplierPricesID: TFMTBCDField;
+    QuerySuppliersID: TFMTBCDField;
     procedure UniFrameCreate(Sender: TObject);
     procedure GridCellContextClick(Column: TUniDBGridColumn; X,
       Y: Integer);
@@ -98,7 +102,18 @@ end;
 
 procedure TPricesT.actDeleteExecute(Sender: TObject);
 begin
-  Query.Delete;
+  MessageDlg('Вы действительно хотите удалить Прайс? ' , mtConfirmation, mbYesNo,
+  procedure(Sender: TComponent; Res: Integer)
+  begin
+    case Res of
+      mrYes :
+      begin
+        Query.Delete;
+      end;
+      mrNo  : Exit;
+    end;
+  end
+  );
 end;
 
 procedure TPricesT.actEditExecute(Sender: TObject);
@@ -195,7 +210,9 @@ begin
 
   with Grid, Grid.JSInterface do
     if RowEditor then
-      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить'])
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+
+  cbSuppliers.FillFromSQL('exec SupplierFilterList');
 end;
 
 procedure TPricesT.UniFrameDestroy(Sender: TObject);

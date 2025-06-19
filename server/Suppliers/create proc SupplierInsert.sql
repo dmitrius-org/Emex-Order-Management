@@ -61,6 +61,10 @@ as
         exec @r = SupplierDeliveryProfilesLoad
                     @SuppliersID    = @SuppliersID
                    ,@Direction      = 1
+
+        exec @r = SupplierPricesLoad
+                    @SuppliersID    = @SuppliersID
+                   ,@Direction      = 1
 		
 		if @r <> 0
 		begin 
@@ -84,5 +88,5 @@ return @r
 go
 grant exec on SupplierInsert to public
 go
-exec setOV 'SupplierInsert', 'P', '20250613', '2'
+exec setOV 'SupplierInsert', 'P', '20250618', '3'
 go

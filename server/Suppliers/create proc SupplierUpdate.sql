@@ -34,6 +34,15 @@ as
         exec @r = SupplierDeliveryProfilesLoad
                     @SuppliersID    = @SuppliersID
                    ,@Direction      = 1
+
+        if @r <> 0
+        begin 
+          RAISERROR (15600, 16, 1, @r);
+        end
+
+        exec @r = SupplierPricesLoad
+                    @SuppliersID    = @SuppliersID
+                   ,@Direction      = 1
         
         if @r <> 0
         begin 
@@ -70,5 +79,5 @@ return @r
 go
 grant exec on SupplierUpdate to public
 go
-exec setOV 'SupplierUpdate', 'P', '20250613', '2'
+exec setOV 'SupplierUpdate', 'P', '20250618', '3'
 go

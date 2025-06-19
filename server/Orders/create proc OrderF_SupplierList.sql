@@ -37,7 +37,7 @@ select
        o.SuppliersBrief + ' | ' + 
        p.PriceLogo + ' | ' +
        '$' + convert(varchar, p.Price) + ' | ' + 
-       convert(varchar, o.Quantity) + '/' + convert(varchar, isnull(p.Available, '-'))  + ' (' + cast(p.Packing as varchar) + ') | ' + -- количество
+       convert(varchar, o.Quantity) + '/' + convert(varchar, iif(isnull(p.Available, '-') ='-1', '~', isnull(p.Available, '-')))  + ' (' + cast(p.Packing as varchar) + ') | ' + -- количество
        convert(varchar, p.GuaranteedDay) + ' дней ' + case 
                                                         when  (datediff(day, o.OrderDate, getdate()) + -- дней в обработке
                                                               p.GuaranteedDay  +                       -- Срок поставщика из API

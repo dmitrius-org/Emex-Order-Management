@@ -140,7 +140,8 @@ uses
   uUtils.Logger in '..\Common\Logger\uUtils.Logger.pas',
   utest in 'App\utest.pas' {APIKeyT: TUniFrame},
   uVersion in '..\Common\CommonApp\uVersion.pas',
-  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas';
+  uUtils.BusinessComboBoxHelper in '..\Common\CommonApp\uUtils.BusinessComboBoxHelper.pas',
+  uSuppliersPriceT in 'App\Suppliers\uSuppliersPriceT.pas' {SuppliersPriceT: TUniFrame};
 
 {$R *.res}
 

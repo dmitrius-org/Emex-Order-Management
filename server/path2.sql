@@ -1,37 +1,32 @@
-alter table tProfilesCustomer
-add SuppliersID	         numeric(18, 0) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+insert tSupplierPrices
+(
+SuppliersID
+,Name
+,Comment
+,DeliveryTerm
+,DeliveryType
+,InWorkingDays
+,ShowInSearch
+,Flag
+)
 
-alter table tSuppliers
-add GroupName	         varchar(64) -- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-
-alter table tSuppliers
-add ApiAddress        varchar(256 ) -- 
-
-delete
-               from GridOptionsSelect
-              where [Column]='Rest'
-
-update tSuppliers
-   set GroupName = 'Emex'
-
-update tSuppliers
-   set ApiAddress = 'http://soap.emexdwc.ae:3000/service.asmx'
-
-update tProfilesCustomer
-   set SuppliersID = c.SuppliersID
-  from tProfilesCustomer p
- inner join tClients c
-         on c.ClientID = p.ClientID
+select 
+ s.SuppliersID
+,p.Name
+,p.Comment
+,p.DeliveryTerm
+,p.DeliveryType
+,p.InWorkingDays
+,p.ShowInSearch
+,p.Flag
+from tSuppliers s
+inner join tPrices p
+        on 1=1
 
 
---select SuppliersID, * from tProfilesCustomer
 
---update tClients
---set SuppliersID = cc.SuppliersID
---from tClients c
---inner join testdb.dbo.tClients cc
---on cc.ClientID = c.ClientID
+if OBJECT_ID('tPrices') is not null
+  drop table tPrices
 
--- alter table tClients
--- drop column SuppliersID     
 
+  insert tmenu (MenuID,N,Caption,Name,ParentID,Type) select 1061, 1061, 'Редактирование суммы заказа',  'TOrderF.actAmountEnabled', 20, 1

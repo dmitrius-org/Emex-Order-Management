@@ -125,6 +125,8 @@ type
     edtAmount: TUniFormattedNumberEdit;
     UniLabel2: TUniLabel;
     btnAdditionalCheck: TUniBitBtn;
+    btnAmountEnabled: TUniBitBtn;
+    actAmountEnabled: TAction;
     procedure btnOkClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure btnGoogleImagesClick(Sender: TObject);
@@ -155,6 +157,8 @@ type
     procedure btnMessageClick(Sender: TObject);
     procedure btnSplitClick(Sender: TObject);
     procedure btnAdditionalCheckClick(Sender: TObject);
+    procedure actAmountEnabledExecute(Sender: TObject);
+    procedure UniFormCreate(Sender: TObject);
 
   private
     FAction: TFormAction;
@@ -185,6 +189,8 @@ type
     FIncome2:  Real;
     FProfin2:  Real;
     FQuantity2: Integer;
+    FAvailable2: Integer;
+
     FReference :string;
     FCustomerSubID:string;
     FSuppliersID: Integer;
@@ -285,6 +291,11 @@ type
     /// SetEditDeliveryStyle - Установка стилей для поля: Срок доставки, после изменения
     /// </summary>
     procedure SetEditDeliveryStyle(aVal: Integer);
+
+    /// <summary>
+    /// SetEditCountStyle - Установка стилей для поля: Количество
+    /// </summary>
+    procedure SetEditCountStyle();
 
     /// <summary>
     /// PriceCalc - Установка стилей для показателей: Показатели после изменения
@@ -533,7 +544,9 @@ begin
     FMarginF2          := sql.F('MarginF').AsFloat;
     FIncome2           := sql.F('IncomePrc').AsFloat;
     FProfin2           := sql.F('Profit').AsFloat;
-    FQuantity2         := sql.F('Available').AsInteger;
+    FQuantity2         := FQuantity;// sql.F('Available').AsInteger;
+    FAvailable2         := sql.F('Available').AsInteger;
+
 
     edtCount2.Text     := FQuantity.ToString + '/' + sql.F('AvailableStr').AsString + ' (' + sql.F('Packing').AsString + ')';
     edtMargin2.Text    := FormatFloat('##0%', FMargin);
@@ -592,6 +605,7 @@ begin
     edtIncome2.Text    := FormatFloat('##0%', FIncome2);
 
     SetEditDataStyle();
+    SetEditCountStyle();
     SetEditDataRating(sql.F('PercentSupped').AsInteger);
 
     SetEditDeliveryStyle((FPassedDayInWork+
@@ -633,11 +647,13 @@ begin
     FIncome2  :=0;
     FProfin2  :=0;
     FQuantity2:=0;
+    FAvailable2:=0;
 
     NotExists.Visible := True;
     edtReliability2.Visible := False;
 
     SetEditDataStyle();
+    SetEditCountStyle();
     SetEditDataRating(0);
 
     edtDelivery2.Hint := '';
@@ -772,6 +788,13 @@ begin
       GetPartFromEmex;
     end;
   end;
+end;
+
+procedure TOrderF.actAmountEnabledExecute(Sender: TObject);
+begin
+  edtAmount.Enabled := not edtAmount.Enabled;
+
+  if edtAmount.Enabled then edtAmount.SetFocus;
 end;
 
 procedure TOrderF.actProtocolExecute(Sender: TObject);
@@ -1125,6 +1148,18 @@ begin
     edtDelivery.Color := $008080FF;
 end;
 
+procedure TOrderF.SetEditCountStyle();
+begin
+  if FAvailable2 = -1 then
+    edtCount2.Color :=  $0080FF80
+  else
+  if FQuantity2 < FAvailable2 then
+    //edtDelivery.Color := clWhite
+    edtCount2.Color :=  $0080FF80
+  else
+    edtCount2.Color := $008080FF;
+end;
+
 procedure TOrderF.SetEditDataRating(ARating: integer);
 var r, js: string;
 begin
@@ -1186,7 +1221,7 @@ begin
   setColor(FIncome2,   FIncome,   edtIncome2);
   setColor(FProfin2,   FProfin,   edtProfit2);
  // setColor(FMarginF2,  FMarginF,  edtDelivery2);
-  setColor(FQuantity2, FPriceQuantity, edtCount2);
+//  setColor(FQuantity2, FPriceQuantity, edtCount2);
 end;
 
 procedure TOrderF.SetEditDeliveryStyle(aVal: Integer);
@@ -1271,6 +1306,15 @@ procedure TOrderF.UniBitBtn1Click(Sender: TObject);
 begin
   cbPrice.Enabled := not cbPrice.Enabled;
   cbPrice.SetFocus;
+end;
+
+procedure TOrderF.UniFormCreate(Sender: TObject);
+begin
+  {$IFDEF Debug}
+    Grant.GrantTemplateCreate(self, 'TOrdersT');
+  {$ENDIF}
+  Grant.SetGrant(self, UniActionList1);
+
 end;
 
 procedure TOrderF.UniFormDestroy(Sender: TObject);
@@ -1697,6 +1741,7 @@ begin
   FIncome2           := FIncome;
   FProfin2           := FProfin;
   FQuantity2         := FQuantity;
+  FAvailable2        := FPriceQuantity; // Доступное количество из прайса
 
   edtMargin2.Text    := edtMargin.Text;
   edtMarginF2.Text   := edtMarginF.Text;
@@ -1716,6 +1761,7 @@ begin
                     FDeliveryTermFromCustomerProfile));
 
   SetEditDataStyle;
+  SetEditCountStyle();
 
   edtDelivery2.Color := edtDelivery.Color;
 

@@ -47,9 +47,10 @@ Update p
  inner join tOrders o with (nolock)
          on o.OrderID = p.OrderID
  outer apply (select top 1 *
-                from tPrices t with (nolock) 
-               where t.Name = o.PriceLogo
-              ) as Prices
+                from tSupplierPrices t with (nolock index=a2) 
+               where t.SuppliersID = o.SuppliersID
+                 and t.Name        = o.PriceLogo
+             ) as Prices
 
  where p.Spid   = @@Spid
    and p.RetVal = 0
@@ -103,5 +104,5 @@ return @r
 go
   grant exec on OrdersSupplierDeliveryCalc to public
 go
-exec setOV 'OrdersSupplierDeliveryCalc', 'P', '20250210', '1'
+exec setOV 'OrdersSupplierDeliveryCalc', 'P', '20250618', '2'
 go

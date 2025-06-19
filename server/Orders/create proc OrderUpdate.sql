@@ -44,6 +44,10 @@ as
   select @DeliveryTermSupplier    = t.DeliveryTerm
         ,@DeliveryTermSupplierNew = p.GuaranteedDay
         ,@CurrentAmount           = t.Amount
+        ,@Amount                  = case
+                                      when isnull(@IsSplit, 0) = 1 or isnull(@SplitQuality, 0) > 0 then t.Amount
+                                      else @Amount 
+                                    end
 	from tOrders t with (nolock index=ao1)
    outer apply ( select top 1 *
                    from pFindByNumber p with (nolock index=ao3)
@@ -331,9 +335,11 @@ as
                          --iif(isnull(NoAirOld     , 0)<>isnull(NoAir     , 0), 'NoAir: ''' +  cast(isnull(NoAirOld, 0) as varchar)  + ''' -> '''+ cast(isnull(NoAir, 0) as varchar)  + '''<br>', '') + 
                          iif(isnull(RestrictionsOLD,'')<>isnull(Restrictions,''), 'Restrictions: ''' + isnull(RestrictionsOLD,'') + ''' -> '''+ isnull(Restrictions,'') +  '''<br>', '') + 
                          iif(isnull(FragileOLD   , 0)<>isnull(Fragile   , 0), 'Fragile: '''+ cast(isnull(FragileOLD, 0) as varchar) + ''' -> '''+ cast(isnull(Fragile, 0) as varchar) + '''<br>', '') + 
-                         iif(isnull(NLAOLD       , 0)<>isnull(NLA       , 0), 'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +'''', '') + 
-                         iif(isnull(@CurrentAmount, 0)<>isnull(@Amount       , 0), 'Сумма руб.: ''' + cast(isnull(@CurrentAmount, 0) as varchar) + ''' -> '''+ cast(isnull(@Amount, 0) as varchar) +'''', '') 
+                         iif(isnull(NLAOLD       , 0)<>isnull(NLA       , 0), 'NLA: ''' + cast(isnull(NLAOLD, 0) as varchar) + ''' -> '''+ cast(isnull(NLA, 0) as varchar) +'''<br>', '')
+                         
     from #PartsUpdate pu (nolock)
+
+  select @AuditComment = isnull(@AuditComment, '') + iif(isnull(@CurrentAmount, 0)<>isnull(@Amount  , 0), 'Сумма руб.: ''' + cast(isnull(@CurrentAmount, 0) as varchar) + ''' -> '''+ cast(isnull(@Amount, 0) as varchar) +'''', '') 
 
   -- аудит
   exec AuditInsert

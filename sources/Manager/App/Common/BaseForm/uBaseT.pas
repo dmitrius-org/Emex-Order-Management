@@ -149,6 +149,11 @@ begin
 
   // индексы для сортировки
   GridExt.SortColumnCreate(Grid);
+
+  with Grid, Grid.JSInterface do
+    if RowEditor then
+      JSConfigPlugin('Ext.grid.plugin.RowEditing', ['saveBtnText', 'Сохранить', 'cancelBtnText', 'Отменить']);
+
   LogInfo('TBaseT.UniFrameCreate End');
 end;
 

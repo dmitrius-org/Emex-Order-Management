@@ -38,6 +38,7 @@ object OrderF: TOrderF
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     end>
   OnReady = UniFormReady
+  OnCreate = UniFormCreate
   OnDestroy = UniFormDestroy
   TextHeight = 15
   object tabCommon: TUniFieldContainer
@@ -348,13 +349,13 @@ object OrderF: TOrderF
       TabOrder = 13
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
-      Images = UniMainModule.BaseImage16
-      ImageIndex = 1
+      Images = UniNativeImageList1
+      ImageIndex = 2
       OnClick = UniBitBtn1Click
     end
     object btnDestinationLogo: TUniBitBtn
       Left = 874
-      Top = 157
+      Top = 159
       Width = 22
       Height = 24
       Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
@@ -364,8 +365,8 @@ object OrderF: TOrderF
       TabOrder = 9
       IconAlign = iaCenter
       IconPosition = ipButtonEdge
-      Images = UniMainModule.BaseImage16
-      ImageIndex = 1
+      Images = UniNativeImageList1
+      ImageIndex = 2
       OnClick = btnDestinationLogoClick
     end
     object UniGroupBox5: TUniGroupBox
@@ -961,7 +962,7 @@ object OrderF: TOrderF
     object edtDetailNameF: TUniComboBox
       Left = 116
       Top = 63
-      Width = 709
+      Width = 658
       Hint = ''
       ShowHint = True
       Text = ''
@@ -1134,7 +1135,7 @@ object OrderF: TOrderF
       OnKeyDown = edtLKeyDown
     end
     object btnMessage: TUniButton
-      Left = 777
+      Left = 824
       Top = 94
       Width = 91
       Height = 25
@@ -1157,7 +1158,7 @@ object OrderF: TOrderF
           ' '#1074#1077#1089' '#1076#1077#1090#1072#1083#1080'"><i class="fa fa-balance-scale"></i></span>')
     end
     object btnSplit: TUniBitBtn
-      Left = 902
+      Left = 904
       Top = 159
       Width = 87
       Height = 52
@@ -1181,14 +1182,15 @@ object OrderF: TOrderF
       TabOrder = 32
     end
     object edtAmount: TUniFormattedNumberEdit
-      Left = 888
-      Top = 62
-      Width = 103
+      Left = 824
+      Top = 63
+      Width = 140
       Hint = #1056#1091#1073#1083#1077#1074#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1076#1077#1090#1072#1083#1080
       Margins.Left = 0
       Margins.Top = 0
       Margins.Right = 0
       Margins.Bottom = 0
+      Enabled = False
       ShowHint = True
       ParentFont = False
       Font.Height = -13
@@ -1202,7 +1204,7 @@ object OrderF: TOrderF
       OnKeyDown = edtLKeyDown
     end
     object UniLabel2: TUniLabel
-      Left = 840
+      Left = 780
       Top = 66
       Width = 37
       Height = 13
@@ -1211,6 +1213,20 @@ object OrderF: TOrderF
       Caption = #1057#1091#1084#1084#1072':'
       Anchors = [akTop, akRight]
       TabOrder = 36
+    end
+    object btnAmountEnabled: TUniBitBtn
+      Left = 969
+      Top = 63
+      Width = 22
+      Height = 24
+      ShowHint = True
+      Action = actAmountEnabled
+      Anchors = [akTop, akRight]
+      TabOrder = 37
+      IconAlign = iaCenter
+      IconPosition = ipButtonEdge
+      Images = UniNativeImageList1
+      ImageIndex = 2
     end
   end
   object UniContainerPanel1: TUniContainerPanel
@@ -1321,8 +1337,6 @@ object OrderF: TOrderF
     ShowHint = True
     AutoScroll = True
     Align = alClient
-    ExplicitLeft = 48
-    ExplicitTop = 411
     ScrollHeight = 397
     ScrollWidth = 1007
   end
@@ -1369,22 +1383,30 @@ object OrderF: TOrderF
     Left = 569
     Top = 527
     object actRefreshFormData: TAction
+      Tag = -1
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       OnExecute = actRefreshFormDataExecute
     end
     object actProtocol: TAction
+      Tag = -1
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083
       ImageIndex = 4
       ImageName = 'protocol'
       OnExecute = actProtocolExecute
+    end
+    object actAmountEnabled: TAction
+      Hint = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1089#1091#1084#1084#1099' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 2
+      OnExecute = actAmountEnabledExecute
     end
   end
   object UniNativeImageList1: TUniNativeImageList
     Left = 549
     Top = 398
     Images = {
-      02000000008080FF061400000063616C656E6461722D636865636B2D6F3B6661
-      3B008080FF060B000000726566726573683B66613B}
+      03000000008080FF061400000063616C656E6461722D636865636B2D6F3B6661
+      3B008080FF060B000000726566726573683B66613BFFFFFF1F06130000007065
+      6E63696C2D7371756172652D6F3B66613B}
   end
 end

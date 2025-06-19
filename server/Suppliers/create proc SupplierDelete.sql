@@ -34,7 +34,11 @@ as
         Delete tSupplierDeliveryProfiles
           from tSupplierDeliveryProfiles with (rowlock index=ao1)
          where SuppliersID  = @SuppliersID
- 
+
+        Delete tSupplierPrices
+          from tSupplierPrices with (rowlock index=ao2)
+         where SuppliersID  = @SuppliersID
+
         Delete tSuppliers
           from tSuppliers with (rowlock index=ao1)
          where SuppliersID  = @SuppliersID
@@ -56,6 +60,6 @@ as
 go
 grant exec on SupplierDelete to public
 go
-exec setOV 'SupplierDelete', 'P', '20250320', '1'
+exec setOV 'SupplierDelete', 'P', '20250618', '2'
 go
  

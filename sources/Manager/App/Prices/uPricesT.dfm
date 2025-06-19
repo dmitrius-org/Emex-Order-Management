@@ -132,8 +132,6 @@ object PricesT: TPricesT
         Action = actAdd
         ImageIndex = 0
         TabOrder = 0
-        ExplicitLeft = 0
-        ExplicitTop = 0
       end
       object UniToolButton2: TUniToolButton
         AlignWithMargins = True
@@ -143,8 +141,6 @@ object PricesT: TPricesT
         Action = actEdit
         ImageIndex = 1
         TabOrder = 2
-        ExplicitLeft = 90
-        ExplicitTop = 0
       end
       object UniToolButton4: TUniToolButton
         AlignWithMargins = True
@@ -154,8 +150,6 @@ object PricesT: TPricesT
         Action = actDelete
         ImageIndex = 2
         TabOrder = 3
-        ExplicitLeft = 180
-        ExplicitTop = 0
       end
     end
   end
@@ -225,6 +219,14 @@ object PricesT: TPricesT
       OnColumnFilter = GridColumnFilter
       Columns = <
         item
+          FieldName = 'SupplierBrief'
+          Title.Alignment = taCenter
+          Title.Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          Width = 200
+          Editor = cbSuppliers
+          Sortable = True
+        end
+        item
           FieldName = 'Name'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089#1072
@@ -286,12 +288,26 @@ object PricesT: TPricesT
         Height = 23
         Hint = ''
         ShowHint = True
-        Text = 'cbDeliveryType'
+        Style = csOwnerDrawFixed
+        Text = ''
         Items.Strings = (
           'Days'
           'Months  ')
         TabOrder = 1
         IconItems = <>
+      end
+      object cbSuppliers: TUniExComboBox
+        Left = 24
+        Top = 72
+        Width = 109
+        Hint = ''
+        ShowHint = True
+        Style = csOwnerDrawFixed
+        Text = ''
+        TabOrder = 2
+        AnyMatch = True
+        IconItems = <>
+        Value = '-1'
       end
     end
   end
@@ -305,25 +321,30 @@ object PricesT: TPricesT
     UpdateOptions.CountUpdatedRecords = False
     UpdateOptions.FetchGeneratorsPoint = gpNone
     UpdateOptions.CheckRequired = False
-    UpdateOptions.KeyFields = 'Name'
+    UpdateOptions.KeyFields = 'SupplierPricesID'
+    UpdateOptions.AutoIncFields = 'SupplierPricesID'
     UpdateObject = UpdateSQL
     SQL.Strings = (
       'select * '
-      '  from tPrices (Nolock)')
+      '  from vSuppliersPrices')
     Left = 686
     Top = 101
-    object QueryDeliveryType: TWideStringField
+    object QuerySupplierBrief: TStringField
+      FieldName = 'SupplierBrief'
+      Size = 128
+    end
+    object QueryDeliveryType: TStringField
       FieldName = 'DeliveryType'
       Required = True
       Size = 30
     end
-    object QueryName: TWideStringField
+    object QueryName: TStringField
       FieldName = 'Name'
       Origin = 'Name'
       Required = True
       Size = 30
     end
-    object CommentName: TWideStringField
+    object CommentName: TStringField
       FieldName = 'Comment'
       Origin = 'Comment'
       Size = 256
@@ -337,6 +358,12 @@ object PricesT: TPricesT
     end
     object QueryShowInSearch: TBooleanField
       FieldName = 'ShowInSearch'
+    end
+    object QuerySupplierPricesID: TFMTBCDField
+      FieldName = 'SupplierPricesID'
+    end
+    object QuerySuppliersID: TFMTBCDField
+      FieldName = 'SuppliersID'
     end
   end
   object DataSource: TDataSource
@@ -406,8 +433,9 @@ object PricesT: TPricesT
       'end'
       ''
       'if exists (select 1'
-      '             from tPrices(nolock)'
-      '            where Name= @Name)'
+      '             from vSupplierPrices (nolock)'
+      '            where SuppliersID = :SuppliersID'
+      '              and Name= @Name)'
       'begin'
       
         '   select @R = 600 -- '#39#1055#1088#1072#1081#1089#1083#1080#1089#1090' '#1089' '#1079#1072#1076#1072#1085#1085#1099#1084' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077#1084' '#1089#1091#1097#1077#1089#1090 +
@@ -422,14 +450,15 @@ object PricesT: TPricesT
       ' RAISERROR (@M, 16, 1); '
       'end'
       ''
-      'INSERT INTO tPrices'
+      'INSERT INTO tSupplierPrices '
       '           ([Name]'
       '           ,[Comment]'
       '           ,[DeliveryTerm]'
       '           ,[DeliveryType]'
       '           ,[Flag]'
       '           ,[InWorkingDays]'
-      '           ,[ShowInSearch]   '
+      '           ,[ShowInSearch]  '
+      '           ,[SuppliersID] '
       '           )'
       '     VALUES'
       '           (@Name '
@@ -439,6 +468,7 @@ object PricesT: TPricesT
       '           ,:NEW_Flag'
       '           ,:New_InWorkingDays'
       '           ,:NEW_ShowInSearch'
+      '           ,:NEW_SuppliersID'
       '           )'
       ''
       'SELECT @Name AS Name')
@@ -454,9 +484,10 @@ object PricesT: TPricesT
       'end'
       ''
       'if exists (select 1'
-      '             from tPrices(nolock)'
-      '            where Name = @Name'
-      '              and Name<> :OLD_Name)'
+      '             from tSupplierPrices (nolock)'
+      '            where SuppliersID = :OLD_SuppliersID'
+      '              and Name        = @Name'
+      '              and Name       <> :OLD_Name)'
       'begin'
       
         '   select @r = 600 -- '#39#1055#1088#1072#1081#1089#1083#1080#1089#1090' '#1089' '#1079#1072#1076#1072#1085#1085#1099#1084' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077#1084' '#1089#1091#1097#1077#1089#1090 +
@@ -471,32 +502,25 @@ object PricesT: TPricesT
       ' RAISERROR (@M, 16, 1); '
       'end'
       ''
-      'UPDATE tPrices'
-      '   SET Name          = @Name'
-      '      ,Comment       = :NEW_Comment'
-      '      ,DeliveryTerm  = :NEW_DeliveryTerm'
-      '      ,DeliveryType  = :NEW_DeliveryType'
-      '      ,Flag          = :NEW_Flag'
-      '      ,InWorkingDays = :NEW_InWorkingDays'
-      '      ,ShowInSearch  = :NEW_ShowInSearch'
-      ' WHERE Name = :OLD_Name;'
+      'UPDATE tSupplierPrices'
+      '   SET Name             = @Name'
+      '      ,Comment          = :NEW_Comment'
+      '      ,DeliveryTerm     = :NEW_DeliveryTerm'
+      '      ,DeliveryType     = :NEW_DeliveryType'
+      '      ,Flag             = :NEW_Flag'
+      '      ,InWorkingDays    = :NEW_InWorkingDays'
+      '      ,ShowInSearch     = :NEW_ShowInSearch'
+      ' WHERE SupplierPricesID = :OLD_SupplierPricesID;'
       ' '
       'SELECT @Name as Name        '
       '')
     DeleteSQL.Strings = (
-      'if exists (select 1'
-      '             from tOrders (nolock)'
-      '            where PriceLogo= :Name)'
-      'begin'
-      
-        '   RAISERROR ('#39#1059#1076#1072#1083#1077#1085#1080#1077' '#1079#1072#1087#1088#1077#1097#1077#1085#1086', '#1087#1088#1072#1081#1089' '#1080#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1082#1072#1079#1072#1093'!' +
-        #39', 16, 1); '
-      'end'
-      ''
-      'DELETE FROM tPrices'
-      ' WHERE Name = :OLD_Name')
+      'exec SupplierPricesDelete'
+      '       @SupplierPricesID= :OLD_SupplierPricesID ')
     FetchRowSQL.Strings = (
-      'SELECT * FROM tPrices (nolock) WHERE Name = :Name')
+      'SELECT * '
+      '  FROM vSuppliersPrices'
+      ' WHERE SupplierPricesID = :SupplierPricesID')
     Left = 794
     Top = 101
   end
